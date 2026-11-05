@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 2026-11-05 — cartões de ajudantes e Barraca Ichiraku
+- **Cartões de ajudantes:**
+  - Novos `src/ui/AllyCards.tsx` e `src/allies.css`; a linha de texto "Suportes …" foi substituída por cartões no padrão da referência do usuário.
+  - Cada cartão tem: retrato redondo com moldura na cor da técnica, nome, selo da aldeia ou SINERGIA, buff real (regeneração e bônus da Areia), técnica com barra de recarga, elemento, escola, % de dano e intervalo.
+  - O snapshot ganhou `allyCharge`.
+- **Barraca Ichiraku:**
+  - Novo evento no mapa com o sprite da barraca de lámen.
+  - Esquecer uma pílula (todos os níveis) ou uma técnica custa 10 + 5 × nível em Ryu, quantas vezes quiser. A última técnica é protegida.
+  - Os atributos são recalculados a partir das fontes.
+  - A tela é própria ("ESQUECER", "Sair da barraca").
+- **Caça-níquel:** saiu "do Ichiraku" do nome e o sprite da barraca passou a ser da Barraca Ichiraku.
+- **Verificado:**
+  - `tsc -b`, `vite build`, `verify-rules.mjs` e `verify-runtime.mjs` (23 verificações) passaram.
+  - Os testes avulsos do Kakashi, dos chefes e do debug continuaram passando.
+  - Teste novo no navegador:
+    - 3 cartões com SINERGIA, sem cobrir o herói nem as habilidades;
+    - Ichiraku recusa com Ryu insuficiente;
+    - esquecer a Pílula do Soldado por 20 Ryu baixou o Taijutsu de 120% para 100%;
+    - esquecer Kage Bunshin por 15 Ryu;
+    - a barraca fechou e não reabriu com só a última técnica.
+- **Não testado:** 5 ajudantes ao mesmo tempo em telas pequenas; balanceamento do preço.
+
 ## 2026-11-05 — Kakashi interativo copia item da bolsa
 - **Novo evento "Sharingan de Kakashi":** NPC com sprite do Kakashi. Ao apertar E, o jogador escolhe 1 item que já carrega e ganha +1 cópia, até o limite do item. Pode ser usado uma vez por zona.
 - **Tela da escolha:** própria ("Copiar um item da bolsa"), com selo "CÓPIA", sem Atualizar/Banir. "Cancelar (X)" fecha sem gastar o Kakashi nem os usos de pular. Itens já no limite não aparecem; com a bolsa vazia, só aparece um aviso.

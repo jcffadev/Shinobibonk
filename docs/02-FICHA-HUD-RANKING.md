@@ -26,7 +26,8 @@ Atualizar a posição e distância até o Top 1 após cada abate. Guardar partid
   - Barra de 4 técnicas automáticas com as pílulas acima e o botão R com o selo AUTO.
   - Itens no canto inferior direito.
   - FPS e inimigos vivos no centro inferior.
-  - Faixa do guardião com HP, progresso da defesa do altar, aliados e sinergia.
+  - Faixa do guardião com HP e progresso da defesa do altar.
+  - **Cartões de ajudantes** à esquerda, abaixo do herói, no padrão da referência do usuário: retrato, nome, selo da aldeia ou SINERGIA, buff, técnica com barra de recarga, elemento, escola e % de dano.
 - **IMPLEMENTADO na ficha (P)**, em `src/ui/RunSheet.tsx`:
   - Atributos finais derivados de `calculateStats`.
   - Escala de dificuldade.

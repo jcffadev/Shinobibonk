@@ -173,7 +173,12 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - **Maldição de Orochimaru**: +20% de dificuldade, +25% de XP e saque.
   - **Altar para proteger**: ficar 20 s no círculo dá uma kunai grátis.
   - **Mercador de armas**: troca cada kunai/shuriken guardada por 5 Ryu.
-  - **Caça-níquel do Ichiraku**: 25 Ryu por giro; o resultado sai entre kunai, shuriken, pílula e recompensa de item.
+  - **Caça-níquel**: 25 Ryu por giro; o resultado sai entre kunai, shuriken, pílula e recompensa de item. Antes se chamava "Caça-níquel do Ichiraku" e usava o sprite da barraca; agora usa o sprite padrão de evento.
+  - **Barraca Ichiraku** (sprite 5 de `environment-v2.png`, em x 13, z 21):
+    - `openIchiraku` abre uma escolha (`choiceLevel = −2`) com as técnicas aprendidas, só se houver mais de uma, e as pílulas.
+    - `forgetAtIchiraku` cobra `10 + 5 × nível` em Ryu. Na pílula, apaga todos os níveis de `knownPills`; na técnica, apaga `skillLevels`, `growth` e `cooldowns`, liberando o espaço. Depois chama `refreshStats()`.
+    - A barraca continua aberta para esquecer mais. Sem Ryu suficiente, mostra um aviso e não muda nada. X fecha.
+    - O evento nunca é desativado.
   - **Bênção de Tsunade**: uma vez por zona, sorteia +12% de dano, +24 HP ou +15% de XP.
   - **Sharingan de Kakashi** (sprite do Kakashi em x −21, z −1): uma vez por zona.
     - `openKakashi` abre uma escolha (`choiceLevel = −1`) com os itens da bolsa que ainda estão abaixo do limite, do mais raro ao mais comum.
@@ -206,7 +211,13 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 ### UI durante a run
 
 - **Topo**: missão, cronômetro regressivo, Ryu, kunai/shuriken, clima e zona.
-- **Faixas e telas**: faixa do guardião com HP, progresso da defesa do altar, interação próxima ("Aperte E") e lista de aliados com sinergia.
+- **Faixas e telas**: faixa do guardião com HP, progresso da defesa do altar, interação próxima ("Aperte E").
+- **Cartões de ajudantes** (`src/ui/AllyCards.tsx` + `src/allies.css`, à esquerda em `top:150px`), um por aliado selado:
+  - retrato redondo com moldura na cor da 1ª técnica, nome e selo da aldeia (FOLHA/AREIA/SOM/CHUVA) ou "SINERGIA";
+  - buff real: +0,3 HP/s × `allyBuff`, mais "+12 armadura / +15% dano" da Areia;
+  - nome da técnica com a barra de recarga compartilhada dos aliados (`allyCharge` no snapshot);
+  - elemento, escola, % de dano (65 × `allyDamage`) e intervalo.
+  - O buff único por personagem continua pendente, por isso o cartão mostra o buff genérico que existe.
 - **Resumo pós-run** (`RunSummary`), na vitória ou derrota:
   - resultado, forma final e chefe ativo;
   - 12 indicadores: tempo, nível, zona, abates, dano total, DPS médio, dano dos aliados, Ryu, kunai, shuriken, ameaça e suportes;

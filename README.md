@@ -42,6 +42,7 @@ Atalhos locais:
   - resumo pós-run (`RunSummary`);
   - painel de debug (`DebugPanel`);
   - ícones de pílula (`PillIcon`);
+  - cartões de ajudantes (`AllyCards`);
   - plano de build, filtros e ícones de técnica.
 - `src/audio/sfx.ts`: efeitos sonoros sintetizados no navegador.
 - `src/style.css`, `src/run-ui.css`, `src/sealing.css`, `src/summary.css`, `src/debug.css`, `src/hud-dock.css`: estilos do hub, da HUD/ficha, do selamento, do resumo pós-run, do debug e do bloco inferior (pílulas acima das habilidades).

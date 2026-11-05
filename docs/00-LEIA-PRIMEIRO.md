@@ -70,7 +70,16 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Altar para proteger: ficar 20 s no círculo.
   - Bênção de Tsunade: buff aleatório.
   - Mercador de armas.
-  - Caça-níquel do Ichiraku: 25 Ryu por giro.
+  - Caça-níquel: 25 Ryu por giro.
+  - **Barraca Ichiraku**: o sprite da barraca de lámen.
+    - Esquecer uma pílula (todos os níveis) ou uma técnica custa 10 + 5 × nível em Ryu, quantas vezes quiser. A barraca nunca se esgota.
+    - A última técnica não pode ser esquecida.
+    - Os atributos são recalculados a partir das fontes, sem buff residual.
+- **Cartões de ajudantes** (lado esquerdo, abaixo do herói), no padrão da referência do usuário:
+  - retrato com moldura na cor da técnica, nome e selo da aldeia (ou "SINERGIA");
+  - buff real (+0,3 HP/s × força de suporte, mais o bônus da Areia quando ativo);
+  - técnica de ataque com barra de recarga;
+  - elemento, escola, % de dano e intervalo.
   - Emboscadas periódicas.
   - **Sharingan de Kakashi (NPC)**:
     - Uma vez por zona, copia 1 item à escolha que o jogador já carrega (+1 cópia, até o limite do item).
