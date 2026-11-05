@@ -22,6 +22,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/game/tuning.ts` | 13 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 4 grupos: Inimigos, Personagem, Ganhos, Drops. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
 | `src/ui/RunSheet.tsx` | Ficha da run (P), ícones de item/pílula e retrato do herói; exporta os grupos de atributos. |
 | `src/ui/RunSummary.tsx` + `src/summary.css` | Tela de resumo pós-run (vitória/derrota), derivada do `WorldSnapshot`, com a faixa de Lamens ganhos. |
+| `src/game/allies.ts` | Buff passivo único de cada um dos 22 shinobis como ajudante (`ALLY_BUFFS`), soma escalada pela força de suporte (`alliesBonuses`) e texto do cartão (`allyBuffText`). |
 | `src/game/rewards.ts` | `runLamens(result, mission)`: Lamens por desempenho (`LAMEN_RULES`). Em `main.tsx`, um `useEffect` credita o total na carteira uma única vez por `runId` (via `useRef`); `spent` não muda, então o Reset não remove Lamens ganhos. |
 | `src/hud-dock.css` | Bloco inferior esquerdo: pílulas acima das habilidades, mais a posição da ajuda de teclas. |
 | `src/ui/DebugPanel.tsx` + `src/debug.css` | Painel de debug (F9) e tipos `DebugApi`/`DebugLive`. |
@@ -120,7 +121,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 - **Aliados**:
   - Seguem o jogador em formação.
   - A cada 1,5 s ÷ cadência de aliados, cada um lança a 1ª técnica dele com 65% × dano de aliados.
-  - Cada aliado dá +0,3 HP/s × força de suporte.
+  - Cada aliado dá um buff passivo único (`ALLY_BUFFS` em `src/game/allies.ts`) × força de suporte (`allyBuff`). Em `refreshStats`, `alliesBonuses(allies, stats.allyBuff)` é somado aos buffs da run, junto com a sinergia da Areia. A regeneração genérica de +0,3 HP/s por aliado foi removida.
 - **Descoberta**:
   - Eventos e kunais/shurikens entram no mapa quando ficam dentro do frustum da câmera a menos de 40 m, e continuam registrados depois.
   - Células exploradas no mapa: grade de 5 m ao redor do caminho percorrido.
@@ -214,10 +215,9 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 - **Faixas e telas**: faixa do guardião com HP, progresso da defesa do altar, interação próxima ("Aperte E").
 - **Cartões de ajudantes** (`src/ui/AllyCards.tsx` + `src/allies.css`, à esquerda em `top:150px`), um por aliado selado:
   - retrato redondo com moldura na cor da 1ª técnica, nome e selo da aldeia (FOLHA/AREIA/SOM/CHUVA) ou "SINERGIA";
-  - buff real: +0,3 HP/s × `allyBuff`, mais "+12 armadura / +15% dano" da Areia;
+  - buff único com o valor efetivo (`allyBuffText(id, allyBuff)`; o nome do buff aparece no tooltip), mais "+12 armadura / +15% dano" da Areia;
   - nome da técnica com a barra de recarga compartilhada dos aliados (`allyCharge` no snapshot);
   - elemento, escola, % de dano (65 × `allyDamage`) e intervalo.
-  - O buff único por personagem continua pendente, por isso o cartão mostra o buff genérico que existe.
 - **Resumo pós-run** (`RunSummary`), na vitória ou derrota:
   - resultado, forma final e chefe ativo;
   - 12 indicadores: tempo, nível, zona, abates, dano total, DPS médio, dano dos aliados, Ryu, kunai, shuriken, ameaça e suportes;
@@ -241,7 +241,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 - **Moeda**: a fórmula de Lamens é provisória. Abates de guardião não entram (o snapshot não informa). O debug permite inflar a recompensa.
 - **Selamento**: não tem 3 tentativas nem chance de falha; também não existe o selamento permanente com 1 tentativa.
-- **Aliados**: não têm buff passivo único por personagem nem dano por habilidade própria além da 1ª técnica.
+- **Aliados**: atacam só com a 1ª técnica do kit, e os valores dos buffs únicos são provisórios.
 - **Sinergias**: só a da Areia existe.
 - **Mapa**: arena única, sem colisão, pulo, dash, biomas ou mapa procedural.
 - **Descoberta**: sem oclusão.

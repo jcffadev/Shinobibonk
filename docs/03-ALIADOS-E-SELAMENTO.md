@@ -28,7 +28,21 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 - **IMPLEMENTADO: aliados em combate**
   - Aparecem como sprite, seguem o jogador em formação e atacam sozinhos com a 1ª técnica deles.
   - Dano: 65% do dano do jogador × dano de aliados. Cadência: 1,5 s ÷ cadência de aliados.
-  - Cada aliado dá +0,3 HP/s × força de suporte.
+  - Cada aliado dá um **buff passivo único** (`src/game/allies.ts`), multiplicado pela força de suporte (Estandarte da Aliança +20%, Selo de Cooperação +5%). Os buffs entram em `calculateStats` como buffs da run e são recalculados das fontes a cada quadro. Projéteis não ficam fracionados. Valores provisórios:
+
+| Ajudante | Buff | Ajudante | Buff |
+|---|---|---|---|
+| Naruto | +12% dano total | Jiraiya | +15% XP |
+| Gaara | +10 armadura | Orochimaru | +25% duração de status |
+| Madara | +6% chance crítica | Rock Lee | +15% dano de taijutsu |
+| Hashirama | +1,2 HP/s de cura | Neji | +30% dano crítico |
+| Sasuke | +15% dano de ninjutsu | Hinata | +6% evasão |
+| Sakura | +1 HP/s de cura | Shikamaru | +15% recarga da Ultimate |
+| Kakashi | +12% cadência | Temari | +12% área |
+| Itachi | +12% chance de status | Tenten | +1 projétil |
+| Minato | +12% movimento | Pain | +40 HP máximo |
+| Tsunade | +1,5 HP/s de cura | Tobirama | +1,5 m de coleta |
+| Kankuro | +20% veneno | Might Guy | +10% taijutsu, +6% movimento |
   - Itens que afetam aliados: Insígnia do Comandante, Tambor de Guerra, Estandarte da Aliança, Selo de Cooperação e Pergaminho de Recrutamento.
 - **IMPLEMENTADO: vagas e sinergia**
   - Vagas: 3 + 1 pelo Pergaminho de Recrutamento + 1 pelo nó permanente "Suporte adicional", máximo 5.

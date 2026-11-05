@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 2026-11-05 — buff único de cada ajudante
+- **Buffs:** novo `src/game/allies.ts` com um buff passivo para cada um dos 22 shinobis (tabela em `docs/03`).
+  - Médicos curam (Tsunade +1,5 HP/s, Sakura +1, Hashirama +1,2).
+  - Os demais dão o atributo do estilo deles (Naruto +12% dano, Gaara +10 armadura, Neji +30% dano crítico, Tenten +1 projétil...).
+- **Na simulação:** os buffs entram em `calculateStats` via `refreshStats` e escalam com a força de suporte. A regeneração genérica de +0,3 HP/s por aliado saiu.
+- **Itens:** Estandarte da Aliança e Selo de Cooperação agora reforçam os buffs dos ajudantes; o texto foi atualizado.
+- **Cartões:** cada cartão de ajudante mostra o buff real com o valor efetivo.
+- **Verificado:**
+  - `tsc -b`, `vite build`, `verify-rules.mjs` e `verify-runtime.mjs` (23 verificações) passaram, e os testes avulsos anteriores também.
+  - Teste novo:
+    - os 22 têm buff;
+    - os buffs somam e escalam;
+    - recrutar Tsunade, Gaara e Tenten deu +1,5 HP/s, +10 armadura e +1 projétil;
+    - com o Estandarte, a cura vira +1,8 HP/s e os cartões mostram esses valores.
+- **Não testado:** balanceamento em runs completas.
+
 ## 2026-11-05 — cartões de ajudantes e Barraca Ichiraku
 - **Cartões de ajudantes:**
   - Novos `src/ui/AllyCards.tsx` e `src/allies.css`; a linha de texto "Suportes …" foi substituída por cartões no padrão da referência do usuário.

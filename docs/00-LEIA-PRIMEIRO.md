@@ -77,7 +77,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
     - Os atributos são recalculados a partir das fontes, sem buff residual.
 - **Cartões de ajudantes** (lado esquerdo, abaixo do herói), no padrão da referência do usuário:
   - retrato com moldura na cor da técnica, nome e selo da aldeia (ou "SINERGIA");
-  - buff real (+0,3 HP/s × força de suporte, mais o bônus da Areia quando ativo);
+  - buff único do ajudante com o valor efetivo (por exemplo, "+1,5 HP/s de cura"), mais o bônus da Areia quando ativo;
   - técnica de ataque com barra de recarga;
   - elemento, escola, % de dano e intervalo.
   - Emboscadas periódicas.
@@ -93,7 +93,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - G recusa e deixa uma kunai grátis.
 - **Aliados selados**:
   - Seguem o jogador em formação e atacam sozinhos com a primeira técnica deles.
-  - Cada aliado dá regeneração de suporte.
+  - Cada aliado dá um **buff passivo único** ao grupo (tabela em [03](03-ALIADOS-E-SELAMENTO.md)). Os médicos curam; os outros dão o atributo que combina com o estilo deles.
   - Vagas: 3 base, +1 por item, +1 por passiva permanente; máximo 5.
   - A sinergia da Areia (Gaara + Temari + Kankuro) dá +12 de armadura e +15% de dano.
 - **Descoberta**: eventos e kunais só entram no minimapa e no mapa depois de aparecerem no campo de visão da câmera (frustum, até 40 m).
@@ -123,7 +123,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Limite de inimigos**: está fixado em **no máximo 180 vivos**. A meta de 1.500 não foi implementada nem medida.
 - **Descoberta**: não considera oclusão por terreno ou árvores.
 - **Selamento**: não tem tentativas nem chance de falha (a regra das 3 tentativas não está implementada). Também não existe selamento permanente para desbloquear personagens.
-- **Aliados**: só dão regeneração genérica; o buff passivo único por shinobi está pendente. Sinergias além da Areia (outras vilas e equipes canônicas) não existem.
+- **Aliados**: os valores dos buffs únicos são provisórios. Sinergias além da Areia (outras vilas e equipes canônicas) não existem.
 - **Moeda**: a fórmula de Lamens por desempenho é provisória e não foi balanceada. Com o modo debug dá para inflar a recompensa (avançar tempo, mudar nível), e parâmetros salvos (por exemplo, mais EXP) também afetam os Lamens das próximas runs.
 - **Conta**: login, cadastro, save da run, ranking, backend e multiplayer não existem. O progresso fica em `localStorage`.
 - **Atributos e itens**: a Sorte só afeta a raridade das ofertas de item e de técnica. Remover pílula/item (Shisui/Ichiraku) não existe.

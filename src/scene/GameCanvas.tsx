@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { activeTuning, dropChance, tuneThreat } from '../game/tuning';
 import { createBossCombat, type BossState } from './bossCombat';
+import { alliesBonuses } from '../game/allies';
 import { DebugPanel, type DebugApi } from '../ui/DebugPanel';
 import { playSfx } from '../audio/sfx';
 import { choiceCount, choiceUses, weaponPrice } from '../game/preparation';
@@ -79,7 +80,11 @@ export function GameCanvas({ heroId, mission, itemPool, preparation, enabled, pa
     let bonusHp=0,defeated=false,invulnerability=0,allyDamage=0,pendingItemRewards=0;
     let stats=calculateStats(heroId,1,{},{},0,permanent),allyTimer=0;
     const allyActors:THREE.Sprite[]=[];
-    const refreshStats=(healGrowth=false)=>{const oldMax=stats.maxHp;stats=calculateStats(heroId,level,knownItems,knownPills,bonusHp,permanent,{...runBuffs,defense:(runBuffs.defense||0)+(sandSynergy(allies)?12:0),damage:(runBuffs.damage||0)+(sandSynergy(allies)?.15:0)});luck=stats.luck;hp=Math.min(stats.maxHp,hp+(healGrowth?Math.max(0,stats.maxHp-oldMax):0));};
+    const refreshStats=(healGrowth=false)=>{const oldMax=stats.maxHp;
+      // Buffs da run = escolhas de "Powerlevel" + buff único de cada ajudante (× força de suporte) + sinergia da Areia. Recalculado das fontes a cada quadro.
+      const buffs:Bonuses={...runBuffs};for(const [key,value] of Object.entries(alliesBonuses(allies,stats.allyBuff)))buffs[key as keyof Bonuses]=(buffs[key as keyof Bonuses]||0)+(value as number);
+      if(sandSynergy(allies)){buffs.defense=(buffs.defense||0)+12;buffs.damage=(buffs.damage||0)+.15;}
+      stats=calculateStats(heroId,level,knownItems,knownPills,bonusHp,permanent,buffs);luck=stats.luck;hp=Math.min(stats.maxHp,hp+(healGrowth?Math.max(0,stats.maxHp-oldMax):0));};
     const grantItem=(name:string)=>{const item=ITEM_BY_NAME[name];if(!item||(knownItems[name]||0)>=item.max)return;knownItems[name]=(knownItems[name]||0)+1;refreshStats(true);};
     const recruitAlly=(id:string)=>{if(allyActors.length>=stats.supportSlots||allies.includes(id))return false;const sprite=makeHero(id);sprite.position.copy(player.position).add(new THREE.Vector3(2,0,1));scene.add(sprite);allyActors.push(sprite);allies.push(id);addRing(sprite.position,'#61ffa8',1);refreshStats(true);return true;};
     const revealAround=(x:number,z:number)=>{const cx=Math.round(x/5),cz=Math.round(z/5);for(let ox=-1;ox<=1;ox++)for(let oz=-1;oz<=1;oz++){if(ox*ox+oz*oz>2)continue;const gx=cx+ox,gz=cz+oz,key=`${gx},${gz}`;if(!exploredCells.has(key))exploredCells.set(key,{x:gx*5,z:gz*5});}};revealAround(0,0);
@@ -205,7 +210,7 @@ export function GameCanvas({ heroId, mission, itemPool, preparation, enabled, pa
       ambushTimer-=dt;if(ambushTimer<=0){for(let n=0;n<Math.min(8+zone*2,threat.cap-enemyList.length);n++)spawnEnemy();ambushTimer=18+Math.random()*12;eventToast='Emboscada! Ninjas cercando a área.';}
       if(defenseActive&&!defenseDone){const altar=events.find(e=>e.id==='altar')!;addRing(new THREE.Vector3(altar.x,0,altar.z),'#ffe98c',4);if(Math.hypot(player.position.x-altar.x,player.position.z-altar.z)<4)defenseTime+=dt;if(defenseTime>=20){defenseActive=false;defenseDone=true;spawnPickup('sealDrop',altar.x,altar.z);eventToast='Altar protegido: recompensa disponível!';}}
       spawnTimer-=dt;if(spawnTimer<=0&&enemyList.length<threat.cap){spawnEnemy();spawnTimer=threat.spawnInterval*(.8+Math.random()*.4);}
-      hp=Math.min(stats.maxHp,hp+dt*(stats.regen+allyActors.length*.3*stats.allyBuff));
+      hp=Math.min(stats.maxHp,hp+dt*stats.regen);
       for(const enemy of [...enemyList]){
         if(enemy.poison){const duration=Math.min(dt,enemy.poison.remaining);enemy.poison.remaining-=duration;takeDamage(enemy,enemy.poison.dps*duration,'#b67bff');if(!enemyList.includes(enemy))continue;if(enemy.poison.remaining<=0)enemy.poison=undefined;}
         enemy.sprite.material.color.lerp(new THREE.Color(enemy.elite?'#ffb969':'#ffffff'),dt*6);if(enemy.burn){enemy.burn-=dt;takeDamage(enemy,stats.damage*.15*dt,'#ff9b46');if(!enemyList.includes(enemy))continue;}enemy.controlTime=Math.max(0,(enemy.controlTime||0)-dt);enemy.slow=Math.max(0,(enemy.slow||0)-dt);const stunned=enemy.controlTime>0&&enemy.control!=='Lentidão';const casting=enemy.boss?bossCombat.update(enemy,dt,!stunned&&enemy.windup===undefined&&!defeated):false;if(defeated)break;if(stunned||casting)continue;

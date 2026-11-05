@@ -37,6 +37,7 @@ Atalhos locais:
   - `pills.ts`: 18 pílulas.
   - `tuning.ts`: parâmetros de balanceamento do modo debug (salvos e aplicados em todas as runs).
   - `rewards.ts`: Lamens ganhos pelo desempenho da run.
+  - `allies.ts`: buff único de cada shinobi como ajudante.
 - `src/ui/`:
   - ficha da run (`RunSheet`);
   - resumo pós-run (`RunSummary`);
