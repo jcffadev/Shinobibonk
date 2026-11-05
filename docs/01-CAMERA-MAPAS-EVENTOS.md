@@ -17,7 +17,7 @@ Essas condições são **propostas**; números de buffs, penalidades, frequênci
 - Spawns contínuos por orçamento de dificuldade, não por ondas; 1 kill = +1 abate.
 - Limite-alvo de 1.500 inimigos **vivos** no mundo, sem contar cadáveres, efeitos ou objetos. Oclusão, LOD, spatial hash, pooling e simulação de IA por frequência são necessidades técnicas.
 - Inimigos normais, elites com contornos por tier, mega-elites e chefes. Barras de HP somente para mega-elites e chefes.
-- **Estado do código**: spawn contínuo com teto de **180 vivos** (`difficultyAt` em `src/game/progression.ts`). Não há instancing, pooling nem spatial hash. A meta de 1.500 está **PENDENTE** e não foi medida. Elites comuns têm tom laranja. Mega elites não têm barra de HP visível; o guardião mostra o HP numa faixa do HUD.
+- **Estado do código**: spawn contínuo com teto de **180 vivos** (`difficultyAt` em `src/game/progression.ts`). Não há instancing, pooling nem spatial hash. A meta de 1.500 está **PENDENTE** e não foi medida. Elites comuns têm tom laranja. **IMPLEMENTADO**: mega elites e guardiões têm barra de vida 3D com nome acima do personagem (roxa no mega elite, laranja no guardião) e **usam as técnicas do próprio shinobi** contra o jogador, sempre com aviso vermelho no chão; quem sai da área marcada antes do golpe não leva dano (ver [12](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md)). O guardião também continua com a faixa de HP no HUD.
 - Bosses/bestas de caudas e shinobis de Edo Tensei sorteados por mapa, regras de elegibilidade e dificuldade.
 
 ## Eventos

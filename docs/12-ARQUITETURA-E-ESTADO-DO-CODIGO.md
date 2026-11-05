@@ -9,6 +9,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `index.html` | Entrada HTML do Vite, com o root React. |
 | `src/main.tsx` | Componente `App`: páginas do hub, estado local (herói, carteira, árvore, desbloqueios, arquivamentos, plano), HUD da run, mapas, cartas de recompensa, selamento e telas de vitória/derrota. |
 | `src/scene/GameCanvas.tsx` | Cena Three.js e simulação da run inteira; envia `WorldSnapshot` para o React. |
+| `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Objetos visuais das técnicas e descarte de recursos. |
 | `src/game/heroes.ts` | 22 shinobis: aldeia, atributos base, passiva, bônus, 4 técnicas (escola, elemento, forma, status), Ultimate. `skillPool` adiciona a 1ª técnica de colegas da mesma aldeia (nível 8+). `sandSynergy`. Formas do Naruto. |
 | `src/game/catalog.ts` | 36 itens (raridade, custo, limite, bônus), `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
@@ -178,7 +179,16 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - O primeiro surge entre 30 e 55 s; os seguintes a cada 45–70 s, até 9 por run.
   - São um shinobi aleatório que ainda não é aliado, com HP alto (sprite maior).
   - O guardião da zona aparece numa faixa "Guardião · nome · HP" no HUD.
-  - Não há barra de HP 3D sobre mega elites ou guardiões.
+- **Chefes (`src/scene/bossCombat.ts`)**: mega elites e guardiões.
+  - **Barra de vida 3D:** sprite com canvas acima do personagem, roxa para mega elite e laranja para guardião, com o nome. Durante uma técnica mostra "⚠ nome do golpe". Fica visível mesmo com H e sobre o cenário.
+  - **Técnicas do personagem:**
+    - A cada 4,6 s / 3,8 s / 3,0 s (zonas 1/2/3; guardião ×0,8; ±15%) o chefe escolhe uma técnica do próprio kit. Mega elite usa as primeiras 1 + zona técnicas; guardião usa as 4.
+    - Antes do golpe, marca a área em vermelho por 1,1 s, que vai ficando mais forte. O chefe para de andar enquanto conjura.
+    - Formas: Área cai na posição do jogador (raio 2,4); Corpo a corpo é um círculo em volta do chefe; Cone de 6 m; Linha/Projétil de 10 m; Em V com duas linhas; Onda/Órbita é um anel em volta do chefe.
+  - **Dano:** 18 × poder da técnica × ameaça, menos armadura, com evasão, invulnerabilidade e god mode respeitados. Técnicas com controle (Sombra, Areia, Madeira, Raio, Genjutsu, corpo a corpo) deixam o jogador 45% mais lento por 1,2 s.
+  - **Ultimate do guardião:** uma vez, abaixo de 50% de HP, a Ultimate do personagem vira uma área de raio 5,6 em volta dele, com aviso de 1,7 s e poder 2,6.
+  - **HP no debug:** a barra acompanha o multiplicador de HP do debug (`rescale`). Barra e avisos são descartados quando o chefe morre ou é removido.
+  - Todos os números são provisórios.
 - **Selamento**:
   - Ao derrotar um mega elite, a run pausa na decisão. E inicia o ritual de 2,7 s (instantâneo com a Shuriken Selo da Tenten); G recusa e deixa uma kunai grátis.
   - Equipe cheia ou personagem repetido impede selar.
@@ -219,7 +229,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 - **Descoberta**: sem oclusão.
 - **Inimigos**: teto de 180 vivos; meta de 1.500 não medida.
 - **Remoção de pílula/item**: Shisui/Ichiraku de esquecimento não existe, e a fusão não existe. Os atributos já são recalculados das fontes a cada quadro, o que facilita a remoção futura.
-- **Mega elites**: sem barra de HP visível sobre o personagem (só o texto do guardião no HUD). Não há rotação de mega elite por zona.
+- **Mega elites**: não há rotação de mega elite por zona. O aviso das técnicas é desenhado plano no chão e pode ficar parcialmente escondido em relevo forte. A dificuldade dos chefes não foi balanceada; em níveis baixos, 3 a 4 golpes podem derrubar o personagem.
 - **Arte**: atlas e SVGs são provisórios, sem animação por quadro. As técnicas usam primitivas geométricas.
 - **Bundle**: o JavaScript tem 899 kB, sem code-splitting.
 - **Painel de debug**: fica à direita, abaixo do minimapa (botão e painel em `top:222px`), sem cobrir o cartão do herói, o minimapa nem a barra superior. Abaixo de 640 px de largura, vira uma gaveta inferior. Botão e painel somem quando o resumo pós-run está aberto. No Edge, F9 também é atalho do Leitor Imersivo; o painel chama `preventDefault`, mas isso não foi verificado numa sessão real.

@@ -25,6 +25,7 @@ Atalhos locais:
 - `src/main.tsx`: hub, elenco, ataques, plano de build, árvore permanente, loja, missões, HUD da run e modais.
 - `src/scene/GameCanvas.tsx`: cena Three.js e simulação da run (jogador, terreno, inimigos, técnicas, aliados, drops, eventos, zonas e câmera).
 - `src/scene/techniqueEffects.ts`: visuais das técnicas. Dano e hitbox ficam na simulação.
+- `src/scene/bossCombat.ts`: chefes (mega elites e guardiões), com barra de vida e técnicas do personagem com aviso no chão.
 - `src/game/`: dados e regras sem React.
   - `heroes.ts`: 22 shinobis e 88 técnicas.
   - `catalog.ts`: 36 itens e sorteio por raridade.

@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2026-11-05 — chefes com barra de vida e técnicas próprias
+- Novo `src/scene/bossCombat.ts`, integrado ao `GameCanvas.tsx`.
+- **Barra de vida:** mega elites e guardiões ganham barra 3D acima do personagem, com nome; durante um golpe ela mostra "⚠ golpe".
+- **Técnicas:**
+  - Os chefes usam as técnicas do próprio shinobi contra o jogador. Mega elite: 1 + zona técnicas; guardião: o kit todo.
+  - Cada golpe tem aviso vermelho de 1,1 s no chão, no formato da técnica (área, cone, linha, V, anel). Sair da área evita o dano.
+  - Golpes com controle deixam o jogador lento.
+  - O guardião usa a Ultimate dele uma vez, abaixo de 50% de HP.
+- **Valores provisórios:** `BOSS_RULES`.
+- **Verificado:**
+  - `tsc -b`, `vite build`, `verify-rules.mjs` e `verify-runtime.mjs` (23 verificações) passaram.
+  - Um teste avulso no navegador confirmou: barra criada; Gaara conjurando "Agulhas de Areia"; HP 101 → 63 ficando parado; 122 → 122 saindo do "Caixão de Areia"; remoção sem erro.
+- **Não testado:** balanceamento em runs completas, guardião usando a Ultimate em jogo real e o aviso em relevo forte.
+
 ## 2026-11-05 — login admin removido e debug com ajustes ao vivo salvos
 **Login removido**
 - Removidos `src/game/adminAuth.ts` (login e hash da senha) e `src/ui/AdminLogin.tsx`.

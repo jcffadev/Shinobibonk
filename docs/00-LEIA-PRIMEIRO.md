@@ -73,6 +73,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Caça-níquel do Ichiraku: 25 Ryu por giro.
   - Emboscadas periódicas.
 - **Kunais/shurikens no mapa**: abrir custa Ryu (20, depois +10 por abertura) e oferece uma escolha de item.
+- **Chefes (mega elites e guardiões)**: barra de vida com nome acima do personagem. Usam as técnicas do próprio shinobi contra o jogador, a cada 3–4,6 s conforme a zona, sempre com aviso vermelho no chão. Quem sai da área marcada não leva dano. Golpes com controle deixam o jogador lento. O guardião usa a Ultimate dele uma vez, abaixo de 50% de HP.
 - **Mega elites e selamento**:
   - Mega elites são shinobis aleatórios do elenco (até 9 por run) e surgem naturalmente.
   - Ao derrotar um, E inicia o selamento animado de 2,7 s (instantâneo com a Shuriken Selo da Tenten) e o personagem entra na equipe.
