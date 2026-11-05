@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 2026-11-05 — Kakashi interativo copia item da bolsa
+- **Novo evento "Sharingan de Kakashi":** NPC com sprite do Kakashi. Ao apertar E, o jogador escolhe 1 item que já carrega e ganha +1 cópia, até o limite do item. Pode ser usado uma vez por zona.
+- **Tela da escolha:** própria ("Copiar um item da bolsa"), com selo "CÓPIA", sem Atualizar/Banir. "Cancelar (X)" fecha sem gastar o Kakashi nem os usos de pular. Itens já no limite não aparecem; com a bolsa vazia, só aparece um aviso.
+- **Escolha de cartas em geral:**
+  - O clique usa o evento `shinobi-choose` (índice) e funciona com qualquer número de cartas; o teclado aceita 1–9.
+  - Com mais de 4 cartas, a grade fica em 4 colunas com rolagem (`hud-dock.css`).
+- **Verificado:**
+  - `tsc -b`, `vite build`, `verify-rules.mjs` e `verify-runtime.mjs` (23 verificações) passaram.
+  - Teste avulso no navegador:
+    - sem itens, o Kakashi não abre;
+    - com 6 itens (1 no limite), lista 5;
+    - X cancela sem gastar;
+    - clicar na 5ª carta copiou o Talismã de Vida (1 → 2) e gastou o Kakashi;
+    - os usos de pular, atualizar e banir ficaram intactos.
+  - O teste dos chefes também passou de novo.
+
 ## 2026-11-05 — chefes com barra de vida e técnicas próprias
 - Novo `src/scene/bossCombat.ts`, integrado ao `GameCanvas.tsx`.
 - **Barra de vida:** mega elites e guardiões ganham barra 3D acima do personagem, com nome; durante um golpe ela mostra "⚠ golpe".

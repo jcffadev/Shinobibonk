@@ -34,6 +34,7 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
 - **Guardião de zona (IMPLEMENTADO)**: surge aos 160 s de cada zona de 200 s, sorteado da lista da zona em `src/game/missions.ts`.
 - **Proteção de altar (CONFIRMADO)**: defender o altar durante o evento. **IMPLEMENTADO PARCIAL**: ficar 20 s dentro do círculo de 4 m dá uma kunai grátis. Ondas dedicadas e falha ao sair estão **PENDENTES**.
 - **Mercador e caça-níquel (IMPLEMENTADO)**: o mercador troca kunai/shuriken guardadas por 5 Ryu cada. O caça-níquel do Ichiraku custa 25 Ryu e sorteia kunai, shuriken, pílula ou recompensa de item.
+- **Kakashi interativo (CONFIRMADO; IMPLEMENTADO)**: NPC "Sharingan de Kakashi" no mapa. Ao interagir com E, o jogador escolhe um item que já carrega e ganha mais uma cópia dele, respeitando o limite do item. Pode ser usado uma vez por zona, e cancelar não gasta o uso.
 - **Emboscadas (IMPLEMENTADO)**: a cada 18–30 s surgem 8 + 2×zona inimigos ao redor do jogador.
 - **Tempo e clima (CONFIRMADO; IMPLEMENTADO)**: um clima sorteado a cada zona. Névoa reduz a visibilidade; tempestade de areia reduz o movimento em 27%. Outros climas por bioma estão **PENDENTES**.
 - **Descoberta (CONFIRMADO)**: minimapa e mapa M mostram ícones só depois de o evento ser visto pela câmera. **IMPLEMENTADO**: teste de frustum da câmera até 40 m, com registro persistente. Oclusão por terreno ou árvores está **PENDENTE**. Tab abre o mapa rápido e P abre a ficha.

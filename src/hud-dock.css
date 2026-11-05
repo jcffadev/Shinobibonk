@@ -11,7 +11,11 @@
 .skill-dock>.vitamin-row>span{padding:2px 4px;white-space:nowrap}
 /* Ajuda de teclas fica abaixo do dock, à direita do botão "← Preparação" (left:16px; bottom:17px). */
 .game-help{left:124px;bottom:14px;max-width:400px}
+/* Escolha com muitas cartas (cópia do Kakashi): grade de até 4 colunas com rolagem. */
+.level-choice-cards.many-cards{max-height:62vh;overflow-y:auto;gap:12px;padding:4px;scrollbar-width:thin}
+.level-choice-cards.many-cards .level-choice-card{min-height:0}
 @media(max-width:700px){
+  .level-choice-cards.many-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .skill-dock{left:8px;bottom:50px;gap:6px;max-width:calc(100% - 16px)}
   .skill-dock>.vitamin-row{max-height:44px;padding:4px 6px 6px}
   .skill-dock>.vitamin-row .inv-icon{width:26px;height:26px}

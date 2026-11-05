@@ -175,6 +175,13 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - **Mercador de armas**: troca cada kunai/shuriken guardada por 5 Ryu.
   - **Caça-níquel do Ichiraku**: 25 Ryu por giro; o resultado sai entre kunai, shuriken, pílula e recompensa de item.
   - **Bênção de Tsunade**: uma vez por zona, sorteia +12% de dano, +24 HP ou +15% de XP.
+  - **Sharingan de Kakashi** (sprite do Kakashi em x −21, z −1): uma vez por zona.
+    - `openKakashi` abre uma escolha (`choiceLevel = −1`) com os itens da bolsa que ainda estão abaixo do limite, do mais raro ao mais comum.
+    - Escolher chama `grantItem`, que dá +1 cópia, e desativa o evento.
+    - X (`rewardAction('skip')`) fecha sem gastar o evento nem os usos de pular. Atualizar e banir não se aplicam.
+    - Sem itens copiáveis, só mostra um aviso.
+    - Na UI: título "KAKASHI · SHARINGAN", selo "CÓPIA" e grade de até 4 colunas com rolagem para muitas cartas.
+    - Clicar numa carta dispara o evento `shinobi-choose` com o índice (funciona além da 4ª carta). O teclado aceita 1–9.
 - **Mega elites**:
   - O primeiro surge entre 30 e 55 s; os seguintes a cada 45–70 s, até 9 por run.
   - São um shinobi aleatório que ainda não é aliado, com HP alto (sprite maior).

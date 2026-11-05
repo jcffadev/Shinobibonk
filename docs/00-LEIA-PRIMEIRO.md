@@ -72,6 +72,10 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Mercador de armas.
   - Caça-níquel do Ichiraku: 25 Ryu por giro.
   - Emboscadas periódicas.
+  - **Sharingan de Kakashi (NPC)**:
+    - Uma vez por zona, copia 1 item à escolha que o jogador já carrega (+1 cópia, até o limite do item).
+    - A tela própria lista só itens abaixo do limite.
+    - Não tem Atualizar/Banir; X cancela sem gastar o Kakashi.
 - **Kunais/shurikens no mapa**: abrir custa Ryu (20, depois +10 por abertura) e oferece uma escolha de item.
 - **Chefes (mega elites e guardiões)**: barra de vida com nome acima do personagem. Usam as técnicas do próprio shinobi contra o jogador, a cada 3–4,6 s conforme a zona, sempre com aviso vermelho no chão. Quem sai da área marcada não leva dano. Golpes com controle deixam o jogador lento. O guardião usa a Ultimate dele uma vez, abaixo de 50% de HP.
 - **Mega elites e selamento**:

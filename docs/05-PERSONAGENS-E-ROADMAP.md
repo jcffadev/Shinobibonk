@@ -13,7 +13,7 @@ Naruto, Gaara, Madara, Hashirama, Sasuke, Sakura, Kakashi, Itachi, Minato, Tsuna
 - **Arte**: retratos e sprites são provisórios (atlas PNG e SVGs gerados), sem animação por quadro.
 
 ## NPCs e apoios
-Shisui: vender/esquecer pílulas e recalcular atributos; Orochimaru: NPC de pacto/risco, não item; Guy: treinamento; sapo sábio: bênção; Ichiraku: fusão de habilidades (planejado). **No código atual** só existem como evento: Maldição de Orochimaru, Bênção de Tsunade, Caça-níquel do Ichiraku (roleta, sem fusão) e Mercador de armas. Shisui, Guy, sapo sábio e Kabuto **não estão implementados**. Apoios possíveis: Sakura, Sasuke, Shikamaru, Neji, Temari, Kankuro, Hinata, Rock Lee e outros, cada qual com buff único e golpe auxiliar. Kabuto/Edo Tensei: tema de encontros de selamento.
+Shisui: vender/esquecer pílulas e recalcular atributos; Orochimaru: NPC de pacto/risco, não item; Guy: treinamento; sapo sábio: bênção; Ichiraku: fusão de habilidades (planejado). **No código atual** existem como evento: Maldição de Orochimaru, Bênção de Tsunade, **Sharingan de Kakashi** (copia 1 item da bolsa), Caça-níquel do Ichiraku (roleta, sem fusão) e Mercador de armas. Shisui, Guy, sapo sábio e Kabuto **não estão implementados**. Apoios possíveis: Sakura, Sasuke, Shikamaru, Neji, Temari, Kankuro, Hinata, Rock Lee e outros, cada qual com buff único e golpe auxiliar. Kabuto/Edo Tensei: tema de encontros de selamento.
 
 ## Linha do tempo — 05/11/2026
 A conversa disponível não fornece horários confiáveis para cada decisão individual; registrar **data confirmada** sem inventar minutos.
