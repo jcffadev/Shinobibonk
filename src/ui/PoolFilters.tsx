@@ -1,0 +1,7 @@
+export type Filters={search:string;rarity:string;school:string;element:string;shape:string;attribute:string;village:string};
+export const EMPTY_FILTERS:Filters={search:'',rarity:'',school:'',element:'',shape:'',attribute:'',village:''};
+export function PoolFilters({value,onChange,facets}:{value:Filters;onChange:(value:Filters)=>void;facets:Partial<Record<keyof Filters,string[]>>}){
+ const labels:Record<keyof Filters,string>={search:'Buscar',rarity:'Raridade',school:'Tipo de dano / status',element:'Elemento',shape:'Forma do ataque',attribute:'Atributo',village:'Aldeia'};
+ return <div className="pool-filters"><input aria-label="Buscar nome ou efeito" placeholder="Buscar nome ou efeito…" value={value.search} onChange={e=>onChange({...value,search:e.target.value})}/>{Object.entries(facets).map(([key,options])=><select aria-label={labels[key as keyof Filters]} key={key} value={value[key as keyof Filters]} onChange={e=>onChange({...value,[key]:e.target.value})}><option value="">{labels[key as keyof Filters]} · todos</option>{[...new Set(options)].sort().map(option=><option key={option}>{option}</option>)}</select>)}<button onClick={()=>onChange({...EMPTY_FILTERS})}>Limpar filtros</button></div>;
+}
+export function matchesSearch(text:string,search:string){const normalize=(s:string)=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();return normalize(text).includes(normalize(search));}

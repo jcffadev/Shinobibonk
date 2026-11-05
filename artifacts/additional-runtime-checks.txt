@@ -1,0 +1,16 @@
+
+await page.getByRole('button',{name:'Preparar outra missão'}).click();
+await page.getByRole('button',{name:'Itens',exact:true}).click();
+await page.getByLabel('Raridade').selectOption('Raro');await page.getByLabel('Atributo',{exact:true}).selectOption('Chance crítica');
+assert.equal(await page.locator('.shop-card').count(),1);
+await page.locator('.shop-card').getByRole('button',{name:'Desbloquear',exact:false}).click();
+assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('sb_admin_wallet_v1')).balance),999699);
+await page.getByRole('button',{name:'Reset ↺'}).click();assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('sb_admin_wallet_v1')).balance),999999);checks.push('Compra administrativa, filtros de crítico e reembolso do reset');
+await page.getByRole('button',{name:'Shinobis',exact:true}).click();await page.locator('.character-card').filter({hasText:'Hashirama'}).click();await start();
+const ratio=await page.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.setCrit(-10);d.target(1.2);let previous=d.inspect().totalDamage;d.cast('Punho Senju');const first=d.inspect().totalDamage-previous;d.grantItem('Selo de Senjutsu');previous=d.inspect().totalDamage;d.cast('Punho Senju');return (d.inspect().totalDamage-previous)/first;});
+assert.ok(Math.abs(ratio-1.2)<1e-8);checks.push('Hashirama recebe exatamente +20% de dano após infusão Sábia');
+await page.getByRole('button',{name:'← Preparação',exact:true}).click();await page.getByRole('button',{name:'Shinobis',exact:true}).click();await page.locator('.character-card').filter({hasText:'Itachi'}).click();await start();
+const slept=await page.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.target(1);for(let n=0;n<8;n++)d.grantItem('Olhos do Rastreador');let applied=false;for(let n=0;n<20;n++){d.cast('Corvos Ilusórios');applied ||= d.inspect().enemies.some(e=>e.control==='Dormir'&&e.controlTime>0);}return applied;});
+assert.equal(slept,true);checks.push('Genjutsu aplica Dormir em um inimigo real');
+await page.keyboard.press('p');await wait();await page.screenshot({path:'artifacts/genjutsu-sheet.png'});
+

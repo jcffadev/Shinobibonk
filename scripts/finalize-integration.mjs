@@ -1,0 +1,20 @@
+import fs from 'node:fs';
+let s=fs.readFileSync('src/scene/GameCanvas.tsx','utf8');
+s=s.replace("const weather=Math.random()", "let weather=Math.random()");
+s=s.replace("guardianSpawned=false;bossStacks=0;eventToast='Zona '", "guardianSpawned=false;bossStacks=0;weather=Math.random()<.5?'Névoa espectral':'Tempestade de areia';scene.background=new THREE.Color(weather==='Névoa espectral'?'#6d6a91':'#a9825c');scene.fog=new THREE.Fog(scene.background,weather==='Névoa espectral'?12:26,weather==='Névoa espectral'?44:72);eventToast='Zona '");
+s=s.replace('defenseProgress:number; hp:', 'defenseProgress:number; banned:string[]; hp:');
+s=s.replace("defenseProgress:0,hp:", "defenseProgress:0,banned:[],hp:");
+s=s.replace('skillGrowth:{...growth},techniques,synergy:',"skillGrowth:{...growth},techniques:techniques.filter(t=>!banned.has(t.name)&&(!config.archivedSkills.includes(t.name)||skillLevels[t.name])),banned:[...banned],synergy:");
+s=s.replace("    let bonusHp=0,", "    const pendingSeals:{heroId:string;target:string;phase:'ready'}[]=[];\n    let bonusHp=0,");
+s=s.replace("if(enemy.megaElite&&!sealing){sealing={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready'};", "if(enemy.megaElite){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const};if(sealing)pendingSeals.push(pending);else sealing=pending;");
+s=s.replace("sealing=null;eventToast='Selamento recusado", "sealing=pendingSeals.shift()??null;eventToast='Selamento recusado");
+s=s.replace("sealing=null;eventToast='Shinobi selado", "sealing=pendingSeals.shift()??null;eventToast='Shinobi selado");
+s=s.replace("let bestPickup:MapPickup|undefined,bestDistance=3.2", "let bestPickup:MapPickup|undefined,bestDistance=2");
+s=s.replace("if(Math.random()<stats.status)", "if(Math.random()<stats.status)");
+fs.writeFileSync('src/scene/GameCanvas.tsx',s);
+s=fs.readFileSync('src/ui/RunSheet.tsx','utf8');
+s=s.replace('pool.length}', 'pool.filter(i=>!world.banned.includes(i.name)).length}').replace('pool.map(i=>','pool.filter(i=>!world.banned.includes(i.name)).map(i=>');
+fs.writeFileSync('src/ui/RunSheet.tsx',s);
+s=fs.readFileSync('src/game/catalog.ts','utf8').replace('duração do veneno e da lentidão.','duração de efeitos de status.').replace('+12 pontos percentuais de chance de aplicar lentidão de 25%.','+12 pontos percentuais de chance de status (Genjutsu). Técnicas sem status passam a aplicar lentidão.');
+fs.writeFileSync('src/game/catalog.ts',s);
+

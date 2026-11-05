@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-05T22:24:04.224Z",
+  "checks": [
+    "22 shinobis selecionáveis",
+    "Filtro Areia: Gaara / Temari / Kankuro",
+    "Relógio começa sem guardião antecipado",
+    "Textura PNG do personagem carregada",
+    "Movimento WASD",
+    "Rasengan bloqueado nos níveis iniciais",
+    "Atualizar, banir e pular debitam usos; banimento exclui futuras ofertas",
+    "Afixos sorteados aplicados à habilidade escolhida",
+    "Naruto evolui nos níveis 10 / 25 / 50 com troca de forma",
+    "Selamento mostra e recruta Temari após animação",
+    "Sinergia só ativa com os três suportes da Areia",
+    "H oculta projéteis/números sem impedir dano",
+    "Ultimate R e selo AUTO",
+    "Tecla Y alterna a Ultimate automática",
+    "Recusa G deixa kunai grátis com três escolhas",
+    "Kunais custam 20 e depois 30 Ryu",
+    "Ícones no pool de itens da ficha",
+    "Mapa M recebe marcação por clique",
+    "Contagem termina em 0:00 com vitória",
+    "Vitória credita Lamens uma única vez e mostra no resumo",
+    "Compra administrativa, filtros de crítico e reembolso do reset",
+    "Hashirama recebe exatamente +20% de dano após infusão Sábia",
+    "Genjutsu aplica Dormir em um inimigo real",
+    "Sem exceções JavaScript ou assets 404"
+  ],
+  "errors": [],
+  "missing": []
+}

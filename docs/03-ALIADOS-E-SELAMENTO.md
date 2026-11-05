@@ -1,0 +1,45 @@
+# Shinobis de apoio, selamento e sinergias
+
+## Capacidade CONFIRMADA
+3 aliados base; +1 vaga por **um item da run**; +1 por **uma passiva permanente** adquirida com Lamens; máximo 5. Jogador não conta.
+
+## Itens específicos de aliados (PROPOSTOS)
+- **Pergaminho de Recrutamento (épico)**: +1 vaga temporária, limite 1.
+- **Insígnia do Comandante (raro)**: +12% dano das habilidades ofensivas dos aliados, limite a balancear.
+- **Tambor de Guerra (épico)**: +15% cadência de ataque dos aliados, limite a balancear.
+- **Estandarte da Aliança (lendário)**: +20% intensidade dos buffs passivos fornecidos por aliados, 1 cópia.
+- **Selo de Cooperação (raro)**: +10% dano dos aliados e +5% intensidade de seus buffs, limite a balancear.
+
+## Selamentos
+1. **Apoio temporário**: mega-elite Edo Tensei, até 3 tentativas; se todas falham, foge, sem bônus de aliado. Ao derrotar o shinobi, mostrar o próprio personagem e a animação do selo antes de confirmar a entrada dele na equipe. Se o jogador recusar com G, o elite deixa uma kunai/shuriken; coletar o drop abre uma escolha de item cuja qualidade considera Sorte. O abate não pode duplicar a recompensa.
+2. **Desbloqueio permanente**: mega-elite com menos HP, 1 tentativa; sucesso libera personagem jogável na conta.
+
+Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa de abate somente uma vez**, sem duplicar por selamento. Shuriken Selo da Tenten: lendário +30% dano total e efeito especial de selamento instantâneo, gatilho exato pendente.
+
+## Estado do protótipo (05/11/2026)
+- **IMPLEMENTADO: mega elites**
+  - São um shinobi aleatório do elenco de 22 (exceto quem já é aliado) e surgem naturalmente, até 9 por run.
+  - Ao derrotar um, a run para na decisão e mostra o retrato do alvo.
+  - Se vários caem juntos, as decisões entram em fila.
+- **IMPLEMENTADO: selar ou recusar**
+  - E inicia o ritual de 2,7 s (selo, pergaminho, anéis). Com a Shuriken Selo da Tenten, o selamento é instantâneo. Ao concluir, o shinobi entra na equipe da run.
+  - G recusa e deixa uma kunai grátis. Coletá-la abre uma escolha de 3 itens (4 com "Quarta opção"), com raridade influenciada pela Sorte.
+  - Equipe cheia ou personagem repetido impede selar.
+- **IMPLEMENTADO: aliados em combate**
+  - Aparecem como sprite, seguem o jogador em formação e atacam sozinhos com a 1ª técnica deles.
+  - Dano: 65% do dano do jogador × dano de aliados. Cadência: 1,5 s ÷ cadência de aliados.
+  - Cada aliado dá +0,3 HP/s × força de suporte.
+  - Itens que afetam aliados: Insígnia do Comandante, Tambor de Guerra, Estandarte da Aliança, Selo de Cooperação e Pergaminho de Recrutamento.
+- **IMPLEMENTADO: vagas e sinergia**
+  - Vagas: 3 + 1 pelo Pergaminho de Recrutamento + 1 pelo nó permanente "Suporte adicional", máximo 5.
+  - Sinergia da Areia: Gaara, Temari e Kankuro como aliados dão +12 de armadura e +15% de dano.
+- **PENDENTE**:
+  - Até 3 tentativas com chance de falha e fuga; minigame.
+  - Selamento permanente (1 tentativa) para desbloquear personagem jogável.
+  - Buff passivo único por aliado.
+  - Sinergias de outras aldeias e equipes canônicas.
+  - Notificação de sinergia e conversão do selamento em item kunai.
+- Sprites e animação são provisórios. As capturas em `assets/referencia/prints` servem como norte visual.
+
+## Aliados e sinergias
+Cada aliado oferece buff exclusivo e habilidade ofensiva de dano moderado escalado com nível do jogador. Afinidade do protagonista; bônus ocultos para 3/4/5 aliados da mesma vila e equipes canônicas (ex.: Time 7); composições mistas recebem bônus reduzido; notificação na tela. Percentuais finais pendentes. Barras de HP para mega-elites e chefes, não para elites comuns. Futuras skins raras sem vantagem obrigatória.

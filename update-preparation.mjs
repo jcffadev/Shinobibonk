@@ -1,0 +1,58 @@
+import fs from 'node:fs';let s=fs.readFileSync('src/main.tsx','utf8');
+function r(a,b){if(!s.includes(a))throw Error(a.slice(0,120));s=s.replace(a,b);}
+function range(a,b,next){const start=s.indexOf(a),end=s.indexOf(b,start);if(start<0||end<0)throw Error(a);s=s.slice(0,start)+next+s.slice(end);}
+r("import { ItemIcon, HeroPortrait, RunSheet } from './ui/RunSheet';",`import { ItemIcon, HeroPortrait, RunSheet } from './ui/RunSheet';
+import { SkillIcon } from './ui/SkillIcon';
+import { BuildPlanner } from './ui/BuildPlanner';
+import { calculateStats } from './game/progression';
+import { PASSIVES, NEW_ADMIN, purchase, refund, type AdminWallet } from './game/preparation';`);
+range('const itemSprite:', 'function readJson', '');
+r('  const [prototypePool,setPrototypePool]=useState(true);','');
+r("  const [lamens, setLamens] = useState(() => Number(localStorage.getItem('sb_lamens') || 0));",`  const [wallet,setWallet]=useState<AdminWallet>(()=>{const saved=readJson<AdminWallet|null>('sb_admin_wallet_v1',null);if(saved&&Number.isFinite(saved.balance)&&Number.isFinite(saved.spent))return saved;localStorage.setItem('sb_admin_wallet_v1',JSON.stringify(NEW_ADMIN));return {...NEW_ADMIN};});
+  const lamens=wallet.balance;
+  const saveWallet=(next:AdminWallet)=>{setWallet(next);localStorage.setItem('sb_admin_wallet_v1',JSON.stringify(next));};
+  const spendRyu=(cost:number)=>{const next=purchase(wallet,cost);if(!next)return false;saveWallet(next);return true;};
+  const [archivedSkills,setArchivedSkills]=useState<string[]>(()=>readJson('sb_archived_skills',[]));
+  const [archivedPills,setArchivedPills]=useState<string[]>(()=>readJson('sb_archived_pills',[]));`);
+r('  const hero = heroes.find', `  const togglePlanned=(name:string)=>{const next=planned.includes(name)?planned.filter(n=>n!==name):[...planned,name];setPlanned(next);localStorage.setItem('sb_planned_attacks',JSON.stringify(next));};
+  const toggleSkill=(name:string)=>{const next=archivedSkills.includes(name)?archivedSkills.filter(n=>n!==name):[...archivedSkills,name];setArchivedSkills(next);localStorage.setItem('sb_archived_skills',JSON.stringify(next));};
+  const togglePill=(name:string)=>{const next=archivedPills.includes(name)?archivedPills.filter(n=>n!==name):[...archivedPills,name];setArchivedPills(next);localStorage.setItem('sb_archived_pills',JSON.stringify(next));};
+  const resetBuild=()=>{saveWallet(refund(wallet));setLevels({});setUnlocked([]);setArchived([]);setArchivedSkills([]);setArchivedPills([]);setPlanned([]);for(const key of ['sb_unlocked_items','sb_archived_items','sb_archived_skills','sb_archived_pills','sb_planned_attacks'])localStorage.setItem(key,'[]');localStorage.setItem('sb_permanent_levels','{}');};
+  const hero = heroes.find`);
+range('  const buyItem =','  const attackList', `  const buyItem=(item:typeof items[number])=>{if(item.rarity==='Comum'||unlocked.includes(item.id)||!spendRyu(item.cost))return;const next=[...unlocked,item.id];setUnlocked(next);localStorage.setItem('sb_unlocked_items',JSON.stringify(next));};
+`);
+r('availableItems(unlocked,archived,prototypePool),[unlocked,archived,prototypePool]', 'availableItems(unlocked,archived,false),[unlocked,archived]');
+r('itemPool={pool}', 'itemPool={pool} preparation={{permanent:levels,archivedSkills,archivedPills}}');
+r('>Itens</button></nav>', '>Itens</button><button className="admin-reset" title={`Devolve ${wallet.spent.toLocaleString(\'pt-BR\')} Ryu gastos nos testes e limpa a build`} onClick={resetBuild}>Reset ↺</button></nav>');
+r("{guest ? 'Visitante' : 'Conta'}", "Administrador");
+r("{guest ? 'Progresso local' : 'Escolha como entrar'}", "{`${lamens.toLocaleString('pt-BR')} Ryu · local`}");
+r('Determinação · cresce em poder conforme perde HP.', 'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).');
+r('Armadura de Areia · resistência e controle do campo.', 'Armadura de Areia · +8 de armadura base: 12 no total, reduzindo 10,7% do dano recebido.');
+r('Sharingan · crítico e adaptação em combate.', 'Sharingan · +7 pontos percentuais de crítico: 12% de chance total; crítico causa 175% do dano.');
+r('Células Senju · regeneração contínua.', 'Células Senju · regenera 0,8 HP/s, equivalente a 0,52% do HP base por segundo.');
+r('<span className="portrait" style={{ \'--hero-color\': entry.color } as React.CSSProperties}>{entry.name.slice(0, 1)}</span>', '<HeroPortrait id={entry.id}/>');
+r('<span className="portrait large" style={{ \'--hero-color\': hero.color } as React.CSSProperties}>{hero.name.slice(0, 1)}</span>', '<HeroPortrait id={hero.id}/>');
+r('<h3>Kit inicial · automáticos</h3>', `<div className="base-stats">{(()=>{const b=calculateStats(hero.id,1);return [[b.maxHp,'HP máximo'],[b.damage,'Dano base'],[b.armor,'Armadura'],[b.moveSpeed,'Movimento / s'],[Math.round(b.crit*100)+'%','Chance crítica'],[b.regen,'Regeneração / s']].map(([value,label])=><div key={label}><small>{label}</small><b>{value}</b></div>);})()}</div><small>Ficha base no nível 1. Passiva natural incluída; compras e itens somam durante a missão.</small><h3>Kit · técnicas automáticas</h3>`);
+r('<b>{i + 1}</b>{skill}</span>', '<SkillIcon heroId={hero.id} index={i} name={skill}/>{skill}</span>');
+r('<button className="button primary-button" onClick={missionSelect}>Preparar missão →</button>', '<button className="button primary-button" onClick={()=>changePage(\'build\')}>Planejar missão →</button>');
+range('<div className="build-columns">', '</div>}\n\n    {page === \'passives\'', `<BuildPlanner hero={hero} unlocked={unlocked} planned={planned} togglePlanned={togglePlanned} archivedItems={archived} archivedSkills={archivedSkills} archivedPills={archivedPills} toggleItem={toggleArchived} toggleSkill={toggleSkill} togglePill={togglePill}/>`);
+range("    {page === 'passives'", "        {page === 'items'", `    {page==='passives'&&<div className="hub-page"><div className="page-heading"><div><p className="eyebrow">TREINAMENTO PERMANENTE · ADMIN LOCAL</p><h1>Progressão <em>shinobi</em></h1><p className="home-copy">Compras aplicadas na próxima missão. Reset devolve os Ryu gastos nesta versão de teste.</p></div><div className="lamen-wallet">🪙 {lamens.toLocaleString('pt-BR')} Ryu</div></div><div className="passive-grid">{PASSIVES.map(({name,buff,base,max,icon})=>{const level=levels[name]||0,cost=base+level*25;return <article className="passive-card" key={name}><div className="passive-art"><ItemIcon name={items.find(i=>i.id===icon)!.name}/><b>{level>=max?'MÁX.':\`Nv. \${level}/\${max}\`}</b></div><h3>{name}</h3><p>{buff}</p><div className="level-pips">{Array.from({length:max},(_,i)=><i className={i<level?'filled':''} key={i}/>)}</div><button className="buy-passive" disabled={level>=max||lamens<cost} onClick={()=>{if(level>=max||!spendRyu(cost))return;updateLevels({...levels,[name]:level+1});}}>{level>=max?'Concluído':\`Comprar · \${cost} Ryu\`}</button></article>;})}</div></div>}
+
+`);
+range('<label className="pool-toggle">','<div className="item-grid">','');
+r("prototypePool ? 'Disponível no teste do protótipo' : ", '');
+r('<div className="shop-icon item-sprite" style={iconStyle(item.name)} aria-label={item.name} />', '<ItemIcon name={item.name} className="shop-icon"/>');
+r('Lamens atuais são locais e começam em zero. A recompensa por missão ainda será implementada; nenhum Lamens foi inventado ou creditado.', 'Conta Administrador local: crédito inicial de 999.999 Ryu para testes. Compras e saldo ficam neste navegador. Preços provisórios; Reset devolve os gastos registrados.');
+r('<div className="inv-icon item-sprite pill-icon" style={iconStyle(name)}', '<div className="inv-icon pill-icon"');
+r('title={name} key={name}><small>{count}</small>', 'title={name} key={name}><ItemIcon name={name}/><small>{count}</small>');
+r('<div className="inv-icon item-sprite" style={iconStyle(name)}', '<div className="inv-icon"');
+r('??""}`}><small>{count}</small>', '??""}`}><ItemIcon name={name}/><small>{count}</small>');
+r('<button key={skill}><small>{i+1}</small>{skill}<em>AUTO</em></button>', '<button key={skill} className={world.skillLevels[skill]?\'learned\':\'unlearned\'} title={`${skill} · ${world.skillLevels[skill]?\'Nv. \'+world.skillLevels[skill]:i===3&&!world.permanent[\'Quarta técnica\']?\'Desbloqueie Quarta técnica na progressão\':\'Aprenda no level-up\'}`}><SkillIcon heroId={hero.id} index={i} name={skill}/><small>{i+1} · {world.skillLevels[skill]?\'Nv. \'+world.skillLevels[skill]:\'—\'}</small></button>');
+r('<small>R</small>{hero.ultimate}', '<SkillIcon heroId={hero.id} index={4} name={hero.ultimate}/><small>R</small>');
+r('<span className="attack-icon">{i < 4 ? [\'🌀\',\'💥\',\'👥\',\'✨\'][i] : \'⚡\'}</span>', '<SkillIcon heroId={hero.id} index={i<4?i:4} name={attack.name}/>');
+r("<b>{card.kind==='skill'?'MELHORIA':'NOVA'}</b>", "<b>{card.kind==='skill'&&world.skillLevels[card.name]?'MELHORIA':'NOVA'}</b>");
+r('<ItemIcon name={card.name}/>:<span>{card.icon}</span>', '<ItemIcon name={card.name}/>:card.kind===\'skill\'?<SkillIcon heroId={hero.id} index={hero.skills.indexOf(card.name)} name={card.name}/>:<span>{card.icon}</span>');
+r('className={`level-choice-card rarity-', "className={`${world.choices.banning?'ban-target':''} ${planned.includes(card.name)?'planned-choice':''} level-choice-card rarity-");
+r('<div className="choice-controls">Escolha', `<div className="reward-actions"><button disabled={!world.choices.reroll} onClick={()=>window.dispatchEvent(new KeyboardEvent('keydown',{key:'f'}))}>↻ Atualizar ({world.choices.reroll}) <kbd>F</kbd></button><button disabled={!world.choices.skip} onClick={()=>window.dispatchEvent(new KeyboardEvent('keydown',{key:'x'}))}>» Pular ({world.choices.skip}) <kbd>X</kbd></button><button className={world.choices.banning?'banning':''} disabled={!world.choices.ban} onClick={()=>window.dispatchEvent(new KeyboardEvent('keydown',{key:'z'}))}>⊗ {world.choices.banning?'Cancelar banimento':'Banir'} ({world.choices.ban}) <kbd>Z</kbd></button></div>{world.choices.banning&&<p className="ban-instruction">Clique na carta que deseja retirar das próximas ofertas desta run.</p>}<div className="choice-controls">Escolha`);
+s=s.replaceAll('Lamens','Ryu').replaceAll('🍜','🪙');
+fs.writeFileSync('src/main.tsx',s);

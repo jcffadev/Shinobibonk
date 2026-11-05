@@ -1,0 +1,216 @@
+# CHANGELOG
+
+## 2026-11-05 — login admin removido e debug com ajustes ao vivo salvos
+**Login removido**
+- Removidos `src/game/adminAuth.ts` (login e hash da senha) e `src/ui/AdminLogin.tsx`.
+- O modal de conta não tem mais campos de login ou senha, e os estilos `.admin-login` saíram de `debug.css`.
+- Nenhum arquivo do projeto contém o login ou a senha. `Feedback da versão.txt` continua fora do git.
+- **Atenção:** o primeiro commit publicado (`be528e9`) ainda contém o login e o hash da senha no histórico.
+
+**Ativação do debug**
+- O debug não depende de conta: `debug={import.meta.env.DEV}`. Existe ao rodar com `pnpm dev`/`ABRIR_JOGO.bat`; a build de produção não tem o painel.
+
+**Painel de debug** (`src/game/tuning.ts`, `DebugPanel.tsx`, `GameCanvas.tsx`)
+- 13 parâmetros em 4 grupos:
+  - Inimigos: HP, dano, velocidade, spawn e teto.
+  - Personagem: dano e Ultimate.
+  - Ganhos: EXP e Ryu.
+  - Drops (novos): chance de Ryu, Chakra, pílula e item, com a chance efetiva exibida.
+- Mudar o HP dos inimigos reescala também os que já estão vivos.
+- Os parâmetros salvos (`sb_debug_tuning_v1`) agora valem em **todas** as runs, com o painel aberto ou fechado (antes só com o debug ligado).
+- O botão mostra "ajustes ativos" quando algo difere do padrão.
+- Novos botões "Copiar JSON" e "Colar JSON".
+
+**Verificado**
+- `tsc -b`, `vite build` e `verify-rules.mjs` passaram.
+- `verify-runtime.mjs` passou nas 23 verificações.
+- Um teste avulso no navegador confirmou: modal sem login; painel sem login; HP ×2 dobrando o inimigo vivo; item ×30 = 54%; valores salvos e recarregados na run seguinte; restaurar padrões.
+
+**Não testado**
+- Os demais sliders, um a um, em gameplay real.
+
+## 2026-11-05 — versionamento no GitHub
+- O projeto passa a ser um repositório git, com remoto `origin` em https://github.com/jcffadev/Shinobibonk.git e branch `main`.
+- Novo `.gitignore`. Ficam fora do repositório:
+  - dependências, build e segredos;
+  - `Feedback da versão.txt`, por conter credenciais;
+  - `animação do personagem.jpeg`, uma prévia de banco de imagens com marca d'água.
+- Nova skill `skills/publicar-github/SKILL.md`, com um atalho em `.claude/skills/publicar-github/`: ao fim de cada tarefa com alterações, documentar, verificar, conferir segredos, fazer commit em português e push sem force.
+- `AGENTS.md` ganhou a seção "Publicação no GitHub".
+
+## 2026-11-05 — HUD de pílulas, level-up sem itens e Lamens por desempenho
+Feito por três subagentes e integrado depois.
+
+**HUD**
+- Novo `src/hud-dock.css`. Em `main.tsx`, `.vitamin-row` e `.ability-bar` ficam dentro de `.skill-dock`: pílulas numa linha própria acima das habilidades, quebrando em até 2 linhas, com rolagem.
+- Na integração, o bloco subiu para `bottom:96px` e a ajuda de teclas foi para a direita do botão "← Preparação", porque o selo AUTO encostava na ajuda.
+- No resumo, os nomes das pílulas não são mais cortados com "…": aparecem sem o prefixo "Pílula" e quebram linha.
+
+**Level-up** (`rollLevelOffers`)
+- Só técnicas e pílulas, até 2 técnicas; nunca itens.
+- Técnicas todas no máximo: só pílulas. Pílulas todas no limite: só técnicas.
+- Itens só por recompensas (kunai, shuriken, eventos, drop, recusa de selamento).
+
+**Pílula do Mercador**
+- O texto agora cita só Ryu ("+12% Ryu recebido").
+
+**Lamens por desempenho**
+- Novo `src/game/rewards.ts`: tempo, abates, nível, zona, mega elites selados e vitória, multiplicados pela dificuldade. Valores provisórios.
+- Creditados uma vez por run (vitória ou derrota) e mostrados no resumo com a decomposição.
+
+**Testes**
+- `scripts/verify-runtime.mjs`: a verificação da carteira passou a ser relativa (antes esperava o saldo fixo 999.699, que mudou com o crédito de Lamens). Nova verificação: "Vitória credita Lamens uma única vez e mostra no resumo".
+
+**Verificado**
+- `tsc -b` e `vite build` sem erros.
+- `verify-runtime.mjs` passou com 24 verificações.
+- Um teste avulso no navegador confirmou: level-up só com técnicas e pílulas em 60 rolagens; 16 pílulas no HUD sem sobrepor as habilidades nem a ajuda; resumo com Lamens.
+
+**Não testado**
+- O caso "só pílulas com técnicas no máximo" em jogo real.
+- Layout do HUD entre 700 e 1100 px e no celular.
+- Balanceamento da fórmula de Lamens.
+
+## 2026-11-05 — posição do painel de debug
+- `src/debug.css`:
+  - O botão "DEBUG · F9" e o painel foram para a direita, abaixo do minimapa, e não cobrem mais o cartão do herói.
+  - Botão e painel ficam ocultos enquanto o resumo pós-run está aberto (regra CSS com `:has(.summary-backdrop)`).
+- **Verificado** com `vite build` e um teste avulso no navegador a 1440×900:
+  - o painel não se sobrepõe ao cartão do herói, ao minimapa nem à barra superior;
+  - o botão some no resumo.
+- O layout de celular do painel não foi conferido visualmente.
+
+## 2026-11-05 — modo debug admin, resumo pós-run e 18 pílulas
+Feito por três subagentes em paralelo e integrado depois.
+
+**Modo debug (admin)**
+- Novos arquivos: `src/game/adminAuth.ts`, `src/game/tuning.ts`, `src/ui/AdminLogin.tsx`, `src/ui/DebugPanel.tsx` e `src/debug.css`.
+- Login admin local no modal de conta. A senha é guardada só como hash SHA-256 e verificada no navegador; é proteção de protótipo, não segurança real.
+- Na missão, F9 (ou a tecla à esquerda do 1) abre o painel:
+  - leitura ao vivo;
+  - 9 multiplicadores salvos em `sb_debug_tuning_v1`;
+  - dar item ou pílula, curar, god mode, Chakra, nível, Ryu;
+  - mega elite, limpar inimigos, avançar o tempo, congelar.
+- Sem admin, o balanceamento padrão não muda.
+
+**Resumo pós-run**
+- Novos arquivos: `src/ui/RunSummary.tsx` e `src/summary.css`.
+- Substitui a tela final simples. Mostra resultado, 12 indicadores (inclui DPS médio), dano por técnica com % e DPS, build final e atributos finais.
+- Mantém o botão "Preparar outra missão" e adiciona "Tentar novamente".
+
+**Pílulas**
+- Novos arquivos: `src/game/pills.ts` e `src/ui/PillIcon.tsx`.
+- 18 pílulas com tema ninja, uma por atributo, no formato da wiki de referência. Substituem Rubra, Verde e Azul.
+- `progression.ts`, `preparation.ts`, `GameCanvas.tsx`, `RunSheet.tsx` e `BuildPlanner.tsx` agora leem de `pills.ts`.
+
+**Verificado**
+- `tsc -b` e `vite build` sem erros; o bundle passou a 899 kB.
+- `verify-rules.mjs` passou.
+- `verify-runtime.mjs` passou nas 23 verificações.
+- Um teste avulso no navegador cobriu login admin (errado e certo), F9 abrindo e fechando, sorteio das pílulas novas, resumo na vitória e layout a 390 px.
+
+**Não testado**
+- Derrota real.
+- Cada slider do debug.
+- Conflito do F9 com o Leitor Imersivo do Edge.
+- Balanceamento das pílulas.
+
+## 2026-11-05 — tecla Y restaurada (decisão do usuário)
+- **CONFIRMADO** pelo usuário: a tecla Y tem que existir.
+- `src/scene/GameCanvas.tsx`: Y volta a alternar a Ultimate automática. A tecla e o clique no selo AUTO chamam a mesma função `onToggleAuto`.
+- `scripts/verify-runtime.mjs`: nova verificação "Tecla Y alterna a Ultimate automática".
+- **Verificado**: `tsc -b` e `vite build` sem erros; `verify-runtime.mjs` passou nas 23 verificações, sem erros JS.
+- README, docs 00, 04, 10 e 12, contexto do chat e `AGENTS.md` atualizados.
+
+## 2026-11-05 — moeda Lamens no hub e AUTO sem tecla Y (Y revertido na entrada acima)
+- `src/main.tsx`: carteira, árvore permanente, loja, nota de teste, Reset e rodapé do hub agora mostram a moeda permanente como **Lamens** (🍜) em vez de "Ryu". O Ryu (🪙) continua sendo o dinheiro da run (HUD, kunais, mercador, caça-níquel). A função interna `spendRyu` foi renomeada para `spendLamens`. A chave `sb_admin_wallet_v1` não mudou, então o saldo salvo é mantido.
+- `src/scene/GameCanvas.tsx`: removido o atalho oculto **Y**. O selo AUTO do botão R agora dispara o evento `shinobi-toggle-auto-ult` em vez de simular a tecla Y.
+- README, docs 00, 04, 11 e 12 atualizados; as duas divergências saíram da lista de pendências.
+- **Verificado**: `tsc -b` e `vite build` sem erros. `node scripts/verify-runtime.mjs` reexecutado com as 22 verificações passando (inclusive "Ultimate R e selo AUTO" por clique e reembolso do Reset), sem erros JS. A execução regravou `artifacts/runtime-checks.json` e as screenshots em `artifacts/`.
+
+## 2026-11-05 — sincronização da documentação com o código
+Os docs foram editados até cerca de 15h; o código continuou mudando até cerca de 17h53 sem registro. Esta entrada documenta, a partir da leitura do código, as mudanças que não estavam registradas, e corrige os Markdown. Nenhum código foi alterado.
+
+**Registrado retroativamente (IMPLEMENTADO no código, sem entrada anterior):**
+- Dados extraídos para `src/game/`:
+  - 22 shinobis e 88 técnicas com escola, elemento, forma e status.
+  - Catálogo de 36 itens.
+  - `calculateStats` recalculando atributos das fontes.
+  - Dificuldade por rank e tempo.
+  - Crítico com mega crítico.
+  - Afixos de técnica por raridade.
+  - Evoluções visuais por nível.
+  - Árvore permanente com 16 nós.
+  - Três zonas com guardião.
+- UI nova em `src/ui/`: ficha da run, plano de build e filtros.
+- Hub:
+  - Filtros por aldeia, escola e elemento.
+  - Carteira administrativa local (999.999) com Reset que devolve o gasto.
+  - Prévia da cena.
+- Run:
+  - Contagem regressiva de 10:00 com vitória e derrota; três zonas de 200 s com clima e guardião.
+  - Ataques inimigos telegrafados; armadura e evasão.
+  - Cartas com atualizar, pular e banir (F/X/Z).
+  - Kunais no mapa com preço crescente de Ryu.
+  - Defesa de altar de 20 s.
+  - Emboscadas.
+  - Mega elites aleatórios do elenco (até 9).
+  - Aliados que seguem e atacam.
+  - Sinergia da Areia.
+  - Descoberta por frustum da câmera.
+  - Ganchos de teste `window.__shinobiTest` (dev com `?test`).
+- Eventos renomeados: "Rugido de Rhydon" → Provocação do guardião; "Bênção de Snorlax" → Bênção de Tsunade.
+- Scripts `scripts/verify-rules.mjs`, `scripts/verify-runtime.mjs`, `scripts/smoke-browser.mjs` e scripts de integração já aplicados (`scripts/integrate-*.mjs`, `update-*.mjs`).
+
+**Documentação corrigida:**
+- README, `00-LEIA-PRIMEIRO` e `12-ARQUITETURA` reescritos conforme o código.
+- 01, 02, 03, 04, 05 e 11 receberam seções de estado do código.
+- 06 marcado como histórico.
+- 09, 10 e o contexto do chat receberam notas sobre as decisões que mudaram (Tab/P, AUTO no lugar de Y, moedas, nomes sem Pokémon).
+
+**Divergências registradas como PENDENTES:**
+- A moeda permanente aparece como "Ryu" no hub (a decisão é Lamens).
+- A tecla Y ainda alterna o AUTO como atalho oculto.
+- Teto real de 180 inimigos vivos.
+- Selamento sem tentativas nem falha.
+- Descoberta sem oclusão.
+
+**Verificado nesta data:** `tsc -b` sem erros; `vite build` concluído com aviso de chunk de 879 kB; `node scripts/verify-rules.mjs` passou. Os testes de navegador em `artifacts/runtime-checks.json` são da execução anterior do Codex e não foram reexecutados.
+
+## 2026-11-05 — run, selamento de Orochimaru, skill e referências
+- Copiados os 50 PNGs de clipboard disponíveis desta conversa para `assets/referencia/prints/originais/`, preservando os nomes originais; mantidas cópias organizadas na pasta principal.
+- Implementadas aparições naturais do mega elite Orochimaru e sequência após derrota: retrato do alvo, escolha E/G, animação do selo, registro de aliado temporário ou drop que abre três itens. Sorte do Talismã altera chance de raridade nessa escolha.
+- Substituída a Maldição de Gengar pela Maldição de Orochimaru; mantém o efeito de risco/recompensa provisório.
+- A roleta/eventos, coleta de armas/Ryu, altar de desafio, escolha de level-up, HUD de run, clima simples e mapa da zona estão implementados em `src/`; defesa de altar completa, zonas e IA de aliados continuam pendentes.
+- Ultimate automática agora é alternada pelo selo AUTO dentro do botão R; removido Y do guia visual do HUD. Naruto alterna VFX de shuriken, Rasengan, clone e rajada de chakra.
+- Criada `skills/documentar-projeto/SKILL.md` e integrada ao `AGENTS.md`: toda alteração em código/configuração/assets deve sincronizar Markdown na mesma tarefa.
+- README, guia inicial, arquitetura, câmera/eventos e selamento atualizados para distinguir código real de plano visual. `pnpm build` concluído em 05/11/2026; Vite avisou sobre bundle acima de 500 kB.
+
+## 2026-11-05 — hub de elenco e progressão
+- Adicionadas telas do elenco com passivas/kit, catálogo de ataques por shinobi, plano de build, árvore permanente e loja de itens.
+- Planejamento permite marcar ataques e bloquear itens desbloqueados para a próxima run; preferências ficam no navegador local.
+- Proposta econômica documentada: dez passivas, dez níveis, custo crescente; total projetado de 21.300 Lamens para a árvore apresentada.
+- Login, recompensas de Lamens, efeitos de passivas e integração real do pool seguem pendentes.
+
+## 2026-11-05 — tela inicial e entrada de jogador
+- Criada tela inicial inspirada na referência enviada, com cenário 3D ao fundo, opção de convidado e área de conta.
+- Adicionada seleção de missões Genin, Chunin, Jonin e Kage, com rótulo de início da missão escolhida.
+- Preparado modal explicando que login/cadastro por e-mail e senha dependem de implementação futura; nenhum dado de senha é coletado.
+- Placar indica claramente dados locais e ausência de ranking/contas online.
+
+## 2026-11-05 — movimento e inimigos na base 3D
+- Adicionados movimento WASD/setas, câmera que acompanha o protagonista e rotação por arraste do mouse.
+- Inimigos geométricos surgem aleatoriamente ao redor do jogador e avançam em sua direção; contador aparece na HUD.
+- Controles e estado continuam em uma simulação Three.js separada da interface React.
+
+## 2026-11-05 — base inicial 3D
+- Adicionada base de desenvolvimento com Three.js e TypeScript; React controla a interface, enquanto cena e renderização ficam isoladas.
+- Configurado Vite para iniciar a nova base pela raiz do projeto, preservando `game/index.html` como protótipo 2D jogável.
+- Adicionada cena isométrica de teste com terreno em blocos e personagem geométrico provisório.
+- Instaladas dependências Three.js, React, TypeScript, Vite e tipos associados.
+- A base não migra ainda as mecânicas do protótipo 2D nem representa arte final.
+
+## 2026-11-05 — pacote para Codex
+- Consolidado código executável mais recente (v0.5.3), docs, artes conceituais, screenshots e histórico disponível.
+- Não houve migração para 3D nesta consolidação.
+- Origem: arquivos locais de versões anteriores desta conversa.

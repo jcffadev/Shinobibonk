@@ -1,0 +1,232 @@
+# Arquitetura e estado do código
+
+Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scripts/verify-rules.mjs`. Este é o inventário da base presente, não uma promessa de produto final.
+
+## Mapa de arquivos
+
+| Caminho | Responsabilidade |
+|---|---|
+| `index.html` | Entrada HTML do Vite, com o root React. |
+| `src/main.tsx` | Componente `App`: páginas do hub, estado local (herói, carteira, árvore, desbloqueios, arquivamentos, plano), HUD da run, mapas, cartas de recompensa, selamento e telas de vitória/derrota. |
+| `src/scene/GameCanvas.tsx` | Cena Three.js e simulação da run inteira; envia `WorldSnapshot` para o React. |
+| `src/scene/techniqueEffects.ts` | Objetos visuais das técnicas e descarte de recursos. |
+| `src/game/heroes.ts` | 22 shinobis: aldeia, atributos base, passiva, bônus, 4 técnicas (escola, elemento, forma, status), Ultimate. `skillPool` adiciona a 1ª técnica de colegas da mesma aldeia (nível 8+). `sandSynergy`. Formas do Naruto. |
+| `src/game/catalog.ts` | 36 itens (raridade, custo, limite, bônus), `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
+| `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
+| `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
+| `src/game/evolution.ts` | Formas por nível de cada shinobi, recorte de retrato nos atlas e nível de desbloqueio das técnicas. |
+| `src/game/preparation.ts` | 16 nós da árvore permanente, usos de atualizar/pular/banir, preço das kunais, carteira administrativa (999.999), compra e reembolso. |
+| `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis. |
+| `src/game/pills.ts` | Fonte única das 18 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |
+| `src/game/tuning.ts` | 13 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 4 grupos: Inimigos, Personagem, Ganhos, Drops. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
+| `src/ui/RunSheet.tsx` | Ficha da run (P), ícones de item/pílula e retrato do herói; exporta os grupos de atributos. |
+| `src/ui/RunSummary.tsx` + `src/summary.css` | Tela de resumo pós-run (vitória/derrota), derivada do `WorldSnapshot`, com a faixa de Lamens ganhos. |
+| `src/game/rewards.ts` | `runLamens(result, mission)`: Lamens por desempenho (`LAMEN_RULES`). Em `main.tsx`, um `useEffect` credita o total na carteira uma única vez por `runId` (via `useRef`); `spent` não muda, então o Reset não remove Lamens ganhos. |
+| `src/hud-dock.css` | Bloco inferior esquerdo: pílulas acima das habilidades, mais a posição da ajuda de teclas. |
+| `src/ui/DebugPanel.tsx` + `src/debug.css` | Painel de debug (F9) e tipos `DebugApi`/`DebugLive`. |
+| `src/ui/PillIcon.tsx` | Cápsula colorida com o glifo da pílula, em CSS inline. |
+| `src/ui/BuildPlanner.tsx` | Plano pré-run: planejar/arquivar técnicas, pílulas e itens. |
+| `src/ui/PoolFilters.tsx` | Filtros de busca, raridade, escola, elemento, forma, atributo e aldeia. |
+| `src/ui/SkillIcon.tsx` | Ícone desenhado por técnica. |
+| `src/audio/sfx.ts` | Sons procedurais via Web Audio. |
+| `src/style.css`, `src/run-ui.css`, `src/sealing.css` | Hub, HUD/ficha/cartas e ritual de selamento/AUTO. |
+| `public/assets/shinobi-roster-v2.png` | Retratos base do elenco (grade 5×5). |
+| `public/assets/shinobi-evolutions-v2.png` | Retratos das formas evoluídas (grade 6×5). |
+| `public/assets/shinobis/*.svg` | Sprites SVG por shinobi/forma (`<id>-<nível>.svg`). |
+| `public/assets/environment-v2.png` | Árvores, rochas, portão, construções e objetos de evento. |
+| `public/assets/shinobi-sprites-atlas.png` | Atlas antigo; ainda usado para inimigos comuns. |
+| `public/assets/item-icons-atlas.png` | Ícones de itens (via CSS). |
+| `public/assets/orochimaru-sprite.svg`, `icons/kunai.svg`, `icons/shuriken.svg` | Sprite antigo de Orochimaru; ícones de kunai/shuriken no chão. |
+| `scripts/verify-rules.mjs` | Asserções de regras puras; grava `artifacts/rules-checks.json`. |
+| `scripts/verify-runtime.mjs`, `scripts/smoke-browser.mjs` | Testes no navegador com Playwright + Edge; caminhos fixos deste PC. |
+| `scripts/integrate-*.mjs`, `scripts/finalize-integration.mjs`, `scripts/add-runtime-checks.mjs`, `scripts/generate-sprites.mjs`, `update-*.mjs` (raiz) | Scripts de migração já aplicados pelo Codex (edição por substituição de texto). Não reexecutar. |
+| `artifacts/` | Screenshots reais da base atual e resultados JSON dos testes. |
+| `game/index.html` | Protótipo Canvas 2D legado; não carregado pelo Vite. |
+
+## Fluxo de execução e estado
+
+1. `index.html` carrega `src/main.tsx`.
+2. `App` escolhe a página: `home`, `characters`, `attacks`, `build`, `passives`, `items`, `missions`, `preview` ou `game`.
+3. Ao iniciar a missão, `App` cria um `GameCanvas` novo (chave `runId`) com herói, dificuldade, pool de itens e preparação (`permanent`, técnicas e pílulas arquivadas).
+4. `GameCanvas` roda a simulação no loop do renderer e envia um `WorldSnapshot` a cada 0,2 s. O React usa esse snapshot para a HUD, mapas, ficha e cartas.
+5. As teclas são tratadas em `GameCanvas`. Os botões da UI disparam `KeyboardEvent` sintéticos (por exemplo, F/X/Z, 1–4 e R). O clique no mapa dispara o evento `shinobi-ping`, e o selo AUTO dispara `shinobi-toggle-auto-ult`.
+6. A simulação para quando há painel aberto, carta de recompensa, derrota ou vitória. O ritual de selamento congela o relógio e os spawns.
+7. Persistência apenas em `localStorage`:
+   - `sb_hero`: herói selecionado.
+   - `sb_admin_wallet_v1`: saldo e total gasto.
+   - `sb_permanent_levels`: níveis da árvore permanente.
+   - `sb_unlocked_items`, `sb_archived_items`, `sb_archived_skills`, `sb_archived_pills`, `sb_planned_attacks`: desbloqueios, arquivamentos e plano.
+   - `sb_debug_tuning_v1`: parâmetros de balanceamento salvos pelo debug, aplicados em **todas** as runs deste navegador.
+   - Não existe mais login nem sessão admin. A chave antiga `sb_admin_session_v1`, se existir, é ignorada.
+8. Não há save de run, backend ou conta online.
+9. Com `pnpm dev` e `?test` na URL, `window.__shinobiTest` expõe ganchos de teste (dar item, gerar inimigo, ajustar nível/tempo/dinheiro, inspecionar estado).
+10. **Modo debug**
+    - **Ativação**: `main.tsx` passa `debug={import.meta.env.DEV}` ao `GameCanvas`. Só no servidor de desenvolvimento ele renderiza o `DebugPanel` e entrega a API do painel (separada de `__shinobiTest`). A build de produção não tem painel.
+    - F9 ou `Backquote` (a tecla à esquerda do 1) abre e fecha o painel.
+    - **Parâmetros**: `activeTuning()` devolve sempre os valores salvos, então os ajustes valem no meio da run e nas runs seguintes, com o painel aberto ou fechado. Onde cada um entra:
+      - HP, dano, velocidade, spawn e teto dos inimigos: em `threatNow()` = `tuneThreat(difficultyAt(...))`. Quando o HP muda, o loop reescala também o HP dos inimigos vivos (`appliedEnemyHp`).
+      - Dano do personagem: em `hit()`, sem afetar os aliados.
+      - EXP e Ryu: na coleta dos drops.
+      - Ultimate: no ganho passivo de Chakra.
+      - Drops: em `removeEnemy`, via `dropChance(base, mult)`, limitado a 100%. As bases são Ryu 72% (×Maldição/Provocação, até 95%), Chakra 28%, pílula 1,5% e item 1,8%.
+    - God mode ignora o dano recebido; "congelar" pausa a simulação. "Copiar/Colar JSON" exporta e reaplica os parâmetros.
+    - A `difficultyScale` exibida na ficha não inclui os multiplicadores.
+
+## Cena e simulação
+
+- **Cena e câmera**:
+  - Câmera ortográfica isométrica.
+  - Botão direito: yaw livre e pitch entre 0,18 e 1,48 rad. Scroll: zoom de 10 a 32.
+  - Terreno de 100×100 com relevo de senos e três montes gaussianos, colorido por grama, trilha, pedra e lava.
+  - Vegetação e construções são sprites de `environment-v2.png`; ficam translúcidos quando o jogador está a menos de 3 m.
+  - O jogador fica limitado a ±46. Não há colisão com cenário nem pulo.
+- **Personagens**: o jogador, os aliados e os mega elites são sprites com o retrato da forma atual; os inimigos comuns usam o atlas antigo.
+- **Tempo e zonas**:
+  - `elapsed` vai de 0 a 600 s; o HUD mostra a contagem regressiva.
+  - Zona = 1 + ⌊elapsed/200⌋ (máximo 3).
+  - Ao trocar de zona: novo clima (Névoa espectral reduz a visão; Tempestade de areia dá −27% de movimento), eventos reativados e guardião rearmado.
+  - O guardião (shinobi da lista da zona) surge aos 160 s de cada zona.
+- **Dificuldade** (`difficultyAt`):
+  - Multiplicador por rank: Genin 1, Chunin 1,4, Jonin 1,9, Kage 2,6.
+  - Por minuto: HP +22%, dano +15%, velocidade e cadência sobem, intervalo de spawn cai.
+  - Teto de **180 inimigos vivos**.
+  - Maldição e Provocação multiplicam a dificuldade da zona.
+- **Inimigos**:
+  - Perseguem o jogador. Ao alcançar, marcam um círculo vermelho e atacam após um tempo de preparo; sair do círculo evita o dano.
+  - O dano recebido passa por armadura (`100/(100+armadura)`) e evasão (máximo 60%).
+  - 8% dos inimigos comuns são elites (contorno laranja).
+  - Emboscadas a cada 18–30 s geram 8 + 2×zona inimigos.
+- **Técnicas**:
+  - Cada técnica aprendida dispara sozinha pela própria recarga (cadência e afixo "haste").
+  - Projétil, Em V e Onda viram projéteis (o número de projéteis se aplica).
+  - Corpo a corpo, Cone, Linha, Área e Órbita acertam por geometria instantânea.
+  - Terreno não bloqueia acerto.
+- **Dano**: atributo de dano × poder da técnica × afixo × escola (Taijutsu físico / Ninjutsu) × passiva × crítico.
+  - Crítico: chance acima de 100% vira chance de mega crítico (+50 pontos de multiplicador).
+  - Status por técnica, por Genjutsu ou por item. Veneno e queimadura causam dano contínuo.
+- **Passivas especiais no código**:
+  - Naruto: até +20% de dano conforme perde HP.
+  - Hashirama: +20% em técnicas Sábias ou com Selo de Senjutsu.
+  - Gaara: +1% de dano por ponto de armadura.
+- **Ultimate**:
+  - Chakra 0–100, recarga de 55 s × `ultimateRate`; o drop roxo dá +9.
+  - R lança a Ultimate (área de raio 6 × √área, poder 6).
+  - AUTO lança sozinho quando a carga está cheia. A tecla Y alterna o AUTO; o clique no selo faz o mesmo, disparando o evento `shinobi-toggle-auto-ult`. Os dois caminhos chamam `onToggleAuto`.
+- **Progressão**:
+  - XP para o próximo nível: `ceil(18 + 6(n−1) + 0,08(n−1)²)`.
+  - Ao subir de nível: cartas de recompensa e 3 s de invulnerabilidade.
+  - Se a forma muda, o sprite troca e o HP base sobe 25%.
+- **Aliados**:
+  - Seguem o jogador em formação.
+  - A cada 1,5 s ÷ cadência de aliados, cada um lança a 1ª técnica dele com 65% × dano de aliados.
+  - Cada aliado dá +0,3 HP/s × força de suporte.
+- **Descoberta**:
+  - Eventos e kunais/shurikens entram no mapa quando ficam dentro do frustum da câmera a menos de 40 m, e continuam registrados depois.
+  - Células exploradas no mapa: grade de 5 m ao redor do caminho percorrido.
+  - Não há teste de oclusão.
+- **H**: esconde efeitos, projéteis e números; a lógica de dano continua.
+- **Desempenho**: cada inimigo, projétil e efeito é um objeto Three.js próprio. Não há instancing, pooling nem spatial hash.
+
+## Mecânicas no código atual
+
+### Hub pré-run
+
+- **Conta e carteira**:
+  - A tela inicial tem "Continuar como convidado" e uma carteira local de teste chamada "Administrador", sem login.
+  - O modal de conta explica que o cadastro ainda não existe e que o debug abre com F9 no servidor local. Não há campos de login nem de senha.
+  - A carteira começa com 999.999 Lamens (🍜). O Ryu (🪙) é só o dinheiro da run.
+- **Elenco**: 22 shinobis com retrato, aldeia, passiva, atributos, kit e Ultimate. Filtros por aldeia, tipo de dano (escola) e elemento.
+- **Ataques**: biblioteca do shinobi com nível de desbloqueio de cada técnica e filtros por escola, elemento e forma. Inclui técnicas de colegas da mesma aldeia.
+- **Plano de build**: planejar (marca visual) e arquivar técnicas, pílulas e itens. Os arquivados não aparecem na run; a técnica inicial não pode ser arquivada.
+- **Árvore permanente** (`PASSIVES`):
+  - 10 linhas de atributo com 10 níveis cada; custo = base + 25 × nível comprado.
+  - Quarta opção, Atualizar/Pular/Banir (+1 uso por nível, até 10), Suporte adicional e Quarta técnica.
+- **Loja**:
+  - 36 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
+  - Desbloquear só adiciona ao pool. Há filtros e a opção de arquivar da run.
+- **Missões**: Genin, Chunin, Jonin e Kage alteram a escala de dificuldade.
+- **Reset**: devolve tudo o que foi gasto e limpa árvore, desbloqueios, arquivamentos e plano.
+
+### Run, recompensas e eventos
+
+- **Cartas de recompensa** (level-up):
+  - Só técnicas e pílulas; itens nunca aparecem no level-up.
+  - `skillTarget = max(min(2, técnicas elegíveis), total − pílulas elegíveis)`: entram até 2 técnicas, depois pílulas diferentes (as 18 de `pills.ts`, até 10 cada, via `grantPill`), e técnicas completam se faltarem pílulas.
+  - Técnicas elegíveis: desbloqueadas, não arquivadas nem banidas, abaixo do nível 9, e nova só se houver espaço (3, ou 4 com "Quarta técnica").
+  - Itens só vêm de `rollMegaLoot` (kunai, shuriken, eventos, drop de item, recusa de selamento).
+  - Sem opções elegíveis, aparece uma carta de "Powerlevel" com um ganho pequeno de atributo.
+- **Atualizar / pular / banir**: F, X e Z (ou botões), com 3 usos base cada. Banir exige escolher a carta em seguida e remove aquela opção pelo resto da run.
+- **Sorteio de itens**: pesos 90 / 9,889 / 0,1 / 0,01 / 0,001 (comum → lendário), multiplicados por (1 + Sorte/100)^índice e divididos pela quantidade de itens da raridade. A Sorte é limitada a 500 no cálculo.
+- **Pickups no mapa**: 25 entre kunai, shuriken e bolsa de Ryu (+10).
+  - Kunai/shuriken custam 20 Ryu, +10 a cada abertura paga, e abrem uma escolha de item.
+  - Kunais de recompensa (guardião, desafio, altar, recusa de selamento) são grátis.
+- **Drops de inimigo**:
+  - XP sempre.
+  - Ryu com cerca de 72% de chance.
+  - Carga da Ultimate com 28%.
+  - Pílula com 1,5%.
+  - Recompensa de item com 1,8% (abre uma escolha).
+- **Eventos fixos no mapa**:
+  - **Provocação do guardião**: até 3 vezes por zona; cada uma dá +10% de dificuldade da zona, +10% de saque e +30% de HP do guardião, e o guardião derrotado solta 1 + provocações kunais grátis.
+  - **Altar de desafio**: 6 inimigos; vencer dá uma kunai grátis.
+  - **Maldição de Orochimaru**: +20% de dificuldade, +25% de XP e saque.
+  - **Altar para proteger**: ficar 20 s no círculo dá uma kunai grátis.
+  - **Mercador de armas**: troca cada kunai/shuriken guardada por 5 Ryu.
+  - **Caça-níquel do Ichiraku**: 25 Ryu por giro; o resultado sai entre kunai, shuriken, pílula e recompensa de item.
+  - **Bênção de Tsunade**: uma vez por zona, sorteia +12% de dano, +24 HP ou +15% de XP.
+- **Mega elites**:
+  - O primeiro surge entre 30 e 55 s; os seguintes a cada 45–70 s, até 9 por run.
+  - São um shinobi aleatório que ainda não é aliado, com HP alto (sprite maior).
+  - O guardião da zona aparece numa faixa "Guardião · nome · HP" no HUD.
+  - Não há barra de HP 3D sobre mega elites ou guardiões.
+- **Selamento**:
+  - Ao derrotar um mega elite, a run pausa na decisão. E inicia o ritual de 2,7 s (instantâneo com a Shuriken Selo da Tenten); G recusa e deixa uma kunai grátis.
+  - Equipe cheia ou personagem repetido impede selar.
+  - Se vários mega elites caem, as decisões entram em fila.
+- **Aliados e sinergia**: vagas 3 + Pergaminho de Recrutamento + nó "Suporte adicional" (máximo 5). A sinergia da Areia exige Gaara, Temari e Kankuro como aliados.
+- **Fim da run**: vitória ao chegar a 0:00; derrota com HP 0.
+
+### UI durante a run
+
+- **Topo**: missão, cronômetro regressivo, Ryu, kunai/shuriken, clima e zona.
+- **Faixas e telas**: faixa do guardião com HP, progresso da defesa do altar, interação próxima ("Aperte E") e lista de aliados com sinergia.
+- **Resumo pós-run** (`RunSummary`), na vitória ou derrota:
+  - resultado, forma final e chefe ativo;
+  - 12 indicadores: tempo, nível, zona, abates, dano total, DPS médio, dano dos aliados, Ryu, kunai, shuriken, ameaça e suportes;
+  - dano por técnica com barra, % e DPS;
+  - build final (itens, pílulas, aliados, sinergia) e atributos finais;
+  - "Tentar novamente" e "Preparar outra missão".
+  - As regras `.defeat-backdrop`/`.defeat-card` em `run-ui.css` ficaram sem uso.
+- **Cartão superior esquerdo**: retrato da forma atual, nível, HP e XP.
+- **Canto superior direito**: minimapa com jogador, inimigos, pickups, ping e eventos descobertos.
+  - Tab: mapa rápido.
+  - M: mapa completo; clicar nele marca um ping.
+- **Base** (`src/hud-dock.css`):
+  - `.skill-dock` (canto inferior esquerdo, `bottom:96px`) empilha a linha de pílulas (`.vitamin-row`: ícones de 30 px, até 2 linhas, depois rolagem) acima da barra de técnicas (4 espaços + botão R com o selo AUTO), sem sobreposição.
+  - Ajuda de teclas em `left:124px; bottom:14px`, à direita do botão "← Preparação".
+  - Itens no canto inferior direito; FPS e inimigos vivos no centro inferior.
+  - Até 700 px de largura, o bloco fica em `bottom:50px`, com pílulas de 26 px em 1 linha.
+- **Ficha (P)**: atributos, escala de dificuldade, técnicas com dano e afixos acumulados, itens, pílulas, aliados e sinergia.
+- **Cartas**: cartas de recompensa com botões Atualizar/Pular/Banir; painel de selamento com retrato e animação; telas de vitória e derrota.
+
+## Lacunas e divergências conhecidas
+
+- **Moeda**: a fórmula de Lamens é provisória. Abates de guardião não entram (o snapshot não informa). O debug permite inflar a recompensa.
+- **Selamento**: não tem 3 tentativas nem chance de falha; também não existe o selamento permanente com 1 tentativa.
+- **Aliados**: não têm buff passivo único por personagem nem dano por habilidade própria além da 1ª técnica.
+- **Sinergias**: só a da Areia existe.
+- **Mapa**: arena única, sem colisão, pulo, dash, biomas ou mapa procedural.
+- **Descoberta**: sem oclusão.
+- **Inimigos**: teto de 180 vivos; meta de 1.500 não medida.
+- **Remoção de pílula/item**: Shisui/Ichiraku de esquecimento não existe, e a fusão não existe. Os atributos já são recalculados das fontes a cada quadro, o que facilita a remoção futura.
+- **Mega elites**: sem barra de HP visível sobre o personagem (só o texto do guardião no HUD). Não há rotação de mega elite por zona.
+- **Arte**: atlas e SVGs são provisórios, sem animação por quadro. As técnicas usam primitivas geométricas.
+- **Bundle**: o JavaScript tem 899 kB, sem code-splitting.
+- **Painel de debug**: fica à direita, abaixo do minimapa (botão e painel em `top:222px`), sem cobrir o cartão do herói, o minimapa nem a barra superior. Abaixo de 640 px de largura, vira uma gaveta inferior. Botão e painel somem quando o resumo pós-run está aberto. No Edge, F9 também é atalho do Leitor Imersivo; o painel chama `preventDefault`, mas isso não foi verificado numa sessão real.
+- **Ausentes**: sem conta real, save, ranking, rede ou multiplayer.
+
+## Verificação
+
+- **05/11/2026, nesta revisão**: `tsc -b` sem erros; `vite build` concluído (aviso de chunk acima de 500 kB); `node scripts/verify-rules.mjs` passou e regravou `artifacts/rules-checks.json` (22 shinobis, 88 técnicas, 36 itens).
+- **05/11/2026, após a troca para Lamens e a restauração da tecla Y**: `node scripts/verify-runtime.mjs` passou nas 23 verificações no navegador (inclui "Tecla Y alterna a Ultimate automática"), sem exceções JS nem assets 404, e regravou `artifacts/runtime-checks.json`.
+- Não houve teste manual de jogabilidade, medição de FPS com carga alta nem validação de balanceamento.

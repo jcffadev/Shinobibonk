@@ -1,0 +1,32 @@
+/* Painel debug de balanceamento (F9; só no servidor de desenvolvimento). */
+/* Fica à direita, abaixo do minimapa, para não cobrir o cartão do herói (superior esquerdo). */
+.debug-toggle { position:fixed; z-index:60; right:12px; top:222px; padding:6px 9px; border:1px solid #ff5fa2; border-radius:7px; background:#2a1023e8; color:#ffc2dc; font:900 9px/1 system-ui,sans-serif; letter-spacing:.06em; cursor:pointer; }
+.debug-toggle:hover { background:#43173a; }
+.debug-panel { position:fixed; z-index:60; right:12px; top:222px; bottom:72px; width:min(360px,calc(100vw - 24px)); overflow-y:auto; padding:10px 12px 12px; border:1px solid #ff5fa2; border-radius:10px; background:#120d1cf2; color:#ece6f5; font:12px/1.35 system-ui,sans-serif; box-shadow:0 10px 30px #0009; }
+.debug-panel header { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:6px; }
+.debug-panel header small { color:#ff8fbf; font-size:9px; font-weight:900; letter-spacing:.08em; }
+.debug-panel header h2 { margin:0; font-size:17px; }
+.debug-panel header button { width:28px; height:28px; border:1px solid #6b4a7e; border-radius:6px; background:#22182f; color:#fff; font-size:16px; cursor:pointer; }
+.debug-section { margin-top:8px; padding-top:8px; border-top:1px solid #3a2a4a; }
+.debug-section h3 { margin:0 0 6px; color:#ffcf70; font-size:10px; letter-spacing:.08em; text-transform:uppercase; }
+.debug-live { display:grid; gap:2px; font-size:11px; color:#cfc6dc; }
+.debug-live b { color:#fff; }
+.debug-slider { display:grid; grid-template-columns:1fr 64px; align-items:center; gap:2px 8px; margin-bottom:6px; }
+.debug-slider > span { grid-column:1 / -1; display:flex; justify-content:space-between; font-size:11px; }
+.debug-slider b { color:#9fe3ff; }
+.debug-slider b.changed { color:#ff8fbf; }
+.debug-slider input[type=range] { width:100%; accent-color:#ff5fa2; }
+.debug-panel input[type=number], .debug-panel select { min-width:0; padding:4px 5px; border:1px solid #4a3a5c; border-radius:5px; background:#1d1529; color:#fff; font-size:11px; }
+.debug-panel input[type=number] { width:64px; }
+.debug-row { display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-bottom:5px; }
+.debug-row select { flex:1 1 150px; }
+.debug-panel .debug-row button, .debug-reset { padding:5px 8px; border:1px solid #6b4a7e; border-radius:6px; background:#2b1f3b; color:#f3e9ff; font-size:11px; font-weight:700; cursor:pointer; }
+.debug-panel .debug-row button:hover, .debug-reset:hover { background:#3d2b54; }
+.debug-panel .debug-row button.on { border-color:#61ffa8; background:#173a2a; color:#b5ffd6; }
+.debug-reset { width:100%; margin-top:2px; }
+.debug-note { margin:6px 0 0; color:#a597b8; font-size:10px; }
+@media (max-width:640px) { .debug-panel { top:auto; bottom:12px; height:60vh; } }
+/* No resumo pós-run o debug some (botão e painel). */
+body:has(.summary-backdrop) .debug-toggle, body:has(.summary-backdrop) .debug-panel { display:none; }
+/* Botão indica quando há parâmetros salvos diferentes do padrão. */
+.debug-toggle.tuned { border-color:#ffcf70; color:#ffe2a6; }

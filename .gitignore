@@ -1,0 +1,28 @@
+# Dependências e build
+node_modules/
+dist/
+*.tsbuildinfo
+*.log
+.vite/
+
+# Ambiente e segredos
+.env
+.env.*
+*.pem
+*.key
+
+# Contém credenciais em texto puro; nunca publicar.
+Feedback da versão.txt
+
+# Prévia de banco de imagens com marca d'água; sem licença para distribuir.
+animação do personagem.jpeg
+
+# Sistema / editores
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+
+# Configurações locais do Claude Code (as skills do projeto são versionadas)
+.claude/settings.local.json
