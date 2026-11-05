@@ -5,7 +5,7 @@
 - Removidos `src/game/adminAuth.ts` (login e hash da senha) e `src/ui/AdminLogin.tsx`.
 - O modal de conta não tem mais campos de login ou senha, e os estilos `.admin-login` saíram de `debug.css`.
 - Nenhum arquivo do projeto contém o login ou a senha. `Feedback da versão.txt` continua fora do git.
-- **Atenção:** o primeiro commit publicado (`be528e9`) ainda contém o login e o hash da senha no histórico.
+- **Histórico reescrito**, a pedido do usuário. Os commits `be528e9` (que tinha o login e o hash da senha) e `5f81fdf` foram juntados num único commit limpo, `be738b5`, publicado com `git push --force-with-lease`. O GitHub ficou com 1 commit, e os objetos antigos foram removidos do repositório local (`reflog expire` + `gc --prune=now`). O GitHub ainda pode guardar o commit antigo por algum tempo para quem souber o hash exato; o suporte do GitHub consegue apagá-lo de vez.
 
 **Ativação do debug**
 - O debug não depende de conta: `debug={import.meta.env.DEV}`. Existe ao rodar com `pnpm dev`/`ABRIR_JOGO.bat`; a build de produção não tem o painel.
