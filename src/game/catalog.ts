@@ -3,14 +3,14 @@ export type Rarity = 'Comum' | 'Incomum' | 'Raro' | 'Épico' | 'Lendário';
  * Atributos que itens/pílulas/buffs podem dar. Os do primeiro bloco viram campos de `Stats`;
  * os do segundo bloco (mecânicas de item) ficam em `Stats.extra` e são lidos pela simulação (GameCanvas).
  */
-export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'crit'|'critDamage'|'cool'|'gold'|'exp'|'area'|'projectiles'|'dodge'|'duration'|'dot'|'status'|'attackSpeed'|'luck'|'pickup'|'pickupFlat'|'regen'|'support'|'allyDamage'|'allySpeed'|'allyBuff'|'sage'
+export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'crit'|'critDamage'|'cool'|'gold'|'exp'|'area'|'projectiles'|'dodge'|'duration'|'dot'|'status'|'attackSpeed'|'projectileSpeed'|'luck'|'pickup'|'pickupFlat'|'regen'|'support'|'allyDamage'|'allySpeed'|'allyBuff'|'sage'
   // Dano por elemento da técnica (+%) e Genjutsu (escola)
   |'elFogo'|'elAgua'|'elVento'|'elTerra'|'elRaio'|'elMadeira'|'elAreia'|'elSombra'|'elNeutro'|'elSabio'|'genjutsu'
   // Mecânicas de item
   |'healthPct'|'regenMult'|'eliteDamage'|'controlledDamage'|'statusStack'|'lowHpDamage'|'noHitDamage'|'killDamage'|'armorPhysical'|'bigCrit'
   |'lifesteal'|'thorns'|'killHeal'|'execute'|'burnChance'|'poisonChance'|'sleepChance'|'rootChance'|'chillChance'|'statusDamage'
   |'revive35'|'revive60'|'shield'|'rush'|'stance'|'smoke'|'emergencyHeal'|'periodicHeal'|'bolts'|'beam'|'freezeOnHit'
-  |'kunaiDiscount'|'slotDiscount'|'enemyCount'|'pillCap'|'skillCap'|'ultReset';
+  |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'pillCap'|'skillCap'|'ultReset';
 export type Bonuses = Partial<Record<StatKey, number>>;
 export type Item = { id:string; name:string; rarity:Rarity; cost:number; icon:string; sprite:number; max:number; description:string; bonuses:Bonuses };
 const COST:Record<Rarity,number>={Comum:0,Incomum:150,Raro:300,'Épico':500,'Lendário':900};
@@ -54,6 +54,8 @@ export const ITEMS:Item[] = [
   item('sandals','Sandálias Leves','Comum',5,ANY,'+7% de velocidade de movimento.',{move:.07}),
   item('critical','Luneta Ninja','Comum',7,ANY,'+6 pontos percentuais de chance crítica.',{crit:.06}),
   item('area-seal','Selo de Expansão','Comum',11,ANY,'+10% de raio dos ataques em área.',{area:.1}),
+  // Velocidade de projétil (referência: lente de mira): viagem de projéteis mais rápida e golpes/lançamentos com menos preparo.
+  item('sniper-lens','Lente do Atirador','Comum',7,ANY,'+14% de velocidade de projétil e +3 pontos percentuais de chance crítica.',{projectileSpeed:.14,crit:.03}),
 
   // ───── Incomum ─────
   item('adrenaline','Selo de Adrenalina','Incomum',5,3,'Ao ser atingido: +20% de movimento e +12% de cadência por 3 s.',{rush:1}),
@@ -82,6 +84,8 @@ export const ITEMS:Item[] = [
   item('taunt-flute','Flauta Provocadora','Incomum',2,5,'+12% de inimigos no mapa, +10% de experiência e +5 de Sorte.',{enemyCount:.12,exp:.1,luck:5}),
   item('tracker','Olhos do Rastreador','Incomum',7,ANY,'+25 pontos percentuais de chance de status (Genjutsu). Técnicas sem status passam a aplicar lentidão.',{status:.25}),
   item('ninjutsu','Selo de Ninjutsu','Incomum',11,ANY,'+15% de dano de Ninjutsu e da Ultimate.',{element:.15}),
+  // Referência: pedra lisa (ricochete + velocidade de projétil).
+  item('river-pebble','Seixo Polido do Rio','Incomum',1,3,'+1 ricochete em projéteis (Projétil e Em V) e +9% de velocidade de projétil.',{bounce:1,projectileSpeed:.09}),
   item('cooldown','Ampulheta de Recarga','Incomum',6,5,'+12% de velocidade de recarga da Ultimate. Não dá carga instantânea.',{cool:.12}),
 
   // ───── Raro ─────
@@ -115,7 +119,7 @@ export const ITEMS:Item[] = [
   item('recruit','Pergaminho de Recrutamento','Épico',11,1,'+1 vaga de ajudante nesta run.',{support:1}),
   item('wide-seal','Selo de Área Ampla','Épico',10,ANY,'+15% de dano total e +15% de área.',{damage:.15,area:.15}),
   item('iron-club','Clava de Ferro','Épico',3,2,'+1% de dano de Taijutsu a cada 2 de armadura (até +50%).',{armorPhysical:.005}),
-  item('sage-infusion','Selo de Senjutsu','Épico',2,1,'Infunde todas as técnicas com Modo Sábio. Ativa o bônus de +20% de dano sábio de Hashirama.',{sage:1}),
+  item('sage-infusion','Selo de Senjutsu','Épico',2,1,'Infunde todas as técnicas com o elemento Sábio e dá a linha Senjutsu (modo sábio) às técnicas de Ninjutsu. Ativa o bônus de +20% de dano sábio de Hashirama.',{sage:1}),
 
   // ───── Lendário ─────
   item('haku-mirror','Espelho de Gelo de Haku','Lendário',10,1,'+15% de dano; ao ser atingido, congela inimigos próximos por 3 s (a cada 20 s).',{damage:.15,freezeOnHit:1}),

@@ -1,3 +1,4 @@
+import { NPC_NAMES } from '../game/npcs';
 import { ITEM_BY_NAME } from '../game/catalog';
 import { HERO_BY_ID } from '../game/heroes';
 import { formAt } from '../game/evolution';
@@ -58,7 +59,7 @@ export function RunSummary({world,hero,mission,reward=null,onRetry,onPrepare}:{w
           <h3 className="section-label">PÍLULAS</h3>
           <div className="summary-items">{pills.length?pills.map(([name,count])=><div className="summary-item" key={name}><ItemIcon name={name}/><span title={name}>{name.replace(/^Pílula /,'')}</span><b>Nv. {count}</b></div>):<p className="summary-empty">Nenhuma pílula.</p>}</div>
           <h3 className="section-label">SUPORTES · {world.allies.length}/{world.stats.supportSlots}{world.synergies?.length?' · SINERGIAS: '+world.synergies.map(s=>`${s.name} (${s.members.length})`).join(', '):''}</h3>
-          <div className="summary-allies">{world.allies.length?world.allies.map((id,i)=><div key={i}><HeroPortrait id={id}/><small>{HERO_BY_ID[id]?.name??id}</small></div>):<p className="summary-empty">Nenhum suporte recrutado.</p>}</div>
+          <div className="summary-allies">{world.allies.length?world.allies.map((id,i)=><div key={i}><HeroPortrait id={id}/><small>{HERO_BY_ID[id]?.name??NPC_NAMES[id]??id}</small></div>):<p className="summary-empty">Nenhum suporte recrutado.</p>}</div>
         </section>
         <section className="summary-col">
           <h2 className="stripe purple">Atributos finais</h2>

@@ -1,15 +1,16 @@
-import type { Item, Rarity, StatKey } from './catalog';
+import type { Bonuses, Item, Rarity, StatKey } from './catalog';
+import { bonusText } from './allies.ts';
 import type { Technique, Element } from './heroes';
 export type SkillGrowth={damage:number;area:number;haste:number;duration:number};
 export const NO_GROWTH:SkillGrowth={damage:0,area:0,haste:0,duration:0};
 export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rarity:Rarity;growth:SkillGrowth}{
  const weights=[90,9.889,.1,.01,.001].map((w,i)=>w*Math.pow(1+Math.min(500,Math.max(0,luck))/100,i));let value=rng()*weights.reduce((a,b)=>a+b,0),tier=4;
  for(let i=0;i<5;i++){value-=weights[i];if(value<0){tier=i;break;}}
- const keys:(keyof SkillGrowth)[]=['damage','area','haste'];if(technique.status||technique.burn)keys.push('duration');
+ const keys:(keyof SkillGrowth)[]=technique.setup?['damage','haste','duration']:['damage','area','haste'];if(!technique.setup&&(technique.status||technique.burn))keys.push('duration');
  const growth={...NO_GROWTH};for(let n=0;n<(tier>=3?3:2)&&keys.length;n++){const key=keys.splice(Math.floor(rng()*keys.length),1)[0];growth[key]=Math.round(([10,18,25,30,40][tier]+rng()*[8,10,10,15,15][tier]))/100;}
  return {rarity:(['Comum','Incomum','Raro','Épico','Lendário'] as Rarity[])[tier],growth};
 }
-export function growthText(g:SkillGrowth){return (Object.entries(g) as [keyof SkillGrowth,number][]).filter(([,n])=>n>0).map(([key,n])=>`+${Math.round(n*100)}% ${{damage:'dano',area:'raio de área',haste:'cadência',duration:'duração'}[key]}`).join(' · ');}
+export function growthText(g:SkillGrowth,technique?:Technique){const labels=technique?.setup?{damage:'força do buff',area:'área',haste:'recarga do buff',duration:'duração do buff'}:{damage:'dano',area:'raio de área',haste:'cadência',duration:'duração'};return (Object.entries(g) as [keyof SkillGrowth,number][]).filter(([,n])=>n>0).map(([key,n])=>`+${Math.round(n*100)}% ${labels[key]}`).join(' · ');}
 
 /** Chave de bônus por elemento de técnica (itens "Pergaminho Katon" etc.). */
 export const ELEMENT_KEY:Record<Element,StatKey>={Fogo:'elFogo',Água:'elAgua',Vento:'elVento',Terra:'elTerra',Raio:'elRaio',Madeira:'elMadeira',Areia:'elAreia',Sombra:'elSombra',Neutro:'elNeutro',Sábio:'elSabio'};
@@ -20,8 +21,10 @@ const UNIVERSAL:StatKey[]=['sage','damage','crit','critDamage','attackSpeed','ar
 
 export function affectedTechniques(item:Item,techniques:Technique[]):string[]{
  const b=item.bonuses;
- return techniques.filter(t=>has(item,...UNIVERSAL)
-   ||(b.projectiles&&['Projétil','Em V'].includes(t.shape))
+ // Setups (buff puro) não são melhorados por itens de ataque.
+ return techniques.filter(t=>!t.setup).filter(t=>has(item,...UNIVERSAL)
+   ||b.projectileSpeed
+   ||((b.projectiles||b.bounce)&&['Projétil','Em V'].includes(t.shape))
    ||(b.normal||b.armorPhysical)&&t.school==='Taijutsu'
    ||b.element&&t.school==='Ninjutsu'
    ||b.genjutsu&&t.school==='Genjutsu'
@@ -47,5 +50,37 @@ export function itemAttribute(item:Item){
  if(has(item,'health','healthPct','defense','dodge','regen','lifesteal','thorns','killHeal','revive35','revive60','shield','smoke','emergencyHeal','periodicHeal','freezeOnHit'))return 'Defesa';
  if(has(item,'status','duration','burnChance','poisonChance','sleepChance','rootChance','chillChance'))return 'Status';
  if(has(item,'support','allyDamage','allySpeed','allyBuff'))return 'Ajudantes';
+ if(has(item,'attackSpeed','projectileSpeed','bounce','move'))return 'Velocidade';
  return 'Utilidade';
+}
+
+/**
+ * Linha Senjutsu (modo sábio) das técnicas de Ninjutsu: a cada acerto, `chance` de causar um golpe adicional
+ * de `multiplier` × o dano normal daquele acerto (mesmo crítico/bônus). Valores provisórios.
+ */
+export const SENJUTSU={chance:.25,multiplier:1.5,label:'Senjutsu (modo sábio)',color:'#f5da86'};
+/** Uma técnica tem a linha Senjutsu quando é Ninjutsu e está infundida com o elemento Sábio (próprio, item Selo de Senjutsu ou Modo Sábio ativo). */
+export function hasSenjutsu(t:Technique,sageInfused:boolean){return !t.setup&&t.school==='Ninjutsu'&&(t.element==='Sábio'||sageInfused);}
+export function senjutsuText(){return `${SENJUTSU.label}: ${Math.round(SENJUTSU.chance*100)}% de chance por acerto de causar dano adicional de ${String(SENJUTSU.multiplier).replace('.',',')}× o dano normal.`;}
+
+/** Valores efetivos de um setup com os afixos de level-up (força, recarga, duração). */
+export function setupNumbers(t:Technique,g:SkillGrowth=NO_GROWTH){
+ const s=t.setup!;const cooldown=s.cooldown/(1+g.haste),duration=s.duration*(1+g.duration);
+ const bonuses:Bonuses={};for(const [k,v] of Object.entries(s.bonuses))bonuses[k as StatKey]=(v as number)*(1+g.damage);
+ // Sem acúmulo, reativar só renova: tempo ativo = duração/recarga (limitado a 100%).
+ return {cooldown,duration,bonuses,stack:s.stack,sage:!!s.sage,uptime:Math.min(1,duration/cooldown)};
+}
+const n1=(v:number)=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
+/** Linhas do card de setup: Recarga · Duração · cada bônus · Ativo X% do tempo · Acumulável. */
+export function setupLines(t:Technique,g:SkillGrowth=NO_GROWTH):string[]{
+ const s=setupNumbers(t,g);
+ return [`Recarga ${n1(s.cooldown)} s`,`Duração ${n1(s.duration)} s`,...bonusText(s.bonuses).split(' · ').filter(Boolean),...(s.sage?['Elemento Sábio + Senjutsu no Ninjutsu','Taijutsu corpo a corpo acerta em área ao redor']:[]),`Ativo ${Math.round(s.uptime*100)}% do tempo`,`Acumulável: ${s.stack?'Sim':'Não'}`];
+}
+/** Texto curto de uma técnica para tooltips/cartas (setup ou ataque com linha Senjutsu). */
+export function techniqueDetail(t:Technique,g:SkillGrowth=NO_GROWTH,sageInfused=false,sageModeKnown=false):string{
+ if(t.setup)return `Setup (buff, sem dano) · ${t.setup.summary} ${setupLines(t,g).join(' · ')}.`;
+ const parts=[`${t.school} · ${t.element} · ${t.shape}`];
+ if(hasSenjutsu(t,sageInfused))parts.push(senjutsuText());
+ else if(t.school==='Ninjutsu'&&sageModeKnown)parts.push(`${SENJUTSU.label} durante o Modo Sábio.`);
+ return parts.join(' · ');
 }

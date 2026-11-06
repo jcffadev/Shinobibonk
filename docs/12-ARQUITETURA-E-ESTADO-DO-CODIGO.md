@@ -12,16 +12,18 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Objetos visuais das técnicas e descarte de recursos. |
 | `src/game/heroes.ts` | 22 shinobis: aldeia, atributos base, passiva, bônus, 4 técnicas (escola, elemento, forma, status), Ultimate. `skillPool` adiciona a 1ª técnica de colegas da mesma aldeia (nível 8+). `sandSynergy`. Formas do Naruto. |
-| `src/game/catalog.ts` | 91 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
+| `src/game/catalog.ts` | 93 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
 | `src/game/progression.ts` (nota) | `Stats.extra` guarda a soma bruta de todos os bônus; `genjutsu` é o multiplicador da escola Genjutsu; `healthPct` e `regenMult` ajustam HP máximo e regeneração. |
 | `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
 | `src/game/evolution.ts` | Formas por nível de cada shinobi, recorte de retrato nos atlas e nível de desbloqueio das técnicas. |
 | `src/game/preparation.ts` | 16 nós da árvore permanente, usos de atualizar/pular/banir, preço das kunais, carteira administrativa (999.999), compra e reembolso. |
 | `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis; `GUARDIAN_RULES` e `guardianHpMultiplier(zoneElapsed)` (0,6× → 1,0× aos 160 s). |
+| `src/game/npcs.ts` | Ebisu e Iruka: `NPC_RULES`, `LEGENDARY_VALUES`, `TOTEM_RULES`, sorteio de trocas, `NPC_ALLIES.iruka`, `NPC_NAMES` e retratos SVG provisórios. Telas de escolha: −3 Ebisu, −4 menu do Iruka, −5 pergaminho lendário. |
+| `src/scene/narutoTotem.ts` | Barra 3D do Naruto Totem (nome, HP, segundos restantes). |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
-| `src/game/pills.ts` | Fonte única das 18 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |
+| `src/game/pills.ts` | Fonte única das 19 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |
 | `src/game/tuning.ts` | 13 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 4 grupos: Inimigos, Personagem, Ganhos, Drops. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
 | `src/ui/RunSheet.tsx` | Ficha da run (P), ícones de item/pílula e retrato do herói; exporta os grupos de atributos. |
 | `src/ui/RunSummary.tsx` + `src/summary.css` | Tela de resumo pós-run (vitória/derrota), derivada do `WorldSnapshot`, com a faixa de Lamens ganhos. |
@@ -147,7 +149,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - 10 linhas de atributo com 10 níveis cada; custo = base + 25 × nível comprado.
   - Quarta opção, Atualizar/Pular/Banir (+1 uso por nível, até 10), Suporte adicional e Quarta técnica.
 - **Loja**:
-  - 91 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
+  - 93 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
   - Desbloquear só adiciona ao pool. Há filtros e a opção de arquivar da run.
 - **Missões**: Genin, Chunin, Jonin e Kage alteram a escala de dificuldade.
 - **Reset**: devolve tudo o que foi gasto e limpa árvore, desbloqueios, arquivamentos e plano.
@@ -175,6 +177,8 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - **Plano do Shikamaru** (NPC com sprite do Shikamaru): até 3 vezes por zona; cada uma dá +1 kunai grátis ao derrotar o guardião (1 + planos, máx. 4). Sem penalidade.
   - **Selo do guardião**: invoca o guardião da zona na hora; HP cresce com o tempo na zona.
   - Hooks de teste: `summonGuardian`, `shikamaru`, `defeatGuardian`, `guardian`.
+  - **Ebisu/Iruka/Naruto Totem**: ver docs/01. Hooks: `ebisu`, `iruka`, `npcState`, `fillAllies`, `totem`, `damageTotem`, `killClones`, `collectDrops`.
+  - **Técnicas**: `Technique.setup` (forma 'Buff'), `ultimateBase`, preparo de golpe dividido por `projectileSpeed`, Modo Sábio e linha Senjutsu (`SENJUTSU`, `hasSenjutsu`, `techniqueDetail` em `combat.ts`); snapshot `setups`. Hooks: `castDelayed`, `senjutsu`, `combat`, `setRunBuff`, `setGrowth`; `cast` resolve na hora. Ver docs/04.
   - **Altar de desafio**: 6 inimigos; vencer dá uma kunai grátis.
   - **Maldição de Orochimaru**: +20% de dificuldade, +25% de XP e saque.
   - **Altar para proteger**: ficar 20 s no círculo dá uma kunai grátis.

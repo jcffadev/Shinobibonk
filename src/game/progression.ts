@@ -3,7 +3,9 @@ import { HEROES, HERO_BY_ID } from './heroes.ts';
 import { FORMS, formAt } from './evolution.ts';
 import { pillBonuses } from './pills.ts';
 export type Difficulty='Genin'|'Chunin'|'Jonin'|'Kage';
-export type Stats={sage:number;maxHp:number;damage:number;armor:number;moveSpeed:number;attackSpeed:number;crit:number;critDamage:number;evasion:number;regen:number;luck:number;pickup:number;xpGain:number;moneyGain:number;ultimateRate:number;area:number;projectiles:number;duration:number;poison:number;status:number;physical:number;ninjutsu:number;genjutsu:number;supportSlots:number;allyDamage:number;allySpeed:number;allyBuff:number;
+export type Stats={sage:number;maxHp:number;damage:number;armor:number;moveSpeed:number;attackSpeed:number;
+  /** Velocidade de projétil: ×viagem dos projéteis e ÷tempo de preparo (golpe/lançamento) das técnicas sem projétil. */
+  projectileSpeed:number;bounce:number;crit:number;critDamage:number;evasion:number;regen:number;luck:number;pickup:number;xpGain:number;moneyGain:number;ultimateRate:number;area:number;projectiles:number;duration:number;poison:number;status:number;physical:number;ninjutsu:number;genjutsu:number;supportSlots:number;allyDamage:number;allySpeed:number;allyBuff:number;
   /** Soma bruta de todos os bônus (itens, pílulas, buffs da run); a simulação lê daqui as mecânicas de item (elementos, procs, roubo de vida...). */
   extra:Bonuses};
 export const HERO_BASE=Object.fromEntries(HEROES.map(h=>[h.id,h.base]));
@@ -25,7 +27,7 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
     evasion:Math.min(.6,add('dodge')),regen:(base.regen+n*.02+add('regen'))*Math.max(0,1+add('regenMult')),luck:Math.floor(n/5)+add('luck')+p('Fortuna')*2,
     pickup:2.5*(1+add('pickup'))+add('pickupFlat')+p('Magnetismo')*.6,xpGain:1+add('exp')+p('Estudo')*.05,moneyGain:1+add('gold')+p('Comércio')*.05,
     ultimateRate:1+add('cool'),area:1+add('area'),projectiles:1+add('projectiles'),
-    duration:1+add('duration'),poison:add('dot'),status:Math.min(.9,add('status')),physical:1+add('normal'),ninjutsu:1+add('element'),genjutsu:1+add('genjutsu'),attackSpeed:Math.max(.2,1+n*.004+add('attackSpeed')+p('Celeridade')*.02),moveSpeed:base.speed*Math.max(.3,1+n*.001+add('move')+p('Agilidade')*.025),extra:{...b},
+    duration:1+add('duration'),poison:add('dot'),status:Math.min(.9,add('status')),physical:1+add('normal'),ninjutsu:1+add('element'),genjutsu:1+add('genjutsu'),attackSpeed:Math.max(.2,1+n*.004+add('attackSpeed')+p('Celeridade')*.02),projectileSpeed:Math.max(.3,1+add('projectileSpeed')),bounce:Math.floor(add('bounce')),moveSpeed:base.speed*Math.max(.3,1+n*.001+add('move')+p('Agilidade')*.025),extra:{...b},
     supportSlots:3+Math.min(1,add('support'))+Math.min(1,p('Suporte adicional')),allyDamage:1+add('allyDamage'),allySpeed:1+add('allySpeed'),allyBuff:1+add('allyBuff'),
   };
 }

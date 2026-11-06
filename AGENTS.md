@@ -15,6 +15,7 @@ Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conf
 - Não confunda imagens em references/concept_art com screenshots reais.
 - Preserve decisões de gameplay do usuário; quando houver divergência entre código e requisitos, documente e corrija com cuidado.
 - Faça mudanças incrementais e registre mudanças no CHANGELOG.md; não declare teste de sintaxe ou jogabilidade sem executá-lo.
+- Fonte de conhecimento canônico (vilas, clãs, organizações, técnicas, natureza de chakra/elemento): **Naruto Wiki/Narutopedia** (https://naruto.fandom.com/). Cite a página consultada. Se encontrar fonte mais atualizada ou divergente, avise o usuário para revisar antes de alterar o personagem. Percentuais e atributos de gameplay continuam regras originais do protótipo.
 - Não inclua bibliotecas externas ou ativos de terceiros sem verificar licença e necessidade.
 
 ## Invariantes de design

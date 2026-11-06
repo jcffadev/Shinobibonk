@@ -1,4 +1,5 @@
 import type { Bonuses, StatKey } from './catalog';
+import { NPC_RULES } from './npcs.ts';
 
 /**
  * Buff passivo único que cada shinobi dá ao grupo quando é ajudante (selado na run).
@@ -31,6 +32,8 @@ export const ALLY_BUFFS: Record<string, AllyBuff> = {
   tobirama: { title: 'Percepção Sensorial', bonuses: { pickupFlat: 1.5 } },
   kankuro: { title: 'Veneno de Marionete', bonuses: { dot: .2 } },
   guy: { title: 'Portões Abertos', bonuses: { normal: .1, move: .06 } },
+  // NPC não jogável (evento da Iruka, src/game/npcs.ts): entra já com a passiva em força máxima.
+  iruka: { title: 'Lições da Academia', bonuses: { exp: NPC_RULES.irukaAllyExp } },
 };
 
 const pct = (v: number) => `${Math.round(v * 1000) / 10}%`.replace('.', ',');
@@ -44,6 +47,9 @@ const LABEL: Partial<Record<StatKey, (v: number) => string>> = {
   element: (v) => `+${pct(v)} dano de ninjutsu`,
   normal: (v) => `+${pct(v)} dano de taijutsu`,
   attackSpeed: (v) => `+${pct(v)} cadência`,
+  projectileSpeed: (v) => `+${pct(v)} velocidade de projétil`,
+  bounce: (v) => `+${num(v)} ricochete`,
+  sage: () => 'elemento Sábio',
   status: (v) => `+${pct(v)} chance de status`,
   move: (v) => `+${pct(v)} movimento`,
   exp: (v) => `+${pct(v)} XP`,

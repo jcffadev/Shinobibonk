@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-06 — velocidade de projétil, setups, Senjutsu, Ebisu, Iruka e Naruto Totem
+- **Cadência** revisada: também acelera os ajudantes (metade do bônus) e os procs periódicos de item.
+- **Velocidade de projétil** (atributo novo): acelera a viagem dos projéteis e o preparo dos golpes e lançamentos. Itens novos: Lente do Atirador e Seixo Polido do Rio (com ricochete); pílula nova: Pílula do Arremesso. Itens de pulo/deslize ficam PENDENTES.
+- **Técnicas de setup** (buff puro, automáticas): Portões do Inferno (Lee), Portão da Dor (Guy), Byakugou (Tsunade), Modo Sábio (Naruto, Jiraiya). Cards mostram recarga, duração, bônus, % do tempo ativo e acumulável. A Ultimate da Tsunade virou Invocação de Katsuyu.
+- **Modo Sábio**: elemento Sábio e taijutsu corpo a corpo em área. **Linha Senjutsu** em ninjutsu: 25% de chance de um extra de 1,5× o dano.
+- **Eventos**: Ebisu (troca: ganho × 1,1 de custo), Iruka (lição grátis, pergaminho lendário com −20% de custo, ou Iruka como ajudante de +25% XP) e Naruto Totem (7:00–6:00, clones dão XP, totem dá 2 níveis, não selável).
+- **Fonte canônica**: Naruto Wiki/Narutopedia, registrada no AGENTS.md.
+- **Verificação**: tsc, vite build, verify-rules (93 itens) e verify-runtime passaram; testes de navegador à parte para velocidade, setups, Modo Sábio, Senjutsu e os três eventos. Balanceamento PENDENTE.
+
 ## 2026-11-06 — sinergias, seleção com filtros e guardião invocável
 - **Sinergias de vila e organização** (`src/game/synergy.ts`): ativam com 2+ membros (herói + ajudantes, ao menos 1 ajudante), faixas 2/3/4+, acumulam vila + organizações (ex.: Akatsuki). Substituem a antiga sinergia fixa da Areia (Irmãos da Areia completos mantêm +12 armadura/+15% dano). Painel "SINERGIAS" abaixo do card do herói; cartões de ajudante mostram a PASSIVA individual e as tags das sinergias. Dados de clã/organização/afinidade em `heroes.ts` (`HERO_CLAN`, `ORGANIZATIONS`, `heroOrganizations`, `heroAffinity`).
 - **Seleção de shinobi** (`src/ui/CharacterSelect.tsx`): grade de retratos com selo de elemento; filtros por vila, elemento, organização/clã e busca; contagem "X de 22".

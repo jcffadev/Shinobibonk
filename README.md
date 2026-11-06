@@ -29,13 +29,14 @@ Atalhos locais:
 - `src/game/`: dados e regras sem React.
   - `heroes.ts`: 22 shinobis e 88 técnicas, clãs, organizações e afinidade elemental.
   - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
-  - `catalog.ts`: 91 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
+  - `npcs.ts`: eventos do Ebisu e do Iruka, Iruka como ajudante e regras do Naruto Totem.
+  - `catalog.ts`: 93 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
   - `progression.ts`: atributos, dificuldade e crítico.
   - `evolution.ts`: formas por nível.
   - `combat.ts`: afixos de técnica.
   - `preparation.ts`: árvore permanente e carteira.
   - `missions.ts`: três zonas e HP do guardião invocável.
-  - `pills.ts`: 18 pílulas.
+  - `pills.ts`: 19 pílulas.
   - `tuning.ts`: parâmetros de balanceamento do modo debug (salvos e aplicados em todas as runs).
   - `rewards.ts`: Lamens ganhos pelo desempenho da run.
   - `allies.ts`: buff único de cada shinobi como ajudante.

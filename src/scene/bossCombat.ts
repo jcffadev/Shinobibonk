@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { HERO_BY_ID, type Technique } from '../game/heroes';
+import { HERO_BY_ID, ultimateBase, type Technique } from '../game/heroes';
 import { techniqueVisual, disposeObject } from './techniqueEffects';
 
 /**
@@ -92,12 +92,13 @@ export function createBossCombat(ctx: BossContext) {
     let technique: Technique, shape: CastShape, range: number, width = 1.5, power: number, ultimate = false;
     if (state.guardian && lowHp && !state.ultimateUsed) {
       // Ultimate do guardião, uma vez, abaixo de 50% de HP: grande área em volta dele.
-      technique = { ...hero.techniques[3], name: hero.ultimate };
+      technique = { ...ultimateBase(hero), name: hero.ultimate, setup: undefined, shape: 'Área' };
       shape = 'circle'; range = 5.6; power = BOSS_RULES.ultimatePower; ultimate = true; state.ultimateUsed = true;
     } else {
       // Mega elites usam mais técnicas conforme a zona; guardiões usam o kit todo.
-      const available = hero.techniques.slice(0, state.guardian ? 4 : Math.min(4, 1 + ctx.zone()));
-      technique = available[state.next % available.length] ?? hero.techniques[0];
+      // Técnicas de setup (buff puro) não causam dano e ficam fora do repertório do chefe.
+      const available = hero.techniques.slice(0, state.guardian ? 4 : Math.min(4, 1 + ctx.zone())).filter((t) => !t.setup);
+      technique = available[state.next % Math.max(1, available.length)] ?? hero.techniques[0];
       state.next = Math.floor(Math.random() * 1000);
       shape = shapeOf(technique); power = technique.power;
       range = shape === 'circle' ? (technique.shape === 'Corpo a corpo' ? 2.6 : 2.4) : shape === 'cone' ? 6 : shape === 'ring' ? (technique.shape === 'Onda' ? 4.4 : 3.2) : 10;

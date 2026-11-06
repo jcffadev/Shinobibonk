@@ -1,4 +1,5 @@
 import { HERO_BY_ID, HEROES, NARUTO_FORMS } from './heroes.ts';
+import { NPC_PORTRAITS } from './npcs.ts';
 export type Form={level:number;name:string;outfit?:string;detail?:string};
 // Níveis são design do jogo. Personagens sem outra fase apropriada mantêm a aparência.
 export const FORMS:Record<string,Form[]>={
@@ -29,6 +30,8 @@ export function spriteFile(id:string,level=1){if(id==='naruto')return `/assets/s
 export function requiredLevel(heroId:string,index:number){return heroId==='naruto'?[1,10,5,15][index]:[1,5,12,20][index];}
 const evolvedCells=Object.entries(FORMS).flatMap(([id,forms])=>id==='naruto'?[]:forms.filter(f=>f.level>1).map(f=>id+'-'+f.level));
 export function portraitRegion(id:string,level=1){
+ // NPCs não jogáveis (Ebisu, Iruka): retrato provisório próprio, imagem inteira.
+ if(NPC_PORTRAITS[id])return {path:NPC_PORTRAITS[id],cols:1,rows:1,index:0};
  const form=formAt(id,level);
  if(id==='naruto')return {path:'/assets/shinobi-roster-v2.png',cols:5,rows:5,index:level<10?0:level<25?22:level<50?23:24};
  if(form.level>1)return {path:'/assets/shinobi-evolutions-v2.png',cols:6,rows:5,index:Math.max(0,evolvedCells.indexOf(id+'-'+form.level))};

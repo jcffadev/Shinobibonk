@@ -44,6 +44,19 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const akat=activeSynergies('itachi',['pain']);assert.ok(akat.some(s=>s.id==='org:akatsuki'));assert.ok(!akat.some(s=>s.kind==='vila'),'Itachi (Folha) + Pain (Chuva) não compartilham vila');
  const uch=activeSynergies('itachi',['sasuke']);assert.deepEqual(uch.map(s=>s.id).sort(),['org:uchiha','vila:Vila da Folha'],'membro acumula vila + organização');
  assert.ok((synergyBonuses(activeSynergies('naruto',['sasuke','sakura','kakashi'])).damage??0)>.2,'Time 7 com 4 membros escala');}
+{// Velocidade de projétil, setups (buff puro) e linha Senjutsu.
+ const {setupNumbers,setupLines,hasSenjutsu,SENJUTSU,affectedTechniques,itemAttribute:attr}=await import('../src/game/combat.ts');const {HERO_BY_ID,ultimateBase}=await import('../src/game/heroes.ts');
+ assert.equal(calculateStats('naruto',1).projectileSpeed,1);assert.ok(Math.abs(calculateStats('naruto',1,{'Lente do Atirador':2}).projectileSpeed-1.28)<1e-9);assert.equal(calculateStats('naruto',1,{'Seixo Polido do Rio':2}).bounce,2);
+ assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Arremesso':3}).projectileSpeed-1.3)<1e-9);
+ const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual(setups,['Byakugou','Modo Sábio','Modo Sábio dos Sapos','Portão da Dor','Portões do Inferno']);
+ const gates=HERO_BY_ID.lee.techniques.find(t=>t.setup);const g=setupNumbers(gates);assert.equal(g.cooldown,11);assert.equal(g.duration,6);assert.ok(Math.abs(g.uptime-6/11)<1e-9);assert.ok(setupLines(gates).includes('Ativo 55% do tempo'));assert.ok(setupLines(gates).includes('Acumulável: Não'));
+ assert.ok(setupNumbers(gates,{damage:0,area:0,haste:.1,duration:.2}).uptime>g.uptime,'afixos de recarga/duração aumentam o tempo ativo');
+ assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Kage Bunshin');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
+ assert.ok(HEROES.every(h=>!h.techniques[0].setup),'a técnica inicial sempre ataca');
+ assert.equal(SENJUTSU.multiplier,1.5);const rasengan=HERO_BY_ID.naruto.techniques.find(t=>t.name==='Rasengan'),punch=HERO_BY_ID.hashirama.techniques[0];
+ assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID.jiraiya.techniques[2],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
+ const lens=ITEMS.find(i=>i.id==='sniper-lens'),pebble=ITEMS.find(i=>i.id==='river-pebble');assert.ok(lens&&pebble);assert.equal(attr(pebble),'Velocidade');
+ assert.ok(!affectedTechniques(lens,HERO_BY_ID.lee.techniques).includes('Portões do Inferno'),'itens de ataque não afetam setups');assert.equal(affectedTechniques(lens,HERO_BY_ID.lee.techniques).length,3);}
 assert.ok(skillPool('gaara').some(t=>t.name==='Corte do Leque'));assert.ok(skillPool('gaara').some(t=>t.name==='Agulhas de Karasu'));
 assert.equal(choiceCount({}),3);assert.equal(choiceCount({'Quarta opção':1}),4);
 assert.deepEqual(choiceUses({'Atualizar':7,'Pular':7,'Banir':7}),{reroll:10,skip:10,ban:10});

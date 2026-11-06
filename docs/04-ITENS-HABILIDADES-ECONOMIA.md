@@ -1,5 +1,58 @@
 # Pool, habilidades, itens, economia
 
+## Velocidade de ataque, velocidade de projétil, setups e Senjutsu (IMPLEMENTADO em 06/11/2026, valores provisórios)
+Pedido do usuário: velocidade de ataque é um dos atributos mais importantes; velocidade de projétil deve existir e influenciar praticamente todas as técnicas de golpe, projétil e lançamento, exceto as de buff ("setup").
+
+- **Cadência (`attackSpeed`)**:
+  - Divide a recarga de todas as técnicas de ataque do jogador.
+  - Ajudantes usam metade do bônus: `1,5 / (allySpeed × (1 + (cadência − 1) × 0,5))`.
+  - Raios do Chidori Nagashi e chamas da Amaterasu (itens) também são divididos pela cadência.
+  - Não afeta a Ultimate nem os setups; os setups ficam de fora para evitar o laço "Portões dão cadência → mais Portões".
+- **Velocidade de projétil (`projectileSpeed`, mínimo 0,3)**:
+  - Projétil, Em V e Onda: a velocidade de viagem é multiplicada pelo atributo (base 10 m/s; Kage Bunshin 6 m/s).
+  - Corpo a corpo, Cone, Linha, Área e Órbita: ganharam um preparo até o acerto, dividido pelo atributo (Taijutsu 0,14 s; Ninjutsu/Genjutsu 0,24 s).
+  - Não afeta setups, Ultimate nem procs de item; ajudantes também usam o atributo.
+  - Fontes:
+    - Lente do Atirador (Comum, sem limite): +14% e +3 pontos de crítico.
+    - Seixo Polido do Rio (Incomum, até 3): +1 ricochete em Projétil/Em V e +9%. O projétil que já acertou salta para o inimigo mais próximo ainda não atingido, até 6 m.
+    - Pílula do Arremesso: +10% por nível.
+- **Itens de pulo e deslize (PENDENTE até as mecânicas existirem)**:
+  - Pulo:
+    - +1 pulo e altura;
+    - +1 pulo, velocidade e rajada periódica;
+    - armadura, −velocidade e onda sísmica ao aterrissar.
+  - Deslize:
+    - onda ao deslizar;
+    - invulnerável no início do deslize e recarga mais rápida.
+  - Pesca não terá itens (decisão do usuário).
+- **Técnicas de setup (buff puro)**:
+  - Ativação automática com inimigo a até 9 m; não causam dano. Não acumulam: reativar renova a duração.
+  - Card e tooltip mostram Recarga, Duração, cada bônus, "Ativo X% do tempo" e Acumulável.
+  - No level-up, os afixos de setup são força, recarga e duração. Chefes não usam setups.
+  - A Ultimate passou a usar a última técnica de ataque do kit (`ultimateBase`).
+
+| Técnica | Shinobi / slot (substitui) | Recarga | Duração | Bônus | Ativo |
+|---|---|---|---|---|---|
+| Portões do Inferno | Rock Lee / 4 (Vendaval da Folha) | 11 s | 6 s | +22% dano, +20% cadência, +15% movimento | 55% |
+| Portão da Dor | Might Guy / 2 (Furacão Poderoso) | 14 s | 7 s | +35% taijutsu, +15% cadência, +8 pts crítico | 50% |
+| Byakugou | Tsunade / 3 (Quebra de Rocha) | 18 s | 8 s | +3 HP/s, +12 armadura, +20% taijutsu | 44% |
+| Modo Sábio | Naruto / 4 (Rajada de Chakra) | 16 s | 7 s | +15% dano, +20% área + efeitos de sábio | 44% |
+| Modo Sábio dos Sapos | Jiraiya / 4 (Canto dos Sapos) | igual ao Modo Sábio | | | |
+
+  - A Ultimate da Tsunade virou "Invocação de Katsuyu", para não repetir o nome Byakugou.
+- **Modo Sábio, enquanto ativo**:
+  - As técnicas contam como elemento Sábio (valem o Pergaminho do Monte Myoboku e o +20% do Hashirama).
+  - O Ninjutsu ganha a linha Senjutsu.
+  - O taijutsu corpo a corpo vira golpe em área ao redor, com raio ×1,8 escalando com Área.
+- **Linha Senjutsu ("Senjutsu (modo sábio)")**:
+  - É uma linha de dano adicional, como queimadura e veneno: 25% de chance por acerto de um golpe extra de 1,5× o dano daquele acerto. As constantes ficam em `SENJUTSU` (`combat.ts`).
+  - Têm a linha as técnicas de Ninjutsu do elemento Sábio, as técnicas com Selo de Senjutsu e as técnicas usadas durante o Modo Sábio. Taijutsu não tem.
+  - "Por chance" foi decisão do agente; o usuário não especificou entre chance e sempre (PENDENTE confirmação).
+- **Narutopedia (fonte canônica)**, páginas Eight Gates, Strength of a Hundred Seal, Sage Mode e Senjutsu:
+  - "Portões do Inferno" é nome sugerido pelo usuário; o canônico é Oito Portões/Portões Internos.
+  - Byakugou é Fūinjutsu, mas no jogo ficou como Taijutsu (o jogo só tem 3 escolas).
+  - Sakura também usa o Byakugou, e Hashirama e Minato também usam Modo Sábio; eles ainda não têm setup. Decisão do usuário PENDENTE.
+
 ## Economia
 Lamens = moeda permanente, ganha por partidas/conquistas; compra árvore, seus níveis, e desbloqueia itens não comuns para entrar no pool aleatório. Comuns entram sem compra. Desbloquear não concede item imediatamente. Chakra não é concedido diretamente por itens; efeitos podem acelerar recarga da Ultimate. Drops de normais/épicos/lendários escalam por dificuldade para XP, dinheiro e carga da Ultimate.
 
@@ -43,7 +96,7 @@ Slots 1–4: **somente automáticos**, cada um com recarga própria; o quarto é
   - Itens vêm só de recompensas: kunai, shuriken, eventos, drop de item e recusa de selamento.
   - Sem nada elegível, aparece uma carta de "Powerlevel" (+6 HP, +2% dano, +0,5 crítico, +1% movimento, +1 armadura ou +1% cadência).
 - **Atualizar, pular e banir**: teclas F/X/Z ou botões, com 3 usos base cada e até 10 com a árvore. Banir remove a opção pelo resto da run.
-- **Pílulas**: 18 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado do caça-níquel, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
+- **Pílulas**: 19 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado do caça-níquel, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
 
 ## Pílulas (IMPLEMENTADO, valores provisórios)
 O formato segue a página de vitaminas da wiki de referência: cada pílula aumenta **um atributo por nível**. Os nomes foram adaptados ao mundo ninja, sem Pokémon.
@@ -65,7 +118,7 @@ A Pílula do Mercador afeta só o Ryu recebido na run, nunca os Lamens.
 - **Pílulas antigas**: substituídas. A Rubra virou Soldado + Elemental, a Verde virou Akimichi e a Azul virou Hiden. Arquivamentos salvos com os nomes antigos passam a ser ignorados.
 - **Cálculo**: `calculateStats` soma `pillBonuses` a cada recálculo, a partir das fontes, sem buff residual.
 - **PENDENTE**:
-  - pílulas de sistemas que o jogo ainda não tem (escudo, velocidade de projétil, roubo de vida, espinhos, sobrecura, maldição, elites, power-ups, atributo aleatório);
+  - pílulas de sistemas que o jogo ainda não tem (escudo, roubo de vida, espinhos, sobrecura, maldição, elites, power-ups, atributo aleatório);
   - pílula mais forte conforme a raridade da carta;
   - limite de espaços de pílula;
   - balanceamento.
@@ -90,7 +143,7 @@ Afixos compatíveis com cada habilidade. Setup prioriza duração e recarga, pod
 ## Catálogo
 O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 
-**IMPLEMENTADO** em `src/game/catalog.ts`: **91 itens** no formato da página de itens da wiki de referência (raridade · efeito · gatilho · limite de cópias). Os nomes foram adaptados ao mundo ninja, os valores levemente alterados e nada lembra Pokémon.
+**IMPLEMENTADO** em `src/game/catalog.ts`: **93 itens** no formato da página de itens da wiki de referência (raridade · efeito · gatilho · limite de cópias). Os nomes foram adaptados ao mundo ninja, os valores levemente alterados e nada lembra Pokémon.
 - **Raridades**: 25 comuns, 27 incomuns, 15 raros, 14 épicos e 10 lendários.
 - **Custo de desbloqueio**: comum 0, incomum 150, raro 300, épico 500, lendário 900.
 - **Limites**: "sem limite" da referência vira 10 cópias; itens únicos têm 1.
@@ -142,4 +195,4 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 - pontos que crescem com o dinheiro gasto;
 - altares de símbolos.
 
-**PENDENTE**: balanceamento dos 91 itens; os efeitos visuais de raios e chamas são simples (anéis no chão).
+**PENDENTE**: balanceamento dos 93 itens; os efeitos visuais de raios e chamas são simples (anéis no chão).

@@ -106,7 +106,7 @@ export function DebugPanel({ getApi }: { getApi: () => DebugApi | null }) {
         <span>Ameaça HP ×<b>{fmt(live.threat.hp, 2)}</b> · dano ×<b>{fmt(live.threat.damage, 2)}</b></span>
         <span>Vel. inimigo ×<b>{fmt(live.threat.speed, 2)}</b> · spawn a cada <b>{fmt(live.threat.spawnInterval, 2)} s</b></span>
         <span>Dano <b>{fmt(s.damage)}</b> · Armadura <b>{fmt(s.armor)}</b></span>
-        <span>Vel. ataque ×<b>{fmt(s.attackSpeed, 2)}</b> · Mov. <b>{fmt(s.moveSpeed, 2)}</b></span>
+        <span>Vel. ataque ×<b>{fmt(s.attackSpeed, 2)}</b> · Projétil ×<b>{fmt(s.projectileSpeed, 2)}</b> · Mov. <b>{fmt(s.moveSpeed, 2)}</b></span>
         <span>Crítico <b>{fmt(s.crit * 100)}%</b> · ×<b>{fmt(s.critDamage, 2)}</b></span>
         <span>Evasão <b>{fmt(s.evasion * 100)}%</b> · Regen <b>{fmt(s.regen, 2)}/s</b></span>
         <span>Sorte <b>{s.luck}</b> · Área ×<b>{fmt(s.area, 2)}</b> · Proj. <b>{fmt(s.projectiles, 0)}</b></span>

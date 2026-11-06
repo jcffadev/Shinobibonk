@@ -42,6 +42,8 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 | Minato | +12% movimento | Pain | +40 HP máximo |
 | Tsunade | +1,5 HP/s de cura | Tobirama | +1,5 m de coleta |
 | Kankuro | +20% veneno | Might Guy | +10% taijutsu, +6% movimento |
+  - Iruka (NPC, não jogável): entra como ajudante pelo evento do Iruka com +25% de XP já no máximo; ataque "Kunai da Academia". Dados em `src/game/npcs.ts` (`NPC_ALLIES`).
+  - Divergência registrada: o requisito original (contexto do chat) dizia que o protagonista não conta na contagem de vila, que composição mista recebe sinergia reduzida e que a ativação mostra notificação. O código atual conta o herói e não implementa as duas outras regras. Decisão do usuário PENDENTE.
   - Itens que afetam aliados: Chá Verde de Konoha, Estandarte da Aliança e Pergaminho de Recrutamento.
 - **IMPLEMENTADO: vagas e sinergia**
   - Vagas: 3 + 1 pelo Pergaminho de Recrutamento + 1 pelo nó permanente "Suporte adicional", máximo 5.

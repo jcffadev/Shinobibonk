@@ -1,6 +1,7 @@
 import '../allies.css';
 import { HERO_BY_ID } from '../game/heroes';
 import { ALLY_BUFFS, allyBuffText } from '../game/allies';
+import { NPC_ALLIES } from '../game/npcs';
 import { synergiesOf, type ActiveSynergy } from '../game/synergy';
 import { HeroPortrait } from './RunSheet';
 
@@ -35,8 +36,10 @@ export function AllyCards({ heroId, synergies = [], allies, slots, allyBuff, all
     <SynergyPanel heroId={heroId} synergies={synergies} />
     <small className="ally-cards-title">AJUDANTES {allies.length}/{slots}</small>
     {allies.map((id) => {
-      const hero = HERO_BY_ID[id]; if (!hero) return null;
-      const technique = hero.techniques[0];
+      // Heróis jogáveis ou NPC ajudante (Iruka, src/game/npcs.ts), que não pertence ao elenco.
+      const hero: { name: string; village: string } | undefined = HERO_BY_ID[id] ?? NPC_ALLIES[id];
+      const technique = HERO_BY_ID[id]?.techniques[0] ?? NPC_ALLIES[id]?.technique;
+      if (!hero || !technique) return null;
       const mine = synergiesOf(id, synergies);
       const buff = ALLY_BUFFS[id];
       return <article className="ally-card" key={id} style={{ ['--ally' as string]: technique.color }}>

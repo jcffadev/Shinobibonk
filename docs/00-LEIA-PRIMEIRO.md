@@ -37,7 +37,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
   - Elenco de 22 shinobis em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
   - Biblioteca com 4 técnicas por shinobi e plano de build (planejar/arquivar técnicas, pílulas e itens).
-  - Árvore permanente com 16 nós e loja de 91 itens com filtros e arquivamento.
+  - Árvore permanente com 16 nós e loja de 93 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
 - **Run**:
   - Contagem regressiva de 10:00 e vitória ao chegar a 0:00. Derrota ao zerar o HP.
@@ -56,7 +56,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Itens vêm apenas de recompensas: kunai, shuriken, eventos, drop de item e recusa de selamento.
   - F/X/Z para atualizar, pular e banir; cada um tem 3 usos base, ampliáveis pela árvore. Banir exclui a opção pelo resto da run.
   - 3 s de invulnerabilidade ao subir de nível.
-  - 18 pílulas com tema ninja (uma por atributo), até o nível 10 cada. Ver [04](04-ITENS-HABILIDADES-ECONOMIA.md).
+  - 19 pílulas com tema ninja (uma por atributo), até o nível 10 cada. Ver [04](04-ITENS-HABILIDADES-ECONOMIA.md).
 - **Evoluções visuais por nível**: Naruto troca de forma nos níveis 10, 25 e 50; os outros shinobis aos 15/20/25/30, conforme o personagem. Cada evolução dá +25% do HP base.
 - **Ultimate**:
   - Recarga passiva de 55 s, ajustada pela velocidade de recarga.
@@ -123,7 +123,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Limite de inimigos**: está fixado em **no máximo 180 vivos**. A meta de 1.500 não foi implementada nem medida.
 - **Descoberta**: não considera oclusão por terreno ou árvores.
 - **Selamento**: não tem tentativas nem chance de falha (a regra das 3 tentativas não está implementada). Também não existe selamento permanente para desbloquear personagens.
-- **Aliados**: os valores dos buffs únicos são provisórios. Sinergias além da Areia (outras vilas e equipes canônicas) não existem.
+- **Aliados**: os valores dos buffs únicos são provisórios. Sinergias de vila/organização existem (`synergy.ts`), mas divergem do requisito original: o herói conta na vila, não há redução para composição mista nem notificação ao ativar (decisão do usuário PENDENTE).
 - **Moeda**: a fórmula de Lamens por desempenho é provisória e não foi balanceada. Com o modo debug dá para inflar a recompensa (avançar tempo, mudar nível), e parâmetros salvos (por exemplo, mais EXP) também afetam os Lamens das próximas runs.
 - **Conta**: login, cadastro, save da run, ranking, backend e multiplayer não existem. O progresso fica em `localStorage`.
 - **Atributos e itens**: a Sorte só afeta a raridade das ofertas de item e de técnica. Remover pílula/item (Shisui/Ichiraku) não existe.
@@ -133,7 +133,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 ## Verificação (05/11/2026)
 
 - **TESTADO nesta data**: `tsc -b` e `vite build` concluídos sem erro. O Vite avisa que o bundle JS tem 879 kB, acima de 500 kB.
-- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 88 técnicas, 91 itens, distribuição de crítico e raridade).
+- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 88 técnicas, 93 itens, distribuição de crítico e raridade).
 - **TESTADO nesta data**: `node scripts/verify-runtime.mjs` (Playwright/Edge) passou nas 23 verificações sem erros de JS, inclusive a nova verificação da tecla Y, já com debug, resumo e pílulas integrados.
 - **TESTADO nesta data (debug sem login)**: teste avulso no navegador confirmou:
   - o modal de conta não tem campos de login nem de senha;

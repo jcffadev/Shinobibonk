@@ -36,7 +36,7 @@ Estado em 05/11/2026:
 - Item 1 está **IMPLEMENTADO parcialmente**: Three.js, câmera orbital e billboards existem; colisão, navegação e pulo não.
 - Item 2 está **PENDENTE**.
 - Itens 3 e 4 estão **parciais**: ficha, eventos, minimapa e aliados em combate existem; ranking e selamento com tentativas não.
-- Item 5 está **parcial**: 91 itens e 88 técnicas existem; fusão não.
+- Item 5 está **parcial**: 93 itens e 88 técnicas existem; fusão não.
 
 ## Nota visual
 `references/concept_art/` contém artes de **referência visual geradas**, não capturas do jogo. `references/screenshots/` tem capturas do protótipo 2D antigo. `artifacts/` tem screenshots reais da base atual.
