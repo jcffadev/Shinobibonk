@@ -5,7 +5,7 @@ import { chromium } from 'file:///C:/Users/jcffa/.cache/codex-runtimes/codex-pri
 const server=await createServer({server:{host:'127.0.0.1',port:5176,strictPort:true}});await server.listen();
 let browser;const checks=[],errors=[],missing=[];
 try {
-browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--mute-audio','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:900}});
 page.on('pageerror',e=>errors.push(e.message));
 page.on('response',r=>{if(r.status()===404&&!r.url().endsWith('favicon.ico'))missing.push(r.url());});
