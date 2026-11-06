@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-06 — Configurações completas
+- Tela de Configurações no formato da referência (Som, Gráficos, Tela, Controles, Teclas, Interface, Idioma, Conta), salva na hora e aplicada ao vivo: volume/efeitos/vozes, qualidade, limite de FPS, resolução, tela cheia, sensibilidade e inversão da câmera, distância da câmera, teclas remapeáveis, tamanho/opacidade do HUD, minimapa, avisos, nome do jogador e reinício/apagar dados. Itens sem suporte aparecem como "em breve".
+- Verificação: tsc, build, verify-rules e verify-runtime passaram.
+
 ## 2026-11-06 — 4 mapas, missões de desbloqueio, Lendários, pausa no Esc e salvar/retomar
 - **Pool de técnicas**: só o kit no começo; técnicas de outros (inclusive Naruto/Sasuke/Sakura) entram só depois de selá-los.
 - **Mapas**: Folha, Areia, Pedra e Névoa Oculta, com tema, clima, cenário, zonas e guardiões próprios; Chunin/Jonin/Kage liberam ao vencer a dificuldade anterior em cada mapa.

@@ -1,0 +1,41 @@
+/* Tela de Configurações (referência do usuário): menu de categorias à esquerda, painel com cabeçalho colorido à direita. */
+.st-backdrop{position:fixed;inset:0;z-index:300;display:grid;grid-template-columns:minmax(220px,280px) minmax(0,1fr);grid-template-rows:auto 1fr;gap:16px 22px;padding:16px 28px 24px;background:radial-gradient(circle at 30% 20%,#2a1f3acc,#0b0e15f2);backdrop-filter:blur(6px);color:#eef2fa;overflow:hidden}
+.st-top{grid-column:1/-1;display:flex;align-items:center;gap:18px}
+.st-back{display:flex;align-items:center;gap:8px;padding:8px 14px;border:0;border-radius:999px;background:#1d2433;color:#fff;font-weight:800;cursor:pointer}
+.st-back kbd{background:#384259;border-radius:6px;padding:1px 6px;font-size:11px;font-family:inherit}
+.st-top h1{margin:0;padding:8px 26px;border-radius:14px;background:linear-gradient(100deg,#ff5f6d,#ffb347);transform:skewX(-8deg);font-size:28px;font-weight:900;box-shadow:0 6px 0 #0004}
+.st-top h1 small{font-size:12px;margin-left:10px;opacity:.85}
+.st-nav{display:flex;flex-direction:column;gap:10px;overflow:auto;padding:4px}
+.st-nav button{display:flex;align-items:center;gap:12px;text-align:left;padding:10px 14px;border-radius:16px;border:0;border-left:5px solid var(--cat);background:#1b2130;color:#eef2fa;cursor:pointer;transition:transform .12s}
+.st-nav button:hover{transform:translateX(4px)}
+.st-nav button.active{background:linear-gradient(100deg,var(--cat),color-mix(in srgb,var(--cat) 55%,#1b2130));box-shadow:0 0 0 3px #0008,0 6px 16px #0006;transform:translateX(10px)}
+.st-nav b{display:block;font-size:16px}.st-nav small{font-size:11px;opacity:.8}
+.st-icon{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#0f131d;font-size:20px;border:2px solid #ffffff22}
+.st-panel{display:flex;flex-direction:column;min-height:0;border-radius:20px;background:#181d29;box-shadow:0 10px 30px #0008;overflow:hidden}
+.st-panel-head{display:flex;align-items:center;gap:14px;padding:14px 20px;background:repeating-linear-gradient(135deg,var(--cat) 0 18px,color-mix(in srgb,var(--cat) 82%,#fff) 18px 36px)}
+.st-panel-head h2{margin:0;font-size:24px;font-weight:900;text-shadow:0 2px 0 #0004}.st-panel-head small{font-weight:700;opacity:.9}
+.st-restore{margin-left:auto;padding:9px 16px;border:0;border-radius:12px;background:#151a26;color:#fff;font-weight:800;cursor:pointer}
+.st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px;overflow:auto}
+.st-card{display:flex;flex-direction:column;justify-content:center;gap:10px;padding:14px 16px;border-radius:14px;background:#202738;min-height:62px}
+.st-card.wide{grid-column:1/-1}
+.st-card-head{display:flex;flex-direction:column;gap:2px}.st-card-head b{font-size:15px}.st-card-head small{font-size:11px;opacity:.7}
+.st-toggle{align-self:flex-end;width:54px;height:30px;border-radius:999px;border:0;background:#3a4357;position:relative;cursor:pointer;margin-top:-34px}
+.st-toggle i{position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:#eef2fa;transition:left .15s}
+.st-toggle.on{background:var(--cat)}.st-toggle.on i{left:28px}
+.st-slider{display:flex;align-items:center;gap:12px}.st-slider input{flex:1;accent-color:var(--cat)}.st-slider em{font-style:normal;font-weight:900;min-width:52px;text-align:right;background:#151a26;border-radius:8px;padding:2px 8px}
+.st-choice{display:flex;flex-wrap:wrap;gap:4px;padding:4px;border-radius:999px;background:#151a26}
+.st-choice button{flex:1;padding:8px 12px;border:0;border-radius:999px;background:transparent;color:#c9d1e3;font-weight:800;cursor:pointer}
+.st-choice button.active{background:#3a4560;color:#fff}.st-choice button:disabled{opacity:.4;cursor:not-allowed}
+.st-key{flex-direction:row;align-items:center;justify-content:space-between}
+.st-key button{min-width:96px;padding:8px 14px;border:0;border-radius:999px;background:#151a26;color:#fff;font-weight:900;cursor:pointer}
+.st-key button.listening{background:var(--cat);color:#1b1b1b}.st-key.soon{opacity:.55}
+.st-input{padding:10px 12px;border-radius:10px;border:1px solid #ffffff22;background:#151a26;color:#fff;font-size:15px}
+.st-danger{align-self:flex-start;padding:9px 16px;border:0;border-radius:12px;background:#e2474f;color:#fff;font-weight:800;cursor:pointer}
+@media (max-width:820px){.st-backdrop{grid-template-columns:1fr;grid-template-rows:auto auto 1fr;padding:12px 16px}.st-nav{flex-direction:row;overflow-x:auto}.st-nav button{flex:none}.st-nav button small{display:none}.st-grid{grid-template-columns:1fr}.st-top h1{font-size:20px}}
+
+/* Aplicação das configurações de interface na partida (variáveis no .game-shell). */
+.game-shell .game-level,.game-shell .skill-dock,.game-shell .game-topbar,.game-shell .ally-cards,.game-shell aside.ally-cards{zoom:var(--hud-scale,1);opacity:var(--hud-opacity,1)}
+.game-shell .minimap{zoom:calc(var(--hud-scale,1) * var(--minimap-scale,1));opacity:var(--hud-opacity,1)}
+.game-shell.hide-minimap .minimap{display:none}
+.game-shell.hide-toasts .world-toast{display:none}
+.game-shell.hide-fps .runtime-readout{display:none}

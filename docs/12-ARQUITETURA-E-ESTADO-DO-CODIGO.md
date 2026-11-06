@@ -30,7 +30,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/game/unlockMissions.ts` | Missões de desbloqueio por shinobi (`UNLOCK_MISSIONS`, `LEGENDARY`). |
 | `src/game/account.ts` | Conta: iniciais, desbloqueados, selados, pesquisa e progresso por mapa (`isDifficultyUnlocked`, `markMapCompleted`). |
 | `src/game/enemyTiers.ts` | Tipos de inimigo e saque por HP/dificuldade. |
-| `src/game/settings.ts` | Configurações do jogador (`sealAnimation`), em localStorage com try/catch. |
+| `src/game/settings.ts` + `src/ui/SettingsScreen.tsx` + `src/settings.css` | Configurações completas (som, gráficos, tela, controles, teclas remapeáveis via `translateKey`, interface, conta) em `sb_settings_v1`; `currentSettings()` lido ao vivo pela simulação e pelo som. |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
 | `src/game/pills.ts` | Fonte única das 19 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |

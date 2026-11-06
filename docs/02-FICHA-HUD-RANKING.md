@@ -6,6 +6,16 @@ HP, XP, nível, Chakra/recarga da Ultimate, tempo, abates individuais, inimigos 
 - **Cores de ganho e perda (IMPLEMENTADO em 06/11/2026, pedido do usuário)**: `src/ui/BuffText.tsx` pinta os textos de efeito dos cards em **verde** (+%, ×1,x, ganho, cura, ressurreição, descontos/"custa menos") e **vermelho** (−%, perda, custo, dívida, emboscada). Vale para cartas de level-up, recompensa e NPC, troca de ajudante, passivas dos ajudantes, prêmios da roleta, ficha, Bolsa da Missão e Plano de build.
 - **Rota no mapa**: cartão com nome e metros abaixo do minimapa, seta ou pino na tela e "Chegou!" (ver docs/01).
 
+## Configurações (IMPLEMENTADO em 06/11/2026, referência do usuário)
+- `src/ui/SettingsScreen.tsx` + `src/settings.css` + `src/game/settings.ts` (`sb_settings_v1`): menu de categorias e painel colorido; salvas na hora e aplicadas ao vivo na partida (evento `shinobi-settings`). Abre pelo hub (⚙) e pela pausa (Esc → Configurações).
+- **Som**: volume geral, efeitos, vozes, silenciar em segundo plano (música: em breve).
+- **Gráficos**: qualidade (pixel ratio), limite de FPS (30–144), ocultar meus ataques, números de dano, drops discretos, efeitos de coleta, mostrar FPS.
+- **Tela**: tela cheia/janela e resolução (automática, nativa, 900p, 720p).
+- **Controles**: sensibilidade do mouse, inverter Y, distância da câmera, Ultimate automática ao começar, card de captura.
+- **Teclas**: 15 ações remapeáveis (troca automática se a tecla já era usada; Esc fixo). Pulo/deslize: em breve.
+- **Interface**: tamanho e opacidade do HUD, minimapa on/off e tamanho, avisos on/off.
+- **Idioma**: português (outros em breve). **Conta**: nome do jogador, começar do zero, apagar dados locais.
+
 ## Tela de pausa
 1. **Progressão por nível**: melhorias permanentes à ficha obtidas ao esgotar o pool, excluindo XP%.
 2. **Ataque**: dano total, Taijutsu, Ninjutsu, Genjutsu/status, velocidade de ataque, área, projéteis, duração, crítico, dano crítico, dano por status, chance de status, penetração.
