@@ -120,10 +120,11 @@ export function pillBonuses(pills: Record<string, number>): Bonuses {
  * Concede `amount` níveis de uma pílula por nome, respeitando o limite.
  * Muta `pills` e retorna true se o nível mudou. Usável por drops, cartas e pelo painel de debug.
  */
-export function grantPill(pills: Record<string, number>, name: string, amount = 1): boolean {
+export function grantPill(pills: Record<string, number>, name: string, amount = 1, extraCap = 0): boolean {
   const def = PILL_BY_NAME[name];
   if (!def) return false;
-  const before = pills[name] || 0, after = Math.max(0, Math.min(def.max, before + amount));
+  // extraCap: níveis extras de itens (Cabaça de Pílulas: +2, até 12).
+  const before = pills[name] || 0, after = Math.max(0, Math.min(def.max + Math.max(0, extraCap), before + amount));
   if (after === before) return false;
   if (after) pills[name] = after; else delete pills[name];
   return true;

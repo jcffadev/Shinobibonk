@@ -3,12 +3,11 @@
 ## Capacidade CONFIRMADA
 3 aliados base; +1 vaga por **um item da run**; +1 por **uma passiva permanente** adquirida com Lamens; máximo 5. Jogador não conta.
 
-## Itens específicos de aliados (PROPOSTOS)
-- **Pergaminho de Recrutamento (épico)**: +1 vaga temporária, limite 1.
-- **Insígnia do Comandante (raro)**: +12% dano das habilidades ofensivas dos aliados, limite a balancear.
-- **Tambor de Guerra (épico)**: +15% cadência de ataque dos aliados, limite a balancear.
-- **Estandarte da Aliança (lendário)**: +20% intensidade dos buffs passivos fornecidos por aliados, 1 cópia.
-- **Selo de Cooperação (raro)**: +10% dano dos aliados e +5% intensidade de seus buffs, limite a balancear.
+## Itens específicos de aliados (IMPLEMENTADO, valores provisórios)
+- **Chá Verde de Konoha (incomum, até 3)**: ajudantes causam +25% de dano e atacam 15% mais rápido.
+- **Estandarte da Aliança (raro, até 2)**: +40% de força dos buffs dos ajudantes.
+- **Pergaminho de Recrutamento (épico, 1 cópia)**: +1 vaga de ajudante na run.
+- Insígnia do Comandante, Tambor de Guerra e Selo de Cooperação saíram do catálogo na troca para o formato da referência (05/11/2026).
 
 ## Selamentos
 1. **Apoio temporário**: mega-elite Edo Tensei, até 3 tentativas; se todas falham, foge, sem bônus de aliado. Ao derrotar o shinobi, mostrar o próprio personagem e a animação do selo antes de confirmar a entrada dele na equipe. Se o jogador recusar com G, o elite deixa uma kunai/shuriken; coletar o drop abre uma escolha de item cuja qualidade considera Sorte. O abate não pode duplicar a recompensa.
@@ -28,7 +27,7 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 - **IMPLEMENTADO: aliados em combate**
   - Aparecem como sprite, seguem o jogador em formação e atacam sozinhos com a 1ª técnica deles.
   - Dano: 65% do dano do jogador × dano de aliados. Cadência: 1,5 s ÷ cadência de aliados.
-  - Cada aliado dá um **buff passivo único** (`src/game/allies.ts`), multiplicado pela força de suporte (Estandarte da Aliança +20%, Selo de Cooperação +5%). Os buffs entram em `calculateStats` como buffs da run e são recalculados das fontes a cada quadro. Projéteis não ficam fracionados. Valores provisórios:
+  - Cada aliado dá um **buff passivo único** (`src/game/allies.ts`), multiplicado pela força de suporte (Estandarte da Aliança +40% por cópia). Os buffs entram em `calculateStats` como buffs da run e são recalculados das fontes a cada quadro. Projéteis não ficam fracionados. Valores provisórios:
 
 | Ajudante | Buff | Ajudante | Buff |
 |---|---|---|---|
@@ -43,7 +42,7 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 | Minato | +12% movimento | Pain | +40 HP máximo |
 | Tsunade | +1,5 HP/s de cura | Tobirama | +1,5 m de coleta |
 | Kankuro | +20% veneno | Might Guy | +10% taijutsu, +6% movimento |
-  - Itens que afetam aliados: Insígnia do Comandante, Tambor de Guerra, Estandarte da Aliança, Selo de Cooperação e Pergaminho de Recrutamento.
+  - Itens que afetam aliados: Chá Verde de Konoha, Estandarte da Aliança e Pergaminho de Recrutamento.
 - **IMPLEMENTADO: vagas e sinergia**
   - Vagas: 3 + 1 pelo Pergaminho de Recrutamento + 1 pelo nó permanente "Suporte adicional", máximo 5.
   - Sinergia da Areia: Gaara, Temari e Kankuro como aliados dão +12 de armadura e +15% de dano.

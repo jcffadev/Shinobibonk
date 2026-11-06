@@ -1,5 +1,5 @@
-import type { Item, Rarity } from './catalog';
-import type { Technique } from './heroes';
+import type { Item, Rarity, StatKey } from './catalog';
+import type { Technique, Element } from './heroes';
 export type SkillGrowth={damage:number;area:number;haste:number;duration:number};
 export const NO_GROWTH:SkillGrowth={damage:0,area:0,haste:0,duration:0};
 export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rarity:Rarity;growth:SkillGrowth}{
@@ -10,10 +10,42 @@ export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rar
  return {rarity:(['Comum','Incomum','Raro','Épico','Lendário'] as Rarity[])[tier],growth};
 }
 export function growthText(g:SkillGrowth){return (Object.entries(g) as [keyof SkillGrowth,number][]).filter(([,n])=>n>0).map(([key,n])=>`+${Math.round(n*100)}% ${{damage:'dano',area:'raio de área',haste:'cadência',duration:'duração'}[key]}`).join(' · ');}
+
+/** Chave de bônus por elemento de técnica (itens "Pergaminho Katon" etc.). */
+export const ELEMENT_KEY:Record<Element,StatKey>={Fogo:'elFogo',Água:'elAgua',Vento:'elVento',Terra:'elTerra',Raio:'elRaio',Madeira:'elMadeira',Areia:'elAreia',Sombra:'elSombra',Neutro:'elNeutro',Sábio:'elSabio'};
+const ELEMENT_BY_KEY=Object.fromEntries(Object.entries(ELEMENT_KEY).map(([e,k])=>[k,e])) as Record<string,Element>;
+const has=(item:Item,...keys:StatKey[])=>keys.some(k=>(item.bonuses[k]||0)!==0);
+/** Bônus que melhoram qualquer técnica do jogador. */
+const UNIVERSAL:StatKey[]=['sage','damage','crit','critDamage','attackSpeed','area','dot','eliteDamage','controlledDamage','statusStack','lowHpDamage','noHitDamage','killDamage','bigCrit','execute','burnChance','poisonChance','sleepChance','rootChance','chillChance','statusDamage','skillCap'];
+
 export function affectedTechniques(item:Item,techniques:Technique[]):string[]{
  const b=item.bonuses;
- return techniques.filter(t=>b.sage||b.damage||b.crit||b.critDamage||b.attackSpeed||b.area||b.projectiles&&['Projétil','Em V'].includes(t.shape)||b.normal&&t.school==='Taijutsu'||b.element&&t.school==='Ninjutsu'||b.status&&t.status||b.duration&&(t.status||t.burn)||b.dot).map(t=>t.name);
+ return techniques.filter(t=>has(item,...UNIVERSAL)
+   ||(b.projectiles&&['Projétil','Em V'].includes(t.shape))
+   ||(b.normal||b.armorPhysical)&&t.school==='Taijutsu'
+   ||b.element&&t.school==='Ninjutsu'
+   ||b.genjutsu&&t.school==='Genjutsu'
+   ||(b[ELEMENT_KEY[t.element]]||0)>0
+   ||b.status&&t.status
+   ||b.duration&&(t.status||t.burn)).map(t=>t.name);
 }
-export function itemSchools(item:Item){const b=item.bonuses;if(b.normal)return ['Taijutsu'];if(b.element)return ['Ninjutsu'];if(b.status)return ['Genjutsu'];return ['Taijutsu','Ninjutsu','Genjutsu'];}
-export function itemElement(item:Item){return item.bonuses.sage?'Sábio':item.id==='poison'?'Veneno':'Universal';}
-export function itemAttribute(item:Item){const b=item.bonuses;if(b.crit)return 'Chance crítica';if(b.critDamage)return 'Dano crítico';if(b.damage||b.normal||b.element||b.dot)return 'Dano';if(b.health||b.defense||b.dodge||b.regen)return 'Defesa';if(b.status||b.duration)return 'Status';return 'Utilidade';}
+export function itemSchools(item:Item){const b=item.bonuses;if(b.normal||b.armorPhysical)return ['Taijutsu'];if(b.element)return ['Ninjutsu'];if(b.genjutsu||b.status||b.sleepChance)return ['Genjutsu'];return ['Taijutsu','Ninjutsu','Genjutsu'];}
+export function itemElement(item:Item){
+ const key=(Object.keys(item.bonuses) as StatKey[]).find(k=>ELEMENT_BY_KEY[k]);
+ if(key)return ELEMENT_BY_KEY[key];
+ if(item.bonuses.sage)return 'Sábio';
+ if(has(item,'poisonChance'))return 'Veneno';
+ if(has(item,'burnChance','beam'))return 'Fogo';
+ if(has(item,'bolts'))return 'Raio';
+ if(has(item,'chillChance','freezeOnHit'))return 'Gelo';
+ return 'Universal';
+}
+export function itemAttribute(item:Item){
+ if(has(item,'crit','bigCrit'))return 'Chance crítica';
+ if(has(item,'critDamage'))return 'Dano crítico';
+ if(has(item,'damage','normal','element','genjutsu','dot','eliteDamage','controlledDamage','statusStack','lowHpDamage','noHitDamage','killDamage','armorPhysical','execute','statusDamage','beam','bolts')||itemElement(item)!=='Universal'&&(Object.keys(item.bonuses) as StatKey[]).some(k=>ELEMENT_BY_KEY[k]))return 'Dano';
+ if(has(item,'health','healthPct','defense','dodge','regen','lifesteal','thorns','killHeal','revive35','revive60','shield','smoke','emergencyHeal','periodicHeal','freezeOnHit'))return 'Defesa';
+ if(has(item,'status','duration','burnChance','poisonChance','sleepChance','rootChance','chillChance'))return 'Status';
+ if(has(item,'support','allyDamage','allySpeed','allyBuff'))return 'Ajudantes';
+ return 'Utilidade';
+}

@@ -1,47 +1,133 @@
 export type Rarity = 'Comum' | 'Incomum' | 'Raro' | 'Épico' | 'Lendário';
-export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'crit'|'critDamage'|'cool'|'gold'|'exp'|'area'|'projectiles'|'dodge'|'duration'|'dot'|'status'|'attackSpeed'|'luck'|'pickup'|'pickupFlat'|'regen'|'support'|'allyDamage'|'allySpeed'|'allyBuff'|'sage';
+/**
+ * Atributos que itens/pílulas/buffs podem dar. Os do primeiro bloco viram campos de `Stats`;
+ * os do segundo bloco (mecânicas de item) ficam em `Stats.extra` e são lidos pela simulação (GameCanvas).
+ */
+export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'crit'|'critDamage'|'cool'|'gold'|'exp'|'area'|'projectiles'|'dodge'|'duration'|'dot'|'status'|'attackSpeed'|'luck'|'pickup'|'pickupFlat'|'regen'|'support'|'allyDamage'|'allySpeed'|'allyBuff'|'sage'
+  // Dano por elemento da técnica (+%) e Genjutsu (escola)
+  |'elFogo'|'elAgua'|'elVento'|'elTerra'|'elRaio'|'elMadeira'|'elAreia'|'elSombra'|'elNeutro'|'elSabio'|'genjutsu'
+  // Mecânicas de item
+  |'healthPct'|'regenMult'|'eliteDamage'|'controlledDamage'|'statusStack'|'lowHpDamage'|'noHitDamage'|'killDamage'|'armorPhysical'|'bigCrit'
+  |'lifesteal'|'thorns'|'killHeal'|'execute'|'burnChance'|'poisonChance'|'sleepChance'|'rootChance'|'chillChance'|'statusDamage'
+  |'revive35'|'revive60'|'shield'|'rush'|'stance'|'smoke'|'emergencyHeal'|'periodicHeal'|'bolts'|'beam'|'freezeOnHit'
+  |'kunaiDiscount'|'slotDiscount'|'enemyCount'|'pillCap'|'skillCap'|'ultReset';
 export type Bonuses = Partial<Record<StatKey, number>>;
 export type Item = { id:string; name:string; rarity:Rarity; cost:number; icon:string; sprite:number; max:number; description:string; bonuses:Bonuses };
-const item = (id:string,name:string,rarity:Rarity,sprite:number,max:number,description:string,bonuses:Bonuses):Item => ({id,name,rarity,sprite,max,description,bonuses,icon:'◆',cost:({Comum:0,Incomum:150,Raro:300,'Épico':500,'Lendário':900})[rarity]});
-// Migrado do catálogo legado (24), hub/cena (+3) e documento de aliados (+4).
-// Números e limites ainda são balanceamento de protótipo.
+const COST:Record<Rarity,number>={Comum:0,Incomum:150,Raro:300,'Épico':500,'Lendário':900};
+const item = (id:string,name:string,rarity:Rarity,sprite:number,max:number,description:string,bonuses:Bonuses):Item => ({id,name,rarity,sprite,max,description,bonuses,icon:'◆',cost:COST[rarity]});
+/** "Sem limite" da referência vira 10 cópias (convenção do projeto). */
+const ANY=10;
+// Ícones (atlas 4×4): 0 cabaça · 1 shuriken com selo · 2 colar · 3 pergaminho de força · 4 bandana · 5 amuleto de corrida
+// 6 ampulheta · 7 pergaminho explosivo · 8 bolsa · 9 cristal roxo · 10 cristal azul · 11 pergaminho de equipe · 12–14 cápsulas · 15 anel
+const el=(id:string,name:string,key:StatKey,label:string,sprite:number)=>item(id,name,'Comum',sprite,ANY,`+28% de dano de técnicas ${label} e +3% de dano total.`,{[key]:.28,damage:.03});
+
+/**
+ * Catálogo no formato da referência (raridade · efeito · gatilho · limite), com nomes do mundo ninja
+ * e valores levemente alterados. Só entram efeitos que a simulação executa de verdade.
+ * Números são balanceamento provisório.
+ */
 export const ITEMS:Item[] = [
-  item('damage','Pergaminho de Força','Comum',3,10,'+20% de dano total.',{damage:.2}),
-  item('bandana','Bandana Reforçada','Comum',4,10,'+10 pontos de armadura.',{defense:10}),
-  item('sandals','Sandálias Leves','Comum',5,10,'+13% de velocidade de movimento.',{move:.13}),
-  item('coins','Bolsa de Moedas','Comum',8,10,'+30% de Ryu recebido por drops.',{gold:.3}),
-  item('life','Talismã de Vida','Comum',15,10,'+40 HP máximo. Recupera o HP acrescentado.',{health:40}),
-  item('pickup','Bolsa de Lamens do Naruto','Incomum',8,10,'+30% de alcance de coleta. Não concede Lamens.',{pickup:.3}),
-  item('taijutsu','Luvas de Taijutsu','Incomum',0,10,'+25% de dano físico.',{normal:.25}),
-  item('ninjutsu','Selo de Ninjutsu','Incomum',1,10,'+25% de dano de ninjutsu e Ultimate.',{element:.25}),
-  item('chakra','Chakra Concentrado','Incomum',9,10,'+25% de velocidade de recarga da Ultimate; não fornece carga instantânea.',{cool:.25}),
-  item('experience','Pedra da Juventude','Incomum',10,10,'+25% de experiência recebida e +2 m de alcance de coleta.',{exp:.25,pickupFlat:2}),
-  item('luck','Colar do Primeiro Hokage','Raro',2,5,'+15 de Sorte. Melhora a raridade das ofertas de itens.',{luck:15}),
-  item('critical','Pergaminho de Crítico','Raro',7,10,'+8 pontos percentuais de chance crítica. Acima de 100%, aumenta a chance de mega crítico.',{crit:.08}),
-  item('cooldown','Ampulheta de Recarga','Raro',6,5,'+13% de velocidade de recarga da Ultimate.',{cool:.13}),
-  item('area','Selo de Área','Raro',1,5,'+22% de raio dos ataques em área.',{area:.22}),
-  item('duration','Amuleto da Duração','Raro',2,5,'+30% de duração de efeitos de status.',{duration:.3}),
-  item('tracker','Olhos do Rastreador','Raro',7,5,'+12 pontos percentuais de chance de status (Genjutsu). Técnicas sem status passam a aplicar lentidão.',{status:.12}),
-  item('fortune','Talismã da Sorte','Raro',2,5,'+8 de Sorte para as próximas ofertas.',{luck:8}),
-  item('clone','Clone Adicional','Épico',11,3,'+1 projétil por disparo; prioriza outro inimigo.',{projectiles:1}),
-  item('dodge','Pérola da Esquiva','Épico',2,5,'+9 pontos percentuais de evasão.',{dodge:.09}),
-  item('poison','Anel do Veneno','Épico',14,3,'Ataques envenenam por 3 s: 35% do dano do impacto ao longo da duração base.',{dot:.35}),
-  item('speed','Selo de Velocidade','Épico',5,5,'+20% de velocidade dos ataques automáticos.',{attackSpeed:.2}),
-  item('recruit','Pergaminho de Recrutamento','Épico',11,1,'+1 vaga de suporte nesta run.',{support:1}),
-  item('mantle','Manto da Sorte','Raro',4,10,'+35 de Sorte.',{luck:35}),
-  item('sage','Armadura do Sábio','Lendário',4,2,'+12% dano, HP, movimento e cadência; +12 armadura.',{damage:.12,move:.12,attackSpeed:.12,defense:12}),
+  // ───── Comum ─────
+  item('coins','Bolsa de Moedas','Comum',8,ANY,'+22% de Ryu recebido.',{gold:.22}),
+  item('herbal-tea','Chá Medicinal','Comum',0,8,'6% de chance por abate de curar 2% do HP máximo.',{killHeal:.06}),
+  item('ryo-nugget','Pepita de Ryo','Comum',8,5,'Kunais/shurikens do mapa custam 8% menos (até −40%) e +5% de Ryu.',{kunaiDiscount:.08,gold:.05}),
+  el('el-fire','Pergaminho Katon','elFogo','de Fogo',7),
+  el('el-water','Pergaminho Suiton','elAgua','de Água',10),
+  el('el-wind','Pergaminho Fuuton','elVento','de Vento',5),
+  el('el-earth','Pergaminho Doton','elTerra','de Terra',3),
+  el('el-lightning','Pergaminho Raiton','elRaio','de Raio',9),
+  el('el-wood','Pergaminho Mokuton','elMadeira','de Madeira',13),
+  el('el-sand','Pergaminho Jiton de Areia','elAreia','de Areia',0),
+  el('el-shadow','Pergaminho das Sombras','elSombra','de Sombra',11),
+  el('el-neutral','Pergaminho Shinobi','elNeutro','neutras (armas e golpes)',1),
+  // Específicos pedidos: Jutsu Sábio (elemento Sábio) e Genjutsu (escola), no mesmo molde dos pergaminhos de elemento.
+  item('el-sage','Pergaminho do Monte Myoboku','Comum',2,ANY,'+28% de dano de técnicas Sábias (Senjutsu) e +3% de dano total.',{elSabio:.28,damage:.03}),
+  item('genjutsu-scroll','Pergaminho Genjutsu','Comum',9,ANY,'+28% de dano de técnicas de Genjutsu e +3% de dano total.',{genjutsu:.28,damage:.03}),
+  item('smoke','Bomba de Fumaça','Comum',0,ANY,'+4,5 pontos percentuais de evasão.',{dodge:.045}),
+  item('exorcist','Etiqueta Exorcista','Comum',1,ANY,'+16% de dano contra elites, mega elites e guardiões.',{eliteDamage:.16}),
+  item('wire','Fio de Aço Ninja','Comum',1,5,'4% de chance por acerto de prender o inimigo (Paralisar 1,2 s).',{rootChance:.04}),
+  item('pickup','Ímã de Chakra','Comum',5,ANY,'+1,6 m de alcance de coleta.',{pickupFlat:1.6}),
+  item('bandana','Bandana Reforçada','Comum',4,ANY,'+6 pontos de armadura.',{defense:6}),
+  item('tanzaku','Amuleto Tanzaku','Comum',2,ANY,'+10 de Sorte e +3 pontos percentuais de chance crítica.',{luck:10,crit:.03}),
+  item('life','Bolinho de Arroz','Comum',15,ANY,'+16 HP máximo.',{health:16}),
+  item('balm','Bálsamo Medicinal','Comum',0,ANY,'+0,6 HP/s de regeneração.',{regen:.6}),
+  item('sandals','Sandálias Leves','Comum',5,ANY,'+7% de velocidade de movimento.',{move:.07}),
+  item('critical','Luneta Ninja','Comum',7,ANY,'+6 pontos percentuais de chance crítica.',{crit:.06}),
+  item('area-seal','Selo de Expansão','Comum',11,ANY,'+10% de raio dos ataques em área.',{area:.1}),
+
+  // ───── Incomum ─────
+  item('adrenaline','Selo de Adrenalina','Incomum',5,3,'Ao ser atingido: +20% de movimento e +12% de cadência por 3 s.',{rush:1}),
+  item('sleep-incense','Incenso do Sono','Incomum',2,3,'2,5% de chance por acerto de fazer o inimigo Dormir por 2 s.',{sleepChance:.025}),
+  item('vampire-root','Raiz Vampira','Incomum',13,ANY,'Recupera 3% do dano causado como HP.',{lifesteal:.03}),
+  item('chains','Correntes de Selamento','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
+  item('katon-orb','Esfera Katon','Incomum',7,5,'5% de chance por acerto de queimar e +10% de dano de status (queimadura/veneno).',{burnChance:.05,statusDamage:.1}),
+  item('gold-tooth','Dente de Ouro','Incomum',8,3,'O caça-níquel custa 8% menos (até −24%).',{slotDiscount:.08}),
+  item('akimichi-box','Marmita Akimichi','Incomum',8,ANY,'+1,2 HP/s de regeneração.',{regen:1.2}),
+  item('green-tea','Chá Verde de Konoha','Incomum',13,3,'Ajudantes causam +25% de dano e atacam 15% mais rápido.',{allyDamage:.25,allySpeed:.15}),
+  item('duration','Selo de Persistência','Incomum',6,ANY,'+20% de duração de efeitos de status.',{duration:.2}),
+  item('experience','Pedra da Juventude','Incomum',10,ANY,'+15% de experiência recebida.',{exp:.15}),
+  item('stone-stance','Postura de Pedra','Incomum',4,3,'Parado: +30% de armadura e +8% de cadência até se mover.',{stance:1}),
+  item('rhythm','Ritmo Ininterrupto','Incomum',6,ANY,'Sem levar golpes, o dano sobe 4% por segundo, até +40%. Zera ao ser atingido.',{noHitDamage:.4}),
+  item('taijutsu','Luvas de Taijutsu','Incomum',3,ANY,'+15% de dano de Taijutsu.',{normal:.15}),
+  item('poison-herb','Erva Venenosa','Incomum',13,ANY,'+30% de dano de queimadura e veneno.',{statusDamage:.3}),
+  item('swift-kunai','Kunai Ágil','Incomum',1,ANY,'+10% de cadência.',{attackSpeed:.1}),
+  item('crit-damage','Kunai Afiada','Incomum',1,ANY,'+30 pontos percentuais de dano crítico.',{critDamage:.3}),
+  item('repel','Incenso Repelente','Incomum',2,3,'−8% de inimigos no mapa e +6% de movimento.',{enemyCount:-.08,move:.06}),
+  item('thorn-armor','Armadura de Espinhos','Incomum',4,ANY,'Inimigos que te acertam sofrem 25 de dano.',{thorns:25}),
+  item('blood-shell','Concha Sanguinária','Incomum',15,ANY,'Recupera 0,8% do dano causado como HP.',{lifesteal:.008}),
+  item('emergency-fruit','Fruta Medicinal','Incomum',13,ANY,'+10 HP máximo; abaixo de 30% de HP, recupera 35% (a cada 45 s).',{health:10,emergencyHeal:1}),
+  item('dense-smoke','Fumaça Densa','Incomum',0,ANY,'Ao ser atingido: 25% de chance de ficar invisível (invulnerável) por 1,5 s; +3% de evasão.',{smoke:.25,dodge:.03}),
+  item('hyoton','Pergaminho Hyoton','Incomum',10,5,'6% de chance por acerto de congelar parcialmente (Lentidão) e +3 de armadura.',{chillChance:.06,defense:3}),
+  item('poison','Anel do Veneno','Incomum',15,5,'6% de chance por acerto de envenenar e +10 pontos percentuais de chance de status.',{poisonChance:.06,status:.1}),
+  item('taunt-flute','Flauta Provocadora','Incomum',2,5,'+12% de inimigos no mapa, +10% de experiência e +5 de Sorte.',{enemyCount:.12,exp:.1,luck:5}),
+  item('tracker','Olhos do Rastreador','Incomum',7,ANY,'+25 pontos percentuais de chance de status (Genjutsu). Técnicas sem status passam a aplicar lentidão.',{status:.25}),
+  item('ninjutsu','Selo de Ninjutsu','Incomum',11,ANY,'+15% de dano de Ninjutsu e da Ultimate.',{element:.15}),
+  item('cooldown','Ampulheta de Recarga','Incomum',6,5,'+12% de velocidade de recarga da Ultimate. Não dá carga instantânea.',{cool:.12}),
+
+  // ───── Raro ─────
+  item('jonin-vest','Colete Jonin','Raro',4,ANY,'+12 de armadura e +12% de HP máximo.',{defense:12,healthPct:.12}),
+  item('toxic-sludge','Lodo Venenoso','Raro',13,ANY,'+2 HP/s de regeneração e +20% de dano de queimadura e veneno.',{regen:2,statusDamage:.2}),
+  item('gate-band','Faixa dos Oito Portões','Raro',3,5,'+35% de dano de Taijutsu e −8% de cadência.',{normal:.35,attackSpeed:-.08}),
+  item('wind-scarf','Cachecol do Vento','Raro',5,5,'+20% de movimento e +10% de cadência.',{move:.2,attackSpeed:.1}),
+  item('chakra-goggles','Óculos de Chakra','Raro',10,5,'+35% de dano de Ninjutsu e −8% de cadência.',{element:.35,attackSpeed:-.08}),
+  item('study-scroll','Pergaminho de Estudo','Raro',11,ANY,'+25% de experiência e +2 m de alcance de coleta.',{exp:.25,pickupFlat:2}),
+  item('five-elements','Selo dos Cinco Elementos','Raro',11,3,'+6% de dano por status diferente no inimigo (controle, queimadura, veneno, lentidão), até +30%.',{statusStack:.06}),
+  item('chakra-shield','Escudo de Chakra','Raro',9,2,'Bloqueia totalmente o próximo golpe a cada 14 s.',{shield:1}),
+  item('kubikiribocho','Lâmina Kubikiribocho','Raro',1,4,'3% de chance por acerto de causar ×8 de dano.',{bigCrit:.03}),
+  item('damage','Selo Amaldiçoado','Raro',3,5,'+30% de dano total e −10% de HP máximo.',{damage:.3,healthPct:-.1}),
+  item('training-weights','Pesos de Treinamento','Raro',4,3,'+50% de experiência e −10% de movimento.',{exp:.5,move:-.1}),
+  item('banner','Estandarte da Aliança','Raro',11,2,'+40% de força dos buffs dos ajudantes.',{allyBuff:.4}),
+  item('executioner','Lâmina do Carrasco','Raro',1,4,'Inimigos comuns abaixo de 8% do HP morrem na hora (+4 pontos por cópia extra).',{execute:.08}),
+  item('luck','Colar do Primeiro Hokage','Raro',2,ANY,'+20 de Sorte. Melhora a raridade das ofertas de itens.',{luck:20}),
+  item('herb-tea','Chá de Ervas','Raro',0,3,'A cada 30 s, se estiver ferido, cura 12% do HP máximo.',{periodicHeal:1}),
+
+  // ───── Épico ─────
+  item('insignia','Insígnia da Fortuna','Épico',8,ANY,'+40% de Ryu recebido e +30 de Sorte.',{gold:.4,luck:30}),
+  item('crit-seal','Selo do Golpe Fatal','Épico',7,ANY,'+40 pontos percentuais de dano crítico e +8 de chance crítica.',{critDamage:.4,crit:.08}),
+  item('chidori-nagashi','Pergaminho Chidori Nagashi','Épico',9,3,'A cada 2,5 s, raios atingem 3 inimigos próximos (+1 por cópia extra) e podem paralisar.',{bolts:1}),
+  item('speed','Selo de Velocidade','Épico',5,ANY,'+20% de cadência dos ataques automáticos.',{attackSpeed:.2}),
+  item('pill-gourd','Cabaça de Pílulas','Épico',0,1,'Pílulas podem subir mais 2 níveis (até 12).',{pillCap:2}),
+  item('clone','Clone Adicional','Épico',11,3,'+1 projétil em todas as técnicas; prioriza outro inimigo.',{projectiles:1}),
+  item('samurai-armor','Armadura Samurai','Épico',4,3,'+20 de armadura, +15% de HP máximo, 40 de dano a quem te acerta e −5% de movimento.',{defense:20,healthPct:.15,thorns:40,move:-.05}),
+  item('kyuubi-rage','Fúria da Kyuubi','Épico',9,1,'Até +60% de dano com 25% de HP ou menos; −25% de regeneração.',{lowHpDamage:.6,regenMult:-.25}),
+  item('shinigami-cloak','Manto do Shinigami','Épico',11,2,'+1% de dano a cada 100 abates na run (até +30%).',{killDamage:.01}),
+  item('revive','Pergaminho de Ressurreição','Épico',3,2,'Revive uma vez com 35% do HP (uma vez por cópia).',{revive35:1}),
+  item('recruit','Pergaminho de Recrutamento','Épico',11,1,'+1 vaga de ajudante nesta run.',{support:1}),
+  item('wide-seal','Selo de Área Ampla','Épico',10,ANY,'+15% de dano total e +15% de área.',{damage:.15,area:.15}),
+  item('iron-club','Clava de Ferro','Épico',3,2,'+1% de dano de Taijutsu a cada 2 de armadura (até +50%).',{armorPhysical:.005}),
+  item('sage-infusion','Selo de Senjutsu','Épico',2,1,'Infunde todas as técnicas com Modo Sábio. Ativa o bônus de +20% de dano sábio de Hashirama.',{sage:1}),
+
+  // ───── Lendário ─────
+  item('haku-mirror','Espelho de Gelo de Haku','Lendário',10,1,'+15% de dano; ao ser atingido, congela inimigos próximos por 3 s (a cada 20 s).',{damage:.15,freezeOnHit:1}),
+  item('sage','Armadura do Sábio','Lendário',4,2,'+30% de dano total e +20% de cadência.',{damage:.3,attackSpeed:.2}),
+  item('rinne-tensei','Rinne Tensei','Lendário',9,3,'Revive uma vez com 60% do HP (uma vez por cópia).',{revive60:1}),
+  item('red-moon','Olho da Lua Vermelha','Lendário',9,2,'+2 projéteis e +25% de área.',{projectiles:2,area:.25}),
+  item('hokage-scroll','Pergaminho do Hokage','Lendário',3,1,'Ultimate recarrega 25% mais rápido; ao usá-la, as técnicas recarregam e ganham +30% de cadência por 6 s.',{cool:.25,ultReset:1}),
+  item('tenten','Shuriken Selo da Tenten','Lendário',1,1,'+25% de dano total. E sela instantaneamente um mega elite já derrotado.',{damage:.25}),
+  item('kurama-chakra','Chakra da Kurama','Lendário',9,1,'+20% de dano de Ninjutsu, +15% de área e Ultimate recarrega 40% mais rápido.',{element:.2,area:.15,cool:.4}),
+  item('amaterasu','Chamas de Amaterasu','Lendário',7,2,'+10% de dano; a cada 6 s, chamas negras atingem o inimigo mais forte por perto e explodem em volta (queimam).',{damage:.1,beam:1}),
+  item('forbidden-scroll','Pergaminho Proibido','Lendário',3,1,'Técnicas podem subir mais 2 níveis (até 11).',{skillCap:2}),
   item('lee','Remédio do Rock Lee','Lendário',0,1,'Punho Bêbado: +20% dano, +20% cadência, +15% movimento e +10 pontos de evasão.',{damage:.2,attackSpeed:.2,move:.15,dodge:.1}),
-  item('insignia','Insígnia da Fortuna','Lendário',8,2,'+65% de Ryu recebido por drops.',{gold:.65}),
-  item('tenten','Shuriken Selo da Tenten','Lendário',1,1,'+30% dano total. E sela instantaneamente um mega elite já derrotado.',{damage:.3}),
-  item('commander','Insígnia do Comandante','Raro',7,5,'+12% de dano dos aliados.',{allyDamage:.12}),
-  item('drum','Tambor de Guerra','Épico',6,3,'+15% de cadência dos aliados.',{allySpeed:.15}),
-  item('banner','Estandarte da Aliança','Lendário',11,1,'+20% de força dos buffs dos ajudantes.',{allyBuff:.2}),
-  item('cooperation','Selo de Cooperação','Raro',1,5,'+10% dano dos aliados e +5% de força dos buffs dos ajudantes.',{allyDamage:.1,allyBuff:.05}),
-  item('crit-damage','Kunai Afiada','Comum',1,10,'+10 pontos percentuais de dano crítico (250% → 260% na primeira cópia).',{critDamage:.1}),
-  item('crit-lens','Lente de Precisão','Incomum',7,10,'+20 pontos percentuais de dano crítico.',{critDamage:.2}),
-  item('crit-seal','Selo do Golpe Fatal','Épico',7,10,'+40 pontos percentuais de dano crítico.',{critDamage:.4}),
-  item('precision-seal','Selo de Precisão','Épico',7,10,'+15 pontos percentuais de chance crítica, incluindo a faixa de mega crítico.',{crit:.15}),
-  item('sage-infusion','Selo de Senjutsu','Épico',3,1,'Infunde todas as técnicas com Modo Sábio. Ativa o bônus de +20% de dano sábio de Hashirama.',{sage:1}),
 ];
 export const ITEM_BY_NAME = Object.fromEntries(ITEMS.map(i=>[i.name,i])) as Record<string,Item>;
 export function availableItems(unlocked:readonly string[], archived:readonly string[], allForPrototype:boolean) {

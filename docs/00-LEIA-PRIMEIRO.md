@@ -37,7 +37,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
   - Elenco de 22 shinobis com filtros por aldeia, tipo de dano e elemento.
   - Biblioteca com 4 técnicas por shinobi e plano de build (planejar/arquivar técnicas, pílulas e itens).
-  - Árvore permanente com 16 nós e loja de 36 itens com filtros e arquivamento.
+  - Árvore permanente com 16 nós e loja de 91 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
 - **Run**:
   - Contagem regressiva de 10:00 e vitória ao chegar a 0:00. Derrota ao zerar o HP.
@@ -133,7 +133,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 ## Verificação (05/11/2026)
 
 - **TESTADO nesta data**: `tsc -b` e `vite build` concluídos sem erro. O Vite avisa que o bundle JS tem 879 kB, acima de 500 kB.
-- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 88 técnicas, 36 itens, distribuição de crítico e raridade).
+- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 88 técnicas, 91 itens, distribuição de crítico e raridade).
 - **TESTADO nesta data**: `node scripts/verify-runtime.mjs` (Playwright/Edge) passou nas 23 verificações sem erros de JS, inclusive a nova verificação da tecla Y, já com debug, resumo e pílulas integrados.
 - **TESTADO nesta data (debug sem login)**: teste avulso no navegador confirmou:
   - o modal de conta não tem campos de login nem de senha;

@@ -2,7 +2,7 @@ import type { Bonuses, StatKey } from './catalog';
 
 /**
  * Buff passivo único que cada shinobi dá ao grupo quando é ajudante (selado na run).
- * Escalam com a força dos buffs de suporte (`allyBuff`: Estandarte da Aliança, Selo de Cooperação).
+ * Escalam com a força dos buffs de suporte (`allyBuff`: Estandarte da Aliança +40%).
  * Médicos (Tsunade, Sakura) e Hashirama curam; ofensivos dão o tipo de dano/atributo que usam.
  * Valores são balanceamento provisório.
  */

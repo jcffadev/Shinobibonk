@@ -28,7 +28,7 @@ Atalhos locais:
 - `src/scene/bossCombat.ts`: chefes (mega elites e guardiões), com barra de vida e técnicas do personagem com aviso no chão.
 - `src/game/`: dados e regras sem React.
   - `heroes.ts`: 22 shinobis e 88 técnicas.
-  - `catalog.ts`: 36 itens e sorteio por raridade.
+  - `catalog.ts`: 91 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
   - `progression.ts`: atributos, dificuldade e crítico.
   - `evolution.ts`: formas por nível.
   - `combat.ts`: afixos de técnica.

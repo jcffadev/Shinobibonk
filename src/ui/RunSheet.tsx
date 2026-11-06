@@ -16,7 +16,7 @@ export function ItemIcon({name,className=''}:{name:string;className?:string}){
 }
 export function HeroPortrait({id,level=1}:{id:string;level?:number}){const r=portraitRegion(id,level);return <span className="hero-sprite roster-sprite" role="img" aria-label={HERO_BY_ID[id]?.name??id} style={{backgroundImage:`url(${r.path})`,backgroundSize:`${r.cols*100}% ${r.rows*100}%`,backgroundPosition:`${(r.index%r.cols)/(r.cols-1)*100}% ${Math.floor(r.index/r.cols)/(r.rows-1)*100}%`}}/>;}
 const fmt=(value:number)=>value.toLocaleString('pt-BR',{maximumFractionDigits:1});
-export const groups:{name:string;rows:[keyof Stats,string,boolean?][]}[]=[
+export const groups:{name:string;rows:[Exclude<keyof Stats,'extra'>,string,boolean?][]}[]=[
   {name:'ATAQUE',rows:[['damage','Dano base do golpe'],['physical','Taijutsu',true],['ninjutsu','Ninjutsu',true],['attackSpeed','Cadência',true],['crit','Chance crítica',true],['critDamage','Dano crítico',true],['area','Raio de área',true],['projectiles','Projéteis'],['duration','Duração de status',true],['poison','Veneno / 3 s',true],['status','Genjutsu · chance de status adicional',true]]},
   {name:'DEFESA',rows:[['maxHp','HP máximo'],['armor','Armadura'],['evasion','Evasão',true],['regen','Regeneração / s']]},
   {name:'UTILIDADE',rows:[['moveSpeed','Movimento (m/s)'],['pickup','Coleta (m)'],['luck','Sorte'],['xpGain','Experiência',true],['moneyGain','Ryu',true],['ultimateRate','Recarga Ultimate',true],['supportSlots','Vagas de suporte'],['allyDamage','Dano de aliados',true],['allySpeed','Cadência de aliados',true]]},

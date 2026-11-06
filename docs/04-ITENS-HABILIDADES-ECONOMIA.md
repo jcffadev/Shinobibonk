@@ -90,14 +90,56 @@ Afixos compatíveis com cada habilidade. Setup prioriza duração e recarga, pod
 ## Catálogo
 O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 
-**IMPLEMENTADO** em `src/game/catalog.ts`: **36 itens**, migrados do legado (24), do hub/cena (+3), do documento de aliados (+4) e de itens de crítico/Sábio.
+**IMPLEMENTADO** em `src/game/catalog.ts`: **91 itens** no formato da página de itens da wiki de referência (raridade · efeito · gatilho · limite de cópias). Os nomes foram adaptados ao mundo ninja, os valores levemente alterados e nada lembra Pokémon.
+- **Raridades**: 25 comuns, 27 incomuns, 15 raros, 14 épicos e 10 lendários.
 - **Custo de desbloqueio**: comum 0, incomum 150, raro 300, épico 500, lendário 900.
-- **Limites**: cada item tem limite próprio de cópias (1 a 10).
-- **Exemplos**: Remédio do Rock Lee (lendário, 1 cópia, sem penalidade); Shuriken Selo da Tenten (+30% de dano e selamento instantâneo de mega elite derrotado); Selo de Senjutsu (infusão Sábia); Kunai Afiada, Lente de Precisão e Selo do Golpe Fatal (dano crítico +10/+20/+40 pontos).
+- **Limites**: "sem limite" da referência vira 10 cópias; itens únicos têm 1.
+- **Pergaminhos de elemento** (comuns, molde dos itens de tipo): +28% de dano no elemento e +3% de dano total. Existem para Fogo (Katon), Água (Suiton), Vento (Fuuton), Terra (Doton), Raio (Raiton), Madeira (Mokuton), Areia, Sombra e Neutro.
+- **Específicos pedidos pelo usuário, no mesmo molde**:
+  - **Pergaminho do Monte Myoboku**: +28% de dano de técnicas Sábias (Senjutsu) e +3% de dano total.
+  - **Pergaminho Genjutsu**: +28% de dano de técnicas de Genjutsu e +3% de dano total. Antes o Genjutsu não tinha multiplicador de escola; agora tem `stats.genjutsu`.
+- **Mecânicas implementadas** (lidas de `Stats.extra` em `GameCanvas.tsx`):
+  - **Dano condicional**:
+    - contra elites e chefes (Etiqueta Exorcista);
+    - contra inimigos controlados (Correntes de Selamento);
+    - por status diferente no alvo, até +30% (Selo dos Cinco Elementos);
+    - com HP baixo (Fúria da Kyuubi);
+    - sem levar golpes, até +40% (Ritmo Ininterrupto);
+    - por abates, até +30% (Manto do Shinigami);
+    - armadura vira dano de Taijutsu (Clava de Ferro);
+    - 3% de ×8 (Lâmina Kubikiribocho);
+    - execução abaixo de 8% (Lâmina do Carrasco).
+  - **Gatilhos por acerto**: queimar, envenenar, dormir, prender (paralisar) e congelar parcialmente. Há também +% de dano de queimadura/veneno.
+  - **Defesa**:
+    - roubo de vida (Raiz Vampira, Concha Sanguinária);
+    - espinhos (Armadura de Espinhos, Armadura Samurai);
+    - escudo a cada 14 s (Escudo de Chakra);
+    - invisibilidade ao ser atingido (Fumaça Densa);
+    - gelo ao ser atingido (Espelho de Gelo de Haku);
+    - cura de emergência (Fruta Medicinal);
+    - cura periódica (Chá de Ervas);
+    - cura por abate (Chá Medicinal);
+    - ressurreição com 35% ou 60% de HP;
+    - HP % e redução de regeneração.
+  - **Ritmo**:
+    - +movimento e +cadência ao ser atingido (Selo de Adrenalina);
+    - +armadura e +cadência parado (Postura de Pedra);
+    - Ultimate que recarrega as técnicas (Pergaminho do Hokage).
+  - **Ataques automáticos**:
+    - raios a cada 2,5 s (Pergaminho Chidori Nagashi);
+    - chamas negras no inimigo mais forte a cada 6 s (Chamas de Amaterasu).
+  - **Economia e mapa**: desconto nas kunais (até −40%) e no caça-níquel (até −24%); ±% de inimigos no mapa.
+  - **Limites**: Cabaça de Pílulas (pílulas até 12) e Pergaminho Proibido (técnicas até nível 11).
+- **Mantidos por regra do projeto**: Remédio do Rock Lee (lendário, sem penalidade), Shuriken Selo da Tenten (+25% de dano e selamento instantâneo), Selo de Senjutsu (infusão Sábia de Hashirama), Pergaminho de Recrutamento e Colar do Primeiro Hokage.
 - **Sorteio**: pesos fortemente concentrados em comum (90 / 9,889 / 0,1 / 0,01 / 0,001) e corrigidos pela quantidade de itens de cada raridade.
 
-**PENDENTE**:
-- Os ~80 itens.
-- Itens que ampliam o nível máximo de técnica (9→12) ou o limite de pilhas.
-- Remoção ou esquecimento de item/pílula.
-- Balanceamento.
+**Fora do catálogo** (dependem de sistemas que o jogo não tem):
+- pulo e deslize;
+- pesca;
+- velocidade e ricochete de projétil;
+- recuo (flinch);
+- vantagem de tipo;
+- pontos que crescem com o dinheiro gasto;
+- altares de símbolos.
+
+**PENDENTE**: balanceamento dos 91 itens; os efeitos visuais de raios e chamas são simples (anéis no chão).

@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 2026-11-05 — catálogo de 91 itens no formato da referência
+- **Catálogo:** `src/game/catalog.ts` foi refeito com 91 itens (25 comuns, 27 incomuns, 15 raros, 14 épicos, 10 lendários) seguindo o formato da página de itens da wiki: raridade, efeito, gatilho e limite. Os nomes são ninjas, os valores foram levemente alterados e não há Pokémon.
+- **Itens pedidos:** Pergaminho do Monte Myoboku (+28% Sábio) e Pergaminho Genjutsu (+28% Genjutsu), no molde dos pergaminhos de elemento (Katon, Suiton, Fuuton, Doton, Raiton, Mokuton, Areia, Sombra, Neutro).
+- **Mecânicas novas na simulação** (`GameCanvas.tsx`, via `Stats.extra`):
+  - dano por elemento e Genjutsu, dano condicional e gatilhos por acerto;
+  - roubo de vida, espinhos, escudo, fumaça, gelo ao ser atingido;
+  - curas (emergência, periódica, por abate) e ressurreição;
+  - adrenalina, postura parada e reset da Ultimate;
+  - raios e Amaterasu automáticos;
+  - descontos de kunai e caça-níquel, quantidade de inimigos e limites de pílula (12) e técnica (11).
+  - Todo dano recebido agora passa por `damagePlayer`.
+- **Filtros:** `combat.ts` classifica as chaves novas (filtros da loja e o "Melhora:" das cartas).
+- **Itens removidos ou trocados:** Insígnia do Comandante, Tambor de Guerra e Selo de Cooperação saíram. O Estandarte da Aliança agora é raro com +40%. A Bandana dá +6 de armadura. A Pedra da Juventude dá +15% de XP.
+- **Testes:** `verify-rules.mjs` foi atualizado (≥80 itens, ids únicos, itens pedidos, Selo Amaldiçoado, Fúria da Kyuubi, Genjutsu, gatilhos).
+- **Verificado:**
+  - `tsc -b`, `vite build`, `verify-rules.mjs` e `verify-runtime.mjs` (23 verificações) passaram.
+  - Teste avulso no navegador:
+    - Pergaminho Fuuton deu ×1,318 no Rasengan;
+    - Genjutsu numa técnica de Ninjutsu deu só +3%;
+    - Raiz Vampira curou de 20 para 54 de HP;
+    - o Escudo bloqueou o 1º golpe;
+    - a Ressurreição voltou com 35%;
+    - o Chidori Nagashi causou dano sozinho;
+    - a pílula chegou ao nível 12;
+    - a kunai caiu de 20 para 12 com 5 Pepitas;
+    - a loja mostra 91 itens e o filtro Sábio funciona.
+- **Não testado:** balanceamento e cada um dos 91 itens individualmente em jogo.
+
 ## 2026-11-05 — buff único de cada ajudante
 - **Buffs:** novo `src/game/allies.ts` com um buff passivo para cada um dos 22 shinobis (tabela em `docs/03`).
   - Médicos curam (Tsunade +1,5 HP/s, Sakura +1, Hashirama +1,2).

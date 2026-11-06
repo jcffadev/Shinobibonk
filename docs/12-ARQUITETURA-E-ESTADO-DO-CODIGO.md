@@ -12,8 +12,9 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Objetos visuais das técnicas e descarte de recursos. |
 | `src/game/heroes.ts` | 22 shinobis: aldeia, atributos base, passiva, bônus, 4 técnicas (escola, elemento, forma, status), Ultimate. `skillPool` adiciona a 1ª técnica de colegas da mesma aldeia (nível 8+). `sandSynergy`. Formas do Naruto. |
-| `src/game/catalog.ts` | 36 itens (raridade, custo, limite, bônus), `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
+| `src/game/catalog.ts` | 91 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
+| `src/game/progression.ts` (nota) | `Stats.extra` guarda a soma bruta de todos os bônus; `genjutsu` é o multiplicador da escola Genjutsu; `healthPct` e `regenMult` ajustam HP máximo e regeneração. |
 | `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
 | `src/game/evolution.ts` | Formas por nível de cada shinobi, recorte de retrato nos atlas e nível de desbloqueio das técnicas. |
 | `src/game/preparation.ts` | 16 nós da árvore permanente, usos de atualizar/pular/banir, preço das kunais, carteira administrativa (999.999), compra e reembolso. |
@@ -144,7 +145,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - 10 linhas de atributo com 10 níveis cada; custo = base + 25 × nível comprado.
   - Quarta opção, Atualizar/Pular/Banir (+1 uso por nível, até 10), Suporte adicional e Quarta técnica.
 - **Loja**:
-  - 36 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
+  - 91 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
   - Desbloquear só adiciona ao pool. Há filtros e a opção de arquivar da run.
 - **Missões**: Genin, Chunin, Jonin e Kage alteram a escala de dificuldade.
 - **Reset**: devolve tudo o que foi gasto e limpa árvore, desbloqueios, arquivamentos e plano.
@@ -255,6 +256,6 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Verificação
 
-- **05/11/2026, nesta revisão**: `tsc -b` sem erros; `vite build` concluído (aviso de chunk acima de 500 kB); `node scripts/verify-rules.mjs` passou e regravou `artifacts/rules-checks.json` (22 shinobis, 88 técnicas, 36 itens).
+- **05/11/2026, nesta revisão**: `tsc -b` sem erros; `vite build` concluído (aviso de chunk acima de 500 kB); `node scripts/verify-rules.mjs` passou e regravou `artifacts/rules-checks.json` (22 shinobis, 88 técnicas, 36 itens na época; hoje 91).
 - **05/11/2026, após a troca para Lamens e a restauração da tecla Y**: `node scripts/verify-runtime.mjs` passou nas 23 verificações no navegador (inclui "Tecla Y alterna a Ultimate automática"), sem exceções JS nem assets 404, e regravou `artifacts/runtime-checks.json`.
 - Não houve teste manual de jogabilidade, medição de FPS com carga alta nem validação de balanceamento.

@@ -1,8 +1,8 @@
 {
   "megaRate": 0.50172,
-  "rareRateZeroLuck": 0.00136,
-  "rareRateLuck200": 0.00996,
+  "rareRateZeroLuck": 0.00122,
+  "rareRateLuck200": 0.01044,
   "roster": 22,
   "techniques": 88,
-  "items": 36
+  "items": 91
 }
