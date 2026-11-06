@@ -5,8 +5,8 @@ import { calculateStats,rollCritical,difficultyAt } from '../src/game/progressio
 import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
 import { formAt,portraitRegion } from '../src/game/evolution.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
-assert.equal(HEROES.length,23);
-assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,70);
+assert.equal(HEROES.length,24);
+assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,72);
 {// Fase da obra (06/11/2026): Naruto começa só com Kage Bunshin; Sapo no Clássico, Rasengan no fim da Parte I, Modo Sábio no Shippuden.
  const {HERO_BY_ID,PHASE_LEVELS,SHARED_TECHNIQUES}=await import('../src/game/heroes.ts');const lv=(id,name)=>HERO_BY_ID[id].techniques.find(t=>t.name===name)?.unlockLevel;
  assert.deepEqual(HERO_BY_ID.naruto.techniques.map(t=>[t.name,t.unlockLevel]),[['Kage Bunshin',1],['Invocação do Sapo',10],['Rasengan',15],['Modo Sábio',25]]);

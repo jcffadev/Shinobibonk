@@ -86,6 +86,8 @@ export const HEROES:Hero[]=[
  /* Kushina Uzumaki (Narutopedia): kunoichi de Uzushio que viveu na Folha, a "Habanero Sangrenta", jinchuuriki da Kurama;
     chakra especial do clã Uzumaki e as Correntes de Selamento Adamantinas. Naturezas: Vento, Água, Yin. */
  h('kushina','Kushina','Vila da Folha','#c8323c',140,20,5,6.9,'Chakra Uzumaki · +15% HP máximo e +0,5 HP/s (vitalidade do clã) e +10 pontos de chance de status (correntes de selamento).',{healthPct:.15,regen:.5,status:.1},[L.kunai,{...t('Correntes de Selamento','Ninjutsu','Neutro','Linha',1.5),status:'Paralisar',statusChance:.35},L.dragaoAgua,s('Habanero Sangrento','Taijutsu','Neutro',{cooldown:13,duration:6,bonuses:{damage:.18,attackSpeed:.15,status:.1},stack:false,summary:'A fúria da Habanero Sangrenta: +dano, +velocidade de ataque e +chance de status por alguns segundos.'})],'Prisão de Correntes da Kurama','Controle, status e ninjutsu'),
+ /* Asuma Sarutobi (teste da skill de arte): lâminas de chakra de Vento e Cinzas Ardentes (Katon). Naturezas: Vento, Fogo. */
+ h('asuma','Asuma','Vila da Folha','#5f7f46',140,22,6,6.8,'Lâminas do Vento · +15% dano de taijutsu e +10% área.',{normal:.15,area:.1},[L.kunai,t('Lâminas de Chakra','Taijutsu','Vento','Cone',1.4),t('Cinzas Ardentes','Ninjutsu','Fogo','Área',1.4),L.vendaval],'Fúria do Rei Macaco','Taijutsu, vento e área'),
 ];/**
  * Técnicas BÁSICAS de Academia (pedido do usuário, 06/11/2026): sempre no pool, liberadas cedo (Nv. 2–4), para não faltar
  * opção nos níveis baixos. Neutras para todos; as elementais só para quem tem a natureza (HERO_NATURES). Dano baixo,
@@ -218,7 +220,7 @@ export const HERO_NATURES:Record<string,Element[]>={
  jiraiya:['Fogo','Vento','Terra','Água','Sombra'],orochimaru:['Vento','Raio','Terra','Água','Fogo','Madeira','Sombra'],
  lee:[],neji:['Fogo','Terra','Água'],hinata:['Fogo','Raio'],shikamaru:['Fogo','Terra','Sombra'],temari:['Vento'],tenten:[],
  pain:['Fogo','Vento','Raio','Terra','Água'],/* naturezas do Nagato (quem usa as técnicas), não as do Yahiko */tobirama:['Água','Fogo','Vento','Raio','Terra','Sombra'],
- kankuro:['Vento','Raio','Terra','Água'],guy:['Fogo','Raio'],kushina:['Vento','Água','Sombra'],
+ kankuro:['Vento','Raio','Terra','Água'],guy:['Fogo','Raio'],kushina:['Vento','Água','Sombra'],asuma:['Vento','Fogo'],
 };
 /** Afinidade marcada como "(Affinity)" na Narutopedia. */
 const MARKED_AFFINITY:Record<string,Element>={naruto:'Vento',kakashi:'Raio',sasuke:'Raio'};

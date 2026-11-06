@@ -157,6 +157,26 @@ const KUSHINA=npcSprite(d=>{
 });
 fs.mkdirSync('public/assets/shinobis',{recursive:true});
 fs.writeFileSync('public/assets/shinobis/kushina-1.svg',KUSHINA);
+/** Asuma Sarutobi (teste da skill criar-arte): cabelo preto espetado, barba, colete jōnin verde, faixa da cintura, lâminas de chakra e cigarro. */
+const ASUMA=npcSprite(d=>{
+ const hair='#1f1b1e',hairLight='#3a3438',beard='#2a2326';
+ konohaBody(d,{sleeve:P.navy,shirt:P.navy});
+ const vest='#5f7f46',vestShade='#465f33',vestLight='#78985a';
+ d.poly([[24,33],[40,33],[41,46],[23,46]],vest);d.rect(24,34,25,45,vestShade);d.rect(39,34,40,45,vestShade);
+ d.rect(25,31,39,34,vest);d.rect(25,31,39,31,vestLight);d.rect(32,34,32,46,'#3a5229');
+ for(const x0 of [26,34]){d.rect(x0,37,x0+3,41,vestLight);d.rect(x0,37,x0+3,37,vestShade);}
+ d.rect(23,44,41,46,'#e8e4ea');d.rect(23,46,41,46,'#bdb8c6');d.rect(31,44,33,46,'#c23b32');
+ hands(d,{forearm:false});
+ d.poly([[17,44],[19,44],[19,52],[17,54]],'#c9d1da');d.poly([[45,44],[47,44],[47,54],[45,52]],'#c9d1da');
+ face(d);
+ d.ellipse(32,27.5,9.5,4.5,beard,(x,y)=>y>=25);d.rect(29,29,35,29,P.mouth);
+ d.poly([[20,15],[22,6],[25,11],[27,3],[30,10],[33,2],[35,10],[38,4],[40,11],[43,6],[44,15]],hair);
+ d.ellipse(32,14,12,5,hair,(x,y)=>y<=15);d.poly([[27,5],[29,10],[26,10]],hairLight);
+ forehead(d,15);
+ eyes(d,hair);
+ d.rect(35,29,39,29,'#f1ece4');d.px(40,29,'#e8682c');
+});
+fs.writeFileSync('public/assets/shinobis/asuma-1.svg',ASUMA);
 fs.writeFileSync('public/assets/shinobis/iruka-1.svg',IRUKA);
 fs.writeFileSync('public/assets/shinobis/ebisu-1.svg',EBISU);
 console.log('Gerados sprites dos NPCs: iruka-1.svg, ebisu-1.svg.');

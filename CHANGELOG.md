@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-11-06 — Asuma (teste da skill de arte)
+- Asuma Sarutobi jogável e liberado desde o início (`STARTER_HEROES`): Lâminas de Chakra (Vento, Cone) e Cinzas Ardentes (Fogo, Área) como únicas, Kunai Tática e Grande Vendaval compartilhadas; naturezas Vento/Fogo; sprite pixel art por código (`asuma-1.svg`). PROPOSTO para revisão de arte no padrão do atlas (Codex).
+
 ## 2026-11-06 — falas de técnicas sem spam
 - `sfx.ts`: técnicas comuns falam no máximo 1 vez a cada 60 s por técnica e 15 s entre falas (`VOICE_RULES`); a Ultimate sempre fala. Antes o Kage Bunshin (técnica inicial do Naruto) repetia a fala a cada 6,5 s.
 

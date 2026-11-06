@@ -6,7 +6,7 @@
  * - Técnicas de outros shinobis precisam de 100% de pesquisa para entrar no Plano de build (passiva "Pesquisa" acelera).
  * Tudo em localStorage com try/catch; sem armazenamento, vale só nesta sessão.
  */
-export const STARTER_HEROES = ['naruto', 'sasuke', 'sakura'];
+export const STARTER_HEROES = ['naruto', 'sasuke', 'sakura', 'asuma'];
 const UNLOCKED_KEY = 'sb_unlocked_heroes_v1';
 const SEALED_KEY = 'sb_sealed_heroes_v1';
 const RESEARCH_KEY = 'sb_research_v1';
