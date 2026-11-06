@@ -84,7 +84,10 @@ export function ultimateBase(hero:Hero):Technique{return [...hero.techniques].re
 export const HERO_BY_ID=Object.fromEntries(HEROES.map(h=>[h.id,h])) as Record<string,Hero>;
 HERO_BY_ID.naruto.techniques[1].unlockLevel=10;
 HERO_BY_ID.naruto.techniques[2].unlockLevel=5;
-HERO_BY_ID.naruto.techniques[3].unlockLevel=15;
+// Modo Sábio só na fase Shippuden do Naruto (forma do nível 25, NARUTO_FORMS).
+HERO_BY_ID.naruto.techniques[3].unlockLevel=25;
+// Amaterasu do Sasuke é técnica da fase Shippuden.
+HERO_BY_ID.sasuke.techniques[3].unlockLevel=25;
 /** Usuários canônicos do Modo Sábio (Narutopedia, Sage Mode): podem aprender técnicas de elemento Sábio. */
 export const SAGE_USERS=new Set(['naruto','jiraiya','hashirama','minato']);
 /** Técnicas únicas de um shinobi: as do kit que não estão na biblioteca compartilhada (1–2 por shinobi). */

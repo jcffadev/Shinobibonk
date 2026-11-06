@@ -25,3 +25,4 @@
 .pause-panel .sheet-footer{display:none}
 .pause-panel .pause-footer{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(1400px,98vw);box-sizing:border-box;margin:0;padding:10px 14px;border-radius:18px;border:1px solid #49516b;background:#141924f5;box-shadow:0 10px 30px #000b;z-index:80}
 .game-panel-backdrop:has(.pause-panel){align-items:flex-start;padding-top:10px}
+.skill-chips .kit-level{margin-left:auto;font-size:10px;font-weight:900;padding:1px 6px;border-radius:999px;background:#2a3346;color:#f5c542}

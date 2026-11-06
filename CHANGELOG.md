@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-11-06 — técnicas liberadas por nível na fase certa
+- Modo Sábio do Naruto só no nível 25 (forma Shippuden); Amaterasu do Sasuke no nível 25. O painel do shinobi mostra o nível de liberação de cada técnica do kit (Nv. 1/5/12/20 por padrão, com ajustes por personagem).
+
 ## 2026-11-06 — alvo fixo, ordem do elenco e card de missão
 - **Alvo fixo**: clique com o botão direito (sem arrastar) fixa o alvo com prioridade guardião > Mega Elite/Shinobi para selar > elite > maior HP entre os visíveis até 30 m; anel vermelho no alvo; as técnicas miram nele quando está no alcance; clicar de novo solta. Arrastar continua girando a câmera.
 - **Elenco ordenado**: jogáveis primeiro; bloqueados por dificuldade da missão (Genin → Kage) e Lendários por último.
