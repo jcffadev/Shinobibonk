@@ -66,3 +66,11 @@
 .settings-row input{margin-top:4px;width:18px;height:18px;flex:none}
 .settings-row small{display:block;color:#9aa6c0;font-size:12px;line-height:1.35}
 .seal-skip-setting{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:10px;color:#b9c3d8;font-size:11px;cursor:pointer}
+
+/* HUD (06/11/2026): com 4+ ajudantes os cartões ficam compactos e a coluna para antes do dock de técnicas (canto inferior esquerdo), com rolagem. */
+.ally-cards{max-height:calc(100vh - 150px - 230px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;pointer-events:auto}
+.ally-cards:has(.ally-card:nth-of-type(4)) .ally-card{min-height:40px;padding:3px 8px 3px 4px;gap:6px}
+.ally-cards:has(.ally-card:nth-of-type(4)) .ally-portrait{width:32px;height:32px}
+.ally-cards:has(.ally-card:nth-of-type(4)) .ally-portrait .hero-sprite{width:30px;height:36px;margin-top:6px}
+.ally-cards:has(.ally-card:nth-of-type(4)) .ally-info > :nth-child(n+3){display:none}
+.ally-cards:has(.ally-card:nth-of-type(4)) .ally-buff{font-size:9px}

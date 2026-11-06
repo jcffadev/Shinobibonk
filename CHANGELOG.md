@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-11-06 — HUD: cartões de ajudante compactos
+- Com 4+ ajudantes os cartões ficam compactos e a coluna termina antes do dock de técnicas/pílulas, com rolagem (`allies.css`).
+
 ## 2026-11-06 — Ryu em formato curto
 - `src/game/format.ts` (`compactNumber`): Ryu do HUD em formato curto (1,2 mil · 2,0M · 5,0B · 3,0T; acima disso notação científica), valor exato no tooltip.
 
