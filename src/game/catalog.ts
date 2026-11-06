@@ -141,10 +141,13 @@ export const ITEM_BY_NAME = Object.fromEntries(ITEMS.map(i=>[i.name,i])) as Reco
 export function availableItems(unlocked:readonly string[], archived:readonly string[], allForPrototype:boolean) {
   return ITEMS.filter(i=>!archived.includes(i.id)&&(allForPrototype||i.rarity==='Comum'||unlocked.includes(i.id)));
 }
-/** Pesos por raridade. Sorte zero preserva a chance inicial de raro ou melhor (~0,11%). */
+/**
+ * Pesos por raridade (Comum, Incomum, Raro, Épico, Lendário). Recalibrado em 06/11/2026 (pedido do usuário: a Sorte quase não
+ * mudava as cartas). bonus = Sorte/50 (até 6). Raro ou melhor: Sorte 0 ≈ 0,7% · 20 ≈ 6% · 50 ≈ 15% · 100 ≈ 26%.
+ */
 export function luckRarityWeights(luck:number){
-  const bonus=Math.min(4,Math.max(0,luck)/100);
-  return [90,9.889+12*bonus,.1+8*bonus,.01+1.5*bonus*bonus,.001+.35*bonus*bonus];
+  const bonus=Math.min(6,Math.max(0,luck)/50);
+  return [90/(1+bonus*.6),9.889+20*bonus,.6+10*bonus,.1+3*Math.pow(bonus,1.5),.02+Math.pow(bonus,1.6)];
 }
 /** `priority`: ids marcados como Prioridade na Bolsa da Missão; o peso deles é multiplicado por `priorityWeight` (não garante). */
 export function rollItems(pool:readonly Item[], owned:Record<string,number>, luck:number, count:number, rng= Math.random, priority:readonly string[]=[], priorityWeight=1):Item[] {

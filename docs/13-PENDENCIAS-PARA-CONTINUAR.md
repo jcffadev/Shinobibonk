@@ -20,9 +20,12 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 ## Pedidos do usuário em 06/11/2026 (PENDENTES)
 - **Escala do jogo** — FEITO em parte: inimigos exponenciais com o tempo, resistência crescente e hordas até 1400 (`ENEMY_SCALING`). FALTA: crescimento grande do dano pelas técnicas (ex.: +X% de dano por nível de técnica, mais projéteis), dano megacrítico, níveis de "Treino" após acabarem os upgrades (referência do vídeo: nível 1254, dano +2484%, técnicas Nv. 10 com +300%/nível). Referência original: dano do shinobi crescendo de forma exponencial, HP dos monstros subindo, hordas crescendo com o tempo, inimigos ficando mais fortes e resistentes até forçar o jogador a pular de zona.
 - **Recalibração de atributos para todos os níveis** (não só até o 50).
-- **Sorte**: quase não afeta cartas e pílulas; buffar a chance de vir mais coisas (RNG muito rígido).
-- **Roleta da Tsunade**: nerfar e corrigir a entrega dos bônus (o usuário viu bônus não entregues).
+- **Sorte** — FEITO (06/11/2026): curva de raridade, +1 carta por chance e drops de pílula/item escalam com a Sorte. Validar jogando.
+- **Roleta da Tsunade** — FEITO: nerf e correção da entrega (bênçãos acumulam; pílula/item no limite viram Ryu). Validar jogando.
 - **Animações**: levar a animação do Naruto (caminhada, diagonal, arremesso) para todos os shinobis com a skill `movimentar-shinobi`/`criar-arte-shinobibonk`; monstros correndo animados em direção ao jogador. Exige gerar arte (folhas de sprites) — o Claude Code não gera PNG de arte; fazer no Codex.
+
+## Calibração com ponto de partida
+- O usuário quer um ponto inicial de calibração baseado no PokéBonk. Fonte permitida: wiki pública (https://pokebonk-wiki.wiki) e observação de vídeos/prints de gameplay. Não fazer engenharia reversa do aplicativo. Levantar: crescimento de técnicas por nível, upgrades, curva de nível/Treino, inimigos por minuto, HP/dano por zona.
 
 ## Decisões aguardando o usuário
 1. **Hospedar a Alpha**: escolher GitHub Pages (repo precisa ficar público; criar workflow + `base` no vite.config), Netlify/Vercel/Cloudflare Pages (aceita repo privado) ou itch.io (zip do `dist`).

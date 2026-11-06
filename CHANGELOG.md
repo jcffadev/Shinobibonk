@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-11-06 — roleta nerfada e corrigida, sorte recalibrada
+- **Roleta da Tsunade — entrega corrigida**: bênçãos iguais agora acumulam (até 3×) em vez de se sobrescrever; pílula que chega no limite vira Ryu; item que já está no limite vira Ryu em vez de travar a escolha.
+- **Roleta — nerf**: giro 30 Ryu +10 por giro; casas boas reduzidas (kunai/shuriken/pílula 9, Ryu 7, bênção 6, item 4, Sorte Grande 1) e ruins/vazia aumentadas (dívida 12, azar 10, credores 9, vazia 17). Boas: Sorte 0 = 48% (antes 63%), Sorte 200 = 77%.
+- **Sorte**: curva de raridade bem mais sensível (raro ou melhor: Sorte 0 ≈ 0,7%, 20 ≈ 6%, 50 ≈ 15%, 100 ≈ 26%); chance de +1 carta nas ofertas (Sorte/150, até 60%); drop de pílula ×(1 + Sorte/100) e de item ×(1 + Sorte/150).
+
 ## 2026-11-06 — escala dos inimigos e hordas
 - `difficultyAt` (`progression.ts`): HP dos inimigos ×1,10 por minuto e dano ×1,05 por minuto (além do crescimento linear), resistência a dano de +1,5% por minuto até 60% (`armor`, somada à defesa do tier), teto de inimigos até 1400 e spawn mais rápido (mín. 0,03 s). Constantes em `ENEMY_SCALING`. Ex. Genin: 10 min = HP ×8,3, 320 inimigos; 30 min = HP ×133, 1400 inimigos, 45% de resistência.
 - Crescimento por nível do shinobi segue linear (+3%): o nível passa de 1000 (referência do PokéBonk); o dano massivo deve vir de técnicas, projéteis, críticos e itens.
