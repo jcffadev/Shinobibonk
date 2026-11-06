@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-11-06 — Ryu em formato curto
+- `src/game/format.ts` (`compactNumber`): Ryu do HUD em formato curto (1,2 mil · 2,0M · 5,0B · 3,0T; acima disso notação científica), valor exato no tooltip.
+
 ## 2026-11-06 — técnicas por fase, escala/Final Swarm, pílulas com raridade, sorte, roleta e economia exponencial
 - **Técnicas por fase da obra** (`PHASE_LEVELS` em heroes.ts): Naruto começa com Kage Bunshin; **Invocação do Sapo** (compartilhada com Jiraiya; Kuchiyose: Yatai Kuzushi, Neutro, Área, atordoa) no Nv. 10; Rasengan Nv. 15; Modo Sábio Nv. 25. Revisão por estreia na Narutopedia em Sasuke, Sakura, Itachi, Minato, Tsunade, Jiraiya, Lee, Neji, Hinata e Shikamaru. 70 técnicas.
 - **Itens só por interação**: removido o drop de item por abate (era a origem dos itens no nível máximo; a emboscada só aumentava os abates). Nível máximo dá só Treino.
