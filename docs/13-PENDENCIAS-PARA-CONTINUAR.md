@@ -15,7 +15,14 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **Chão nas bordas**: alterações feitas (`terrainArt.ts`), validação visual final pendente.
 - Pedidos recentes do Codex em curso: bijuus, progressão extra e roleta.
 - Skills do Codex: `skills/criar-arte-shinobibonk` (padrão de arte de shinobis, itens, pílulas, cenários) e `skills/movimentar-shinobi` (movimento, pulo, dash, sprites de animação), com ponteiros em `.claude/skills/`.
-- **Teste quebrado**: `verify-runtime` falha em "Selamento mostra e recruta Temari" — o ritual fica em "selando" pelo gancho `defeatMega` do modo de teste; no jogo real o usuário confirmou que o selamento funciona. Corrigir o gancho/teste.
+- Testes atualizados ao trabalho do Codex: o selamento espera o ritual terminar (navegador de teste roda a poucos FPS); vitória por gancho `finishMission` (a missão agora termina no portal de saída); saída da partida pela pausa (Esc → Salvar e sair).
+
+## Pedidos do usuário em 06/11/2026 (PENDENTES)
+- **Escala do jogo** (referência: hordas de até ~1400 inimigos, danos de milhões no fim): dano do shinobi crescendo de forma exponencial, HP dos monstros subindo, hordas crescendo com o tempo, inimigos ficando mais fortes e resistentes até forçar o jogador a pular de zona.
+- **Recalibração de atributos para todos os níveis** (não só até o 50).
+- **Sorte**: quase não afeta cartas e pílulas; buffar a chance de vir mais coisas (RNG muito rígido).
+- **Roleta da Tsunade**: nerfar e corrigir a entrega dos bônus (o usuário viu bônus não entregues).
+- **Animações**: levar a animação do Naruto (caminhada, diagonal, arremesso) para todos os shinobis com a skill `movimentar-shinobi`/`criar-arte-shinobibonk`; monstros correndo animados em direção ao jogador. Exige gerar arte (folhas de sprites) — o Claude Code não gera PNG de arte; fazer no Codex.
 
 ## Decisões aguardando o usuário
 1. **Hospedar a Alpha**: escolher GitHub Pages (repo precisa ficar público; criar workflow + `base` no vite.config), Netlify/Vercel/Cloudflare Pages (aceita repo privado) ou itch.io (zip do `dist`).
