@@ -75,7 +75,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Plano do Shikamaru: até 3 vezes por zona; cada vez dá +1 kunai grátis quando o guardião é derrotado, sem penalidade.
   - Altar de desafio: horda de 6.
   - Maldição de Orochimaru: +20% de dificuldade e +25% de XP/saque.
-  - Altar para proteger: ficar 20 s no círculo.
+  - Altares por raridade (Normal → Lendário): pisar no círculo começa a contar (sem E); fora do círculo a porcentagem cai, mais rápido quanto mais raro (`ALTAR_RULES`, ver docs/01).
   - Mercador de armas.
   - Roleta da Tsunade: overlay animado com casas boas e ruins, giro rápido segurando E, prêmios entregues ao sair, custo 25 +5 por giro; Sorte melhora as chances (nunca 100%) e a dificuldade compensa.
   - **Barraca Ichiraku**: o sprite da barraca de lámen.

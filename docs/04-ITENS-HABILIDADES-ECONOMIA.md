@@ -130,7 +130,7 @@ A Pílula do Mercador afeta só o Ryu recebido na run, nunca os Lamens.
 - **Pílulas antigas**: substituídas. A Rubra virou Soldado + Elemental, a Verde virou Akimichi e a Azul virou Hiden. Arquivamentos salvos com os nomes antigos passam a ser ignorados.
 - **Cálculo**: `calculateStats` soma `pillBonuses` a cada recálculo, a partir das fontes, sem buff residual.
 - Cada escolha de pílula avança **um nível**. Os multiplicadores de potência são 1×, 1,25×, 1,5×, 1,75× e 2×, da Comum à Lendária. O bônus extra fica salvo separadamente. A Barraca Ichiraku remove ambos ao esquecer a pílula.
-- **Pílula do Pergaminho** concede +10% de XP por nível base. **Pílula de Incenso** concede +10% à densidade da horda, +5% à dificuldade dos inimigos e +12% ao Ryu recebido por nível base. O limite da horda é 1.600 inimigos.
+- **Pílula do Pergaminho** concede +10% de XP por nível base. **Pílula de Incenso** concede +10% à densidade da horda, +5% à dificuldade dos inimigos e +12% ao Ryu recebido por nível base. O limite da horda é 1.600 inimigos no tempo normal; no Final Swarm o teto vira 1.600 × fator do swarm (×3, +25%/min) até `FINAL_SWARM.maxEnemies` = 8.000.
 - O banimento usa o nome da técnica ou pílula, independente da raridade e do nível. O que já foi aprendido continua ativo até que o jogador o remova na Barraca Ichiraku.
 - **PENDENTE**:
   - pílulas de sistemas que o jogo ainda não tem (escudo, roubo de vida, espinhos, sobrecura, maldição, elites, power-ups, atributo aleatório);

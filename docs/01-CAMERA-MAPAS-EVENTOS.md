@@ -52,7 +52,13 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
 - **Maldição de Orochimaru (CONFIRMADO; substitui Gengar)**: risco/recompensa opcional. **IMPLEMENTADO**: +20% de dificuldade e +25% de XP/saque, uma vez por zona.
 - **Mega elite (CONFIRMADO)**: encontros especiais surgem organicamente e podem ser selados após a derrota. **IMPLEMENTADO**: shinobi aleatório do elenco (que ainda não é aliado). O primeiro surge entre 30 e 55 s e os seguintes a cada 45–70 s, até 9 por run. Rotação por zona e elegibilidade estão **PENDENTES**.
 - **Guardião de zona (IMPLEMENTADO)**: invocado pelo Selo do guardião quando o jogador quiser, ou automaticamente aos 160 s de cada zona de 200 s; sorteado da lista da zona em `src/game/missions.ts` (`GUARDIAN_RULES`, `guardianHpMultiplier`).
-- **Proteção de altar (CONFIRMADO)**: defender o altar durante o evento. **IMPLEMENTADO PARCIAL**: ficar 20 s dentro do círculo de 4 m dá uma kunai grátis. Ondas dedicadas e falha ao sair estão **PENDENTES**.
+- **Altares por raridade ("Altar · Normal/Incomum/Raro/Épico/Lendário", CONFIRMADO pelo usuário em 06/11/2026)**: 8 por zona (os 5 primeiros cobrem as 5 raridades; os outros 3 são sorteados). **IMPLEMENTADO e TESTADO no navegador**:
+  - Pisar no círculo (3 m, `ALTAR_RULES.radius` em `GameCanvas.tsx`) já começa a contar, sem apertar E (E continua funcionando). O círculo fica dourado com o jogador dentro e vermelho fora.
+  - Dentro, sobe 1 s por segundo até `ALTAR_RULES.seconds` = 10/14/18/23/30 s (Normal → Lendário), ou seja ~10%/s no Normal e ~3,3%/s no Lendário.
+  - Fora do círculo a porcentagem **cai**; quanto mais raro, mais rápido (`ALTAR_RULES.decayPerSecond`, fração da barra por segundo): Normal 4%/s (~25 s para zerar), Incomum 6%/s, Raro 9%/s, Épico 13%/s, Lendário 18%/s (~5,5 s). Cada altar guarda o próprio progresso e cai sozinho enquanto o jogador está longe; ao zerar fora do círculo, o altar sai da barra.
+  - Barra/percentual no HUD: "Protegendo altar · X%". Em 100% abre a escolha de itens com um item da raridade do altar garantido.
+  - Medição (Edge headless): Normal 5→12→22→32% em 4 s dentro e 30→27→23→20% fora; Lendário 2→4→7→10% dentro e zerou em menos de 1 s fora.
+  - Ondas dedicadas durante o altar: **PENDENTE**.
 - **Mercador (IMPLEMENTADO)**: troca kunai/shuriken guardadas por 5 Ryu cada.
 - **Arsenal da Tenten (CONFIRMADO; IMPLEMENTADO; antes "Sharingan de Kakashi", trocado a pedido do usuário em 06/11/2026)**: NPC com sprite da Tenten no mapa (id `arsenal`). Ao interagir com E, o jogador escolhe um item que já carrega e ganha mais uma cópia dele, respeitando o limite do item. Pode ser usado uma vez por zona, e cancelar não gasta o uso.
 - **Emboscadas (IMPLEMENTADO)**: a cada 18–30 s surgem 8 + 2×zona inimigos ao redor do jogador.

@@ -122,8 +122,9 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - O guardião (shinobi da lista da zona) é invocado no Selo do guardião (`summonGuardian`, HP × `guardianHpMultiplier`) por interação. `guardianSpawned` garante um por zona.
 - **Dificuldade** (`difficultyAt`):
   - Multiplicador por rank: Genin 1, Chunin 1,4, Jonin 1,9, Kage 2,6.
-  - Por minuto: HP +22%, dano +15%, velocidade e velocidade de ataque sobem, intervalo de spawn cai.
-  - Teto de **180 inimigos vivos**.
+  - Escala pelo tempo total da run com `ENEMY_SCALING` (`src/game/progression.ts`): HP e dano lineares × exponenciais por minuto, resistência crescente e spawn em lote (`SPAWN_RULES` em `GameCanvas.tsx`: 40 por quadro, 120 no swarm).
+  - Teto de inimigos vivos: (60 + 90·min + 6,4·min²) × fator da missão, até **1.600** (Genin chega a 1.600 aos 10 min).
+  - **Final Swarm** (`FINAL_SWARM`): com o relógio da zona zerado, HP/dano/defesa ×3 +25% por minuto; o teto vira teto normal × fator do swarm, limitado a `FINAL_SWARM.maxEnemies` = **8.000**; o spawn nunca fica abaixo de teto ÷ `refillSeconds` (4 s) e os inimigos do swarm nascem a 14–28 m (`spawnRing`). O debug "Teto de inimigos vivos" multiplica por cima respeitando o mesmo limite.
   - A Maldição de Orochimaru multiplica a dificuldade da zona. O Plano do Shikamaru não altera dificuldade.
 - **Inimigos**:
   - Perseguem o jogador. Ao alcançar, marcam um círculo vermelho e atacam após um tempo de preparo; sair do círculo evita o dano.
@@ -189,6 +190,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - Técnicas elegíveis: desbloqueadas, não deixadas em casa nem banidas, abaixo do nível 9, e nova só se houver espaço (3, ou 4 com "Quarta técnica").
   - Itens só vêm de `rollMegaLoot` (kunai, shuriken, eventos, drop de item, recusa de selamento).
   - Sem opções elegíveis, aparece uma carta de "Powerlevel" com um ganho pequeno de atributo.
+- **Proteção contra escolha involuntária** (`CHOICE_GUARD.armSeconds = 0,5` em `GameCanvas.tsx`, `choiceArmed`): cada conjunto novo de cartas ignora clique, teclas 1–9, E, V, F, X e Z por 0,5 s. Evita que o clique/duplo clique dado na tela anterior (níveis em fila, troca, banimento) pegue a carta nova — era a origem das pílulas "pegas sozinhas". Testes `?test` dispensam a espera; `?test=1&guard=1` a liga.
 - **Atualizar / pular / banir**: F, X e Z (ou botões), com 3 usos base cada. Banir exige escolher a carta em seguida e remove aquela opção pelo resto da run.
 - **Sorteio de itens**: pesos 90 / 9,889 / 0,1 / 0,01 / 0,001 (comum → lendário), multiplicados por (1 + Sorte/100)^índice e divididos pela quantidade de itens da raridade. A Sorte é limitada a 500 no cálculo.
 - **Pickups no mapa**: 25 entre kunai, shuriken e bolsa de Ryu (+10).
@@ -208,7 +210,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - **Técnicas**: `Technique.setup` (forma 'Buff'), `ultimateBase`, preparo de golpe dividido por `projectileSpeed`, Modo Sábio e linha Senjutsu (`SENJUTSU`, `hasSenjutsu`, `techniqueDetail` em `combat.ts`); snapshot `setups`. Hooks: `castDelayed`, `senjutsu`, `combat`, `setRunBuff`, `setGrowth`; `cast` resolve na hora. Ver docs/04.
   - **Altar de desafio**: 6 inimigos; vencer dá uma kunai grátis.
   - **Maldição de Orochimaru**: +20% de dificuldade, +25% de XP e saque.
-  - **Altar para proteger**: ficar 20 s no círculo dá uma kunai grátis.
+  - **Altares por raridade** (`ALTAR_RULES` em `GameCanvas.tsx`, `startAltar`/`tickAltar`, progresso por altar em `altarProgress`): pisar no círculo de 3 m inicia sem E; sobe dentro, cai fora com taxa por raridade; 100% abre escolha de itens com um da raridade do altar.
   - **Mercador de armas**: troca cada kunai/shuriken guardada por 5 Ryu.
   - **Roleta da Tsunade** (evento `slot`, antigo Caça-níquel): overlay `TsunadeRoulette` pedindo giros via `CustomEvent('shinobi-roulette')`; regras puras em `src/game/roulette.ts` (`ROULETTE_RULES`, `rouletteWeights`, `rollRoulette`, `rouletteCost`, `spendBonuses`). Estado `roulette` pausa o loop; `ryuSpent` soma kunais, roleta e Ichiraku. Hook `__shinobiTest.roulette`.
   - **Barraca Ichiraku** (sprite 5 de `environment-v2.png`, em x 13, z 21):

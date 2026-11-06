@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Final Swarm crescente, pílulas só por escolha e altares por raridade
+
+- **Final Swarm**: o teto do swarm era cortado em 1.600 (já atingido aos 10 min), então a horda não triplicava; com build forte, o spawn ×3 perdia para o abate e a horda estabilizava perto de 300. Agora o teto é 1.600 × fator do swarm (×3, +25%/min) até `FINAL_SWARM.maxEnemies` = 8.000, o spawn repõe o teto em ~4 s (`refillSeconds`), até 120 por quadro, e os inimigos do swarm nascem a 14–28 m. Medido no Edge headless: +1 min → 6.094 vivos; +3 min → 8.000; matando tudo a cada 2 s a horda volta a ~1.800–2.000.
+- **Pílulas sem escolha**: a única fonte é a carta do level-up, mas com níveis em fila o novo conjunto de cartas surgia sob o cursor e o clique/duplo clique ou tecla 1–9 dado na tela anterior pegava a carta nova (muitas vezes pílula). Cada conjunto novo agora ignora clique e teclas por 0,5 s (`CHOICE_GUARD`). Teste: 6 aberturas com clique + tecla imediatos → 0 escolhas; duplo clique com níveis em fila → exatamente 1 escolha (sem a proteção: 6 escolhas involuntárias e um duplo clique que pegou 2).
+- **Altares por raridade**: pisar no círculo começa a contar, sem E; fora do círculo a porcentagem cai, mais rápido quanto mais raro (Normal 4%/s … Lendário 18%/s), com progresso por altar e círculo vermelho fora (`ALTAR_RULES`).
+
 ## Alinhamento do HUD e Ryu em formato curto
 
 - Barra da missão em blocos: missão e clima/zona à esquerda, relógio grande (ou "FINAL SWARM +m:ss") no centro, Ryu curto e kunai/shuriken à direita. Os preços de kunai, shuriken, mercador e roleta ficam numa linha secundária menor. Novo `src/hud-layout.css`, importado por último.

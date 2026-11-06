@@ -63,19 +63,28 @@ export const ENEMY_SCALING={hpLinear:.3,hpPerMinute:1.17,damageLinear:.2,damageP
 /**
  * FINAL SWARM: quando o relógio da zona zera, o jogo NÃO acaba; conta o tempo sobrevivido e a dificuldade triplica na hora
  * (HP, dano, defesa e quantidade/spawn) e cresce growthPerMinute a cada minuto sobrevivido (além da escala normal por tempo).
- * A quantidade fica presa em ENEMY_SCALING.maxEnemies (limite de performance); a triplicação vira spawn ×3 (reposição instantânea).
+ * Quantidade (correção 06/11/2026 — "os monstros pararam de aumentar em 300 no Final Swarm"): antes o teto do swarm era
+ * cortado em ENEMY_SCALING.maxEnemies (1600, já atingido aos 10 min), então a horda NÃO triplicava; e o spawn ×3 perdia
+ * para o abate de builds fortes, que matavam tudo ao nascer (equilíbrio em ~300). Agora:
+ * - teto do swarm = teto normal (até 1600) × fator do swarm (×3, +25%/min), limitado a FINAL_SWARM.maxEnemies (performance);
+ * - reposição mínima: o spawn por segundo nunca fica abaixo de teto ÷ refillSeconds (a horda volta ao teto em ~refillSeconds);
+ * - os inimigos do swarm nascem num anel mais largo (spawnRing, metros do jogador), fora do alcance imediato das técnicas.
+ * O debug (F9, "Teto de inimigos vivos") multiplica por cima e também respeita FINAL_SWARM.maxEnemies.
  */
-export const FINAL_SWARM={multiplier:3,growthPerMinute:.25,maxArmor:.85};
+export const FINAL_SWARM={multiplier:3,growthPerMinute:.25,maxArmor:.85,maxEnemies:8000,refillSeconds:4,spawnRing:[14,28] as const};
 /** Multiplicador do FINAL SWARM para `overtimeSeconds` sobrevividos após o relógio zerar (1 = fora do swarm). */
 export function finalSwarmFactor(overtimeSeconds:number){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60):1;}
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
   const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds);
   const earlyGenin=rank==='Genin'?.66+.34*Math.min(1,minutes/2.5):1;
-  const spawnPerSecond=earlyGenin*Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier))*swarm;
+  const baseCap=Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*earlyGenin));
+  const cap=swarm>1?Math.min(FINAL_SWARM.maxEnemies,Math.floor(baseCap*swarm)):baseCap;
+  const baseSpawn=earlyGenin*Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier))*swarm;
+  const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):baseSpawn;
   return {hp:tier*(1+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*curse*swarm,damage:tier*(1+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,
     spawnPerSecond,spawnInterval:1/spawnPerSecond,
-    cap:Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*swarm*earlyGenin)),
+    cap,
     armor:swarm>1?Math.min(FINAL_SWARM.maxArmor,minutes*S.armorPerMinute*swarm):Math.min(S.maxArmor,minutes*S.armorPerMinute),swarm};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}

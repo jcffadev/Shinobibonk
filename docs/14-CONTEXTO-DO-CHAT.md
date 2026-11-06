@@ -367,3 +367,14 @@ A validação final no Edge passou em 47 verificações, incluindo aura ativa, c
 **Resposta**
 
 Já estavam resolvidos pelo Codex: grade de itens em 3 linhas com rolagem, cartões compactos com 4+ ajudantes e dock de pílulas compacto. Completei o contador dos itens, a barra da missão em blocos, o minimapa (ícones contidos, rótulo e selo DEBUG abaixo dele), o painel SINERGIAS recolhível e o Ryu curto em preços, roleta, mercador e avisos. Validado em 1440×900 e 1366×768 com 5 ajudantes e 80 itens; `tsc`, build, `verify-rules` e `verify-runtime` passaram.
+## Final Swarm, pílulas sem escolha e altares por raridade
+
+**Pedido** (via coordenador)
+
+> Os monstros pararam de aumentar a quantidade em 300 no final swarm.
+> Por algum motivo ele está pegando pílula sozinho em algum momento; estou com as habilidades todas selecionadas e dando upgrade, estou esquecendo as pílulas, mas acontece algum evento que faz ele pegar as pílulas aleatoriamente sozinho.
+> O altar de desafio: só de ficar em cima deve começar a contar a porcentagem; ao sair de cima e do círculo em volta (limite de range) deve começar a cair; quanto mais raro o altar, mais rápido cai.
+
+**Resposta**
+
+Final Swarm: parcial — o swarm já existia, mas o teto era cortado em 1.600 (atingido aos 10 min) e o spawn perdia para o abate de builds fortes. Agora o teto é 1.600 × fator do swarm até 8.000, com reposição em ~4 s e nascimento a 14–28 m. Pílulas: a única fonte restante era a carta do level-up (roleta, chão e eventos já não davam pílula); com níveis em fila o clique ou a tecla da tela anterior caía na carta nova. Cada conjunto novo de cartas ignora entradas por 0,5 s. Altares: parcial — a barra já caía fora do círculo, mas exigia E e caía igual em toda raridade. Agora começa ao pisar, guarda progresso por altar e cai de 4%/s (Normal) a 18%/s (Lendário). Testes no Edge headless, `tsc`, build e `verify-rules` passaram.

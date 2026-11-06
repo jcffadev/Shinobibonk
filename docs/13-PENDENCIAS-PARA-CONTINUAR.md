@@ -19,6 +19,11 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - Skills do Codex: `skills/criar-arte-shinobibonk` (padrão de arte de shinobis, itens, pílulas, cenários) e `skills/movimentar-shinobi` (movimento, pulo, dash, sprites de animação), com ponteiros em `.claude/skills/`.
 - Testes atualizados ao trabalho do Codex: o selamento espera o ritual terminar (navegador de teste roda a poucos FPS); vitória por gancho `finishMission` (a missão agora termina no portal de saída); saída da partida pela pausa (Esc → Salvar e sair).
 
+## Final Swarm, pílulas e altares (06/11/2026)
+- **IMPLEMENTADO e TESTADO (headless)** — Final Swarm cresce além de 1.600 até `FINAL_SWARM.maxEnemies` = 8.000; pílulas só por escolha (`CHOICE_GUARD` 0,5 s); altares por raridade começam ao pisar e caem fora do círculo (`ALTAR_RULES`).
+- **PENDENTE** — medir FPS com 4.800–8.000 inimigos em GPU real; se cair demais, baixar `FINAL_SWARM.maxEnemies`. No headless (SwiftShader) ficou em ~20 FPS tanto com 1.600 quanto com 8.000.
+- **PENDENTE** — confirmar jogando que não há mais pílula "sozinha". Se ainda ocorrer, observar se o jogador clica de forma contínua (a proteção cobre só os primeiros 0,5 s de cada conjunto de cartas). Ondas dedicadas durante o altar continuam pendentes.
+
 ## Desempenho com 1.600 inimigos
 
 - **IMPLEMENTADO** — o código do Claude agrupa corpos, contornos e avisos dos inimigos comuns e elites em lotes instanciados.

@@ -22,7 +22,7 @@ Atalhos locais:
 
 ## Estrutura
 
-O elenco atual tem 24 shinobis, 56 formas jogáveis com folhas direcionais de caminhada e 72 técnicas. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos e o HUD exibe o total da simulação.
+O elenco atual tem 24 shinobis, 56 formas jogáveis com folhas direcionais de caminhada e 72 técnicas. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total da simulação.
 
 O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
 
