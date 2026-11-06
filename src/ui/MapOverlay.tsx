@@ -62,8 +62,9 @@ export function PickupIcon({ p, size }: { p: Pickup; size: 'map' | 'mini' }) {
 /** Marcadores + rota dentro do minimapa (centrado no jogador, 1,55 % por metro). */
 export function MinimapMarkers({ world }: { world: WorldSnapshot }) {
   const p = world.player;
-  const at = (x: number, z: number, max = 44) => { let dx = (x - p.x) * 1.55, dy = (z - p.z) * 1.55; const r = Math.hypot(dx, dy); if (r > max) { dx *= max / r; dy *= max / r; } return { x: 50 + dx, y: 50 + dy, edge: r > max }; };
-  const r = world.route, t = r ? at(r.x, r.z, 45) : null;
+  // Raio máximo 38 %: com ícones de 20 px (≈ 5,5 % do minimapa) o marcador de borda fica inteiro dentro do círculo.
+  const at = (x: number, z: number, max = 38) => { let dx = (x - p.x) * 1.55, dy = (z - p.z) * 1.55; const r = Math.hypot(dx, dy); if (r > max) { dx *= max / r; dy *= max / r; } return { x: 50 + dx, y: 50 + dy, edge: r > max }; };
+  const r = world.route, t = r ? at(r.x, r.z, 42) : null;
   return <>
     {r && t && <svg className="mini-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="50" y1="50" x2={t.x} y2={t.y} /></svg>}
     {world.pickups.filter(pk => dist(world, pk.x, pk.z) < 30).map((pk, i) => { const q = at(pk.x, pk.z); return <i key={pk.id ?? 'pk' + i} className="mini-marker" title={pk.name ?? PICKUP_LABEL[pk.kind]} style={{ left: `${q.x}%`, top: `${q.y}%` }}><PickupIcon p={pk} size="mini" /></i>; })}

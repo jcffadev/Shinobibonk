@@ -34,8 +34,9 @@ Atualizar a posição e distância até o Top 1 após cada abate. Guardar partid
 ## Estado do código (05/11/2026)
 - **IMPLEMENTADO na HUD**:
   - Retrato, nível, HP e XP no canto superior esquerdo.
-  - No topo: missão, contagem regressiva de 10:00, Ryu, kunai/shuriken, clima e zona.
-  - Minimapa no canto superior direito.
+  - No topo, em blocos: missão + clima/zona; contagem regressiva grande de 10:00 (ou "FINAL SWARM +m:ss"); Ryu em formato curto e kunai/shuriken. Linha secundária menor com os preços de kunai, shuriken, mercador (roletar) e roleta. Avisos ficam abaixo da barra.
+  - Minimapa no canto superior direito, com ícones contidos no círculo e rótulo "Tab rápido · M mapa"; o selo DEBUG fica abaixo do rótulo.
+  - Painel SINERGIAS recolhível pelo título (estado salvo no navegador). Itens: até 3 linhas com rolagem.
   - Barra de 4 técnicas automáticas com as pílulas acima e o botão R com o selo AUTO.
   - Itens no canto inferior direito.
   - FPS e inimigos vivos no centro inferior.

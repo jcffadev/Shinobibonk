@@ -357,3 +357,13 @@ As aldeias têm selo de vínculo com nome original e emblema, da seleção ao ma
 > o que você esta fazendo agora? como esta sua fila?
 
 A validação final no Edge passou em 47 verificações, incluindo aura ativa, corrida dos clones na prévia, treinamento e retomada do ponteiro. A fila restante é a revisão visual de cada forma sem ações próprias, seguida por escala de missões longas e testes com GPU real.
+
+## Alinhamento do HUD em jogo e Ryu curto
+
+**Pedido** (via coordenador, a partir do print do usuário com Naruto Nv. 194, 5 ajudantes e ~80 itens)
+
+> Alinhar o HUD: grade de itens limitada com rolagem, minimapa sem ícones cortados e sem o selo DEBUG sobre o rótulo, barra da missão em blocos com preços numa linha menor e avisos fora da barra, SINERGIAS recolhível, dock sem cobertura. Aplicar o formato curto de Ryu aos preços, roleta, diálogo de troca e toasts. Revisar antes o que o Codex já resolveu.
+
+**Resposta**
+
+Já estavam resolvidos pelo Codex: grade de itens em 3 linhas com rolagem, cartões compactos com 4+ ajudantes e dock de pílulas compacto. Completei o contador dos itens, a barra da missão em blocos, o minimapa (ícones contidos, rótulo e selo DEBUG abaixo dele), o painel SINERGIAS recolhível e o Ryu curto em preços, roleta, mercador e avisos. Validado em 1440×900 e 1366×768 com 5 ajudantes e 80 itens; `tsc`, build, `verify-rules` e `verify-runtime` passaram.

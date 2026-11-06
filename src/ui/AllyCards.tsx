@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BuffText } from './BuffText';
 import '../allies.css';
 import { HERO_BY_ID } from '../game/heroes';
@@ -11,12 +12,19 @@ import { HeroPortrait, RunSheetButton } from './RunSheet';
 
 const allyInfo = (id: string): { name: string; village: string } | undefined => HERO_BY_ID[id] ?? NPC_ALLIES[id];
 
-/** Painel compacto das sinergias de aldeia/organização ativas (logo abaixo do cartão do herói). */
+const SYNERGY_COLLAPSED_KEY = 'shinobibonk.hud.synergiesCollapsed';
+const readCollapsed = () => { try { return localStorage.getItem(SYNERGY_COLLAPSED_KEY) === '1'; } catch { return false; } };
+
+/** Painel compacto das sinergias de aldeia/organização ativas (logo abaixo do cartão do herói). Clique no título recolhe/expande; o estado fica salvo. */
 function SynergyPanel({ synergies }: { synergies: ActiveSynergy[] }) {
+  const [collapsed, setCollapsed] = useState(readCollapsed);
   if (!synergies.length) return null;
-  return <section className="synergy-panel" aria-label="Sinergias ativas">
-    <small className="ally-cards-title">SINERGIAS · {synergies.length} · só ajudantes contam</small>
-    {synergies.map((s) => <div className={`synergy-row ${s.kind}`} key={s.id} title={`${s.name} (${s.kind === 'vila' ? 'aldeia' : 'organização'}): ${s.members.map((id) => allyInfo(id)?.name ?? id).join(', ')}. Faixas: ${s.tiers.join(' / ')} ajudantes.${s.next ? ` Próxima faixa com ${s.next}.` : ' Faixa máxima.'}`}>
+  const toggle = () => setCollapsed((was) => { const next = !was; try { localStorage.setItem(SYNERGY_COLLAPSED_KEY, next ? '1' : '0'); } catch { /* armazenamento indisponível: só a sessão lembra */ } return next; });
+  return <section className={`synergy-panel${collapsed ? ' collapsed' : ''}`} aria-label="Sinergias ativas">
+    <button type="button" className="ally-cards-title synergy-toggle" aria-expanded={!collapsed} title={collapsed ? 'Mostrar sinergias' : 'Recolher sinergias'} onClick={(e) => { e.currentTarget.blur(); toggle(); }}>
+      <span aria-hidden="true">{collapsed ? '▸' : '▾'}</span> SINERGIAS · {synergies.length}{collapsed ? ` · ${synergies.map((s) => s.icon).join(' ')}` : ' · só ajudantes contam'}
+    </button>
+    {!collapsed && synergies.map((s) => <div className={`synergy-row ${s.kind}`} key={s.id} title={`${s.name} (${s.kind === 'vila' ? 'aldeia' : 'organização'}): ${s.members.map((id) => allyInfo(id)?.name ?? id).join(', ')}. Faixas: ${s.tiers.join(' / ')} ajudantes.${s.next ? ` Próxima faixa com ${s.next}.` : ' Faixa máxima.'}`}>
       <span className="synergy-icon">{s.icon}</span>
       <b>{s.name}</b>
       <em>{s.members.length}{s.next ? `/${s.next}` : ' MÁX'}</em>
@@ -61,7 +69,7 @@ export function AllyCards({ synergies = [], allies, affinity = {}, slots, allyBu
           <header><b>{hero.name}</b><em><VillageEmblem village={hero.village}/>{villageName(hero.village,true)}</em></header>
           <p className="ally-buff" title={`Passiva individual de ${hero.name}${buff ? ': ' + buff.title : ''}. Escala com a afinidade e com a força de suporte. Máximo: ${allyBuffText(id, allyBuff)}.`}><span className="ally-passive">PASSIVA</span>{buff ? <b>{buff.title}</b> : null} <BuffText text={allyBuffText(id, allyBuff, points)}/>{!atMax && <span className="ally-max"> · máx. <BuffText text={allyBuffText(id, allyBuff)}/></span>}</p>
           <AffinityRow points={points} />
-          {mine.length > 0 && <div className="ally-synergy-tags">{mine.map((s) => <em key={s.id} className={s.kind} title={`${s.name}: $<BuffText text={s.text}/>`}>{s.icon} {s.tag}</em>)}</div>}
+          {mine.length > 0 && <div className="ally-synergy-tags">{mine.map((s) => <em key={s.id} className={s.kind} title={`${s.name}: ${s.text}`}>{s.icon} {s.tag}</em>)}</div>}
           <div className="ally-skill" title={`${technique.name}: ${technique.school} · ${technique.element} · ${power}% do seu dano · a cada ${cooldown} s`}>
             <span>{technique.name}</span><i><s style={{ width: `${Math.round(Math.max(0, Math.min(1, charge)) * 100)}%` }} /></i>
           </div>

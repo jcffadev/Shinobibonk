@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Alinhamento do HUD e Ryu em formato curto
+
+- Barra da missão em blocos: missão e clima/zona à esquerda, relógio grande (ou "FINAL SWARM +m:ss") no centro, Ryu curto e kunai/shuriken à direita. Os preços de kunai, shuriken, mercador e roleta ficam numa linha secundária menor. Novo `src/hud-layout.css`, importado por último.
+- Minimapa: marcadores e pontos de inimigo ficam dentro do círculo, sem corte na borda. Rótulo "Tab rápido · M mapa" sob o círculo. O selo DEBUG e o painel descem para baixo do rótulo e acompanham a escala do HUD/minimapa.
+- Painel SINERGIAS recolhível pelo título, com estado salvo no navegador. O título das tags de sinergia nos cartões deixa de mostrar "[object Object]".
+- Contador de quantidade dos itens com fundo escuro e fonte maior. A grade de itens já estava limitada a 3 linhas com rolagem, e os cartões de ajudante já ficavam compactos com 4 ou mais.
+- Ryu em formato curto (`compactNumber`) nos preços da barra, na Roleta da Tsunade (valor exato no tooltip), no diálogo do mercador/prêmio e nos avisos de venda, Ichiraku, roleta e kunai pagas.
+- A fala sintetizada ignora navegadores sem `speechSynthesis` em vez de lançar erro.
+- Validado no Edge headless em 1440×900 e 1366×768 com 5 ajudantes, 80 itens, nível 194 e 123,5M Ryu. `tsc`, build, `verify-rules` e `verify-runtime` passaram.
+
 ## Combate, animação e preparação da missão
 
 - HUD de escolhas e ficha compactados. Botão da ficha em escolhas, selamento e troca de suporte. Tab mantém o mapa rápido aberto sem interromper o movimento. Kunai direcional no mapa, ícone próprio do Selo do Guardião e câmera/zoom interpolados.

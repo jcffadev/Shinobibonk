@@ -3,6 +3,7 @@ import { BuffText } from './BuffText';
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ROULETTE_CASAS, ROULETTE_RULES, badChance, goodChance, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
 import { itemArt } from '../game/inventoryArt';
+import { compactNumber } from '../game/format';
 import '../tsunade-roulette.css';
 
 /**
@@ -33,7 +34,9 @@ function CasaIcon({ id, fallback, label }: { id: RouletteCasaId; fallback: strin
   const style = CASA_ART[id]?.();
   return style ? <span role="img" aria-label={label} className="catalog-icon tr-casa-icon" style={style} /> : <>{fallback}</>;
 }
-const fmtRyu = (n: number) => n.toLocaleString('pt-BR');
+/** Ryu em formato curto (1,2 mil · 3,4M); o valor completo fica no title de cada campo. */
+const fmtRyu = (n: number) => compactNumber(n);
+const fullRyu = (n: number) => `${Math.round(n).toLocaleString('pt-BR')} Ryu`;
 
 export function TsunadeRoulette({ view }: { view: RouletteView }) {
   const [live, setLive] = useState<RouletteView>(view);
@@ -133,10 +136,10 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
         </div>
         <div className="tr-side">
           <dl className="tr-stats">
-            <div><dt>Ryu</dt><dd><CasaIcon id="ryu" fallback="🪙" label="Ryu" /> {fmtRyu(live.money)}</dd></div>
-            <div><dt>Próximo giro</dt><dd>{fmtRyu(live.cost)} Ryu <small>(×{String(ROULETTE_RULES.costGrowth).replace('.', ',')}/giro · sobe com o tempo{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
+            <div><dt>Ryu</dt><dd title={fullRyu(live.money)}><CasaIcon id="ryu" fallback="🪙" label="Ryu" /> {fmtRyu(live.money)}</dd></div>
+            <div><dt>Próximo giro</dt><dd title={fullRyu(live.cost)}>{fmtRyu(live.cost)} Ryu <small>(×{String(ROULETTE_RULES.costGrowth).replace('.', ',')}/giro · sobe com o tempo{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
             <div><dt>Giros na run</dt><dd>{live.spins}</dd></div>
-            <div><dt>Ryu gasto na run</dt><dd>{fmtRyu(live.ryuSpent)}</dd></div>
+            <div><dt>Ryu gasto na run</dt><dd title={fullRyu(live.ryuSpent)}>{fmtRyu(live.ryuSpent)}</dd></div>
             <div><dt>Sorte</dt><dd>🍀 {live.luck}</dd></div>
             <div><dt>Pressão da zona</dt><dd>⚠ {live.pressure.toFixed(2).replace('.', ',')}</dd></div>
           </dl>
@@ -144,7 +147,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
             <ul>{ROULETTE_CASAS.map(c => <li key={c.id} className={`kind-${c.kind}`} title={c.description}><i><CasaIcon id={c.id} fallback={c.icon} label={c.label} /></i><span>{c.label}</span><em>{pct(live.weights[c.id] ?? 0)}</em></li>)}</ul>
           </div>
           <div className="tr-pending">
-            <b>Ganhos desta visita · {revealed.length} giro(s) · {live.sessionSpent} Ryu</b> <small>{goods} bons · {bads} ruins</small>
+            <b>Ganhos desta visita · {revealed.length} giro(s) · {fmtRyu(live.sessionSpent)} Ryu</b> <small>{goods} bons · {bads} ruins</small>
             <ol>{[...revealed].reverse().map(p => <li key={p.seq} className={`kind-${p.kind}`}><i>{p.item||p.pill?<ItemIcon name={p.item??p.pill!}/>:<CasaIcon id={p.id} fallback={p.icon} label={p.label}/>}</i><span>{p.label}<small><BuffText text={p.detail}/></small></span></li>)}</ol>
             {!revealed.length && <p className="tr-empty">Nada ainda. Os resultados aparecem aqui e são entregues ao sair.</p>}
           </div>

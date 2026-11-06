@@ -55,6 +55,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/allies.ts` | Buff passivo único de cada um dos 22 shinobis como ajudante (`ALLY_BUFFS`), soma escalada pela força de suporte (`alliesBonuses`) e texto do cartão (`allyBuffText`). |
 | `src/game/rewards.ts` | `runLamens(result, mission)`: Lamens por desempenho (`LAMEN_RULES`). Em `main.tsx`, um `useEffect` credita o total na carteira uma única vez por `runId` (via `useRef`); `spent` não muda, então o Reset não remove Lamens ganhos. |
 | `src/hud-dock.css` | Bloco inferior esquerdo: pílulas acima das habilidades, mais a posição da ajuda de teclas. |
+| `src/hud-layout.css` | Alinhamento do HUD em jogo (importado por último, seletores `.game-shell`): barra da missão em blocos, rótulo do minimapa, posição do selo DEBUG, contador dos itens e SINERGIAS recolhível. |
 | `src/ui/DebugPanel.tsx` + `src/debug.css` | Painel de debug (F9) e tipos `DebugApi`/`DebugLive`. |
 | `src/ui/PillIcon.tsx` | Cápsula colorida com o glifo da pílula, em CSS inline. |
 | `src/ui/BuildPlanner.tsx` | Plano pré-run: planejar ou deixar em casa técnicas, pílulas e itens. |
@@ -246,7 +247,8 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 
 ### UI durante a run
 
-- **Topo**: missão, cronômetro regressivo, Ryu, kunai/shuriken, clima e zona.
+- **Topo** (`game-topbar` em `main.tsx`, layout em `src/hud-layout.css`): grade em três blocos — missão + clima/zona (esquerda), relógio grande ou "FINAL SWARM +m:ss" (centro), Ryu curto e kunai/shuriken (direita) — e uma linha secundária menor com os preços de kunai, shuriken, roletar do mercador e giro da roleta, todos em `compactNumber`. Avisos (`.world-toast`, ex.: emboscada) ficam abaixo da barra, em `top:140px`.
+- **Ryu em formato curto**: `compactNumber` (`src/game/format.ts`) no HUD, nos preços da barra, na Roleta da Tsunade (valor exato no `title`), no diálogo do mercador/prêmio (`ItemTradeDialog`) e nos toasts/interações de `GameCanvas.tsx` que mostram Ryu.
 - **Faixas e telas**: faixa do guardião com HP, progresso da defesa do altar, interação próxima ("Aperte E").
 - **Cartões de ajudantes** (`src/ui/AllyCards.tsx` + `src/allies.css`, à esquerda em `top:150px`), um por aliado selado:
   - retrato redondo com moldura na cor da 1ª técnica, nome e selo da aldeia (FOLHA/AREIA/SOM/CHUVA) ou "SINERGIA";
@@ -262,12 +264,14 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - As regras `.defeat-backdrop`/`.defeat-card` em `run-ui.css` ficaram sem uso.
 - **Cartão superior esquerdo**: retrato da forma atual, nível, HP e XP.
 - **Canto superior direito**: minimapa com jogador, inimigos, pickups, ping e eventos descobertos.
+  - Marcadores ficam num raio de 38% do minimapa (`MinimapMarkers`) e os pontos de inimigo num raio circular de 45%, para não serem cortados pela borda. Abaixo do círculo há o rótulo `.minimap-caption` ("Tab rápido · M mapa").
   - Tab: mapa rápido.
   - M: mapa completo; clicar nele marca um ping.
 - **Base** (`src/hud-dock.css`):
   - `.skill-dock` (canto inferior esquerdo, `bottom:96px`) empilha a linha de pílulas (`.vitamin-row`: ícones de 30 px, até 2 linhas, depois rolagem) acima da barra de técnicas (4 espaços + botão R com o selo AUTO), sem sobreposição.
   - Ajuda de teclas em `left:124px; bottom:14px`, à direita do botão "← Preparação".
-  - Itens no canto inferior direito; FPS e inimigos vivos no centro inferior.
+  - Itens no canto inferior direito: ícones de 25 px, no máximo 3 linhas (`max-height:90px`) com rolagem e contador de quantidade com fundo escuro; FPS e inimigos vivos no centro inferior.
+- **Ajudantes** (`AllyCards.tsx`, `allies.css`): com 4+ ajudantes os cartões ficam compactos e a coluna para antes do dock, com rolagem. O painel SINERGIAS recolhe/expande pelo título; o estado fica em `localStorage` (`shinobibonk.hud.synergiesCollapsed`, com try/catch).
   - Até 700 px de largura, o bloco fica em `bottom:50px`, com pílulas de 26 px em 1 linha.
 - **Ficha (P)**: atributos, escala de dificuldade, técnicas com dano e afixos acumulados, itens, pílulas, aliados e sinergia.
 - **Cartas**: cartas de recompensa com botões Atualizar/Pular/Banir; painel de selamento com retrato e animação; telas de vitória e derrota.
@@ -285,7 +289,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 - **Mega elites**: não há rotação de mega elite por zona. O aviso das técnicas é desenhado plano no chão e pode ficar parcialmente escondido em relevo forte. A dificuldade dos chefes não foi balanceada; em níveis baixos, 3 a 4 golpes podem derrubar o personagem.
 - **Arte**: As formas usam sprites por quadro. Os efeitos mesclam atlas de pixel art e geometrias estilizadas.
 - **Bundle**: o JavaScript tem 899 kB, sem code-splitting.
-- **Painel de debug**: fica à direita, abaixo do minimapa (botão e painel em `top:222px`), sem cobrir o cartão do herói, o minimapa nem a barra superior. Abaixo de 640 px de largura, vira uma gaveta inferior. Botão e painel somem quando o resumo pós-run está aberto. No Edge, F9 também é atalho do Leitor Imersivo; o painel chama `preventDefault`, mas isso não foi verificado numa sessão real.
+- **Painel de debug**: fica à direita, abaixo do minimapa e do rótulo dele (em jogo, `hud-layout.css` calcula o `top` a partir do tamanho do minimapa × escala do HUD/minimapa; fora do jogo vale `top:222px` de `debug.css`), sem cobrir o cartão do herói, o minimapa nem a barra superior. Abaixo de 640 px de largura, vira uma gaveta inferior. Botão e painel somem quando o resumo pós-run está aberto. No Edge, F9 também é atalho do Leitor Imersivo; o painel chama `preventDefault`, mas isso não foi verificado numa sessão real.
 - **Ausentes**: sem conta real, save, ranking, rede ou multiplayer.
 
 ## Verificação

@@ -38,6 +38,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Efeitos e preparação** — técnicas com visuais por natureza e golpes característicos. Chōmei e Gyūki seguem as referências do usuário. A Bolsa da Missão permite combinar busca, estado e raridade.
 - **Ofertas e saída** — uma pílula por escolha e um nível por pílula. A raridade aumenta a potência. Banir remove a opção do sorteio pelo nome durante a run. Na pausa, clique duas vezes em Desistir para confirmar. O resumo tem o botão Ir para o menu.
 - **Contagem da horda:** o HUD lê o total real de inimigos vivos e o minimapa mantém sua amostragem separada.
+- **Alinhamento do HUD (06/11/2026):** barra da missão em blocos (missão/zona, relógio grande, recursos) com preços numa linha menor; Ryu em formato curto também nos preços, roleta, mercador e avisos; ícones do minimapa dentro do círculo, com rótulo "Tab rápido · M mapa" e o selo DEBUG abaixo dele; painel SINERGIAS recolhível pelo título (estado salvo). Validado em 1440×900 e 1366×768 com 5 ajudantes e 80 itens.
 - **Recompensas:** a fila de itens da Tsunade pede E para pegar ou V para vender. Habilidades e pílulas são escolhas de level-up. O máximo de cartas de recompensa é quatro, inclusive ao banir. A sinergia conta o ajudante de mesmo nome do jogador quando recrutado.
 
 - **Hub**:

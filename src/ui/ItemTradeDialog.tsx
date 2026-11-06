@@ -1,6 +1,7 @@
 import { HeroPortrait, ItemIcon, RunSheetButton } from './RunSheet';
 import { BuffText } from './BuffText';
 import type { WorldSnapshot } from '../scene/GameCanvas';
+import { compactNumber } from '../game/format';
 
 export function tradeAction(action: 'sell' | 'reroll' | 'exit') {
   window.dispatchEvent(new CustomEvent('shinobi-trade', { detail: action }));
@@ -15,7 +16,7 @@ export function ItemTradeDialog({ choice, money, onSheet }: { choice: NonNullabl
       <aside className="choice-npc">{merchant?<span role="img" aria-label="Barraca do Mercador" className="merchant-portrait"/>:<HeroPortrait id="tsunade"/>}</aside>
       <div className="level-choice-title">
         <h1>{title}</h1>
-        <p>{merchant ? `${money} Ryu disponíveis · cada compra aumenta o preço das próximas` : 'Pegue a recompensa ou venda pelo valor indicado.'}</p>
+        <p>{merchant ? `${compactNumber(money)} Ryu disponíveis · cada compra aumenta o preço das próximas` : 'Pegue a recompensa ou venda pelo valor indicado.'}</p>
       </div>
       <div className="level-choice-cards" style={{ gridTemplateColumns: `repeat(${choice.cards.length},minmax(0,1fr))` }}>
         {choice.cards.map((card, index) => <button key={card.id} className={`level-choice-card rarity-${card.rarity.toLowerCase()}`}
@@ -23,7 +24,7 @@ export function ItemTradeDialog({ choice, money, onSheet }: { choice: NonNullabl
           <div className="choice-art"><small>{card.rarity}</small>{card.kind === 'item' ? <ItemIcon name={card.name}/> : <span>—</span>}</div>
           <div className="choice-copy">
             <h2>{card.name}</h2><p><BuffText text={card.description}/></p>
-            {card.price !== undefined && <strong>{card.price} Ryu</strong>}
+            {card.price !== undefined && <strong title={`${card.price.toLocaleString('pt-BR')} Ryu`}>{compactNumber(card.price)} Ryu</strong>}
             {card.disabled && <p>{card.disabled}</p>}
             {!card.disabled && <kbd>{merchant ? index + 1 : 'E'}</kbd>}
           </div>
@@ -31,11 +32,11 @@ export function ItemTradeDialog({ choice, money, onSheet }: { choice: NonNullabl
       </div>
       <div className="reward-actions">
         {merchant ? <>
-          <button disabled={(choice.rerollCost ?? Infinity) > money} onClick={() => tradeAction('reroll')}>Roletar · {choice.rerollCost} Ryu <kbd>F</kbd></button>
+          <button disabled={(choice.rerollCost ?? Infinity) > money} onClick={() => tradeAction('reroll')}>Roletar · {choice.rerollCost === undefined ? '…' : compactNumber(choice.rerollCost)} Ryu <kbd>F</kbd></button>
           <button onClick={() => tradeAction('exit')}>Sair <kbd>Esc</kbd></button>
         </> : <>
           <button onClick={() => choose(0)}>Pegar <kbd>E</kbd></button>
-          <button onClick={() => tradeAction('sell')}>Vender · +{choice.sale} Ryu <kbd>V</kbd></button>
+          <button onClick={() => tradeAction('sell')}>Vender · +{choice.sale === undefined ? '…' : compactNumber(choice.sale)} Ryu <kbd>V</kbd></button>
         </>}
         <RunSheetButton onClick={onSheet}/>
       </div>

@@ -49,6 +49,7 @@ function speak(name:string, intro=false) {
   const volume=settings.volume*settings.voiceVolume;
   if(volume<=.001||(settings.muteInBackground&&document.hidden)||!('speechSynthesis' in window))return false;
   const synth=window.speechSynthesis;
+  if(!synth)return false;
   if(!intro&&(synth.speaking||performance.now()-lastVoice<6500))return false;
   const voices=synth.getVoices().filter(v=>v.localService);
   const voice=voices.find(v=>v.lang.toLowerCase().startsWith(settings.voiceLanguage==='ja'?'ja':'pt'));

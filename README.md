@@ -63,7 +63,7 @@ O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A 
   - seleção de shinobi com retratos e filtros (`CharacterSelect`);
   - plano de build, filtros e ícones de técnica.
 - `src/audio/sfx.ts`: efeitos sonoros sintetizados no navegador.
-- `src/style.css`, `src/run-ui.css`, `src/sealing.css`, `src/summary.css`, `src/debug.css`, `src/hud-dock.css`: estilos do hub, da HUD/ficha, do selamento, do resumo pós-run, do debug e do bloco inferior (pílulas acima das habilidades).
+- `src/style.css`, `src/run-ui.css`, `src/sealing.css`, `src/summary.css`, `src/debug.css`, `src/hud-dock.css`, `src/hud-layout.css`: estilos do hub, da HUD/ficha, do selamento, do resumo pós-run, do debug, do bloco inferior (pílulas acima das habilidades) e do alinhamento do HUD em jogo (barra da missão, minimapa, selo DEBUG, sinergias).
 - `public/assets/`: atlas e sprites provisórios (retratos, evoluções, cenário, ícones de itens, SVGs por shinobi).
 - `scripts/` e `update-*.mjs` (raiz): scripts de manutenção que o Codex usou para editar o código por substituição de texto, mais os verificadores. Os `update-*.mjs` e `scripts/integrate-*.mjs` já foram aplicados; rodá-los de novo falha ou duplica alterações.
 - `artifacts/`: screenshots reais e resultados JSON das verificações automatizadas.
