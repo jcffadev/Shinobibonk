@@ -73,3 +73,6 @@ Versão de especificação: 0.3 (proposta original de design)
 
 ## Status
 Documento de design elaborado; implementação, arte, servidor, testes e balanceamento NÃO realizados por este documento.
+# Escolha de recompensa
+
+Ao fechar a Roleta da Tsunade, itens e pílulas aguardam uma decisão por prêmio. E pega, V vende, e a próxima recompensa aparece na mesma ordem dos giros. A fila é salva com a run. Pílulas coletadas no chão também abrem a escolha antes de alterar atributos. Prêmios de roleta que se tornem indisponíveis pelo limite são convertidos em Ryu.

@@ -5,15 +5,14 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 `tsc --noEmit -p .`, `vite build`, `node scripts/verify-rules.mjs`, `node scripts/verify-runtime.mjs` (Node do Codex em
 `%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`; git em `C:\Program Files\Git\cmd\git.exe`).
 
-## Fila do Codex (EM ANDAMENTO, relatada pelo Codex em 06/11/2026; nada disso deve ser dado como concluído)
-- **Pulo e dash**: movimento implementado (`playerMotion.ts`), faltam poses próprias.
-- **Outras formas do Naruto**: artes geradas, sem integração nem validação.
-- **Outros shinobis**: faltam animações individuais (hoje só o Naruto Academia tem caminhada/arremesso).
+## Fila do Codex
+- **IMPLEMENTADO:** poses base de caminhada, pulo, dash, ataque, dano e Ultimate em todas as formas jogáveis. Asuma tem atlas próprio e Naruto Academia mantém suas folhas. **PENDENTE:** substituir a deformação genérica por folhas direcionais dedicadas nas demais formas e animar os monstros.
+- **IMPLEMENTADO:** fila de confirmação para prêmios de item/pílula da roleta e pílulas do chão, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação baixa de câmera.
 - **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
 - **Impactos e sons**: faltam integração e revisão. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (não publicado, licença não verificada): procurar outros sons depois, com licença livre verificada.
 - **Atributos até nível 50**: recalibração pendente; o bônus de +0,8% quando acabam os upgrades é regra separada (`powerlevel.ts`).
 - **Chão nas bordas**: alterações feitas (`terrainArt.ts`), validação visual final pendente.
-- Pedidos recentes do Codex em curso: bijuus, progressão extra e roleta.
+- Bijuus: revisão de arte de Chōmei e Gyūki pendente. Progressão: bônus aleatório de 0,8% implementado e recalibração geral pendente.
 - Skills do Codex: `skills/criar-arte-shinobibonk` (padrão de arte de shinobis, itens, pílulas, cenários) e `skills/movimentar-shinobi` (movimento, pulo, dash, sprites de animação), com ponteiros em `.claude/skills/`.
 - Testes atualizados ao trabalho do Codex: o selamento espera o ritual terminar (navegador de teste roda a poucos FPS); vitória por gancho `finishMission` (a missão agora termina no portal de saída); saída da partida pela pausa (Esc → Salvar e sair).
 

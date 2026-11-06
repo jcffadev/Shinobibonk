@@ -74,6 +74,7 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.deepEqual(leaf(2).bonuses,{exp:.03,pickupFlat:.5});assert.deepEqual(leaf(3).bonuses,{projectiles:1,exp:.05,pickupFlat:2});
  assert.deepEqual(leaf(4).bonuses,{projectiles:1,projectileChance:.5,exp:.05,pickupFlat:2},'1,5 projétil = +1 e 50% de chance de +1');assert.deepEqual(leaf(5).bonuses,{projectiles:2,exp:.1,pickupFlat:3});
  assert.ok(activeSynergies('gaara',['iruka','sakura','lee']).some(s=>s.id==='vila:Vila da Folha'&&s.tier===3),'Iruka (NPC) conta para a Folha');
+ assert.ok(activeSynergies('naruto',['naruto','sakura','kakashi','lee','tenten']).some(s=>s.id==='vila:Vila da Folha'&&s.tier===5),'Ajudante Naruto conta mesmo com Naruto jogável');
  assert.ok((synergyBonuses(activeSynergies('gaara',['naruto','sasuke','sakura','kakashi'])).damage??0)>=.11,'Time 7 com 4 ajudantes escala');
  // Afinidade: Nv. 1..5, passiva 40%→100%; Iruka/omitido = máximo.
  assert.equal(affinityLevel(0),1);assert.equal(affinityLevel(maxAffinityPoints()),AFFINITY_RULES.max);assert.equal(affinityFactor(0),.4);assert.equal(affinityFactor(maxAffinityPoints()),1);

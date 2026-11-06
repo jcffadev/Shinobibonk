@@ -8,6 +8,7 @@ try {
 browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--mute-audio','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:900}});
 page.on('pageerror',e=>errors.push(e.message));
+page.on('console',m=>{if(m.type()==='error'&&/shader error|VALIDATE_STATUS/i.test(m.text()))errors.push(m.text());});
 page.on('response',r=>{if(r.status()===404&&!r.url().endsWith('favicon.ico'))missing.push(r.url());});
 const wait=()=>page.waitForTimeout(300);
 const debug=async(method,...args)=>page.evaluate(([m,a])=>window.__shinobiTest[m](...a),[method,args]);
@@ -54,8 +55,8 @@ await debug('setChakra');await page.keyboard.press('r');assert.ok((await state()
 await page.keyboard.press('y');assert.equal((await state()).autoUlt,false);await page.keyboard.press('y');assert.equal((await state()).autoUlt,true);checks.push('Tecla Y alterna a Ultimate automática');
 await debug('clearEnemies');await debug('dismiss');await wait();await debug('defeatMega','neji');await page.keyboard.press('g');await wait();
 assert.equal((await state()).sealing,null);await page.keyboard.press('e');await wait();assert.equal((await state()).choice.length,3);await page.keyboard.press('1');await wait();checks.push('Recusa G deixa kunai grátis com três escolhas');
-await debug('dismiss');await debug('setMoney',100);await debug('pickup','kunai');await wait();await page.keyboard.press('e');await wait();assert.equal((await state()).paidWeapons,1);assert.equal((await state()).runMoney,80);await page.keyboard.press('1');await wait();
-await debug('dismiss');await debug('pickup','kunai');await wait();await page.keyboard.press('e');await wait();assert.equal((await state()).paidWeapons,2);assert.equal((await state()).runMoney,50);await page.keyboard.press('1');await wait();checks.push('Kunais custam 20 e depois 30 Ryu');
+await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('setMoney',100);await debug('pickup','kunai');await wait();await page.keyboard.press('e');await wait();assert.equal((await state()).paidWeapons,1);assert.equal((await state()).runMoney,80);await page.keyboard.press('1');await wait();
+await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('pickup','kunai');await wait();await page.keyboard.press('e');await wait();assert.equal((await state()).paidWeapons,2);assert.equal((await state()).runMoney,50);await page.keyboard.press('1');await wait();checks.push('Kunais custam 20 e depois 30 Ryu');
 await debug('grantItem','Pedra da Juventude');await debug('grantItem','Kunai Afiada');await debug('dismiss');await wait();
 await page.keyboard.press('p');await wait();const details=page.locator('.sheet-column').first().locator('details');await details.first().evaluate(el=>el.open=true);await details.first().scrollIntoViewIfNeeded();assert.ok(await page.locator('.pool-icon-row .catalog-icon').count()>0);checks.push('Ícones no pool de itens da ficha');
 await page.screenshot({path:'artifacts/sheet-pool.png'});await page.getByRole('button',{name:'Continuar missão',exact:true}).click();await wait();
@@ -79,6 +80,47 @@ await page.keyboard.press('Escape');await page.getByRole('button',{name:'Salvar 
 const slept=await page.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.target(1);for(let n=0;n<8;n++)d.grantItem('Olhos do Rastreador');let applied=false;for(let n=0;n<20;n++){d.cast('Corvos Ilusórios');applied ||= d.inspect().enemies.some(e=>e.control==='Dormir'&&e.controlTime>0);}return applied;});
 assert.equal(slept,true);checks.push('Genjutsu aplica Dormir em um inimigo real');
 await page.keyboard.press('p');await wait();await page.screenshot({path:'artifacts/genjutsu-sheet.png'});
+
+await page.getByRole('button',{name:'Continuar missão',exact:true}).click();
+await page.keyboard.press('Escape');
+await page.getByRole('button',{name:'Salvar e sair',exact:true}).click();
+await page.getByRole('button',{name:'Shinobis',exact:true}).click();
+await page.locator('.character-card').filter({hasText:'Asuma'}).click();
+await start();
+assert.equal((await state()).heroId,'asuma');
+await page.waitForFunction(()=>window.__shinobiTest.inspect().atlasReady);
+await debug('clearEnemies');
+await page.keyboard.down('w');
+await page.waitForFunction(()=>window.__shinobiTest.motion().pose==='walk');
+await page.keyboard.up('w');
+await page.keyboard.press('Space');
+await page.waitForFunction(()=>window.__shinobiTest.motion().pose==='jump');
+await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
+await page.keyboard.press('Shift');
+await page.waitForFunction(()=>window.__shinobiTest.motion().pose==='dash');
+checks.push('Asuma carrega seu atlas e usa caminhada, pulo e dash');
+
+await debug('setMoney',10000);
+await page.evaluate(()=>{
+ const r=window.__shinobiTest.roulette;
+ r.open();r.spin(1,'item');r.spin(1,'pill');r.exit();
+});
+const prize=page.getByRole('dialog',{name:'Prêmio da Tsunade'});
+await prize.waitFor();
+const beforePrizes=await state();
+await prize.getByRole('button',{name:/Vender/}).click();
+await prize.locator('.level-choice-card').filter({hasText:'Pílula'}).waitFor();
+assert.deepEqual((await state()).pills,beforePrizes.pills);
+await page.keyboard.press('e');
+await prize.waitFor({state:'hidden'});
+assert.ok(Object.values((await state()).pills).some(n=>n>0));
+assert.deepEqual((await state()).items,beforePrizes.items);
+checks.push('Prêmios em sequência: vender item e só conceder pílula após E');
+
+await debug('clearEnemies');await debug('setTime',600);await debug('horde',1600,14,1e6,false);
+await page.waitForFunction(()=>Number(document.querySelector('.runtime-readout')?.textContent?.match(/(\d+) inimigos vivos/)?.[1])>=1600);
+assert.ok((await debug('perf')).instances.bodies>300);
+checks.push('Horda passa de 300 e o HUD mostra 1.600 inimigos');
 
 
 assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);checks.push('Sem exceções JavaScript ou assets 404');

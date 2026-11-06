@@ -1,6 +1,16 @@
 import * as THREE from 'three';
+import { ASUMA_ATLAS } from '../game/evolution';
+import { createPlayerPose } from './playerPose';
 
-export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, hasWalkAtlas: boolean) {
+export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string) {
+  const hasWalkAtlas = heroId === 'naruto';
+  const pose = createPlayerPose();
+  const asuma = heroId === 'asuma' ? new THREE.TextureLoader().load(ASUMA_ATLAS) : null;
+  if (asuma) {
+    asuma.colorSpace = THREE.SRGBColorSpace;
+    asuma.minFilter = asuma.magFilter = THREE.NearestFilter;
+    asuma.generateMipmaps = false;
+  }
   const width = sprite.scale.x, height = sprite.scale.y;
   const canvas = document.createElement('canvas');
   canvas.width = 128; canvas.height = 24;
@@ -35,34 +45,60 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, has
     throwing.offset.y = .075;
   }
   let idleMap = sprite.material.map;
-  let throwingWeapon = false, mirror = false;
+  let throwingWeapon = false, mirror = false, rear = false, ultimate = false;
+  let state = 'idle';
   let attack = 0, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
   return {
-    attack: (weapon = false, left?: boolean) => { attack = weapon ? .25 : .22; throwingWeapon = weapon; if(left!==undefined)mirror=left; },
+    attack: (weapon = false, left?: boolean, special = false) => {
+      if (ultimate && attack > 0 && !special) return;
+      attack = special ? .55 : weapon ? .25 : .22;
+      ultimate = special;
+      throwingWeapon = weapon;
+      if (left !== undefined) mirror = left;
+    },
+    state: () => state,
     hurt: () => { hurt = .23; },
     update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, animatedForm: boolean, jumpHeight: number, sliding: boolean, diagonalInput: boolean) {
-      if (sprite.material.map !== walk && sprite.material.map !== diagonal && sprite.material.map !== throwing) idleMap = sprite.material.map;
+      if (sprite.material.map !== walk && sprite.material.map !== diagonal && sprite.material.map !== throwing && sprite.material.map !== asuma) idleMap = sprite.material.map;
       attack = Math.max(0, attack - dt);
       stepTime = walkingInput ? stepTime + dt : 0;
-      const casting = animatedForm && attack > 0 && throwing?.image;
+      hurt = Math.max(0, hurt - dt);
+      if (walkingInput && !attack) { mirror = leftward; rear = backwardView; }
+      state = hurt > 0 ? 'hurt' : sliding ? 'dash' : jumpHeight > 0 ? 'jump'
+        : attack > 0 ? (ultimate ? 'ultimate' : 'attack') : walkingInput ? 'walk' : 'idle';
+      const casting = animatedForm && state === 'attack' && throwing?.image;
       const walkAtlas = diagonalInput && diagonal?.image ? diagonal : walk;
-      const walking = animatedForm && (walkingInput || jumpHeight > 0 || sliding) && !casting && walkAtlas?.image;
+      const walking = animatedForm && state === 'walk' && walkAtlas?.image;
       if (casting && throwing) {
         const frame = throwingWeapon ? Math.min(3, Math.floor((.25 - attack) / .06)) : attack > .08 ? 2 : 3;
         throwing.repeat.x = mirror ? -.25 : .25;
         throwing.offset.x = (frame + Number(mirror)) / 4;
       } else if (walking && walkAtlas) {
-        const frame = sliding ? 0 : jumpHeight > 0 ? 1 : Math.floor(stepTime * 10) % 4;
+        const frame = Math.floor(stepTime * 10) % 4;
         walkAtlas.repeat.x = leftward ? -.25 : .25;
         walkAtlas.offset.set((frame + Number(leftward)) / 4, backwardView ? 0 : .5);
       }
-      sprite.material.map = casting ? throwing : walking ? walkAtlas : idleMap;
-      // Margens semitransparentes do atlas diagonal não pertencem à silhueta.
-      sprite.material.alphaTest = casting || walking ? .55 : .1;
-      hurt = Math.max(0, hurt - dt);
-      const squash = casting || walkingInput ? 0 : Math.sin(Math.min(1,attack/.22)*Math.PI)*.12;
-      sprite.material.rotation = (sliding ? (leftward ? .32 : -.32) : -squash) + hurt*.24;
-      sprite.scale.set(width*(1+squash),height*(1-squash)*(sliding ? .72 : 1),1);
+      const useAsuma = !!asuma?.image && state !== 'idle';
+      if (useAsuma && asuma) {
+        const frame = state === 'walk' ? (rear ? 4 : 0) + Math.floor(stepTime * 11) % 4
+          : state === 'jump' ? 8 : state === 'dash' ? 9 : state === 'hurt' ? 10
+          : state === 'ultimate' ? 15 : throwingWeapon ? Math.min(14, 12 + Math.floor((.25 - attack) / .08)) : 11;
+        asuma.repeat.set(mirror ? -.25 : .25, .25);
+        asuma.offset.set((frame % 4 + Number(mirror)) / 4, (3 - Math.floor(frame / 4)) / 4);
+      }
+      const usesSheet = useAsuma || !!casting || !!walking;
+      sprite.material.map = useAsuma ? asuma : casting ? throwing : walking ? walkAtlas : idleMap;
+      sprite.material.alphaTest = usesSheet ? .55 : .18;
+      const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? .07 : 0;
+      const lift = state === 'jump' ? .095 : state === 'dash' ? .04 : 0;
+      const reach = state === 'attack' ? Math.sin(Math.PI * attack / (throwingWeapon ? .25 : .22)) * .11
+        : state === 'ultimate' ? .09 : -stride * .55;
+      const guard = state === 'ultimate' ? .085 : state === 'attack' ? .045 : state === 'hurt' ? .04 : 0;
+      pose.apply(sprite.material, usesSheet ? 0 : stride, usesSheet ? 0 : lift,
+        usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
+      sprite.material.rotation = usesSheet ? 0 : state === 'dash' ? (mirror ? .34 : -.34)
+        : state === 'hurt' ? (mirror ? -.1 : .1) : state === 'walk' && backwardView ? (mirror ? .05 : -.05) : 0;
+      sprite.scale.set(width,height,1);
       sprite.position.y = floor + jumpHeight + sprite.scale.y*.5;
       sprite.material.color.set(hurt>0 ? '#ffc0be' : '#ffffff');
       bar.position.set(sprite.position.x,floor+jumpHeight-.09,sprite.position.z);
@@ -76,6 +112,6 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, has
       paint.fillStyle='#ffffff66';paint.fillRect(3,7,Math.round(122*ratio),2);
       map.needsUpdate=true;
     },
-    dispose(){scene.remove(bar);walk?.dispose();diagonal?.dispose();throwing?.dispose();map.dispose();bar.material.dispose();},
+    dispose(){scene.remove(bar);walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();map.dispose();bar.material.dispose();},
   };
 }

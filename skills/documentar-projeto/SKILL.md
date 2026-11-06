@@ -11,6 +11,8 @@ Use esta skill sempre que editar ou revisar código, configuração, controles, 
 
 ## Procedimento
 
+Registre cada nova solicitação e a resposta final em `docs/14-CONTEXTO-DO-CHAT.md`, mesmo quando a solicitação for apenas uma pergunta. Reúna pedidos complementares da mesma rodada. Em caso de credenciais ou dados sensíveis, registre só o contexto necessário sem copiar o dado. Atualize o changelog quando houver mudança no jogo e use `docs/13-PENDENCIAS-PARA-CONTINUAR.md` para indicar o que ainda falta.
+
 1. Leia `AGENTS.md`, `README.md`, `docs/00-LEIA-PRIMEIRO.md` e os documentos específicos da funcionalidade alterada.
 2. Inspecione o estado atual dos arquivos afetados. Trate o código executável como fonte da verdade para o que existe; requisitos e artes conceituais descrevem intenção, não implementação.
 3. No mesmo conjunto de mudanças, atualize os Markdown necessários:

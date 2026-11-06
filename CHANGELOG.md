@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Animações do elenco e correções de partida
+
+- Asuma ganha atlas original 4×4. O retrato usa a célula de repouso e a partida usa quadros de caminhada, salto, dash, dano, selo, lâminas e Ultimate.
+- Os 24 shinobis jogáveis e suas formas usam poses de movimento e combate a partir do próprio sprite. Naruto Academia mantém suas folhas dedicadas. As formas sem folha dedicada usam deformação localizada dos braços e pernas.
+- Prêmios de item e pílula da Tsunade entram numa fila salva na partida. Pílulas encontradas no chão também pedem confirmação. E aceita e V vende a recompensa exibida.
+- Sinergias contam ajudantes recrutados que tenham o mesmo ID do jogador. O personagem controlado fica fora da contagem.
+- O HUD mostra o total real de inimigos vivos. A horda escala até 1.600 e o mapa limita apenas seus marcadores. A câmera volta a inclinar até aproximadamente 7°.
+- Adiciona o registro contínuo de pedidos e respostas em `docs/14-CONTEXTO-DO-CHAT.md`, integrado à skill de documentação.
+- Validação no navegador com 28 verificações, incluindo Asuma, ordem dos prêmios e contagem de 1.600 inimigos.
+
 ## 2026-11-06 — Asuma (teste da skill de arte)
 - Asuma Sarutobi jogável e liberado desde o início (`STARTER_HEROES`): Lâminas de Chakra (Vento, Cone) e Cinzas Ardentes (Fogo, Área) como únicas, Kunai Tática e Grande Vendaval compartilhadas; naturezas Vento/Fogo; sprite pixel art por código (`asuma-1.svg`). PROPOSTO para revisão de arte no padrão do atlas (Codex).
 

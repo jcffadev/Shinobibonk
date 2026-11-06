@@ -93,3 +93,6 @@ Mapas por bioma, mapa procedural, colisão, pulo, spawn configurável por zona, 
 
 ## H e opções gráficas
 Modo H: ocultar números flutuantes, trilhas e efeitos ofensivos opcionais, mas manter lógica de colisão, dano, status e animação de hit simplificada. **IMPLEMENTADO** para projéteis, anéis, visuais e números. Não existe menu de configurações gráficas; as opções a seguir são futuras: densidade visual, LOD de inimigos, minimapa 15/30/60 FPS, partículas, qualidade, limite de FPS e transparência da HUD.
+# Atualização da câmera e da partida
+
+O arrasto vertical da câmera permite inclinação de 0,12 a 1,48 radianos. O ponto de visão fica acima do terreno e o chão renderizado avança além do limite jogável. O HUD conta os inimigos vivos da simulação e o minimapa amostra até 300 marcadores para manter a leitura.

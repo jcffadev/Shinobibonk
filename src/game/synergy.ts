@@ -131,8 +131,9 @@ function tierFor(def: SynergyDef, count: number): number | undefined {
 }
 
 /** Sinergias ativas: contam só os ajudantes (heroId fica fora). Aldeias primeiro. */
-export function activeSynergies(heroId: string, allies: readonly string[]): ActiveSynergy[] {
-  const team = new Set(allies.filter((id) => id !== heroId));
+export function activeSynergies(_heroId: string, allies: readonly string[]): ActiveSynergy[] {
+  // O jogador fica fora, mas um ajudante recrutado do mesmo shinobi ocupa uma vaga real.
+  const team = new Set(allies);
   const out: ActiveSynergy[] = [];
   for (const def of synergyDefinitions()) {
     const members = def.members.filter((id) => team.has(id));

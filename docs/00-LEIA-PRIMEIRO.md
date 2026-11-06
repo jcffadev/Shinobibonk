@@ -33,6 +33,10 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 ## Implementado na base atual
 
+- **Movimento e combate:** poses em todas as formas jogáveis, folhas dedicadas para Asuma e Naruto Academia, inclinação baixa da câmera com proteção de altura sobre o terreno.
+- **Contagem da horda:** o HUD lê o total real de inimigos vivos e o minimapa mantém sua amostragem separada.
+- **Recompensas:** a fila da Tsunade e as pílulas do chão pedem E para pegar ou V para vender. A sinergia conta o ajudante de mesmo nome do jogador quando recrutado.
+
 - **Hub**:
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
   - Elenco de 22 shinobis em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.

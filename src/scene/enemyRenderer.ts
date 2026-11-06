@@ -74,16 +74,20 @@ void main() {
 }`;
 
 type Attr = THREE.InstancedBufferAttribute;
-/** Lote instanciado com capacidade que dobra sob demanda. */
+/**
+ * Lote instanciado com capacidade que dobra sob demanda. Ao crescer, a geometria é RECRIADA: o three.js fixa
+ * `_maxInstanceCount` da InstancedBufferGeometry no primeiro uso, então trocar só os atributos deixaria as instâncias
+ * acima da capacidade inicial invisíveis.
+ */
 class Batch {
-  readonly geometry = new THREE.InstancedBufferGeometry();
+  geometry = new THREE.InstancedBufferGeometry();
   readonly mesh: THREE.Mesh;
   private capacity = 0;
   count = 0;
   private attrs: Record<string, Attr> = {};
+  private base: THREE.BufferGeometry;
   constructor(base: THREE.BufferGeometry, material: THREE.Material, private layout: Record<string, number>, scene: THREE.Scene) {
-    this.geometry.index = base.index;
-    for (const [name, attr] of Object.entries(base.attributes)) this.geometry.setAttribute(name, attr);
+    this.base = base.clone();
     this.mesh = new THREE.Mesh(this.geometry, material);
     this.mesh.frustumCulled = false;
     this.mesh.matrixAutoUpdate = false;
@@ -94,17 +98,24 @@ class Batch {
     let cap = Math.max(this.capacity, 256);
     while (cap < min) cap *= 2;
     if (cap === this.capacity) return;
+    const geometry = new THREE.InstancedBufferGeometry();
+    geometry.index = this.base.index;
+    for (const [name, attr] of Object.entries(this.base.attributes)) geometry.setAttribute(name, attr);
     for (const [name, size] of Object.entries(this.layout)) {
       const next = new Float32Array(cap * size), old = this.attrs[name];
       if (old) next.set(old.array as Float32Array);
       const attr = new THREE.InstancedBufferAttribute(next, size);
       attr.setUsage(THREE.DynamicDrawUsage);
-      this.geometry.setAttribute(name, attr);
+      geometry.setAttribute(name, attr);
       this.attrs[name] = attr;
     }
+    const previous = this.geometry;
+    this.geometry = geometry; this.mesh.geometry = geometry;
+    // Só os atributos instanciados antigos são liberados; a base (quad/anel) continua em uso pela nova geometria.
+    if (this.capacity) { previous.setIndex(null); for (const name of Object.keys(this.base.attributes)) previous.deleteAttribute(name); previous.dispose(); }
     this.capacity = cap;
   }
-  /** Garante espaço para mais uma instância e devolve os arrays. */
+  /** Garante espaço para mais uma instância e devolve o índice. */
   next() { if (this.count >= this.capacity) this.grow(this.count + 1); return this.count++; }
   arr(name: string) { return this.attrs[name].array as Float32Array; }
   commit() {
@@ -116,9 +127,8 @@ class Batch {
     this.geometry.instanceCount = this.count;
     this.mesh.visible = this.count > 0;
   }
-  dispose() { this.mesh.removeFromParent(); this.geometry.dispose(); (this.mesh.material as THREE.Material).dispose(); }
+  dispose() { this.mesh.removeFromParent(); this.geometry.dispose(); this.base.dispose(); (this.mesh.material as THREE.Material).dispose(); }
 }
-
 function billboardMaterial(map: THREE.Texture, solid: boolean) {
   const material = new THREE.ShaderMaterial({
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { alphaTest: { value: solid ? .1 : .5 }, uDepthOffset: { value: solid ? .02 : 0 } }]),

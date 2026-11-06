@@ -4,6 +4,8 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Mapa de arquivos
 
+O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o estado. `playerPose.ts` ajusta pernas e braços nos UVs da forma atual e mantém a câmera independente. `evolution.ts` aponta o Asuma para `public/assets/asuma-motion-v1.png`, folha original 4×4. A fila de recompensas fica em `GameCanvas.tsx` e aparece em `ItemTradeDialog.tsx`. O snapshot separa o total de inimigos (`enemyCount`) dos marcadores limitados do mapa (`enemies`).
+
 | Caminho | Responsabilidade |
 |---|---|
 | `index.html` | Entrada HTML do Vite, com o root React. |

@@ -5,6 +5,7 @@ Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conf
 ## Documentação contínua
 - Sempre que alterar código, configuração, controles, assets ou sistemas, siga `skills/documentar-projeto/SKILL.md` e sincronize os Markdown afetados na mesma tarefa.
 - Mantenha README.md, docs/00-LEIA-PRIMEIRO.md, docs/12-ARQUITETURA-E-ESTADO-DO-CODIGO.md, o documento temático e CHANGELOG.md alinhados ao estado real.
+- Para toda nova solicitação do usuário, registre o pedido e a resposta em `docs/14-CONTEXTO-DO-CHAT.md`. Inclua mensagens complementares da mesma rodada e preserve dados sensíveis fora do arquivo versionado.
 
 ## Skills de arte e movimento
 - Para criar ou integrar arte, siga `skills/criar-arte-shinobibonk/SKILL.md`; para movimento, pulo, dash e animação dos shinobis, siga `skills/movimentar-shinobi/SKILL.md`.

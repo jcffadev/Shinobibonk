@@ -31,7 +31,9 @@ export function requiredLevel(heroId:string,index:number){return HERO_BY_ID[hero
 const evolvedCells=Object.entries(FORMS).flatMap(([id,forms])=>id==='naruto'?[]:forms.filter(f=>f.level>1).map(f=>id+'-'+f.level));
 import { BIJUU } from './bijuu.ts';
 const leafPortraits = ['ebisu', 'iruka', 'kushina'];
+export const ASUMA_ATLAS = '/assets/asuma-motion-v1.png';
 export function portraitRegion(id:string,level=1){
+ if(id==='asuma')return {path:ASUMA_ATLAS,cols:4,rows:4,index:0};
  const leafIndex = leafPortraits.indexOf(id);
  if(leafIndex >= 0) return {path:'/assets/shinobi-folha-v3.png',cols:3,rows:1,index:leafIndex};
  if(id==='sakura'&&level<15)return {path:'/assets/sakura-genin-v1.png',cols:1,rows:1,index:0};

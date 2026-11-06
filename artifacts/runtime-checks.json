@@ -1,7 +1,7 @@
 {
-  "date": "2026-11-06T12:46:17.816Z",
+  "date": "2026-11-06T13:57:07.805Z",
   "checks": [
-    "23 shinobis selecionáveis",
+    "24 shinobis selecionáveis",
     "Filtro Areia: Gaara / Temari / Kankuro",
     "Relógio começa sem guardião antecipado",
     "Textura PNG do personagem carregada",
@@ -24,6 +24,9 @@
     "Compra administrativa, filtros de crítico e reembolso do reset",
     "Hashirama recebe exatamente +20% de dano após infusão Sábia",
     "Genjutsu aplica Dormir em um inimigo real",
+    "Asuma carrega seu atlas e usa caminhada, pulo e dash",
+    "Prêmios em sequência: vender item e só conceder pílula após E",
+    "Horda passa de 300 e o HUD mostra 1.600 inimigos",
     "Sem exceções JavaScript ou assets 404"
   ],
   "errors": [],
