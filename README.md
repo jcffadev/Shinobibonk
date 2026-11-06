@@ -28,7 +28,7 @@ O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de at
 
 As técnicas combinam efeitos por natureza com visuais próprios para golpes como Rasengan, Chidori e Dragão de Água. A Bolsa da Missão tem filtros por raridade, e os visuais revisados de Chōmei e Gyūki aparecem na arena final.
 
-O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A [fila de pendências](docs/13-PENDENCIAS-PARA-CONTINUAR.md) e o [changelog](CHANGELOG.md) acompanham o trabalho.
+O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A [calibração com referência](docs/15-CALIBRACAO-REFERENCIA.md) compara nossos valores com a wiki pública do PokéBonk. A [fila de pendências](docs/13-PENDENCIAS-PARA-CONTINUAR.md) e o [changelog](CHANGELOG.md) acompanham o trabalho.
 
 - `src/main.tsx`: hub, elenco, ataques, plano de build, árvore permanente, loja, missões, HUD da run e modais.
 - `src/scene/GameCanvas.tsx`: cena Three.js e simulação da run (jogador, terreno, inimigos, técnicas, aliados, drops, eventos, zonas e câmera).

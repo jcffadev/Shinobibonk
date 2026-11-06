@@ -401,3 +401,13 @@ Versões: novo — as 56 formas viraram personagens próprios (24 famílias) com
 **Resposta**
 
 Pílulas: antes só mostravam o bônus ("+4% chance crítica") e o nível; agora mostram o atributo atual → novo nas cartas, na ficha, no plano de build e no tooltip da barra. Pergaminhos: o +3% de dano total fazia todas as técnicas aparecerem em "Melhora:"; agora só as do mesmo elemento. Bolsa: as 4 predefinições viraram a sub-aba "Itens em casa" com até 12 listas com descrição, compatível com o save antigo. Testes de navegador, `tsc`, build, `verify-rules` e `verify-runtime` passaram.
+
+## Calibração com a wiki do PokéBonk e detalhes de interface
+
+**Pedido** (via coordenador)
+
+> Ponto de partida de calibração com a wiki pública do PokéBonk (sem engenharia reversa): tabelas referência × valor atual × proposta em docs/15, aplicando só o que for claramente inconsistente. Detalhes: prévia do atributo ao esquecer pílula no Ichiraku, reordenar as listas de "Itens em casa" e botão para expandir/recolher a grade de itens do HUD com estado salvo.
+
+**Resposta**
+
+Calibração: novo `docs/15-CALIBRACAO-REFERENCIA.md` com level-up, vitaminas × pílulas, Lab × Passivas, chefes, Survival × Final Swarm e economia, todos com URL da wiki. Nenhum valor foi alterado. As maiores diferenças ficaram como PROPOSTO para o usuário: venda de item fixa enquanto a kunai fica cara, Ryu por abate sem inflação, desbloqueios estruturais baratos e HP do guardião que não lê o dano do jogador.

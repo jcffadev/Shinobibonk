@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Calibração com referência pública
+
+- Adiciona `docs/15-CALIBRACAO-REFERENCIA.md`, com a wiki pública do PokéBonk (level-up, vitaminas, Lab, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário.
+
 ## Pílulas com atributo atual → novo, pergaminhos por elemento e listas de itens em casa
 
 - Pílulas mostram o atributo do personagem com o valor atual e o novo: nas cartas de level-up ("Seu atributo"), na ficha (P, "Próximo nível"), no plano de build (aba Pílulas, no Nv. 1 do shinobi) e no tooltip da barra de pílulas. Prévia em `src/game/pillPreview.ts`, com as mesmas regras de `calculateStats` (tetos de evasão e status, % de HP e multiplicador de regeneração).

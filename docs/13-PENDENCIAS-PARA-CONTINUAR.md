@@ -62,6 +62,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 
 ## Calibração com ponto de partida
 - O usuário quer um ponto inicial de calibração baseado no PokéBonk. Fonte permitida: wiki pública (https://pokebonk-wiki.wiki) e observação de vídeos/prints de gameplay. Não fazer engenharia reversa do aplicativo. Levantar: crescimento de técnicas por nível, upgrades, curva de nível/Treino, inimigos por minuto, HP/dano por zona.
+- **FEITO (levantamento)** — [docs/15-CALIBRACAO-REFERENCIA.md](15-CALIBRACAO-REFERENCIA.md): tabelas ref. × atual × proposta. Nenhum valor alterado. **AGUARDANDO O USUÁRIO** (seção 7 do doc): venda de item proporcional ao preço da kunai, Ryu por abate com inflação, HP do guardião pelo dano do jogador e teto de golpe de chefe, preços dos desbloqueios estruturais, máximos das passivas, Atualizar/Pular/Banir 2/2/1, opção de desenhar só os N inimigos mais próximos. A wiki não publica a curva de HP por minuto: segue PENDENTE medir por vídeo.
 
 ## Decisões aguardando o usuário
 1. **Hospedar a Alpha**: escolher GitHub Pages (repo precisa ficar público; criar workflow + `base` no vite.config), Netlify/Vercel/Cloudflare Pages (aceita repo privado) ou itch.io (zip do `dist`).
