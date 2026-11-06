@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 2026-11-06 — falas de técnicas sem spam
+- `sfx.ts`: técnicas comuns falam no máximo 1 vez a cada 60 s por técnica e 15 s entre falas (`VOICE_RULES`); a Ultimate sempre fala. Antes o Kage Bunshin (técnica inicial do Naruto) repetia a fala a cada 6,5 s.
+
 ## 2026-11-06 — HUD: cartões de ajudante compactos
 - Com 4+ ajudantes os cartões ficam compactos e a coluna termina antes do dock de técnicas/pílulas, com rolagem (`allies.css`).
 

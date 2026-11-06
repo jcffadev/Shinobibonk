@@ -91,6 +91,9 @@ export function playYooo(){
   sweep(1450,820,.65,strength*.7);
 }
 let lastCast=-Infinity;
+/** Intervalos mínimos das falas de técnicas comuns (ms). */
+export const VOICE_RULES={global:15000,perTechnique:60000};
+let lastTechniqueVoice=-Infinity;const lastVoiceByTechnique:Record<string,number>={};
 export function playTechniqueSound(t:Technique,ultimate=false){
   const now=performance.now();if(!ultimate&&now-lastCast<90)return;lastCast=now;
   const s=currentSettings(),volume=s.volume*s.sfxVolume;
@@ -99,5 +102,9 @@ export function playTechniqueSound(t:Technique,ultimate=false){
   else if(t.element==='Fogo'||t.element==='Areia')sweep(480,170,.28,.23*volume,true);
   else if(t.element==='Madeira'||t.school==='Taijutsu')sweep(750,160,.13,.20*volume,true);
   else sweep(870,380,.2,.13*volume,t.shape==='Onda');
-  if(ultimate||japanese[t.name])speak(t.name);
+  // Falas: a Ultimate sempre fala; técnicas comuns no máximo 1 vez a cada VOICE_RULES.perTechnique por técnica e
+  // VOICE_RULES.global entre falas (antes a técnica inicial, lançada a cada ~1,5 s, repetia a fala a cada 6,5 s).
+  if(ultimate){speak(t.name);return;}
+  if(!japanese[t.name]||now-lastTechniqueVoice<VOICE_RULES.global||now-(lastVoiceByTechnique[t.name]??-Infinity)<VOICE_RULES.perTechnique)return;
+  if(speak(t.name)){lastTechniqueVoice=now;lastVoiceByTechnique[t.name]=now;}
 }
