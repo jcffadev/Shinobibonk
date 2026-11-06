@@ -18,6 +18,15 @@
 .minimap .mini-marker{position:absolute;z-index:3;transform:translate(-50%,-50%);font-style:normal}
 .minimap .mini-marker.edge{opacity:.75}
 .minimap .mini-marker.routed .mk{border-color:#fff;box-shadow:0 0 8px #fff}
+.minimap .map-player,.world-player{z-index:6;pointer-events:none}
+.map-player-kunai{display:block;width:23px;height:23px;filter:drop-shadow(0 0 4px #62ebff8c)}
+.world-map .map-north,.world-map .map-south{width:auto;height:auto;background:#151b2be8;line-height:1}
+.world-map .map-north{top:13px}.world-map .map-south{top:auto;bottom:1px}
+.game-panel-backdrop.quickmap-backdrop{justify-items:end;align-items:start;padding:12px;background:none;backdrop-filter:none;pointer-events:none}
+.quickmap-backdrop .quickmap-panel{width:min(470px,95vw);pointer-events:none}
+.quickmap-backdrop .map-layout.quick{grid-template-columns:1fr}
+.quickmap-backdrop .discovered-list{display:none}
+.quickmap-backdrop .quickmap-panel>header button{pointer-events:auto}
 .mini-route,.map-route-line{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible}
 .mini-route line,.map-route-line line{stroke:#ffe14d;stroke-width:1.4;stroke-dasharray:3 2;vector-effect:non-scaling-stroke;stroke-linecap:round}
 .mini-route line{stroke-width:2.5}

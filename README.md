@@ -112,3 +112,9 @@ O estado completo está em [docs/12-ARQUITETURA-E-ESTADO-DO-CODIGO.md](docs/12-A
 Esta é uma base de protótipo. Arte, animações, balanceamento, mapas por bioma, contas, persistência online e multiplayer ainda precisam de trabalho. As imagens em `assets/referencia/prints` e `references/concept_art` são referências visuais, não screenshots do executável.
 
 Personagens e nomes do universo Naruto são propriedade de terceiros. Publicação pública depende de licença (ver [docs/10](docs/10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md)). A imagem `animação do personagem.jpeg` na raiz é uma prévia de banco de imagens com marca d'água e não pode virar asset sem licença.
+
+### Preparação e controles
+
+Escolher o shinobi atualiza o painel, preservando a cena de fundo. A região é escolhida na tela de mapas e a arena 3D é criada ao começar. Na preparação, abra uma técnica para ver seus atributos base e uma demonstração com alvos. Cada shinobi pode bloquear até 60% das técnicas que pode aprender. Planejar marca a técnica para a missão. Com o Treinamento com Jiraiya, até quatro técnicas planejadas podem ser treinadas (+15% de dano). Pílulas podem ser planejadas. Exclusão de itens continua na Bolsa da Missão.
+
+Tab mostra o mapa enquanto pressionado, permitindo movimento. P ou **Ver build e ficha** abre a ficha sobre uma escolha pendente. Esc, perda de foco e F9 liberam a kunai do ponteiro. A escolha final devolve o controle ao jogo. **Reset de conta** confirma antes de limpar o progresso local.

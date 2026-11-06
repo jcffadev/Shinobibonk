@@ -5,7 +5,7 @@ import { actionArt, directionalArt } from '../game/directionalArt';
 
 export type StrikePose = 'punch' | 'kick';
 
-export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string) {
+export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true) {
   const hasWalkAtlas = heroId === 'naruto';
   const pose = createPlayerPose();
   const asuma = heroId === 'asuma' ? new THREE.TextureLoader().load(ASUMA_ATLAS) : null;
@@ -15,16 +15,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     asuma.generateMipmaps = false;
   }
   const width = sprite.scale.x, height = sprite.scale.y;
-  const canvas = document.createElement('canvas');
-  canvas.width = 128; canvas.height = 24;
-  const paint = canvas.getContext('2d')!;
-  const map = new THREE.CanvasTexture(canvas);
-  map.magFilter = THREE.NearestFilter;
-  const bar = new THREE.Sprite(new THREE.SpriteMaterial({ map, transparent:true, depthTest:false, depthWrite:false }));
-  bar.scale.set(1.45,.21,1);
-  bar.center.set(.5,1);
-  bar.renderOrder = 30;
-  scene.add(bar);
+  const health = healthBar ? createHealthBar(scene) : null;
   const walk = hasWalkAtlas ? new THREE.TextureLoader().load('/assets/naruto-academia-walk-v1.png') : null;
   if (walk) {
     walk.colorSpace = THREE.SRGBColorSpace;
@@ -122,21 +113,24 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         asuma.offset.set((frame % 4 + Number(mirror)) / 4, (3 - Math.floor(frame / 4)) / 4);
       }
       const directedCast = !!directionSheet?.cast && (state === 'attack' || state === 'ultimate');
-      const useDirection = !!directionMap?.image && (state === 'walk' || directedCast);
+      const useDirection = !!directionMap?.image && (state === 'walk' || directedCast || state==='jump' || state==='dash');
       const attacking = state === 'attack' || state === 'ultimate';
       const acrobatics = actionSheet?.kind === 'acrobatics' && (state === 'jump' || state === 'dash');
-      const useAction = !!actionMap?.image && (acrobatics || (attacking && (actionSheet?.kind !== 'taijutsu' || !!strike)));
+      const useAction = !!actionMap?.image && (acrobatics || (attacking && (actionSheet?.kind !== 'taijutsu' || !!strike) && !(academy && actionSheet?.kind==='acrobatics')));
       if (useAction && actionMap && actionSheet) {
         const castFrame = Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4));
-        const frame = state === 'jump' ? Number(jumpProgress > .66)
+        const frame = state === 'jump' ? Number(jumpProgress > .22 && jumpProgress < .77)
           : state === 'dash' ? 2 + Number(slideProgress > .7) : castFrame;
-        const secondRow = acrobatics || (actionSheet.kind === 'cast' && rear) || (actionSheet.kind === 'taijutsu' && strike === 'kick');
-        actionMap.repeat.set(mirror ? -.25 : .25, .5);
-        actionMap.offset.set((frame + Number(mirror)) / 4, secondRow ? 0 : .5);
+        const secondRow = (acrobatics && ('directional' in actionSheet ? backwardView : true)) || (actionSheet.kind === 'cast' && rear) || (actionSheet.kind === 'taijutsu' && strike === 'kick');
+        const flip = acrobatics ? leftward : mirror;
+        const rows=actionSheet.rows??2;
+        const row=(actionSheet.firstRow??0)+Number(secondRow);
+        actionMap.repeat.set(flip ? -.25 : .25, 1/rows);
+        actionMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
       }
       if (useDirection && directionMap && directionSheet) {
         const frame = directedCast ? Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4))
-          : Math.floor(stepTime * 10) % 4;
+          : state==='jump' ? (jumpProgress<.24||jumpProgress>.76?0:2) : state==='dash' ? (slideProgress<.72?2:1) : Math.floor(stepTime * 10) % 4;
         const row = directedCast ? 2 : (directionSheet.firstRow ?? 0) + Number(backwardView);
         const flip = directedCast ? mirror : leftward;
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
@@ -146,18 +140,21 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       posePath = useAction ? actionSheet!.path : useDirection ? directionSheet!.path : '';
       sprite.material.map = useAsuma ? asuma : useAction ? actionMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
       sprite.material.alphaTest = usesSheet ? .55 : .18;
-      const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? .07 : 0;
-      const lift = state === 'jump' ? .095 : state === 'dash' ? .04 : 0;
+      const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.13 : 0;
+      const lift = state === 'jump' ? Math.sin(Math.PI*jumpProgress)*.16 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.065 : 0;
       const reach = state === 'attack' ? Math.sin(Math.PI * attack / (throwingWeapon ? .25 : .22)) * .11
         : state === 'ultimate' ? .09 : -stride * .55;
       const guard = state === 'ultimate' ? .085 : state === 'attack' ? .045 : state === 'hurt' ? .04 : 0;
-      pose.apply(sprite.material, usesSheet ? 0 : stride, usesSheet ? 0 : lift,
+      const proceduralMotion=!usesSheet||useDirection&&!useAction&&(state==='jump'||state==='dash');
+      pose.apply(sprite.material, proceduralMotion ? stride : 0, proceduralMotion ? lift : 0,
         usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
-      sprite.material.rotation = usesSheet ? 0 : state === 'dash' ? (mirror ? .34 : -.34)
+      sprite.material.rotation = !proceduralMotion ? 0 : state === 'dash' ? (mirror ? .34 : -.34)
         : state === 'hurt' ? (mirror ? -.1 : .1) : state === 'walk' && backwardView ? (mirror ? .05 : -.05) : 0;
       sprite.scale.set(width,height,1);
       sprite.position.y = floor + jumpHeight + sprite.scale.y*.5;
       sprite.material.color.set(hurt>0 ? '#ffc0be' : '#ffffff');
+      if(!health)return;
+      const {bar,paint,map}=health;
       bar.position.set(sprite.position.x,floor+jumpHeight-.09,sprite.position.z);
       if(lastHp===hp&&lastMax===maxHp)return;
       lastHp=hp;lastMax=maxHp;
@@ -169,6 +166,20 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       paint.fillStyle='#ffffff66';paint.fillRect(3,7,Math.round(122*ratio),2);
       map.needsUpdate=true;
     },
-    dispose(){scene.remove(bar);walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());map.dispose();bar.material.dispose();},
+    dispose(){if(health){scene.remove(health.bar);health.map.dispose();health.bar.material.dispose();}walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());},
   };
+}
+
+function createHealthBar(scene:THREE.Scene) {
+  const canvas=document.createElement('canvas');
+  canvas.width=128;canvas.height=24;
+  const paint=canvas.getContext('2d')!;
+  const map=new THREE.CanvasTexture(canvas);
+  map.magFilter=THREE.NearestFilter;
+  const bar=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthTest:false,depthWrite:false}));
+  bar.scale.set(1.45,.21,1);
+  bar.center.set(.5,1);
+  bar.renderOrder=30;
+  scene.add(bar);
+  return {bar,paint,map};
 }

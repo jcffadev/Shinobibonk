@@ -11,7 +11,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **PENDENTE** — revisar caminhada, ataque, pulo e dash/esquiva de todo o elenco por forma, inclusive transição do sprite estático para as ações. Naruto Academia e Manto da Kurama ficam fora desta revisão por pedido do usuário. Priorizar formas com pose procedural e validar os quadros em jogo. Dano, Ultimate e animação dos monstros permanecem na fila.
 - **REGRA DE ENTREGA** — novos shinobis e evoluções precisam vir com repouso, caminhada, ataque, pulo e dash/esquiva. Atualizar as skills, documentação, contexto e GitHub a cada entrega.
 - **IMPLEMENTADO:** fila de confirmação para itens da roleta, pílulas e habilidades reservadas para level-up, teto de quatro ofertas, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação da câmera por movimento do mouse.
-- **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
+- **Atlas de habilidades**: integrado ao HUD, às escolhas, ao elenco e ao plano de missão.
 - **IMPLEMENTADO** — efeitos por natureza e golpes característicos, com impactos nos inimigos. **PENDENTE** — refinamento de efeitos por técnica e sons. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (licença não verificada). Procurar outros sons com licença livre verificada.
 - **Atributos até nível 50**: recalibração pendente; o bônus de +0,8% quando acabam os upgrades é regra separada (`powerlevel.ts`).
 - **Chão nas bordas**: relevo e céu em gradiente em `terrainArt.ts`. Falta conferir mais climas e os extremos do mapa em jogo.
@@ -74,7 +74,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - Alvo fixo (botão direito): implementado; falta tecla remapeável própria e indicador no HUD.
 
 ## Balanceamento (todos os valores são provisórios)
-- Itens (94), pílulas (19), passivas (25), sinergias/combos, afinidade, setups, Senjutsu (25% · 1,5×), roleta, tiers de inimigo (elite 95 HP/30% defesa; mega 420 HP/55%), lamen de cura (15%/35%), abates e minutos das missões, custo da roleta.
+- Itens (94), pílulas (19), passivas (25), sinergias/combos, afinidade, setups, Senjutsu (25% · 1,5×), roleta, tiers de inimigo (elite 95 HP/30% defesa; mega 420 HP/55%), lamen de cura (até 5%/35%), abates e minutos das missões, custo da roleta.
 - O limite da horda e a amostra de desempenho estão registrados na seção de desempenho acima.
 
 ## Divergências canônicas registradas (Narutopedia), não alteradas
@@ -82,3 +82,9 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 
 ## Testes
 - `verify-runtime` tem uma checagem instável de saldo de Ryu (um drop coletado durante a compra da kunai); rodar de novo resolve; correção sugerida: `clearEnemies` antes da compra.
+
+## Próxima revisão após este lote
+
+1. Revisão visual individual das ações nas 56 formas e em suporte. Há caminhada direcional para todas, ações dedicadas para as formas registradas em `actionArt` e poses procedurais compartilhadas onde ainda faltam folhas. Naruto Academia e Neji receberam folhas novas neste lote. As ações dedicadas de pulo/dash das demais formas do Naruto permanecem na fila.
+2. Medir escala no meio e no final de missões reais. Comparar níveis, DPS, HP/defesa do guardião e abates por segundo. A curva já produz valores de milhões em mega elites e ~1 bilhão no cenário de guardião informado. O vídeo fornecido documenta a abertura.
+3. Medir 1.600 inimigos com GPU real, em diferentes climas, e continuar validando o chão nas bordas. Sons novos dependem de fontes com licença verificável.

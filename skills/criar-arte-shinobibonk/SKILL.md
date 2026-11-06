@@ -15,3 +15,8 @@ Leia a direção de arte de `AGENTS.md`. Abra os atlases usados pelo módulo alv
 - Nos efeitos de técnicas, consulte a referência da obra e a direção visual de jogos oficiais quando houver. Recrie o efeito com a geometria e a paleta do projeto. Confira direção, escala, impacto e a tecla H sem depender de mudanças no dano. Em bijū, confira a silhueta e conte os apêndices visíveis antes de registrar a textura.
 - Para ilustração de seleção, deixe área livre para o nome da região e os guardiões. Guarde as imagens de referência e os assets do jogo em caminhos separados. Use apenas arte autorizada no produto.
 - Documente o caminho, a ordem do atlas, o que foi integrado e o que foi testado com a skill `documentar-projeto`.
+## Técnicas e efeitos
+
+- Use o nome e a natureza do golpe para escolher sua silhueta, trajetória e impacto. Para cenas como Gamabunta, separe os quadros do ator do efeito em movimento para alinhar a origem com a boca ou as mãos.
+- Use o atlas de pixel art para a Substituição e a aura do Modo Sábio. A aura deve permanecer visível durante o buff. Reaproveite quadros e efeitos na prévia com alvos, inclusive a animação de corrida de clones.
+- Para os ícones de Modo Sábio, mantenha a identidade e as marcas oculares de cada shinobi conforme a referência da obra. Para aldeias, mostre o emblema e o nome original.

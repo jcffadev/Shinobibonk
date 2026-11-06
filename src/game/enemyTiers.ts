@@ -31,9 +31,21 @@ export function lootScale(tier: EnemyTier, maxHp: number, normalHp: number, miss
   return ENEMY_TIERS[tier].loot * hpWeight * missionLootFactor(missionTier);
 }
 
+/** O primeiro mega Genin tem ~20 mil HP. O tempo total continua contando entre zonas. */
+export function megaEliteHp(seconds:number, threatMultiplier:number) {
+  return Math.round(20000*2**(Math.max(0,seconds-55)/80)*threatMultiplier);
+}
+
+/** 4 a 6 encontros distribuídos ao longo da zona, com variação dentro de cada janela. */
+export function rollMegaSchedule(rng=Math.random) {
+  const count=4+Math.floor(rng()*3);
+  const interval=465/(count-1);
+  return Array.from({length:count},(_,index)=>index===0?42+26*rng():52+index*interval+(rng()-.5)*interval*.58);
+}
+
 /** Elites ganham a vida completa do tipo após cinco minutos de zona. */
 export function eliteHpRamp(tier: EnemyTier, zoneSeconds: number) {
-  const initial = tier === 'elite' ? .55 : tier === 'mega' ? .40 : 1;
+  const initial = tier === 'elite' ? .45 : 1;
   const progress = Math.min(1, Math.max(0, zoneSeconds) / 300);
   return initial + (1 - initial) * progress;
 }

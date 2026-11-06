@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent, type ReactNode } from 'react';
+import { useEffect, useState, type MouseEvent, type ReactNode, type Dispatch, type SetStateAction } from 'react';
 import '../debug.css';
 import { ITEMS } from '../game/catalog';
 import { HEROES } from '../game/heroes';
@@ -39,8 +39,7 @@ const fmt = (value: number, digits = 1) => value.toLocaleString('pt-BR', { maxim
 /** F9 ou a tecla à esquerda do "1" (código Backquote: ` no teclado US, ' no ABNT2). */
 export const isDebugToggleKey = (event: KeyboardEvent) => event.key === 'F9' || event.code === 'Backquote';
 
-export function DebugPanel({ getApi }: { getApi: () => DebugApi | null }) {
-  const [open, setOpen] = useState(false);
+export function DebugPanel({ getApi,open,setOpen }: { getApi: () => DebugApi | null; open:boolean; setOpen:Dispatch<SetStateAction<boolean>> }) {
   const [live, setLive] = useState<DebugLive | null>(null);
   const [values, setValues] = useState<Tuning>(() => ({ ...tuning }));
   const [item, setItem] = useState(ITEMS[0]?.name ?? '');
@@ -54,13 +53,13 @@ export function DebugPanel({ getApi }: { getApi: () => DebugApi | null }) {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (!isDebugToggleKey(event) || event.repeat) return;
-      if (event.target instanceof HTMLElement && event.target.matches('input[type=text],input[type=number],textarea')) return;
+      if (event.key!=='F9' && event.target instanceof HTMLElement && event.target.matches('input[type=text],input[type=number],textarea')) return;
       event.preventDefault();
       setOpen((value) => !value);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [setOpen]);
   useEffect(() => {
     if (!open) return;
     const read = () => setLive(getApi()?.inspect() ?? null);

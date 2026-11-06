@@ -1,4 +1,4 @@
-import { ItemIcon } from './RunSheet';
+import { HeroPortrait, ItemIcon, RunSheetButton } from './RunSheet';
 import { BuffText } from './BuffText';
 import type { WorldSnapshot } from '../scene/GameCanvas';
 
@@ -6,12 +6,13 @@ export function tradeAction(action: 'sell' | 'reroll' | 'exit') {
   window.dispatchEvent(new CustomEvent('shinobi-trade', { detail: action }));
 }
 
-export function ItemTradeDialog({ choice, money }: { choice: NonNullable<WorldSnapshot['choice']>; money: number }) {
+export function ItemTradeDialog({ choice, money, onSheet }: { choice: NonNullable<WorldSnapshot['choice']>; money: number; onSheet:()=>void }) {
   const merchant = choice.level === -8;
   const title = merchant ? 'Mercador de itens' : 'Prêmio da Tsunade';
   const choose = (index: number) => window.dispatchEvent(new CustomEvent('shinobi-choose', { detail: index }));
   return <div className="level-choice-backdrop">
     <section className="level-choice" role="dialog" aria-label={title}>
+      <aside className="choice-npc">{merchant?<span role="img" aria-label="Barraca do Mercador" className="merchant-portrait"/>:<HeroPortrait id="tsunade"/>}</aside>
       <div className="level-choice-title">
         <h1>{title}</h1>
         <p>{merchant ? `${money} Ryu disponíveis · cada compra aumenta o preço das próximas` : 'Pegue a recompensa ou venda pelo valor indicado.'}</p>
@@ -36,6 +37,7 @@ export function ItemTradeDialog({ choice, money }: { choice: NonNullable<WorldSn
           <button onClick={() => choose(0)}>Pegar <kbd>E</kbd></button>
           <button onClick={() => tradeAction('sell')}>Vender · +{choice.sale} Ryu <kbd>V</kbd></button>
         </>}
+        <RunSheetButton onClick={onSheet}/>
       </div>
     </section>
   </div>;

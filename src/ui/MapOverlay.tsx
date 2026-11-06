@@ -15,12 +15,12 @@ type Marker = WorldSnapshot['events'][number];
 type Pickup = WorldSnapshot['pickups'][number];
 
 /** Eventos com NPC: retrato do atlas (src/game/evolution.ts → portraitRegion). */
-const NPC_PORTRAIT: Record<string, string> = { arsenal: 'tenten', shikamaru: 'shikamaru', slot: 'tsunade', ebisu: 'ebisu', iruka: 'iruka', orochimaru: 'orochimaru' };
+const NPC_PORTRAIT: Record<string, string> = { arsenal: 'tenten', shikamaru: 'shikamaru', slot: 'tsunade', ebisu: 'ebisu', iruka: 'iruka', ichiraku:'teuchi','sapos-sabios':'sapos-sabios', orochimaru: 'orochimaru' };
 /** Ícone/cor por tipo de evento. tone → classe CSS (map.css). */
 const EVENT_STYLE: Record<string, { glyph: string; tone: string }> = {
   arsenal: { glyph: '🗡️', tone: 'npc' }, shikamaru: { glyph: '♟️', tone: 'npc' }, slot: { glyph: '🎰', tone: 'npc' }, ebisu: { glyph: '🕶', tone: 'npc' }, iruka: { glyph: '📚', tone: 'npc' },
-  orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: '⛩️', tone: 'danger' }, challenge: { glyph: '⛩️', tone: 'challenge' }, altar: { glyph: '🛕', tone: 'altar' },
-  trader: { glyph: '⚖️', tone: 'shop' }, ichiraku: { glyph: '🍜', tone: 'shop' },
+  orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: 'guardian-bijuu', tone: 'guardian' }, challenge: { glyph: '⛩️', tone: 'challenge' }, altar: { glyph: '🛕', tone: 'altar' },
+  trader: { glyph: '⚖️', tone: 'shop' }, ichiraku: { glyph: '🍜', tone: 'shop' }, 'sapos-sabios':{glyph:'🐸',tone:'shop'},
 };
 const PICKUP_LABEL: Record<string, string> = { kunai: 'Kunai (pago em Ryu)', shuriken: 'Shuriken (pago em Ryu)', ryu: 'Bolsa de Ryu', sealDrop: 'Kunai de recompensa grátis' };
 
@@ -43,11 +43,15 @@ export function MarkerIcon({ m, size }: { m: Marker; size: 'map' | 'mini' }) {
   const portrait = m.portrait ?? NPC_PORTRAIT[m.id];
   const glyph = EVENT_STYLE[m.id]?.glyph ?? m.icon;
   return <span className={`mk mk-${size} tone-${markerTone(m)}${portrait ? ' has-portrait' : ''}${m.active === false ? ' used' : ''}`}>
-    {portrait ? <HeroPortrait id={portrait} /> : glyph === 'bijuu-portal'
-      ? <img src="/assets/icons/bijuu-portal.svg" alt="" />
+    {portrait ? <HeroPortrait id={portrait} /> : glyph === 'bijuu-portal'||glyph==='guardian-bijuu'
+      ? <img src={glyph==='guardian-bijuu'?'/assets/icons/guardian-bijuu.svg':'/assets/icons/bijuu-portal.svg'} alt="" />
       : <em>{glyph}</em>}
     {portrait && <sup>{glyph}</sup>}
   </span>;
+}
+export function MapPlayerIcon({heading=0}:{heading?:number}) {
+  return <img className="map-player-kunai" src="/assets/icons/map-kunai.svg" alt="Jogador"
+    style={{transform:`rotate(${heading}rad)`}} draggable={false}/>;
 }
 export function PickupIcon({ p, size }: { p: Pickup; size: 'map' | 'mini' }) {
   return <span className={`mk mk-${size} tone-pickup${p.kind === 'sealDrop' ? ' free' : ''}`}>
@@ -81,7 +85,7 @@ export function MapPanel({ world, quick }: { world: WorldSnapshot; quick: boolea
       <div className="map-terrain" />
       {world.explored.map((cell, i) => <span className="map-revealed" key={i} style={pos(cell.x, cell.z)} />)}
       {r && <svg className="map-route-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={coordinate(world.player.x)} y1={coordinate(world.player.z)} x2={coordinate(r.x)} y2={coordinate(r.z)} /></svg>}
-      <span className="world-player" style={pos(world.player.x, world.player.z)}>▲</span>
+      <span className="world-player" style={pos(world.player.x, world.player.z)}><MapPlayerIcon heading={world.player.heading}/></span>
       <EnemyDots enemies={world.enemies} project={(x, z) => [coordinate(x), coordinate(z)]} radius={3.5} />
       {world.pickups.map((p, i) => <i className={`known-map-event map-marker pickup${r?.id === p.id ? ' routed' : ''}`} key={p.id ?? 'p' + i} style={pos(p.x, p.z)} title={`${p.name ?? PICKUP_LABEL[p.kind]} · ${meters(dist(world, p.x, p.z))} · clique para traçar rota`} onClick={p.id ? pick(p.id) : undefined}><PickupIcon p={p} size="map" /></i>)}
       {world.events.map(m => <i className={`known-map-event map-marker${r?.id === m.id ? ' routed' : ''}${m.active === false ? ' used' : ''}`} key={m.id} style={pos(m.x, m.z)} title={`${m.name} · ${meters(dist(world, m.x, m.z))}${m.active === false ? ' · já usado nesta zona' : r?.id === m.id ? ' · clique para limpar a rota' : ' · clique para traçar rota'}`} onClick={pick(m.id)}><MarkerIcon m={m} size="map" /><small>{m.name}</small></i>)}

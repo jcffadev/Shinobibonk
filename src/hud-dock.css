@@ -20,3 +20,89 @@
 }
 
 .vitamin-row .pill-slot-empty{display:grid;place-items:center;border:1px dashed #bd9bc66e;background:#221b33a6;color:#af93b9;font-size:14px}
+.game-shell{--kunai-cursor:url('/assets/icons/cursor-kunai.svg') 3 3,auto;cursor:var(--kunai-cursor)}
+.game-shell :is(button,a,select){cursor:var(--kunai-cursor)}
+.game-shell .scene-live{cursor:none}
+.level-choice-backdrop{background:#0a1122ad;backdrop-filter:blur(3px)}
+.level-choice{width:min(920px,95vw);position:relative}
+.choice-npc{position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);width:114px;display:grid;justify-items:center}
+.choice-npc .hero-sprite{width:110px;height:144px}
+.merchant-portrait{width:114px;height:114px;background:url('/assets/environment-v2.png') 100% 100% / 400% 200%;image-rendering:pixelated}
+@media(max-width:1210px){.choice-npc{position:static;transform:none;margin:0 auto 6px;width:56px}.choice-npc .hero-sprite,.merchant-portrait{width:54px;height:60px}}
+.level-choice .level-choice-title{max-width:100%;padding:10px 26px 12px;margin-bottom:14px}
+.level-choice .level-choice-cards{gap:10px}
+.level-choice .level-choice-card{min-height:218px;overflow:hidden}
+.level-choice .choice-copy{padding:12px 14px 24px}
+.level-choice .choice-copy h2{margin:0 0 6px}
+.level-choice .choice-controls{margin-top:4px}
+.build-view-filters{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0}
+.build-view-filters button{padding:7px 12px;border-radius:999px;border:1px solid #556782;background:#1f2b40;color:#d5e6ff}
+.build-view-filters button[aria-pressed=true]{background:#52689a;color:white}
+.build-view-filters small{margin-left:auto;color:#c4d0e4}
+.build-workspace{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:14px}
+.build-tech-list{display:flex;flex-direction:column;gap:7px;max-height:54vh;overflow:auto;padding-right:4px}
+.build-tech-list .pool-card{display:flex;flex-direction:row;flex:0 0 auto;align-items:center;min-height:54px;padding:7px 10px;gap:8px;border-radius:12px}
+.build-tech-list .pool-card .build-entry{display:flex;align-items:center;gap:10px;min-width:0;flex:1;text-align:left;border:0;background:transparent;color:#f0f4ff;padding:4px}
+.build-tech-list .pool-card.archived{opacity:1}
+.build-tech-list .pool-card.archived .build-entry{opacity:.65}
+.build-tech-list .pool-card .enable-skill{background:#14766b;color:#effffe;font-weight:800}
+.build-tech-list .pool-card .enable-skill:hover{background:#209d88}
+.build-tech-list .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #ffce61}
+.build-entry small{display:block}
+.build-entry .skill-art,.build-entry .catalog-icon{width:34px;height:34px;flex:none}
+.build-tech-list .pool-card footer{margin:0;gap:4px}
+.build-tech-list .pool-card footer button{font-size:11px;padding:5px 8px}
+.build-detail{border:1px solid #53607b;border-radius:14px;padding:20px;background:#1d263b;color:#dce7ff}
+.build-detail .skill-art,.build-detail .catalog-icon{width:56px;height:56px}
+.build-detail h2{margin:9px 0}
+.build-detail b{color:#ffd06b}
+.technique-base-data{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:12px 0}
+.technique-base-data div{background:#161f31;padding:7px 8px;border-radius:8px}
+.technique-base-data dt{font-size:10px;color:#9eb4d1}
+.technique-base-data dd{font-size:12px;font-weight:700;margin:2px 0 0}
+.technique-preview{height:170px;overflow:hidden;border:1px solid #40596e;border-radius:12px;background:radial-gradient(at 55% 72%,#284d4d,#0f1929 79%)}
+.technique-preview canvas{display:block;width:100%;height:100%}
+.build-detail>small{display:block;margin-top:5px;color:#a9bed5}
+.reset-danger{background:#a53043!important;color:#fff}
+@media(max-width:760px){.build-workspace{grid-template-columns:1fr}.build-tech-list{max-height:43vh}.build-tech-list .pool-card{flex-wrap:wrap}.build-tech-list .pool-card footer{margin-left:auto}}
+.game-panel-backdrop.over-choice{z-index:70}
+.choice-sheet-row{display:flex;justify-content:center;margin:10px 0 4px}
+.choice-sheet-button{padding:8px 14px;border:1px solid #7994b4;border-radius:11px;background:#20314b;color:#e5f4ff;font-weight:750}
+.choice-sheet-button:hover,.choice-sheet-button:focus-visible{background:#304a6b}
+.choice-sheet-button kbd{margin-left:6px}
+.village-emblem{width:1.25em;height:1.25em;vertical-align:-.24em;flex:none}
+.cs-village-tag{--el:#6b9e77;display:inline-flex;align-items:center;gap:4px}
+.cs-village .village-emblem{margin-right:3px}
+.cs-village-mark .village-emblem,.ms-tab-symbol .village-emblem{width:1.2em;height:1.2em}
+.detail-title .base-stats{flex:1 0 38%;margin:0 0 0 auto;gap:5px}
+.detail-title .base-stats>div{padding:5px 7px}
+.detail-title .base-stats b{font-size:15px;margin-top:2px}
+.detail-title .base-stats small{white-space:nowrap}
+.detail-panel .detail-actions{margin:9px 0 14px}
+.ultimate-box p{display:flex;align-items:center;gap:8px}
+.ultimate-box .skill-art{width:28px;height:28px}
+@media(max-width:1100px){.detail-title{flex-wrap:wrap}.village-emblem{width:1.25em;height:1.25em;vertical-align:-.24em;flex:none}
+.cs-village-tag{--el:#6b9e77;display:inline-flex;align-items:center;gap:4px}
+.cs-village .village-emblem{margin-right:3px}
+.cs-village-mark .village-emblem,.ms-tab-symbol .village-emblem{width:1.2em;height:1.2em}
+.detail-title .base-stats{flex-basis:100%}}
+.skill-chips>span{display:flex;align-items:center;gap:4px}
+.skill-chips .skill-art{padding:0;border:0;margin-right:4px}
+.skill-chips .sage-skill-art,.sage-skill-art{display:inline-block;background-image:url('/assets/sage-technique-icons-v1.png');background-size:300% 200%;image-rendering:pixelated;border-radius:6px}
+.skill-chips .gamabunta-skill-art,.gamabunta-skill-art{display:inline-block;background-image:url('/assets/gamabunta-oil-v1.png');background-position:0 50%;background-size:400% auto;background-repeat:no-repeat;image-rendering:pixelated}
+.choice-art em strong{display:block;color:#fff4a3;margin-bottom:2px}
+.merged-skill-art{display:inline-flex;align-items:center;justify-content:center;gap:2px;border-radius:6px;background:#263653}
+.merged-skill-art>.skill-art{width:45%!important;height:72%!important;margin:0!important}
+.skill-chips .atlas-skill-art,.atlas-skill-art{display:inline-block;background-image:url('/assets/technique-atlas-v1.png');background-size:500% 500%;image-rendering:pixelated;flex:none}
+.empty-skill-art{display:grid!important;place-items:center;color:#bdcde1;border:1px dashed #aec1dc80;border-radius:8px;background:#161c2e66}
+.skill-dock>.ability-bar button{min-width:53px;min-height:58px;padding:4px 5px 8px;border-radius:10px}
+.skill-dock>.ability-bar button>.skill-art{width:34px;height:34px;margin-bottom:2px}
+.skill-dock>.ability-bar .ultimate{min-width:59px;border-radius:50%}
+.inventory-corner{gap:4px;max-width:min(255px,35vw);max-height:90px;min-height:0;overflow:auto;scrollbar-width:thin}
+.inventory-corner .inv-icon{width:25px;height:25px;flex:none}
+.inventory-corner .catalog-icon{width:100%;height:100%}
+.inventory-corner .inv-icon small{right:0;bottom:0;min-width:10px;padding:0 2px;font-size:8px}
+.level-choice-card .choice-art{height:clamp(75px,12vh,112px)}
+.level-choice-card .choice-art>.skill-art,.level-choice-card .choice-art>.catalog-icon{width:clamp(46px,8vh,72px);height:clamp(46px,8vh,72px)}
+.level-choice-card .choice-copy h2{line-height:1.16;text-wrap:balance}
+@media(max-width:700px){.skill-dock>.ability-bar button{min-width:43px}.skill-dock>.ability-bar .ultimate{min-width:51px}.inventory-corner{max-width:110px}}

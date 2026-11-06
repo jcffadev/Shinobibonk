@@ -30,3 +30,9 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 - Teste W, A, S, D, WA, WD, SA e SD. Compare distâncias de direções e diagonais pelo mesmo tempo e verifique troca de fileira, espelho e continuidade da passada. Confira o comportamento com yaw girado.
 - Pule parado e em movimento, teste dash com movimento e sem tecla direcional, e troque o foco durante cada ação. Confira retorno ao solo, recarga, ausência de entrada presa e estabilidade da câmera.
 - Confira arremesso, técnicas sem arma e evolução de forma. Execute os testes da base, inspecione um quadro real em jogo e atualize a documentação com a skill `documentar-projeto`.
+
+## Ajudantes, inimigos e prévias
+
+- Ligue o controlador de movimento também ao suporte selado, aos clones e à prévia de técnicas. Um sprite que muda de posição deve alternar quadros de caminhada/corrida. Teste a mudança de forma e a execução da técnica.
+- As ações com arte própria têm prioridade. Para as formas antigas ainda sem folha, registre o fallback e mantenha a revisão na fila. Em lote, selecione quadros e espelhamento por UV para manter o instanciamento da horda.
+- Valide Tab em movimento, pulo parado e andando, dash em diagonal, perda de foco, F9 e retorno de uma escolha com o ponteiro capturado.

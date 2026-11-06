@@ -28,7 +28,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/npcs.ts` | Ebisu e Iruka: `NPC_RULES`, `LEGENDARY_VALUES`, `TOTEM_RULES`, sorteio de trocas, `NPC_ALLIES.iruka`, `NPC_NAMES` e `NPC_PORTRAITS` (sprites pixel art `public/assets/shinobis/iruka-1.svg` e `ebisu-1.svg`, gerados por `node scripts/generate-sprites.mjs --npcs`). Telas de escolha: −3 Ebisu, −4 menu do Iruka, −5 pergaminho lendário. |
 | `src/scene/narutoTotem.ts` | Barra 3D do Naruto Totem (nome, HP, segundos restantes). |
 | `src/game/roulette.ts` + `src/ui/TsunadeRoulette.tsx` + `src/tsunade-roulette.css` | Roleta da Tsunade: casas, pesos por sorte/dificuldade, custo crescente e overlay. |
-| `src/scene/dropSprites.ts` | Sprites procedurais (canvas) dos drops: essência roxa de XP (3 tamanhos), orbe azul de chakra, moeda 両 de Ryu, tigela de lamen de cura (`RAMEN_DROP` em GameCanvas: 15%/35%), pílula e pergaminho. Hooks `dropShowcase`/`drops`. |
+| `src/scene/dropSprites.ts` | Sprites procedurais (canvas) dos drops: essência roxa de XP (3 tamanhos), orbe azul de chakra, moeda 両 de Ryu, tigela de lamen de cura (`RAMEN_DROP` em GameCanvas: até 5%/35%), pílula e pergaminho. Hooks `dropShowcase`/`drops`. |
 | `src/ui/MapOverlay.tsx` + `src/map.css` | Ícones do mapa M/Tab e do minimapa, rota/ping, seta e metros na HUD, "Chegou!". Evento `shinobi-route`. |
 | `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, busca, botões de raridade, "em casa", prioridade, predefinições e hudzinho do hub. |
 | `src/ui/BuffText.tsx` | Pinta ganhos em verde e perdas em vermelho nos textos dos cards. |
@@ -67,7 +67,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `public/assets/shinobi-motion/*.png` | Folhas de caminhada dos 20 shinobis adicionados ao lote do Time 7 e Asuma. Quatro colunas por folha e duas fileiras por forma registrada. |
 | `public/assets/shinobis/*.svg` | Sprites SVG por shinobi/forma (`<id>-<nível>.svg`). |
 | `public/assets/environment-v2.png` | Árvores, rochas, portão, construções e objetos de evento. |
-| `public/assets/shinobi-sprites-atlas.png` | Atlas antigo; ainda usado para inimigos comuns. |
+| `public/assets/shinobi-sprites-atlas.png` | Atlas legado. Inimigos comuns usam a folha animada `shinobi-enemy-motion-v1.png`. |
 | `public/assets/item-icons-atlas.png` | Ícones de itens (via CSS). |
 | `public/assets/orochimaru-sprite.svg`, `icons/kunai.svg`, `icons/shuriken.svg` | Sprite antigo de Orochimaru; ícones de kunai/shuriken no chão. |
 | `scripts/verify-rules.mjs` | Asserções de regras puras; grava `artifacts/rules-checks.json`. |
@@ -113,12 +113,12 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - Terreno de 100×100 com relevo de senos e três montes gaussianos, colorido por grama, trilha, pedra e lava.
   - Vegetação e construções são sprites de `environment-v2.png`; ficam translúcidos quando o jogador está a menos de 3 m.
   - O jogador fica limitado a ±46. Não há colisão com cenário nem pulo.
-- **Personagens**: o jogador, os aliados e os mega elites são sprites com o retrato da forma atual; os inimigos comuns usam o atlas antigo.
+- **Personagens**: o jogador, os aliados e os mega elites usam o controlador de animação e a forma correspondente. Inimigos comuns usam a folha instanciada.
 - **Tempo e zonas**:
   - `elapsed` vai de 0 a 600 s; o HUD mostra a contagem regressiva.
   - Zona = 1 + ⌊elapsed/200⌋ (máximo 3).
   - Ao trocar de zona: novo clima (Névoa espectral reduz a visão; Tempestade de areia dá −27% de movimento), eventos reativados e guardião rearmado.
-  - O guardião (shinobi da lista da zona) é invocado no Selo do guardião (`summonGuardian`, HP × `guardianHpMultiplier`) ou surge sozinho aos 160 s da zona. `guardianSpawned` garante um por zona.
+  - O guardião (shinobi da lista da zona) é invocado no Selo do guardião (`summonGuardian`, HP × `guardianHpMultiplier`) por interação. `guardianSpawned` garante um por zona.
 - **Dificuldade** (`difficultyAt`):
   - Multiplicador por rank: Genin 1, Chunin 1,4, Jonin 1,9, Kage 2,6.
   - Por minuto: HP +22%, dano +15%, velocidade e velocidade de ataque sobem, intervalo de spawn cai.
@@ -230,7 +230,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 - **Chefes (`src/scene/bossCombat.ts`)**: mega elites e guardiões.
   - **Barra de vida 3D:** sprite com canvas acima do personagem, roxa para mega elite e laranja para guardião, com o nome. Durante uma técnica mostra "⚠ nome do golpe". Fica visível mesmo com H e sobre o cenário.
   - **Técnicas do personagem:**
-    - A cada 4,6 s / 3,8 s / 3,0 s (zonas 1/2/3; guardião ×0,8; ±15%) o chefe escolhe uma técnica do próprio kit. Mega elite usa as primeiras 1 + zona técnicas; guardião usa as 4.
+    - A cada 3,7 s / 2,9 s / 2,3 s (zonas 1/2/3; guardião ×0,8; ±15%) o chefe escolhe uma técnica do próprio kit. Mega elite usa as primeiras 1 + zona técnicas; guardião usa as 4.
     - Antes do golpe, marca a área em vermelho por 1,1 s, que vai ficando mais forte. O chefe para de andar enquanto conjura.
     - Formas: Área cai na posição do jogador (raio 2,4); Corpo a corpo é um círculo em volta do chefe; Cone de 6 m; Linha/Projétil de 10 m; Em V com duas linhas; Onda/Órbita é um anel em volta do chefe.
   - **Dano:** 18 × poder da técnica × ameaça, menos armadura, com evasão, invulnerabilidade e god mode respeitados. Técnicas com controle (Sombra, Areia, Madeira, Raio, Genjutsu, corpo a corpo) deixam o jogador 45% mais lento por 1,2 s.
@@ -281,9 +281,9 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 - **Mapa**: arena única, sem colisão, pulo, dash, biomas ou mapa procedural.
 - **Descoberta**: sem oclusão.
 - **Inimigos**: teto de 180 vivos; meta de 1.500 não medida.
-- **Remoção de pílula/item**: Shisui/Ichiraku de esquecimento não existe, e a fusão não existe. Os atributos já são recalculados das fontes a cada quadro, o que facilita a remoção futura.
+- **Remoção de pílula/item**: Ichiraku permite esquecer técnicas e pílulas. Sapos Sábios oferecem fusão e combinação.
 - **Mega elites**: não há rotação de mega elite por zona. O aviso das técnicas é desenhado plano no chão e pode ficar parcialmente escondido em relevo forte. A dificuldade dos chefes não foi balanceada; em níveis baixos, 3 a 4 golpes podem derrubar o personagem.
-- **Arte**: atlas e SVGs são provisórios, sem animação por quadro. As técnicas usam primitivas geométricas.
+- **Arte**: As formas usam sprites por quadro. Os efeitos mesclam atlas de pixel art e geometrias estilizadas.
 - **Bundle**: o JavaScript tem 899 kB, sem code-splitting.
 - **Painel de debug**: fica à direita, abaixo do minimapa (botão e painel em `top:222px`), sem cobrir o cartão do herói, o minimapa nem a barra superior. Abaixo de 640 px de largura, vira uma gaveta inferior. Botão e painel somem quando o resumo pós-run está aberto. No Edge, F9 também é atalho do Leitor Imersivo; o painel chama `preventDefault`, mas isso não foi verificado numa sessão real.
 - **Ausentes**: sem conta real, save, ranking, rede ou multiplayer.
@@ -293,3 +293,16 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 - **05/11/2026, nesta revisão**: `tsc -b` sem erros; `vite build` concluído (aviso de chunk acima de 500 kB); `node scripts/verify-rules.mjs` passou e regravou `artifacts/rules-checks.json` (22 shinobis, 88 técnicas, 36 itens na época; hoje 91).
 - **05/11/2026, após a troca para Lamens e a restauração da tecla Y**: `node scripts/verify-runtime.mjs` passou nas 23 verificações no navegador (inclui "Tecla Y alterna a Ultimate automática"), sem exceções JS nem assets 404, e regravou `artifacts/runtime-checks.json`.
 - Não houve teste manual de jogabilidade, medição de FPS com carga alta nem validação de balanceamento.
+
+## Integração atual de preparação, combate e arte
+
+- `BuildPlanner` separa lista com rolagem do detalhe. `TechniquePreview` desenha alvos de treino no Three.js usando os efeitos do jogo, o controlador de poses e a sequência de Gamabunta. O detalhe traz status, chance/dano crítico inicial e recarga. `SkillIcon` usa atlas de famílias, retratos Sábios e ícone de Gamabunta.
+- `playerMotion` serve jogador, ajudantes, shinobis inimigos, clones e a prévia. As folhas exclusivas de Naruto Academia e Neji cobrem pulo/dash. As demais formas combinam folhas direcionais com pose procedural onde ainda faltam quadros próprios.
+- `enemyRenderer` mantém corpos, contornos e avisos instanciados. A seleção de quadro é UV por instância. Projéteis inimigos usam sprites compartilhados, limite simultâneo e teste de colisão pelo segmento percorrido por quadro.
+- `gamabunta.ts` escolhe as quatro poses, emite óleo pela boca e inicia ignição no ponto-alvo. A animação e o impacto compartilham o mesmo relógio. Referência: [Fire Release: Toad Oil Flame Bullet](https://naruto.fandom.com/wiki/Fire_Release%3A_Toad_Oil_Flame_Bullet).
+- `techniqueMerge.ts` produz uma técnica a partir de duas receitas; as fusões e combinações são persistidas com os respectivos estados em `CampaignSave`. Combinação reutiliza as duas resoluções originais. Fusão combina naturezas e afixos.
+- O retrato Sábio usa os traços de Naruto, Hashirama, Jiraiya e Minato. Kabuto tem arte reservada para quando entrar no elenco. Orochimaru tem olhos serpentinos para a representação de senjutsu, seguindo a distinção canônica. [Sage Mode](https://naruto.fandom.com/wiki/Sage_Mode)
+- A seleção de herói/bioma não recria o cenário decorativo da preparação. O ponteiro é capturado pelo elemento estável da aplicação. A decisão atual fica em `GameCanvas` quando a ficha se sobrepõe ao pool.
+
+- `atlasEffects.ts` anima quatro quadros de Substituição e quatro da aura de Modo Sábio. A aura segue o jogador enquanto o setup está ativo. A prévia reutiliza as duas sequências.
+- `VillageEmblem` resolve nome original, abreviação e símbolo para seleção, suporte, missões e mapas. A chave portuguesa usada por `VILLAGE_COMBOS` permanece estável. [Símbolos da Narutopedia](https://naruto.fandom.com/wiki/Module%3AInfobox/icons)

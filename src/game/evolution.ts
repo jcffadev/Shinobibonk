@@ -33,6 +33,8 @@ import { BIJUU } from './bijuu.ts';
 const leafPortraits = ['ebisu', 'iruka', 'kushina'];
 export const ASUMA_ATLAS = '/assets/asuma-motion-v1.png';
 export function portraitRegion(id:string,level=1){
+ if(id==='sapos-sabios')return {path:'/assets/shinobis/sapos-sabios-v1.png',cols:1,rows:1,index:0};
+ if(id==='teuchi')return {path:'/assets/shinobis/teuchi-v1.png',cols:1,rows:1,index:0};
  if(id==='asuma')return {path:ASUMA_ATLAS,cols:4,rows:4,index:0};
  const leafIndex = leafPortraits.indexOf(id);
  if(leafIndex >= 0) return {path:'/assets/shinobi-folha-v3.png',cols:3,rows:1,index:leafIndex};

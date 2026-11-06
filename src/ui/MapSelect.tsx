@@ -1,3 +1,4 @@
+import { VillageEmblem, villageName } from './VillageEmblem';
 import { useEffect } from 'react';
 import { MAPS, MAP_BY_ID, DIFFICULTY_ORDER, type MapId } from '../game/maps';
 import { HERO_BY_ID, heroAffinity } from '../game/heroes';
@@ -36,12 +37,12 @@ export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, h
       const done = mapProgress()[m.id] ?? [];
       const open = isMapUnlocked(m.id), prev = MAP_BY_ID[MAP_ORDER[MAP_ORDER.indexOf(m.id) - 1] as MapId];
       return <button type="button" key={m.id} className={`${m.id === mapId ? 'active' : ''} ${open ? '' : 'locked'}`} title={open ? undefined : `Vença o Genin em ${prev?.name} para liberar`} style={{ ['--map' as string]: m.color }} onClick={() => onMap(m.id)}>
-        <span className="ms-tab-symbol">{m.symbol}</span><span><b>{m.name}</b><small>{MAP_ELEMENTS[m.id].join(' · ')}</small></span><em title="Dificuldades vencidas">{open ? done.length + '/4' : '🔒'}</em>
+        <span className="ms-tab-symbol"><VillageEmblem village={m.name}/></span><span><b>{villageName(m.name,true)}</b><small>{MAP_ELEMENTS[m.id].join(' · ')}</small></span><em title="Dificuldades vencidas">{open ? done.length + '/4' : '🔒'}</em>
       </button>;
     })}</nav>
     <section className={`ms-preview ms-preview-${mapId}`}>
       {!mapOpen && <div className="ms-locked-map">🔒 {map.name} bloqueada<small>Vença o Genin em {MAP_BY_ID[MAP_ORDER[MAP_ORDER.indexOf(mapId) - 1] as MapId]?.name} para liberar este mapa.</small></div>}
-      <div className="ms-region"><small>REGIÃO · {map.country.toUpperCase()}</small><h2>{map.name}</h2><div className="ms-tags">{MAP_ELEMENTS[mapId].map((el) => <i key={el}>{el}</i>)}</div><p>{map.description} Climas: {map.weathers.map((w) => w.name).join(' / ')}.</p></div>
+      <div className="ms-region"><small>REGIÃO · {map.country.toUpperCase()}</small><h2>{villageName(map.name)}</h2><div className="ms-tags">{MAP_ELEMENTS[mapId].map((el) => <i key={el}>{el}</i>)}</div><p>{map.description} Climas: {map.weathers.map((w) => w.name).join(' / ')}.</p></div>
       <button type="button" className="ms-hero" onClick={onChangeHero}><HeroPortrait id={heroId} /><span><small>Seu shinobi</small><b>{hero.name}</b><i>{heroAffinity(heroId)}</i></span><em>Trocar</em></button>
       {unlockHere.length > 0 && <details className="ms-unlocks"><summary>Missões de desbloqueio · {unlockHere.length}</summary><div>{unlockHere.filter(([, m]) => m.difficulty === mission).slice(0, 2).map(([id]) => <MissionCard key={id} id={id} compact />)}{unlockHere.filter(([, m]) => m.difficulty !== mission).length > 0 && <small>+ {unlockHere.filter(([, m]) => m.difficulty !== mission).length} em outras dificuldades</small>}</div></details>}
       <div className="ms-guardians"><small>GUARDIÕES · um por zona, invocado no altar</small><div>{map.zones.map((zone, i) => <div className="ms-zone" key={zone.name}><b>ZONA {i + 1} · {zone.name}</b><span>{zone.guardians.map((g) => <HeroPortrait key={g} id={g} />)}</span></div>)}</div></div>

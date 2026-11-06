@@ -201,3 +201,159 @@ Os efeitos usam a leitura visual de Ultimate Ninja STORM para técnicas como Ras
 O código do Claude já usa instanciamento para corpos, contornos e avisos dos inimigos. O teste automatizado agora registra uma amostra com 1.600 em movimento. A revisão de caminhada, ataque, pulo e dash por forma continua na fila conforme a ordem solicitada.
 
 A compilação, as regras e 37 verificações no navegador passaram. A amostra final registrou 6,77 FPS no Edge headless com SwiftShader durante 2,51 s e 1.600 inimigos em movimento. A medição com aceleração por GPU está pendente.
+
+## Rodada — jogabilidade, arte e planejamento
+
+**Pedidos anteriores nesta rodada**
+O usuário pediu HUD de escolhas e de habilidades mais legível, mapa rápido por Tab sem interromper o movimento, marcador direcional de kunai, ícone da bijū no portal, HP numérico de mega elites e chefes e escala de dano e de hordas próxima à referência. Também pediu trava do ponteiro, F9 com cursor e ações de corrida, ataque, pulo e dash para inimigos e ajudantes. O exemplo de escala foi um guardião perto de 990 M–1 B de HP após 18 min no Final Swarm e a meta de 5 M de abates.
+
+**Pedidos e complementos**
+
+> Ao clicar na barraca do Ichiraku, aparecer um personagem dele
+>
+> Colocar o Ichiraku na frente da barraca dele também, não esqueça.
+>
+> Não recarregar o mapa quando selecionar o personagem, ele tem que selecionar o mapa na tela de seleção e apenas isso.
+>
+> Colocar botão ver build/ficha do personal ao aparecer algum pool de seleção de itens, habilidades, pilulas, selamentos, eu vou direto pro P.
+>
+> Fazer o andar do personagem ficar mais fluido pressionando WASD...
+> Revisar física ao passar perto das estruturas e não ficar bloqueando/travando o personagem
+>
+> o naruto totem tem que ficar com posição de mãos e os clones dele tem que correr em direção ao alvo, não serem lançados estáticos.
+>
+> abaixar a % do drop de lamen para até 5%
+> no caso o item que dropa dos monstros, não o de recompensa final...
+>
+> Deixar mais smooth mexer a camera/rodar e o scroll
+>
+> Mouse ainda escapando da tela ao movimentar o mouse, tem que bloquear o mouse na janela do brownser/jogo
+> Só aparecer mouse quando der alttab/esc no jogo colocar um mouse personalizado, uma "kunaizinha"
+>
+> Preciso de rebalanceamento do HP dos monstros, diminuir um pouco a quantidade de genin, os mega elites/pokemons para capturar tem que aparecer com mais aleatoriedade, ser um RNG, mas tem que pelo menos aparecer de 4 a 6 ajudantes por zona para selar e uns 2 para selar para conta
+>
+> Exemplo de rebalanceamento os megas tem que ter cerca de 20mil de hp o primeiro e ir escalando com o jogo, nos minutos finais já temos que estar na casa de milhão de HP...
+> Mas, o scale do personagem tem que acompanhar os números
+>
+> Dash do naruto/pulo esta "bugado" estático, revise
+>
+> A sorte inicial esta influenciando demais...Este é um exemplo de um personagem no segundo 01 do pokebonk
+>
+> Estude o scale e veja o que consegue aprender que podemos utilizar também referente ao jogo, no nosso projeto
+>
+> Revise animaçoes de ataques de Neji, ja vou mandar você revisar todos novamente... provavelmente você esqueceu de alguns, revise pulos/dashs também...
+> Não esqueça de também implementar caso eles forem selados e virem ajudantes..
+>
+> Retire esse "clique para retomar controle da missão", após selecionar um upgrade/item/pilula/ajudante... não era para ter isto.
+> Melhore o hud de aparição de escolhas, deixe mais clean, bonitinho.
+>
+> Melhore a IA dos inimigos para chegar em mim com mais facilidade, coloque monstros normais jogando Shurikens, Kunais, Shurikens Huuma.
+> Esses ataques serão rangeds crie aleatoriedade
+> aleatoriedade de spawn de ranged e meeles
+>
+> Pergunta: quanto tempo de vídeo você consegue processar, ler e aprender para fazermos o scale?
+>
+> Passiva da Tenten, dá mais dano com habilidades normais/projéteis 1,5[x]%
+>
+> Retire esse negócio de clique para retomar, por pena...
+> Esta tirando a fluidez do jogo...
+>
+> para fazer a animação das habilidades, foque em que elemento ela é... se for fogo, busque fazer algo com chamas, bolas de fogo e siga o nome da habilidade também como base... siga com essa ideia para todos os elementos...
+
+**Resposta**
+Os controles de combate usam trava do ponteiro, movimento normalizado e câmera com rotação, inclinação e zoom interpolados. Teuchi está diante do Ichiraku e aparece no atendimento. O botão da ficha mantém as mesmas cartas quando se volta. Tab permite andar com mapa rápido, e F9 mostra a kunai do cursor. A escolha final devolve o controle sem tela de retomada. O mapa de preparação preserva sua cena ao trocar de personagem. Lamen de cura tem teto de 5%, com a recompensa final separada.
+
+O clipe de dois minutos permitiu estudar a abertura por marcos. O Gastly chega ao nível 4 perto de um minuto e ao nível 6 com 63 abates em 1:26, com o golpe inicial perto de 38. Vídeos mais longos podem ser estudados por quadros em marcos de nível, abates, dano e luta de guardião. A escala implementada está em `docs/04-ITENS-HABILIDADES-ECONOMIA.md`. A meta de 5 milhões ainda exige medir reposição e desempenho sustentado.
+
+Foram integradas folhas de ação de Naruto Academia e das duas formas de Neji. Aliados correm, saltam, esquivam e alternam ataques liberados. O Totem mantém o selo e os clones correm. Inimigos comuns alternam ataque, corrida, salto e esquiva, com sorteio corpo a corpo/à distância e três armas. A passiva de Tenten aplica ×1,5 uma vez a técnicas neutras ou de projétil. Quadros próprios de ataque, pulo e dash para todas as formas restantes seguem em revisão.
+
+**Pedidos sobre preparação e técnicas**
+
+> Ah, esqueci o negócio de não aprender habilidade tem que unico por personagem que você escolhe... o ideal é que tenha uma página assim:
+>
+> Se possível fundir habilidades, criar um npc no jogo que serão os 2 sapos do monte, coloque-os interativos no jogo, lá terá uma mecânica de fundir/combinar habilidades 2 em 1.
+> Fundir: pega os status dos buffs das 2 habilidades e cria uma nova habilidade totalmente nova, juntando 2 elementos, ela será nv1 e vai poder upa de novo, ganhando mais dano ainda e ainda a habilidade por si só já ganha 2x[%] dano
+> Combinar: Combinar 2 habilidades que você tem, junta 2 habilidades em 1 espaço de habilidade só, aparece as duas juntas, elas ganham + 1,5[x]% de dano ou seja.
+> Faça a arte dos sapos sábios em cima do Gamakichi o sapo maior, aparecer também ao clicar no Npc a imagem deles...
+> Todos os npcs que tem interação de abrir algum pop-up para decidir, colocar eles para aparecem ao lado do pool do escolhas.
+>
+> Na habilidade de Naruto, Invocação de Gamabunta: [Estilo Fogo: Bomba de Chamas do Óleo de Sapo | Wiki Naruto | Fandom](https://naruto.fandom.com/pt-br/wiki/Estilo_Fogo:_Bomba_de_Chamas_do_%C3%93leo_de_Sapo)
+> Fazer ele ao aprender essa habilidade, aparecer o Gamabunta
+>
+> Cuspir fogo, me mostre como você esta criando essa animação, precisa ser fluída.
+> Tem a questão de cuspir fogo e tudo mais...
+>
+> o clone das sombras que o naruto lança, enquanto jogador, não está correndo em direção ao inimigo, deve correr dar um hit e explodir, seguindo o que a habilidade deveria fazer como dano... seja dano em área, dano em v, sei la como você estruturou essa habilidade...
+>
+> Não deve ser possível deixar pílulas em casa, remova isso do planejamento inicial.
+>
+> No planejamento de itens, não precisa colocar deixar em casa... já temos a parte de plano pra isso, o "planejar" dos itens deve ser "Colocar na bolsa ninja"
+>
+> Essa animação do ataque do gamabunta está legal, mas não deveria sair fogo da boca dele?
+> De preferência óleo no começo da animação e depois pegar fogo perto do inimigo?
+> Manter a ESPADA e o cachimbo na boca dele para ficar fiel a animação.
+> Gamabunta tem uma espada, não um pau/cajado... e usa um cachimbo.
+>
+> Lembre-se de usar os sites que falei como referência para pegar as referências.
+>
+> Já arrumou a animação dos personagens e colocou os monstros ranged?
+> Aumente também a frequência que os mega elites/bosses usam habilidades e aumente as áreas de impacto delas...
+>
+> No botão Reset, escreva Reset de conta e ao clicar explique que a conta toda será resetada do 0, igual ao início do jogo.
+>
+> Revise o resto do elenco já, faça os ajudantes correrem e jogarem as habilidades... depois vá fazendo o restante, me mostre a fila agora.
+>
+> Eu te mandei um print do planejamento de missão do pokebonk... a nossa não esta igual ainda... precisa ser clean daquela forma a nossa também, ser possível favoritar habilidades, até porque favoritar e melhorar habilidades ja é um upgrade que temos, só ser possível não levar 60% das habilidades que o ninja pode aprender em missão, isso ser escalonável conforme vamos liberando novos shinobis e o jogo ir liberando novas habilidades que os shinobis podem aprender...
+> Se no inicio com o Time7 liberado ele pode aprender 10, no jogo ele levaria 4, bloquearia 6.
+> Se no late game com todos os personagens ele pode aprender 100 habilidades, ele vai poder levar 40, bloquear 60... entendeu a mecânica?
+>
+> Aparecer "Planejado pra Missão" para habilidades/pilulas/itens que colocarmos no plano de missão
+>
+> Deixar o botão permitir aprender acesso... para o jogador saber que para habilitar a habilidade, só clicar ali e ela voltará ao plano de missão, pelo menos no pool.
+>
+> Você fez algo que bugou tudo, corrija
+>
+> Técnica de substituição o personagem tem que arremessar um clone no inimigo e ao acertar/entrar na área o personagem vira um Toco de madeira e explode dando o dano e os status da habilidade.
+>
+> colocar os ícones das habilidades, colocar a lista de status iniciais ao lado do personaagem na frente do nome no espaço vazio, subir os botões Ataques shinobi / Planejar Missão
+>
+> Mostrar o que melhora a ultimate do personagem, ela será afetada por dano total em todos os personagens e combara com todas as melhorias de dano do jogo
+> Unica restrição é se ela for projétil ou não, o restante tudo melhora a ultimate dos personagens.
+>
+> Referência para o ícone de habilidade Modo Sábio, para o Naruto aparecer a fotinha do Naruto com esse ícone, para o Hashirama, colocar o hashirama, TODOS os personagens que tem modo sábio da Obra e entraram para o nosso jogo tem que ser assim... Orochimaru, Naruto, Hashirama, Kabuto... entendeu?
+> Sempre pegar a foto do personal de refêrencia, criar o ícone ele com os olhos do personagem em modo sábio, tem muita referência de pesquisa para você fazer esse ícone.
+> O mesmo para o ataque do Gamabunta em naruto, fazer o iconezinho com o gamebunta.
+>
+> Ao clicar em planejar que seria nosso "favoritar" e deveria ser planejar para missão as habilidades, mas ao clicar na estrelinha, se tivermos o buff da conta "Treinamento com Jiraya", temos 4 habilidades que conseguirmos habilitar treinamento do Jiraya e aumentar 15[x]% o dano dessas habilidades
+>
+> planejar para missão, já é um jeito de favoritar, ao fazer isso, aparecer para ele "treinar"
+> Ai a habiulidade ficará planejada na missão e ainda vai aparecer no jogo "Planejado para Missão - Treinada" Acima aparecer +15%
+>
+> Após fazer isso siga a fila, bigbrain, vou deixar você trabalhar, isso se você ja revisou a animação de todos os personagens que faltaram, para ataques/dashs/pulos isso incluindo suas evoluções
+>
+> Aparecer os status base de quanto cada habilidade pode dar status, critico, nesse espaço vazio mostrar como ficará ingame a animaçãao da habilidade e o efeito acertando uns monstros para o usuário ver como funciona a habilidade.
+> Fazer isso para todas as habilidades
+>
+> Porque os clones não estão correndo na direção do inimigo?
+> ele está indo a imagem estática...
+> Nunca deve ocorrer isso, sempre coloque as animações que planejamos
+>
+> Cadê a vila fazendo parte para fazer parte do link dos ajudantes dos personagens?
+> E tem que aparecer o nome original das vilas, Konoha por exemplo... e o símbolo de konoha... fazer isso pra todos
+>
+> O "toco de árvore" ficou ridículo na técnica de substituição
+>
+> Em modo sábio, fazer uma "aura" em volta do personagem para mostrar ele enquanto estiver com o buff ativo... o efeito ta ridículo, use o mesmo conceito do atlas para fazer essas animaçoes, não sei porque você saiu dessa linha
+
+**Resposta**
+O planejamento separa uma lista com rolagem do painel de detalhes, com ícones, atributos base e prévia em alvos de treino. As linhas têm altura própria. Bloqueio é por personagem, limitado a 60% das técnicas aprendíveis, e “Permitir aprender” está destacado. Pílulas ficam disponíveis, itens planejados usam “Colocar na bolsa ninja” e as exclusões ficam na Bolsa da Missão. Após planejar uma técnica, a estrela permite treiná-la quando a passiva dá uma vaga. Até quatro técnicas recebem +15% de dano. A carta mostra o bônus e “Planejado para Missão · Treinada”. A seleção de personagem traz atributos e ações na parte superior, os ícones do kit e a explicação da Ultimate. O reset local exige confirmação.
+
+Fukasaku e Shima sobre Gamakichi abrem a oficina. A fusão cria um ataque de área no nível 1, combina afixos e elementos e tem ×2 sobre a média de poder. A combinação usa um espaço para duas técnicas, com ×1,5 por ataque. As receitas são salvas na missão. Os NPCs mostram arte junto às escolhas. A Ultimate aplica as melhorias de dano, e os bônus de projétil se aplicam a Naruto, Tenten e Minato.
+
+Gamabunta tem quatro poses com tantō e cachimbo. O óleo sai da boca e o fogo nasce próximo ao alvo. O Kage Bunshin acompanha o inimigo, acerta uma vez e se desfaz. A Substituição transforma o clone em toco com fumaça em quadros de atlas. A prévia do clone usa o mesmo controlador de corrida. O Modo Sábio tem retrato por personagem e aura de atlas enquanto o buff está ativo. A representação de Orochimaru segue a distinção entre senjutsu e Modo Sábio, e o ícone de Kabuto fica reservado para sua entrada no elenco.
+
+As aldeias têm selo de vínculo com nome original e emblema, da seleção ao mapa e aos cartões de suporte. A contagem dos vínculos continua baseada nos ajudantes selados. A fila restante está em `docs/13-PENDENCIAS-PARA-CONTINUAR.md`.
+
+> o que você esta fazendo agora? como esta sua fila?
+
+A validação final no Edge passou em 47 verificações, incluindo aura ativa, corrida dos clones na prévia, treinamento e retomada do ponteiro. A fila restante é a revisão visual de cada forma sem ações próprias, seguida por escala de missões longas e testes com GPU real.

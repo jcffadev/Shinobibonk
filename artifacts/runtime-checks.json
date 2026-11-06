@@ -1,15 +1,17 @@
 {
-  "date": "2026-11-06T19:39:35.361Z",
+  "date": "2026-11-06T21:41:39.732Z",
   "checks": [
     "Bolsa da Missão combina raridade, busca e aba de estado",
+    "Selecionar shinobi preserva a cena de fundo",
     "24 shinobis selecionáveis",
     "Filtro Areia: Gaara / Temari / Kankuro",
     "Relógio começa sem guardião antecipado",
     "Textura PNG do personagem carregada",
     "Movimento WASD",
     "Evoluções do Naruto carregam a folha da forma atual",
-    "Naruto Clássico usa quadros de lançamento com a roupa da forma",
+    "Naruto Clássico usa quadros de lançamento e Gamabunta incendeia o óleo",
     "Rasengan bloqueado nos níveis iniciais",
+    "Ficha por cima do level-up retorna às mesmas cartas",
     "Atualizar, banir e pular debitam usos; banimento exclui futuras ofertas",
     "Afixos sorteados aplicados à habilidade escolhida",
     "Naruto evolui nos níveis 10 / 25 / 50 com troca de forma",
@@ -25,9 +27,10 @@
     "Mapa M recebe marcação por clique",
     "Portal de saída conclui a missão com vitória",
     "Vitória credita Lamens uma única vez e mostra no resumo",
-    "Compra administrativa, filtros de crítico e reembolso do reset",
+    "Compra administrativa, filtros de crítico e confirmação do reset de conta",
     "Hashirama usa a folha direcional da forma atual, incluindo Modo Sábio",
     "Hashirama recebe exatamente +20% de dano após infusão Sábia",
+    "Aura de atlas aparece durante o buff do Modo Sábio",
     "Genjutsu aplica Dormir em um inimigo real",
     "Asuma carrega seu atlas e usa caminhada, pulo e dash",
     "Movimento do mouse inclina a câmera sem botão até perto do horizonte",
@@ -37,6 +40,13 @@
     "Desistência exige dois cliques na pausa e resumo volta ao menu",
     "Sasuke inicial usa quadros de ataque, pulo e dash; cursor e fundo do dock estão ocultos",
     "Chōmei e Gyūki usam as novas texturas na cena",
+    "WASD funciona com Tab pressionado e o mapa fecha ao soltar",
+    "O ponteiro fica travado e F9 libera a kunai",
+    "Teuchi aparece diante da barraca e no atendimento por E",
+    "Inimigo normal sorteado como ranged dispara arma visível",
+    "Naruto Totem mantém selo de mãos e clones correm com quadros próprios",
+    "Oficina dos Sapos Sábios troca duas técnicas por uma fusão de nível 1",
+    "Prévia anima a corrida do clone, botão devolve técnica ao pool, planejamento habilita treino e ponteiro volta após escolha",
     "Sem exceções JavaScript ou assets 404"
   ],
   "errors": [],
@@ -44,15 +54,15 @@
   "performanceSample": {
     "renderer": "Edge headless · ANGLE/SwiftShader",
     "enemies": 1600,
-    "seconds": 2.51070000000298,
-    "fps": 6.771020034245359,
-    "cpuUpdateMs": 1.1647058821776335,
-    "cpuRenderMs": 58.02352941211532,
-    "drawCalls": 101,
+    "seconds": 2.5824000000059604,
+    "fps": 5.421313506802853,
+    "cpuUpdateMs": 8.507142857781478,
+    "cpuRenderMs": 30.557142855865614,
+    "drawCalls": 186,
     "instances": {
       "bodies": 1600,
-      "outlines": 135,
-      "markers": 26
+      "outlines": 138,
+      "markers": 60
     }
   }
 }

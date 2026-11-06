@@ -14,9 +14,9 @@
 
 | Tipo | Contorno | Captura | Força (base Genin, provisória) | Recompensa |
 |---|---|---|---|---|
-| Monstro normal | — | não | HP 22 | EXP 8, Ryu 3 (72%), Chakra 9 (28%), lamen 15% |
+| Monstro normal | — | não | HP 22 | EXP 8, Ryu 3 (72%), Chakra 9 (28%), lamen até 5% |
 | Elite amarelo (8% dos spawns) | amarelo | não | HP 95, dano ×1,6, bloqueia 30% do dano, sem técnicas | Ryu e Chakra garantidos; EXP/Ryu/Chakra ×3 × peso do HP × √tier da missão |
-| Mega Elite (a cada 45–70 s, até 9) | vermelho | sim, como ajudante da run (NÃO desbloqueia na conta) | HP 420, dano ×2,6, bloqueia 55%, sem técnicas | saque ×9 × peso do HP × √tier; 3 moedas e 2 orbes de chakra |
+| Mega Elite (4–6 horários sorteados por zona) | vermelho | sim, como ajudante da run (NÃO desbloqueia na conta) | HP inicial ~20 mil no Genin, dobra após intervalos de 80 s, dano ×2,6 e defesa progressiva | saque ×9 × peso do HP × √tier; 3 moedas e 2 orbes de chakra |
 | Shinobi para selar (1º encontro especial da run, se houver shinobi bloqueado) | ciano | sim, 1 tentativa: E sela, G deixa escapar | HP 180, dano ×1,5, bloqueia 25% | só DESBLOQUEIA na conta (sem buff, EXP ou drops) |
 | Guardião / Naruto Totem | — | regras próprias | guardião mantém técnicas de chefe | ver docs/01 |
 
@@ -110,3 +110,7 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 
 ## Aliados e sinergias
 Cada aliado oferece buff exclusivo e habilidade ofensiva de dano moderado escalado com nível do jogador. Afinidade do protagonista; bônus ocultos para 3/4/5 aliados da mesma vila e equipes canônicas (ex.: Time 7); composições mistas recebem bônus reduzido; notificação na tela. Percentuais finais pendentes. Barras de HP para mega-elites e chefes, não para elites comuns. Futuras skins raras sem vantagem obrigatória.
+
+### Estado atual dos encontros e suportes
+
+Cada zona sorteia 4–6 horários de Mega Elite ao longo de seus 10 minutos. Avançar antes, alcançar o teto ou terminar a missão pode reduzir os encontros vistos. Há até dois encontros de conta por zona quando existem candidatos elegíveis. As exigências continuam em `unlockMissions.ts`. Mega elites usam técnicas, têm barra de HP numérica e, quando selados, ocupam uma vaga de suporte. Ajudantes usam o mesmo controlador de animação do jogador, acompanham movimento, salto e dash e alternam técnicas de ataque liberadas no nível atual. Quadros dedicados são usados quando existem. A revisão artística individual das demais formas está pendente.

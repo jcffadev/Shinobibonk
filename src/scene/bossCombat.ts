@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { compactNumber } from '../game/format';
 import { BIJUU_BY_ID, BIJUU_BOMB, beastPhase } from '../game/bijuu';
 import { HERO_BY_ID, ultimateBase, type Technique } from '../game/heroes';
 import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techniqueEffects';
@@ -12,8 +13,8 @@ import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techni
  */
 export const BOSS_RULES = {
   /** Intervalo entre técnicas por zona (s); guardiões usam 80% disso. */
-  cooldownByZone: [4.6, 3.8, 3.0],
-  windup: 1.1,
+  cooldownByZone: [3.7, 2.9, 2.3],
+  windup: 1.05,
   ultimateWindup: 1.7,
   /** Dano base por técnica, multiplicado pelo poder da técnica, pela ameaça e pela armadura do jogador. */
   baseDamage: 18,
@@ -24,7 +25,7 @@ export const BOSS_RULES = {
 
 type CastShape = 'circle' | 'cone' | 'line' | 'lineV' | 'ring';
 type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir: THREE.Vector3; range: number; width: number; windup: number; total: number; power: number; marker: THREE.Group; ultimate: boolean };
-export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; phase?:number; castCount:number };
+export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number };
 export type BossHost = { sprite: THREE.Sprite; hp: number; heroId?: string; guardian?: boolean; boss?: BossState };
 
 export type BossContext = {
@@ -51,6 +52,9 @@ function drawBar(state: BossState, ratio: number) {
   ctx.fillStyle = '#0b0f1ce6'; ctx.fillRect(8, 34, w - 16, 22);
   ctx.fillStyle = state.guardian ? '#ff7a3d' : '#b46cff'; ctx.fillRect(11, 37, Math.max(0, (w - 22) * ratio), 16);
   ctx.strokeStyle = '#ffffffaa'; ctx.lineWidth = 2; ctx.strokeRect(9, 35, w - 18, 20);
+  ctx.font='bold 14px sans-serif';ctx.lineWidth=3;ctx.strokeStyle='#111729';ctx.fillStyle='#fff';
+  const hp=state.hpText??compactNumber(state.maxHp)+' / '+compactNumber(state.maxHp);
+  ctx.strokeText(hp,w/2,50);ctx.fillText(hp,w/2,50);
   (state.bar.material.map as THREE.CanvasTexture).needsUpdate = true;
 }
 
@@ -112,6 +116,8 @@ export function createBossCombat(ctx: BossContext) {
     }
     else return;
     // Círculo de técnica em Área cai sobre a posição atual do jogador; os demais saem do chefe.
+    range*=state.phase?1.24:state.guardian?1.22:1.15;
+    width*=state.phase?1.28:1.2;
     const center = (shape === 'circle' && !ultimate && technique.shape === 'Área') ? new THREE.Vector3(ctx.player.position.x, 0, ctx.player.position.z) : new THREE.Vector3(origin.x, 0, origin.z);
     const marker = new THREE.Group();
     const y = ctx.height(center.x, center.z) + .22;
@@ -173,9 +179,12 @@ export function createBossCombat(ctx: BossContext) {
       if (state.cast.windup <= 0) fire(host, state);
     } else if (canAct) {
       state.cooldown -= dt;
-      if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.7,1.65,.75][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
+      if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.2,1.35,.68][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
     }
-    if (Math.abs(ratio - state.lastRatio) > .004 || state.cast) { state.lastRatio = ratio; drawBar(state, ratio); }
+    const hpText=compactNumber(Math.ceil(host.hp))+' / '+compactNumber(state.maxHp);
+    if (Math.abs(ratio - state.lastRatio) > .004 || state.hpText!==hpText || state.cast) {
+      state.lastRatio = ratio;state.hpText=hpText;drawBar(state, ratio);
+    }
     return Boolean(state.cast);
   }
 

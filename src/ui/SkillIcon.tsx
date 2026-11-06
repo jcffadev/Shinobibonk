@@ -1,7 +1,31 @@
 import { HEROES } from '../game/heroes';
-// Ícones vetoriais próprios, mantidos no código e usados em HUD, biblioteca e cartas.
+const techniques = new Map(HEROES.flatMap(h=>h.techniques).map(t=>[t.name,t]));
+const sageFaces:Record<string,number>={naruto:0,hashirama:1,jiraiya:2,minato:3,kabuto:4,orochimaru:5};
+const namedIcons: Record<string,number> = {
+  'Shuriken':0,'Kunai Tática':1,'Kunai Hiraishin':1,'Kunai Explosiva':1,
+  'Rasengan':2,'Kage Bunshin':3,'Rasenshuriken Supremo':4,
+  'Técnica de Substituição':6,'Bomba de Fumaça':7,'Dragão de Água':9,
+  'Chidori':10,'Raikiri':10,'Kirin':10,'Palma de Ar':16,'Kaiten':16,'Sessenta e Quatro Palmas':16,
+  'Punho da Folha':17,'Punho Gentil':16,'Chute Ascendente':17,'Furacão da Folha':18,
+  'Lótus Primária':17,'Tigre do Meio-Dia':17,'Punhos dos Leões Gêmeos':16,
+  'Agulhas de Água':19,'Byakugou':21,'Força dos Cem':21,'Modo Sábio':22,
+  'Shinra Tensei':23,'Chibaku Tensei':14,'Correntes de Selamento':24,
+  'Prisão de Correntes da Kurama':24,'Caixão de Areia':12,'Funeral do Deserto':12,
+  'Mil Mãos de Madeira':13,'Meteorito':14,'Kamui':15,'Oito Portões':17,
+};
+const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:14,Sombra:15,Sábio:22,Neutro:18};
+// Arte do atlas por técnica ou família. O ícone vetorial cobre técnicas sem célula dedicada.
 export function SkillIcon({heroId,index=0,name}:{heroId:string;index?:number;name:string}){
-  const technique=HEROES.flatMap(h=>h.techniques).find(t=>t.name===name);
+  const merged=name.startsWith('Fusão · ')?name.slice(8).split(' / '):name.split(' + ');
+  if(merged.length===2)return <span className="skill-art merged-skill-art" role="img" aria-label={name}><SkillIcon heroId={heroId} name={merged[0]}/><SkillIcon heroId={heroId} name={merged[1]}/></span>;
+  const sage=sageFaces[heroId];
+  if(sage!==undefined&&(name==='Modo Sábio'||name==='Mil Mãos de Madeira'&&heroId==='hashirama'||name.includes('Senjutsu')&&heroId==='orochimaru'))return <span className="skill-art sage-skill-art" role="img" aria-label={name} style={{backgroundPosition:(sage%3)*50+'% '+Math.floor(sage/3)*100+'%'}}/>;
+  if(name.includes('Gamabunta')||heroId==='naruto'&&name==='Invocação do Sapo')return <span className="skill-art gamabunta-skill-art" role="img" aria-label={name}/>;
+  const technique=techniques.get(name);
+  if(name.startsWith('Espaço ')) return <span className="skill-art empty-skill-art" aria-label={name}>+</span>;
+  const cell=namedIcons[name]??(name.includes('Sapo')||name.includes('Gamabunta')?undefined:technique?elementIcon[technique.element]
+    :/Katon/.test(name)?8:/Suiton/.test(name)?5:/Raiton/.test(name)?10:/Doton/.test(name)?14:/Fuuton/.test(name)?11:undefined);
+  if(cell!==undefined)return <span className="skill-art atlas-skill-art" role="img" aria-label={name} style={{backgroundPosition:`${cell%5*25}% ${Math.floor(cell/5)*25}%`}}/>;
   const color=technique?.color??(heroId==='gaara'?'#e4be77':heroId==='hashirama'?'#8bdd83':heroId==='madara'?'#ff845b':'#64d8ff');
   const glyph=name.includes('Rasengan')?'spiral':name.includes('Sapo')?'toad':name.includes('Bunshin')?'clone':technique?({Madeira:'roots',Areia:technique.shape==='Área'?'coffin':'spikes',Fogo:'fire',Sombra:'armor',Sábio:'forest',Água:'wave',Vento:'wave',Raio:'spikes',Terra:'meteor',Neutro:technique.shape==='Corpo a corpo'?'wood':'star'}[technique.element]):heroId==='hashirama'?['wood','spikes','roots','forest','forest'][Math.min(index,4)]:heroId==='gaara'?['spikes','coffin','wave','spikes','wave'][Math.min(index,4)]:heroId==='madara'?['star','fire','armor','fire','meteor'][Math.min(index,4)]:['star','spiral','clone','wave','spiral'][Math.min(index,4)];
   return <svg className="skill-art" viewBox="0 0 48 48" role="img" aria-label={name}><rect x="2" y="2" width="44" height="44" rx="10" fill="#172038" stroke={color} strokeWidth="2"/><g fill={color} stroke="#f2f5e7" strokeWidth="1" strokeLinejoin="round">

@@ -1,3 +1,4 @@
+import { VillageEmblem } from './VillageEmblem';
 import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
 import { MAP_BY_ID } from '../game/maps';
 import { HERO_BY_ID } from '../game/heroes';
@@ -22,7 +23,7 @@ export function MissionCard({ id, compact = false, anonymous = false }: { id: st
   ];
   const ready = missing.length === 0 && mapOk && diffOk;
   return <div className={`mc ${compact ? 'compact' : ''} ${m.legendary ? 'legendary' : ''}`} style={{ ['--map' as string]: map.color }}>
-    <header><span className="mc-symbol">{map.symbol}</span><div><small>{m.legendary ? 'MISSÃO LENDÁRIA' : 'MISSÃO DE DESBLOQUEIO'}</small><b>{anonymous?'Liberado com missão':m.title}</b></div><em className={ready ? 'ready' : ''}>{ready ? 'Pronta' : '🔒'}</em></header>
+    <header><span className="mc-symbol"><VillageEmblem village={map.name}/></span><div><small>{m.legendary ? 'MISSÃO LENDÁRIA' : 'MISSÃO DE DESBLOQUEIO'}</small><b>{anonymous?'Liberado com missão':m.title}</b></div><em className={ready ? 'ready' : ''}>{ready ? 'Pronta' : '🔒'}</em></header>
     <div className="mc-where"><i>{map.name}</i><i>{m.difficulty}</i><i>⚔ {m.kills} abates</i><i>⏱ {m.minute} min</i></div>
     {!compact && !anonymous && <p>{m.story}</p>}
     <ul>{steps.map((s, i) => <li key={i} className={s.ok ? 'ok' : ''}>{s.portrait ? <span className="mc-portrait"><HeroPortrait id={s.portrait} /></span> : <span className="mc-dot">{s.ok ? '✓' : '•'}</span>}{s.text}{s.portrait && <strong>{s.ok ? '✓' : '✗'}</strong>}</li>)}</ul>

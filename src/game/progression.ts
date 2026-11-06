@@ -12,6 +12,17 @@ export type Stats={sage:number;maxHp:number;damage:number;armor:number;moveSpeed
   /** Soma bruta de todos os bônus (itens, pílulas, buffs da run); a simulação lê daqui as mecânicas de item (elementos, procs, roubo de vida...). */
   extra:Bonuses};
 export const HERO_BASE=Object.fromEntries(HEROES.map(h=>[h.id,h.base]));
+export function heroDamageScale(level:number) {
+  const levels=Math.max(0,level-1);
+  return (1+levels*.03)*(1+levels/75)**3;
+}
+export function effectiveLootLuck(luck:number, elapsed:number) {
+  return luck*(.2+.8*Math.min(1,Math.max(0,elapsed)/150));
+}
+export function xpToLevelUp(level:number) {
+  const levels=Math.max(0,level-1);
+  return level<=1?30:18+6*levels+.08*levels**2/(1+levels/250);
+}
 export function calculateStats(heroId:string,level:number,items:Record<string,number>={},pills:Record<string,number>={},bonusHp=0,permanent:Record<string,number>={},runBuffs:Bonuses={},powerlevel:Powerlevel={},pillQuality:Record<string,number>={}):Stats {
   const base=HERO_BASE[heroId]??HERO_BASE.naruto,n=Math.max(0,level-1),b:Bonuses={...HERO_BY_ID[heroId]?.bonuses};
   for(const [key,value] of Object.entries(runBuffs)){const k=key as keyof Bonuses;b[k]=(b[k]||0)+value;}
@@ -28,7 +39,7 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
   const armorByLevel=base.armor*(1+n*.01)+n*.25;
   return applyPowerlevel({
     sage:add('sage'),maxHp:Math.round((baseHp*(1+n*.03+evolutions*.25)+add('health')+bonusHp+p('Resistência')*8)*Math.max(.1,1+add('healthPct'))),
-    damage:base.damage*(1+n*.03)*(1+add('damage')+p('Treinamento')*.04)*(heroId==='gaara'?1+(armorByLevel+add('defense')+p('Couraça')*2)*.01:1),
+    damage:base.damage*heroDamageScale(level)*(1+add('damage')+p('Treinamento')*.04)*(heroId==='gaara'?1+(armorByLevel+add('defense')+p('Couraça')*2)*.01:1),
     armor:armorByLevel+add('defense')+p('Couraça')*2,
     crit:Math.max(0,base.crit+n*.0015+add('crit')+p('Precisão')*.01),critDamage:2.5+add('critDamage'),
     evasion:Math.min(.6,add('dodge')),regen:(base.regen+n*.04+add('regen'))*Math.max(0,1+add('regenMult')),luck:Math.floor(n/3)+add('luck')+p('Fortuna')*2,
@@ -40,7 +51,6 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
 }
 /** Escala das missões sobre a base Genin (o que é salvo no debug vale como Genin e é multiplicado por isto). */
 export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6};
-/** Crescimento por nível do shinobi é LINEAR (+3% dano/HP por nível): o nível passa de 1000 (referência PokéBonk); o dano massivo vem de técnicas, projéteis, críticos e itens. */
 /**
  * Escala dos inimigos com o tempo TOTAL da run (não reseta por zona). Valores provisórios; o debug multiplica por cima.
  * Revisão 06/11/2026 (pedido do usuário: "8 min e só 60 bichos", "HP/dano baixíssimos"):
@@ -49,7 +59,7 @@ export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.
  * - Teto da horda = (capBase + capLinear×min + capQuad×min²) × (0,85 + tier×0,15), até maxEnemies (1600 no Genin aos 10 min)
  * - Spawns por segundo = (spawnBase + spawnPerMinute×min) × √tier, até maxSpawnPerSecond (o jogo repõe em lote, sem 1-por-quadro)
  */
-export const ENEMY_SCALING={hpLinear:.3,hpPerMinute:1.15,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.015,maxArmor:.6};
+export const ENEMY_SCALING={hpLinear:.3,hpPerMinute:1.17,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.015,maxArmor:.6};
 /**
  * FINAL SWARM: quando o relógio da zona zera, o jogo NÃO acaba; conta o tempo sobrevivido e a dificuldade triplica na hora
  * (HP, dano, defesa e quantidade/spawn) e cresce growthPerMinute a cada minuto sobrevivido (além da escala normal por tempo).
@@ -60,11 +70,12 @@ export const FINAL_SWARM={multiplier:3,growthPerMinute:.25,maxArmor:.85};
 export function finalSwarmFactor(overtimeSeconds:number){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60):1;}
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
   const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds);
-  const spawnPerSecond=Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier))*swarm;
+  const earlyGenin=rank==='Genin'?.66+.34*Math.min(1,minutes/2.5):1;
+  const spawnPerSecond=earlyGenin*Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier))*swarm;
   return {hp:tier*(1+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*curse*swarm,damage:tier*(1+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,
     spawnPerSecond,spawnInterval:1/spawnPerSecond,
-    cap:Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*swarm)),
+    cap:Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*swarm*earlyGenin)),
     armor:swarm>1?Math.min(FINAL_SWARM.maxArmor,minutes*S.armorPerMinute*swarm):Math.min(S.maxArmor,minutes*S.armorPerMinute),swarm};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}

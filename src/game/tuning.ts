@@ -58,7 +58,7 @@ export const TUNING_FIELDS: { key: TuningKey; group: TuningGroup; label: string;
   { key: 'chakraDrop', group: 'Drops e mapa', label: 'Chance de drop de Chakra (base 28%)', min: 0, max: 3.5, step: 0.05 },
   { key: 'pillDrop', group: 'Drops e mapa', label: 'Chance de drop de pílula (base 1,5%)', min: 0, max: 30, step: 0.1 },
   { key: 'itemDrop', group: 'Drops e mapa', label: 'Drop de item por abate (DESATIVADO: itens só por kunai/shuriken/eventos)', min: 0, max: 30, step: 0.1 },
-  { key: 'ramenDrop', group: 'Drops e mapa', label: 'Chance de lamen de cura (base 15%)', min: 0, max: 6, step: 0.05 },
+  { key: 'ramenDrop', group: 'Drops e mapa', label: 'Chance de lamen de cura (teto de 5%)', min: 0, max: 1, step: 0.05 },
   { key: 'ramenHeal', group: 'Drops e mapa', label: 'Cura do lamen (base 35% do HP)', min: 0, max: 2.8, step: 0.05 },
   { key: 'mapPickups', group: 'Drops e mapa', label: 'Kunais/shurikens/Ryu no chão (início da run)', min: 0, max: 6, step: 0.05 },
   { key: 'kunaiPrice', group: 'Drops e mapa', label: 'Preço para abrir kunai/shuriken', min: 0, max: 5, step: 0.05 },

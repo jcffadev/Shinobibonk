@@ -48,7 +48,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Prévia da cena a partir do menu.
 - **Run**:
   - Contagem regressiva de 10:00 e vitória ao chegar a 0:00. Derrota ao zerar o HP.
-  - Três zonas de 200 s cada. Um guardião por zona: o jogador o invoca quando quiser no Selo do guardião (mais HP quanto mais tarde) ou ele chega sozinho aos 160 s da zona. O clima é sorteado a cada zona.
+  - Três zonas com 10 min de relógio cada. O jogador invoca o guardião no Selo do Guardião. Ele fica mais resistente conforme o tempo. O clima é sorteado a cada zona.
   - A dificuldade escala por rank da missão (Genin–Kage) e por tempo.
   - Inimigos telegrafam ataques com um marcador vermelho que pode ser evitado. Há armadura e evasão.
 - **Técnicas**:
@@ -69,7 +69,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Recarga passiva de 55 s, ajustada pela velocidade de recarga.
   - O orbe azul de chakra dá +9% de carga.
   - Tecla Y ou clique no selo AUTO do botão R ligam e desligam o uso automático.
-- **Drops** (sprites próprios em `src/scene/dropSprites.ts`): XP = essência roxa (8 comum, 25 elite, 100 mega elite/guardião, tamanho cresce com o valor); carga da Ultimate = orbe azul de chakra; Ryu = moeda dourada com 両; tigela de lamen (15% por abate) cura 35% do HP; pílula = cápsula rosa; item = pergaminho laranja.
+- **Drops** (sprites próprios em `src/scene/dropSprites.ts`): XP = essência roxa (8 comum, 25 elite, 100 mega elite/guardião, tamanho cresce com o valor); carga da Ultimate = orbe azul de chakra; Ryu = moeda dourada com 両; tigela de lamen (até 5% por abate) cura 35% do HP; pílula = cápsula rosa; item = pergaminho laranja.
 - **Eventos**:
   - Plano do Shikamaru: até 3 vezes por zona; cada vez dá +1 kunai grátis quando o guardião é derrotado, sem penalidade.
   - Altar de desafio: horda de 6.
@@ -168,3 +168,9 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - [Economia, RNG e eventos](09-PROGRESSAO-ECONOMIA-RNG-EVENTOS.md)
 - [Hub, elenco e economia](11-HUB-ELENCO-PLANO-ECONOMIA.md)
 - [Skill de documentação contínua](../skills/documentar-projeto/SKILL.md)
+
+## Estado atual da missão
+
+O Genin abre com menos inimigos e menor HP dos comuns. Eles alternam caminhada/corrida, ataque, pulo e dash; parte deles é sorteada para atacar de longe com kunai, shuriken ou shuriken Fūma. Mega elites, guardiões e bijū mostram HP atual/máximo. Os encontros de conta preservam os requisitos do mapa, dificuldade, história, abates e minutos.
+
+Teuchi fica diante da barraca do Ichiraku. Os Sapos Sábios sobre Gamakichi combinam dois ataques em um espaço ou fundem em uma técnica nova. NPCs com cartas mostram sua arte junto ao atendimento. A tigela de cura tem teto de 5% por abate e recupera 35% do HP máximo no padrão. A recompensa permanente continua por desempenho da missão.

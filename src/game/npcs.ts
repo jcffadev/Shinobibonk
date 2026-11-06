@@ -111,7 +111,7 @@ export const isNpcAlly = (id: string) => id in NPC_ALLIES;
  * shinobi-roster-v2.png (quadrado, imagem inteira). Gerados por `node scripts/generate-sprites.mjs --npcs`.
  * Usados pelo sprite 3D no mapa, pelo cartão de ajudante (Iruka) e pela ficha (via portraitRegion).
  */
-export const NPC_NAMES: Record<string, string> = { iruka: 'Iruka Umino', ebisu: 'Ebisu' };
+export const NPC_NAMES: Record<string, string> = { iruka: 'Iruka Umino', ebisu: 'Ebisu', teuchi:'Teuchi', 'sapos-sabios':'Fukasaku e Shima' };
 
 /** Naruto Totem: evento fixo do minuto 7 (relógio regressivo 7:00 → 6:00). Valores provisórios. */
 export const TOTEM_RULES = {
@@ -123,8 +123,8 @@ export const TOTEM_RULES = {
   distance: 14,
   /** Clones: a cada `interval` s surgem `perWave`, até `maxClones` vivos ao mesmo tempo. */
   interval: .6, perWave: 4, maxClones: 48,
-  /** Área de surgimento dos clones ao redor do jogador (m). */
-  radiusMin: 6, radius: 50,
+  /** Área de surgimento dos clones ao redor do Totem (m). */
+  radiusMin: 1.7, radius: 4.2,
   cloneHp: 14, cloneSpeed: 3.9, cloneXp: 5,
   /** Níveis concedidos ao derrotar o totem (entram na fila normal de level-up). */
   levels: 2,

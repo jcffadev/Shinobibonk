@@ -3,7 +3,7 @@ export type School='Taijutsu'|'Ninjutsu'|'Genjutsu';
 export type Element='Neutro'|'Fogo'|'Água'|'Vento'|'Terra'|'Raio'|'Madeira'|'Areia'|'Sombra'|'Sábio';
 export type Shape='Projétil'|'Corpo a corpo'|'Cone'|'Onda'|'Em V'|'Linha'|'Área'|'Órbita'|'Buff';
 export type Control='Atordoar'|'Paralisar'|'Dormir'|'Empurrar'|'Lentidão';
-export type Technique={name:string;school:School;element:Element;shape:Shape;color:string;power:number;range:number;cooldown:number;slow?:boolean;burn?:boolean;status?:Control;statusChance:number;unlockLevel:number;setup?:Setup};
+export type Technique={name:string;school:School;element:Element;secondaryElement?:Element;ultimate?:boolean;shape:Shape;color:string;power:number;range:number;cooldown:number;slow?:boolean;burn?:boolean;status?:Control;secondaryStatus?:Control;secondaryStatusChance?:number;statusChance:number;unlockLevel:number;setup?:Setup};
 /**
  * Técnica de setup (buff puro): não causa dano, é ativada automaticamente (com inimigo a até 9 m) e dá bônus temporários.
  * Recarga própria: NÃO é reduzida pela velocidade de ataque nem pela velocidade de projétil (só pelo afixo de recarga do level-up).
@@ -78,7 +78,7 @@ export const HEROES:Hero[]=[
  h('hinata','Hinata','Clã Hyuga','#c1b2e9',130,19,6,6.7,'Proteção Gentil · +8 pontos de evasão e +15% taijutsu.',{dodge:.08,normal:.15},[L.punhoGentil,t('Palmas Protetoras','Taijutsu','Neutro','Órbita'),L.palmaAr,t('Punhos dos Leões Gêmeos','Taijutsu','Neutro','Cone',1.4)],'Passo dos Leões Gêmeos','Evasão, taijutsu e área'),
  h('shikamaru','Shikamaru','Clã Nara','#a5b783',120,17,5,6.6,'Estrategista · +30% duração de status e +10 pontos de chance de lentidão.',{duration:.3,status:.1},[t('Possessão das Sombras','Genjutsu','Sombra','Cone'),L.agulhasSombra,L.prisaoSombra,t('Costura das Sombras','Genjutsu','Sombra','Linha')],'Estrangulamento das Sombras','Controle, duração e velocidade de ataque'),
  h('temari','Temari','Vila da Areia','#d1be8a',125,22,4,6.7,'Mestra do Leque · +25% raio dos ataques.',{area:.25},[t('Corte do Leque','Ninjutsu','Vento','Cone'),L.laminas,L.vendaval,t('Tornado Cortante','Ninjutsu','Vento','Órbita')],'Invocação de Kamatari','Área, projéteis e ninjutsu'),
- h('tenten','Tenten','Vila da Folha','#dc9f91',120,16,4,7,'Mestra de Armas · +1 projétil por disparo.',{projectiles:1},[L.shuriken,t('Kunai Explosiva','Taijutsu','Neutro','Área'),L.senbon,t('Corrente de Armas','Taijutsu','Neutro','Linha')],'Dragões Gêmeos','Projéteis, taijutsu e crítico'),
+ h('tenten','Tenten','Vila da Folha','#dc9f91',120,16,4,7,'Mestra de Armas · ×1,5 de dano em técnicas neutras ou de projétil. +1 projétil por disparo.',{projectiles:1},[L.shuriken,t('Kunai Explosiva','Taijutsu','Neutro','Área'),L.senbon,t('Corrente de Armas','Taijutsu','Neutro','Linha')],'Dragões Gêmeos','Projéteis, taijutsu e crítico'),
  h('pain','Pain','Vila da Chuva','#ca86cb',140,24,7,6.2,'Caminho Deva · +20% ninjutsu e +15% raio de área. Nagato (Clã Uzumaki) controla o corpo de Yahiko pelos receptores de chakra.',{element:.2,area:.15},[L.kunai,t('Shinra Tensei','Ninjutsu','Neutro','Área'),t('Bansho Tenin','Ninjutsu','Neutro','Cone'),L.bolaFogo],'Chibaku Tensei','Ninjutsu, área e recarga'),
  h('tobirama','Tobirama','Vila da Folha','#82cbe6',135,21,7,6.8,'Estratégia Suiton · +15% velocidade de ataque e +15% recarga da Ultimate.',{attackSpeed:.15,cool:.15},[t('Corte de Água','Ninjutsu','Água','Linha'),L.dragaoAgua,L.agulhasAgua,t('Onda Explosiva','Ninjutsu','Água','Área',1.4)],'Mar do Segundo Hokage','Velocidade de ataque, ninjutsu e recarga'),
  h('kankuro','Kankuro','Vila da Areia','#a48fc7',130,18,6,6.5,'Marionetista · +20% duração de status e ataques aplicam veneno de 20% do impacto em 3 s.',{duration:.2,dot:.2},[t('Agulhas de Karasu','Taijutsu','Neutro','Em V'),t('Kuroari','Ninjutsu','Neutro','Área'),L.parede,L.kunai],'Teatro das Marionetes','Veneno, duração e projéteis'),
@@ -104,6 +104,7 @@ export const ACADEMY:Technique[]=[
  {...t('Raiton: Faísca','Ninjutsu','Raio','Linha',.7),unlockLevel:4},
 ];
 /** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
+export function isProjectileUltimate(id:string){return id==='naruto'||id==='tenten'||id==='minato';}
 export function ultimateBase(hero:Hero):Technique{return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];}
 export const HERO_BY_ID=Object.fromEntries(HEROES.map(h=>[h.id,h])) as Record<string,Hero>;
 /**
@@ -168,6 +169,10 @@ export const POOL_UNLOCK={shared:8,unique:12};
 export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()):PoolTechnique[]{
   const hero=HERO_BY_ID[heroId]??HEROES[0],allowed=allowedElements(hero.id),seen=new Set(hero.techniques.map(x=>x.name));
   const list:PoolTechnique[]=hero.techniques.map(x=>({...x,source:'kit',origin:hero.id}));
+  if(SAGE_USERS.has(hero.id)&&!seen.has(L.modoSabio.name)){
+    list.push({...L.modoSabio,unlockLevel:hero.id==='hashirama'?20:25,source:'kit',origin:hero.id});
+    seen.add(L.modoSabio.name);
+  }
   for(const basic of ACADEMY)if(allowed.has(basic.element)&&!seen.has(basic.name)){seen.add(basic.name);list.push({...basic,source:'basica',origin:hero.id});}
   const others=[...HEROES.filter(o=>o.id!==hero.id&&o.village===hero.village),...HEROES.filter(o=>o.village!==hero.village)];
   for(const other of others){if(!sealed.has(other.id))continue;for(const tech of other.techniques){
@@ -178,6 +183,7 @@ export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()
   return list;
 }
 /** Técnicas que podem aparecer na run (sem as únicas ainda bloqueadas). */
+export function skillArchiveLimit(learnableCount:number){return Math.floor(Math.max(0,learnableCount)*.6);}
 export function skillPool(heroId:string,sealed:ReadonlySet<string>=new Set()):Technique[]{return techniquePool(heroId,sealed).filter(x=>!x.locked);}
 /**
  * Clã de origem (o campo `village` converte clãs da Folha para "Vila da Folha").

@@ -1,4 +1,4 @@
-﻿import * as THREE from 'three';
+import * as THREE from 'three';
 
 /**
  * Renderização em lote (instancing) dos inimigos comuns/elite e dos avisos de golpe no chão.
@@ -142,13 +142,18 @@ function billboardMaterial(map: THREE.Texture, solid: boolean) {
   return material;
 }
 
-/** Folha de sprites dos inimigos: 4 colunas × 3 linhas (mesmo recorte de spriteMaterial em GameCanvas). */
-const ATLAS_COLS = 4, ATLAS_ROWS = 3;
 
-/** Sprite-dado de um inimigo em lote: índice no atlas e cor do contorno (elite). */
-export type BatchedSprite = THREE.Sprite & { userData: { atlas?: number; outline?: THREE.Color } };
 
-export function createEnemyRenderer(scene: THREE.Scene, atlas: THREE.Texture) {
+// Divisões nos corredores transparentes da folha original de 1536 × 1024.
+const ROW_EDGES = [0, 256, 512, 754, 1024];
+const COLUMN_EDGES = ROW_EDGES.slice(1).map((_, row) => [0, 256, 512, row===3?725:750, 1042, 1280, 1536]);
+export const ENEMY_FRAME = {attack:3, dash:4, jump:5} as const;
+
+export function createEnemyRenderer(scene: THREE.Scene) {
+  const atlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-motion-v1.png');
+  atlas.colorSpace = THREE.SRGBColorSpace;
+  atlas.minFilter = atlas.magFilter = THREE.NearestFilter;
+  atlas.generateMipmaps = false;
   const quad = new THREE.PlaneGeometry(1, 1);
   const layout = { iOffset: 3, iSize: 2, iUv: 4, iColor: 4 };
   const bodies = new Batch(quad, billboardMaterial(atlas, false), layout, scene);
@@ -164,18 +169,22 @@ export function createEnemyRenderer(scene: THREE.Scene, atlas: THREE.Texture) {
   const markerGeometry = new THREE.BufferGeometry(), markerData = new THREE.MeshBasicMaterial();
 
   function pushBody(batch: Batch, sp: THREE.Sprite, sx: number, sy: number, r: number, g: number, b: number) {
-    const i = batch.next(), index = sp.userData.atlas as number;
+    const i = batch.next(), row = sp.userData.atlas as number, frame = sp.userData.frame as number;
     const o = batch.arr('iOffset'), s = batch.arr('iSize'), u = batch.arr('iUv'), c = batch.arr('iColor');
     o[i * 3] = sp.position.x; o[i * 3 + 1] = sp.position.y; o[i * 3 + 2] = sp.position.z;
     s[i * 2] = sx; s[i * 2 + 1] = sy;
-    u[i * 4] = (index % ATLAS_COLS) / ATLAS_COLS + .001; u[i * 4 + 1] = (ATLAS_ROWS - 1 - Math.floor(index / ATLAS_COLS)) / ATLAS_ROWS + .001;
-    u[i * 4 + 2] = 1 / ATLAS_COLS; u[i * 4 + 3] = 1 / ATLAS_ROWS;
+    const columns = COLUMN_EDGES[row], flipped = sp.userData.flipped;
+    const left = columns[frame], right = columns[frame+1], top = ROW_EDGES[row], bottom = ROW_EDGES[row+1];
+    u[i * 4] = (flipped ? right-.5 : left+.5)/1536;
+    u[i * 4 + 1] = (1024-bottom+.5)/1024;
+    u[i * 4 + 2] = (right-left-1)/1536*(flipped?-1:1);
+    u[i * 4 + 3] = (bottom-top-1)/1024;
     c[i * 4] = r; c[i * 4 + 1] = g; c[i * 4 + 2] = b; c[i * 4 + 3] = 1;
   }
 
   return {
     /** Marca um sprite como inimigo em lote (fica fora da cena; a posição/escala/cor viram instâncias). */
-    adopt(sprite: THREE.Sprite, atlasIndex: number) { sprite.userData.atlas = atlasIndex; },
+    adopt(sprite: THREE.Sprite, row: number) { sprite.userData.atlas = row; sprite.userData.frame = 1; },
     isBatched(sprite: THREE.Sprite) { return sprite.userData.atlas !== undefined; },
     /** Contorno sólido do elite (cópia da silhueta 14%×8% maior, desenhada atrás). */
     outline(sprite: THREE.Sprite, color: string) { sprite.userData.outline = new THREE.Color(color); },
@@ -205,6 +214,6 @@ export function createEnemyRenderer(scene: THREE.Scene, atlas: THREE.Texture) {
     },
     /** Contagem de instâncias do último quadro (ganchos de teste). */
     stats() { return { bodies: bodies.count, outlines: outlines.count, markers: markers.count }; },
-    dispose() { bodies.dispose(); outlines.dispose(); markers.dispose(); quad.dispose(); ringShape.dispose(); markerGeometry.dispose(); markerData.dispose(); },
+    dispose() { atlas.dispose(); bodies.dispose(); outlines.dispose(); markers.dispose(); quad.dispose(); ringShape.dispose(); markerGeometry.dispose(); markerData.dispose(); },
   };
 }

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Combate, animação e preparação da missão
+
+- HUD de escolhas e ficha compactados. Botão da ficha em escolhas, selamento e troca de suporte. Tab mantém o mapa rápido aberto sem interromper o movimento. Kunai direcional no mapa, ícone próprio do Selo do Guardião e câmera/zoom interpolados.
+- Trava do ponteiro durante a missão, com kunai de interface e liberação por Esc, perda de foco e F9. Escolher um prêmio recaptura o ponteiro diretamente.
+- Teuchi na frente da barraca e retrato ao abrir o atendimento. Fukasaku e Shima sobre Gamakichi abrem fusão e combinação. Retratos dos NPCs aparecem junto das escolhas.
+- Planejamento de técnicas por shinobi, teto de 60% de exclusão, restauração destacada, treinamento de até quatro técnicas com +15% de dano e pílulas disponíveis no pool. Ícones do atlas, Modo Sábio por personagem e prévias animadas com alvos.
+- Genin abre com menos inimigos e HP comum menor. Sorte pesa 20% na abertura e chega a 100% em 2:30. Quatro a seis encontros de Mega Elite previstos por zona e até dois encontros de conta elegíveis. Chefes com HP numérico, mais defesa, técnicas mais frequentes e áreas maiores.
+- Folhas novas de Naruto Academia, Neji nas duas formas e inimigos comuns. Suportes seguem, saltam, esquivam e alternam técnicas. O Totem mantém o selo de mãos. Clones correm até o alvo. Substituição usa um toco no impacto. Gamabunta usa óleo e ignição perto do alvo, com espada e cachimbo.
+- Ultimate recebe os bônus de dano, com modificadores de projétil apenas em Naruto, Minato e Tenten. Tenten ganha ×1,5 em técnicas neutras ou de projétil. Lamen de cura em até 5%. Reset de conta exige confirmação e limpa o progresso local.
+
 ## Efeitos das técnicas, bijū e filtros da Bolsa
 
 - Adiciona efeitos visuais por natureza e golpes característicos com impacto no alvo. Dragão de Água, Chidori, Rasengan, Mokuton, areia e invocações têm visuais próprios.

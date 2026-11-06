@@ -3,11 +3,12 @@ import '../allies.css';
 import { HERO_BY_ID } from '../game/heroes';
 import { ALLY_BUFFS, AFFINITY_RULES, affinityLevel, affinityFactor, affinityProgress, allyBuffText, maxAffinityPoints } from '../game/allies';
 import { NPC_ALLIES } from '../game/npcs';
-import { activeSynergies, synergiesOf, villageOf, VILLAGE_COMBOS, type ActiveSynergy } from '../game/synergy';
+import { activeSynergies, synergiesOf, villageOf, type ActiveSynergy } from '../game/synergy';
 import type { LevelOffer } from '../scene/GameCanvas';
-import { HeroPortrait } from './RunSheet';
+import { VillageEmblem, villageName } from './VillageEmblem';
+import { HeroPortrait, RunSheetButton } from './RunSheet';
 
-const villageTag = (village: string) => VILLAGE_COMBOS[village]?.tag ?? village.replace(/^Vila d[aoe]s?\s+/i, '').toUpperCase();
+
 const allyInfo = (id: string): { name: string; village: string } | undefined => HERO_BY_ID[id] ?? NPC_ALLIES[id];
 
 /** Painel compacto das sinergias de aldeia/organização ativas (logo abaixo do cartão do herói). */
@@ -57,7 +58,7 @@ export function AllyCards({ synergies = [], allies, affinity = {}, slots, allyBu
       return <article className="ally-card" key={id} style={{ ['--ally' as string]: technique.color }}>
         <span className="ally-portrait"><HeroPortrait id={id} /></span>
         <div className="ally-info">
-          <header><b>{hero.name}</b><em>{villageTag(hero.village)}</em></header>
+          <header><b>{hero.name}</b><em><VillageEmblem village={hero.village}/>{villageName(hero.village,true)}</em></header>
           <p className="ally-buff" title={`Passiva individual de ${hero.name}${buff ? ': ' + buff.title : ''}. Escala com a afinidade e com a força de suporte. Máximo: ${allyBuffText(id, allyBuff)}.`}><span className="ally-passive">PASSIVA</span>{buff ? <b>{buff.title}</b> : null} <BuffText text={allyBuffText(id, allyBuff, points)}/>{!atMax && <span className="ally-max"> · máx. <BuffText text={allyBuffText(id, allyBuff)}/></span>}</p>
           <AffinityRow points={points} />
           {mine.length > 0 && <div className="ally-synergy-tags">{mine.map((s) => <em key={s.id} className={s.kind} title={`${s.name}: $<BuffText text={s.text}/>`}>{s.icon} {s.tag}</em>)}</div>}
@@ -75,7 +76,7 @@ export function AllyCards({ synergies = [], allies, affinity = {}, slots, allyBu
  * Tela de substituição (choiceLevel −7): equipe cheia ao capturar um mega elite.
  * Clicar no NOVO = dispensar (não ganha nada). Clicar num ajudante atual = ele sai e o novo entra (afinidade Nv. 1).
  */
-export function AllyReplaceChoice({ heroId, cards, allies, affinity, slots, allyBuff }: { heroId: string; cards: LevelOffer[]; allies: string[]; affinity: Record<string, number>; slots: number; allyBuff: number }) {
+export function AllyReplaceChoice({ heroId, cards, allies, affinity, slots, allyBuff, onSheet }: { heroId: string; cards: LevelOffer[]; allies: string[]; affinity: Record<string, number>; slots: number; allyBuff: number; onSheet:()=>void }) {
   const choose = (index: number) => window.dispatchEvent(new CustomEvent('shinobi-choose', { detail: index }));
   const fresh = cards.find((c) => c.allyNew);
   const current = activeSynergies(heroId, allies);
@@ -88,7 +89,7 @@ export function AllyReplaceChoice({ heroId, cards, allies, affinity, slots, ally
       <span className="replace-badge">{isNew ? 'NOVO · clique para dispensar' : 'clique para substituir'}</span>
       <span className="replace-portrait"><HeroPortrait id={id} /></span>
       <b>{hero?.name ?? id}</b>
-      <em>{villageTag(villageOf(id) ?? '')}</em>
+      <em><VillageEmblem village={villageOf(id)??''}/>{villageName(villageOf(id)??'',true)}</em>
       <p className="replace-passive"><span className="ally-passive">PASSIVA</span>{buff?.title}</p>
       <p className="replace-value">Agora: {allyBuffText(id, allyBuff, points)}</p>
       <p className="replace-value max">Máx. (afinidade {AFFINITY_RULES.max}): {allyBuffText(id, allyBuff)}</p>
@@ -104,6 +105,6 @@ export function AllyReplaceChoice({ heroId, cards, allies, affinity, slots, ally
       <div className="replace-current">{cards.map((c, i) => c.allyNew ? null : card(c, i))}</div>
       <div className="replace-new">{cards.map((c, i) => c.allyNew ? card(c, i) : null)}</div>
     </div>
-    <div className="reward-actions"><button onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'x' }))}>✕ Dispensar o novo <kbd>X</kbd></button></div>
+    <div className="reward-actions"><button onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'x' }))}>✕ Dispensar o novo <kbd>X</kbd></button><RunSheetButton onClick={onSheet}/></div>
   </section></div>;
 }

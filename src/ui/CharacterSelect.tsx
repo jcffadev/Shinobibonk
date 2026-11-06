@@ -1,13 +1,13 @@
+import { VillageEmblem, villageName } from './VillageEmblem';
 import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
 /** Ordem do elenco: jogáveis primeiro; bloqueados pela dificuldade da missão (Genin → Kage) e Lendários por último. */
 const DIFF_RANK: Record<string, number> = { Genin: 1, Chunin: 2, Jonin: 3, Kage: 4 };
 const unlockOrder = (id: string) => isHeroPlayable(id) ? 0 : (DIFF_RANK[UNLOCK_MISSIONS[id]?.difficulty ?? 'Genin'] ?? 1) * 10 + (LEGENDARY.has(id) ? 50 : 0);
-/** Símbolo da vila mostrado sobre a silhueta do shinobi bloqueado. */
-const VILLAGE_MARK: Record<string, string> = { 'Vila da Folha': '木', 'Vila da Areia': '砂', 'Vila do Som': '音', 'Vila da Chuva': '雨' };
+
 import { isHeroPlayable } from '../game/account';
 import { useMemo, useState } from 'react';
-import { HEROES, HERO_CLAN, ORGANIZATIONS, heroAffinity, heroOrganizations, type Element } from '../game/heroes';
+import { HEROES, HERO_BY_ID, HERO_CLAN, ORGANIZATIONS, heroAffinity, heroOrganizations, type Element } from '../game/heroes';
 import { HeroPortrait } from './RunSheet';
 import { matchesSearch } from './PoolFilters';
 
@@ -26,14 +26,15 @@ function heroGroups(id: string): string[] {
 const ORG_OPTIONS = [...new Set([...ORGANIZATIONS.filter(o => o.members.some(id => HEROES.some(h => h.id === id))).map(o => o.name), ...Object.values(HERO_CLAN)])];
 const VILLAGE_OPTIONS = [...new Set(HEROES.map(h => h.village))].sort();
 const ELEMENT_OPTIONS = [...new Set(HEROES.map(h => heroAffinity(h.id)))].sort();
-const shortVillage = (village: string) => village.replace(/^Vila d[aoe]s?\s+/i, '');
+
 const initials = (name: string) => name.split(/\s+/).map(p => p[0]).join('').slice(0, 2).toUpperCase();
 
 /** Selos de elemento e organizações para o painel de detalhes do shinobi. */
 export function CharacterTags({ id }: { id: string }) {
-  const element = heroAffinity(id);
+  const element = heroAffinity(id),village=HERO_BY_ID[id]?.village;
   return <div className="cs-tags">
     <span className="cs-tag" style={{ ['--el' as string]: ELEMENT_COLOR[element] }}>{ELEMENT_GLYPH[element]} {element}</span>
+    {village&&<span className="cs-tag cs-village-tag" title={'Vínculo de ajudantes · '+villageName(village)}><VillageEmblem village={village}/>{villageName(village,true)}</span>}
     {heroGroups(id).map(g => <span key={g} className="cs-tag org">{g}</span>)}
   </div>;
 }
@@ -48,7 +49,7 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
   const list = useMemo(() => HEROES.filter(h => {
     const groups = heroGroups(h.id);
     const known = isHeroPlayable(h.id);
-    return matchesSearch(known ? h.name + ' ' + h.village + ' ' + groups.join(' ') : h.village, filters.search)
+    return matchesSearch(known ? h.name + ' ' + h.village + ' ' + villageName(h.village) + ' ' + groups.join(' ') : h.village+' '+villageName(h.village), filters.search)
       && (!filters.village || h.village === filters.village)
       && (!filters.element || known && heroAffinity(h.id) === filters.element)
       && (!filters.org || known && groups.includes(filters.org));
@@ -62,7 +63,7 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
       <input className="cs-search" aria-label="Buscar shinobi" placeholder="Buscar por nome…" value={filters.search} onChange={e => set('search', e.target.value)} />
       <select aria-label="Aldeia" value={filters.village} onChange={e => set('village', e.target.value)}>
         <option value="">Vila · todas</option>
-        {VILLAGE_OPTIONS.map(v => <option key={v} value={v}>{v}</option>)}
+        {VILLAGE_OPTIONS.map(v => <option key={v} value={v}>{villageName(v)} · {v}</option>)}
       </select>
       <select aria-label="Elemento" value={filters.element} onChange={e => set('element', e.target.value)}>
         <option value="">Elemento · todos</option>
@@ -85,13 +86,13 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
           <span className="cs-portrait">
             <span className="cs-initials" aria-hidden="true">{playable?initials(entry.name):null}</span>
             <HeroPortrait id={entry.id} decorative={!playable} />
-            {!isHeroPlayable(entry.id) && <span className="cs-village-mark" aria-hidden="true">{VILLAGE_MARK[entry.village] ?? '忍'}</span>}
+            {!isHeroPlayable(entry.id) && <span className="cs-village-mark" aria-hidden="true"><VillageEmblem village={entry.village}/></span>}
             {playable&&<span className="cs-element" style={{ ['--el' as string]: ELEMENT_COLOR[element] }} title={`Elemento: ${element}`}>{ELEMENT_GLYPH[element]}</span>}
           </span>
           {playable && LEGENDARY.has(entry.id) && <i className="cs-legend-tag">LENDÁRIO</i>}
           {playable&&<b>{entry.name}</b>}
           
-          <small className="cs-village">{shortVillage(entry.village)}</small>
+          <small className="cs-village"><VillageEmblem village={entry.village}/>{villageName(entry.village,true)}</small>
           {!playable&&<small className="cs-mission-label">Liberado com missão</small>}
           {selected && <i className="cs-picked">SELECIONADO</i>}
         </button>;

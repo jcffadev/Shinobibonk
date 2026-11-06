@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createAtlasEffect } from './atlasEffects';
 import type { Technique } from '../game/heroes';
 
 const UP = new THREE.Vector3(0, 1, 0);
@@ -70,6 +71,11 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
     }
     mesh(round(.16),crest,0,.28,.63).scale.set(1,.42,1.25);
     group.userData.directed = true;
+  } else if (name === 'Técnica de Substituição') {
+    const puff=createAtlasEffect('substitution');
+    group.add(puff.sprite);
+    group.userData.atlasFrame=(age:number)=>puff.frame(Math.min(3,Math.floor(age/.1)));
+    group.addEventListener('removed',puff.dispose);
   } else if (/Invocação do Sapo|Gamabunta|Katsuyu|Invocação de Manda/.test(name)) {
     if (name.includes('Manda')) {
       trace([forward(-.37,-.12,-.44),forward(.37,-.1,-.18),forward(.18,.26,.1),forward(-.1,.48,.36)],.18,'#7855a7');
@@ -195,6 +201,7 @@ export function techniqueImpact(t: Technique) {
 }
 
 export function animateTechniqueVisual(object: THREE.Object3D, dt: number, direction?: THREE.Vector3) {
+  if(object.userData.atlasFrame){object.userData.atlasAge=(object.userData.atlasAge??0)+dt;object.userData.atlasFrame(object.userData.atlasAge);}
   if(object.userData.directed && direction) object.rotation.y = Math.atan2(direction.x,direction.z);
   else if(object.userData.spin) object.rotation.y += dt*object.userData.spin;
 }
