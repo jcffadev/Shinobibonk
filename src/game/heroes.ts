@@ -79,7 +79,22 @@ export const HEROES:Hero[]=[
  /* Kushina Uzumaki (Narutopedia): kunoichi de Uzushio que viveu na Folha, a "Habanero Sangrenta", jinchuuriki da Kurama;
     chakra especial do clã Uzumaki e as Correntes de Selamento Adamantinas. Naturezas: Vento, Água, Yin. */
  h('kushina','Kushina','Vila da Folha','#c8323c',140,20,5,6.9,'Chakra Uzumaki · +15% HP máximo e +0,5 HP/s (vitalidade do clã) e +10 pontos de chance de status (correntes de selamento).',{healthPct:.15,regen:.5,status:.1},[L.kunai,{...t('Correntes de Selamento','Ninjutsu','Neutro','Linha',1.5),status:'Paralisar',statusChance:.35},L.dragaoAgua,s('Habanero Sangrento','Taijutsu','Neutro',{cooldown:13,duration:6,bonuses:{damage:.18,attackSpeed:.15,status:.1},stack:false,summary:'A fúria da Habanero Sangrenta: +dano, +velocidade de ataque e +chance de status por alguns segundos.'})],'Prisão de Correntes da Kurama','Controle, status e ninjutsu'),
-];/** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
+];/**
+ * Técnicas BÁSICAS de Academia (pedido do usuário, 06/11/2026): sempre no pool, liberadas cedo (Nv. 2–4), para não faltar
+ * opção nos níveis baixos. Neutras para todos; as elementais só para quem tem a natureza (HERO_NATURES). Dano baixo,
+ * melhoram com o level-up como qualquer técnica. Substituição (Kawarimi) acerta ao redor e atordoa.
+ */
+export const ACADEMY:Technique[]=[
+ {...t('Técnica de Substituição','Ninjutsu','Neutro','Órbita',.55),status:'Atordoar',statusChance:.4,unlockLevel:2},
+ {...t('Chute Giratório','Taijutsu','Neutro','Cone',.7),unlockLevel:2},
+ {...t('Bomba de Fumaça','Ninjutsu','Neutro','Área',.4),status:'Lentidão',statusChance:.5,unlockLevel:3},
+ {...t('Katon: Fagulha','Ninjutsu','Fogo','Projétil',.7),unlockLevel:3},
+ {...t('Suiton: Jato d\'Água','Ninjutsu','Água','Linha',.7),unlockLevel:3},
+ {...t('Fuuton: Rajada','Ninjutsu','Vento','Cone',.7),unlockLevel:3},
+ {...t('Doton: Pedregulho','Ninjutsu','Terra','Projétil',.75),unlockLevel:4},
+ {...t('Raiton: Faísca','Ninjutsu','Raio','Linha',.7),unlockLevel:4},
+];
+/** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
 export function ultimateBase(hero:Hero):Technique{return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];}
 export const HERO_BY_ID=Object.fromEntries(HEROES.map(h=>[h.id,h])) as Record<string,Hero>;
 HERO_BY_ID.naruto.techniques[1].unlockLevel=10;
@@ -97,7 +112,7 @@ export function uniqueTechniques(heroId:string){return (HERO_BY_ID[heroId]?.tech
  * (+ os elementos do próprio kit). Elemento fora disso nunca entra no pool, mesmo que seja da mesma vila.
  */
 export function allowedElements(heroId:string){const set=new Set<Element>(['Neutro',...(HERO_NATURES[heroId]??[])]);if(SAGE_USERS.has(heroId))set.add('Sábio');for(const tech of HERO_BY_ID[heroId]?.techniques??[])set.add(tech.element);return set;}
-export type PoolSource='kit'|'vila'|'elemento'|'única';
+export type PoolSource='kit'|'basica'|'vila'|'elemento'|'única';
 export type PoolTechnique=Technique&{source:PoolSource;origin:string;locked?:boolean};
 /** Nível de desbloqueio no level-up: compartilhadas a partir do 8; únicas de outros shinobis a partir do 12. */
 export const POOL_UNLOCK={shared:8,unique:12};
@@ -113,6 +128,7 @@ export const POOL_UNLOCK={shared:8,unique:12};
 export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()):PoolTechnique[]{
   const hero=HERO_BY_ID[heroId]??HEROES[0],allowed=allowedElements(hero.id),seen=new Set(hero.techniques.map(x=>x.name));
   const list:PoolTechnique[]=hero.techniques.map(x=>({...x,source:'kit',origin:hero.id}));
+  for(const basic of ACADEMY)if(allowed.has(basic.element)&&!seen.has(basic.name)){seen.add(basic.name);list.push({...basic,source:'basica',origin:hero.id});}
   const others=[...HEROES.filter(o=>o.id!==hero.id&&o.village===hero.village),...HEROES.filter(o=>o.village!==hero.village)];
   for(const other of others){if(!sealed.has(other.id))continue;for(const tech of other.techniques){
     if(seen.has(tech.name)||!allowed.has(tech.element))continue;

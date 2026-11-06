@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-06 — técnicas básicas da Academia
+- `ACADEMY` em `heroes.ts`: sempre no pool, liberadas cedo, dano baixo, melhoram no level-up. Para todos: Técnica de Substituição (Nv. 2, ao redor, atordoa), Chute Giratório (Nv. 2), Bomba de Fumaça (Nv. 3, lentidão). Por natureza: Katon: Fagulha, Suiton: Jato d'Água, Fuuton: Rajada (Nv. 3), Doton: Pedregulho, Raiton: Faísca (Nv. 4). Lee e Tenten (sem natureza) só recebem as neutras. Plano de build mostra "Básica da Academia" (sem exigir pesquisa).
+- Verificação: tsc, verify-rules e verify-runtime passaram.
+
 ## 2026-11-06 — técnicas liberadas por nível na fase certa
 - Modo Sábio do Naruto só no nível 25 (forma Shippuden); Amaterasu do Sasuke no nível 25. O painel do shinobi mostra o nível de liberação de cada técnica do kit (Nv. 1/5/12/20 por padrão, com ajustes por personagem).
 
