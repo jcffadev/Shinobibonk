@@ -132,7 +132,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 ## Verificação (05/11/2026)
 
 - **TESTADO nesta data**: `tsc -b` e `vite build` concluídos sem erro. O Vite avisa que o bundle JS tem 879 kB, acima de 500 kB.
-- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 67 técnicas, 94 itens, distribuição de crítico e raridade).
+- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (23 shinobis, 69 técnicas, 94 itens, distribuição de crítico e raridade).
 - **TESTADO nesta data**: `node scripts/verify-runtime.mjs` (Playwright/Edge) passou nas 23 verificações sem erros de JS, inclusive a nova verificação da tecla Y, já com debug, resumo e pílulas integrados.
 - **TESTADO nesta data (debug sem login)**: teste avulso no navegador confirmou:
   - o modal de conta não tem campos de login nem de senha;

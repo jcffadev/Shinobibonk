@@ -11,6 +11,7 @@ export type AllyBuff = { title: string; bonuses: Bonuses };
 
 export const ALLY_BUFFS: Record<string, AllyBuff> = {
   naruto: { title: 'Vontade do Fogo', bonuses: { damage: .12 } },
+  kushina: { title: 'Correntes Adamantinas', bonuses: { status: .12 } },
   gaara: { title: 'Escudo de Areia', bonuses: { defense: 10 } },
   madara: { title: 'Pressão Uchiha', bonuses: { crit: .06 } },
   hashirama: { title: 'Células Senju', bonuses: { regen: 1.2 } },

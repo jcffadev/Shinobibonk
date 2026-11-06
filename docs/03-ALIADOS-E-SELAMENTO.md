@@ -20,6 +20,7 @@
 | Shinobi para selar (1º encontro especial da run, se houver shinobi bloqueado) | ciano | sim, 1 tentativa: E sela, G deixa escapar | HP 180, dano ×1,5, bloqueia 25% | só DESBLOQUEIA na conta (sem buff, EXP ou drops) |
 | Guardião / Naruto Totem | — | regras próprias | guardião mantém técnicas de chefe | ver docs/01 |
 
+- Missões de desbloqueio (src/game/unlockMissions.ts): cada shinobi bloqueado exige mapa + dificuldade, abates e minuto na run e, em cadeias de história, ter selado outros antes (Hinata → Neji → Tenten → Lee → Guy; Temari → Kankuro → Gaara; Kakashi → Jiraiya → Tsunade/Orochimaru/Minato/Pain; Minato → Kushina; Kakashi → Itachi; Tsunade → Hashirama → Tobirama; Hashirama + Itachi → Madara). O card de missão mostra o checklist.
 - Iniciais jogáveis: Naruto, Sasuke e Sakura (PROPOSTO, ajustável em `STARTER_HEROES`). Os demais aparecem 🔒 na seleção até serem selados. Em testes automáticos (`?test`) todos ficam jogáveis e o Shinobi para selar não surge sozinho.
 - Selar um shinobi na conta também libera as técnicas ÚNICAS dele para o pool dos outros (respeitando elemento).
 1. **Apoio temporário**: mega-elite Edo Tensei, até 3 tentativas; se todas falham, foge, sem bônus de aliado. Ao derrotar o shinobi, mostrar o próprio personagem e a animação do selo antes de confirmar a entrada dele na equipe. Se o jogador recusar com G, o elite deixa uma kunai/shuriken; coletar o drop abre uma escolha de item cuja qualidade considera Sorte. O abate não pode duplicar a recompensa.

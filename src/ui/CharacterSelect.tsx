@@ -1,5 +1,5 @@
+import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
-import { MAP_BY_ID } from '../game/maps';
 /** Símbolo da vila mostrado sobre a silhueta do shinobi bloqueado. */
 const VILLAGE_MARK: Record<string, string> = { 'Vila da Folha': '木', 'Vila da Areia': '砂', 'Vila do Som': '音', 'Vila da Chuva': '雨' };
 import { isHeroPlayable } from '../game/account';
@@ -83,7 +83,7 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
           </span>
           {LEGENDARY.has(entry.id) && <i className="cs-legend-tag">LENDÁRIO</i>}
           <b>{!isHeroPlayable(entry.id) && LEGENDARY.has(entry.id) ? '???' : entry.name}</b>
-          {!isHeroPlayable(entry.id) && UNLOCK_MISSIONS[entry.id] && <span className="cs-mission-tip" role="tooltip"><b>🔒 Missão: {UNLOCK_MISSIONS[entry.id].title}</b>{MAP_BY_ID[UNLOCK_MISSIONS[entry.id].map].name} · {UNLOCK_MISSIONS[entry.id].difficulty} · a partir de {UNLOCK_MISSIONS[entry.id].minute} min<br/>{UNLOCK_MISSIONS[entry.id].story}<br/>Derrote e sele o shinobi para desbloquear.</span>}
+          {!isHeroPlayable(entry.id) && UNLOCK_MISSIONS[entry.id] && <span className="cs-mission-pop" role="tooltip"><MissionCard id={entry.id} compact /></span>}
           <small className="cs-village">{shortVillage(entry.village)}</small>
           {selected && <i className="cs-picked">SELECIONADO</i>}
         </button>;

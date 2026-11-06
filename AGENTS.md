@@ -17,6 +17,7 @@ Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conf
 - Faça mudanças incrementais e registre mudanças no CHANGELOG.md; não declare teste de sintaxe ou jogabilidade sem executá-lo.
 - Fonte de conhecimento canônico (vilas, clãs, organizações, técnicas, natureza de chakra/elemento): **Naruto Wiki/Narutopedia** (https://naruto.fandom.com/). Cite a página consultada. Se encontrar fonte mais atualizada ou divergente, avise o usuário para revisar antes de alterar o personagem. Percentuais e atributos de gameplay continuam regras originais do protótipo.
 - Terminologia: o atributo `attackSpeed` chama-se **velocidade de ataque** em todo texto (nunca "cadência"). Velocidade de projétil (`projectileSpeed`) é outro atributo.
+- Direção de arte (receita do usuário, 06/11/2026): personagens em pixel art chibi (cabeça grande, corpo compacto, silhueta e cores reconhecíveis de Naruto clássico/Shippuden), vistos de câmera elevada; cenário 3D estilizado em visão isométrica (2.5D); resolução-base, proporções e paleta únicas para todo o elenco; animações de caminhada, ataque, dano e Ultimate. Como a câmera gira 360°, a direção preferida a longo prazo é personagem 3D de baixa complexidade com aparência pixelada (alternativa: sprites direcionais de 4/8 direções). Nunca usar sprites ou modelos oficiais. Iruka, Ebisu e Kushina (SVG gerados em scripts/generate-sprites.mjs) devem ser revisados nessa receita.
 - Não inclua bibliotecas externas ou ativos de terceiros sem verificar licença e necessidade.
 
 ## Invariantes de design

@@ -76,6 +76,9 @@ export const HEROES:Hero[]=[
  h('tobirama','Tobirama','Vila da Folha','#82cbe6',135,21,7,6.8,'Estratégia Suiton · +15% velocidade de ataque e +15% recarga da Ultimate.',{attackSpeed:.15,cool:.15},[t('Corte de Água','Ninjutsu','Água','Linha'),L.dragaoAgua,L.agulhasAgua,t('Onda Explosiva','Ninjutsu','Água','Área',1.4)],'Mar do Segundo Hokage','Velocidade de ataque, ninjutsu e recarga'),
  h('kankuro','Kankuro','Vila da Areia','#a48fc7',130,18,6,6.5,'Marionetista · +20% duração de status e ataques aplicam veneno de 20% do impacto em 3 s.',{duration:.2,dot:.2},[t('Agulhas de Karasu','Taijutsu','Neutro','Em V'),t('Kuroari','Ninjutsu','Neutro','Área'),L.parede,L.kunai],'Teatro das Marionetes','Veneno, duração e projéteis'),
  h('guy','Might Guy','Vila da Folha','#69cf81',145,25,7,6.8,'Poder da Juventude · +30% taijutsu e +10% movimento.',{normal:.3,move:.1},[L.furacao,L.portoes,t('Pavão da Manhã','Taijutsu','Fogo','Em V'),t('Tigre do Meio-Dia','Taijutsu','Neutro','Onda',1.8)],'Oito Portões','Taijutsu, velocidade de ataque e crítico'),
+ /* Kushina Uzumaki (Narutopedia): kunoichi de Uzushio que viveu na Folha, a "Habanero Sangrenta", jinchuuriki da Kurama;
+    chakra especial do clã Uzumaki e as Correntes de Selamento Adamantinas. Naturezas: Vento, Água, Yin. */
+ h('kushina','Kushina','Vila da Folha','#c8323c',140,20,5,6.9,'Chakra Uzumaki · +15% HP máximo e +0,5 HP/s (vitalidade do clã) e +10 pontos de chance de status (correntes de selamento).',{healthPct:.15,regen:.5,status:.1},[L.kunai,{...t('Correntes de Selamento','Ninjutsu','Neutro','Linha',1.5),status:'Paralisar',statusChance:.35},L.dragaoAgua,s('Habanero Sangrento','Taijutsu','Neutro',{cooldown:13,duration:6,bonuses:{damage:.18,attackSpeed:.15,status:.1},stack:false,summary:'A fúria da Habanero Sangrenta: +dano, +velocidade de ataque e +chance de status por alguns segundos.'})],'Prisão de Correntes da Kurama','Controle, status e ninjutsu'),
 ];/** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
 export function ultimateBase(hero:Hero):Technique{return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];}
 export const HERO_BY_ID=Object.fromEntries(HEROES.map(h=>[h.id,h])) as Record<string,Hero>;
@@ -123,7 +126,7 @@ export function skillPool(heroId:string,sealed:ReadonlySet<string>=new Set()):Te
  * clã Uzumaki) e o kit mistura vários Caminhos (Deva, Asura, receptores). O Caminho Deva é o cadáver de
  * Yahiko controlado por Nagato; Yahiko NÃO tem clã nem é Uzumaki (naturezas próprias: Água, Fogo, Vento).
  */
-export const HERO_CLAN:Record<string,string>={madara:'Clã Uchiha',sasuke:'Clã Uchiha',itachi:'Clã Uchiha',neji:'Clã Hyuga',hinata:'Clã Hyuga',shikamaru:'Clã Nara',hashirama:'Clã Senju',tobirama:'Clã Senju',tsunade:'Clã Senju',naruto:'Clã Uzumaki',pain:'Clã Uzumaki'};
+export const HERO_CLAN:Record<string,string>={madara:'Clã Uchiha',sasuke:'Clã Uchiha',itachi:'Clã Uchiha',neji:'Clã Hyuga',hinata:'Clã Hyuga',shikamaru:'Clã Nara',hashirama:'Clã Senju',tobirama:'Clã Senju',tsunade:'Clã Senju',naruto:'Clã Uzumaki',pain:'Clã Uzumaki',kushina:'Clã Uzumaki'};
 /**
  * Organizações/equipes canônicas usadas por filtros e sinergias. Um shinobi pode estar em várias.
  * Ids que ainda não existem no elenco (ex.: kisame, ino, zabuza) já ficam listados para o elenco futuro; não contam até existirem.
@@ -138,6 +141,7 @@ export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
  {id:'uchiha',name:'Clã Uchiha',members:['madara','sasuke','itachi','obito','shisui']},
  {id:'hyuga',name:'Clã Hyuga',members:['neji','hinata','hiashi','hanabi']},
  {id:'senju',name:'Clã Senju',members:['hashirama','tobirama','tsunade']},
+ {id:'uzumaki',name:'Clã Uzumaki',members:['naruto','kushina','pain','karin','nagato']},
  {id:'time10',name:'Ino-Shika-Chō',members:['shikamaru','ino','choji','asuma']},
  {id:'time8',name:'Time 8',members:['hinata','kiba','shino','kurenai']},
  {id:'espadachins',name:'Sete Espadachins da Névoa',members:['kisame','zabuza','mangetsu','suigetsu','chojuro','kushimaru','jinpachi','fuguki','jinin','ameyuri']},
@@ -157,7 +161,7 @@ export const HERO_NATURES:Record<string,Element[]>={
  jiraiya:['Fogo','Vento','Terra','Água','Sombra'],orochimaru:['Vento','Raio','Terra','Água','Fogo','Madeira','Sombra'],
  lee:[],neji:['Fogo','Terra','Água'],hinata:['Fogo','Raio'],shikamaru:['Fogo','Terra','Sombra'],temari:['Vento'],tenten:[],
  pain:['Fogo','Vento','Raio','Terra','Água'],/* naturezas do Nagato (quem usa as técnicas), não as do Yahiko */tobirama:['Água','Fogo','Vento','Raio','Terra','Sombra'],
- kankuro:['Vento','Raio','Terra','Água'],guy:['Fogo','Raio'],
+ kankuro:['Vento','Raio','Terra','Água'],guy:['Fogo','Raio'],kushina:['Vento','Água','Sombra'],
 };
 /** Afinidade marcada como "(Affinity)" na Narutopedia. */
 const MARKED_AFFINITY:Record<string,Element>={naruto:'Vento',kakashi:'Raio',sasuke:'Raio'};

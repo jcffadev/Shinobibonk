@@ -57,8 +57,16 @@ const ORDER = ['Genin', 'Chunin', 'Jonin', 'Kage'];
 export function mapProgress(): Record<string, string[]> { return read<Record<string, string[]>>(MAP_PROGRESS_KEY, {}); }
 export function isDifficultyUnlocked(mapId: string, difficulty: string) {
   if (allUnlockedOverride || testMode()) return true;
+  if (!isMapUnlocked(mapId)) return false;
   const index = ORDER.indexOf(difficulty); if (index <= 0) return true;
   return (mapProgress()[mapId] ?? []).includes(ORDER[index - 1]);
+}
+/** Ordem dos mapas: o seguinte só libera ao vencer o Genin do anterior (Folha → Areia → Pedra → Névoa). */
+export const MAP_ORDER = ['folha', 'areia', 'pedra', 'nevoa'];
+export function isMapUnlocked(mapId: string) {
+  if (allUnlockedOverride || testMode()) return true;
+  const index = MAP_ORDER.indexOf(mapId); if (index <= 0) return true;
+  return (mapProgress()[MAP_ORDER[index - 1]] ?? []).includes('Genin');
 }
 export function markMapCompleted(mapId: string, difficulty: string) {
   const all = mapProgress(); const done = new Set(all[mapId] ?? []); done.add(difficulty); all[mapId] = [...done]; write(MAP_PROGRESS_KEY, all);

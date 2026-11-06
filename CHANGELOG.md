@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-06 — Kushina, missões com história e abates, mapas em sequência, pausa corrigida
+- **Kushina Uzumaki** (Narutopedia: Vento/Água/Yin, Clã Uzumaki, Correntes de Selamento Adamantinas, Habanero Sangrenta): 2 únicas (Correntes de Selamento, linha que paralisa; Habanero Sangrento, setup), kit com Kunai Tática e Dragão de Água, Ultimate Prisão de Correntes da Kurama, buff de ajudante Correntes Adamantinas, sprite pixel art SVG e nova sinergia Clã Uzumaki. Missão: Folha · Jonin · 500 abates · 5 min, depois de selar Minato.
+- **Missões de desbloqueio** com requisitos de **história** (ex.: Neji só depois da Hinata, Hashirama depois da Tsunade, Tobirama depois do Hashirama, Madara depois do Hashirama e Itachi) e **abates na run**. Novo card de missão (história, onde jogar, checklist) no hover da seleção, no painel do shinobi bloqueado e na tela do mapa.
+- **Mapas em sequência**: Areia só após vencer o Genin da Folha, Pedra após o Genin da Areia, Névoa após o Genin da Pedra; dificuldades seguem por mapa.
+- **Pausa**: barra de comandos e botões fixa no rodapé da tela (antes era cortada); texto de teclas da ficha oculto na pausa.
+- **Direção de arte** registrada no AGENTS.md.
+- Verificação: tsc, build, verify-rules (23 shinobis, 69 técnicas) e verify-runtime passaram; teste de navegador da pausa, seleção e mapa.
+
 ## 2026-11-06 — tela Escolha o mapa
 - `src/ui/MapSelect.tsx` + `src/map-select.css`: abas dos 4 mapas com progresso, prévia grande da região (selos de elemento, descrição, climas, shinobi escolhido com Trocar, shinobis para selar no mapa, guardiões por zona) e painel Preparar partida (modo Clássico; Sobrevivência em breve; dificuldades com multiplicadores e cadeados; build selecionada; mochila em breve; Bolsa da Missão com predefinições; Começar com Enter).
 - verify-runtime passa a iniciar pelo botão Começar.

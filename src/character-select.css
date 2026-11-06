@@ -40,5 +40,5 @@
 }
 
 /* Shinobi bloqueado na conta: retrato apagado com cadeado. */
-.cs-card.cs-locked{filter:grayscale(.85) brightness(.7)}
+.cs-card.cs-locked .cs-portrait{filter:grayscale(.85) brightness(.7)}
 .cs-card.cs-locked::after{content:'🔒';position:absolute;top:6px;left:6px;font-size:18px;filter:none}

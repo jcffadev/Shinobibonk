@@ -111,7 +111,8 @@ export const isNpcAlly = (id: string) => id in NPC_ALLIES;
  * shinobi-roster-v2.png (quadrado, imagem inteira). Gerados por `node scripts/generate-sprites.mjs --npcs`.
  * Usados pelo sprite 3D no mapa, pelo cartão de ajudante (Iruka) e pela ficha (via portraitRegion).
  */
-export const NPC_PORTRAITS: Record<string, string> = { iruka: '/assets/shinobis/iruka-1.svg', ebisu: '/assets/shinobis/ebisu-1.svg' };
+/** Retratos em SVG (fora do atlas): NPCs e shinobis novos ainda sem célula no atlas (Kushina). */
+export const NPC_PORTRAITS: Record<string, string> = { iruka: '/assets/shinobis/iruka-1.svg', ebisu: '/assets/shinobis/ebisu-1.svg', kushina: '/assets/shinobis/kushina-1.svg' };
 export const NPC_NAMES: Record<string, string> = { iruka: 'Iruka Umino', ebisu: 'Ebisu' };
 
 /** Naruto Totem: evento fixo do minuto 7 (relógio regressivo 7:00 → 6:00). Valores provisórios. */

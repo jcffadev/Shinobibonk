@@ -19,7 +19,7 @@ const start=async()=>{
 };
 await page.goto('http://127.0.0.1:5176/?test=1');
 await page.getByRole('button',{name:'Escolher shinobi',exact:false}).click();
-assert.equal(await page.locator('.character-card').count(),22);checks.push('22 shinobis selecionáveis');
+assert.equal(await page.locator('.character-card').count(),23);checks.push('23 shinobis selecionáveis');
 await page.getByLabel('Aldeia').selectOption('Vila da Areia');assert.equal(await page.locator('.character-card').count(),3);checks.push('Filtro Areia: Gaara / Temari / Kankuro');
 await page.getByRole('button',{name:'Limpar filtros'}).click();
 await page.screenshot({path:'artifacts/roster.png'});

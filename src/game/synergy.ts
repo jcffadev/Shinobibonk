@@ -89,6 +89,7 @@ export const ORG_COMBOS: Record<string, { tag: string; icon: string; theme: stri
   uchiha: { tag: 'UCHIHA', icon: '👁️', theme: 'Sharingan: crítico.', base: { crit: .03, critDamage: .15 } },
   hyuga: { tag: 'HYUGA', icon: '🤍', theme: 'Byakugan e Punho Gentil: dano crítico e evasão.', base: { critDamage: .12, dodge: .03 } },
   senju: { tag: 'SENJU', icon: '🌳', theme: 'Vitalidade Senju: cura e vida.', base: { regen: .6, health: 20 } },
+  uzumaki: { tag: 'UZUMAKI', icon: '🌀', theme: 'Chakra Uzumaki: vida e resistência.', base: { health: 30, defense: 3 } },
   time10: { tag: 'INO-SHIKA-CHŌ', icon: '🦌', theme: 'Formação Ino-Shika-Chō: área e duração de status.', base: { area: .06, duration: .1 } },
   time8: { tag: 'TIME 8', icon: '🐕', theme: 'Equipe de rastreamento: coleta e movimento.', base: { pickupFlat: .8, move: .05 } },
   espadachins: { tag: 'ESPADACHINS', icon: '🗡️', theme: 'Sete Espadachins da Névoa: dano crítico e velocidade de ataque.', base: { critDamage: .2, attackSpeed: .05 } },

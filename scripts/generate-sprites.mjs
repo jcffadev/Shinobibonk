@@ -131,7 +131,32 @@ const EBISU=npcSprite(d=>{
  d.rect(21,23,22,23,'#101018');d.rect(42,23,43,23,'#101018');
  d.rect(30,29,34,29,P.mouth);d.px(35,28,P.mouth);
 });
+/** Kushina Uzumaki (Narutopedia): cabelo ruivo muito longo com presilha na franja, blusa clara e vestido verde longo. */
+const KUSHINA=npcSprite(d=>{
+ const hair='#c4262e',hairLight='#e2464a',hairDark='#8a1720';
+ // Camada de trás do cabelo: cai até a cintura dos dois lados
+ d.poly([[19,14],[45,14],[49,30],[48,44],[44,46],[42,34],[22,34],[20,46],[16,44],[15,30]],hair);
+ d.poly([[16,30],[19,28],[21,44],[18,45]],hairDark);d.poly([[48,30],[45,28],[43,44],[46,45]],hairDark);
+ konohaBody(d,{sleeve:'#efe3c4',shirt:'#efe3c4'});
+ // Vestido verde longo por cima (cobre o tronco e as pernas até a canela)
+ const dress='#4f7a4a',dressShade='#3a5c37',dressLight='#6a9662';
+ d.poly([[25,34],[39,34],[42,53],[22,53]],dress);d.rect(25,34,26,52,dressShade);d.rect(38,34,39,52,dressShade);d.rect(22,52,42,53,dressShade);
+ d.rect(28,34,36,35,dressLight);d.rect(31,37,33,50,dressShade);
+ d.rect(25,31,39,33,'#efe3c4');d.rect(25,33,39,33,'#d8c9a5');// gola da blusa
+ hands(d,{forearm:false});
+ face(d);
+ // Cabelo da frente: topo, franja repartida e mechas laterais
+ d.ellipse(32,14.5,13,8.5,hair,(x,y)=>y<=17);d.ellipse(28,11,7,3.5,hairLight,(x,y)=>y<=11);
+ d.poly([[20,14],[24,14],[23,28],[19,30]],hair);d.poly([[44,14],[40,14],[41,28],[45,30]],hair);
+ d.poly([[24,15],[31,15],[27,21]],hair);d.poly([[33,15],[40,15],[37,20]],hair);d.poly([[29,15],[35,15],[32,19]],hairDark);
+ // Presilha prendendo a franja à esquerda
+ d.rect(22,16,25,17,'#e8d8a8');d.rect(22,17,25,17,'#b9a777');
+ eyes(d,hairDark);
+ // Sorriso confiante
+ d.rect(30,29,34,29,P.mouth);d.px(29,28,P.mouth);d.px(35,28,P.mouth);
+});
 fs.mkdirSync('public/assets/shinobis',{recursive:true});
+fs.writeFileSync('public/assets/shinobis/kushina-1.svg',KUSHINA);
 fs.writeFileSync('public/assets/shinobis/iruka-1.svg',IRUKA);
 fs.writeFileSync('public/assets/shinobis/ebisu-1.svg',EBISU);
 console.log('Gerados sprites dos NPCs: iruka-1.svg, ebisu-1.svg.');
