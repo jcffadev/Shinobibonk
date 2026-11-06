@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 2026-11-06 — técnicas por fase, escala/Final Swarm, pílulas com raridade, sorte, roleta e economia exponencial
+- **Técnicas por fase da obra** (`PHASE_LEVELS` em heroes.ts): Naruto começa com Kage Bunshin; **Invocação do Sapo** (compartilhada com Jiraiya; Kuchiyose: Yatai Kuzushi, Neutro, Área, atordoa) no Nv. 10; Rasengan Nv. 15; Modo Sábio Nv. 25. Revisão por estreia na Narutopedia em Sasuke, Sakura, Itachi, Minato, Tsunade, Jiraiya, Lee, Neji, Hinata e Shikamaru. 70 técnicas.
+- **Itens só por interação**: removido o drop de item por abate (era a origem dos itens no nível máximo; a emboscada só aumentava os abates). Nível máximo dá só Treino.
+- **Pílulas**: raridade pela Sorte (Comum 1 nível … Lendário 5); pílula no limite não aparece em cartas, drops nem roleta; tudo no máximo vira Treino.
+- **Sorte**: `rollItems` sorteia a raridade e depois o item (antes caía em Comum quando a raridade não tinha item desbloqueado); Comum cai mais rápido com a Sorte.
+- **Horda e escala**: spawn em lote (`SPAWN_RULES`), tempo total da run para a ameaça, teto até 1600, HP ×(1+0,3·min)·1,15^min; técnicas ganham +30% a +250% de dano por level-up.
+- **Final Swarm**: ao zerar o tempo, aviso, relógio "+m:ss" de sobrevivência e dificuldade ×3 crescendo +25% por minuto (`FINAL_SWARM`).
+- **Roleta**: nerf 2 (boas ~35% com Sorte 0), porcentagens exibidas = sorteio real, entrega total verificada, ícones do atlas novo.
+- **Economia exponencial**: kunai/shuriken 20×1,5^usos, roleta 30×1,35^giros, mercador ×1,35, tudo ×1,15 por minuto de run (`PRICE_INFLATION`); kunai chega a milhões no late game.
+- Verificação: tsc, verify-rules e verify-runtime (24 checks) passaram nos subagentes.
+
 ## 2026-11-06 — roleta nerfada e corrigida, sorte recalibrada
 - **Roleta da Tsunade — entrega corrigida**: bênçãos iguais agora acumulam (até 3×) em vez de se sobrescrever; pílula que chega no limite vira Ryu; item que já está no limite vira Ryu em vez de travar a escolha.
 - **Roleta — nerf**: giro 30 Ryu +10 por giro; casas boas reduzidas (kunai/shuriken/pílula 9, Ryu 7, bênção 6, item 4, Sorte Grande 1) e ruins/vazia aumentadas (dívida 12, azar 10, credores 9, vazia 17). Boas: Sorte 0 = 48% (antes 63%), Sorte 200 = 77%.

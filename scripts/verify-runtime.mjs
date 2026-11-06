@@ -32,12 +32,12 @@ await page.keyboard.press('w');const before=(await state()).player;
 await page.keyboard.down('w');await page.waitForTimeout(400);await page.keyboard.up('w');
 assert.ok(Math.hypot((await state()).player.x-before.x,(await state()).player.z-before.z)>1);checks.push('Movimento WASD');
 await debug('clearEnemies');await debug('reward');await wait();
-const low=(await state()).choice;assert.ok(low.filter(c=>c.kind==='skill').every(c=>c.name==='Shuriken'));checks.push('Rasengan bloqueado nos níveis iniciais');
+const low=(await state()).choice;assert.ok(low.filter(c=>c.kind==='skill').every(c=>c.name==='Kage Bunshin'));checks.push('Rasengan bloqueado nos níveis iniciais');
 const uses=(await state()).uses;await page.keyboard.press('f');assert.equal((await state()).uses.reroll,uses.reroll-1);
 await page.keyboard.press('z');let chosen=(await state()).choice.findIndex(c=>c.kind!=='stat');const bannedName=(await state()).choice[chosen].name;await page.keyboard.press(String(chosen+1));assert.equal((await state()).uses.ban,2);assert.ok(!(await state()).choice.some(c=>c.name===bannedName));await page.keyboard.press('x');assert.equal((await state()).uses.skip,2);checks.push('Atualizar, banir e pular debitam usos; banimento exclui futuras ofertas');
 await debug('dismiss');await debug('setLevel',10);await debug('reward');await wait();
 assert.equal((await state()).form,'Clássico');let selected=(await state()).choice.findIndex(c=>c.kind==='skill');assert.ok(selected>=0);
-const offer=(await state()).choice[selected];await page.keyboard.press(String(selected+1));assert.equal((await state()).skills[offer.name],offer.name==='Shuriken'?2:1);assert.deepEqual((await state()).growth[offer.name],offer.growth);checks.push('Afixos sorteados aplicados à habilidade escolhida');
+const offer=(await state()).choice[selected];await page.keyboard.press(String(selected+1));assert.equal((await state()).skills[offer.name],offer.name==='Kage Bunshin'?2:1);assert.deepEqual((await state()).growth[offer.name],offer.growth);checks.push('Afixos sorteados aplicados à habilidade escolhida');
 for(const [lv,form] of [[25,'Shippuden'],[50,'Manto da Kyuubi']]){await debug('setLevel',lv);assert.equal((await state()).form,form);}
 checks.push('Naruto evolui nos níveis 10 / 25 / 50 com troca de forma');
 await debug('setLevel',10);await debug('dismiss');await wait();await debug('clearEnemies');

@@ -26,7 +26,8 @@ export const FORMS:Record<string,Form[]>={
 };
 export function formAt(id:string,level:number){const list=FORMS[id]??[{level:1,name:'Shinobi'}];return [...list].reverse().find(f=>level>=f.level)??list[0];}
 export function spriteFile(id:string,level=1){if(id==='naruto')return `/assets/shinobis/${NARUTO_FORMS.find(f=>f.name===formAt(id,level).name)!.file}.svg`;if(HERO_BY_ID[id]?.atlas!==undefined&&formAt(id,level).level===1)return null;return `/assets/shinobis/${id}-${formAt(id,level).level}.svg`;}
-export function requiredLevel(heroId:string,index:number){return heroId==='naruto'?[1,10,5,15][index]:[1,5,12,20][index];}
+/** Nível de liberação da técnica `index` do kit (fonte única: `unlockLevel` em heroes.ts, ajustado por fase da obra). */
+export function requiredLevel(heroId:string,index:number){return HERO_BY_ID[heroId]?.techniques[index]?.unlockLevel??[1,5,12,20][index];}
 const evolvedCells=Object.entries(FORMS).flatMap(([id,forms])=>id==='naruto'?[]:forms.filter(f=>f.level>1).map(f=>id+'-'+f.level));
 import { BIJUU } from './bijuu.ts';
 const leafPortraits = ['ebisu', 'iruka', 'kushina'];

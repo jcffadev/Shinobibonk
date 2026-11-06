@@ -3,12 +3,28 @@ import { bonusText } from './allies.ts';
 import type { Technique, Element } from './heroes';
 export type SkillGrowth={damage:number;area:number;haste:number;duration:number};
 export const NO_GROWTH:SkillGrowth={damage:0,area:0,haste:0,duration:0};
+export const RARITY_ORDER:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
+/** Sorteia o índice de raridade (0 Comum … 4 Lendário) pelos pesos de Sorte de luckRarityWeights (mesma curva de itens/técnicas/pílulas). */
+export function rollRarityTier(luck:number,rng=Math.random):number{
+ const weights=luckRarityWeights(luck);let value=rng()*weights.reduce((a,b)=>a+b,0);
+ for(let i=0;i<5;i++){value-=weights[i];if(value<0)return i;}
+ return 4;
+}
+/**
+ * Afixos por nível de técnica (%), por raridade [Comum, Incomum, Raro, Épico, Lendário]: base + aleatório(0..spread).
+ * DANO das técnicas de ataque é a principal fonte de escala do jogador (referência PokéBonk: técnica Nv. 10 com +300%/nível):
+ * sempre vem no level-up de técnica de ataque e cresce muito com a raridade. Área/recarga/duração e buffs (setups) usam a tabela menor.
+ */
+export const GROWTH_ROLLS={damage:{base:[30,55,90,150,250],spread:[15,20,30,50,80]},other:{base:[10,18,25,30,40],spread:[8,10,10,15,15]}};
 export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rarity:Rarity;growth:SkillGrowth}{
- const weights=luckRarityWeights(luck);let value=rng()*weights.reduce((a,b)=>a+b,0),tier=4;
- for(let i=0;i<5;i++){value-=weights[i];if(value<0){tier=i;break;}}
- const keys:(keyof SkillGrowth)[]=technique.setup?['damage','haste','duration']:['damage','area','haste'];if(!technique.setup&&(technique.status||technique.burn))keys.push('duration');
- const growth={...NO_GROWTH};for(let n=0;n<(tier>=3?3:2)&&keys.length;n++){const key=keys.splice(Math.floor(rng()*keys.length),1)[0];growth[key]=Math.round(([10,18,25,30,40][tier]+rng()*[8,10,10,15,15][tier]))/100;}
- return {rarity:(['Comum','Incomum','Raro','Épico','Lendário'] as Rarity[])[tier],growth};
+ const tier=rollRarityTier(luck,rng);
+ const keys:(keyof SkillGrowth)[]=technique.setup?['damage','haste','duration']:['area','haste'];if(!technique.setup&&(technique.status||technique.burn))keys.push('duration');
+ const growth={...NO_GROWTH},count=tier>=3?3:2;
+ const roll=(table:{base:number[];spread:number[]})=>Math.round(table.base[tier]+rng()*table.spread[tier])/100;
+ // Técnica de ataque: dano garantido (tabela grande) + 1–2 afixos secundários.
+ if(!technique.setup)growth.damage=roll(GROWTH_ROLLS.damage);
+ for(let n=technique.setup?0:1;n<count&&keys.length;n++){const key=keys.splice(Math.floor(rng()*keys.length),1)[0];growth[key]=roll(GROWTH_ROLLS.other);}
+ return {rarity:RARITY_ORDER[tier],growth};
 }
 export function growthText(g:SkillGrowth,technique?:Technique){const labels=technique?.setup?{damage:'força do buff',area:'área',haste:'recarga do buff',duration:'duração do buff'}:{damage:'dano',area:'raio de área',haste:'velocidade de ataque',duration:'duração'};return (Object.entries(g) as [keyof SkillGrowth,number][]).filter(([,n])=>n>0).map(([key,n])=>`+${Math.round(n*100)}% ${labels[key]}`).join(' · ');}
 

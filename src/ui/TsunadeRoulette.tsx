@@ -1,7 +1,8 @@
 import { ItemIcon } from './RunSheet';
 import { BuffText } from './BuffText';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ROULETTE_CASAS, ROULETTE_RULES, badChance, goodChance, type RoulettePrize, type RouletteView } from '../game/roulette';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
+import { ROULETTE_CASAS, ROULETTE_RULES, badChance, goodChance, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
+import { itemArt, pillArt } from '../game/inventoryArt';
 import '../tsunade-roulette.css';
 
 /**
@@ -22,6 +23,17 @@ function send<T>(action: string): T | undefined {
   return detail.result as T | undefined;
 }
 const pct = (v: number) => (v * 100).toFixed(1).replace('.', ',') + '%';
+/** Ícones das casas no atlas novo do inventário (inventoryArt.ts); casas sem arte equivalente (vazia) mantêm o símbolo. */
+const CASA_ART: Partial<Record<RouletteCasaId, () => CSSProperties | undefined>> = {
+  kunai: () => itemArt('swift-kunai'), shuriken: () => itemArt('tenten'), pill: () => pillArt.soldado, ryu: () => itemArt('coins'),
+  item: () => itemArt('forbidden-scroll'), jackpot: () => itemArt('ryo-nugget'), buff: () => itemArt('life'), lose: () => itemArt('gold-tooth'),
+  debuff: () => itemArt('red-moon'), ambush: () => itemArt('kubikiribocho'),
+};
+function CasaIcon({ id, fallback, label }: { id: RouletteCasaId; fallback: string; label: string }) {
+  const style = CASA_ART[id]?.();
+  return style ? <span role="img" aria-label={label} className="catalog-icon tr-casa-icon" style={style} /> : <>{fallback}</>;
+}
+const fmtRyu = (n: number) => n.toLocaleString('pt-BR');
 
 export function TsunadeRoulette({ view }: { view: RouletteView }) {
   const [live, setLive] = useState<RouletteView>(view);
@@ -105,15 +117,15 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
         <div className="tr-wheel-col">
           <div className="tr-pointer" aria-hidden>▼</div>
           <div className={`tr-wheel${spinning ? ' is-spinning' : ''}${turbo ? ' is-turbo' : ''}`} style={{ background: WHEEL_BG, transform: `rotate(${rotation}deg)`, transition: duration ? `transform ${duration}ms cubic-bezier(.15,.75,.2,1)` : 'none' }}>
-            {ROULETTE_CASAS.map((c, i) => <span key={c.id} className={`tr-casa kind-${c.kind}`} style={{ transform: `rotate(${i * SEG + SEG / 2}deg)` }}><b title={c.label}>{c.icon}</b></span>)}
+            {ROULETTE_CASAS.map((c, i) => <span key={c.id} className={`tr-casa kind-${c.kind}`} style={{ transform: `rotate(${i * SEG + SEG / 2}deg)` }}><b title={c.label}><CasaIcon id={c.id} fallback={c.icon} label={c.label} /></b></span>)}
             <div className="tr-hub">綱</div>
           </div>
           <div className={`tr-result${last ? ' kind-' + last.kind : ''}`} aria-live="polite">
-            {spinning ? <span>Girando…{turbo ? ' (giro rápido)' : ''}</span> : last ? <><b>{last.item||last.pill?<ItemIcon name={last.item??last.pill!}/>:last.icon} {last.label}</b><small>{last.detail}</small></> : <span>Aperte E para girar</span>}
+            {spinning ? <span>Girando…{turbo ? ' (giro rápido)' : ''}</span> : last ? <><b>{last.item||last.pill?<ItemIcon name={last.item??last.pill!}/>:<CasaIcon id={last.id} fallback={last.icon} label={last.label}/>} {last.label}</b><small>{last.detail}</small></> : <span>Aperte E para girar</span>}
           </div>
           {message && <p className="tr-message">{message}</p>}
           <div className="tr-actions">
-            <button className="tr-spin" onClick={() => spin(false)} disabled={spinning}>Girar · {live.cost} Ryu <kbd>E</kbd></button>
+            <button className="tr-spin" onClick={() => spin(false)} disabled={spinning}>Girar · {fmtRyu(live.cost)} Ryu <kbd>E</kbd></button>
             <button className={`tr-fast${fast ? ' on' : ''}`} onClick={toggleFast} aria-pressed={fast}>Giro rápido ao segurar E: {fast ? 'Ligado' : 'Desligado'} <kbd>F</kbd></button>
             <button className="tr-exit" onClick={exit}>Sair e receber <kbd>Esc</kbd></button>
           </div>
@@ -121,19 +133,19 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
         </div>
         <div className="tr-side">
           <dl className="tr-stats">
-            <div><dt>Ryu</dt><dd>🪙 {live.money}</dd></div>
-            <div><dt>Próximo giro</dt><dd>{live.cost} Ryu <small>(+{ROULETTE_RULES.costStep}/giro{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
+            <div><dt>Ryu</dt><dd><CasaIcon id="ryu" fallback="🪙" label="Ryu" /> {fmtRyu(live.money)}</dd></div>
+            <div><dt>Próximo giro</dt><dd>{fmtRyu(live.cost)} Ryu <small>(×{String(ROULETTE_RULES.costGrowth).replace('.', ',')}/giro · sobe com o tempo{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
             <div><dt>Giros na run</dt><dd>{live.spins}</dd></div>
-            <div><dt>Ryu gasto na run</dt><dd>{live.ryuSpent}</dd></div>
+            <div><dt>Ryu gasto na run</dt><dd>{fmtRyu(live.ryuSpent)}</dd></div>
             <div><dt>Sorte</dt><dd>🍀 {live.luck}</dd></div>
             <div><dt>Pressão da zona</dt><dd>⚠ {live.pressure.toFixed(2).replace('.', ',')}</dd></div>
           </dl>
           <div className="tr-odds"><b>Chances atuais</b> <span className="good">Boas {pct(good)}</span> · <span className="bad">Ruins {pct(bad)}</span>
-            <ul>{ROULETTE_CASAS.map(c => <li key={c.id} className={`kind-${c.kind}`} title={c.description}><i>{c.icon}</i><span>{c.label}</span><em>{pct(live.weights[c.id] ?? 0)}</em></li>)}</ul>
+            <ul>{ROULETTE_CASAS.map(c => <li key={c.id} className={`kind-${c.kind}`} title={c.description}><i><CasaIcon id={c.id} fallback={c.icon} label={c.label} /></i><span>{c.label}</span><em>{pct(live.weights[c.id] ?? 0)}</em></li>)}</ul>
           </div>
           <div className="tr-pending">
             <b>Ganhos desta visita · {revealed.length} giro(s) · {live.sessionSpent} Ryu</b> <small>{goods} bons · {bads} ruins</small>
-            <ol>{[...revealed].reverse().map(p => <li key={p.seq} className={`kind-${p.kind}`}><i>{p.item||p.pill?<ItemIcon name={p.item??p.pill!}/>:p.icon}</i><span>{p.label}<small><BuffText text={p.detail}/></small></span></li>)}</ol>
+            <ol>{[...revealed].reverse().map(p => <li key={p.seq} className={`kind-${p.kind}`}><i>{p.item||p.pill?<ItemIcon name={p.item??p.pill!}/>:<CasaIcon id={p.id} fallback={p.icon} label={p.label}/>}</i><span>{p.label}<small><BuffText text={p.detail}/></small></span></li>)}</ol>
             {!revealed.length && <p className="tr-empty">Nada ainda. Os resultados aparecem aqui e são entregues ao sair.</p>}
           </div>
         </div>

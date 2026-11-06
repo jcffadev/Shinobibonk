@@ -1,4 +1,4 @@
-import type { Bonuses, StatKey } from './catalog.ts';
+import type { Bonuses, Rarity, StatKey } from './catalog.ts';
 
 // Fonte única das pílulas da run (cartas de level-up, drop rosa, caça-níquel, build e ficha).
 // Formato: cada pílula eleva UM atributo por nível, acumulando até PILL_MAX níveis.
@@ -94,11 +94,19 @@ export function pillDescription(name: string): string {
   return def ? `${pillEffectText(name, 1)} por nível (máx. ${def.max}). ${def.flavor}` : '';
 }
 
-/** Descrição da carta de level-up gerada dos dados. */
-export function pillOfferText(name: string, current: number, extraCap = 0): string {
+/**
+ * Qualidade das cartas de pílula (igual às técnicas): a raridade é sorteada pela Sorte (rollRarityTier/luckRarityWeights)
+ * e define quantos NÍVEIS a carta concede de uma vez. Os níveis continuam sendo a única fonte do bônus (recalculado de knownPills),
+ * então não há buff residual; o total respeita o limite (PILL_MAX + pillCap).
+ */
+export const PILL_RARITY_LEVELS: Record<Rarity, number> = { Comum: 1, Incomum: 2, Raro: 3, Épico: 4, Lendário: 5 };
+
+/** Descrição da carta de level-up gerada dos dados (`amount` = níveis concedidos pela raridade, limitado ao máximo). */
+export function pillOfferText(name: string, current: number, extraCap = 0, amount = 1): string {
   const def = PILL_BY_NAME[name];
   if (!def) return '';
-  return `${pillEffectText(name, 1)}. Nv. ${current} → ${current + 1} / ${def.max + extraCap}`;
+  const after = Math.min(def.max + extraCap, current + Math.max(1, amount));
+  return `${pillEffectText(name, after - current)} (${after - current} nív.). Nv. ${current} → ${after} / ${def.max + extraCap}`;
 }
 
 /** Verifica o limite de níveis e de tipos na run. */

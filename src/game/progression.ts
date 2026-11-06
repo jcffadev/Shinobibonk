@@ -41,14 +41,31 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
 /** Escala das missões sobre a base Genin (o que é salvo no debug vale como Genin e é multiplicado por isto). */
 export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6};
 /** Crescimento por nível do shinobi é LINEAR (+3% dano/HP por nível): o nível passa de 1000 (referência PokéBonk); o dano massivo vem de técnicas, projéteis, críticos e itens. */
-/** Escala dos inimigos com o tempo da run. Valores provisórios; o debug multiplica por cima. */
-export const ENEMY_SCALING={hpPerMinute:1.1,damagePerMinute:1.05,maxEnemies:1400,minSpawnInterval:.03,armorPerMinute:.015,maxArmor:.6};
-export function difficultyAt(rank:Difficulty,seconds:number,curse=1){
-  const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60;
-  // Escala exponencial (pedido do usuário, 06/11/2026): HP e dano dos inimigos crescem a cada minuto, a horda chega a ~1400
-  // e os inimigos ganham resistência (armor = fração do dano bloqueada) até forçar o jogador a avançar de zona.
-  const S=ENEMY_SCALING;
-  return {hp:tier*(1+minutes*.22)*Math.pow(S.hpPerMinute,minutes)*curse,damage:tier*(1+minutes*.15)*Math.pow(S.damagePerMinute,minutes)*curse,speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,spawnInterval:Math.max(S.minSpawnInterval,.7/(tier*(1+minutes*.3))),cap:Math.min(S.maxEnemies,Math.floor((70+minutes*14+minutes*minutes*1.1)*(.85+tier*.15))),armor:Math.min(S.maxArmor,minutes*S.armorPerMinute)};
+/**
+ * Escala dos inimigos com o tempo TOTAL da run (não reseta por zona). Valores provisórios; o debug multiplica por cima.
+ * Revisão 06/11/2026 (pedido do usuário: "8 min e só 60 bichos", "HP/dano baixíssimos"):
+ * - HP  = tier × (1 + min × hpLinear) × hpPerMinute^min      → Genin: 2 min ×2,1 · 5 min ×5,0 · 8 min ×10,4 · 10 min ×16 · 15 min ×46 · 30 min ×660
+ * - Dano= tier × (1 + min × damageLinear) × damagePerMinute^min → 10 min ×5,4 · 30 min ×40
+ * - Teto da horda = (capBase + capLinear×min + capQuad×min²) × (0,85 + tier×0,15), até maxEnemies (1600 no Genin aos 10 min)
+ * - Spawns por segundo = (spawnBase + spawnPerMinute×min) × √tier, até maxSpawnPerSecond (o jogo repõe em lote, sem 1-por-quadro)
+ */
+export const ENEMY_SCALING={hpLinear:.3,hpPerMinute:1.15,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.015,maxArmor:.6};
+/**
+ * FINAL SWARM: quando o relógio da zona zera, o jogo NÃO acaba; conta o tempo sobrevivido e a dificuldade triplica na hora
+ * (HP, dano, defesa e quantidade/spawn) e cresce growthPerMinute a cada minuto sobrevivido (além da escala normal por tempo).
+ * A quantidade fica presa em ENEMY_SCALING.maxEnemies (limite de performance); a triplicação vira spawn ×3 (reposição instantânea).
+ */
+export const FINAL_SWARM={multiplier:3,growthPerMinute:.25,maxArmor:.85};
+/** Multiplicador do FINAL SWARM para `overtimeSeconds` sobrevividos após o relógio zerar (1 = fora do swarm). */
+export function finalSwarmFactor(overtimeSeconds:number){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60):1;}
+export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
+  const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds);
+  const spawnPerSecond=Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier))*swarm;
+  return {hp:tier*(1+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*curse*swarm,damage:tier*(1+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
+    speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,
+    spawnPerSecond,spawnInterval:1/spawnPerSecond,
+    cap:Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*swarm)),
+    armor:swarm>1?Math.min(FINAL_SWARM.maxArmor,minutes*S.armorPerMinute*swarm):Math.min(S.maxArmor,minutes*S.armorPerMinute),swarm};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}
 export function rollCritical(chance:number,criticalMultiplier=2.5,rng=Math.random):{tier:0|1|2;multiplier:number}{

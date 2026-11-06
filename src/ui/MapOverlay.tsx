@@ -2,6 +2,7 @@ import { MAP_SIZE } from '../game/worldScale';
 import type { MouseEvent, ReactNode } from 'react';
 import type { WorldSnapshot } from '../scene/GameCanvas';
 import { HeroPortrait } from './RunSheet';
+import { EnemyDots } from './EnemyDots';
 import '../map.css';
 
 // Mapa completo (M), mapa rápido (Tab), marcadores do minimapa e HUD de rota/ping.
@@ -78,7 +79,7 @@ export function MapPanel({ world, quick }: { world: WorldSnapshot; quick: boolea
       {world.explored.map((cell, i) => <span className="map-revealed" key={i} style={pos(cell.x, cell.z)} />)}
       {r && <svg className="map-route-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={coordinate(world.player.x)} y1={coordinate(world.player.z)} x2={coordinate(r.x)} y2={coordinate(r.z)} /></svg>}
       <span className="world-player" style={pos(world.player.x, world.player.z)}>▲</span>
-      {world.enemies.map((enemy, i) => <b key={i} style={pos(enemy.x, enemy.z)} />)}
+      <EnemyDots enemies={world.enemies} project={(x, z) => [coordinate(x), coordinate(z)]} radius={3.5} />
       {world.pickups.map((p, i) => <i className={`known-map-event map-marker pickup${r?.id === p.id ? ' routed' : ''}`} key={p.id ?? 'p' + i} style={pos(p.x, p.z)} title={`${p.name ?? PICKUP_LABEL[p.kind]} · ${meters(dist(world, p.x, p.z))} · clique para traçar rota`} onClick={p.id ? pick(p.id) : undefined}><PickupIcon p={p} size="map" /></i>)}
       {world.events.map(m => <i className={`known-map-event map-marker${r?.id === m.id ? ' routed' : ''}${m.active === false ? ' used' : ''}`} key={m.id} style={pos(m.x, m.z)} title={`${m.name} · ${meters(dist(world, m.x, m.z))}${m.active === false ? ' · já usado nesta zona' : r?.id === m.id ? ' · clique para limpar a rota' : ' · clique para traçar rota'}`} onClick={pick(m.id)}><MarkerIcon m={m} size="map" /><small>{m.name}</small></i>)}
       {world.ping && <i className={`known-map-event map-marker ping${r?.id === 'ping' ? ' routed' : ''}`} style={pos(world.ping.x, world.ping.z)} title={r?.id === 'ping' ? 'Ping · clique para limpar' : 'Ping (G) · clique para traçar rota'} onClick={e => { e.stopPropagation(); route(r?.id === 'ping' ? null : 'ping'); }}>📍</i>}

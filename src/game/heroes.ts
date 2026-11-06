@@ -49,27 +49,34 @@ const L={
  prisaoSombra:t('Prisão das Sombras','Genjutsu','Sombra','Área'),
  nevoa:t('Névoa Venenosa','Ninjutsu','Sombra','Área'),
  modoSabio:s('Modo Sábio','Ninjutsu','Sábio',SAGE_MODE),
+ /**
+  * Invocação do Sapo = Kuchiyose: Yatai Kuzushi no Jutsu (Narutopedia "Summoning: Food Cart Destroyer Technique",
+  * consultado em 06/11/2026): o usuário invoca um sapo gigante no ar, que cai e esmaga a área, prendendo os alvos sob o peso.
+  * Usuários canônicos: Jiraiya, Minato, Naruto → técnica COMPARTILHADA (Naruto e Jiraiya no kit). Ninjutsu de espaço-tempo
+  * SEM natureza: elemento Neutro (o Suiton: Teppōdama de Gamabunta é técnica do sapo e Água fugiria da base Vento do Naruto).
+  */
+ sapo:{...t('Invocação do Sapo','Ninjutsu','Neutro','Área',1.5),status:'Atordoar' as Control,statusChance:.3,cooldown:2.6},
 };
 /** Nomes das técnicas compartilhadas; qualquer outra técnica de um kit é ÚNICA daquele shinobi. */
 export const SHARED_TECHNIQUES=new Set(Object.values(L).map(x=>x.name));
 // Temas canônicos; percentuais, atributos e composições são regras originais de protótipo. U = única, L.* = compartilhada.
 export const HEROES:Hero[]=[
- h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[L.shuriken,t('Rasengan','Ninjutsu','Vento','Área',1.5),t('Kage Bunshin','Taijutsu','Neutro','Projétil',1.2),L.modoSabio],'Rasenshuriken Supremo','Área, velocidade de ataque e projéteis',0),
+ h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[t('Kage Bunshin','Taijutsu','Neutro','Projétil',1.2),L.sapo,t('Rasengan','Ninjutsu','Vento','Área',1.5),L.modoSabio],'Rasenshuriken Supremo','Área, velocidade de ataque e projéteis',0),
  h('gaara','Gaara','Vila da Areia','#c87557',145,22,4,6.3,'Defesa Ofensiva · +8 armadura e +1% de dano total para cada ponto de armadura.',{defense:8},[L.agulhasAreia,t('Caixão de Areia','Ninjutsu','Areia','Área',1.5),L.ondaAreia,t('Sepultamento','Ninjutsu','Areia','Área',1.6)],'Funeral do Deserto','Área, armadura e duração',1),
  h('madara','Madara','Clã Uchiha','#b94f61',120,24,3,6.8,'Sharingan · +7 pontos de chance crítica: 12% total; críticos causam 250% do dano.',{crit:.07},[t('Leque de Guerra','Taijutsu','Neutro','Cone'),L.bolaFogo,L.susanoo,t('Chamas Majestosas','Ninjutsu','Fogo','Cone',1.6)],'Meteorito','Crítico, fogo e ninjutsu',2),
  h('hashirama','Hashirama','Vila da Folha','#62a678',155,23,8,6.2,'Poder Sábio · +20% de dano em ataques de elemento Sábio; infusão disponível por técnica ou item.',{regen:.8},[L.punho,t('Estacas Mokuton','Ninjutsu','Madeira','Linha'),L.raizes,t('Floresta Profunda','Ninjutsu','Sábio','Área',1.6)],'Mil Mãos de Madeira','Regeneração, vida e área',3),
- h('sasuke','Sasuke','Clã Uchiha','#818adc',120,21,5,7,'Afinidade Raiton · +20% dano de ninjutsu.',{element:.2},[L.kunai,t('Chidori','Ninjutsu','Raio','Linha',1.5),L.bolaFogo,t('Amaterasu','Ninjutsu','Fogo','Área',1.4)],'Kirin','Ninjutsu, crítico e status'),
- h('sakura','Sakura','Vila da Folha','#e78fa8',140,25,7,6.5,'Controle de Chakra · +20% dano de taijutsu e +0,5 HP/s de regeneração.',{normal:.2,regen:.5},[L.punho,t('Impacto de Sakura','Taijutsu','Terra','Área',1.5),L.chute,L.ruptura],'Força dos Cem','Taijutsu, vida e velocidade de ataque'),
+ h('sasuke','Sasuke','Clã Uchiha','#818adc',120,21,5,7,'Afinidade Raiton · +20% dano de ninjutsu.',{element:.2},[L.kunai,L.bolaFogo,t('Chidori','Ninjutsu','Raio','Linha',1.5),t('Amaterasu','Ninjutsu','Fogo','Área',1.4)],'Kirin','Ninjutsu, crítico e status'),
+ h('sakura','Sakura','Vila da Folha','#e78fa8',140,25,7,6.5,'Controle de Chakra · +20% dano de taijutsu e +0,5 HP/s de regeneração.',{normal:.2,regen:.5},[L.punho,L.chute,t('Impacto de Sakura','Taijutsu','Terra','Área',1.5),L.ruptura],'Força dos Cem','Taijutsu, vida e velocidade de ataque'),
  h('kakashi','Kakashi','Vila da Folha','#aabccc',125,20,5,7,'Leitura de Combate · +5 pontos de chance crítica e +10% velocidade de ataque.',{crit:.05,attackSpeed:.1},[L.kunai,t('Raikiri','Ninjutsu','Raio','Linha',1.6),L.dragaoAgua,L.parede],'Kamui','Crítico, ninjutsu e recarga'),
- h('itachi','Itachi','Clã Uchiha','#d75f68',110,21,3,6.8,'Ilusão do Corvo · +20 pontos de chance de lentidão e +25% duração de status.',{status:.2,duration:.25},[L.shuriken,t('Corvos Ilusórios','Genjutsu','Sombra','Órbita'),L.fenix,t('Tsukuyomi','Genjutsu','Sombra','Área',1.4)],'Espada de Totsuka','Genjutsu, duração e crítico'),
+ h('itachi','Itachi','Clã Uchiha','#d75f68',110,21,3,6.8,'Ilusão do Corvo · +20 pontos de chance de lentidão e +25% duração de status.',{status:.2,duration:.25},[L.shuriken,L.fenix,t('Corvos Ilusórios','Genjutsu','Sombra','Órbita'),t('Tsukuyomi','Genjutsu','Sombra','Área',1.4)],'Espada de Totsuka','Genjutsu, duração e crítico'),
  h('minato','Minato','Vila da Folha','#ffe19a',115,19,4,7,'Relâmpago Amarelo · +20% movimento e +15% velocidade de ataque.',{move:.2,attackSpeed:.15},[t('Kunai Hiraishin','Taijutsu','Neutro','Em V'),L.corteRaio,L.vendaval,t('Barreira Espaço-Tempo','Ninjutsu','Neutro','Onda')],'Hiraishin em Cadeia','Movimento, velocidade de ataque e projéteis'),
- h('tsunade','Tsunade','Vila da Folha','#86be8e',165,25,8,6,'Vitalidade Senju · +0,9 HP/s de regeneração e +15% taijutsu.',{regen:.9,normal:.15},[L.punho,t('Chute Celestial','Taijutsu','Terra','Área',1.5),s('Byakugou','Taijutsu','Neutro',{cooldown:18,duration:8,bonuses:{regen:3,defense:12,normal:.2},stack:false,summary:'Libera o selo da testa: regeneração intensa, +armadura e +dano de taijutsu.'}),L.ruptura],'Invocação de Katsuyu','HP, regeneração e taijutsu'),
- h('jiraiya','Jiraiya','Vila da Folha','#d77d72',145,22,6,6.3,'Sábio dos Sapos · +20% raio de área e +15% recarga da Ultimate.',{area:.2,cool:.15},[t('Agulhas de Cabelo','Ninjutsu','Neutro','Cone'),t('Óleo Flamejante','Ninjutsu','Fogo','Onda'),L.bolaFogo,L.modoSabio],'Invocação de Gamabunta','Área, ninjutsu e recarga'),
+ h('tsunade','Tsunade','Vila da Folha','#86be8e',165,25,8,6,'Vitalidade Senju · +0,9 HP/s de regeneração e +15% taijutsu.',{regen:.9,normal:.15},[L.punho,t('Chute Celestial','Taijutsu','Terra','Área',1.5),L.ruptura,s('Byakugou','Taijutsu','Neutro',{cooldown:18,duration:8,bonuses:{regen:3,defense:12,normal:.2},stack:false,summary:'Libera o selo da testa: regeneração intensa, +armadura e +dano de taijutsu.'})],'Invocação de Katsuyu','HP, regeneração e taijutsu'),
+ h('jiraiya','Jiraiya','Vila da Folha','#d77d72',145,22,6,6.3,'Sábio dos Sapos · +20% raio de área e +15% recarga da Ultimate.',{area:.2,cool:.15},[t('Agulhas de Cabelo','Ninjutsu','Neutro','Cone'),L.sapo,t('Óleo Flamejante','Ninjutsu','Fogo','Onda'),L.modoSabio],'Invocação de Gamabunta','Área, ninjutsu e recarga'),
  h('orochimaru','Orochimaru','Vila do Som','#b898df',125,19,4,6.7,'Corpo Serpentino · +10 pontos de evasão e +20% duração de status.',{dodge:.1,duration:.2},[t('Serpentes Ocultas','Ninjutsu','Neutro','Linha'),t('Espada Kusanagi','Taijutsu','Neutro','Cone'),L.nevoa,L.prisaoSombra],'Invocação de Manda','Veneno, duração e evasão'),
- h('lee','Rock Lee','Vila da Folha','#76c998',135,23,5,7,'Esforço Supremo · +25% taijutsu e +15% velocidade de ataque.',{normal:.25,attackSpeed:.15},[L.punho,t('Lótus Primária','Taijutsu','Neutro','Área',1.5),L.furacao,L.portoes],'Portões Internos','Taijutsu, crítico e velocidade de ataque'),
- h('neji','Neji','Clã Hyuga','#d4d6e9',125,21,5,6.9,'Byakugan · +10 pontos de chance crítica e +15% taijutsu.',{crit:.1,normal:.15},[L.punhoGentil,t('Kaiten','Taijutsu','Neutro','Órbita'),L.palmaAr,t('Sessenta e Quatro Palmas','Taijutsu','Neutro','Linha',1.5)],'Cento e Vinte e Oito Palmas','Crítico e taijutsu'),
- h('hinata','Hinata','Clã Hyuga','#c1b2e9',130,19,6,6.7,'Proteção Gentil · +8 pontos de evasão e +15% taijutsu.',{dodge:.08,normal:.15},[L.punhoGentil,t('Punhos dos Leões Gêmeos','Taijutsu','Neutro','Cone',1.4),L.palmaAr,t('Palmas Protetoras','Taijutsu','Neutro','Órbita')],'Passo dos Leões Gêmeos','Evasão, taijutsu e área'),
- h('shikamaru','Shikamaru','Clã Nara','#a5b783',120,17,5,6.6,'Estrategista · +30% duração de status e +10 pontos de chance de lentidão.',{duration:.3,status:.1},[t('Costura das Sombras','Genjutsu','Sombra','Linha'),t('Possessão das Sombras','Genjutsu','Sombra','Cone'),L.agulhasSombra,L.prisaoSombra],'Estrangulamento das Sombras','Controle, duração e velocidade de ataque'),
+ h('lee','Rock Lee','Vila da Folha','#76c998',135,23,5,7,'Esforço Supremo · +25% taijutsu e +15% velocidade de ataque.',{normal:.25,attackSpeed:.15},[L.punho,L.furacao,t('Lótus Primária','Taijutsu','Neutro','Área',1.5),L.portoes],'Portões Internos','Taijutsu, crítico e velocidade de ataque'),
+ h('neji','Neji','Clã Hyuga','#d4d6e9',125,21,5,6.9,'Byakugan · +10 pontos de chance crítica e +15% taijutsu.',{crit:.1,normal:.15},[L.punhoGentil,t('Kaiten','Taijutsu','Neutro','Órbita'),t('Sessenta e Quatro Palmas','Taijutsu','Neutro','Linha',1.5),L.palmaAr],'Cento e Vinte e Oito Palmas','Crítico e taijutsu'),
+ h('hinata','Hinata','Clã Hyuga','#c1b2e9',130,19,6,6.7,'Proteção Gentil · +8 pontos de evasão e +15% taijutsu.',{dodge:.08,normal:.15},[L.punhoGentil,t('Palmas Protetoras','Taijutsu','Neutro','Órbita'),L.palmaAr,t('Punhos dos Leões Gêmeos','Taijutsu','Neutro','Cone',1.4)],'Passo dos Leões Gêmeos','Evasão, taijutsu e área'),
+ h('shikamaru','Shikamaru','Clã Nara','#a5b783',120,17,5,6.6,'Estrategista · +30% duração de status e +10 pontos de chance de lentidão.',{duration:.3,status:.1},[t('Possessão das Sombras','Genjutsu','Sombra','Cone'),L.agulhasSombra,L.prisaoSombra,t('Costura das Sombras','Genjutsu','Sombra','Linha')],'Estrangulamento das Sombras','Controle, duração e velocidade de ataque'),
  h('temari','Temari','Vila da Areia','#d1be8a',125,22,4,6.7,'Mestra do Leque · +25% raio dos ataques.',{area:.25},[t('Corte do Leque','Ninjutsu','Vento','Cone'),L.laminas,L.vendaval,t('Tornado Cortante','Ninjutsu','Vento','Órbita')],'Invocação de Kamatari','Área, projéteis e ninjutsu'),
  h('tenten','Tenten','Vila da Folha','#dc9f91',120,16,4,7,'Mestra de Armas · +1 projétil por disparo.',{projectiles:1},[L.shuriken,t('Kunai Explosiva','Taijutsu','Neutro','Área'),L.senbon,t('Corrente de Armas','Taijutsu','Neutro','Linha')],'Dragões Gêmeos','Projéteis, taijutsu e crítico'),
  h('pain','Pain','Vila da Chuva','#ca86cb',140,24,7,6.2,'Caminho Deva · +20% ninjutsu e +15% raio de área. Nagato (Clã Uzumaki) controla o corpo de Yahiko pelos receptores de chakra.',{element:.2,area:.15},[L.kunai,t('Shinra Tensei','Ninjutsu','Neutro','Área'),t('Bansho Tenin','Ninjutsu','Neutro','Cone'),L.bolaFogo],'Chibaku Tensei','Ninjutsu, área e recarga'),
@@ -97,12 +104,40 @@ export const ACADEMY:Technique[]=[
 /** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
 export function ultimateBase(hero:Hero):Technique{return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];}
 export const HERO_BY_ID=Object.fromEntries(HEROES.map(h=>[h.id,h])) as Record<string,Hero>;
-HERO_BY_ID.naruto.techniques[1].unlockLevel=10;
-HERO_BY_ID.naruto.techniques[2].unlockLevel=5;
-// Modo Sábio só na fase Shippuden do Naruto (forma do nível 25, NARUTO_FORMS).
-HERO_BY_ID.naruto.techniques[3].unlockLevel=25;
-// Amaterasu do Sasuke é técnica da fase Shippuden.
-HERO_BY_ID.sasuke.techniques[3].unlockLevel=25;
+/**
+ * Níveis por FASE DA OBRA (pedido do usuário, 06/11/2026): técnicas da fase criança/genin saem cedo; técnicas de fases
+ * avançadas (Shippuden, guerra, Hokage) só quando o shinobi evolui na run, alinhadas às formas de `evolution.ts`.
+ * Fase conferida na Narutopedia pelo capítulo de estreia (Parte I = cap. 1–244; Shippuden = cap. 245+), 06/11/2026.
+ * Quem não aparece aqui usa o padrão por posição no kit (1/5/12/20). Os kits já estão na ordem cronológica.
+ */
+export const PHASE_LEVELS:Record<string,Record<string,number>>={
+ // Kage Bunshin (cap. 1, Academia) → Invocação do Sapo com Jiraiya (Parte I, forma Clássico Nv. 10)
+ // → Rasengan (cap. 150, fim da Parte I) → Modo Sábio (cap. 375, forma Shippuden Nv. 25).
+ naruto:{'Kage Bunshin':1,'Invocação do Sapo':10,'Rasengan':15,'Modo Sábio':25},
+ // Bola de Fogo (cap. 7, infância) → Chidori (cap. 113, Parte I) → Amaterasu do Sasuke (Shippuden, após a forma do Nv. 15).
+ sasuke:{'Kunai Tática':1,'Bola de Fogo':5,'Chidori':8,'Amaterasu':20},
+ // Força sobre-humana (Impacto de Sakura, cap. 246) é Shippuden: forma do Nv. 15.
+ sakura:{'Punho da Folha':1,'Chute Ascendente':5,'Impacto de Sakura':15,'Ruptura do Solo':20},
+ // Fênix (cap. 46) → Corvos → Tsukuyomi (Mangekyō, Akatsuki, cap. 142): forma Akatsuki do Nv. 15.
+ itachi:{'Shuriken':1,'Fênix de Fogo':5,'Corvos Ilusórios':10,'Tsukuyomi':15},
+ // Barreira Espaço-Tempo: Minato já Quarto Hokage (forma do Nv. 15).
+ minato:{'Barreira Espaço-Tempo':15},
+ // Tsunade é adulta na obra toda: Chute Celestial (cap. 163) e Byakugou (cap. 153) chegam junto da forma Quinta Hokage (Nv. 15).
+ tsunade:{'Punho da Folha':1,'Chute Celestial':5,'Ruptura do Solo':12,'Byakugou':15},
+ // Agulhas de cabelo (Needle Jizō, cap. 166) → Invocação do Sapo → Óleo Flamejante com Gamabunta (cap. 170) → Modo Sábio (forma Nv. 20).
+ jiraiya:{'Agulhas de Cabelo':1,'Invocação do Sapo':5,'Óleo Flamejante':12,'Modo Sábio':20},
+ // Lee: tudo da Parte I enquanto genin (forma Genin até o Nv. 14): Furacão (cap. 37), Lótus (cap. 52), Portões (cap. 85).
+ lee:{'Punho da Folha':1,'Furacão da Folha':5,'Lótus Primária':8,'Portões do Inferno':12},
+ // Neji: Kaiten e 64 Palmas (cap. 101, Parte I) → Palma de Ar (cap. 256, Shippuden): forma Jonin do Nv. 15.
+ neji:{'Punho Gentil':1,'Kaiten':5,'Sessenta e Quatro Palmas':10,'Palma de Ar':15},
+ // Hinata: Palmas Protetoras (Parte I no anime) → Palma de Ar (Shippuden) → Leões Gêmeos (cap. 437): forma Leões Gêmeos do Nv. 30.
+ hinata:{'Punho Gentil':1,'Palmas Protetoras':8,'Palma de Ar':15,'Punhos dos Leões Gêmeos':30},
+ // Shikamaru: Possessão das Sombras (cap. 55) → Costura das Sombras (cap. 283, Shippuden): forma Estrategista do Nv. 15.
+ shikamaru:{'Possessão das Sombras':1,'Agulhas da Sombra':5,'Prisão das Sombras':12,'Costura das Sombras':15},
+ // Guy: Pavão da Manhã (cap. 258, 6º portão) e Tigre do Meio-Dia (cap. 506, 7º portão) seguem as formas do Nv. 15 e 30.
+ guy:{'Furacão da Folha':1,'Portões do Inferno':5,'Pavão da Manhã':15,'Tigre do Meio-Dia':30},
+};
+for(const [id,levels] of Object.entries(PHASE_LEVELS))for(const tech of HERO_BY_ID[id].techniques)if(levels[tech.name]!==undefined)tech.unlockLevel=levels[tech.name];
 /** Usuários canônicos do Modo Sábio (Narutopedia, Sage Mode): podem aprender técnicas de elemento Sábio. */
 export const SAGE_USERS=new Set(['naruto','jiraiya','hashirama','minato']);
 /** Técnicas únicas de um shinobi: as do kit que não estão na biblioteca compartilhada (1–2 por shinobi). */
@@ -195,7 +230,3 @@ export function heroAffinity(heroId:string):Element{const hero=HERO_BY_ID[heroId
 export function sandSynergy(allies:readonly string[]){return ['gaara','temari','kankuro'].every(id=>allies.includes(id));}
 export const NARUTO_FORMS=[{level:1,name:'Academia',file:'naruto-academia'},{level:10,name:'Clássico',file:'naruto-classico'},{level:25,name:'Shippuden',file:'naruto-shippuden'},{level:50,name:'Manto da Kyuubi',file:'naruto-kyuubi'}];
 export function narutoForm(level:number){return [...NARUTO_FORMS].reverse().find(f=>level>=f.level)??NARUTO_FORMS[0];}
-
-HERO_BY_ID.hinata.techniques[1].unlockLevel=15;
-HERO_BY_ID.guy.techniques[2].unlockLevel=15;
-HERO_BY_ID.guy.techniques[3].unlockLevel=30;

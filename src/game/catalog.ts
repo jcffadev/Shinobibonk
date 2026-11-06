@@ -145,21 +145,34 @@ export function availableItems(unlocked:readonly string[], archived:readonly str
  * Pesos por raridade (Comum, Incomum, Raro, Épico, Lendário). Recalibrado em 06/11/2026 (pedido do usuário: a Sorte quase não
  * mudava as cartas). bonus = Sorte/50 (até 6). Raro ou melhor: Sorte 0 ≈ 0,7% · 20 ≈ 6% · 50 ≈ 15% · 100 ≈ 26%.
  */
+/**
+ * Revisão 06/11/2026 (Sorte 360 ainda trazia muito Comum): o peso do Comum cai 2× mais rápido (÷(1+bonus×1,2)).
+ * Sorte 300+ (bonus 6): Comum ≈ 4% · Incomum ≈ 49% · Raro ≈ 23% · Épico ≈ 17% · Lendário ≈ 7% (nunca 100% de nada).
+ */
 export function luckRarityWeights(luck:number){
   const bonus=Math.min(6,Math.max(0,luck)/50);
-  return [90/(1+bonus*.6),9.889+20*bonus,.6+10*bonus,.1+3*Math.pow(bonus,1.5),.02+Math.pow(bonus,1.6)];
+  return [90/(1+bonus*1.2),9.889+20*bonus,.6+10*bonus,.1+3*Math.pow(bonus,1.5),.02+Math.pow(bonus,1.6)];
 }
-/** `priority`: ids marcados como Prioridade na Bolsa da Missão; o peso deles é multiplicado por `priorityWeight` (não garante). */
+/**
+ * Sorteio de itens: primeiro a RARIDADE (pesos da Sorte), depois o item dentro dela. Se a raridade sorteada não tem item elegível
+ * no pool (não desbloqueado com Lamens ou já no limite de cópias), desce para a raridade elegível mais próxima ABAIXO (e só então
+ * acima) — antes o peso das raridades vazias era redistribuído por todo o pool, então Sorte alta com poucos itens raros
+ * desbloqueados caía em Comum. O pool continua sendo só Comuns + desbloqueados (desbloquear só adiciona ao pool).
+ * `priority`: ids marcados como Prioridade na Bolsa da Missão; o peso deles é multiplicado por `priorityWeight` (não garante).
+ */
 export function rollItems(pool:readonly Item[], owned:Record<string,number>, luck:number, count:number, rng= Math.random, priority:readonly string[]=[], priorityWeight=1):Item[] {
   const eligible=pool.filter(i=>(owned[i.name]||0)<i.max), result:Item[]=[];
   const rarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
+  const rarityWeights=luckRarityWeights(luck),total=rarityWeights.reduce((a,b)=>a+b,0);
   while(eligible.length&&result.length<count){
-    // Divide pelo número de itens de cada raridade para o tamanho do catálogo não enviesar os pesos.
-    const rarityWeights=luckRarityWeights(luck),counts=rarities.map(rarity=>eligible.filter(i=>i.rarity===rarity).length);
-    const weights=eligible.map(i=>{const n=rarities.indexOf(i.rarity);return rarityWeights[n]/counts[n]*(priority.includes(i.id)?priorityWeight:1);});
-    let roll=rng()*weights.reduce((a,b)=>a+b,0), index=weights.length-1;
-    for(let i=0;i<weights.length;i++){roll-=weights[i];if(roll<0){index=i;break;}}
-    result.push(eligible.splice(index,1)[0]);
+    let roll=rng()*total,tier=4;
+    for(let i=0;i<5;i++){roll-=rarityWeights[i];if(roll<0){tier=i;break;}}
+    const order=[tier,...Array.from({length:tier},(_,k)=>tier-1-k),...Array.from({length:4-tier},(_,k)=>tier+1+k)];
+    const rarity=rarities[order.find(n=>eligible.some(i=>i.rarity===rarities[n]))!];
+    const options=eligible.filter(i=>i.rarity===rarity),weights=options.map(i=>priority.includes(i.id)?priorityWeight:1);
+    let pick=rng()*weights.reduce((a,b)=>a+b,0),index=options.length-1;
+    for(let i=0;i<weights.length;i++){pick-=weights[i];if(pick<0){index=i;break;}}
+    result.push(eligible.splice(eligible.indexOf(options[index]),1)[0]);
   }
   return result;
 }

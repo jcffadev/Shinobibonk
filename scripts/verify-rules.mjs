@@ -6,7 +6,17 @@ import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
 import { formAt,portraitRegion } from '../src/game/evolution.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
 assert.equal(HEROES.length,23);
-assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,69);
+assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,70);
+{// Fase da obra (06/11/2026): Naruto começa só com Kage Bunshin; Sapo no Clássico, Rasengan no fim da Parte I, Modo Sábio no Shippuden.
+ const {HERO_BY_ID,PHASE_LEVELS,SHARED_TECHNIQUES}=await import('../src/game/heroes.ts');const lv=(id,name)=>HERO_BY_ID[id].techniques.find(t=>t.name===name)?.unlockLevel;
+ assert.deepEqual(HERO_BY_ID.naruto.techniques.map(t=>[t.name,t.unlockLevel]),[['Kage Bunshin',1],['Invocação do Sapo',10],['Rasengan',15],['Modo Sábio',25]]);
+ assert.ok(HERO_BY_ID.naruto.techniques.filter(t=>t.unlockLevel===1).every(t=>!['Rasengan','Modo Sábio'].includes(t.name)),'Naruto não começa com Rasengan/Modo Sábio');
+ const sapo=HERO_BY_ID.naruto.techniques[1];assert.equal(sapo.shape,'Área');assert.equal(sapo.element,'Neutro');assert.ok(SHARED_TECHNIQUES.has('Invocação do Sapo'));assert.ok(HERO_BY_ID.jiraiya.techniques.some(t=>t.name==='Invocação do Sapo'),'Sapo compartilhado com Jiraiya');
+ assert.ok(!skillPool('naruto').some(t=>t.element==='Água'),'Sapo Neutro não abre Água ao Naruto');
+ for(const [id,levels] of Object.entries(PHASE_LEVELS))for(const name of Object.keys(levels))assert.ok(lv(id,name)!==undefined,'PHASE_LEVELS cita técnica fora do kit: '+id+' / '+name);
+ for(const h of HEROES){assert.equal(h.techniques[0].unlockLevel,1,h.id+': técnica inicial no Nv. 1');for(let i=1;i<h.techniques.length;i++)assert.ok(h.techniques[i].unlockLevel>=h.techniques[i-1].unlockLevel,h.id+': kit em ordem cronológica');}
+ assert.ok(lv('sasuke','Amaterasu')>=15&&lv('sakura','Impacto de Sakura')>=15&&lv('neji','Palma de Ar')>=15&&lv('shikamaru','Costura das Sombras')>=15,'técnicas do Shippuden só após a forma Shippuden');
+ assert.ok(lv('lee','Portões do Inferno')<15&&lv('sasuke','Chidori')<15,'técnicas da Parte I liberadas na fase genin');}
 {// Regra do usuário: 1–2 técnicas únicas por shinobi; pool respeita elemento; únicas de outros só após selar.
  const {uniqueTechniques,allowedElements,techniquePool}=await import('../src/game/heroes.ts');
  for(const h of HEROES){const n=uniqueTechniques(h.id).length;assert.ok(n>=1&&n<=2,h.id+' tem '+n+' únicas');const allowed=allowedElements(h.id);for(const t of techniquePool(h.id))assert.ok(allowed.has(t.element),h.id+' não pode aprender '+t.name+' ('+t.element+')');}
@@ -78,7 +88,7 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual([...new Set(setups)],['Byakugou','Habanero Sangrento','Modo Sábio','Portões do Inferno']);
  const gates=HERO_BY_ID.lee.techniques.find(t=>t.setup);const g=setupNumbers(gates);assert.equal(g.cooldown,11);assert.equal(g.duration,6);assert.ok(Math.abs(g.uptime-6/11)<1e-9);assert.ok(setupLines(gates).includes('Ativo 55% do tempo'));assert.ok(setupLines(gates).includes('Acumulável: Não'));
  assert.ok(setupNumbers(gates,{damage:0,area:0,haste:.1,duration:.2}).uptime>g.uptime,'afixos de recarga/duração aumentam o tempo ativo');
- assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Kage Bunshin');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
+ assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Rasengan');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
  assert.ok(HEROES.every(h=>!h.techniques[0].setup),'a técnica inicial sempre ataca');
  assert.equal(SENJUTSU.multiplier,1.5);const rasengan=HERO_BY_ID.naruto.techniques.find(t=>t.name==='Rasengan'),punch=HERO_BY_ID.hashirama.techniques[0];
  assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID.hashirama.techniques[3],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
@@ -91,8 +101,15 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.ok(R.goodChance(wLuck)>R.goodChance(w0),'sorte aumenta casas boas');assert.ok(wLuck.item>w0.item*2.5,'sorte favorece casas premium');
  assert.ok(R.badChance(wMax)>=R.ROULETTE_RULES.minBad-1e-9,'nunca 100% bom');assert.ok(R.goodChance(wMax)<.9);
  assert.ok(R.badChance(wCurse)>R.badChance(wLuck),'dificuldade/Maldição compensa a sorte');assert.ok(R.badChance(R.rouletteWeights(0,50))<=R.ROULETTE_RULES.maxBad+1e-9);
- const rr=R.seededRng(77);let bad=0;for(let i=0;i<40000;i++)bad+=Number(R.ROULETTE_BY_ID[R.rollRoulette(wMax,rr)].kind==='ruim');assert.ok(bad/40000>.13&&bad/40000<.17,'amostragem respeita o mínimo de casas ruins');
- assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),70);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
+ const rr=R.seededRng(77);let bad=0;for(let i=0;i<40000;i++)bad+=Number(R.ROULETTE_BY_ID[R.rollRoulette(wMax,rr)].kind==='ruim');assert.ok(Math.abs(bad/40000-R.badChance(wMax))<.01,'amostragem bate com a chance exibida de casas ruins');
+ assert.ok(Math.abs(R.goodChance(w0)-.349)<.005,'nerf 2: Sorte 0 → ~35% de casas boas');
+ {const wNoPill=R.rouletteWeights(0,0,['pill']);assert.equal(wNoPill.pill,0);assert.ok(Math.abs(sum(wNoPill)-1)<1e-9);const r2=R.seededRng(5);for(let i=0;i<20000;i++)assert.notEqual(R.rollRoulette(wNoPill,r2),'pill','casa excluída nunca é sorteada');}
+ // Economia expansiva: ×1,35 por giro e ×1,15 por minuto inteiro de run.
+ assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),100);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
+ assert.equal(R.rouletteCost(0,0,59),30,'inflação só por minuto inteiro');assert.equal(R.rouletteCost(0,0,600),121);assert.ok(R.rouletteCost(40,0,1800)>1e6,'fim de run: milhões');
+ {const P=await import('../src/game/preparation.ts'),T=await import('../src/game/itemTrade.ts');
+  assert.deepEqual([0,1,2,3].map(n=>P.weaponPrice(n)),[20,30,45,68]);assert.equal(P.weaponPrice(0,600),81);assert.ok(P.weaponPrice(25,1200)>2e6,'kunai no fim custa milhões');
+  assert.equal(T.merchantPrice('Comum',0),45);assert.equal(T.merchantPrice('Comum',2),82);assert.equal(T.merchantRerollPrice(0,0),20);assert.equal(T.merchantRerollPrice(2,0),45);assert.equal(T.merchantRerollPrice(0,.9),12);}
  assert.deepEqual(R.spendBonuses({},5000),{});assert.equal(R.spendBonuses({'Carteira Gama-chan':1},749).damage,.02);assert.equal(R.spendBonuses({'Carteira Gama-chan':1},99999).damage,.3);
  const wallet=calculateStats('naruto',1,{'Carteira Gama-chan':1},{},0,{},R.spendBonuses({'Carteira Gama-chan':1},500));assert.ok(Math.abs(wallet.damage/calculateStats('naruto',1).damage-1.02)<1e-9);assert.ok(Math.abs(wallet.moneyGain-1.12)<1e-9);}
 assert.ok(!skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Corte do Leque'),'única de Vento fora da base do Gaara');assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Agulhas de Karasu'));assert.ok(!skillPool('gaara').some(t=>t.name==='Corte do Leque'));
@@ -117,6 +134,18 @@ assert.ok(!availableItems(['critical'],['critical'],false).some(i=>i.id==='criti
  for(let i=0;i<20000;i++){base+=Number(rollItems(commons,{},0,1)[0].id===fav.id);prio+=Number(rollItems(commons,{},0,1,Math.random,[fav.id],P.PRIORITY_WEIGHT)[0].id===fav.id);}
  assert.ok(prio/base>1.9&&prio/base<2.4,'prioridade ×3 de peso: 20% → 3/7 entre 5 itens da mesma raridade');}
 assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attackRate);
+// Horda: teto 1600 aos 10 min (Genin), spawn em lote crescente; FINAL SWARM ×3 imediato e crescendo.
+{const d8=difficultyAt('Genin',480),d10=difficultyAt('Genin',600),sw=difficultyAt('Genin',600,1,1e-3),sw5=difficultyAt('Genin',900,1,300);
+ assert.ok(d8.cap>=1100&&d10.cap===1600,'horda ~1600 no fim');assert.ok(d8.spawnPerSecond>40,'spawn em lote');
+ assert.ok(Math.abs(sw.hp/d10.hp-3)<.01&&Math.abs(sw.damage/d10.damage-3)<.01,'FINAL SWARM triplica HP e dano');assert.ok(sw.armor>d10.armor*2.9);
+ assert.ok(sw5.hp/difficultyAt('Genin',900).hp>3.9,'FINAL SWARM cresce com o tempo sobrevivido');assert.ok(d10.hp>15,'HP ×16 aos 10 min');}
+// Sorte: raridade primeiro, depois o item; raridade vazia desce para a mais próxima abaixo (Sorte alta não cai em Comum à toa).
+{const pool=[...ITEMS.filter(i=>i.rarity==='Comum'),...ITEMS.filter(i=>i.rarity==='Incomum').slice(0,3),...ITEMS.filter(i=>i.rarity==='Raro').slice(0,2)];let commons=0;const r3=rng;
+ for(let i=0;i<5000;i++)commons+=Number(rollItems(pool,{},360,1,r3)[0].rarity==='Comum');assert.ok(commons/5000<.06,'Sorte 360 com poucos raros desbloqueados: Comum < 6%');
+ const {rollGrowth,rollRarityTier}=await import('../src/game/combat.ts');let lc=0;for(let i=0;i<5000;i++)lc+=Number(rollRarityTier(360,r3)===0);assert.ok(lc/5000<.06&&lc>0,'Sorte 360: Comum raro mas nunca 0%');
+ const g=rollGrowth(0,HEROES.find(h=>h.id==='naruto').techniques[0],()=>0);assert.ok(g.growth.damage>=.3,'técnica de ataque sempre ganha dano');
+ const PL=await import('../src/game/pills.ts');assert.deepEqual(Object.values(PL.PILL_RARITY_LEVELS),[1,2,3,4,5]);const pills={'Pílula do Soldado':8};PL.grantPill(pills,'Pílula do Soldado',5);assert.equal(pills['Pílula do Soldado'],10,'níveis por raridade respeitam o limite');
+ assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Soldado':10}).physical-calculateStats('naruto',1).physical-1)<1e-9,'bônus recalculado só dos níveis');}
 const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 
 
