@@ -15,7 +15,7 @@ const state=()=>debug('inspect');
 const start=async()=>{
  await page.getByRole('button',{name:'Planejar missão →',exact:true}).click();
  await page.getByRole('button',{name:'Escolher missão →',exact:true}).click();
- await page.getByRole('button',{name:'Iniciar missão Genin',exact:false}).click();await wait();
+ await page.getByRole('button',{name:/Começar!/}).click();await wait();
 };
 await page.goto('http://127.0.0.1:5176/?test=1');
 await page.getByRole('button',{name:'Escolher shinobi',exact:false}).click();

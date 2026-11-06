@@ -9,7 +9,7 @@ Data: 05/11/2026. Valores da árvore marcados como proposta; não estão balance
 3. **Ataques**: biblioteca do shinobi selecionado, com nível de desbloqueio de cada técnica, técnicas de colegas da mesma aldeia e filtros por escola, elemento e forma.
 4. **Plano**: planejar ou deixar em casa técnicas, pílulas e itens. O que fica em casa não aparece na run; a técnica inicial é obrigatória.
 5. **Árvore e loja**: a moeda permanente compra níveis permanentes ou desbloqueia itens. Desbloquear item só o inclui no pool.
-6. **Missão**: Genin, Chunin, Jonin ou Kage. A escolha altera a escala de dificuldade da run.
+6. **Missão (tela Escolha o mapa, `MapSelect`)**: abas dos 4 mapas, prévia da região com guardiões e shinobis para selar, e painel Preparar partida (modo, dificuldade Genin→Kage liberada por mapa, build, mochila em breve, predefinições da Bolsa). Enter começa.
 
 **Estado do código (05/11/2026)**:
 - **IMPLEMENTADO**:

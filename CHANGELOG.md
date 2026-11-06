@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-06 — tela Escolha o mapa
+- `src/ui/MapSelect.tsx` + `src/map-select.css`: abas dos 4 mapas com progresso, prévia grande da região (selos de elemento, descrição, climas, shinobi escolhido com Trocar, shinobis para selar no mapa, guardiões por zona) e painel Preparar partida (modo Clássico; Sobrevivência em breve; dificuldades com multiplicadores e cadeados; build selecionada; mochila em breve; Bolsa da Missão com predefinições; Começar com Enter).
+- verify-runtime passa a iniciar pelo botão Começar.
+
 ## 2026-11-06 — Configurações completas
 - Tela de Configurações no formato da referência (Som, Gráficos, Tela, Controles, Teclas, Interface, Idioma, Conta), salva na hora e aplicada ao vivo: volume/efeitos/vozes, qualidade, limite de FPS, resolução, tela cheia, sensibilidade e inversão da câmera, distância da câmera, teclas remapeáveis, tamanho/opacidade do HUD, minimapa, avisos, nome do jogador e reinício/apagar dados. Itens sem suporte aparecem como "em breve".
 - Verificação: tsc, build, verify-rules e verify-runtime passaram.
