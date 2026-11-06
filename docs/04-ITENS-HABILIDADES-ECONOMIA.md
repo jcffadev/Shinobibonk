@@ -109,6 +109,7 @@ Slots 1–4: **somente automáticos**, cada um com recarga própria; o quarto é
   - Sem nada elegível, aparece uma carta de "Powerlevel" (+6 HP, +2% dano, +0,5 crítico, +1% movimento, +1 armadura ou +1% velocidade de ataque).
 - **Atualizar, pular e banir**: teclas F/X/Z ou botões, com 3 usos base cada e até 10 com a árvore. Banir remove a opção pelo resto da run.
 - **Pílulas**: 19 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado da Roleta da Tsunade, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
+- **Prévia das pílulas**: cartas, ficha (P), plano de build e barra mostram o atributo do personagem com o valor atual e o novo (`src/game/pillPreview.ts`). **Pergaminhos de elemento**: "Melhora:" lista só técnicas do mesmo elemento; o +3% de dano total vale para todas, mas não é listado por técnica.
 
 ## Pílulas (IMPLEMENTADO, valores provisórios)
 O formato segue a página de vitaminas da wiki de referência: cada pílula aumenta **um atributo por nível**. Os nomes foram adaptados ao mundo ninja, sem Pokémon.

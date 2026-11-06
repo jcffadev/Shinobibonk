@@ -41,3 +41,9 @@
   .game-shell .minimap-caption{display:none}
   .game-shell .debug-toggle{top:132px}
 }
+
+/* Prévia "atributo atual → novo" das pílulas (cartas de level-up, ficha P, plano de build). */
+.pill-stat-preview{display:grid;gap:2px;margin-top:6px;padding:5px 8px;border-radius:8px;background:#0e1626b3;color:#cfd8ea;font-size:10.5px;line-height:1.25;text-align:left}
+.pill-stat-preview i{color:#9fb0cc;font-size:9px;font-style:normal;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.pill-stat-preview b{color:#fff}
+.pill-stat-preview em{color:#7ff0a6;font-style:normal;font-weight:900}

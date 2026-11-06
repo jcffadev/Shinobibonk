@@ -38,6 +38,11 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **Informações da missão no topo** — FEITO: grade em blocos (missão + clima/zona | relógio grande ou FINAL SWARM | Ryu curto + kunai/shuriken) e preços em linha secundária menor, todos em `compactNumber`. Avisos (toasts) ficam abaixo da barra.
 - **Validação** — TESTADO em Edge headless (1440×900 e 1366×768, 5 ajudantes, 80 itens, Nv. 194, 123.456.789 Ryu), sem sobreposição medida entre barra, minimapa, rótulo, DEBUG, ajudantes, dock e itens. PENDENTE: conferir com 4 técnicas aprendidas e em resoluções menores que 1050 px.
 
+## Pílulas, pergaminhos e listas em casa (06/11/2026)
+- **FEITO** — pílulas com "atributo atual → novo" (cartas, ficha P, plano de build, tooltip da barra). Prévia aproximada: o bônus aleatório por nível (powerlevel) e bônus condicionais de combate não entram. PENDENTE opcional: prévia no Ichiraku ao esquecer pílula.
+- **FEITO** — "Melhora:" dos pergaminhos de elemento lista só técnicas do mesmo elemento.
+- **FEITO** — sub-aba "Itens em casa" na Bolsa da Missão com até 12 listas (nome, descrição, aplicar, duplicar, apagar). PENDENTE opcional: reordenar listas e escolher ícone próprio.
+
 ## Feito em 06/11/2026 (validar jogando)
 - Técnicas por fase da obra, Invocação do Sapo, escala da horda até 1600, Final Swarm, pílulas com raridade, sorte, roleta nerfada e economia exponencial (ver CHANGELOG).
 - Pendências desses itens: Ryu em formato curto (`compactNumber`) no HUD, preços da barra, roleta, mercador/prêmio e toasts — FEITO; Ryu por abate não escala com o tempo (ajustar se o fim ficar caro demais); saves antigos podem restaurar `pendingItemRewards` de drops antigos; slider `itemDrop` do debug não tem mais efeito; Ultimate por fase (Rasenshuriken só no Shippuden) é proposta que conflita com "Ultimate desde o Nv. 1"; fala e efeito visual próprios da Invocação do Sapo.

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Pílulas com atributo atual → novo, pergaminhos por elemento e listas de itens em casa
+
+- Pílulas mostram o atributo do personagem com o valor atual e o novo: nas cartas de level-up ("Seu atributo"), na ficha (P, "Próximo nível"), no plano de build (aba Pílulas, no Nv. 1 do shinobi) e no tooltip da barra de pílulas. Prévia em `src/game/pillPreview.ts`, com as mesmas regras de `calculateStats` (tetos de evasão e status, % de HP e multiplicador de regeneração).
+- Pergaminhos de elemento (Katon, Suiton, Fuuton etc.) listam em "Melhora:" só as técnicas do mesmo elemento. O +3% de dano total não é mais listado por técnica. Sem técnica daquele elemento, a carta diz "Nenhuma técnica de Fogo aprendida ainda."
+- Bolsa da Missão ganha a sub-aba "Itens em casa": até 12 listas salvas com nome, descrição e ícones, com Nova lista (bolsa atual ou vazia), Aplicar, Em uso, Duplicar e Apagar (com confirmação). Substitui as 4 predefinições fixas e mantém a chave `sb_bag_presets_v1`; saves antigos com vagas vazias são convertidos ao abrir.
+- Validado no Edge headless: lista antiga convertida, criar/nomear/descrever/duplicar/aplicar/apagar e persistência após recarregar; carta de pílula, ficha, plano e barra com atual → novo; Katon e Suiton sem técnica do elemento. `tsc`, build, `verify-rules` e `verify-runtime` passaram.
+
 ## Final Swarm crescente, pílulas só por escolha e altares por raridade
 
 - **Final Swarm**: o teto do swarm era cortado em 1.600 (já atingido aos 10 min), então a horda não triplicava; com build forte, o spawn ×3 perdia para o abate e a horda estabilizava perto de 300. Agora o teto é 1.600 × fator do swarm (×3, +25%/min) até `FINAL_SWARM.maxEnemies` = 8.000, o spawn repõe o teto em ~4 s (`refillSeconds`), até 120 por quadro, e os inimigos do swarm nascem a 14–28 m. Medido no Edge headless: +1 min → 6.094 vivos; +3 min → 8.000; matando tudo a cada 2 s a horda volta a ~1.800–2.000.

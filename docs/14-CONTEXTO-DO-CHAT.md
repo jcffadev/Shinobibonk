@@ -378,3 +378,13 @@ Já estavam resolvidos pelo Codex: grade de itens em 3 linhas com rolagem, cart�
 **Resposta**
 
 Final Swarm: parcial — o swarm já existia, mas o teto era cortado em 1.600 (atingido aos 10 min) e o spawn perdia para o abate de builds fortes. Agora o teto é 1.600 × fator do swarm até 8.000, com reposição em ~4 s e nascimento a 14–28 m. Pílulas: a única fonte restante era a carta do level-up (roleta, chão e eventos já não davam pílula); com níveis em fila o clique ou a tecla da tela anterior caía na carta nova. Cada conjunto novo de cartas ignora entradas por 0,5 s. Altares: parcial — a barra já caía fora do círculo, mas exigia E e caía igual em toda raridade. Agora começa ao pisar, guarda progresso por altar e cai de 4%/s (Normal) a 18%/s (Lendário). Testes no Edge headless, `tsc`, build e `verify-rules` passaram.
+
+## Pílulas, pergaminhos de elemento e listas de itens em casa
+
+**Pedido** (via coordenador)
+
+> Pílulas devem mostrar o que melhoram (atributo, atual → novo) nas cartas, na ficha, na Bolsa/Plano e no inventário. Pergaminhos de elemento só devem listar técnicas do mesmo elemento. Criar na Bolsa da Missão a sub-aba "Itens em casa" com várias listas salvas (criar, nomear, descrever, aplicar, duplicar, apagar), evoluindo as predefinições 1–4.
+
+**Resposta**
+
+Pílulas: antes só mostravam o bônus ("+4% chance crítica") e o nível; agora mostram o atributo atual → novo nas cartas, na ficha, no plano de build e no tooltip da barra. Pergaminhos: o +3% de dano total fazia todas as técnicas aparecerem em "Melhora:"; agora só as do mesmo elemento. Bolsa: as 4 predefinições viraram a sub-aba "Itens em casa" com até 12 listas com descrição, compatível com o save antigo. Testes de navegador, `tsc`, build, `verify-rules` e `verify-runtime` passaram.

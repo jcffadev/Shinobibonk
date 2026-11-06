@@ -37,6 +37,10 @@ const UNIVERSAL:StatKey[]=['sage','damage','crit','critDamage','attackSpeed','ar
 
 export function affectedTechniques(item:Item,techniques:Technique[]):string[]{
  const b=item.bonuses;
+ // Pergaminhos de elemento (Katon, Suiton…): listam só as técnicas do MESMO elemento. O pequeno +dano total que
+ // eles também dão vale para tudo, mas não é listado por técnica (confundia: "Katon melhora técnica de Água").
+ const elements=(Object.keys(b) as StatKey[]).filter(k=>ELEMENT_BY_KEY[k]&&(b[k]||0)>0).map(k=>ELEMENT_BY_KEY[k]);
+ if(elements.length)return techniques.filter(t=>!t.setup&&elements.includes(t.element)).map(t=>t.name);
  // Setups (buff puro) não são melhorados por itens de ataque.
  return techniques.filter(t=>!t.setup).filter(t=>has(item,...UNIVERSAL)
    ||b.projectileSpeed
@@ -47,6 +51,13 @@ export function affectedTechniques(item:Item,techniques:Technique[]):string[]{
    ||(b[ELEMENT_KEY[t.element]]||0)>0
    ||b.status&&t.status
    ||b.duration&&(t.status||t.burn)).map(t=>t.name);
+}
+/** Linha "Melhora: …" das cartas e da ficha. Pergaminho de elemento sem técnica daquele elemento avisa isso em vez de listar outras. */
+export function affectedTechniquesText(item:Item,techniques:Technique[]):string{
+ const names=affectedTechniques(item,techniques);
+ if(names.length)return 'Melhora: '+names.join(' / ');
+ const elements=(Object.keys(item.bonuses) as StatKey[]).filter(k=>ELEMENT_BY_KEY[k]&&(item.bonuses[k]||0)>0).map(k=>ELEMENT_BY_KEY[k]);
+ return elements.length?`Nenhuma técnica de ${elements.join('/')} aprendida ainda.`:'Melhora atributos de suporte ou sobrevivência.';
 }
 export function itemSchools(item:Item){const b=item.bonuses;if(b.normal||b.armorPhysical)return ['Taijutsu'];if(b.element)return ['Ninjutsu'];if(b.genjutsu||b.status||b.sleepChance)return ['Genjutsu'];return ['Taijutsu','Ninjutsu','Genjutsu'];}
 export function itemElement(item:Item){

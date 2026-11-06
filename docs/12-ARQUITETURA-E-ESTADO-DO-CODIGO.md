@@ -30,7 +30,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/roulette.ts` + `src/ui/TsunadeRoulette.tsx` + `src/tsunade-roulette.css` | Roleta da Tsunade: casas, pesos por sorte/dificuldade, custo crescente e overlay. |
 | `src/scene/dropSprites.ts` | Sprites procedurais (canvas) dos drops: essência roxa de XP (3 tamanhos), orbe azul de chakra, moeda 両 de Ryu, tigela de lamen de cura (`RAMEN_DROP` em GameCanvas: até 5%/35%), pílula e pergaminho. Hooks `dropShowcase`/`drops`. |
 | `src/ui/MapOverlay.tsx` + `src/map.css` | Ícones do mapa M/Tab e do minimapa, rota/ping, seta e metros na HUD, "Chegou!". Evento `shinobi-route`. |
-| `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, busca, botões de raridade, "em casa", prioridade, predefinições e hudzinho do hub. |
+| `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, busca, botões de raridade, "em casa", prioridade, sub-aba "Itens em casa" (até 12 listas com nome e descrição, em `sb_bag_presets_v1`) e hudzinho do hub. |
 | `src/ui/BuffText.tsx` | Pinta ganhos em verde e perdas em vermelho nos textos dos cards. |
 | `src/game/maps.ts` + `src/maps.css` | 4 mapas temáticos (`MAPS`, `MAP_BY_ID`), zonas e guardiões por mapa; CSS do seletor de mapas, seleção bloqueada e pausa. |
 | `src/game/unlockMissions.ts` | Missões de desbloqueio por shinobi (`UNLOCK_MISSIONS`, `LEGENDARY`). |
@@ -49,6 +49,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
 | `src/game/pills.ts` | Catálogo de 20 pílulas, seis espaços distintos na run, limite base de dez níveis por tipo e potência por raridade. `grantPill` sempre concede um nível. |
+| `src/game/pillPreview.ts` + `src/ui/PillStatPreview.tsx` | Prévia "atributo atual → novo" das pílulas (cartas de level-up, ficha P, plano de build, tooltip da barra), com as regras de `calculateStats`. |
 | `src/game/tuning.ts` | 41 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 5 grupos: Inimigos, Elites e Mega Elites, Personagem (todos os atributos), Ganhos (EXP, curva de EXP, Ryu, Chakra, saque de elites), Drops e mapa (chances, lamen, kunais no chão, preço da kunai). Valem como base Genin; `MISSION_TIER` multiplica por cima. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
 | `src/ui/RunSheet.tsx` | Ficha da run (P), ícones de item/pílula e retrato do herói; exporta os grupos de atributos. |
 | `src/ui/RunSummary.tsx` + `src/summary.css` | Tela de resumo pós-run (vitória/derrota), derivada do `WorldSnapshot`, com a faixa de Lamens ganhos. |
