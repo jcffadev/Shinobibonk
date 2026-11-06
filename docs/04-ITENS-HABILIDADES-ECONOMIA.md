@@ -3,11 +3,11 @@
 ## Velocidade de ataque, velocidade de projétil, setups e Senjutsu (IMPLEMENTADO em 06/11/2026, valores provisórios)
 Pedido do usuário: velocidade de ataque é um dos atributos mais importantes; velocidade de projétil deve existir e influenciar praticamente todas as técnicas de golpe, projétil e lançamento, exceto as de buff ("setup").
 
-- **Cadência (`attackSpeed`)**:
+- **Velocidade de ataque (`attackSpeed`)**:
   - Divide a recarga de todas as técnicas de ataque do jogador.
-  - Ajudantes usam metade do bônus: `1,5 / (allySpeed × (1 + (cadência − 1) × 0,5))`.
-  - Raios do Chidori Nagashi e chamas da Amaterasu (itens) também são divididos pela cadência.
-  - Não afeta a Ultimate nem os setups; os setups ficam de fora para evitar o laço "Portões dão cadência → mais Portões".
+  - Ajudantes usam metade do bônus: `1,5 / (allySpeed × (1 + (velocidade de ataque − 1) × 0,5))`.
+  - Raios do Chidori Nagashi e chamas da Amaterasu (itens) também são divididos pela velocidade de ataque.
+  - Não afeta a Ultimate nem os setups; os setups ficam de fora para evitar o laço "Portões dão velocidade de ataque → mais Portões".
 - **Velocidade de projétil (`projectileSpeed`, mínimo 0,3)**:
   - Projétil, Em V e Onda: a velocidade de viagem é multiplicada pelo atributo (base 10 m/s; Kage Bunshin 6 m/s).
   - Corpo a corpo, Cone, Linha, Área e Órbita: ganharam um preparo até o acerto, dividido pelo atributo (Taijutsu 0,14 s; Ninjutsu/Genjutsu 0,24 s).
@@ -33,8 +33,8 @@ Pedido do usuário: velocidade de ataque é um dos atributos mais importantes; v
 
 | Técnica | Shinobi / slot (substitui) | Recarga | Duração | Bônus | Ativo |
 |---|---|---|---|---|---|
-| Portões do Inferno | Rock Lee / 4 (Vendaval da Folha) | 11 s | 6 s | +22% dano, +20% cadência, +15% movimento | 55% |
-| Portão da Dor | Might Guy / 2 (Furacão Poderoso) | 14 s | 7 s | +35% taijutsu, +15% cadência, +8 pts crítico | 50% |
+| Portões do Inferno | Rock Lee / 4 (Vendaval da Folha) | 11 s | 6 s | +22% dano, +20% velocidade de ataque, +15% movimento | 55% |
+| Portão da Dor | Might Guy / 2 (Furacão Poderoso) | 14 s | 7 s | +35% taijutsu, +15% velocidade de ataque, +8 pts crítico | 50% |
 | Byakugou | Tsunade / 3 (Quebra de Rocha) | 18 s | 8 s | +3 HP/s, +12 armadura, +20% taijutsu | 44% |
 | Modo Sábio | Naruto / 4 (Rajada de Chakra) | 16 s | 7 s | +15% dano, +20% área + efeitos de sábio | 44% |
 | Modo Sábio dos Sapos | Jiraiya / 4 (Canto dos Sapos) | igual ao Modo Sábio | | | |
@@ -60,7 +60,7 @@ Lamens = moeda permanente, ganha por partidas/conquistas; compra árvore, seus n
 
 **Estado do código**:
 - **IMPLEMENTADO**:
-  - Ryu da run vem de drops amarelos e bolsas no mapa.
+  - Ryu da run vem de moedas douradas (両) dos abates e bolsas no mapa. A tigela de lamen (15% por abate) cura 35% do HP e não dá Lamens.
   - Kunai/shuriken no chão custam 20 Ryu, +10 por abertura paga; as kunais de recompensa são grátis.
   - Mercador paga 5 Ryu por arma; Roleta da Tsunade custa 25 Ryu +5 por giro na run (ver docs/01).
   - Carteira permanente local de administrador com 999.999 de crédito e Reset que devolve o gasto.
@@ -86,15 +86,15 @@ Slots 1–4: **somente automáticos**, cada um com recarga própria; o quarto é
   - A técnica inicial é aprendida no nível 1. As outras ficam elegíveis nos níveis 5/12/20 (Naruto: 5/10/15; algumas exceções em Hinata e Guy).
   - A 1ª técnica de colegas da mesma aldeia entra no pool a partir do nível 8.
 - **Limites**: máximo 3 técnicas aprendidas (4 com o nó "Quarta técnica"); nível máximo 9 por técnica.
-- **Ultimate**: recarga base de 55 s; drop roxo +9% de carga.
+- **Ultimate**: recarga base de 55 s; orbe azul de chakra +9% de carga.
 
 ## Recompensas de level-up (IMPLEMENTADO)
 - **Cartas**: 3 por nível (4 com o nó "Quarta opção").
   - **Só técnicas e pílulas, nunca itens** (decisão do usuário).
   - Até 2 técnicas (com raridade e afixos sorteados) e o resto pílulas diferentes. Se faltar um tipo, o outro completa as cartas.
-  - Técnicas todas preenchidas e no nível 9: só pílulas. Pílulas todas no limite (ou arquivadas/banidas): só técnicas.
+  - Técnicas todas preenchidas e no nível 9: só pílulas. Pílulas todas no limite (ou em casa/banidas): só técnicas.
   - Itens vêm só de recompensas: kunai, shuriken, eventos, drop de item e recusa de selamento.
-  - Sem nada elegível, aparece uma carta de "Powerlevel" (+6 HP, +2% dano, +0,5 crítico, +1% movimento, +1 armadura ou +1% cadência).
+  - Sem nada elegível, aparece uma carta de "Powerlevel" (+6 HP, +2% dano, +0,5 crítico, +1% movimento, +1 armadura ou +1% velocidade de ataque).
 - **Atualizar, pular e banir**: teclas F/X/Z ou botões, com 3 usos base cada e até 10 com a árvore. Banir remove a opção pelo resto da run.
 - **Pílulas**: 19 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado da Roleta da Tsunade, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
 
@@ -111,7 +111,7 @@ O formato segue a página de vitaminas da wiki de referência: cada pílula aume
 | do Clone | +0,5 projétil (arredonda para baixo) | Hiden | +8% recarga da Ultimate (não dá Chakra) |
 
 A Pílula do Mercador afeta só o Ryu recebido na run, nunca os Lamens.
-| do Relâmpago | +8% cadência | da Névoa | +3% evasão (teto 60%) |
+| do Relâmpago | +8% velocidade de ataque | da Névoa | +3% evasão (teto 60%) |
 | Olho de Falcão | +4% chance crítica | Genjutsu | +12% chance de status (teto 90%) |
 | da Expansão | +10% área | da Persistência | +10% duração |
 
@@ -125,7 +125,7 @@ A Pílula do Mercador afeta só o Ryu recebido na run, nunca os Lamens.
 
 ## RNG por raridade
 **IMPLEMENTADO** (`rollGrowth` em `src/game/combat.ts`): cada carta de técnica sorteia a raridade com pesos 90 / 9,889 / 0,1 / 0,01 / 0,001, ajustados por Sorte.
-- Rola 2 afixos, ou 3 em épico/lendário, entre dano, raio, cadência e duração (duração só em técnicas com status ou queimadura).
+- Rola 2 afixos, ou 3 em épico/lendário, entre dano, raio, velocidade de ataque e duração (duração só em técnicas com status ou queimadura).
 - Faixas por raridade: 10–18%, 18–28%, 25–35%, 30–45%, 40–55%.
 
 Proposta original:
@@ -175,8 +175,8 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
     - ressurreição com 35% ou 60% de HP;
     - HP % e redução de regeneração.
   - **Ritmo**:
-    - +movimento e +cadência ao ser atingido (Selo de Adrenalina);
-    - +armadura e +cadência parado (Postura de Pedra);
+    - +movimento e +velocidade de ataque ao ser atingido (Selo de Adrenalina);
+    - +armadura e +velocidade de ataque parado (Postura de Pedra);
     - Ultimate que recarrega as técnicas (Pergaminho do Hokage).
   - **Ataques automáticos**:
     - raios a cada 2,5 s (Pergaminho Chidori Nagashi);

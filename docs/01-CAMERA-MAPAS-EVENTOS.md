@@ -45,7 +45,7 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
   - Controles: toque em E = 1 giro animado (1,6 s); segurar E = giro rápido contínuo (280 ms/giro) enquanto houver Ryu; E durante a animação = resultado instantâneo; F/botão liga e desliga o giro rápido (`sb_roulette_fast`).
   - Prêmios e penalidades acumulam numa lista e só são entregues ao sair (Esc/X/"Sair e receber").
   - Custo por giro: (25 + 5 × giros na run) × (1 − desconto, máx. 40%); não reseta por zona.
-  - Casas (peso base): Kunai 13, Shuriken 13, Pílula 12, Ryu de volta 10 (2× custo), Bênção de Tsunade 7 (90 s: +15% dano, ou +12% cadência, ou +2,5 HP/s e +6 armadura), Item 6, Sorte Grande 2 (item + 3× custo); ruins: Dívida de jogo 10, Azar da Lendária Perdedora 8 (−10% dano, −8% movimento por 45 s), Credores da Tsunade 7 (emboscada); neutra: Casa vazia 12.
+  - Casas (peso base): Kunai 13, Shuriken 13, Pílula 12, Ryu de volta 10 (2× custo), Bênção de Tsunade 7 (90 s: +15% dano, ou +12% velocidade de ataque, ou +2,5 HP/s e +6 armadura), Item 6, Sorte Grande 2 (item + 3× custo); ruins: Dívida de jogo 10, Azar da Lendária Perdedora 8 (−10% dano, −8% movimento por 45 s), Credores da Tsunade 7 (emboscada); neutra: Casa vazia 12.
   - Sorte multiplica casas boas por 1 + min(2, sorte/100) (premium ao quadrado); a pressão de dificuldade (maldição, zona, missão) multiplica as ruins; a fatia ruim fica sempre entre 15% e 60%. Ex.: sorte 0 = 63% boas/25% ruins; sorte 100+ = ~81%/15%.
   - Buffs e debuffs são temporários e recalculados das fontes. Valores provisórios.
 - **Altar de desafio (CONFIRMADO)**: interagir inicia uma pequena horda; concluir concede uma kunai grátis. **IMPLEMENTADO**: 6 inimigos de desafio surgem a 7 m. Escala e duração estão **PENDENTES**.
@@ -60,6 +60,21 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
 - **Descoberta (CONFIRMADO)**: minimapa e mapa M mostram ícones só depois de o evento ser visto pela câmera. **IMPLEMENTADO**: teste de frustum da câmera até 40 m, com registro persistente. Oclusão por terreno ou árvores está **PENDENTE**. Tab abre o mapa rápido e P abre a ficha.
 
 Mapas por bioma, mapa procedural, colisão, pulo, spawn configurável por zona, balanceamento e multiplayer seguem **PENDENTES**. A arena atual tem 100×100 m. Consulte [estado do código](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md).
+
+## Mapa, rota e ping (IMPLEMENTADO em 06/11/2026, pedido do usuário)
+- `src/ui/MapOverlay.tsx` + `src/map.css`. M (completo) e Tab (rápido) mostram ícones só do que já foi **visto em tela** na run:
+  - NPCs com retrato e selo da função (Kakashi 👁, Shikamaru ♟️, Tsunade 🎰, Ebisu 🕶, Iruka 📚, Orochimaru 🐍);
+  - eventos com ícone e cor próprios (Selo do guardião, altares, mercador, Ichiraku);
+  - mega elites, guardião e Naruto Totem com retrato e borda pulsante;
+  - recompensas no chão (kunai, shuriken, Ryu).
+  - Evento já usado aparece em cinza. A lista "VISTO NESTA RUN" fica ordenada por distância.
+- **Rota**:
+  - Clicar num ícone (no mapa ou na lista) define o alvo; clicar numa área livre cria um ping 📍 com rota. Só um alvo por vez; clicar de novo ou "✕ Limpar rota" remove.
+  - Uma linha tracejada liga o jogador ao alvo no mapa e no minimapa.
+  - Na HUD, um cartão abaixo do minimapa mostra o nome e os metros. A seta na borda da tela (ou um pino ▼ quando o alvo está à vista) usa a projeção da câmera. Alvos móveis são seguidos.
+- **Chegada**: a menos de 3 m (ou ao usar o evento a até 4,2 m) aparece **"Chegou!"** e o rastreio é limpo. Um alvo consumido, derrotado ou coletado limpa a rota com aviso.
+- G continua marcando ping na posição do jogador, sem rota. O minimapa mantém o norte para cima, enquanto a seta da tela segue a câmera.
+- Mega elites e guardiões passam a ser registrados quando aparecem na câmera (até 40 m). Hooks de teste: `__shinobiTest.mapRoute`.
 
 ## H e opções gráficas
 Modo H: ocultar números flutuantes, trilhas e efeitos ofensivos opcionais, mas manter lógica de colisão, dano, status e animação de hit simplificada. **IMPLEMENTADO** para projéteis, anéis, visuais e números. Não existe menu de configurações gráficas; as opções a seguir são futuras: densidade visual, LOD de inimigos, minimapa 15/30/60 FPS, partículas, qualidade, limite de FPS e transparência da HUD.

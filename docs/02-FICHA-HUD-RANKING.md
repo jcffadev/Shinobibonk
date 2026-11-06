@@ -3,6 +3,9 @@
 ## HUD em partida
 HP, XP, nível, Chakra/recarga da Ultimate, tempo, abates individuais, inimigos vivos, mapa/bioma, dificuldade, dinheiro da partida, slots 1–4, R, aliados 3/5, minimapa, evento ativo, meta Top 1 e colocação dinâmica. A meta deve comparar a run atual inclusive com recordes **do próprio jogador** salvos localmente. Ranking global entre jogadores exige servidor e validação antitrapaça; não alegar online quando apenas local.
 
+- **Cores de ganho e perda (IMPLEMENTADO em 06/11/2026, pedido do usuário)**: `src/ui/BuffText.tsx` pinta os textos de efeito dos cards em **verde** (+%, ×1,x, ganho, cura, ressurreição, descontos/"custa menos") e **vermelho** (−%, perda, custo, dívida, emboscada). Vale para cartas de level-up, recompensa e NPC, troca de ajudante, passivas dos ajudantes, prêmios da roleta, ficha, Bolsa da Missão e Plano de build.
+- **Rota no mapa**: cartão com nome e metros abaixo do minimapa, seta ou pino na tela e "Chegou!" (ver docs/01).
+
 ## Tela de pausa
 1. **Progressão por nível**: melhorias permanentes à ficha obtidas ao esgotar o pool, excluindo XP%.
 2. **Ataque**: dano total, Taijutsu, Ninjutsu, Genjutsu/status, velocidade de ataque, área, projéteis, duração, crítico, dano crítico, dano por status, chance de status, penetração.

@@ -21,7 +21,7 @@ export const ROULETTE_CASAS: RouletteCasa[] = [
   { id: 'item', label: 'Recompensa de item', icon: '🎁', kind: 'bom', weight: 6, premium: true, description: '+1 escolha de item (como uma kunai).' },
   { id: 'shuriken', label: 'Shuriken', icon: '🌀', kind: 'bom', weight: 13, description: '+1 shuriken (trocável no Mercador).' },
   { id: 'ambush', label: 'Credores da Tsunade', icon: '⚔️', kind: 'ruim', weight: 7, description: 'Emboscada leve ao sair da roleta.' },
-  { id: 'buff', label: 'Bênção de Tsunade', icon: '✚', kind: 'bom', weight: 7, description: 'Buff temporário de 90 s (dano, cadência ou vitalidade).' },
+  { id: 'buff', label: 'Bênção de Tsunade', icon: '✚', kind: 'bom', weight: 7, description: 'Buff temporário de 90 s (dano, velocidade de ataque ou vitalidade).' },
   { id: 'jackpot', label: 'Sorte Grande', icon: '🎰', kind: 'bom', weight: 2, premium: true, description: '+1 escolha de item e o triplo do custo em Ryu.' },
 ];
 export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, c])) as Record<RouletteCasaId, RouletteCasa>;
@@ -58,7 +58,7 @@ export const ROULETTE_RULES = {
 
 export const BLESSINGS: { name: string; bonuses: Bonuses; text: string }[] = [
   { name: 'Bênção de Tsunade · Força', bonuses: { damage: .15 }, text: '+15% de dano' },
-  { name: 'Bênção de Tsunade · Ímpeto', bonuses: { attackSpeed: .12 }, text: '+12% de cadência' },
+  { name: 'Bênção de Tsunade · Ímpeto', bonuses: { attackSpeed: .12 }, text: '+12% de velocidade de ataque' },
   { name: 'Bênção de Tsunade · Vitalidade', bonuses: { regen: 2.5, defense: 6 }, text: '+2,5 HP/s e +6 de armadura' },
 ];
 export const BAD_LUCK = { name: 'Azar da Lendária Perdedora', bonuses: { damage: -.1, move: -.08 } as Bonuses, text: '−10% de dano e −8% de movimento' };

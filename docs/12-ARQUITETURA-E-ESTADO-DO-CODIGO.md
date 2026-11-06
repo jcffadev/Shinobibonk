@@ -17,11 +17,15 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/game/progression.ts` (nota) | `Stats.extra` guarda a soma bruta de todos os bônus; `genjutsu` é o multiplicador da escola Genjutsu; `healthPct` e `regenMult` ajustam HP máximo e regeneração. |
 | `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
 | `src/game/evolution.ts` | Formas por nível de cada shinobi, recorte de retrato nos atlas e nível de desbloqueio das técnicas. |
-| `src/game/preparation.ts` | 16 nós da árvore permanente, usos de atualizar/pular/banir, preço das kunais, carteira administrativa (999.999), compra e reembolso. |
+| `src/game/preparation.ts` | 24 nós das Passivas Shinobi (seções Treinamento e Equipe da partida; `passiveCost`, `homeCapacity`, `prioritySlots`, `jiraiyaSlots`/`jiraiyaRolls`), usos de atualizar/pular/banir, preço das kunais, carteira administrativa (999.999), compra e reembolso. |
 | `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis; `GUARDIAN_RULES` e `guardianHpMultiplier(zoneElapsed)` (0,6× → 1,0× aos 160 s). |
-| `src/game/npcs.ts` | Ebisu e Iruka: `NPC_RULES`, `LEGENDARY_VALUES`, `TOTEM_RULES`, sorteio de trocas, `NPC_ALLIES.iruka`, `NPC_NAMES` e retratos SVG provisórios. Telas de escolha: −3 Ebisu, −4 menu do Iruka, −5 pergaminho lendário. |
+| `src/game/npcs.ts` | Ebisu e Iruka: `NPC_RULES`, `LEGENDARY_VALUES`, `TOTEM_RULES`, sorteio de trocas, `NPC_ALLIES.iruka`, `NPC_NAMES` e `NPC_PORTRAITS` (sprites pixel art `public/assets/shinobis/iruka-1.svg` e `ebisu-1.svg`, gerados por `node scripts/generate-sprites.mjs --npcs`). Telas de escolha: −3 Ebisu, −4 menu do Iruka, −5 pergaminho lendário. |
 | `src/scene/narutoTotem.ts` | Barra 3D do Naruto Totem (nome, HP, segundos restantes). |
 | `src/game/roulette.ts` + `src/ui/TsunadeRoulette.tsx` + `src/tsunade-roulette.css` | Roleta da Tsunade: casas, pesos por sorte/dificuldade, custo crescente e overlay. |
+| `src/scene/dropSprites.ts` | Sprites procedurais (canvas) dos drops: essência roxa de XP (3 tamanhos), orbe azul de chakra, moeda 両 de Ryu, tigela de lamen de cura (`RAMEN_DROP` em GameCanvas: 15%/35%), pílula e pergaminho. Hooks `dropShowcase`/`drops`. |
+| `src/ui/MapOverlay.tsx` + `src/map.css` | Ícones do mapa M/Tab e do minimapa, rota/ping, seta e metros na HUD, "Chegou!". Evento `shinobi-route`. |
+| `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, "em casa", prioridade, predefinições e hudzinho do hub. |
+| `src/ui/BuffText.tsx` | Pinta ganhos em verde e perdas em vermelho nos textos dos cards. |
 | `src/game/settings.ts` | Configurações do jogador (`sealAnimation`), em localStorage com try/catch. |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
@@ -34,7 +38,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/hud-dock.css` | Bloco inferior esquerdo: pílulas acima das habilidades, mais a posição da ajuda de teclas. |
 | `src/ui/DebugPanel.tsx` + `src/debug.css` | Painel de debug (F9) e tipos `DebugApi`/`DebugLive`. |
 | `src/ui/PillIcon.tsx` | Cápsula colorida com o glifo da pílula, em CSS inline. |
-| `src/ui/BuildPlanner.tsx` | Plano pré-run: planejar/arquivar técnicas, pílulas e itens. |
+| `src/ui/BuildPlanner.tsx` | Plano pré-run: planejar ou deixar em casa técnicas, pílulas e itens. |
 | `src/ui/PoolFilters.tsx` | Filtros de busca, raridade, escola, elemento, forma, atributo e aldeia. |
 | `src/ui/SkillIcon.tsx` | Ícone desenhado por técnica. |
 | `src/audio/sfx.ts` | Sons procedurais via Web Audio. |
@@ -97,7 +101,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - O guardião (shinobi da lista da zona) é invocado no Selo do guardião (`summonGuardian`, HP × `guardianHpMultiplier`) ou surge sozinho aos 160 s da zona. `guardianSpawned` garante um por zona.
 - **Dificuldade** (`difficultyAt`):
   - Multiplicador por rank: Genin 1, Chunin 1,4, Jonin 1,9, Kage 2,6.
-  - Por minuto: HP +22%, dano +15%, velocidade e cadência sobem, intervalo de spawn cai.
+  - Por minuto: HP +22%, dano +15%, velocidade e velocidade de ataque sobem, intervalo de spawn cai.
   - Teto de **180 inimigos vivos**.
   - A Maldição de Orochimaru multiplica a dificuldade da zona. O Plano do Shikamaru não altera dificuldade.
 - **Inimigos**:
@@ -106,7 +110,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - 8% dos inimigos comuns são elites (contorno laranja).
   - Emboscadas a cada 18–30 s geram 8 + 2×zona inimigos.
 - **Técnicas**:
-  - Cada técnica aprendida dispara sozinha pela própria recarga (cadência e afixo "haste").
+  - Cada técnica aprendida dispara sozinha pela própria recarga (velocidade de ataque e afixo "haste").
   - Projétil, Em V e Onda viram projéteis (o número de projéteis se aplica).
   - Corpo a corpo, Cone, Linha, Área e Órbita acertam por geometria instantânea.
   - Terreno não bloqueia acerto.
@@ -118,7 +122,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - Hashirama: +20% em técnicas Sábias ou com Selo de Senjutsu.
   - Gaara: +1% de dano por ponto de armadura.
 - **Ultimate**:
-  - Chakra 0–100, recarga de 55 s × `ultimateRate`; o drop roxo dá +9.
+  - Chakra 0–100, recarga de 55 s × `ultimateRate`; o orbe azul de chakra dá +9.
   - R lança a Ultimate (área de raio 6 × √área, poder 6).
   - AUTO lança sozinho quando a carga está cheia. A tecla Y alterna o AUTO; o clique no selo faz o mesmo, disparando o evento `shinobi-toggle-auto-ult`. Os dois caminhos chamam `onToggleAuto`.
 - **Progressão**:
@@ -127,7 +131,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - Se a forma muda, o sprite troca e o HP base sobe 25%.
 - **Aliados**:
   - Seguem o jogador em formação.
-  - A cada 1,5 s ÷ cadência de aliados, cada um lança a 1ª técnica dele com 65% × dano de aliados.
+  - A cada 1,5 s ÷ velocidade de ataque de aliados, cada um lança a 1ª técnica dele com 65% × dano de aliados.
   - Cada aliado dá um buff passivo único (`ALLY_BUFFS` em `src/game/allies.ts`) × força de suporte (`allyBuff`). Em `refreshStats`, `alliesBonuses(allies, stats.allyBuff)` é somado aos buffs da run, junto com `synergyBonuses(activeSynergies(heroId, allies))`. O snapshot leva `synergies` (lista ativa) para o painel SINERGIAS e os cartões; `synergy` (booleano do trio da Areia) ficou por compatibilidade. A regeneração genérica de +0,3 HP/s por aliado foi removida.
 - **Descoberta**:
   - Eventos e kunais/shurikens entram no mapa quando ficam dentro do frustum da câmera a menos de 40 m, e continuam registrados depois.
@@ -146,13 +150,13 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - A carteira começa com 999.999 Lamens (🍜). O Ryu (🪙) é só o dinheiro da run.
 - **Elenco**: 22 shinobis em grade de retratos (`CharacterSelect`), com aldeia, passiva, atributos, kit e Ultimate. Filtros por vila, elemento (afinidade) e organização/clã, mais busca.
 - **Ataques**: biblioteca do shinobi com nível de desbloqueio de cada técnica e filtros por escola, elemento e forma. Inclui técnicas de colegas da mesma aldeia.
-- **Plano de build**: planejar (marca visual) e arquivar técnicas, pílulas e itens. Os arquivados não aparecem na run; a técnica inicial não pode ser arquivada.
+- **Plano de build**: planejar (marca visual) e deixar em casa técnicas, pílulas e itens. Os itens em casa não aparecem na run; a técnica inicial não pode ficar em casa.
 - **Árvore permanente** (`PASSIVES`):
   - 10 linhas de atributo com 10 níveis cada; custo = base + 25 × nível comprado.
   - Quarta opção, Atualizar/Pular/Banir (+1 uso por nível, até 10), Suporte adicional e Quarta técnica.
 - **Loja**:
   - 94 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
-  - Desbloquear só adiciona ao pool. Há filtros e a opção de arquivar da run.
+  - Desbloquear só adiciona ao pool. Há filtros; deixar em casa fica na Bolsa da Missão.
 - **Missões**: Genin, Chunin, Jonin e Kage alteram a escala de dificuldade.
 - **Reset**: devolve tudo o que foi gasto e limpa árvore, desbloqueios, arquivamentos e plano.
 
@@ -161,7 +165,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 - **Cartas de recompensa** (level-up):
   - Só técnicas e pílulas; itens nunca aparecem no level-up.
   - `skillTarget = max(min(2, técnicas elegíveis), total − pílulas elegíveis)`: entram até 2 técnicas, depois pílulas diferentes (as 18 de `pills.ts`, até 10 cada, via `grantPill`), e técnicas completam se faltarem pílulas.
-  - Técnicas elegíveis: desbloqueadas, não arquivadas nem banidas, abaixo do nível 9, e nova só se houver espaço (3, ou 4 com "Quarta técnica").
+  - Técnicas elegíveis: desbloqueadas, não deixadas em casa nem banidas, abaixo do nível 9, e nova só se houver espaço (3, ou 4 com "Quarta técnica").
   - Itens só vêm de `rollMegaLoot` (kunai, shuriken, eventos, drop de item, recusa de selamento).
   - Sem opções elegíveis, aparece uma carta de "Powerlevel" com um ganho pequeno de atributo.
 - **Atualizar / pular / banir**: F, X e Z (ou botões), com 3 usos base cada. Banir exige escolher a carta em seguida e remove aquela opção pelo resto da run.

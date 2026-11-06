@@ -60,7 +60,7 @@ export const ITEMS:Item[] = [
   item('sniper-lens','Lente do Atirador','Comum',7,ANY,'+14% de velocidade de projétil e +3 pontos percentuais de chance crítica.',{projectileSpeed:.14,crit:.03}),
 
   // ───── Incomum ─────
-  item('adrenaline','Selo de Adrenalina','Incomum',5,3,'Ao ser atingido: +20% de movimento e +12% de cadência por 3 s.',{rush:1}),
+  item('adrenaline','Selo de Adrenalina','Incomum',5,3,'Ao ser atingido: +20% de movimento e +12% de velocidade de ataque por 3 s.',{rush:1}),
   item('sleep-incense','Incenso do Sono','Incomum',2,3,'2,5% de chance por acerto de fazer o inimigo Dormir por 2 s.',{sleepChance:.025}),
   item('vampire-root','Raiz Vampira','Incomum',13,ANY,'Recupera 3% do dano causado como HP.',{lifesteal:.03}),
   item('chains','Correntes de Selamento','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
@@ -70,11 +70,11 @@ export const ITEMS:Item[] = [
   item('green-tea','Chá Verde de Konoha','Incomum',13,3,'Ajudantes causam +25% de dano e atacam 15% mais rápido.',{allyDamage:.25,allySpeed:.15}),
   item('duration','Selo de Persistência','Incomum',6,ANY,'+20% de duração de efeitos de status.',{duration:.2}),
   item('experience','Pedra da Juventude','Incomum',10,ANY,'+15% de experiência recebida.',{exp:.15}),
-  item('stone-stance','Postura de Pedra','Incomum',4,3,'Parado: +30% de armadura e +8% de cadência até se mover.',{stance:1}),
+  item('stone-stance','Postura de Pedra','Incomum',4,3,'Parado: +30% de armadura e +8% de velocidade de ataque até se mover.',{stance:1}),
   item('rhythm','Ritmo Ininterrupto','Incomum',6,ANY,'Sem levar golpes, o dano sobe 4% por segundo, até +40%. Zera ao ser atingido.',{noHitDamage:.4}),
   item('taijutsu','Luvas de Taijutsu','Incomum',3,ANY,'+15% de dano de Taijutsu.',{normal:.15}),
   item('poison-herb','Erva Venenosa','Incomum',13,ANY,'+30% de dano de queimadura e veneno.',{statusDamage:.3}),
-  item('swift-kunai','Kunai Ágil','Incomum',1,ANY,'+10% de cadência.',{attackSpeed:.1}),
+  item('swift-kunai','Kunai Ágil','Incomum',1,ANY,'+10% de velocidade de ataque.',{attackSpeed:.1}),
   item('crit-damage','Kunai Afiada','Incomum',1,ANY,'+30 pontos percentuais de dano crítico.',{critDamage:.3}),
   item('repel','Incenso Repelente','Incomum',2,3,'−8% de inimigos no mapa e +6% de movimento.',{enemyCount:-.08,move:.06}),
   item('thorn-armor','Armadura de Espinhos','Incomum',4,ANY,'Inimigos que te acertam sofrem 25 de dano.',{thorns:25}),
@@ -93,9 +93,9 @@ export const ITEMS:Item[] = [
   // ───── Raro ─────
   item('jonin-vest','Colete Jonin','Raro',4,ANY,'+12 de armadura e +12% de HP máximo.',{defense:12,healthPct:.12}),
   item('toxic-sludge','Lodo Venenoso','Raro',13,ANY,'+2 HP/s de regeneração e +20% de dano de queimadura e veneno.',{regen:2,statusDamage:.2}),
-  item('gate-band','Faixa dos Oito Portões','Raro',3,5,'+35% de dano de Taijutsu e −8% de cadência.',{normal:.35,attackSpeed:-.08}),
-  item('wind-scarf','Cachecol do Vento','Raro',5,5,'+20% de movimento e +10% de cadência.',{move:.2,attackSpeed:.1}),
-  item('chakra-goggles','Óculos de Chakra','Raro',10,5,'+35% de dano de Ninjutsu e −8% de cadência.',{element:.35,attackSpeed:-.08}),
+  item('gate-band','Faixa dos Oito Portões','Raro',3,5,'+35% de dano de Taijutsu e −8% de velocidade de ataque.',{normal:.35,attackSpeed:-.08}),
+  item('wind-scarf','Cachecol do Vento','Raro',5,5,'+20% de movimento e +10% de velocidade de ataque.',{move:.2,attackSpeed:.1}),
+  item('chakra-goggles','Óculos de Chakra','Raro',10,5,'+35% de dano de Ninjutsu e −8% de velocidade de ataque.',{element:.35,attackSpeed:-.08}),
   item('study-scroll','Pergaminho de Estudo','Raro',11,ANY,'+25% de experiência e +2 m de alcance de coleta.',{exp:.25,pickupFlat:2}),
   item('five-elements','Selo dos Cinco Elementos','Raro',11,3,'+6% de dano por status diferente no inimigo (controle, queimadura, veneno, lentidão), até +30%.',{statusStack:.06}),
   item('chakra-shield','Escudo de Chakra','Raro',9,2,'Bloqueia totalmente o próximo golpe a cada 14 s.',{shield:1}),
@@ -113,7 +113,7 @@ export const ITEMS:Item[] = [
   item('insignia','Insígnia da Fortuna','Épico',8,ANY,'+40% de Ryu recebido e +30 de Sorte.',{gold:.4,luck:30}),
   item('crit-seal','Selo do Golpe Fatal','Épico',7,ANY,'+40 pontos percentuais de dano crítico e +8 de chance crítica.',{critDamage:.4,crit:.08}),
   item('chidori-nagashi','Pergaminho Chidori Nagashi','Épico',9,3,'A cada 2,5 s, raios atingem 3 inimigos próximos (+1 por cópia extra) e podem paralisar.',{bolts:1}),
-  item('speed','Selo de Velocidade','Épico',5,ANY,'+20% de cadência dos ataques automáticos.',{attackSpeed:.2}),
+  item('speed','Selo de Velocidade','Épico',5,ANY,'+20% de velocidade de ataque dos ataques automáticos.',{attackSpeed:.2}),
   item('pill-gourd','Cabaça de Pílulas','Épico',0,1,'Pílulas podem subir mais 2 níveis (até 12).',{pillCap:2}),
   item('clone','Clone Adicional','Épico',11,3,'+1 projétil em todas as técnicas; prioriza outro inimigo.',{projectiles:1}),
   item('samurai-armor','Armadura Samurai','Épico',4,3,'+20 de armadura, +15% de HP máximo, 40 de dano a quem te acerta e −5% de movimento.',{defense:20,healthPct:.15,thorns:40,move:-.05}),
@@ -127,26 +127,27 @@ export const ITEMS:Item[] = [
 
   // ───── Lendário ─────
   item('haku-mirror','Espelho de Gelo de Haku','Lendário',10,1,'+15% de dano; ao ser atingido, congela inimigos próximos por 3 s (a cada 20 s).',{damage:.15,freezeOnHit:1}),
-  item('sage','Armadura do Sábio','Lendário',4,2,'+30% de dano total e +20% de cadência.',{damage:.3,attackSpeed:.2}),
+  item('sage','Armadura do Sábio','Lendário',4,2,'+30% de dano total e +20% de velocidade de ataque.',{damage:.3,attackSpeed:.2}),
   item('rinne-tensei','Rinne Tensei','Lendário',9,3,'Revive uma vez com 60% do HP (uma vez por cópia).',{revive60:1}),
   item('red-moon','Olho da Lua Vermelha','Lendário',9,2,'+2 projéteis e +25% de área.',{projectiles:2,area:.25}),
-  item('hokage-scroll','Pergaminho do Hokage','Lendário',3,1,'Ultimate recarrega 25% mais rápido; ao usá-la, as técnicas recarregam e ganham +30% de cadência por 6 s.',{cool:.25,ultReset:1}),
+  item('hokage-scroll','Pergaminho do Hokage','Lendário',3,1,'Ultimate recarrega 25% mais rápido; ao usá-la, as técnicas recarregam e ganham +30% de velocidade de ataque por 6 s.',{cool:.25,ultReset:1}),
   item('tenten','Shuriken Selo da Tenten','Lendário',1,1,'+25% de dano total. E sela instantaneamente um mega elite já derrotado.',{damage:.25}),
   item('kurama-chakra','Chakra da Kurama','Lendário',9,1,'+20% de dano de Ninjutsu, +15% de área e Ultimate recarrega 40% mais rápido.',{element:.2,area:.15,cool:.4}),
   item('amaterasu','Chamas de Amaterasu','Lendário',7,2,'+10% de dano; a cada 6 s, chamas negras atingem o inimigo mais forte por perto e explodem em volta (queimam).',{damage:.1,beam:1}),
   item('forbidden-scroll','Pergaminho Proibido','Lendário',3,1,'Técnicas podem subir mais 2 níveis (até 11).',{skillCap:2}),
-  item('lee','Remédio do Rock Lee','Lendário',0,1,'Punho Bêbado: +20% dano, +20% cadência, +15% movimento e +10 pontos de evasão.',{damage:.2,attackSpeed:.2,move:.15,dodge:.1}),
+  item('lee','Remédio do Rock Lee','Lendário',0,1,'Punho Bêbado: +20% dano, +20% velocidade de ataque, +15% movimento e +10 pontos de evasão.',{damage:.2,attackSpeed:.2,move:.15,dodge:.1}),
 ];
 export const ITEM_BY_NAME = Object.fromEntries(ITEMS.map(i=>[i.name,i])) as Record<string,Item>;
 export function availableItems(unlocked:readonly string[], archived:readonly string[], allForPrototype:boolean) {
   return ITEMS.filter(i=>!archived.includes(i.id)&&(allForPrototype||i.rarity==='Comum'||unlocked.includes(i.id)));
 }
-export function rollItems(pool:readonly Item[], owned:Record<string,number>, luck:number, count:number, rng= Math.random):Item[] {
+/** `priority`: ids marcados como Prioridade na Bolsa da Missão; o peso deles é multiplicado por `priorityWeight` (não garante). */
+export function rollItems(pool:readonly Item[], owned:Record<string,number>, luck:number, count:number, rng= Math.random, priority:readonly string[]=[], priorityWeight=1):Item[] {
   const eligible=pool.filter(i=>(owned[i.name]||0)<i.max), result:Item[]=[];
   const rarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
   while(eligible.length&&result.length<count){
     // Divide pelo número de itens de cada raridade para o tamanho do catálogo não enviesar os pesos.
-    const weights=eligible.map(i=>{const n=rarities.indexOf(i.rarity);return [90,9.889,.1,.01,.001][n]*Math.pow(1+Math.min(500,Math.max(0,luck))/100,n)/eligible.filter(j=>j.rarity===i.rarity).length;});
+    const weights=eligible.map(i=>{const n=rarities.indexOf(i.rarity);return [90,9.889,.1,.01,.001][n]*Math.pow(1+Math.min(500,Math.max(0,luck))/100,n)/eligible.filter(j=>j.rarity===i.rarity).length*(priority.includes(i.id)?priorityWeight:1);});
     let roll=rng()*weights.reduce((a,b)=>a+b,0), index=weights.length-1;
     for(let i=0;i<weights.length;i++){roll-=weights[i];if(roll<0){index=i;break;}}
     result.push(eligible.splice(index,1)[0]);

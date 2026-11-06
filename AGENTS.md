@@ -16,12 +16,13 @@ Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conf
 - Preserve decisões de gameplay do usuário; quando houver divergência entre código e requisitos, documente e corrija com cuidado.
 - Faça mudanças incrementais e registre mudanças no CHANGELOG.md; não declare teste de sintaxe ou jogabilidade sem executá-lo.
 - Fonte de conhecimento canônico (vilas, clãs, organizações, técnicas, natureza de chakra/elemento): **Naruto Wiki/Narutopedia** (https://naruto.fandom.com/). Cite a página consultada. Se encontrar fonte mais atualizada ou divergente, avise o usuário para revisar antes de alterar o personagem. Percentuais e atributos de gameplay continuam regras originais do protótipo.
+- Terminologia: o atributo `attackSpeed` chama-se **velocidade de ataque** em todo texto (nunca "cadência"). Velocidade de projétil (`projectileSpeed`) é outro atributo.
 - Não inclua bibliotecas externas ou ativos de terceiros sem verificar licença e necessidade.
 
 ## Invariantes de design
 - 4 habilidades comuns em slots 1–4, ativadas **somente automaticamente**, slot 4 desbloqueável na progressão permanente.
-- Ultimate natural disponível desde nível 1: R manual; a **tecla Y é obrigatória** e alterna o uso automático (o selo AUTO embutido no botão R faz o mesmo por clique). Não remover Y. A recarga é passiva por tempo e pode receber aceleradores por drop roxo; Chakra também é usado por ninjas Taijutsu. Itens não concedem Chakra diretamente.
-- XP azul, dinheiro/Lamens amarelo, acelerador de Ultimate roxo devem ser distinguíveis.
+- Ultimate natural disponível desde nível 1: R manual; a **tecla Y é obrigatória** e alterna o uso automático (o selo AUTO embutido no botão R faz o mesmo por clique). Não remover Y. A recarga é passiva por tempo e pode receber aceleradores por drop azul (orbe de chakra); Chakra também é usado por ninjas Taijutsu. Itens não concedem Chakra diretamente.
+- Drops no chão devem ser distinguíveis (decisão do usuário em 06/11/2026): Chakra/carga da Ultimate = orbe azul; XP = essência roxa (maior para elite/mega elite/guardião); Ryu = moeda dourada com 両; tigela de lamen = cura 35% do HP (15% por abate, não dá Lamens); pílula rosa; item laranja.
 - M abre mapa completo; minimapa permanente superior direito; eventos só são registrados após serem **vistos em tela**. Conforme orientação mais recente do usuário, Tab abre o mapa rápido e P abre ficha/build/itens/pool.
 - HUD: nível superior esquerdo, pílulas acima das habilidades, inventário com ícones/quantidades inferior direito.
 - 3 shinobi de suporte base +1 por item da run +1 passiva permanente comprada com Lamens = máximo atual 5, sem contar herói.

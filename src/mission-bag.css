@@ -1,0 +1,71 @@
+/* Passivas Shinobi, Bolsa da Missão e cards compactos de item (hub). */
+.hub-hud { display: flex; flex-wrap: wrap; gap: 8px; margin: -6px 0 14px; }
+.hud-chip { display: inline-flex; align-items: baseline; gap: 6px; padding: 7px 12px; border: 1px solid #ffffff22; border-radius: 18px; background: #1c2639e8; font-size: 12px; }
+.hud-chip b { color: #fff; font-size: 13px; }
+.hud-chip small { color: #aab4c4; font-size: 10px; }
+.hud-chip.lamen { border-color: #f0b95687; background: #30291fe8; }
+.hud-chip.lamen b { color: #ffd176; }
+
+.passive-section { margin-bottom: 18px; }
+.passive-section-title { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 10px; padding-left: 10px; border-left: 4px solid #8f6bff; font-size: 20px; }
+.passive-section-title small { color: #c1c9d5; font-size: 11px; font-weight: 700; }
+.passive-section + .passive-section .passive-section-title { border-left-color: #4b8dff; }
+.passive-card p { min-height: 2.6em; }
+.passive-extra { display: block; margin: 0 8px; color: #7fb4ff; font-size: 9px; font-weight: 700; line-height: 1.4; }
+.jiraiya-slots { display: flex; justify-content: center; gap: 6px; margin: 4px 8px 0; }
+.jiraiya-slots span { display: grid; place-items: center; width: 34px; height: 34px; border: 3px solid #464b59; border-radius: 50%; background: #20283a; font-size: 9px; font-weight: 900; color: #9ba5b4; }
+.jiraiya-slots span.rare { border-color: #6eb8ff; color: #cfe6ff; }
+.jiraiya-slots span.legendary { border-color: #f3c35d; color: #ffe2a0; }
+
+.compact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.compact-item { display: flex; flex-direction: column; min-height: 0; padding: 9px 10px; border: 1px solid #ffffff1f; border-radius: 11px; background: #1c2639f2; }
+.compact-item > header { display: flex; align-items: center; gap: 8px; }
+.compact-item > header .catalog-icon { flex: none; width: 32px; height: 32px; }
+.compact-item > header div { display: grid; flex: 1; min-width: 0; }
+.compact-item > header b { overflow: hidden; font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+.compact-rarity { display: flex; align-items: center; gap: 4px; color: #aab4c4; font-size: 9px; font-weight: 800; }
+.compact-rarity i { width: 7px; height: 7px; border-radius: 50%; background: #cbd1d6; }
+.rarity-incomum .compact-rarity i { background: #6fd27b; }
+.rarity-raro .compact-rarity i { background: #6eb8ff; }
+.rarity-épico .compact-rarity i { background: #c59aff; }
+.rarity-lendário .compact-rarity i { background: #f3c35d; }
+.compact-item p { flex: 1; margin: 6px 0; color: #c1c9d5; font-size: 10px; line-height: 1.4; }
+.compact-item footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; color: #9ba5b4; font-size: 9.5px; font-weight: 800; }
+.compact-item footer button { padding: 5px 9px; border: 1px solid #ffffff2a; border-radius: 12px; background: #2a3550; color: #f4f0e8; cursor: pointer; font-size: 10px; font-weight: 900; }
+.compact-item footer button:disabled { opacity: .5; cursor: not-allowed; }
+.compact-item .compact-buy:not(:disabled) { border: 0; background: linear-gradient(#ffd95e, #e99b18); color: #372a19; }
+.compact-item.at-home { opacity: .62; border-style: dashed; }
+.compact-item.at-home .bag-action { opacity: 1; border-color: #61ffa888; color: #b8ffd6; }
+.compact-item.locked { opacity: .55; }
+.prio-star { flex: none; padding: 0 4px; border: 0; background: none; color: #9ba5b4; cursor: pointer; font-size: 17px; }
+.prio-star.on { color: #ffd176; }
+.prio-star:disabled { opacity: .35; cursor: not-allowed; }
+
+.mission-bag { display: grid; gap: 10px; }
+.bag-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.bag-tabs { display: flex; gap: 2px; padding: 4px; border-radius: 22px; background: #141c2bee; }
+.bag-tabs button { padding: 7px 12px; border: 0; border-radius: 18px; background: none; color: #dfe5ee; cursor: pointer; font-size: 12px; font-weight: 800; }
+.bag-tabs button b { margin-left: 4px; padding: 1px 7px; border-radius: 10px; background: #2a3550; font-size: 10px; }
+.bag-tabs button.active { background: #34446a; color: #fff; }
+.bag-search { flex: 1; min-width: 180px; padding: 9px 14px; border: 1px solid #ffffff22; border-radius: 20px; background: #141c2bee; color: #f4f0e8; font: inherit; font-size: 12px; }
+.bag-capacity { display: grid; padding: 6px 14px; border: 1px solid #ffffff22; border-radius: 18px; background: #141c2bee; text-align: right; }
+.bag-capacity b { font-size: 13px; }
+.bag-capacity small { color: #aab4c4; font-size: 9px; }
+.bag-capacity.full { border-color: #ff8a6a99; }
+.bag-presets { border: 1px solid #ffffff1f; border-radius: 12px; background: #141c2bee; }
+.bag-presets-head { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 14px; border: 0; background: none; color: #f4f0e8; cursor: pointer; text-align: left; }
+.bag-presets-head small { flex: 1; color: #aab4c4; font-size: 10px; text-align: right; }
+.bag-preset-rows { display: grid; gap: 6px; padding: 0 10px 10px; }
+.bag-preset { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid #ffffff1a; border-radius: 10px; background: #1c2639; }
+.bag-preset.in-use { border-color: #3bd17a; }
+.preset-number { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #2a3550; font-size: 11px; font-weight: 900; }
+.bag-preset input { width: 140px; padding: 6px 9px; border: 0; border-radius: 8px; background: #141c2b; color: #f4f0e8; font: inherit; font-size: 12px; font-weight: 800; }
+.preset-icons { display: flex; flex: 1; align-items: center; gap: 4px; min-width: 120px; color: #aab4c4; font-size: 10px; }
+.preset-icons .catalog-icon { width: 20px; height: 20px; }
+.preset-empty { flex: 1; color: #8a94a5; font-size: 11px; }
+.bag-preset button { padding: 6px 11px; border: 0; border-radius: 9px; background: #2a3550; color: #f4f0e8; cursor: pointer; font-size: 11px; font-weight: 900; }
+.bag-preset button:disabled { opacity: .55; cursor: not-allowed; }
+.bag-preset .preset-apply { background: linear-gradient(#5be38f, #2faa5d); color: #08260f; }
+.bag-note { margin: 0; color: #c1c9d5; font-size: 11px; }
+.bag-empty { grid-column: 1 / -1; color: #9ba5b4; }
+@media (max-width: 720px) { .bag-capacity { text-align: left; } .bag-preset input { width: 100%; } }

@@ -59,7 +59,7 @@ const STAT_FORMAT: Partial<Record<StatKey, StatFormat>> = {
   move: { label: 'movimento', percent: true },
   health: { label: 'HP máximo', percent: false },
   projectiles: { label: 'projéteis', percent: false },
-  attackSpeed: { label: 'cadência', percent: true },
+  attackSpeed: { label: 'velocidade de ataque', percent: true },
   projectileSpeed: { label: 'velocidade de projétil', percent: true },
   crit: { label: 'chance crítica', percent: true },
   dodge: { label: 'evasão', percent: true },

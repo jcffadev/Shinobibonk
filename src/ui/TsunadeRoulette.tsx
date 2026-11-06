@@ -1,3 +1,4 @@
+import { BuffText } from './BuffText';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ROULETTE_CASAS, ROULETTE_RULES, badChance, goodChance, type RoulettePrize, type RouletteView } from '../game/roulette';
 import '../tsunade-roulette.css';
@@ -131,7 +132,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
           </div>
           <div className="tr-pending">
             <b>Ganhos desta visita · {revealed.length} giro(s) · {live.sessionSpent} Ryu</b> <small>{goods} bons · {bads} ruins</small>
-            <ol>{[...revealed].reverse().map(p => <li key={p.seq} className={`kind-${p.kind}`}><i>{p.icon}</i><span>{p.label}<small>{p.detail}</small></span></li>)}</ol>
+            <ol>{[...revealed].reverse().map(p => <li key={p.seq} className={`kind-${p.kind}`}><i>{p.icon}</i><span>{p.label}<small><BuffText text={p.detail}/></small></span></li>)}</ol>
             {!revealed.length && <p className="tr-empty">Nada ainda. Os resultados aparecem aqui e são entregues ao sair.</p>}
           </div>
         </div>

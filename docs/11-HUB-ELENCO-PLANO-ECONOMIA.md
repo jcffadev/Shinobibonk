@@ -7,7 +7,7 @@ Data: 05/11/2026. Valores da árvore marcados como proposta; não estão balance
 1. **Tela inicial**: continuar como convidado, escolher shinobi, ver a prévia da cena, consultar progressão e abrir a loja. A carteira de teste se chama "Administrador", sem login; o modal de conta avisa que o cadastro ainda não existe.
 2. **Elenco**: 22 shinobis com retrato, aldeia, passiva, atributos base, kit de quatro técnicas e Ultimate. Grade de retratos (`src/ui/CharacterSelect.tsx`, `src/character-select.css`) com selo de elemento e vila; filtros combináveis por vila, elemento (afinidade principal, `heroAffinity`) e organização/clã (`ORGANIZATIONS`, `HERO_CLAN`), busca por nome, contagem "X de 22" e botão Limpar filtros. O painel de detalhes mostra selos de elemento e organizações.
 3. **Ataques**: biblioteca do shinobi selecionado, com nível de desbloqueio de cada técnica, técnicas de colegas da mesma aldeia e filtros por escola, elemento e forma.
-4. **Plano**: planejar e arquivar técnicas, pílulas e itens. Os arquivados não aparecem na run; a técnica inicial é obrigatória.
+4. **Plano**: planejar ou deixar em casa técnicas, pílulas e itens. O que fica em casa não aparece na run; a técnica inicial é obrigatória.
 5. **Árvore e loja**: a moeda permanente compra níveis permanentes ou desbloqueia itens. Desbloquear item só o inclui no pool.
 6. **Missão**: Genin, Chunin, Jonin ou Kage. A escolha altera a escala de dificuldade da run.
 
@@ -29,6 +29,35 @@ Data: 05/11/2026. Valores da árvore marcados como proposta; não estão balance
 - Banir: 180, 7 níveis.
 - Suporte adicional: 600, 1 nível.
 - Quarta técnica: 400, 1 nível.
+
+## Passivas Shinobi e Bolsa da Missão (IMPLEMENTADO em 06/11/2026, pedido do usuário, valores provisórios)
+- A aba "Progressão" virou **Passivas Shinobi**, com 24 nós em duas seções, **Treinamento** e **Equipe da partida**. Custo: `base + nível × 25` Lamens. Os nomes antigos foram mantidos porque são a chave salva.
+- **Nós criados nesta rodada**, comparados às referências:
+  - **Chakra Curativo**: +0,2 HP/s por nível, 5 níveis.
+  - **Expansão**: +3% de área, 5 níveis.
+  - **Farmacologia Ninja**: +1 nível máximo em cada pílula, 2 níveis.
+  - **Selo de Ressurreição**: começa a run com 1 ressurreição a 35% do HP.
+  - **Baú do Clã**: 5 vagas "em casa" de base, +5 por nível, +1 a cada 2 itens desbloqueados.
+  - **Meditação de Chakra**: a Ultimate carrega 4% mais rápido por nível.
+  - **Bolsa Grande**: 3 itens com prioridade em vez de 2.
+  - **Treinamento com Jiraiya**: 4 espaços para técnicas favoritas.
+- **Treinamento com Jiraiya** (o card "Afinidade" da referência):
+  - As técnicas marcadas como ★ Planejar são as favoritas.
+  - Níveis 1–4 abrem os espaços como Raros, com 8% cada; níveis 5–8 promovem cada um a Lendário, com 15%.
+  - A cada oferta de level-up, cada espaço rola a sua chance e pode forçar uma favorita na oferta.
+  - Medido em 1000 ofertas: a favorita aparece em 10% das ofertas sem o nó, 35% no nível 4 e 54% no nível 8.
+- **Fora ou adaptado**:
+  - **Pesquisa**: PENDENTE, porque o jogo não tem sistema de pesquisa.
+  - **Pular**: não dá Ryu, como já era antes.
+  - **Mochila grande**: virou **Prioridade**. Levar itens de casa para a run quebraria a regra "itens só por recompensas".
+- **Bolsa da Missão** (botão ao lado de Itens; `src/ui/MissionBag.tsx`, `src/game/missionBag.ts`, `src/mission-bag.css`):
+  - Abas Todos, Bloqueado, No pool e Em casa, com busca e o selo "Em casa X/Y".
+  - Cards compactos e um hudzinho (Lamens, passivas, itens no pool, em casa) nas páginas Passivas, Itens e Bolsa.
+  - Predefinições 1–4: salvar, duplicar, apagar e aplicar (`sb_bag_presets_v1`).
+  - Prioridade ★: até 2 itens (3 com Bolsa Grande) ganham peso ×3 no sorteio de recompensas, sem garantia (`sb_priority_items`).
+- **Renomeações**: "Arquivar" virou **Deixar em casa**; "Restaurar ao pool" virou **Levar na missão**.
+  - Itens em casa não entram no pool de recompensas (kunai, shuriken, eventos, roleta).
+  - A lista continua salva em `sb_archived_items`, compatível com saves antigos.
 
 ## Regra proposta para preço da árvore
 

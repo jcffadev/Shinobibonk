@@ -90,6 +90,22 @@ assert.equal(choiceCount({}),3);assert.equal(choiceCount({'Quarta opção':1}),4
 assert.deepEqual(choiceUses({'Atualizar':7,'Pular':7,'Banir':7}),{reroll:10,skip:10,ban:10});
 assert.equal(refund(purchase(NEW_ADMIN,300)).balance,999999);
 assert.ok(!availableItems(['critical'],['critical'],false).some(i=>i.id==='critical'));
+// Passivas Shinobi: seções, nós novos com efeito real, Bolsa da Missão e Treinamento com Jiraiya.
+{const P=await import('../src/game/preparation.ts');
+ assert.equal(P.PASSIVES.length,24);assert.equal(new Set(P.PASSIVES.map(p=>p.name)).size,24);
+ assert.ok(P.PASSIVES.every(p=>P.PASSIVE_SECTIONS.some(s=>s.id===p.section)));assert.ok(P.PASSIVES.every(p=>ITEMS.some(i=>i.id===p.icon)),'ícone de cada passiva existe no catálogo');
+ for(const name of ['Chakra Curativo','Expansão','Farmacologia Ninja','Selo de Ressurreição','Baú do Clã','Meditação de Chakra','Bolsa Grande','Treinamento com Jiraiya'])assert.ok(P.PASSIVES.some(p=>p.name===name),name);
+ const s0=calculateStats('naruto',1),s1=calculateStats('naruto',1,{},{},0,{'Chakra Curativo':5,'Expansão':5,'Meditação de Chakra':5,'Farmacologia Ninja':2,'Selo de Ressurreição':1});
+ assert.ok(Math.abs(s1.regen-s0.regen-1)<1e-9);assert.ok(Math.abs(s1.area-s0.area-.15)<1e-9);assert.ok(Math.abs(s1.ultimateRate-s0.ultimateRate-.2)<1e-9);assert.equal(s1.extra.pillCap,2);assert.equal(s1.extra.revive35,1);
+ assert.deepEqual(P.homeCapacity({},0),{total:5,fromChest:5,fromUnlocks:0});assert.equal(P.homeCapacity({'Baú do Clã':6},64).total,67);
+ assert.equal(P.prioritySlots({}),2);assert.equal(P.prioritySlots({'Bolsa Grande':1}),3);
+ assert.deepEqual(P.jiraiyaSlots({}),[]);assert.equal(P.jiraiyaSlots({'Treinamento com Jiraiya':4}).every(s=>s.rarity==='Raro'),true);
+ assert.deepEqual(P.jiraiyaSlots({'Treinamento com Jiraiya':8}).map(s=>s.chance),[.15,.15,.15,.15]);
+ let hits=0;for(let i=0;i<20000;i++)hits+=P.jiraiyaRolls({'Treinamento com Jiraiya':8});assert.ok(Math.abs(hits/20000-.6)<.03,'4 espaços lendários ≈ 0,6 técnica favorita por oferta');
+ // Prioridade da Bolsa: peso ×3 aumenta a frequência sem tirar os outros itens do sorteio.
+ const commons=ITEMS.filter(i=>i.rarity==='Comum').slice(0,5),fav=commons[0];let base=0,prio=0;
+ for(let i=0;i<20000;i++){base+=Number(rollItems(commons,{},0,1)[0].id===fav.id);prio+=Number(rollItems(commons,{},0,1,Math.random,[fav.id],P.PRIORITY_WEIGHT)[0].id===fav.id);}
+ assert.ok(prio/base>1.9&&prio/base<2.4,'prioridade ×3 de peso: 20% → 3/7 entre 5 itens da mesma raridade');}
 assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attackRate);
 const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,techniques:HEROES.length*4,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 

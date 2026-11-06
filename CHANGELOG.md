@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-06 — Passivas Shinobi, Bolsa da Missão, mapa com rota, drops novos e cores de ganho/perda
+- **Passivas Shinobi** (antiga Progressão): 24 nós em Treinamento/Equipe da partida; novos Chakra Curativo, Expansão, Farmacologia Ninja, Selo de Ressurreição, Baú do Clã, Meditação de Chakra, Bolsa Grande e **Treinamento com Jiraiya** (técnicas favoritas aparecem mais). Pesquisa PENDENTE.
+- **Bolsa da Missão**: abas, busca, capacidade em casa, prioridade ★, predefinições 1–4 e hudzinho. "Arquivar" virou **Deixar em casa**; itens em casa não entram no pool.
+- **Mapa M/Tab**: ícones e retratos do que foi visto, rota por clique ou ping, seta e metros na HUD, "Chegou!" e limpeza automática.
+- **Drops com sprites próprios**: XP = essência roxa (8/25/100, tamanho por tier), Chakra = orbe azul, Ryu = moeda 両, pílula e pergaminho; nova **tigela de lamen** (15% por abate) que cura 35% do HP. Invariante de cores atualizada no AGENTS.md.
+- **Cores**: ganhos em verde e perdas em vermelho nos cards (BuffText).
+- **Terminologia**: "cadência" virou **velocidade de ataque** em todo o jogo e nos docs.
+- **Pain = Nagato** (Clã Uzumaki) controlando o corpo do Yahiko (sem clã), conforme a Narutopedia. Ebisu e Iruka ganharam sprites pixel art no estilo do elenco.
+- Verificação: tsc, vite build, verify-rules e verify-runtime passaram; testes de navegador à parte para Passivas/Bolsa/Jiraiya, mapa/rota, sprites dos NPCs e drops (lamen curou 20 → 49,75 de 85 HP).
+
 ## 2026-11-06 — elementos corrigidos pela Narutopedia
 - `HERO_NATURES` com as naturezas canônicas dos 22 shinobis (Narutopedia, Nature Type); `heroAffinity` passa a usar a afinidade marcada na wiki ou a primeira natureza canônica do kit, em vez de contar elementos do kit.
 - Técnicas sem natureza canônica viraram Neutro: Furacão da Folha, Palma de Ar, Palma do Vazio, Kunai Explosiva, Tigre do Meio-Dia, Bansho Tenin, Kuroari, Chuva Venenosa. Pain ganhou Clã Uzumaki.

@@ -10,7 +10,7 @@ export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rar
  const growth={...NO_GROWTH};for(let n=0;n<(tier>=3?3:2)&&keys.length;n++){const key=keys.splice(Math.floor(rng()*keys.length),1)[0];growth[key]=Math.round(([10,18,25,30,40][tier]+rng()*[8,10,10,15,15][tier]))/100;}
  return {rarity:(['Comum','Incomum','Raro','Épico','Lendário'] as Rarity[])[tier],growth};
 }
-export function growthText(g:SkillGrowth,technique?:Technique){const labels=technique?.setup?{damage:'força do buff',area:'área',haste:'recarga do buff',duration:'duração do buff'}:{damage:'dano',area:'raio de área',haste:'cadência',duration:'duração'};return (Object.entries(g) as [keyof SkillGrowth,number][]).filter(([,n])=>n>0).map(([key,n])=>`+${Math.round(n*100)}% ${labels[key]}`).join(' · ');}
+export function growthText(g:SkillGrowth,technique?:Technique){const labels=technique?.setup?{damage:'força do buff',area:'área',haste:'recarga do buff',duration:'duração do buff'}:{damage:'dano',area:'raio de área',haste:'velocidade de ataque',duration:'duração'};return (Object.entries(g) as [keyof SkillGrowth,number][]).filter(([,n])=>n>0).map(([key,n])=>`+${Math.round(n*100)}% ${labels[key]}`).join(' · ');}
 
 /** Chave de bônus por elemento de técnica (itens "Pergaminho Katon" etc.). */
 export const ELEMENT_KEY:Record<Element,StatKey>={Fogo:'elFogo',Água:'elAgua',Vento:'elVento',Terra:'elTerra',Raio:'elRaio',Madeira:'elMadeira',Areia:'elAreia',Sombra:'elSombra',Neutro:'elNeutro',Sábio:'elSabio'};

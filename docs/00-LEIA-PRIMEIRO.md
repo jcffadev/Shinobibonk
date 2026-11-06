@@ -36,7 +36,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Hub**:
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
   - Elenco de 22 shinobis em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
-  - Biblioteca com 4 técnicas por shinobi e plano de build (planejar/arquivar técnicas, pílulas e itens).
+  - Biblioteca com 4 técnicas por shinobi e plano de build (planejar ou deixar em casa técnicas, pílulas e itens).
   - Árvore permanente com 16 nós e loja de 94 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
 - **Run**:
@@ -47,7 +47,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Técnicas**:
   - 1–4 são automáticas. Começa com 1 técnica; o máximo é 3 espaços, ou 4 com o nó "Quarta técnica". Nível máximo 9.
   - Algumas técnicas só ficam disponíveis a partir de certo nível.
-  - Cada carta de técnica sorteia raridade e afixos (dano, raio, cadência, duração).
+  - Cada carta de técnica sorteia raridade e afixos (dano, raio, velocidade de ataque, duração).
   - Estados: lentidão, atordoar, paralisar, dormir, empurrar, veneno e queimadura.
   - Crítico com faixa de "mega crítico" acima de 100% de chance.
 - **Level-up**:
@@ -60,9 +60,9 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Evoluções visuais por nível**: Naruto troca de forma nos níveis 10, 25 e 50; os outros shinobis aos 15/20/25/30, conforme o personagem. Cada evolução dá +25% do HP base.
 - **Ultimate**:
   - Recarga passiva de 55 s, ajustada pela velocidade de recarga.
-  - O drop roxo dá +9% de carga.
+  - O orbe azul de chakra dá +9% de carga.
   - Tecla Y ou clique no selo AUTO do botão R ligam e desligam o uso automático.
-- **Drops**: XP azul, Ryu amarelo, carga da Ultimate roxa, pílula rosa e recompensa de item laranja.
+- **Drops** (sprites próprios em `src/scene/dropSprites.ts`): XP = essência roxa (8 comum, 25 elite, 100 mega elite/guardião, tamanho cresce com o valor); carga da Ultimate = orbe azul de chakra; Ryu = moeda dourada com 両; tigela de lamen (15% por abate) cura 35% do HP; pílula = cápsula rosa; item = pergaminho laranja.
 - **Eventos**:
   - Plano do Shikamaru: até 3 vezes por zona; cada vez dá +1 kunai grátis quando o guardião é derrotado, sem penalidade.
   - Altar de desafio: horda de 6.

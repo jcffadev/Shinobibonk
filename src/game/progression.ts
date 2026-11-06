@@ -17,8 +17,11 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
   for(const [name,count] of Object.entries(items)){const item=ITEM_BY_NAME[name];if(!item)continue;for(const [key,value] of Object.entries(item.bonuses)){const k=key as keyof Bonuses;b[k]=(b[k]||0)+value*Math.min(item.max,Math.max(0,count));}}
   // Pílulas: bônus por nível vindos de src/game/pills.ts, recalculados sempre a partir de knownPills.
   for(const [key,value] of Object.entries(pillBonuses(pills))){const k=key as keyof Bonuses;b[k]=(b[k]||0)+(value||0);}
-  const add=(key:keyof Bonuses)=>b[key]||0;
   const p=(name:string)=>Math.max(0,Math.min(10,permanent[name]||0));
+  // Passivas Shinobi que viram mecânicas da run (src/game/preparation.ts): entram em `extra` para a simulação ler (pillCap, revive35...).
+  const perm:Bonuses={regen:p('Chakra Curativo')*.2,area:p('Expansão')*.03,cool:p('Meditação de Chakra')*.04,pillCap:Math.min(2,p('Farmacologia Ninja')),revive35:Math.min(1,p('Selo de Ressurreição'))};
+  for(const [key,value] of Object.entries(perm)){if(!value)continue;const k=key as keyof Bonuses;b[k]=(b[k]||0)+value;}
+  const add=(key:keyof Bonuses)=>b[key]||0;
   const forms=FORMS[heroId]??[],evolutions=forms.filter(f=>f.level>1&&f.level<=formAt(heroId,level).level).length;
   const baseHp=Math.round(base.hp*(forms.length>1?.65:1.1));
   return {

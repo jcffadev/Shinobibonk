@@ -1,3 +1,4 @@
+import { BuffText } from './BuffText';
 import '../allies.css';
 import { HERO_BY_ID } from '../game/heroes';
 import { ALLY_BUFFS, AFFINITY_RULES, affinityLevel, affinityFactor, affinityProgress, allyBuffText, maxAffinityPoints } from '../game/allies';
@@ -18,7 +19,7 @@ function SynergyPanel({ synergies }: { synergies: ActiveSynergy[] }) {
       <span className="synergy-icon">{s.icon}</span>
       <b>{s.name}</b>
       <em>{s.members.length}{s.next ? `/${s.next}` : ' MÁX'}</em>
-      <p>{s.text}</p>
+      <p><BuffText text={s.text}/></p>
     </div>)}
   </section>;
 }
@@ -57,9 +58,9 @@ export function AllyCards({ synergies = [], allies, affinity = {}, slots, allyBu
         <span className="ally-portrait"><HeroPortrait id={id} /></span>
         <div className="ally-info">
           <header><b>{hero.name}</b><em>{villageTag(hero.village)}</em></header>
-          <p className="ally-buff" title={`Passiva individual de ${hero.name}${buff ? ': ' + buff.title : ''}. Escala com a afinidade e com a força de suporte. Máximo: ${allyBuffText(id, allyBuff)}.`}><span className="ally-passive">PASSIVA</span>{buff ? <b>{buff.title}</b> : null} {allyBuffText(id, allyBuff, points)}{!atMax && <span className="ally-max"> · máx. {allyBuffText(id, allyBuff)}</span>}</p>
+          <p className="ally-buff" title={`Passiva individual de ${hero.name}${buff ? ': ' + buff.title : ''}. Escala com a afinidade e com a força de suporte. Máximo: ${allyBuffText(id, allyBuff)}.`}><span className="ally-passive">PASSIVA</span>{buff ? <b>{buff.title}</b> : null} <BuffText text={allyBuffText(id, allyBuff, points)}/>{!atMax && <span className="ally-max"> · máx. <BuffText text={allyBuffText(id, allyBuff)}/></span>}</p>
           <AffinityRow points={points} />
-          {mine.length > 0 && <div className="ally-synergy-tags">{mine.map((s) => <em key={s.id} className={s.kind} title={`${s.name}: ${s.text}`}>{s.icon} {s.tag}</em>)}</div>}
+          {mine.length > 0 && <div className="ally-synergy-tags">{mine.map((s) => <em key={s.id} className={s.kind} title={`${s.name}: $<BuffText text={s.text}/>`}>{s.icon} {s.tag}</em>)}</div>}
           <div className="ally-skill" title={`${technique.name}: ${technique.school} · ${technique.element} · ${power}% do seu dano · a cada ${cooldown} s`}>
             <span>{technique.name}</span><i><s style={{ width: `${Math.round(Math.max(0, Math.min(1, charge)) * 100)}%` }} /></i>
           </div>

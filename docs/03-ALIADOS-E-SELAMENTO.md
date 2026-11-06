@@ -26,7 +26,7 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
   - Equipe cheia ou personagem repetido impede selar.
 - **IMPLEMENTADO: aliados em combate**
   - Aparecem como sprite, seguem o jogador em formação e atacam sozinhos com a 1ª técnica deles.
-  - Dano: 65% do dano do jogador × dano de aliados. Cadência: 1,5 s ÷ cadência de aliados.
+  - Dano: 65% do dano do jogador × dano de aliados. Velocidade de ataque: 1,5 s ÷ velocidade de ataque de aliados.
   - Cada aliado dá um **buff passivo único** (`src/game/allies.ts`), multiplicado pela força de suporte (Estandarte da Aliança +40% por cópia). Os buffs entram em `calculateStats` como buffs da run e são recalculados das fontes a cada quadro. Projéteis não ficam fracionados. Valores provisórios:
 
 | Ajudante | Buff | Ajudante | Buff |
@@ -37,7 +37,7 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 | Hashirama | +1,2 HP/s de cura | Neji | +30% dano crítico |
 | Sasuke | +15% dano de ninjutsu | Hinata | +6% evasão |
 | Sakura | +1 HP/s de cura | Shikamaru | +15% recarga da Ultimate |
-| Kakashi | +12% cadência | Temari | +12% área |
+| Kakashi | +12% velocidade de ataque | Temari | +12% área |
 | Itachi | +12% chance de status | Tenten | +1 projétil |
 | Minato | +12% movimento | Pain | +40 HP máximo |
 | Tsunade | +1,5 HP/s de cura | Tobirama | +1,5 m de coleta |
@@ -63,11 +63,11 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 | Aldeia (tema) | 2 | 3 | 4 | 5 |
 |---|---|---|---|---|
 | Folha (projétil/XP/coleta) | +3% XP, +0,5 m coleta | +1 projétil, +5% XP, +2 m | +1,5 projétil, +5% XP, +2 m | +2 projéteis, +10% XP, +3 m |
-| Nuvem (dano) | +4% dano | +8% | +12% | +20% dano, +5% cadência |
+| Nuvem (dano) | +4% dano | +8% | +12% | +20% dano, +5% velocidade de ataque |
 | Névoa (crítico) | +3% crítico | +4% crít., +15% dano crít. | +6%, +25% | +9%, +45% |
 | Pedra (armadura/HP) | +3 armadura | +5 armadura, +25 HP | +8, +40 | +12, +70 |
 | Areia (área/armadura) | +5% área | +10% área, +3 armadura | +14%, +5 | +22%, +8 |
-| Som (cadência/vel. projétil) | +4% cadência | +7% cad., +10% vel. proj. | +10%, +15% | +15%, +25% |
+| Som (velocidade de ataque/vel. projétil) | +4% velocidade de ataque | +7% cad., +10% vel. proj. | +10%, +15% | +15%, +25% |
 | Chuva (status) | +5% chance de status | +8%, +15% duração | +11%, +20% | +15%, +35% |
 | Cachoeira (cura) | +0,4 HP/s | +0,7 HP/s, +20 HP | +1, +35 | +1,6, +60 |
 | Grama (Ultimate/evasão) | +6% recarga Ultimate | +10%, +3% evasão | +14%, +4% | +22%, +6% |
@@ -78,16 +78,16 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 | Sannin | +30 HP, +0,6 HP/s |
 | Hokages | +6% XP, +5% área |
 | Time 7 | +5% dano |
-| Time Guy | +10% taijutsu, +5% cadência |
+| Time Guy | +10% taijutsu, +5% velocidade de ataque |
 | Uchiha | +3% crítico, +15% dano crítico |
 | Hyuga | +12% dano crítico, +3% evasão |
 | Senju | +0,6 HP/s, +20 HP |
 | Ino-Shika-Chō | +6% área, +10% duração |
 | Time 8 | +0,8 m coleta, +5% movimento |
-| Sete Espadachins | +20% dano crítico, +5% cadência |
+| Sete Espadachins | +20% dano crítico, +5% velocidade de ataque |
 | Irmãos da Areia | faixas fixas: 2 → +6 armadura/+7% dano; 3 → +12/+15% |
 
-- **Elementos pela Narutopedia (CORRIGIDO em 06/11/2026, pedido do usuário)**: `HERO_NATURES` em `src/game/heroes.ts` guarda as naturezas canônicas ("Nature Type") dos 22 shinobis (Yin → Sombra; Magnet Release do Gaara → Areia). A afinidade usada no filtro é a marcada como "(Affinity)" na wiki (Naruto Vento, Kakashi e Sasuke Raio); senão, a primeira natureza canônica presente no kit; senão, a primeira natureza canônica; sem natureza = Neutro (Lee, Tenten). Técnicas sem natureza canônica viraram Neutro: Furacão da Folha (Lee), Palma de Ar (Neji), Palma do Vazio (Hinata), Kunai Explosiva (Tenten, perdeu a queimadura), Tigre do Meio-Dia (Guy), Bansho Tenin (Pain), Kuroari e Chuva Venenosa (Kankuro). Afinidades resultantes que mudaram: Itachi Fogo, Neji/Hinata/Guy Fogo, Lee/Tenten Neutro, Pain Fogo, Kankuro Terra. Pain ganhou Clã Uzumaki. Ainda divergem do cânone (não alterados): Orochimaru só como Vila do Som (canonicamente também Konoha/Akatsuki; já está na Akatsuki) e Temari só como Areia (também ligada a Konoha).
+- **Elementos pela Narutopedia (CORRIGIDO em 06/11/2026, pedido do usuário)**: `HERO_NATURES` em `src/game/heroes.ts` guarda as naturezas canônicas ("Nature Type") dos 22 shinobis (Yin → Sombra; Magnet Release do Gaara → Areia). A afinidade usada no filtro é a marcada como "(Affinity)" na wiki (Naruto Vento, Kakashi e Sasuke Raio); senão, a primeira natureza canônica presente no kit; senão, a primeira natureza canônica; sem natureza = Neutro (Lee, Tenten). Técnicas sem natureza canônica viraram Neutro: Furacão da Folha (Lee), Palma de Ar (Neji), Palma do Vazio (Hinata), Kunai Explosiva (Tenten, perdeu a queimadura), Tigre do Meio-Dia (Guy), Bansho Tenin (Pain), Kuroari e Chuva Venenosa (Kankuro). Afinidades resultantes que mudaram: Itachi Fogo, Neji/Hinata/Guy Fogo, Lee/Tenten Neutro, Pain Fogo, Kankuro Terra. Pain ganhou Clã Uzumaki: no jogo, "Pain" é o Nagato (Clã Uzumaki), que controla o corpo do Yahiko no Caminho Deva. O Yahiko não tem clã na Narutopedia (páginas Nagato, Yahiko, Six Paths of Pain e Deva Path); a passiva do Pain explica isso. Ainda divergem do cânone (não alterados): Orochimaru só como Vila do Som (canonicamente também Konoha/Akatsuki; já está na Akatsuki) e Temari só como Areia (também ligada a Konoha).
 - **PENDENTE**:
   - Até 3 tentativas com chance de falha e fuga; minigame.
   - Selamento permanente (1 tentativa) para desbloquear personagem jogável.

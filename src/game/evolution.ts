@@ -30,7 +30,7 @@ export function spriteFile(id:string,level=1){if(id==='naruto')return `/assets/s
 export function requiredLevel(heroId:string,index:number){return heroId==='naruto'?[1,10,5,15][index]:[1,5,12,20][index];}
 const evolvedCells=Object.entries(FORMS).flatMap(([id,forms])=>id==='naruto'?[]:forms.filter(f=>f.level>1).map(f=>id+'-'+f.level));
 export function portraitRegion(id:string,level=1){
- // NPCs não jogáveis (Ebisu, Iruka): retrato provisório próprio, imagem inteira.
+ // NPCs não jogáveis (Ebisu, Iruka): sprite próprio em public/assets/shinobis/<id>-1.svg (enquadramento de célula do atlas), imagem inteira.
  if(NPC_PORTRAITS[id])return {path:NPC_PORTRAITS[id],cols:1,rows:1,index:0};
  const form=formAt(id,level);
  if(id==='naruto')return {path:'/assets/shinobi-roster-v2.png',cols:5,rows:5,index:level<10?0:level<25?22:level<50?23:24};

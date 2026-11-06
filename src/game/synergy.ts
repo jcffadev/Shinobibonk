@@ -10,7 +10,7 @@ import { bonusText, splitProjectiles } from './allies.ts';
  *   porque fechar 5 depende do RNG de quais shinobi aparecem como mega elite.
  * - Cada aldeia tem uma FAMÍLIA de atributo própria, inspirada no tema canônico da Narutopedia (naruto.fandom.com):
  *   Nuvem → dano; Folha → projéteis/XP/coleta; Névoa → crítico; Pedra → armadura/HP; Areia → área/armadura;
- *   Som → cadência/velocidade de projétil; Chuva → status/duração; Cachoeira → HP/cura; Grama → recarga da Ultimate/evasão.
+ *   Som → velocidade de ataque/velocidade de projétil; Chuva → status/duração; Cachoeira → HP/cura; Grama → recarga da Ultimate/evasão.
  * - Regra dura: nenhum combo (aldeia ou organização) dá dano % e projétil juntos (validado em scripts/verify-rules.mjs).
  * - Organizações (Akatsuki, Sannin, Time 7...) seguem a mesma contagem por ajudantes (2+ ativa) e acumulam com a aldeia.
  * - Projétil fracionário vira chance por disparo de +1 projétil (`projectileChance`, ver splitProjectiles em allies.ts).
@@ -59,7 +59,7 @@ export const VILLAGE_COMBOS: Record<string, { tag: string; icon: string; theme: 
     tiers: { 2: { area: .05 }, 3: { area: .1, defense: 3 }, 4: { area: .14, defense: 5 }, 5: { area: .22, defense: 8 } },
   },
   'Vila do Som': {
-    tag: 'SOM', icon: '🎵', theme: 'Rede de laboratórios do Orochimaru; ondas sonoras: cadência e velocidade de projétil.',
+    tag: 'SOM', icon: '🎵', theme: 'Rede de laboratórios do Orochimaru; ondas sonoras: velocidade de ataque e velocidade de projétil.',
     tiers: { 2: { attackSpeed: .04 }, 3: { attackSpeed: .07, projectileSpeed: .1 }, 4: { attackSpeed: .1, projectileSpeed: .15 }, 5: { attackSpeed: .15, projectileSpeed: .25 } },
   },
   'Vila da Chuva': {
@@ -84,14 +84,14 @@ export const ORG_COMBOS: Record<string, { tag: string; icon: string; theme: stri
   sannin: { tag: 'SANNIN', icon: '🐸', theme: 'Os três ninjas lendários: vida e cura.', base: { health: 30, regen: .6 } },
   hokage: { tag: 'HOKAGE', icon: '🔥', theme: 'Líderes da Folha: experiência e área.', base: { exp: .06, area: .05 } },
   time7: { tag: 'TIME 7', icon: '7️⃣', theme: 'Trabalho em equipe do Time Kakashi: dano.', base: { damage: .05 } },
-  timeguy: { tag: 'TIME GUY', icon: '💪', theme: 'Juventude e taijutsu: taijutsu e cadência.', base: { normal: .1, attackSpeed: .05 } },
+  timeguy: { tag: 'TIME GUY', icon: '💪', theme: 'Juventude e taijutsu: taijutsu e velocidade de ataque.', base: { normal: .1, attackSpeed: .05 } },
   areia: { tag: 'IRMÃOS', icon: '🪶', theme: 'Gaara, Temari e Kankuro juntos: armadura e dano.', tiers: { 2: { defense: 6, damage: .07 }, 3: { defense: 12, damage: .15 } } },
   uchiha: { tag: 'UCHIHA', icon: '👁️', theme: 'Sharingan: crítico.', base: { crit: .03, critDamage: .15 } },
   hyuga: { tag: 'HYUGA', icon: '🤍', theme: 'Byakugan e Punho Gentil: dano crítico e evasão.', base: { critDamage: .12, dodge: .03 } },
   senju: { tag: 'SENJU', icon: '🌳', theme: 'Vitalidade Senju: cura e vida.', base: { regen: .6, health: 20 } },
   time10: { tag: 'INO-SHIKA-CHŌ', icon: '🦌', theme: 'Formação Ino-Shika-Chō: área e duração de status.', base: { area: .06, duration: .1 } },
   time8: { tag: 'TIME 8', icon: '🐕', theme: 'Equipe de rastreamento: coleta e movimento.', base: { pickupFlat: .8, move: .05 } },
-  espadachins: { tag: 'ESPADACHINS', icon: '🗡️', theme: 'Sete Espadachins da Névoa: dano crítico e cadência.', base: { critDamage: .2, attackSpeed: .05 } },
+  espadachins: { tag: 'ESPADACHINS', icon: '🗡️', theme: 'Sete Espadachins da Névoa: dano crítico e velocidade de ataque.', base: { critDamage: .2, attackSpeed: .05 } },
 };
 
 const round = (v: number) => Math.round(v * 1000) / 1000;

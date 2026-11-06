@@ -1,5 +1,143 @@
 import fs from 'node:fs';
-import { FORMS } from '../src/game/evolution.ts';
+// Uso: node scripts/generate-sprites.mjs          → sprites dos heróis + NPCs + ícones
+//      node scripts/generate-sprites.mjs --npcs   → só os NPCs (Ebisu e Iruka), sem tocar nos heróis
+
+/*
+ * NPCs (Ebisu e Iruka): pixel art chibi original desenhada por código, no mesmo enquadramento de uma célula
+ * do atlas shinobi-roster-v2.png (quadrado, personagem centralizado, pés perto da base, cabeça grande,
+ * contorno escuro de 1 pixel). Desenho em coordenadas 64×64 sobre grade 128×128, exportada como SVG 256×256
+ * com shape-rendering crispEdges.
+ * Aparência pela Narutopedia: Iruka (rabo de cavalo, cicatriz no nariz, colete chūnin verde, bandana da Folha);
+ * Ebisu (óculos escuros, bandana usada como lenço cobrindo a cabeça, roupa padrão da Folha sem colete).
+ */
+function npcSprite(draw){
+ // Desenho em coordenadas 64×64; a grade real tem S× a resolução para curvas, sombreado e contorno finos
+ // (os sprites do atlas têm pixel menor que o "pixel" de desenho).
+ const S=2,N=64*S,grid=Array.from({length:N},()=>Array(N).fill(null));
+ const inside=(x,y)=>x>=0&&y>=0&&x<N&&y<N;
+ const fine=(x,y,c)=>{if(inside(x,y))grid[y][x]=c;};
+ const px=(x,y,c)=>{for(let j=0;j<S;j++)for(let i=0;i<S;i++)fine(x*S+i,y*S+j,c);};
+ const rect=(x0,y0,x1,y1,c)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)px(x,y,c);};
+ const at=f=>(f+.5)/S-.5;// centro do pixel fino em coordenadas de desenho
+ const ellipse=(cx,cy,rx,ry,c,clip=()=>true)=>{for(let fy=Math.floor((cy-ry)*S);fy<=Math.ceil((cy+ry+1)*S);fy++)for(let fx=Math.floor((cx-rx)*S);fx<=Math.ceil((cx+rx+1)*S);fx++){const x=at(fx),y=at(fy);if(((x-cx)/rx)**2+((y-cy)/ry)**2<=1&&clip(Math.round(x),Math.round(y)))fine(fx,fy,c);}};
+ const poly=(pts,c)=>{const ys=pts.map(p=>p[1]),xs=pts.map(p=>p[0]);for(let fy=Math.min(...ys)*S;fy<=(Math.max(...ys)+1)*S;fy++)for(let fx=Math.min(...xs)*S;fx<=(Math.max(...xs)+1)*S;fx++){const x=at(fx),y=at(fy);let inPoly=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const [xi,yi]=pts[i],[xj,yj]=pts[j];if((yi>y+.5)!==(yj>y+.5)&&x+.5<(xj-xi)*(y+.5-yi)/(yj-yi)+xi)inPoly=!inPoly;}if(inPoly)fine(fx,fy,c);}};
+ const get=(x,y)=>inside(x,y)?grid[y][x]:null;
+ draw({px,rect,ellipse,poly,fine:(x,y,c)=>fine(Math.round(x*S),Math.round(y*S),c)});
+ // Volume: borda direita/inferior da silhueta mais escura e borda superior/esquerda mais clara (luz vinda da esquerda).
+ const tone=(hex,f)=>'#'+[1,3,5].map(i=>Math.max(0,Math.min(255,Math.round(parseInt(hex.slice(i,i+2),16)*f))).toString(16).padStart(2,'0')).join('');
+ const base=grid.map(r=>[...r]),empty=(x,y)=>!inside(x,y)||!base[y][x];
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){const c=base[y][x];if(!c)continue;if(empty(x+1,y)||empty(x+2,y)||empty(x,y+1))grid[y][x]=tone(c,.78);else if(empty(x-1,y)||empty(x,y-1))grid[y][x]=tone(c,1.14);}
+ // Contorno de 1 pixel em volta da silhueta, como nos sprites do atlas.
+ const OUT='#181624',edge=[];
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!grid[y][x]&&[[1,0],[-1,0],[0,1],[0,-1]].some(([dx,dy])=>get(x+dx,y+dy)&&get(x+dx,y+dy)!==OUT))edge.push([x,y]);
+ for(const [x,y] of edge)grid[y][x]=OUT;
+ let rects='';
+ for(let y=0;y<N;y++){let x=0;while(x<N){const c=grid[y][x];if(!c){x++;continue;}let w=1;while(x+w<N&&grid[y][x+w]===c)w++;rects+=`<rect x="${x}" y="${y}" width="${w}" height="1" fill="${c}"/>`;x+=w;}}
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 ${N} ${N}" shape-rendering="crispEdges">${rects}</svg>`;
+}
+// Paleta comum (mesma família de cores do uniforme da Folha no atlas).
+const P={skin:'#f2c8a0',skinShade:'#d9a27c',navy:'#27315e',navyShade:'#1b2346',navyLight:'#36437a',metal:'#c9d1da',metalShade:'#8e99a8',leaf:'#3b4352',sandal:'#2e3a66',wrap:'#e9e7ee',red:'#c23b32',eye:'#1d1a24',mouth:'#8b4a3c'};
+/** Corpo padrão da Folha (pernas, sandálias, faixas na canela, braços e mãos). */
+function konohaBody(d,{sleeve,shirt}){
+ // Pernas e calça
+ // Pernas levemente afastadas (pose de base dos sprites do atlas)
+ d.poly([[26,46],[31,46],[31,55],[25,55]],P.navy);d.poly([[33,46],[38,46],[39,55],[33,55]],P.navy);d.rect(30,46,31,55,P.navyShade);d.rect(31,46,33,48,P.navy);
+ // Faixas brancas nas canelas
+ d.rect(25,51,31,52,P.wrap);d.rect(33,51,39,52,P.wrap);d.rect(25,52,31,52,'#bdbacb');d.rect(33,52,39,52,'#bdbacb');
+ // Sandálias com dedos à mostra
+ d.rect(24,56,31,59,P.sandal);d.rect(33,56,40,59,P.sandal);d.rect(24,56,31,56,'#3d4b80');d.rect(33,56,40,56,'#3d4b80');d.rect(24,57,28,58,P.skin);d.rect(36,57,40,58,P.skin);d.px(26,57,P.skinShade);d.px(38,57,P.skinShade);d.rect(24,59,31,59,'#1c2444');d.rect(33,59,40,59,'#1c2444');d.rect(26,55,30,55,P.skin);d.rect(34,55,38,55,P.skin);
+ // Tronco (camisa) e braços, um pouco abertos
+ d.poly([[24,32],[40,32],[41,46],[23,46]],shirt);
+ d.poly([[20,33],[24,33],[24,41],[18,41]],sleeve);d.poly([[40,33],[44,33],[46,41],[40,41]],sleeve);
+ d.ellipse(22,34.5,2.6,2,sleeve);d.ellipse(42,34.5,2.6,2,sleeve);d.rect(23,36,23,41,P.navyShade);d.rect(41,36,41,41,P.navyShade);
+ // Espiral vermelha da Folha nos ombros
+ d.ellipse(21,36,1.5,1.5,P.red);d.px(21,36,'#e4887d');d.ellipse(43,36,1.5,1.5,P.red);d.px(43,36,'#e4887d');
+}
+function hands(d,{forearm}){
+ if(forearm){d.rect(18,41,22,43,P.skin);d.rect(42,41,46,43,P.skin);}
+ // Punhos fechados
+ d.ellipse(20,45.5,2.6,2.4,P.skin);d.ellipse(44,45.5,2.6,2.4,P.skin);d.rect(18,46,22,46,P.skinShade);d.rect(42,46,46,46,P.skinShade);d.px(20,44,P.skinShade);d.px(44,44,P.skinShade);
+}
+function face(d){
+ d.rect(29,30,35,31,P.skinShade);// pescoço (a gola cobre o resto)
+ d.ellipse(32,20,11.5,10.5,P.skin);
+ d.ellipse(32,24.5,10,6.5,P.skin);
+ d.ellipse(32,28.5,6,2.5,P.skin);// queixo
+ d.ellipse(20,22.5,1.6,2.4,P.skin);d.ellipse(44,22.5,1.6,2.4,P.skin);d.px(20,23,P.skinShade);d.px(44,23,P.skinShade);// orelhas
+ d.rect(39,27,41,28,P.skinShade);d.rect(36,30,38,30,P.skinShade);// sombra do maxilar
+ d.px(33,26,P.skinShade);d.px(33,27,P.skinShade);// nariz
+ d.rect(24,27,25,27,'#f0a89a');d.rect(39,27,40,27,'#f0a89a');// bochechas
+}
+/** Olhos grandes de anime: íris escura 3×4, brilho branco e canto branco. */
+function eyes(d,brow){
+ for(const x0 of [25,37]){d.rect(x0,23,x0+2,26,P.eye);d.px(x0,23,'#ffffff');d.px(x0+1,24,'#ffffff');d.rect(x0,26,x0+2,26,'#4a3a3a');d.px(x0+3,25,'#ffffff');d.rect(x0-1,22,x0+3,22,brow);}
+}
+function forehead(d,y){
+ // Bandana: faixa azul + placa de metal com o símbolo da Folha
+ d.rect(20,y,44,y+4,P.navy);d.rect(20,y+4,44,y+4,P.navyShade);
+ d.rect(25,y-1,39,y+5,P.metal);d.rect(25,y+5,39,y+5,P.metalShade);d.rect(25,y-1,39,y-1,'#e6ebf0');
+ const L=P.leaf,cx=32,cy=y+2;
+ d.px(cx-2,cy-1,L);d.px(cx-1,cy-2,L);d.px(cx,cy-2,L);d.px(cx+1,cy-2,L);d.px(cx+2,cy-1,L);d.px(cx+2,cy,L);d.px(cx+1,cy+1,L);d.px(cx,cy+1,L);d.px(cx-1,cy,L);d.px(cx-2,cy+1,L);d.px(cx-3,cy+2,L);d.px(cx+3,cy-2,L);d.px(cx+4,cy-3,L);
+}
+const IRUKA=npcSprite(d=>{
+ const hair='#4b2f22',hairLight='#6e4532',hairDark='#33201a';
+ // Rabo de cavalo espetado no alto da cabeça, para trás
+ d.poly([[34,9],[33,4],[36,5],[37,0],[39,4],[43,1],[42,5],[47,4],[43,9],[39,10]],hair);
+ d.poly([[36,6],[37,2],[38,6]],hairLight);d.poly([[40,5],[42,2],[41,6]],hairLight);
+ d.rect(35,8,39,9,'#2a2f55');d.rect(35,8,39,8,'#44507f');// prendedor do rabo de cavalo
+ konohaBody(d,{sleeve:P.navy,shirt:P.navy});
+ // Colete chūnin verde com gola alta, bolsos e zíper
+ const vest='#62824a',vestShade='#4a6637',vestLight='#7a9b5e';
+ d.poly([[24,33],[40,33],[41,46],[23,46]],vest);d.rect(24,34,25,45,vestShade);d.rect(39,34,40,45,vestShade);
+ d.rect(25,31,39,34,vest);d.rect(25,31,39,31,vestLight);d.rect(28,33,36,34,vestShade);
+ d.rect(32,34,32,46,'#3c5230');
+ for(const x0 of [26,34]){d.rect(x0,37,x0+3,41,vestLight);d.rect(x0,37,x0+3,37,vestShade);d.rect(x0,41,x0+3,41,vestShade);d.rect(x0+1,38,x0+1,40,vestShade);}
+ d.rect(23,45,41,46,vestShade);
+ hands(d,{forearm:true});// mangas arregaçadas: antebraço à mostra
+ d.rect(18,40,23,40,P.navyLight);d.rect(41,40,46,40,P.navyLight);
+ // Estojo de kunai na coxa direita
+ d.rect(35,47,38,50,'#202846');d.rect(34,48,39,48,P.wrap);
+ face(d);
+ // Cabelo por cima da cabeça, costeletas
+ d.ellipse(32,15,12.5,8,hair,(x,y)=>y<=16);d.ellipse(29,12,7,4,hairLight,(x,y)=>y<=11);
+ d.rect(20,15,22,21,hair);d.rect(42,15,44,21,hair);d.rect(21,19,22,21,hairDark);d.rect(42,19,43,21,hairDark);
+ forehead(d,14);
+ // Sobrancelhas, olhos e a cicatriz que atravessa o nariz
+ eyes(d,hairDark);
+ d.rect(28,25,36,25,'#b86a55');
+ d.rect(30,29,34,29,P.mouth);d.px(29,28,P.mouth);d.px(35,28,P.mouth);
+});
+const EBISU=npcSprite(d=>{
+ const cloth='#2d3d7a',clothShade='#1f2b5a',clothLight='#4256a0';
+ // Pontas do lenço amarrado atrás da cabeça, caindo para o lado
+ d.poly([[42,12],[50,17],[52,26],[48,24],[46,29],[43,20]],cloth);d.poly([[44,15],[49,18],[50,23],[47,21]],clothShade);
+ konohaBody(d,{sleeve:P.navy,shirt:P.navy});
+ // Camisa padrão da Folha sem colete: gola alta, dobras e porta-ferramentas na cintura
+ d.rect(25,31,39,34,P.navyLight);d.rect(25,34,39,34,P.navyShade);
+ d.rect(24,35,25,45,P.navyShade);d.rect(39,35,40,45,P.navyShade);d.rect(31,36,31,43,P.navyShade);d.rect(27,40,29,40,P.navyShade);
+ d.rect(23,45,41,46,P.navyShade);d.rect(36,43,40,47,'#4c5268');d.rect(36,43,40,43,'#6f7690');d.rect(37,45,39,45,'#3a3f52');// bolsa de ferramentas no quadril
+ hands(d,{forearm:false});
+ face(d);
+ // Bandana usada como lenço: cobre toda a cabeça (sem cabelo à mostra)
+ d.ellipse(32,15,12.8,9.5,cloth,(x,y)=>y<=18);
+ d.rect(20,15,22,21,cloth);d.rect(42,15,44,21,cloth);
+ d.ellipse(28,10,6,3,clothLight,(x,y)=>y<=11);d.rect(20,18,21,21,clothShade);d.rect(43,18,44,21,clothShade);
+ d.rect(42,12,44,15,clothShade);// nó
+ forehead(d,15);
+ // Óculos escuros (marca registrada), sobrancelha franzida
+ d.rect(23,22,40,22,'#2a2230');
+ d.rect(23,23,30,26,'#101018');d.rect(34,23,41,26,'#101018');d.rect(31,23,33,23,'#101018');
+ d.rect(24,23,26,23,'#6f82b4');d.px(24,24,'#3d4a72');d.rect(35,23,37,23,'#6f82b4');d.px(35,24,'#3d4a72');
+ d.rect(21,23,22,23,'#101018');d.rect(42,23,43,23,'#101018');
+ d.rect(30,29,34,29,P.mouth);d.px(35,28,P.mouth);
+});
+fs.mkdirSync('public/assets/shinobis',{recursive:true});
+fs.writeFileSync('public/assets/shinobis/iruka-1.svg',IRUKA);
+fs.writeFileSync('public/assets/shinobis/ebisu-1.svg',EBISU);
+console.log('Gerados sprites dos NPCs: iruka-1.svg, ebisu-1.svg.');
+if(process.argv.includes('--npcs'))process.exit(0);
+
+const { FORMS } = await import('../src/game/evolution.ts');
 // Sprites SVG originais do protótipo; silhuetas e adereços por personagem, sem assets externos.
 const entries=[
  ['naruto-academia','#f7cb47','#d57e31','spike','goggles'],['naruto-classico','#f7cb47','#ee8d33','spike','blue'],['naruto-shippuden','#f7cb47','#ed8b35','spike','black'],['naruto-kyuubi','#ffc953','#ffcf52','spike','chakra'],

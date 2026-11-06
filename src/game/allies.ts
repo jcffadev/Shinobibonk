@@ -46,7 +46,7 @@ const LABEL: Partial<Record<StatKey, (v: number) => string>> = {
   regen: (v) => `+${num(v)} HP/s de cura`,
   element: (v) => `+${pct(v)} dano de ninjutsu`,
   normal: (v) => `+${pct(v)} dano de taijutsu`,
-  attackSpeed: (v) => `+${pct(v)} cadência`,
+  attackSpeed: (v) => `+${pct(v)} velocidade de ataque`,
   projectileSpeed: (v) => `+${pct(v)} velocidade de projétil`,
   bounce: (v) => `+${num(v)} ricochete`,
   sage: () => 'elemento Sábio',

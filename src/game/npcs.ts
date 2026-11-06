@@ -13,7 +13,7 @@ import type { Technique } from './heroes';
 /** Atributos "base 100%" da ficha (P) usados nas trocas. Ganho e custo usam a mesma unidade: pontos percentuais aditivos. */
 export const DEAL_STATS: { key: StatKey; label: string }[] = [
   { key: 'damage', label: 'dano total' },
-  { key: 'attackSpeed', label: 'cadência' },
+  { key: 'attackSpeed', label: 'velocidade de ataque' },
   { key: 'projectileSpeed', label: 'velocidade de projétil' },
   { key: 'move', label: 'movimento' },
   { key: 'area', label: 'raio de área' },
@@ -106,29 +106,12 @@ export const NPC_ALLIES: Record<string, NpcAlly> = {
 };
 export const isNpcAlly = (id: string) => id in NPC_ALLIES;
 
-/* Retratos provisórios (SVG embutido). Não são arte final. */
-const svg = (body: string) => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="88" viewBox="0 0 64 88" shape-rendering="crispEdges">${body}</svg>`);
-const IRUKA_SVG = svg(
-  '<path d="M44 14 L58 6 L54 20 Z" fill="#4a2f1d"/>' + // rabo de cavalo
-  '<rect x="16" y="10" width="32" height="12" rx="5" fill="#4a2f1d"/>' +
-  '<rect x="17" y="18" width="30" height="24" rx="8" fill="#e9b98d"/>' +
-  '<rect x="15" y="17" width="34" height="6" fill="#2d3f73"/><rect x="25" y="17" width="14" height="6" fill="#c9d3df"/>' +
-  '<rect x="23" y="28" width="4" height="4" fill="#20160f"/><rect x="37" y="28" width="4" height="4" fill="#20160f"/>' +
-  '<rect x="22" y="34" width="20" height="2" fill="#b07656"/>' + // cicatriz no nariz
-  '<rect x="28" y="38" width="8" height="2" fill="#8a4b35"/>' +
-  '<rect x="14" y="44" width="36" height="28" rx="6" fill="#5f7d4a"/><rect x="29" y="44" width="6" height="28" fill="#3f5634"/>' +
-  '<rect x="10" y="46" width="6" height="20" rx="3" fill="#2f3a55"/><rect x="48" y="46" width="6" height="20" rx="3" fill="#2f3a55"/>' +
-  '<rect x="18" y="72" width="11" height="14" fill="#2f3a55"/><rect x="35" y="72" width="11" height="14" fill="#2f3a55"/>');
-const EBISU_SVG = svg(
-  '<rect x="15" y="8" width="34" height="14" rx="6" fill="#2a3a66"/><rect x="25" y="12" width="14" height="6" fill="#c9d3df"/>' + // bandana com placa
-  '<rect x="17" y="18" width="30" height="24" rx="8" fill="#e8bf98"/>' +
-  '<rect x="19" y="26" width="11" height="6" rx="2" fill="#111"/><rect x="34" y="26" width="11" height="6" rx="2" fill="#111"/><rect x="30" y="28" width="4" height="2" fill="#111"/>' + // óculos escuros
-  '<rect x="28" y="37" width="8" height="2" fill="#8a4b35"/>' +
-  '<rect x="14" y="44" width="36" height="28" rx="6" fill="#4f6b45"/><rect x="29" y="44" width="6" height="28" fill="#2f4128"/>' +
-  '<rect x="10" y="46" width="6" height="20" rx="3" fill="#24304a"/><rect x="48" y="46" width="6" height="20" rx="3" fill="#24304a"/>' +
-  '<rect x="18" y="72" width="11" height="14" fill="#24304a"/><rect x="35" y="72" width="11" height="14" fill="#24304a"/>');
-/** Retratos de NPC por id (fallback provisório). */
-export const NPC_PORTRAITS: Record<string, string> = { iruka: IRUKA_SVG, ebisu: EBISU_SVG };
+/*
+ * Retratos/sprites dos NPCs: pixel art chibi original no mesmo enquadramento de uma célula do atlas
+ * shinobi-roster-v2.png (quadrado, imagem inteira). Gerados por `node scripts/generate-sprites.mjs --npcs`.
+ * Usados pelo sprite 3D no mapa, pelo cartão de ajudante (Iruka) e pela ficha (via portraitRegion).
+ */
+export const NPC_PORTRAITS: Record<string, string> = { iruka: '/assets/shinobis/iruka-1.svg', ebisu: '/assets/shinobis/ebisu-1.svg' };
 export const NPC_NAMES: Record<string, string> = { iruka: 'Iruka Umino', ebisu: 'Ebisu' };
 
 /** Naruto Totem: evento fixo do minuto 7 (relógio regressivo 7:00 → 6:00). Valores provisórios. */
