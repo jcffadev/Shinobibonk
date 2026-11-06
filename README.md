@@ -28,7 +28,9 @@ Atalhos locais:
 - `src/scene/bossCombat.ts`: chefes (mega elites e guardiões), com barra de vida e técnicas do personagem com aviso no chão.
 - `src/game/`: dados e regras sem React.
   - `heroes.ts`: 22 shinobis e 67 técnicas (1–2 únicas por shinobi + 26 compartilhadas), pool por vila/elemento, clãs, organizações e afinidade elemental.
-  - `account.ts`: shinobis jogáveis, selados e pesquisa de técnicas da conta.
+  - `account.ts`: shinobis jogáveis, selados, pesquisa de técnicas e progresso por mapa.
+  - `maps.ts`: 4 mapas temáticos (Folha, Areia, Pedra, Névoa Oculta).
+  - `unlockMissions.ts`: missões de desbloqueio e Lendários.
   - `enemyTiers.ts`: inimigo normal, elite amarelo, Mega Elite e Shinobi para selar.
   - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
   - `roulette.ts`: Roleta da Tsunade.

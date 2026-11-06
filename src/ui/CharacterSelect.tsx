@@ -1,3 +1,7 @@
+import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
+import { MAP_BY_ID } from '../game/maps';
+/** Símbolo da vila mostrado sobre a silhueta do shinobi bloqueado. */
+const VILLAGE_MARK: Record<string, string> = { 'Vila da Folha': '木', 'Vila da Areia': '砂', 'Vila do Som': '音', 'Vila da Chuva': '雨' };
 import { isHeroPlayable } from '../game/account';
 import { useMemo, useState } from 'react';
 import { HEROES, HERO_CLAN, ORGANIZATIONS, heroAffinity, heroOrganizations, type Element } from '../game/heroes';
@@ -68,15 +72,18 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
       {list.map(entry => {
         const element = heroAffinity(entry.id), groups = heroGroups(entry.id), selected = entry.id === selectedId;
         return <button key={entry.id} type="button" aria-pressed={selected}
-          title={`${entry.name} · ${entry.village} · ${element}${groups.length ? ' · ' + groups.join(', ') : ''}`}
-          className={`character-card cs-card ${selected ? 'selected' : ''} ${isHeroPlayable(entry.id) ? '' : 'cs-locked'}`} style={{ ['--hero' as string]: entry.color }}
+          title={isHeroPlayable(entry.id) ? `${entry.name} · ${entry.village} · ${element}${groups.length ? ' · ' + groups.join(', ') : ''}` : undefined}
+          className={`character-card cs-card ${selected ? 'selected' : ''} ${isHeroPlayable(entry.id) ? '' : 'cs-locked'} ${LEGENDARY.has(entry.id) ? 'cs-legendary' : ''}`} style={{ ['--hero' as string]: entry.color }}
           onClick={() => onSelect(entry.id)}>
           <span className="cs-portrait">
             <span className="cs-initials" aria-hidden="true">{initials(entry.name)}</span>
             <HeroPortrait id={entry.id} />
+            {!isHeroPlayable(entry.id) && <span className="cs-village-mark" aria-hidden="true">{VILLAGE_MARK[entry.village] ?? '忍'}</span>}
             <span className="cs-element" style={{ ['--el' as string]: ELEMENT_COLOR[element] }} title={`Elemento: ${element}`}>{ELEMENT_GLYPH[element]}</span>
           </span>
-          <b>{entry.name}</b>
+          {LEGENDARY.has(entry.id) && <i className="cs-legend-tag">LENDÁRIO</i>}
+          <b>{!isHeroPlayable(entry.id) && LEGENDARY.has(entry.id) ? '???' : entry.name}</b>
+          {!isHeroPlayable(entry.id) && UNLOCK_MISSIONS[entry.id] && <span className="cs-mission-tip" role="tooltip"><b>🔒 Missão: {UNLOCK_MISSIONS[entry.id].title}</b>{MAP_BY_ID[UNLOCK_MISSIONS[entry.id].map].name} · {UNLOCK_MISSIONS[entry.id].difficulty} · a partir de {UNLOCK_MISSIONS[entry.id].minute} min<br/>{UNLOCK_MISSIONS[entry.id].story}<br/>Derrote e sele o shinobi para desbloquear.</span>}
           <small className="cs-village">{shortVillage(entry.village)}</small>
           {selected && <i className="cs-picked">SELECIONADO</i>}
         </button>;

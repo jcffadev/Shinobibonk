@@ -26,6 +26,10 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/ui/MapOverlay.tsx` + `src/map.css` | Ícones do mapa M/Tab e do minimapa, rota/ping, seta e metros na HUD, "Chegou!". Evento `shinobi-route`. |
 | `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, "em casa", prioridade, predefinições e hudzinho do hub. |
 | `src/ui/BuffText.tsx` | Pinta ganhos em verde e perdas em vermelho nos textos dos cards. |
+| `src/game/maps.ts` + `src/maps.css` | 4 mapas temáticos (`MAPS`, `MAP_BY_ID`), zonas e guardiões por mapa; CSS do seletor de mapas, seleção bloqueada e pausa. |
+| `src/game/unlockMissions.ts` | Missões de desbloqueio por shinobi (`UNLOCK_MISSIONS`, `LEGENDARY`). |
+| `src/game/account.ts` | Conta: iniciais, desbloqueados, selados, pesquisa e progresso por mapa (`isDifficultyUnlocked`, `markMapCompleted`). |
+| `src/game/enemyTiers.ts` | Tipos de inimigo e saque por HP/dificuldade. |
 | `src/game/settings.ts` | Configurações do jogador (`sealAnimation`), em localStorage com try/catch. |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |

@@ -98,6 +98,8 @@ export const POOL_UNLOCK={shared:8,unique:12};
 /**
  * Pool completo de técnicas do shinobi (Plano de build mostra tudo; a run usa só as liberadas):
  * - kit próprio (1–2 únicas + compartilhadas);
+ * Regra do usuário (06/11/2026): técnicas de OUTROS shinobis só entram depois que aquele shinobi foi SELADO na conta
+ * (vale também para Naruto/Sasuke/Sakura). No começo, o pool é só o kit próprio.
  * - compartilhadas de colegas da MESMA VILA com elemento compatível;
  * - compartilhadas de OUTRAS vilas só com o MESMO elemento (não Neutro) e compatível;
  * - únicas de outros shinobis com elemento compatível, liberadas só depois de selar aquele shinobi pela 1ª vez (`locked` até lá).
@@ -106,11 +108,11 @@ export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()
   const hero=HERO_BY_ID[heroId]??HEROES[0],allowed=allowedElements(hero.id),seen=new Set(hero.techniques.map(x=>x.name));
   const list:PoolTechnique[]=hero.techniques.map(x=>({...x,source:'kit',origin:hero.id}));
   const others=[...HEROES.filter(o=>o.id!==hero.id&&o.village===hero.village),...HEROES.filter(o=>o.village!==hero.village)];
-  for(const other of others)for(const tech of other.techniques){
+  for(const other of others){if(!sealed.has(other.id))continue;for(const tech of other.techniques){
     if(seen.has(tech.name)||!allowed.has(tech.element))continue;
     if(SHARED_TECHNIQUES.has(tech.name)){const sameVillage=other.village===hero.village;if(!sameVillage&&tech.element==='Neutro')continue;seen.add(tech.name);list.push({...tech,unlockLevel:POOL_UNLOCK.shared,source:sameVillage?'vila':'elemento',origin:other.id});}
-    else{seen.add(tech.name);list.push({...tech,unlockLevel:POOL_UNLOCK.unique,source:'única',origin:other.id,locked:!sealed.has(other.id)});}
-  }
+    else{seen.add(tech.name);list.push({...tech,unlockLevel:POOL_UNLOCK.unique,source:'única',origin:other.id});}
+  }}
   return list;
 }
 /** Técnicas que podem aparecer na run (sem as únicas ainda bloqueadas). */

@@ -61,6 +61,21 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
 
 Mapas por bioma, mapa procedural, colisão, pulo, spawn configurável por zona, balanceamento e multiplayer seguem **PENDENTES**. A arena atual tem 100×100 m. Consulte [estado do código](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md).
 
+## Mapas jogáveis e progressão (IMPLEMENTADO em 06/11/2026, pedido do usuário)
+- `src/game/maps.ts`: **4 mapas** com paleta de chão/terreno, cenário (pesos e tinta do atlas), climas e 3 zonas com nomes e guardiões próprios.
+
+| Mapa | País | Tema | Climas | Zonas |
+|---|---|---|---|---|
+| Vila da Folha 木 | Fogo | florestas e trilhas | Céu limpo, Névoa espectral | Arredores da Folha → Trilha dos renegados → Cerco dos Kage |
+| Vila da Areia 砂 | Vento | dunas e cânions | Tempestade de areia (lentidão), Sol do deserto | Dunas de Suna → Cânion dos Ventos → Muralha do Kazekage |
+| Vila da Pedra 岩 | Terra | montanhas rochosas | Ventania, Poeira de pedreira | Pedreira de Iwa → Ponte de Kannabi → Pico do Tsuchikage |
+| Vila da Névoa Oculta 霧 | Água | pântanos enevoados | Névoa Oculta (visão curta), Garoa fria | Ponte de Tazuna → Lago Sangrento → Torre do Mizukage |
+
+- **Progressão por mapa** (`sb_map_progress_v1`): Chunin só libera ao vencer o Genin daquele mapa, Jonin ao vencer o Chunin, Kage ao vencer o Jonin. Cards mostram ✓/▸/🔒 por dificuldade.
+- **Missões de desbloqueio** (`src/game/unlockMissions.ts`): cada shinobi bloqueado tem mapa + dificuldade + minuto; nessa run o "Shinobi para selar" dele aparece (um por vez, 60 s de intervalo). **Lendários**: Madara (Pedra · Kage · 7 min) e Hashirama (Folha · Kage · 7 min), com retrato oculto e nome "???".
+- **Pausa (Esc)**: abre a ficha com rodapé de comandos e botões Desistir, Salvar e sair, Reiniciar, Mapa grande, Tela cheia, Preso (move para área livre), Mapa, Configurações, Relatar (copia um relatório) e Continuar. A caixa de comandos saiu do HUD.
+- **Salvar e retomar**: "Salvar e sair", salvamento automático a cada 15 s e ao fechar o navegador (`sb_saved_run_v1`). O hub oferece "Continuar missão salva". Salva tempo, nível, EXP, abates, Ryu, kunais, itens, pílulas, técnicas, ajudantes e afinidade, buffs, usos, eventos, mapa explorado e posição; hordas e drops vivos voltam a surgir.
+
 ## Mapa, rota e ping (IMPLEMENTADO em 06/11/2026, pedido do usuário)
 - `src/ui/MapOverlay.tsx` + `src/map.css`. M (completo) e Tab (rápido) mostram ícones só do que já foi **visto em tela** na run:
   - NPCs com retrato e selo da função (Tenten 🗡️ no Arsenal, Shikamaru ♟️, Tsunade 🎰, Ebisu 🕶, Iruka 📚, Orochimaru 🐍);

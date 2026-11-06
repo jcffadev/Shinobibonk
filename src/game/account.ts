@@ -51,5 +51,18 @@ export function addResearch(technique: string, amount: number) {
 }
 export function researchGain(base: number, pesquisaLevel: number) { return base * (1 + .25 * Math.max(0, Math.min(4, pesquisaLevel))); }
 
-/** Reset da conta (debug): volta aos iniciais, sem selados e sem pesquisa. */
-export function resetAccount() { write(UNLOCKED_KEY, []); write(SEALED_KEY, []); write(RESEARCH_KEY, {}); }
+/** Progresso por mapa: dificuldades vencidas. Chunin libera ao vencer Genin daquele mapa, e assim por diante. */
+const MAP_PROGRESS_KEY = 'sb_map_progress_v1';
+const ORDER = ['Genin', 'Chunin', 'Jonin', 'Kage'];
+export function mapProgress(): Record<string, string[]> { return read<Record<string, string[]>>(MAP_PROGRESS_KEY, {}); }
+export function isDifficultyUnlocked(mapId: string, difficulty: string) {
+  if (allUnlockedOverride || testMode()) return true;
+  const index = ORDER.indexOf(difficulty); if (index <= 0) return true;
+  return (mapProgress()[mapId] ?? []).includes(ORDER[index - 1]);
+}
+export function markMapCompleted(mapId: string, difficulty: string) {
+  const all = mapProgress(); const done = new Set(all[mapId] ?? []); done.add(difficulty); all[mapId] = [...done]; write(MAP_PROGRESS_KEY, all);
+}
+
+/** Reset da conta (debug): volta aos iniciais, sem selados, sem pesquisa e sem progresso de mapas. */
+export function resetAccount() { write(UNLOCKED_KEY, []); write(SEALED_KEY, []); write(RESEARCH_KEY, {}); write(MAP_PROGRESS_KEY, {}); }

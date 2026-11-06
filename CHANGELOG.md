@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2026-11-06 — 4 mapas, missões de desbloqueio, Lendários, pausa no Esc e salvar/retomar
+- **Pool de técnicas**: só o kit no começo; técnicas de outros (inclusive Naruto/Sasuke/Sakura) entram só depois de selá-los.
+- **Mapas**: Folha, Areia, Pedra e Névoa Oculta, com tema, clima, cenário, zonas e guardiões próprios; Chunin/Jonin/Kage liberam ao vencer a dificuldade anterior em cada mapa.
+- **Missões de desbloqueio** para os 19 shinobis bloqueados (mapa + dificuldade + minuto); **Lendários** Madara e Hashirama com retrato oculto. Seleção mostra silhueta com símbolo da vila e a missão ao passar o mouse.
+- **Esc**: ficha com rodapé de comandos e ações (Desistir, Salvar e sair, Reiniciar, Mapa grande, Tela cheia, Preso, Mapa, Configurações, Relatar, Continuar); ajuda removida do HUD.
+- **Salvar e retomar** a run (manual, automático a cada 15 s e ao fechar).
+- Verificação: tsc, verify-rules, verify-runtime e teste de navegador (19 bloqueados, tooltip do Lendário, 4 mapas, 3 dificuldades bloqueadas, pausa, salvar e retomar no mapa da Areia).
+
 ## 2026-11-06 — técnicas únicas, selamento de conta, tipos de inimigo, debug completo e ímã de drops
 - **Técnicas**: 1–2 únicas por shinobi + 26 compartilhadas (67 no total; duplicatas removidas). Pool por vila/elemento canônico; únicas de outros só após selar o dono. Plano de build mostra a origem e exige 100% de **pesquisa** (nova passiva Pesquisa).
 - **Conta**: iniciais Naruto/Sasuke/Sakura; os demais 🔒 até selar o **Shinobi para selar** (contorno ciano, 1º encontro especial da run), que só desbloqueia na conta.

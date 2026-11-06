@@ -15,7 +15,7 @@ assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,67);
  assert.ok(!skillPool('naruto').some(t=>t.name==='Raikiri'),'única do Kakashi bloqueada antes de selar');
  assert.ok(skillPool('naruto',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'única liberada depois de selar o Kakashi');
  assert.ok(!skillPool('gaara').some(t=>t.name==='Punho da Folha'),'Neutro compartilhado de outra vila não entra');
- assert.ok(skillPool('gaara').some(t=>t.name==='Lâminas Cruzadas'),'compartilhada da mesma vila com elemento compatível entra');}
+ assert.ok(!skillPool('gaara').some(t=>t.name==='Lâminas Cruzadas'),'sem selar a Temari, nada dela entra');assert.ok(skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Lâminas Cruzadas'),'compartilhada da mesma vila com elemento compatível entra após selar');assert.equal(skillPool('naruto').length,4,'no começo o pool é só o kit');}
 assert.equal(rollCritical(0,2.5,()=>0).tier,0);
 assert.deepEqual(rollCritical(1,2.5,()=>.8),{tier:1,multiplier:2.5});
 assert.deepEqual(rollCritical(1.5,2.5,()=>.49),{tier:2,multiplier:3});
