@@ -7,11 +7,12 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 
 ## Fila do Codex
 - **IMPLEMENTADO:** poses base de caminhada, pulo, dash, ataque, dano e Ultimate em todas as formas jogáveis. Asuma tem atlas próprio e Naruto Academia mantém suas folhas. **PENDENTE:** substituir a deformação genérica por folhas direcionais dedicadas nas demais formas e animar os monstros.
-- **IMPLEMENTADO:** fila de confirmação para prêmios de item/pílula da roleta e pílulas do chão, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação baixa de câmera.
+- **IMPLEMENTADO:** folhas direcionais para todas as formas do Time 7 e para Asuma. Próximos lotes: demais shinobis e evoluções, cada folha baseada no sprite estático da forma.
+- **IMPLEMENTADO:** fila de confirmação para itens da roleta, pílulas e habilidades reservadas para level-up, teto de quatro ofertas, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação da câmera por movimento do mouse.
 - **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
 - **Impactos e sons**: faltam integração e revisão. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (não publicado, licença não verificada): procurar outros sons depois, com licença livre verificada.
 - **Atributos até nível 50**: recalibração pendente; o bônus de +0,8% quando acabam os upgrades é regra separada (`powerlevel.ts`).
-- **Chão nas bordas**: alterações feitas (`terrainArt.ts`), validação visual final pendente.
+- **Chão nas bordas**: relevo e céu em gradiente em `terrainArt.ts`. Falta conferir mais climas e os extremos do mapa em jogo.
 - Bijuus: revisão de arte de Chōmei e Gyūki pendente. Progressão: bônus aleatório de 0,8% implementado e recalibração geral pendente.
 - Skills do Codex: `skills/criar-arte-shinobibonk` (padrão de arte de shinobis, itens, pílulas, cenários) e `skills/movimentar-shinobi` (movimento, pulo, dash, sprites de animação), com ponteiros em `.claude/skills/`.
 - Testes atualizados ao trabalho do Codex: o selamento espera o ritual terminar (navegador de teste roda a poucos FPS); vitória por gancho `finishMission` (a missão agora termina no portal de saída); saída da partida pela pausa (Esc → Salvar e sair).
@@ -35,8 +36,8 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 ## Pedidos do usuário em 06/11/2026 (PENDENTES)
 - **Escala do jogo** — FEITO em parte: inimigos exponenciais com o tempo, resistência crescente e hordas até 1400 (`ENEMY_SCALING`). FALTA: crescimento grande do dano pelas técnicas (ex.: +X% de dano por nível de técnica, mais projéteis), dano megacrítico, níveis de "Treino" após acabarem os upgrades (referência do vídeo: nível 1254, dano +2484%, técnicas Nv. 10 com +300%/nível). Referência original: dano do shinobi crescendo de forma exponencial, HP dos monstros subindo, hordas crescendo com o tempo, inimigos ficando mais fortes e resistentes até forçar o jogador a pular de zona.
 - **Recalibração de atributos para todos os níveis** (não só até o 50).
-- **Sorte** — FEITO (06/11/2026): curva de raridade, +1 carta por chance e drops de pílula/item escalam com a Sorte. Validar jogando.
-- **Roleta da Tsunade** — FEITO: nerf e correção da entrega (bênçãos acumulam; pílula/item no limite viram Ryu). Validar jogando.
+- **Sorte** — FEITO (06/11/2026): curva de raridade e chance de uma quarta carta com Sorte. Validar jogando.
+- **Roleta da Tsunade** — FEITO: entrega em fila, E aceita e V vende. Novos giros excluem pílulas; itens que ficarem no limite viram Ryu. Validar jogando.
 - **Animações**: levar a animação do Naruto (caminhada, diagonal, arremesso) para todos os shinobis com a skill `movimentar-shinobi`/`criar-arte-shinobibonk`; monstros correndo animados em direção ao jogador. Exige gerar arte (folhas de sprites) — o Claude Code não gera PNG de arte; fazer no Codex.
 
 ## Calibração com ponto de partida

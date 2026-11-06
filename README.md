@@ -76,7 +76,7 @@ O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A 
 ## Controles durante a run
 
 - WASD ou setas: mover (relativo à câmera).
-- Botão direito + arrastar: girar/inclinar a câmera. Scroll: zoom.
+- Mover o mouse gira e inclina a câmera. Clique direito fixa o alvo. Scroll controla o zoom.
 - Tab: mapa rápido. M: mapa completo (clique marca ping). P: ficha/build/pool. Esc: fecha painel.
 - E: interagir/coletar; perto de mega elite derrotado, sela.
 - G: ping “Aqui”; na decisão de selamento, recusa e deixa uma kunai grátis.

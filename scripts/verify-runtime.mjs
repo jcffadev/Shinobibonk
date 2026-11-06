@@ -32,6 +32,20 @@ await page.screenshot({path:'artifacts/combat.png'});
 await page.keyboard.press('w');const before=(await state()).player;
 await page.keyboard.down('w');await page.waitForTimeout(400);await page.keyboard.up('w');
 assert.ok(Math.hypot((await state()).player.x-before.x,(await state()).player.z-before.z)>1);checks.push('Movimento WASD');
+for(const [level,form] of [[10,'classico'],[25,'shippuden'],[50,'kyuubi']]){
+ await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('setLevel',level);
+ await wait();
+ await page.keyboard.down('w');
+ try {
+   await page.waitForFunction(name=>window.__shinobiTest.motion().atlas.endsWith(name),`naruto-${form}-motion-v1.png`,{timeout:7000});
+ } catch(error) {
+   console.error({form,motion:await debug('motion'),choice:(await state()).choice,errors,missing});
+   throw error;
+ }
+ await page.keyboard.up('w');
+}
+checks.push('Evoluções do Naruto carregam a folha da forma atual');
+await debug('setLevel',1);
 await debug('clearEnemies');await debug('reward');await wait();
 const low=(await state()).choice;assert.ok(low.filter(c=>c.kind==='skill').every(c=>c.name==='Kage Bunshin'));checks.push('Rasengan bloqueado nos níveis iniciais');
 const uses=(await state()).uses;await page.keyboard.press('f');assert.equal((await state()).uses.reroll,uses.reroll-1);
@@ -74,7 +88,7 @@ await page.locator('.shop-card').getByRole('button',{name:'Desbloquear',exact:fa
 assert.equal((await walletNow()).balance,beforeBuy-300);
 await page.getByRole('button',{name:'Reset ↺'}).click();assert.equal((await walletNow()).spent,0);assert.equal((await walletNow()).balance,beforeBuy+(afterVictory.spent));checks.push('Compra administrativa, filtros de crítico e reembolso do reset');
 await page.getByRole('button',{name:'Shinobis',exact:true}).click();await page.locator('.character-card').filter({hasText:'Hashirama'}).click();await start();
-const ratio=await page.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.setCrit(-10);d.target(1.2);let previous=d.inspect().totalDamage;d.cast('Estacas Mokuton');const first=d.inspect().totalDamage-previous;d.grantItem('Selo de Senjutsu');previous=d.inspect().totalDamage;d.cast('Estacas Mokuton');return (d.inspect().totalDamage-previous)/first;});
+const ratio=await page.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.setCrit(-10);d.senjutsu(0);d.target(1.2);let previous=d.inspect().totalDamage;d.cast('Estacas Mokuton');const first=d.inspect().totalDamage-previous;d.grantItem('Selo de Senjutsu');previous=d.inspect().totalDamage;d.cast('Estacas Mokuton');return (d.inspect().totalDamage-previous)/first;});
 assert.ok(Math.abs(ratio-1.2)<1e-8);checks.push('Hashirama recebe exatamente +20% de dano após infusão Sábia');
 await page.keyboard.press('Escape');await page.getByRole('button',{name:'Salvar e sair',exact:true}).click();await page.getByRole('button',{name:'Shinobis',exact:true}).click();await page.locator('.character-card').filter({hasText:'Itachi'}).click();await start();
 const slept=await page.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.target(1);for(let n=0;n<8;n++)d.grantItem('Olhos do Rastreador');let applied=false;for(let n=0;n<20;n++){d.cast('Corvos Ilusórios');applied ||= d.inspect().enemies.some(e=>e.control==='Dormir'&&e.controlTime>0);}return applied;});
@@ -99,23 +113,31 @@ await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
 await page.keyboard.press('Shift');
 await page.waitForFunction(()=>window.__shinobiTest.motion().pose==='dash');
 checks.push('Asuma carrega seu atlas e usa caminhada, pulo e dash');
+await page.mouse.move(720,510);
+const cameraBefore=await debug('motion');
+await page.mouse.move(770,285,{steps:10});
+const cameraAfter=await debug('motion');
+assert.ok(cameraAfter.yaw!==cameraBefore.yaw&&cameraAfter.pitch<.3);
+await page.screenshot({path:'artifacts/camera-horizonte.png'});
+checks.push('Movimento do mouse inclina a câmera sem botão até perto do horizonte');
 
 await debug('setMoney',10000);
 await page.evaluate(()=>{
  const r=window.__shinobiTest.roulette;
- r.open();r.spin(1,'item');r.spin(1,'pill');r.exit();
+ const view=r.open();if(view.weights.pill!==0)throw Error('Roleta ainda sorteia pílula');
+ r.spin(2,'item');r.exit();
 });
 const prize=page.getByRole('dialog',{name:'Prêmio da Tsunade'});
 await prize.waitFor();
 const beforePrizes=await state();
 await prize.getByRole('button',{name:/Vender/}).click();
-await prize.locator('.level-choice-card').filter({hasText:'Pílula'}).waitFor();
+await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.[0]?.kind==='item');
 assert.deepEqual((await state()).pills,beforePrizes.pills);
 await page.keyboard.press('e');
 await prize.waitFor({state:'hidden'});
-assert.ok(Object.values((await state()).pills).some(n=>n>0));
-assert.deepEqual((await state()).items,beforePrizes.items);
-checks.push('Prêmios em sequência: vender item e só conceder pílula após E');
+assert.deepEqual((await state()).pills,beforePrizes.pills);
+assert.equal(Object.values((await state()).items).reduce((n,k)=>n+k,0),1);
+checks.push('Prêmios em sequência: vender primeiro item e receber o segundo com E');
 
 await debug('clearEnemies');await debug('setTime',600);await debug('horde',1600,14,1e6,false);
 await page.waitForFunction(()=>Number(document.querySelector('.runtime-readout')?.textContent?.match(/(\d+) inimigos vivos/)?.[1])>=1600);

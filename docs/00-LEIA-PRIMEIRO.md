@@ -21,7 +21,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 ## Decisões vigentes do usuário (CONFIRMADO)
 
-- Shinobi e inimigos em pixel art (billboards) numa cena 3D. A câmera gira com o botão direito e o scroll controla o zoom.
+- Shinobi e inimigos em pixel art numa cena 3D. Mover o mouse gira e inclina a câmera. Clique direito fixa o alvo e o scroll controla o zoom.
 - Missões nomeiam a dificuldade como Genin, Chunin, Jonin e Kage.
 - Teclas: M abre o mapa completo; Tab o mapa rápido; P a ficha; G o ping “Aqui”; E interage.
 - Ultimate manual no R. **A tecla Y é obrigatória** e alterna a Ultimate automática; o selo AUTO no botão R faz o mesmo por clique e mostra o estado.
@@ -35,7 +35,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 - **Movimento e combate:** poses em todas as formas jogáveis, folhas dedicadas para Asuma e Naruto Academia, inclinação baixa da câmera com proteção de altura sobre o terreno.
 - **Contagem da horda:** o HUD lê o total real de inimigos vivos e o minimapa mantém sua amostragem separada.
-- **Recompensas:** a fila da Tsunade e as pílulas do chão pedem E para pegar ou V para vender. A sinergia conta o ajudante de mesmo nome do jogador quando recrutado.
+- **Recompensas:** a fila de itens da Tsunade pede E para pegar ou V para vender. Habilidades e pílulas são escolhas de level-up. O máximo de cartas de recompensa é quatro, inclusive ao banir. A sinergia conta o ajudante de mesmo nome do jogador quando recrutado.
 
 - **Hub**:
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.

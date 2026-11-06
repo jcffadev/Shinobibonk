@@ -103,8 +103,8 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.ok(R.badChance(wMax)>=R.ROULETTE_RULES.minBad-1e-9,'nunca 100% bom');assert.ok(R.goodChance(wMax)<.9);
  assert.ok(R.badChance(wCurse)>R.badChance(wLuck),'dificuldade/Maldição compensa a sorte');assert.ok(R.badChance(R.rouletteWeights(0,50))<=R.ROULETTE_RULES.maxBad+1e-9);
  const rr=R.seededRng(77);let bad=0;for(let i=0;i<40000;i++)bad+=Number(R.ROULETTE_BY_ID[R.rollRoulette(wMax,rr)].kind==='ruim');assert.ok(Math.abs(bad/40000-R.badChance(wMax))<.01,'amostragem bate com a chance exibida de casas ruins');
- assert.ok(Math.abs(R.goodChance(w0)-.349)<.005,'nerf 2: Sorte 0 → ~35% de casas boas');
- {const wNoPill=R.rouletteWeights(0,0,['pill']);assert.equal(wNoPill.pill,0);assert.ok(Math.abs(sum(wNoPill)-1)<1e-9);const r2=R.seededRng(5);for(let i=0;i<20000;i++)assert.notEqual(R.rollRoulette(wNoPill,r2),'pill','casa excluída nunca é sorteada');}
+ assert.ok(Math.abs(R.goodChance(w0)-.30)<.005,'nerf 2: Sorte 0 → ~30% de casas boas sem pílulas');
+ {const wNoPill=R.rouletteWeights(0,0);assert.equal(wNoPill.pill,0);assert.ok(Math.abs(sum(wNoPill)-1)<1e-9);const r2=R.seededRng(5);for(let i=0;i<20000;i++)assert.notEqual(R.rollRoulette(wNoPill,r2),'pill','casa excluída nunca é sorteada');}
  // Economia expansiva: ×1,35 por giro e ×1,15 por minuto inteiro de run.
  assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),100);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
  assert.equal(R.rouletteCost(0,0,59),30,'inflação só por minuto inteiro');assert.equal(R.rouletteCost(0,0,600),121);assert.ok(R.rouletteCost(40,0,1800)>1e6,'fim de run: milhões');
@@ -115,6 +115,8 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const wallet=calculateStats('naruto',1,{'Carteira Gama-chan':1},{},0,{},R.spendBonuses({'Carteira Gama-chan':1},500));assert.ok(Math.abs(wallet.damage/calculateStats('naruto',1).damage-1.02)<1e-9);assert.ok(Math.abs(wallet.moneyGain-1.12)<1e-9);}
 assert.ok(!skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Corte do Leque'),'única de Vento fora da base do Gaara');assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Agulhas de Karasu'));assert.ok(!skillPool('gaara').some(t=>t.name==='Corte do Leque'));
 assert.equal(choiceCount({}),3);assert.equal(choiceCount({'Quarta opção':1}),4);
+assert.equal(choiceCount({},1000,()=>0),4);
+assert.equal(choiceCount({'Quarta opção':1},1000,()=>0),4);
 assert.deepEqual(choiceUses({'Atualizar':7,'Pular':7,'Banir':7}),{reroll:10,skip:10,ban:10});
 assert.equal(refund(purchase(NEW_ADMIN,300)).balance,999999);
 assert.ok(!availableItems(['critical'],['critical'],false).some(i=>i.id==='critical'));

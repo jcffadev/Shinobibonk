@@ -2,19 +2,57 @@ import * as THREE from 'three';
 import type { GameMap } from '../game/maps';
 import { MAP_SIZE } from '../game/worldScale';
 
-export const RENDERED_GROUND_SIZE = MAP_SIZE + 120;
+export const RENDERED_GROUND_SIZE = MAP_SIZE + 180;
 export const trailX = (z: number) => Math.sin(z * .09) * 5;
 const mound = (x: number, z: number, cx: number, cz: number, rx: number, rz: number, height: number) =>
   height * Math.exp(-(((x - cx) / rx) ** 2 + ((z - cz) / rz) ** 2));
 
 export function groundHeight(map: GameMap['id'], x: number, z: number) {
+  const edge = Math.max(Math.abs(x), Math.abs(z));
+  let ridge = 0;
+  if (edge > MAP_SIZE / 2) {
+    const angle = Math.atan2(z, x);
+    const center = 111 + 7 * Math.sin(5 * angle) + 4 * Math.sin(11 * angle);
+    const peaks = 15 + 8 * Math.sin(7 * angle) ** 2 + 4 * Math.cos(13 * angle) ** 2;
+    const blend = Math.min(1, (edge - MAP_SIZE / 2) / 17);
+    ridge = peaks * Math.exp(-((edge - center) ** 2) / 340) * blend ** 2;
+  }
   const hills = .36 * Math.sin(x * .14) * Math.cos(z * .12)
     + mound(x, z, -16, -9, 15, 12, 3.8)
-    + mound(x, z, 16, 7, 12, 13, 3.3);
+    + mound(x, z, 16, 7, 12, 13, 3.3)
+    + mound(x, z, -42, 26, 18, 14, 9.5)
+    + mound(x, z, 48, -31, 16, 19, 12)
+    + mound(x, z, -44, -42, 15, 17, 10)
+    + ridge;
   if (map !== 'folha') return hills + mound(x, z, 3, -26, 22, 11, 4.8);
   return hills + mound(x, z, 0, -45, 22, 17, 10)
     + mound(x, z, 30, 24, 8, 14, 6)
     + mound(x, z, 53, 24, 8, 14, 6);
+}
+
+/** Céu acompanha o clima, com a cor da névoa no horizonte. */
+export function createSky() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 4;
+  canvas.height = 128;
+  const paint = canvas.getContext('2d')!;
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  return {
+    texture,
+    update(color: string) {
+      const horizon = new THREE.Color(color);
+      const upper = horizon.clone().lerp(new THREE.Color('#315f99'), .48);
+      const gradient = paint.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, upper.getStyle());
+      gradient.addColorStop(.63, horizon.getStyle());
+      gradient.addColorStop(1, horizon.getStyle());
+      paint.fillStyle = gradient;
+      paint.fillRect(0, 0, canvas.width, canvas.height);
+      texture.needsUpdate = true;
+    },
+  };
 }
 
 const rgb = (hex: string) => [1, 3, 5].map(offset => parseInt(hex.slice(offset, offset + 2), 16));

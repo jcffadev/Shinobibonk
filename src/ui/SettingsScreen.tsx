@@ -99,7 +99,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
           <Card title="Monitor e motor gráfico" hint="Escolhidos pelo navegador na versão web" wide />
         </>}
         {category === 'controles' && <>
-          <Card title="Sensibilidade do mouse" hint="Giro e inclinação da câmera (botão direito)"><Slider value={settings.mouseSensitivity} min={.2} max={3} step={.05} format={(v) => v.toFixed(2)} onChange={(v) => set({ mouseSensitivity: v })} /></Card>
+          <Card title="Sensibilidade do mouse" hint="Giro e inclinação ao mover o mouse"><Slider value={settings.mouseSensitivity} min={.2} max={3} step={.05} format={(v) => v.toFixed(2)} onChange={(v) => set({ mouseSensitivity: v })} /></Card>
           <Card title="Inverter eixo Y"><Toggle value={settings.invertY} onChange={(v) => set({ invertY: v })} /></Card>
           <Card title="Distância da câmera" hint="Também com a roda do mouse"><Slider value={settings.cameraDistance} min={10} max={32} step={.5} format={(v) => v.toFixed(1)} onChange={(v) => set({ cameraDistance: v })} /></Card>
           <Card title="Ultimate automática ao começar" hint="Y (ou o selo AUTO) continua alternando na partida"><Toggle value={settings.autoUltimate} onChange={(v) => set({ autoUltimate: v })} /></Card>

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Folhas do Time 7, terreno e regras de oferta
+
+- Integra folhas direcionais de caminhada ao Naruto Clássico, Shippuden e Manto da Kyuubi, e às três formas de Sasuke e Sakura. As folhas de Sasuke e Sakura seguem a arte estática de cada forma. A Sakura inicial mantém o cabelo longo, traje da Academia e cores ao começar a caminhar.
+- Girar e inclinar a câmera passou a ser pelo movimento do mouse, com clique direito para fixar alvo. O terreno ganha montanhas externas e elevações internas, com céu em gradiente conforme o clima.
+- Pílulas e técnicas aparecem como escolhas apenas na subida de nível. A roleta mantém sua economia e penalidades, mas o prêmio de equipamento só vem como item. A roleta e as recompensas do mapa deixam de conceder pílulas. A fila de itens preserva a opção de aceitar ou vender.
+- O número de ofertas fica limitado a quatro mesmo quando Sorte, passiva permanente e banimento se combinam.
+- Build, regras e 29 verificações no navegador passaram. A captura em ângulo baixo registra o terreno visível até o rodapé e o shinobi em foco na Vila da Folha.
+
 ## Animações do elenco e correções de partida
 
 - Asuma ganha atlas original 4×4. O retrato usa a célula de repouso e a partida usa quadros de caminhada, salto, dash, dano, selo, lâminas e Ultimate.

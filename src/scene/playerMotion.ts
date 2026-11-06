@@ -1,6 +1,7 @@
 import * as THREE from 'three';
-import { ASUMA_ATLAS } from '../game/evolution';
+import { ASUMA_ATLAS, formAt } from '../game/evolution';
 import { createPlayerPose } from './playerPose';
+import { directionalArt } from '../game/directionalArt';
 
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string) {
   const hasWalkAtlas = heroId === 'naruto';
@@ -47,6 +48,12 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   let idleMap = sprite.material.map;
   let throwingWeapon = false, mirror = false, rear = false, ultimate = false;
   let state = 'idle';
+  let posePath = '';
+  let previousLevel = 0;
+  let directionSheet: ReturnType<typeof directionalArt>;
+  let directionMap: THREE.Texture | undefined;
+  const directionTextures = new Map<string, THREE.Texture>();
+  const animatedMaps = new Set<THREE.Texture | null>([walk, diagonal, throwing, asuma]);
   let attack = 0, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
   return {
     attack: (weapon = false, left?: boolean, special = false) => {
@@ -57,18 +64,33 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (left !== undefined) mirror = left;
     },
     state: () => state,
+    atlas: () => posePath,
     hurt: () => { hurt = .23; },
-    update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, animatedForm: boolean, jumpHeight: number, sliding: boolean, diagonalInput: boolean) {
-      if (sprite.material.map !== walk && sprite.material.map !== diagonal && sprite.material.map !== throwing && sprite.material.map !== asuma) idleMap = sprite.material.map;
+    update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean) {
+      if (!animatedMaps.has(sprite.material.map)) idleMap = sprite.material.map;
+      if (level !== previousLevel) {
+        previousLevel = level;
+        directionSheet = directionalArt(heroId, formAt(heroId, level).level);
+        directionMap = directionSheet && directionTextures.get(directionSheet.path);
+        if (directionSheet && !directionMap) {
+          directionMap = new THREE.TextureLoader().load(directionSheet.path);
+          directionMap.colorSpace = THREE.SRGBColorSpace;
+          directionMap.minFilter = directionMap.magFilter = THREE.NearestFilter;
+          directionMap.generateMipmaps = false;
+          directionTextures.set(directionSheet.path, directionMap);
+          animatedMaps.add(directionMap);
+        }
+      }
       attack = Math.max(0, attack - dt);
       stepTime = walkingInput ? stepTime + dt : 0;
       hurt = Math.max(0, hurt - dt);
       if (walkingInput && !attack) { mirror = leftward; rear = backwardView; }
       state = hurt > 0 ? 'hurt' : sliding ? 'dash' : jumpHeight > 0 ? 'jump'
         : attack > 0 ? (ultimate ? 'ultimate' : 'attack') : walkingInput ? 'walk' : 'idle';
-      const casting = animatedForm && state === 'attack' && throwing?.image;
+      const academy = hasWalkAtlas && level < 10;
+      const casting = academy && state === 'attack' && throwing?.image;
       const walkAtlas = diagonalInput && diagonal?.image ? diagonal : walk;
-      const walking = animatedForm && state === 'walk' && walkAtlas?.image;
+      const walking = academy && state === 'walk' && walkAtlas?.image;
       if (casting && throwing) {
         const frame = throwingWeapon ? Math.min(3, Math.floor((.25 - attack) / .06)) : attack > .08 ? 2 : 3;
         throwing.repeat.x = mirror ? -.25 : .25;
@@ -86,9 +108,20 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         asuma.repeat.set(mirror ? -.25 : .25, .25);
         asuma.offset.set((frame % 4 + Number(mirror)) / 4, (3 - Math.floor(frame / 4)) / 4);
       }
-      const usesSheet = useAsuma || !!casting || !!walking;
-      sprite.material.map = useAsuma ? asuma : casting ? throwing : walking ? walkAtlas : idleMap;
-      sprite.material.alphaTest = usesSheet ? .55 : .18;
+      const directedCast = !!directionSheet?.cast && (state === 'attack' || state === 'ultimate');
+      const useDirection = !!directionMap?.image && (state === 'walk' || directedCast);
+      if (useDirection && directionMap && directionSheet) {
+        const frame = directedCast ? Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4))
+          : Math.floor(stepTime * 10) % 4;
+        const row = directedCast ? 2 : backwardView ? 1 : 0;
+        const flip = directedCast ? mirror : leftward;
+        directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
+        directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
+      }
+      const usesSheet = useAsuma || useDirection || !!casting || !!walking;
+      posePath = useDirection ? directionSheet!.path : '';
+      sprite.material.map = useAsuma ? asuma : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
+      sprite.material.alphaTest = usesSheet || directionSheet ? .55 : .18;
       const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? .07 : 0;
       const lift = state === 'jump' ? .095 : state === 'dash' ? .04 : 0;
       const reach = state === 'attack' ? Math.sin(Math.PI * attack / (throwingWeapon ? .25 : .22)) * .11
@@ -112,6 +145,6 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       paint.fillStyle='#ffffff66';paint.fillRect(3,7,Math.round(122*ratio),2);
       map.needsUpdate=true;
     },
-    dispose(){scene.remove(bar);walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();map.dispose();bar.material.dispose();},
+    dispose(){scene.remove(bar);walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());map.dispose();bar.material.dispose();},
   };
 }

@@ -15,7 +15,6 @@ export type RouletteCasa = { id: RouletteCasaId; label: string; icon: string; ki
 export const ROULETTE_CASAS: RouletteCasa[] = [
   { id: 'kunai', label: 'Kunai', icon: '🗡', kind: 'bom', weight: 6, description: '+1 kunai no contador da missão.' },
   { id: 'lose', label: 'Dívida de jogo', icon: '💸', kind: 'ruim', weight: 12, description: 'Perde Ryu igual ao custo do giro (ao sair).' },
-  { id: 'pill', label: 'Pílula', icon: '💊', kind: 'bom', weight: 6, description: '+1 a +5 níveis (pela raridade/Sorte) de uma pílula que ainda não está no limite.' },
   { id: 'empty', label: 'Casa vazia', icon: '·', kind: 'neutro', weight: 25, description: 'Nada acontece.' },
   { id: 'ryu', label: 'Ryu de volta', icon: '🪙', kind: 'bom', weight: 5, description: 'Recebe o dobro do custo do giro.' },
   { id: 'debuff', label: 'Azar da Lendária Perdedora', icon: '🌧', kind: 'ruim', weight: 10, description: '−10% de dano e −8% de movimento por 45 s.' },
@@ -40,7 +39,7 @@ export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, 
  */
 /**
  * Nerf 2 (pedido do usuário, 06/11/2026: "vem muita coisa boa"): Sorte 0 → boas ≈ 34,9% (antes 48,4%), ruins ≈ 36%, vazia ≈ 29%.
- * Pesos: kunai/shuriken/pílula 6, Ryu 5, bênção 4, item 2,5, Sorte Grande 0,5 · dívida 12, azar 10, credores 9 · vazia 25.
+ * Pesos: kunai/shuriken 6, Ryu 5, bênção 4, item 2,5, Sorte Grande 0,5 · dívida 12, azar 10, credores 9 · vazia 25.
  */
 export const ROULETTE_RULES = {
   baseCost: 30,
@@ -79,7 +78,7 @@ export function luckFactor(luck: number) { return 1 + Math.min(ROULETTE_RULES.lu
 
 /** Probabilidade (0–1) de cada casa para a sorte e a pressão de dificuldade atuais. */
 export function rouletteWeights(luck: number, pressure: number, exclude: readonly RouletteCasaId[] = []): Record<RouletteCasaId, number> {
-  const f = luckFactor(luck), raw: Record<string, number> = {};
+  const f = luckFactor(luck), raw: Record<string, number> = { pill: 0 };
   for (const c of ROULETTE_CASAS) raw[c.id] = exclude.includes(c.id) ? 0 : c.kind === 'bom' ? c.weight * f * (c.premium ? f : 1) : c.kind === 'ruim' ? c.weight * (1 + Math.max(0, pressure)) : c.weight;
   const total = Object.values(raw).reduce((a, b) => a + b, 0);
   const out: Record<string, number> = {};

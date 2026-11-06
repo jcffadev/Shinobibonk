@@ -2,7 +2,7 @@ import { ItemIcon } from './RunSheet';
 import { BuffText } from './BuffText';
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { ROULETTE_CASAS, ROULETTE_RULES, badChance, goodChance, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
-import { itemArt, pillArt } from '../game/inventoryArt';
+import { itemArt } from '../game/inventoryArt';
 import '../tsunade-roulette.css';
 
 /**
@@ -25,7 +25,7 @@ function send<T>(action: string): T | undefined {
 const pct = (v: number) => (v * 100).toFixed(1).replace('.', ',') + '%';
 /** Ícones das casas no atlas novo do inventário (inventoryArt.ts); casas sem arte equivalente (vazia) mantêm o símbolo. */
 const CASA_ART: Partial<Record<RouletteCasaId, () => CSSProperties | undefined>> = {
-  kunai: () => itemArt('swift-kunai'), shuriken: () => itemArt('tenten'), pill: () => pillArt.soldado, ryu: () => itemArt('coins'),
+  kunai: () => itemArt('swift-kunai'), shuriken: () => itemArt('tenten'), ryu: () => itemArt('coins'),
   item: () => itemArt('forbidden-scroll'), jackpot: () => itemArt('ryo-nugget'), buff: () => itemArt('life'), lose: () => itemArt('gold-tooth'),
   debuff: () => itemArt('red-moon'), ambush: () => itemArt('kubikiribocho'),
 };

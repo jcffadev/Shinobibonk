@@ -61,3 +61,53 @@ Este arquivo é o registro contínuo. O procedimento foi incluído no AGENTS.md 
 **Resposta**
 
 Os 24 jogáveis têm animação base, que acompanha a troca de forma. Asuma tem 16 quadros próprios. Naruto Academia mantém suas folhas dedicadas de caminhada e arremesso. As outras formas usam poses animadas sobre os sprites existentes. Restam as folhas direcionais próprias e a conferência visual de cada forma.
+
+## Folhas direcionais e identidade de cada forma
+
+**Pedidos**
+
+> crie as folhas direcionais dos outros personagens, usa como base o que você fez para o Naruto
+
+> a sakura esta estranha, o estático eu ja falei pra você colocar ela com a skin início, igual na academia, igual fez com o Naruto... por conta que você não fez isso e agora fez a animação seguindo o que eu falei, esta juntando as 2 imagens e bugando a animação.
+
+> Use as imagens que você tem estática, como referência para criar os movimentos animados, não faz sentido, você gerar algo novo para o que você já tem e ficar em discordância, por exemplo, se eu estou parado, fica uma coisa e se andando o personagem muda, entendeu o que eu quis dizer?
+
+**Resposta**
+
+As folhas do primeiro lote cobrem as formas do Naruto, Sasuke e Sakura. As folhas de Sasuke e Sakura foram refeitas usando como referência primária o sprite estático de cada forma. A Sakura inicial conserva cabelo longo, túnica vermelha, shorts verdes e sandálias azuis durante a caminhada. A folha do Naruto Academia é o modelo da organização dos quadros. Os próximos lotes seguem a mesma regra documentada na skill de arte.
+
+## Itens e número de cartas
+
+**Pedidos**
+
+> Ele nunca deve encontra pílulas ou habilidades, apenas itens.
+> Ele ainda as vezes, ao banir está aparecendo uma quinta opção de escolha.
+
+> Só itens em recompensas do mapa, incluindo roleta e drops. Pílulas e habilidades só no level-up.
+
+**Resposta**
+
+Pílulas e habilidades ficam nas ofertas de subida de nível. A roleta e os drops do mapa seguem a nova regra. A quinta carta vinha da chance da Sorte somada à quarta opção. O teto de quatro vale também após banir ou atualizar.
+
+## Mouse e relevo
+
+**Pedidos**
+
+> simplesmente ao movimentar o mouse a camera ja acompanha, coloque montanhas, parte elevadas no mapa, ainda estamos com aquele problema da parte cinzsa, mas vamos ver se corrigimos com montanhas o cenário
+
+> Girar ao mover o mouse, sem segurar botão
+
+**Resposta**
+
+Mover o mouse gira e inclina a câmera durante a partida. Clique direito fixa o alvo. O mapa ganhou elevações internas, montanhas externas e um céu em gradiente para distinguir o horizonte da área cinza.
+
+## Andamento e publicação
+
+**Pedido**
+
+> O que estamos fazendo?
+> Mostre o que esta na fila, o que falta fazer, o que ja completou, você esta atualizando o github?
+
+**Resposta**
+
+O primeiro lote foi publicado no commit `729749a`: Asuma, animações base, sinergia, contador da horda e registro do chat. O lote seguinte cobre Time 7, regras das recompensas e câmera. A [fila](13-PENDENCIAS-PARA-CONTINUAR.md) guarda as folhas dos demais shinobis e formas, os testes de desempenho com a horda cheia, HUD, bijūs, efeitos e áudio.

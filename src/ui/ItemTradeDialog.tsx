@@ -8,7 +8,7 @@ export function tradeAction(action: 'sell' | 'reroll' | 'exit') {
 
 export function ItemTradeDialog({ choice, money }: { choice: NonNullable<WorldSnapshot['choice']>; money: number }) {
   const merchant = choice.level === -8;
-  const title = merchant ? 'Mercador de itens' : choice.level === -10 ? 'Pílula encontrada' : 'Prêmio da Tsunade';
+  const title = merchant ? 'Mercador de itens' : 'Prêmio da Tsunade';
   const choose = (index: number) => window.dispatchEvent(new CustomEvent('shinobi-choose', { detail: index }));
   return <div className="level-choice-backdrop">
     <section className="level-choice" role="dialog" aria-label={title}>
@@ -19,7 +19,7 @@ export function ItemTradeDialog({ choice, money }: { choice: NonNullable<WorldSn
       <div className="level-choice-cards" style={{ gridTemplateColumns: `repeat(${choice.cards.length},minmax(0,1fr))` }}>
         {choice.cards.map((card, index) => <button key={card.id} className={`level-choice-card rarity-${card.rarity.toLowerCase()}`}
           onClick={() => choose(index)} disabled={!!card.disabled}>
-          <div className="choice-art"><small>{card.rarity}</small>{card.kind === 'item'||card.kind==='pill' ? <ItemIcon name={card.name}/> : <span>—</span>}</div>
+          <div className="choice-art"><small>{card.rarity}</small>{card.kind === 'item' ? <ItemIcon name={card.name}/> : <span>—</span>}</div>
           <div className="choice-copy">
             <h2>{card.name}</h2><p><BuffText text={card.description}/></p>
             {card.price !== undefined && <strong>{card.price} Ryu</strong>}

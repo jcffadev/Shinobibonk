@@ -5,7 +5,7 @@ description: Implementa e valida caminhada, corrida, diagonais, pulo, deslize e 
 
 # Movimentação dos shinobis
 
-Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src/game/settings.ts`. Preserve a câmera isométrica, a rotação pelo mouse, o zoom e os atalhos remapeáveis. Use a skill `criar-arte-shinobibonk` para criar poses e atlas.
+Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src/game/settings.ts`. Preserve a câmera isométrica, a rotação ao mover o mouse, o zoom e os atalhos remapeáveis. Use a skill `criar-arte-shinobibonk` para criar poses e atlas.
 
 ## Simulação
 
@@ -18,8 +18,9 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 ## Sprites
 
 - Use a forma atual do personagem. A caminhada do Naruto Academia usa quatro quadros por fileira, com frente em cima e costas embaixo. Espelhe em X para a esquerda. Use uma folha diagonal com a mesma ordem e o mesmo ponto de apoio.
+- Cadastre a folha por ID do shinobi e nível da forma em `src/game/directionalArt.ts`. Os recortes de caminhada são 4×2. Em folhas 4×3, a terceira linha pode ter os quadros de conjuração. A pose parada continua vindo do sprite estático que orientou a arte.
 - Mantenha a fase do ciclo ao trocar direção. Ancore os pés em todos os quadros. Deixe o deslocamento vertical a cargo do pulo e do terreno. Mova braços e pernas dentro do quadro, sem balançar câmera ou corpo para simular passos.
-- Troque UVs de texturas exclusivas do jogador. Mantenha em cache os materiais do elenco e descarte recursos da animação ao sair. Em formas sem atlas, preserve o sprite estático.
+- Troque UVs de texturas exclusivas do jogador. Mantenha em cache os materiais do elenco e descarte recursos da animação ao sair. Em formas sem atlas, anime o sprite existente com `playerPose.ts`.
 - A barra de HP deve acompanhar a posição abaixo dos pés, sem depender de qual quadro está em uso.
 
 ## Validação

@@ -38,7 +38,10 @@ export const PASSIVES:PassiveDef[] = [
   {name:'Treinamento com Jiraiya',buff:'Melhora os espaços das suas técnicas favoritas (★): quanto maior a raridade do espaço, mais elas aparecem no level-up',base:200,max:8,icon:'el-sage',section:'Equipe da partida'},
 ];
 export const passiveCost=(def:PassiveDef,level:number)=>def.base+level*25;
-export function choiceCount(levels:Record<string,number>){return levels['Quarta opção']?4:3;}
+export function choiceCount(levels: Record<string,number>, luck = 0, rng = Math.random) {
+  if (levels['Quarta opção']) return 4;
+  return luck > 0 && rng() < Math.min(.6, luck / 150) ? 4 : 3;
+}
 export function choiceUses(levels:Record<string,number>){return {reroll:3+Math.min(7,levels.Atualizar||0),skip:3+Math.min(7,levels.Pular||0),ban:3+Math.min(7,levels.Banir||0)};}
 
 /** Bolsa da Missão: vagas "Em casa" = 5 base + 5/nível do Baú do Clã + 1 a cada 2 itens desbloqueados com Lamens. */

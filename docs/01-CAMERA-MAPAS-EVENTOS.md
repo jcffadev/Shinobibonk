@@ -45,7 +45,7 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
   - Controles: toque em E = 1 giro animado (1,6 s); segurar E = giro rápido contínuo (280 ms/giro) enquanto houver Ryu; E durante a animação = resultado instantâneo; F/botão liga e desliga o giro rápido (`sb_roulette_fast`).
   - Prêmios e penalidades acumulam numa lista e só são entregues ao sair (Esc/X/"Sair e receber").
   - Custo por giro: (25 + 5 × giros na run) × (1 − desconto, máx. 40%); não reseta por zona.
-  - Casas (peso base): Kunai 13, Shuriken 13, Pílula 12, Ryu de volta 10 (2× custo), Bênção de Tsunade 7 (90 s: +15% dano, ou +12% velocidade de ataque, ou +2,5 HP/s e +6 armadura), Item 6, Sorte Grande 2 (item + 3× custo); ruins: Dívida de jogo 10, Azar da Lendária Perdedora 8 (−10% dano, −8% movimento por 45 s), Credores da Tsunade 7 (emboscada); neutra: Casa vazia 12.
+  - Casas de recompensa: Kunai, Shuriken, Ryu, Bênção, Item e Sorte Grande. Penalidades: Dívida, Azar e Credores. Há também a casa vazia. Os pesos atuais vêm de `ROULETTE_CASAS`.
   - Sorte multiplica casas boas por 1 + min(2, sorte/100) (premium ao quadrado); a pressão de dificuldade (maldição, zona, missão) multiplica as ruins; a fatia ruim fica sempre entre 15% e 60%. Ex.: sorte 0 = 63% boas/25% ruins; sorte 100+ = ~81%/15%.
   - Buffs e debuffs são temporários e recalculados das fontes. Valores provisórios.
 - **Altar de desafio (CONFIRMADO)**: interagir inicia uma pequena horda; concluir concede uma kunai grátis. **IMPLEMENTADO**: 6 inimigos de desafio surgem a 7 m. Escala e duração estão **PENDENTES**.
@@ -95,4 +95,4 @@ Mapas por bioma, mapa procedural, colisão, pulo, spawn configurável por zona, 
 Modo H: ocultar números flutuantes, trilhas e efeitos ofensivos opcionais, mas manter lógica de colisão, dano, status e animação de hit simplificada. **IMPLEMENTADO** para projéteis, anéis, visuais e números. Não existe menu de configurações gráficas; as opções a seguir são futuras: densidade visual, LOD de inimigos, minimapa 15/30/60 FPS, partículas, qualidade, limite de FPS e transparência da HUD.
 # Atualização da câmera e da partida
 
-O arrasto vertical da câmera permite inclinação de 0,12 a 1,48 radianos. O ponto de visão fica acima do terreno e o chão renderizado avança além do limite jogável. O HUD conta os inimigos vivos da simulação e o minimapa amostra até 300 marcadores para manter a leitura.
+O mouse gira e inclina a câmera de 0,12 a 1,48 radianos durante a partida. Clique direito fixa o alvo. A câmera fica acima do terreno. O volume ortográfico inclui o primeiro plano mesmo em inclinação baixa. A área jogável tem novas elevações e uma cadeia de montanhas ao redor dá profundidade ao horizonte. O céu usa um gradiente conforme o clima. O HUD conta os inimigos vivos da simulação e o minimapa amostra até 300 marcadores para manter a leitura.
