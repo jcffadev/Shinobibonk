@@ -1,4 +1,4 @@
-import { HERO_BY_ID, HEROES, NARUTO_FORMS } from './heroes.ts';
+import { HERO_BY_ID, HEROES, NARUTO_FORMS, familyOf } from './heroes.ts';
 export type Form={level:number;name:string;outfit?:string;detail?:string};
 // Níveis são design do jogo. Personagens sem outra fase apropriada mantêm a aparência.
 export const FORMS:Record<string,Form[]>={
@@ -24,15 +24,21 @@ export const FORMS:Record<string,Form[]>={
  kankuro:[{level:1,name:'Genin'},{level:15,name:'Shippuden',outfit:'#493a4b'},{level:30,name:'Aliança Shinobi',outfit:'#6a735c'}],
  guy:[{level:1,name:'Jonin'},{level:15,name:'Sexto Portão',outfit:'#519965'},{level:30,name:'Sétimo Portão',outfit:'#62b4bb'}],
 };
-export function formAt(id:string,level:number){const list=FORMS[id]??[{level:1,name:'Shinobi'}];return [...list].reverse().find(f=>level>=f.level)??list[0];}
-export function spriteFile(id:string,level=1){if(id==='naruto')return `/assets/shinobis/${NARUTO_FORMS.find(f=>f.name===formAt(id,level).name)!.file}.svg`;if(HERO_BY_ID[id]?.atlas!==undefined&&formAt(id,level).level===1)return null;return `/assets/shinobis/${id}-${formAt(id,level).level}.svg`;}
+/**
+ * Forma exibida. Desde as versões separadas (06/11/2026) cada shinobi jogável fica SEMPRE na forma da própria versão
+ * (`Hero.form`): o nível da run não troca mais a forma. Ids fora do elenco (NPCs) seguem a tabela por nível.
+ */
+export function formAt(id:string,level=1){const hero=HERO_BY_ID[id],family=familyOf(id),list=FORMS[family]??[{level:1,name:'Shinobi'}];if(hero)return list.find(f=>f.level===(hero.form??1))??list[0];return [...list].reverse().find(f=>level>=f.level)??list[0];}
+export function spriteFile(id:string,level=1){const family=familyOf(id),form=formAt(id,level);if(family==='naruto')return `/assets/shinobis/${NARUTO_FORMS.find(f=>f.name===form.name)!.file}.svg`;if(HERO_BY_ID[family]?.atlas!==undefined&&form.level===1)return null;return `/assets/shinobis/${family}-${form.level}.svg`;}
 /** Nível de liberação da técnica `index` do kit (fonte única: `unlockLevel` em heroes.ts, ajustado por fase da obra). */
 export function requiredLevel(heroId:string,index:number){return HERO_BY_ID[heroId]?.techniques[index]?.unlockLevel??[1,5,12,20][index];}
 const evolvedCells=Object.entries(FORMS).flatMap(([id,forms])=>id==='naruto'?[]:forms.filter(f=>f.level>1).map(f=>id+'-'+f.level));
 import { BIJUU } from './bijuu.ts';
 const leafPortraits = ['ebisu', 'iruka', 'kushina'];
 export const ASUMA_ATLAS = '/assets/asuma-motion-v1.png';
-export function portraitRegion(id:string,level=1){
+export function portraitRegion(versionId:string,level=1){
+ // Versões usam o retrato da forma da família (ex.: `naruto-shippuden` → célula Shippuden do Naruto).
+ const id=familyOf(versionId);level=HERO_BY_ID[versionId]?formAt(versionId).level:level;
  if(id==='sapos-sabios')return {path:'/assets/shinobis/sapos-sabios-v1.png',cols:1,rows:1,index:0};
  if(id==='teuchi')return {path:'/assets/shinobis/teuchi-v1.png',cols:1,rows:1,index:0};
  if(id==='asuma')return {path:ASUMA_ATLAS,cols:4,rows:4,index:0};
@@ -42,7 +48,7 @@ export function portraitRegion(id:string,level=1){
  if(id==='chomei'||id==='gyuki')return {path:`/assets/bijuu/${id}-v2.png`,cols:1,rows:1,index:0};
  const beast=BIJUU.findIndex(entry=>entry.id===id);
  if(beast>=0)return {path:'/assets/bijuu-atlas-v1.png',cols:3,rows:3,index:beast};
- const form=formAt(id,level);
+ const form=HERO_BY_ID[versionId]?formAt(versionId):formAt(id,level);
  if(id==='naruto')return {path:'/assets/shinobi-roster-v2.png',cols:5,rows:5,index:level<10?0:level<25?22:level<50?23:24};
  if(form.level>1)return {path:'/assets/shinobi-evolutions-v2.png',cols:6,rows:5,index:Math.max(0,evolvedCells.indexOf(id+'-'+form.level))};
  return {path:'/assets/shinobi-roster-v2.png',cols:5,rows:5,index:Math.max(0,HEROES.findIndex(h=>h.id===id))};

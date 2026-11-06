@@ -22,7 +22,7 @@ Atalhos locais:
 
 ## Estrutura
 
-O elenco atual tem 24 shinobis, 56 formas jogáveis com folhas direcionais de caminhada e 72 técnicas. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total da simulação.
+O elenco atual tem 24 famílias de shinobis e 56 versões jogáveis separadas (ex.: Naruto Academia, Genin, Shippuden e Kyuubi), cada uma com kit, passiva e atributos da fase, folhas direcionais de caminhada e 97 técnicas no total. Cada versão nova é liberada por missão jogando com a anterior. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total da simulação.
 
 O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
 
@@ -35,10 +35,10 @@ O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A 
 - `src/scene/techniqueEffects.ts`: visuais das técnicas. Dano e hitbox ficam na simulação.
 - `src/scene/bossCombat.ts`: chefes (mega elites e guardiões), com barra de vida e técnicas do personagem com aviso no chão.
 - `src/game/`: dados e regras sem React.
-  - `heroes.ts`: 23 shinobis (Kushina incluída) e 69 técnicas (1–2 únicas por shinobi + 26 compartilhadas), pool por vila/elemento, clãs, organizações e afinidade elemental.
+  - `heroes.ts`: 24 famílias e 56 versões (`HERO_VERSIONS`, `familyOf`), 97 técnicas (1–2 únicas por versão, exclusivas da família, + compartilhadas), pool por vila/elemento, clãs, organizações e afinidade elemental.
   - `account.ts`: shinobis jogáveis, selados, pesquisa de técnicas e progresso por mapa.
   - `maps.ts`: 4 mapas temáticos (Folha, Areia, Pedra, Névoa Oculta).
-  - `unlockMissions.ts`: missões de desbloqueio e Lendários.
+  - `unlockMissions.ts`: missões de desbloqueio, Lendários e cadeia das versões (`playWith`).
   - `enemyTiers.ts`: inimigo normal, elite amarelo, Mega Elite e Shinobi para selar.
   - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
   - `roulette.ts`: Roleta da Tsunade.
@@ -46,7 +46,7 @@ O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A 
   - `npcs.ts`: eventos do Ebisu e do Iruka, Iruka como ajudante e regras do Naruto Totem.
   - `catalog.ts`: 94 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
   - `progression.ts`: atributos, dificuldade e crítico.
-  - `evolution.ts`: formas por nível.
+  - `evolution.ts`: formas de cada família; cada versão usa a sua forma fixa.
   - `combat.ts`: afixos de técnica.
   - `preparation.ts`: árvore permanente e carteira.
   - `missions.ts`: três zonas e HP do guardião invocável.

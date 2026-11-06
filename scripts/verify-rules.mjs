@@ -8,7 +8,9 @@ import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
 import { ASUMA_ATLAS,FORMS,formAt,portraitRegion } from '../src/game/evolution.ts';
 import { actionArt, directionalArt } from '../src/game/directionalArt.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
-assert.equal(HEROES.length,24);
+// Versões separadas (06/11/2026): cada forma de evolution.ts é um personagem jogável próprio (24 famílias, 56 versões).
+assert.equal(HEROES.length,56);
+assert.equal(new Set(HEROES.map(h=>h.family)).size,24);
 for(const id of ['chomei','gyuki']){
  const portrait=portraitRegion(id);
  assert.equal(portrait.path,`/assets/bijuu/${id}-v2.png`);
@@ -16,41 +18,63 @@ for(const id of ['chomei','gyuki']){
 }
 const motionPairs = new Set();
 let motionForms = 0;
-for (const {id} of HEROES) {
-  const forms = FORMS[id] ?? [formAt(id,1)];
-  for (const {level} of forms) {
-    motionForms++;
-    if (id==='asuma'||(id==='naruto'&&level===1)) {
-      assert.ok(fs.existsSync('public'+(id==='asuma'?ASUMA_ATLAS:'/assets/naruto-academia-walk-v1.png')));
-      continue;
-    }
-    const action=actionArt(id,level);
-    if(action)assert.ok(fs.existsSync('public'+action.path),`folha de ação ausente: ${id} nível ${level}`);
-    const sheet=directionalArt(id,level);
-    assert.ok(sheet && fs.existsSync('public'+sheet.path),`folha ausente: ${id} nível ${level}`);
-    const row = sheet.firstRow ?? 0;
-    assert.ok(row>=0 && row%2===0 && row+1<sheet.rows,`dupla frente/costas inválida: ${id} nível ${level}`);
-    const pair = `${sheet.path}:${row}`;
-    assert.ok(!motionPairs.has(pair),`folha compartilhando quadros entre formas: ${pair}`);
-    motionPairs.add(pair);
+const versionForms = new Set();
+for (const hero of HEROES) {
+  const id=hero.family, level=formAt(hero.id).level;
+  assert.equal(level,hero.form,`${hero.id} fica na própria forma`);
+  assert.equal(formAt(hero.id,99).level,level,`${hero.id} não evolui dentro da run`);
+  assert.ok(FORMS[id]?FORMS[id].some(f=>f.level===level):level===1,`${hero.id}: forma ${level} existe em FORMS`);
+  versionForms.add(id+':'+level);
+  motionForms++;
+  if (id==='asuma'||(id==='naruto'&&level===1)) {
+    assert.ok(fs.existsSync('public'+(id==='asuma'?ASUMA_ATLAS:'/assets/naruto-academia-walk-v1.png')));
+    continue;
   }
+  const action=actionArt(id,level);
+  if(action)assert.ok(fs.existsSync('public'+action.path),`folha de ação ausente: ${id} nível ${level}`);
+  const sheet=directionalArt(id,level);
+  assert.ok(sheet && fs.existsSync('public'+sheet.path),`folha ausente: ${id} nível ${level}`);
+  const row = sheet.firstRow ?? 0;
+  assert.ok(row>=0 && row%2===0 && row+1<sheet.rows,`dupla frente/costas inválida: ${id} nível ${level}`);
+  const pair = `${sheet.path}:${row}`;
+  assert.ok(!motionPairs.has(pair),`folha compartilhando quadros entre formas: ${pair}`);
+  motionPairs.add(pair);
 }
-assert.equal(motionForms,56);
-assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,72);
-{// Fase da obra (06/11/2026): Naruto começa só com Kage Bunshin; Sapo no Clássico, Rasengan no fim da Parte I, Modo Sábio no Shippuden.
- const {HERO_BY_ID,PHASE_LEVELS,SHARED_TECHNIQUES}=await import('../src/game/heroes.ts');const lv=(id,name)=>HERO_BY_ID[id].techniques.find(t=>t.name===name)?.unlockLevel;
- assert.deepEqual(HERO_BY_ID.naruto.techniques.map(t=>[t.name,t.unlockLevel]),[['Kage Bunshin',1],['Invocação do Sapo',10],['Rasengan',15],['Modo Sábio',25]]);
- assert.ok(HERO_BY_ID.naruto.techniques.filter(t=>t.unlockLevel===1).every(t=>!['Rasengan','Modo Sábio'].includes(t.name)),'Naruto não começa com Rasengan/Modo Sábio');
- const sapo=HERO_BY_ID.naruto.techniques[1];assert.equal(sapo.shape,'Área');assert.equal(sapo.element,'Neutro');assert.ok(SHARED_TECHNIQUES.has('Invocação do Sapo'));assert.ok(HERO_BY_ID.jiraiya.techniques.some(t=>t.name==='Invocação do Sapo'),'Sapo compartilhado com Jiraiya');
- assert.ok(!skillPool('naruto').some(t=>t.element==='Água'),'Sapo Neutro não abre Água ao Naruto');
+assert.equal(motionForms,56);assert.equal(versionForms.size,56,'uma versão por forma');
+{// Todas as formas de FORMS viraram versão jogável.
+ for(const [family,forms] of Object.entries(FORMS))for(const f of forms)assert.ok(versionForms.has(family+':'+f.level),'forma sem versão: '+family+' '+f.name);}
+{// Fase da obra por versão: cada versão só tem técnicas da própria fase.
+ const {HERO_BY_ID,PHASE_LEVELS,SHARED_TECHNIQUES}=await import('../src/game/heroes.ts');const lv=(id,name)=>HERO_BY_ID[id].techniques.find(t=>t.name===name)?.unlockLevel;const has=(id,name)=>HERO_BY_ID[id].techniques.some(t=>t.name===name);
+ assert.deepEqual(HERO_BY_ID.naruto.techniques.map(t=>t.name),['Kage Bunshin','Shuriken','Kunai Tática','Rendan Uzumaki']);
+ assert.ok(!has('naruto','Rasengan')&&!has('naruto','Modo Sábio')&&!skillPool('naruto').some(t=>t.name==='Modo Sábio'),'Naruto Academia sem Rasengan/Modo Sábio');
+ assert.deepEqual(HERO_BY_ID['naruto-genin'].techniques.map(t=>[t.name,t.unlockLevel]),[['Kage Bunshin',1],['Invocação do Sapo',5],['Kunai Tática',8],['Rasengan',15]]);
+ assert.ok(has('naruto-shippuden','Modo Sábio')&&has('naruto-shippuden','Rasenshuriken')&&has('naruto-kyuubi','Bijūdama'));
+ const sapo=HERO_BY_ID['naruto-genin'].techniques[1];assert.equal(sapo.shape,'Área');assert.equal(sapo.element,'Neutro');assert.ok(SHARED_TECHNIQUES.has('Invocação do Sapo'));assert.ok(HERO_BY_ID.jiraiya.techniques.some(t=>t.name==='Invocação do Sapo'),'Sapo compartilhado com Jiraiya');
+ assert.ok(!skillPool('naruto-genin').some(t=>t.element==='Água'),'Sapo Neutro não abre Água ao Naruto');
  for(const [id,levels] of Object.entries(PHASE_LEVELS))for(const name of Object.keys(levels))assert.ok(lv(id,name)!==undefined,'PHASE_LEVELS cita técnica fora do kit: '+id+' / '+name);
  for(const h of HEROES){assert.equal(h.techniques[0].unlockLevel,1,h.id+': técnica inicial no Nv. 1');for(let i=1;i<h.techniques.length;i++)assert.ok(h.techniques[i].unlockLevel>=h.techniques[i-1].unlockLevel,h.id+': kit em ordem cronológica');}
- assert.ok(lv('sasuke','Amaterasu')>=15&&lv('sakura','Impacto de Sakura')>=15&&lv('neji','Palma de Ar')>=15&&lv('shikamaru','Costura das Sombras')>=15,'técnicas do Shippuden só após a forma Shippuden');
- assert.ok(lv('lee','Portões do Inferno')<15&&lv('sasuke','Chidori')<15,'técnicas da Parte I liberadas na fase genin');}
-{// Regra do usuário: 1–2 técnicas únicas por shinobi; pool respeita elemento; únicas de outros só após selar.
+ assert.ok(!has('sasuke','Amaterasu')&&has('sasuke-shippuden','Amaterasu')&&!has('sakura','Impacto de Sakura')&&has('sakura-shippuden','Impacto de Sakura')&&!has('neji','Palma de Ar')&&has('neji-jonin','Palma de Ar')&&!has('shikamaru','Costura das Sombras')&&has('shikamaru-estrategista','Costura das Sombras'),'técnicas do Shippuden só nas versões Shippuden');
+ assert.ok(lv('lee','Portões do Inferno')<15&&lv('sasuke','Chidori')<15,'técnicas da Parte I liberadas na fase genin');
+ // Versões avançadas mais fortes que a anterior da família.
+ const {familyVersions}=await import('../src/game/heroes.ts');
+ for(const family of new Set(HEROES.map(h=>h.family))){const list=familyVersions(family);for(let i=1;i<list.length;i++){const a=calculateStats(list[i-1].id,1),b=calculateStats(list[i].id,1);assert.ok(b.maxHp>a.maxHp&&b.damage>a.damage,list[i].id+' mais forte que '+list[i-1].id);}}}
+{// Cadeia de missões das versões: jogar com a anterior, dificuldade/abates crescentes, legado de saves pelo id base.
+ const {UNLOCK_MISSIONS,missingRequirements}=await import('../src/game/unlockMissions.ts');const {HERO_BY_ID,familyVersions}=await import('../src/game/heroes.ts');const {STARTER_HEROES}=await import('../src/game/account.ts');
+ const rank={Genin:1,Chunin:2,Jonin:3,Kage:4};
+ for(const h of HEROES){if(h.family===h.id){assert.ok(STARTER_HEROES.includes(h.id)||UNLOCK_MISSIONS[h.id],h.id+' sem missão');continue;}
+  const m=UNLOCK_MISSIONS[h.id];assert.ok(m,'versão sem missão: '+h.id);const list=familyVersions(h.family),prev=list[list.findIndex(x=>x.id===h.id)-1];
+  assert.equal(m.playWith,prev.id,h.id+' exige jogar com '+prev.id);
+  const pm=UNLOCK_MISSIONS[prev.id];if(pm){assert.ok(rank[m.difficulty]>=rank[pm.difficulty]&&m.kills>pm.kills&&m.minute>=pm.minute,h.id+' mais difícil que a missão de '+prev.id);}
+  assert.ok(m.kills>=300,h.id+' pede abates de versão');}
+ assert.deepEqual(missingRequirements('naruto-genin',new Set(),()=>false),['naruto']);
+ assert.deepEqual(missingRequirements('naruto-genin',new Set()),[],'Naruto Academia é inicial');
+ assert.deepEqual(missingRequirements('naruto-shippuden',new Set()),['naruto-genin'],'Shippuden exige liberar o Genin');
+ for(const id of ['naruto','sasuke','sakura','asuma'])assert.equal(HERO_BY_ID[id].form,1,'id antigo = primeira versão (saves)');}
+{// Regra do usuário: 1–2 técnicas únicas por versão; pool respeita elemento; únicas de outros só após selar.
  const {uniqueTechniques,allowedElements,techniquePool}=await import('../src/game/heroes.ts');
  for(const h of HEROES){const n=uniqueTechniques(h.id).length;assert.ok(n>=1&&n<=2,h.id+' tem '+n+' únicas');const allowed=allowedElements(h.id);for(const t of techniquePool(h.id))assert.ok(allowed.has(t.element),h.id+' não pode aprender '+t.name+' ('+t.element+')');}
- const names=HEROES.flatMap(h=>uniqueTechniques(h.id).map(t=>t.name));assert.equal(new Set(names).size,names.length,'única pertence a um só shinobi');
+ const owner=new Map();for(const h of HEROES)for(const t of uniqueTechniques(h.id)){assert.ok(!owner.has(t.name)||owner.get(t.name)===h.family,'única '+t.name+' em duas famílias');owner.set(t.name,h.family);}
+ assert.ok(!skillPool('naruto',new Set(['naruto-shippuden'])).some(t=>t.name==='Rasenshuriken'),'versão não empresta técnica de outra versão da família');
  assert.ok(!skillPool('lee').some(t=>t.element!=='Neutro'),'Lee (sem natureza) só aprende Neutro');
  assert.ok(!skillPool('naruto').some(t=>t.name==='Raikiri'),'única do Kakashi bloqueada antes de selar');
  assert.ok(!skillPool('naruto',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'selar não ignora incompatibilidade elemental');
@@ -87,15 +111,15 @@ assert.ok(guardianDefense(runSeconds)>.85&&guardianDefense(runSeconds,true)>guar
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);
 assert.equal(megaEliteHp(55,1),20000);assert.ok(megaEliteHp(595,1)>2e6);
 for(const rng of [()=>0,()=>.5,()=>.99]){const schedule=rollMegaSchedule(rng);assert.ok(schedule.length>=4&&schedule.length<=6);assert.ok(schedule.every((t,i)=>t>0&&t<600&&(i===0||t>schedule[i-1])));}
-assert.ok(calculateStats('pain',1).maxHp>n1.maxHp);assert.ok(calculateStats('naruto',10).maxHp>calculateStats('naruto',9).maxHp+20);
+assert.ok(calculateStats('pain',1).maxHp>n1.maxHp);assert.ok(calculateStats('naruto-genin',1).maxHp>calculateStats('naruto',1).maxHp*1.3,'versão seguinte herda o bônus de forma (+25% HP) e +12% de base');
 const gaara=calculateStats('gaara',1),armored=calculateStats('gaara',1,{'Bandana Reforçada':1});
 assert.equal(armored.armor,gaara.armor+6);assert.ok(Math.abs(armored.damage/gaara.damage-1.18/1.12)<1e-8);
 const xp=calculateStats('naruto',1,{'Pergaminho de Estudo':1});assert.equal(xp.xpGain,1.25);assert.equal(xp.pickup,4.5);
 const cursed=calculateStats('naruto',1,{'Selo Amaldiçoado':1});assert.equal(cursed.maxHp,Math.round(n1.maxHp*.9));assert.ok(Math.abs(cursed.damage/n1.damage-1.3)<1e-8);
 const fury=calculateStats('hashirama',1,{'Fúria da Kyuubi':1});assert.ok(Math.abs(fury.regen/calculateStats('hashirama',1).regen-.75)<1e-8);
 assert.equal(calculateStats('naruto',1,{'Pergaminho Genjutsu':1}).genjutsu,1.28);assert.equal(calculateStats('naruto',1,{'Fio de Aço Ninja':2}).extra.rootChance,.08);
-assert.equal(formAt('naruto',49).name,'Shippuden');assert.equal(formAt('naruto',50).name,'Manto da Kyuubi');
-for(const h of HEROES){const r=portraitRegion(h.id);assert.ok(r.index>=0&&r.index<25);assert.ok(fs.existsSync('public'+r.path));}
+assert.equal(formAt('naruto',49).name,'Academia');assert.equal(formAt('naruto-shippuden',1).name,'Shippuden');assert.equal(formAt('naruto-kyuubi',1).name,'Manto da Kyuubi');assert.equal(portraitRegion('naruto-kyuubi').index,24);assert.equal(portraitRegion('sasuke-rinnegan').path,'/assets/shinobi-evolutions-v2.png');
+for(const h of HEROES){const r=portraitRegion(h.id);assert.ok(r.index>=0&&r.index<r.cols*r.rows,h.id+' retrato fora do atlas');assert.ok(fs.existsSync('public'+r.path));}
 assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['gaara','temari','kankuro']),true);
 {// Combos por aldeia/organização: só AJUDANTES contam (herói fora); faixas 2/3/4/5; nenhum combo dá dano % + projétil.
  const {activeSynergies,synergyBonuses,synergyDefinitions,VILLAGE_COMBOS}=await import('../src/game/synergy.ts');
@@ -129,10 +153,10 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual([...new Set(setups)],['Byakugou','Habanero Sangrento','Modo Sábio','Portões do Inferno']);
  const gates=HERO_BY_ID.lee.techniques.find(t=>t.setup);const g=setupNumbers(gates);assert.equal(g.cooldown,11);assert.equal(g.duration,6);assert.ok(Math.abs(g.uptime-6/11)<1e-9);assert.ok(setupLines(gates).includes('Ativo 55% do tempo'));assert.ok(setupLines(gates).includes('Acumulável: Não'));
  assert.ok(setupNumbers(gates,{damage:0,area:0,haste:.1,duration:.2}).uptime>g.uptime,'afixos de recarga/duração aumentam o tempo ativo');
- assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Rasengan');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
+ assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Rendan Uzumaki');assert.equal(ultimateBase(HERO_BY_ID['naruto-shippuden']).name,'Rasenshuriken');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
  assert.ok(HEROES.every(h=>!h.techniques[0].setup),'a técnica inicial sempre ataca');
- assert.equal(SENJUTSU.multiplier,1.5);const rasengan=HERO_BY_ID.naruto.techniques.find(t=>t.name==='Rasengan'),punch=HERO_BY_ID.hashirama.techniques[0];
- assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID.hashirama.techniques[3],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
+ assert.equal(SENJUTSU.multiplier,1.5);const rasengan=HERO_BY_ID['naruto-genin'].techniques.find(t=>t.name==='Rasengan'),punch=HERO_BY_ID.hashirama.techniques[0];
+ assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID['hashirama-sabio'].techniques[3],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
  const lens=ITEMS.find(i=>i.id==='sniper-lens'),pebble=ITEMS.find(i=>i.id==='river-pebble');assert.ok(lens&&pebble);assert.equal(attr(pebble),'Velocidade');
  assert.ok(!affectedTechniques(lens,HERO_BY_ID.lee.techniques).includes('Portões do Inferno'),'itens de ataque não afetam setups');assert.equal(affectedTechniques(lens,HERO_BY_ID.lee.techniques).length,3);}
 {// Roleta da Tsunade: casas boas/ruins, sorte com teto, dificuldade compensando, custo crescente e buff por Ryu gasto.

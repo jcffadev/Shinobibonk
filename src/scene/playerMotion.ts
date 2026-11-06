@@ -2,13 +2,16 @@ import * as THREE from 'three';
 import { ASUMA_ATLAS, formAt } from '../game/evolution';
 import { createPlayerPose } from './playerPose';
 import { actionArt, directionalArt } from '../game/directionalArt';
+import { familyOf } from '../game/heroes';
 
 export type StrikePose = 'punch' | 'kick';
 
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true) {
-  const hasWalkAtlas = heroId === 'naruto';
+  // Versões usam as folhas da família na forma da versão (ex.: naruto-shippuden → folhas do Naruto no nível 25).
+  const family = familyOf(heroId);
+  const hasWalkAtlas = family === 'naruto' && formAt(heroId, 1).level === 1;
   const pose = createPlayerPose();
-  const asuma = heroId === 'asuma' ? new THREE.TextureLoader().load(ASUMA_ATLAS) : null;
+  const asuma = family === 'asuma' ? new THREE.TextureLoader().load(ASUMA_ATLAS) : null;
   if (asuma) {
     asuma.colorSpace = THREE.SRGBColorSpace;
     asuma.minFilter = asuma.magFilter = THREE.NearestFilter;
@@ -63,6 +66,12 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     return texture;
   };
   let attack = 0, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
+  // Rastro do dash (só no jogador): duas cópias translúcidas do quadro atual nas posições anteriores.
+  const trail = healthBar ? [0, 1].map(() => {
+    const ghost = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite.material.map, alphaTest: .18, transparent: true, depthWrite: false, color: '#9fd8ff' }));
+    ghost.visible = false; ghost.renderOrder = 2; scene.add(ghost); return ghost;
+  }) : null;
+  const trailHistory: THREE.Vector3[] = [];
   return {
     attack: (weapon = false, left?: boolean, special = false, pose?: StrikePose) => {
       if (ultimate && attack > 0 && !special) return;
@@ -80,8 +89,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (level !== previousLevel) {
         previousLevel = level;
         const form = formAt(heroId, level).level;
-        directionSheet = directionalArt(heroId, form);
-        actionSheet = actionArt(heroId, form);
+        directionSheet = directionalArt(family, form);
+        actionSheet = actionArt(family, form);
         directionMap = directionSheet && sheetTexture(directionSheet.path);
         actionMap = actionSheet && sheetTexture(actionSheet.path);
       }
@@ -89,9 +98,11 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       stepTime = walkingInput ? stepTime + dt : 0;
       hurt = Math.max(0, hurt - dt);
       if (walkingInput && !attack) { mirror = leftward; rear = backwardView; }
-      state = hurt > 0 ? 'hurt' : sliding ? 'dash' : jumpHeight > 0 ? 'jump'
+      // Pulo e dash têm prioridade sobre o dano: no meio da horda o jogador recebe golpes o tempo todo e o estado 'hurt'
+      // (0,23 s a cada acerto) escondia os quadros de pulo/dash do Naruto Academia. O dano continua visível pela tinta vermelha.
+      state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : hurt > 0 ? 'hurt'
         : attack > 0 ? (ultimate ? 'ultimate' : 'attack') : walkingInput ? 'walk' : 'idle';
-      const academy = hasWalkAtlas && level < 10;
+      const academy = hasWalkAtlas && formAt(heroId, level).level === 1;
       const casting = academy && state === 'attack' && throwing?.image;
       const walkAtlas = diagonalInput && diagonal?.image ? diagonal : walk;
       const walking = academy && state === 'walk' && walkAtlas?.image;
@@ -150,8 +161,28 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
       sprite.material.rotation = !proceduralMotion ? 0 : state === 'dash' ? (mirror ? .34 : -.34)
         : state === 'hurt' ? (mirror ? -.1 : .1) : state === 'walk' && backwardView ? (mirror ? .05 : -.05) : 0;
-      sprite.scale.set(width,height,1);
+      // Squash/stretch do pulo (estica na decolagem, achata na aterrissagem) e leve alongamento horizontal no dash,
+      // somados aos quadros da folha. Os pés continuam ancorados porque a altura usa a escala final.
+      const takeoff = state === 'jump' ? Math.max(0, 1 - jumpProgress / .22) : 0;
+      const landing = state === 'jump' ? Math.max(0, (jumpProgress - .8) / .2) : 0;
+      const squashY = 1 + takeoff * .1 - landing * .1 - (state === 'dash' ? .05 : 0);
+      const squashX = 1 - takeoff * .07 + landing * .09 + (state === 'dash' ? .08 : 0);
+      sprite.scale.set(width * squashX, height * squashY, 1);
       sprite.position.y = floor + jumpHeight + sprite.scale.y*.5;
+      if (trail) {
+        trailHistory.unshift(sprite.position.clone());
+        trailHistory.length = Math.min(trailHistory.length, 6);
+        trail.forEach((ghost, index) => {
+          const point = trailHistory[(index + 1) * 2];
+          ghost.visible = state === 'dash' && !!point;
+          if (!ghost.visible || !point) return;
+          ghost.material.map = sprite.material.map;
+          ghost.material.alphaTest = sprite.material.alphaTest;
+          ghost.material.opacity = .42 - index * .16;
+          ghost.position.copy(point);
+          ghost.scale.copy(sprite.scale);
+        });
+      }
       sprite.material.color.set(hurt>0 ? '#ffc0be' : '#ffffff');
       if(!health)return;
       const {bar,paint,map}=health;
@@ -166,7 +197,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       paint.fillStyle='#ffffff66';paint.fillRect(3,7,Math.round(122*ratio),2);
       map.needsUpdate=true;
     },
-    dispose(){if(health){scene.remove(health.bar);health.map.dispose();health.bar.material.dispose();}walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());},
+    dispose(){trail?.forEach(ghost=>{scene.remove(ghost);ghost.material.dispose();});if(health){scene.remove(health.bar);health.map.dispose();health.bar.material.dispose();}walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());},
   };
 }
 

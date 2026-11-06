@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { portraitRegion } from '../game/evolution';
-import type { Technique } from '../game/heroes';
+import { familyOf, type Technique } from '../game/heroes';
 import { animateTechniqueVisual, disposeObject, techniqueImpact, techniqueVisual } from '../scene/techniqueEffects';
 import { createAtlasEffect } from '../scene/atlasEffects';
 import { createPlayerMotion } from '../scene/playerMotion';
@@ -42,7 +42,7 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
     scene.add(grid);
     const forward=new THREE.Vector3(1,0,0);
     const impact=techniqueImpact(technique);impact.position.copy(dummies[0].position);scene.add(impact);
-    const frog=heroId==='naruto'&&technique.name==='Invocação do Sapo'
+    const frog=familyOf(heroId)==='naruto'&&technique.name==='Invocação do Sapo'
       ?createGamabunta(texture('/assets/gamabunta-oil-v1.png'),player.position,dummies[0].position,forward):null;
     const movingClone=technique.name==='Kage Bunshin'||technique.name==='Técnica de Substituição';
     const clone=movingClone?actor(character,-2.6,0):null;

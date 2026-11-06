@@ -4,10 +4,12 @@ import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
 /** Ordem do elenco: jogáveis primeiro; bloqueados pela dificuldade da missão (Genin → Kage) e Lendários por último. */
 const DIFF_RANK: Record<string, number> = { Genin: 1, Chunin: 2, Jonin: 3, Kage: 4 };
 const unlockOrder = (id: string) => isHeroPlayable(id) ? 0 : (DIFF_RANK[UNLOCK_MISSIONS[id]?.difficulty ?? 'Genin'] ?? 1) * 10 + (LEGENDARY.has(id) ? 50 : 0);
+/** Desempate: família na ordem do elenco e, dentro dela, a versão pela forma (Academia → Genin → Shippuden…). */
+const familyOrder = (id: string) => HEROES.findIndex(h => h.id === familyOf(id)) * 100 + (HERO_BY_ID[id]?.form ?? 1);
 
 import { isHeroPlayable } from '../game/account';
 import { useMemo, useState } from 'react';
-import { HEROES, HERO_BY_ID, HERO_CLAN, ORGANIZATIONS, heroAffinity, heroOrganizations, type Element } from '../game/heroes';
+import { HEROES, HERO_BY_ID, HERO_CLAN, ORGANIZATIONS, familyOf, heroAffinity, heroClan, heroOrganizations, type Element } from '../game/heroes';
 import { HeroPortrait } from './RunSheet';
 import { matchesSearch } from './PoolFilters';
 
@@ -18,7 +20,7 @@ const ELEMENT_GLYPH: Record<Element, string> = { Neutro: '◇', Fogo: '火', Ág
 /** Organizações + clãs de origem (clãs ausentes de ORGANIZATIONS, como Nara e Uzumaki, entram pelo HERO_CLAN). */
 function heroGroups(id: string): string[] {
   const names = heroOrganizations(id).map(o => o.name);
-  const clan = HERO_CLAN[id];
+  const clan = heroClan(id);
   if (clan && !names.includes(clan)) names.push(clan);
   return names;
 }
@@ -53,7 +55,7 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
       && (!filters.village || h.village === filters.village)
       && (!filters.element || known && heroAffinity(h.id) === filters.element)
       && (!filters.org || known && groups.includes(filters.org));
-  }).sort((a, b) => unlockOrder(a.id) - unlockOrder(b.id)), [filters]);
+  }).sort((a, b) => unlockOrder(a.id) - unlockOrder(b.id) || familyOrder(a.id) - familyOrder(b.id)), [filters]);
   // Card da missão em camada fixa (por cima de tudo, sem ser cortado pela grade).
   const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
   const showMission = (id: string, el: HTMLElement) => { if (isHeroPlayable(id) || !UNLOCK_MISSIONS[id]) { setHover(null); return; } const r = el.getBoundingClientRect(); const w = 280, x = Math.min(window.innerWidth - w - 8, Math.max(8, r.left + r.width / 2 - w / 2)); const below = r.bottom + 330 < window.innerHeight; setHover({ id, x, y: below ? r.bottom + 6 : Math.max(8, r.top - 330) }); };
@@ -93,7 +95,7 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
           {playable&&<b>{entry.name}</b>}
           
           <small className="cs-village"><VillageEmblem village={entry.village}/>{villageName(entry.village,true)}</small>
-          {!playable&&<small className="cs-mission-label">Liberado com missão</small>}
+          {!playable&&<small className="cs-mission-label">{entry.family!==entry.id?'Nova versão · missão':'Liberado com missão'}</small>}
           {selected && <i className="cs-picked">SELECIONADO</i>}
         </button>;
       })}

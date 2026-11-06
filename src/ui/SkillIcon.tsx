@@ -1,9 +1,9 @@
-import { HEROES } from '../game/heroes';
+import { HEROES, familyOf } from '../game/heroes';
 const techniques = new Map(HEROES.flatMap(h=>h.techniques).map(t=>[t.name,t]));
 const sageFaces:Record<string,number>={naruto:0,hashirama:1,jiraiya:2,minato:3,kabuto:4,orochimaru:5};
 const namedIcons: Record<string,number> = {
   'Shuriken':0,'Kunai Tática':1,'Kunai Hiraishin':1,'Kunai Explosiva':1,
-  'Rasengan':2,'Kage Bunshin':3,'Rasenshuriken Supremo':4,
+  'Rasengan':2,'Kage Bunshin':3,'Rasenshuriken Supremo':4,'Rasenshuriken':4,'Espada Chidori':10,'Púrpura Elétrica':10,'Flecha de Indra':10,'Cento e Vinte e Oito Palmas':16,'Lótus Oculta':17,'Sepultamento':12,'Grande Sepultamento Imperial':12,
   'Técnica de Substituição':6,'Bomba de Fumaça':7,'Dragão de Água':9,
   'Chidori':10,'Raikiri':10,'Kirin':10,'Palma de Ar':16,'Kaiten':16,'Sessenta e Quatro Palmas':16,
   'Punho da Folha':17,'Punho Gentil':16,'Chute Ascendente':17,'Furacão da Folha':18,
@@ -15,7 +15,9 @@ const namedIcons: Record<string,number> = {
 };
 const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:14,Sombra:15,Sábio:22,Neutro:18};
 // Arte do atlas por técnica ou família. O ícone vetorial cobre técnicas sem célula dedicada.
-export function SkillIcon({heroId,index=0,name}:{heroId:string;index?:number;name:string}){
+export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:number;name:string}){
+  // Versões (naruto-shippuden…) usam a arte da família.
+  const heroId=familyOf(versionId);
   const merged=name.startsWith('Fusão · ')?name.slice(8).split(' / '):name.split(' + ');
   if(merged.length===2)return <span className="skill-art merged-skill-art" role="img" aria-label={name}><SkillIcon heroId={heroId} name={merged[0]}/><SkillIcon heroId={heroId} name={merged[1]}/></span>;
   const sage=sageFaces[heroId];

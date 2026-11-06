@@ -33,7 +33,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 ## Implementado na base atual
 
-- **Movimento e combate** — caminhada em quatro direções nas 56 formas jogáveis dos 24 shinobis, com quadros próprios por forma. Pulo, dash e combate usam as poses disponíveis. A câmera mantém a proteção de altura sobre o terreno.
+- **Movimento e combate** — caminhada em quatro direções nas 56 versões jogáveis dos 24 shinobis, com quadros próprios por forma. Pulo, dash e combate usam as poses disponíveis. A câmera mantém a proteção de altura sobre o terreno.
 - **Ações com quadros próprios neste lote** — conjuração do Naruto Clássico, ataque/pulo/dash do Sasuke inicial e socos/chutes de Lee e Guy em todas as suas formas. A fila registra a revisão do restante do elenco.
 - **Efeitos e preparação** — técnicas com visuais por natureza e golpes característicos. Chōmei e Gyūki seguem as referências do usuário. A Bolsa da Missão permite combinar busca, estado e raridade.
 - **Ofertas e saída** — uma pílula por escolha e um nível por pílula. A raridade aumenta a potência. Banir remove a opção do sorteio pelo nome durante a run. Na pausa, clique duas vezes em Desistir para confirmar. O resumo tem o botão Ir para o menu.
@@ -66,7 +66,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - F/X/Z para atualizar, pular e banir; cada um tem 3 usos base, ampliáveis pela árvore. Banir exclui a opção pelo resto da run.
   - 3 s de invulnerabilidade ao subir de nível.
   - 19 pílulas com tema ninja (uma por atributo), até o nível 10 cada. Ver [04](04-ITENS-HABILIDADES-ECONOMIA.md).
-- **Evoluções visuais por nível**: Naruto troca de forma nos níveis 10, 25 e 50; os outros shinobis aos 15/20/25/30, conforme o personagem. Cada evolução dá +25% do HP base.
+- **Versões separadas (06/11/2026)**: cada forma virou personagem próprio — 56 versões de 24 famílias (ex.: Naruto Academia, Genin, Shippuden e Kyuubi), com kit, passiva e atributos da fase. A versão não muda de forma na run. A seguinte só surge para selar depois da missão cumprida jogando com a anterior, sempre mais difícil (`unlockMissions.ts`, `playWith`). Saves antigos continuam válidos: o id base é a primeira versão.
 - **Ultimate**:
   - Recarga passiva de 55 s, ajustada pela velocidade de recarga.
   - O orbe azul de chakra dá +9% de carga.

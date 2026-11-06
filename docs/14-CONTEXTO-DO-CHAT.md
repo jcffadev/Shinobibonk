@@ -378,6 +378,19 @@ Já estavam resolvidos pelo Codex: grade de itens em 3 linhas com rolagem, cart�
 **Resposta**
 
 Final Swarm: parcial — o swarm já existia, mas o teto era cortado em 1.600 (atingido aos 10 min) e o spawn perdia para o abate de builds fortes. Agora o teto é 1.600 × fator do swarm até 8.000, com reposição em ~4 s e nascimento a 14–28 m. Pílulas: a única fonte restante era a carta do level-up (roleta, chão e eventos já não davam pílula); com níveis em fila o clique ou a tecla da tela anterior caía na carta nova. Cada conjunto novo de cartas ignora entradas por 0,5 s. Altares: parcial — a barra já caía fora do círculo, mas exigia E e caía igual em toda raridade. Agora começa ao pisar, guarda progresso por altar e cai de 4%/s (Normal) a 18%/s (Lendário). Testes no Edge headless, `tsc`, build e `verify-rules` passaram.
+## Versões separadas, pulo/dash do Naruto Academia e kunais do guardião
+
+**Pedido** (via coordenador)
+
+> Separar personagens, exemplo ter um personagem Naruto Academia, Naruto Genin, Naruto Kage e por aí vai... fazer as particularidades de cada um, separar todos os personagens que forem possíveis, criar missões, criar animações completas... ser obrigatório para liberar os novos personagens ter que jogar com um anterior e sempre dificultar mais e ter que capturar o personagem novo; o personagem novo só começa a aparecer quando completar as respectivas missões.
+> Pulo e dash do Naruto inicial não estão com animação.
+> Kunais do boss final: só deixou pegar 1 e não as 3.
+
+Instruções complementares: revisar o que já existia antes de implementar; seguir as skills de arte, movimento, documentação e publicação.
+
+**Resposta**
+
+Versões: novo — as 56 formas viraram personagens próprios (24 famílias) com kit da fase, passiva e atributos; a versão não evolui na run e o id base continua sendo a primeira versão, então os saves seguem válidos. Cadeia: existia parcialmente (missões com requisitos, abates e selamento de conta); completei com `playWith`, missões por versão mais difíceis a cada passo e o passo "Jogar com …" no card. Animações: as folhas existentes por forma foram reaproveitadas; a lista do que falta para o Codex está no docs/13. Pulo/dash do Naruto Academia: a folha já existia, mas o estado de dano escondia os quadros; agora pulo e dash têm prioridade, com squash/stretch e rastro. Kunais: as kunais caíam em cima do portal e o E entrava nele, apagando as demais; agora ficam num círculo, a coleta tem prioridade e o portal avisa. `tsc`, build, `verify-rules` e `verify-runtime` passaram.
 
 ## Pílulas, pergaminhos de elemento e listas de itens em casa
 

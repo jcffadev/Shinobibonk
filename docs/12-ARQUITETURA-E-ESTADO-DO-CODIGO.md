@@ -17,12 +17,12 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/scene/GameCanvas.tsx` | Cena Three.js e simulação da run inteira; envia `WorldSnapshot` para o React. |
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Geometria original por golpe e elemento, orientação na direção do ataque, rotação de efeitos, raios de impacto e descarte de recursos. O limite local de efeitos de impacto evita criar uma malha por inimigo em hordas grandes. |
-| `src/game/heroes.ts` | 22 shinobis: aldeia, atributos base, passiva, bônus, 4 técnicas (escola, elemento, forma, status), Ultimate. `skillPool` adiciona a 1ª técnica de colegas da mesma aldeia (nível 8+). `sandSynergy`. Formas do Naruto. `HERO_CLAN`, `ORGANIZATIONS`, `HERO_NATURES` (naturezas canônicas da Narutopedia) e `heroAffinity`. |
+| `src/game/heroes.ts` | 24 famílias e 56 versões jogáveis (`HERO_VERSIONS`; `family`, `form`, `title`; `familyOf`, `familyVersions`, `DETERMINATION`): aldeia, atributos base, passiva, bônus, 4 técnicas da fase (escola, elemento, forma, status), Ultimate. Bibliotecas `L` (compartilhadas) e `U` (únicas por família). `skillPool` respeita elemento, vila e selamento; versões da mesma família não emprestam técnicas. `sandSynergy` por família. Formas do Naruto. `HERO_CLAN`, `ORGANIZATIONS`, `HERO_NATURES` (naturezas canônicas da Narutopedia) e `heroAffinity`. |
 | `src/game/catalog.ts` | 94 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
 | `src/game/progression.ts` (nota) | `Stats.extra` guarda a soma bruta de todos os bônus; `genjutsu` é o multiplicador da escola Genjutsu; `healthPct` e `regenMult` ajustam HP máximo e regeneração. |
 | `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
-| `src/game/evolution.ts` | Formas por nível de cada shinobi, recorte de retrato nos atlas e nível de desbloqueio das técnicas. |
+| `src/game/evolution.ts` | Formas de cada família, recorte de retrato nos atlas e nível de desbloqueio das técnicas. `formAt` devolve sempre a forma fixa da versão (sem evolução na run); `portraitRegion`/`spriteFile` aceitam id de versão e usam a família. |
 | `src/game/preparation.ts` | 24 nós das Passivas Shinobi (seções Treinamento e Equipe da partida; `passiveCost`, `homeCapacity`, `prioritySlots`, `jiraiyaSlots`/`jiraiyaRolls`), usos de atualizar/pular/banir, preço das kunais, carteira administrativa (999.999), compra e reembolso. |
 | `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis; `GUARDIAN_RULES` e `guardianHpMultiplier(zoneElapsed)` (0,6× → 1,0× aos 160 s). |
 | `src/game/npcs.ts` | Ebisu e Iruka: `NPC_RULES`, `LEGENDARY_VALUES`, `TOTEM_RULES`, sorteio de trocas, `NPC_ALLIES.iruka`, `NPC_NAMES` e `NPC_PORTRAITS` (sprites pixel art `public/assets/shinobis/iruka-1.svg` e `ebisu-1.svg`, gerados por `node scripts/generate-sprites.mjs --npcs`). Telas de escolha: −3 Ebisu, −4 menu do Iruka, −5 pergaminho lendário. |
@@ -33,10 +33,10 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, busca, botões de raridade, "em casa", prioridade, sub-aba "Itens em casa" (até 12 listas com nome e descrição, em `sb_bag_presets_v1`) e hudzinho do hub. |
 | `src/ui/BuffText.tsx` | Pinta ganhos em verde e perdas em vermelho nos textos dos cards. |
 | `src/game/maps.ts` + `src/maps.css` | 4 mapas temáticos (`MAPS`, `MAP_BY_ID`), zonas e guardiões por mapa; CSS do seletor de mapas, seleção bloqueada e pausa. |
-| `src/game/unlockMissions.ts` | Missões de desbloqueio por shinobi (`UNLOCK_MISSIONS`, `LEGENDARY`). |
+| `src/game/unlockMissions.ts` | Missões de desbloqueio por shinobi (`UNLOCK_MISSIONS`, `LEGENDARY`) e cadeia das versões (`VERSION_MISSIONS`, campo `playWith`). `missingRequirements` inclui a versão anterior bloqueada. O spawn fica em `accountCandidates()` do `GameCanvas`. |
 | `src/game/account.ts` | Conta: iniciais, desbloqueados, selados, pesquisa e progresso por mapa (`isDifficultyUnlocked`, `markMapCompleted`). |
 | `src/game/enemyTiers.ts` | Tipos de inimigo e saque por HP/dificuldade. |
-| `src/scene/playerMotion.ts` | (Codex, EM ANDAMENTO) Movimento do jogador: direção pela câmera, diagonais normalizadas, pulo (Espaço, 0,54 s, 1,3 m), dash/deslize (Shift, 0,24 s, 2,6×, recarga 0,9 s, 0,14 s invulnerável), quadros de caminhada/arremesso do Naruto Academia. Faltam poses próprias de pulo/dash. |
+| `src/scene/playerMotion.ts` | (Codex, EM ANDAMENTO) Movimento do jogador: direção pela câmera, diagonais normalizadas, pulo (Espaço, 0,54 s, 1,3 m), dash/deslize (Shift, 0,24 s, 2,6×, recarga 0,9 s, 0,14 s invulnerável), quadros de caminhada/arremesso/pulo/dash do Naruto Academia. Pulo e dash têm prioridade sobre o estado de dano; squash/stretch no pulo e rastro de duas cópias no dash do jogador. Folhas por família e forma da versão. |
 | `src/scene/terrainArt.ts` + `public/assets/ground-materials-v1.png` | (Codex, EM ANDAMENTO) Materiais do chão e bordas do mapa; validação visual final pendente. |
 | `src/game/worldScale.ts` | (Codex) Escala do mundo: mapa de 160 m, limite, duração de zona (600 s), escala dos atores e alcance de ataques. |
 | `src/game/bijuu.ts` + `public/assets/bijuu-atlas-v1.png` + `public/assets/bijuu/` | Dados das nove bijū e texturas. Chōmei e Gyūki têm texturas próprias. Os outros sete continuam no atlas 3×3. |
@@ -204,7 +204,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - Pílula com 1,5%.
   - Recompensa de item com 1,8% (abre uma escolha).
 - **Eventos fixos no mapa**:
-  - **Plano do Shikamaru** (NPC com sprite do Shikamaru): até 3 vezes por zona; cada uma dá +1 kunai grátis ao derrotar o guardião (1 + planos, máx. 4). Sem penalidade.
+  - **Plano do Shikamaru** (NPC com sprite do Shikamaru): até 3 vezes por zona; cada uma dá +1 kunai grátis ao derrotar o guardião (1 + planos, máx. 4). Sem penalidade. As kunais caem num círculo de 3,4 m em volta do portal; o E coleta a kunai próxima antes de entrar no portal e o portal avisa enquanto houver kunai grátis no chão (E de novo entra). Correção de 06/11/2026: antes as kunais caíam em cima do portal, o E entrava nele e `clearZone` apagava as restantes (só 1 era coletada).
   - **Selo do guardião**: invoca o guardião da zona na hora; HP cresce com o tempo na zona.
   - Hooks de teste: `summonGuardian`, `shikamaru`, `defeatGuardian`, `guardian`.
   - **Ebisu/Iruka/Naruto Totem**: ver docs/01. Hooks: `ebisu`, `iruka`, `npcState`, `fillAllies`, `totem`, `damageTotem`, `killClones`, `collectDrops`.
@@ -304,7 +304,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 ## Integração atual de preparação, combate e arte
 
 - `BuildPlanner` separa lista com rolagem do detalhe. `TechniquePreview` desenha alvos de treino no Three.js usando os efeitos do jogo, o controlador de poses e a sequência de Gamabunta. O detalhe traz status, chance/dano crítico inicial e recarga. `SkillIcon` usa atlas de famílias, retratos Sábios e ícone de Gamabunta.
-- `playerMotion` serve jogador, ajudantes, shinobis inimigos, clones e a prévia. As folhas exclusivas de Naruto Academia e Neji cobrem pulo/dash. As demais formas combinam folhas direcionais com pose procedural onde ainda faltam quadros próprios.
+- `playerMotion` serve jogador, ajudantes, shinobis inimigos, clones e a prévia. Recebe o id da versão e usa as folhas da família na forma da versão. As folhas exclusivas de Naruto Academia, Sasuke Genin e Neji cobrem pulo/dash. As demais formas combinam folhas direcionais com pose procedural onde ainda faltam quadros próprios.
 - `enemyRenderer` mantém corpos, contornos e avisos instanciados. A seleção de quadro é UV por instância. Projéteis inimigos usam sprites compartilhados, limite simultâneo e teste de colisão pelo segmento percorrido por quadro.
 - `gamabunta.ts` escolhe as quatro poses, emite óleo pela boca e inicia ignição no ponto-alvo. A animação e o impacto compartilham o mesmo relógio. Referência: [Fire Release: Toad Oil Flame Bullet](https://naruto.fandom.com/wiki/Fire_Release%3A_Toad_Oil_Flame_Bullet).
 - `techniqueMerge.ts` produz uma técnica a partir de duas receitas; as fusões e combinações são persistidas com os respectivos estados em `CampaignSave`. Combinação reutiliza as duas resoluções originais. Fusão combina naturezas e afixos.

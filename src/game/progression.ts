@@ -1,5 +1,5 @@
 import { ITEM_BY_NAME, type Bonuses } from './catalog.ts';
-import { HEROES, HERO_BY_ID } from './heroes.ts';
+import { HEROES, HERO_BY_ID, familyOf } from './heroes.ts';
 import { FORMS, formAt } from './evolution.ts';
 import { applyPowerlevel, type Powerlevel } from './powerlevel.ts';
 import { pillBonuses } from './pills.ts';
@@ -34,12 +34,12 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
   const perm:Bonuses={regen:p('Chakra Curativo')*.2,area:p('Expansão')*.03,cool:p('Meditação de Chakra')*.04,pillCap:Math.min(2,p('Farmacologia Ninja')),revive35:Math.min(1,p('Selo de Ressurreição'))};
   for(const [key,value] of Object.entries(perm)){if(!value)continue;const k=key as keyof Bonuses;b[k]=(b[k]||0)+value;}
   const add=(key:keyof Bonuses)=>b[key]||0;
-  const forms=FORMS[heroId]??[],evolutions=forms.filter(f=>f.level>1&&f.level<=formAt(heroId,level).level).length;
+  const forms=FORMS[familyOf(heroId)]??[],evolutions=forms.filter(f=>f.level>1&&f.level<=formAt(heroId,level).level).length;
   const baseHp=Math.round(base.hp*(forms.length>1?.65:1.1));
   const armorByLevel=base.armor*(1+n*.01)+n*.25;
   return applyPowerlevel({
     sage:add('sage'),maxHp:Math.round((baseHp*(1+n*.03+evolutions*.25)+add('health')+bonusHp+p('Resistência')*8)*Math.max(.1,1+add('healthPct'))),
-    damage:base.damage*heroDamageScale(level)*(1+add('damage')+p('Treinamento')*.04)*(heroId==='gaara'?1+(armorByLevel+add('defense')+p('Couraça')*2)*.01:1),
+    damage:base.damage*heroDamageScale(level)*(1+add('damage')+p('Treinamento')*.04)*(familyOf(heroId)==='gaara'?1+(armorByLevel+add('defense')+p('Couraça')*2)*.01:1),
     armor:armorByLevel+add('defense')+p('Couraça')*2,
     crit:Math.max(0,base.crit+n*.0015+add('crit')+p('Precisão')*.01),critDamage:2.5+add('critDamage'),
     evasion:Math.min(.6,add('dodge')),regen:(base.regen+n*.04+add('regen'))*Math.max(0,1+add('regenMult')),luck:Math.floor(n/3)+add('luck')+p('Fortuna')*2,

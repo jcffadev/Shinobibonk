@@ -7,6 +7,15 @@
 - Bolsa da Missão ganha a sub-aba "Itens em casa": até 12 listas salvas com nome, descrição e ícones, com Nova lista (bolsa atual ou vazia), Aplicar, Em uso, Duplicar e Apagar (com confirmação). Substitui as 4 predefinições fixas e mantém a chave `sb_bag_presets_v1`; saves antigos com vagas vazias são convertidos ao abrir.
 - Validado no Edge headless: lista antiga convertida, criar/nomear/descrever/duplicar/aplicar/apagar e persistência após recarregar; carta de pílula, ficha, plano e barra com atual → novo; Katon e Suiton sem técnica do elemento. `tsc`, build, `verify-rules` e `verify-runtime` passaram.
 
+## Versões separadas do elenco, pulo/dash do Naruto Academia e kunais do guardião
+
+- **Versões separadas**: as 56 formas viraram personagens jogáveis próprios (24 famílias), com kit da fase, passiva e atributos próprios (versões avançadas +12% de HP/dano por passo, +1 armadura, passivas mais fortes). Ex.: Naruto Academia → Genin → Shippuden → Kyuubi. A versão não muda de forma dentro da run. Rasengan e Byakugou viraram técnicas compartilhadas; 25 técnicas novas únicas por família (Rendan Uzumaki, Rasenshuriken, Bijūdama, Espada Chidori, Flecha de Indra, Limbo, 128 Palmas…). Total: 97 técnicas.
+- **Cadeia de missões**: cada versão nova (`VERSION_MISSIONS`, campo `playWith`) só aparece para selar jogando com a versão anterior, no mapa/dificuldade da missão, depois dos abates e minutos. Cada passo é mais difícil que o anterior. O card mostra "MISSÃO DE VERSÃO" e o passo "Jogar com …"; o retrato do pré-requisito agora aparece no círculo.
+- **Saves**: o id base é a primeira versão (`naruto` = Naruto Academia); `sb_hero`, desbloqueados, selados e run salva seguem válidos sem migração.
+- **Pulo/dash do Naruto Academia**: a folha acrobática já existia; o estado de dano (0,23 s a cada golpe) tinha prioridade sobre pulo e dash e escondia os quadros no meio da horda. Agora pulo e dash vêm primeiro, com squash/stretch no pulo e rastro de duas cópias no dash.
+- **Kunais do guardião**: as kunais grátis (1 + planos do Shikamaru) caíam em cima do portal; o E checava o portal primeiro, entrava nele e `clearZone` apagava as restantes. Agora caem num círculo de 3,4 m, a coleta próxima tem prioridade e o portal avisa enquanto houver kunai grátis no chão.
+- Verificação: `tsc`, `vite build`, `verify-rules` (56 versões, cadeia, únicas por família) e `verify-runtime` (pulo/dash com dano, Naruto Genin com Gamabunta, 3 kunais coletadas antes do portal, missão de versão só com o Academia) passaram.
+
 ## Final Swarm crescente, pílulas só por escolha e altares por raridade
 
 - **Final Swarm**: o teto do swarm era cortado em 1.600 (já atingido aos 10 min), então a horda não triplicava; com build forte, o spawn ×3 perdia para o abate e a horda estabilizava perto de 300. Agora o teto é 1.600 × fator do swarm (×3, +25%/min) até `FINAL_SWARM.maxEnemies` = 8.000, o spawn repõe o teto em ~4 s (`refillSeconds`), até 120 por quadro, e os inimigos do swarm nascem a 14–28 m. Medido no Edge headless: +1 min → 6.094 vivos; +3 min → 8.000; matando tudo a cada 2 s a horda volta a ~1.800–2.000.
