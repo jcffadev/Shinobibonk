@@ -88,6 +88,16 @@ await page.locator('.shop-card').getByRole('button',{name:'Desbloquear',exact:fa
 assert.equal((await walletNow()).balance,beforeBuy-300);
 await page.getByRole('button',{name:'Reset ↺'}).click();assert.equal((await walletNow()).spent,0);assert.equal((await walletNow()).balance,beforeBuy+(afterVictory.spent));checks.push('Compra administrativa, filtros de crítico e reembolso do reset');
 await page.getByRole('button',{name:'Shinobis',exact:true}).click();await page.locator('.character-card').filter({hasText:'Hashirama'}).click();await start();
+await debug('clearEnemies');await debug('clearDrops');
+for(const [level,atlas,key] of [[1,'hashirama-walk-v1.png','w'],[20,'hashirama-20-walk-v1.png','s']]){
+ await debug('setLevel',level);
+ await page.keyboard.down(key);
+ await page.waitForFunction(name=>window.__shinobiTest.motion().atlas.endsWith(name),atlas);
+ await page.keyboard.up(key);
+}
+assert.equal((await state()).form,'Modo Sábio');
+await debug('setLevel',1);
+checks.push('Hashirama usa a folha direcional da forma atual, incluindo Modo Sábio');
 const ratio=await page.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.setCrit(-10);d.senjutsu(0);d.target(1.2);let previous=d.inspect().totalDamage;d.cast('Estacas Mokuton');const first=d.inspect().totalDamage-previous;d.grantItem('Selo de Senjutsu');previous=d.inspect().totalDamage;d.cast('Estacas Mokuton');return (d.inspect().totalDamage-previous)/first;});
 assert.ok(Math.abs(ratio-1.2)<1e-8);checks.push('Hashirama recebe exatamente +20% de dano após infusão Sábia');
 await page.keyboard.press('Escape');await page.getByRole('button',{name:'Salvar e sair',exact:true}).click();await page.getByRole('button',{name:'Shinobis',exact:true}).click();await page.locator('.character-card').filter({hasText:'Itachi'}).click();await start();

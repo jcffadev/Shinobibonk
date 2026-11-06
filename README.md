@@ -22,7 +22,7 @@ Atalhos locais:
 
 ## Estrutura
 
-O elenco atual tem 24 shinobis e 72 técnicas. Asuma tem retrato e folha de animação próprios. Todas as formas jogáveis participam do sistema de poses do jogador. A horda escala até 1.600 inimigos e o HUD exibe o total da simulação.
+O elenco atual tem 24 shinobis, 56 formas jogáveis com folhas direcionais de caminhada e 72 técnicas. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos e o HUD exibe o total da simulação.
 
 O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A [fila de pendências](docs/13-PENDENCIAS-PARA-CONTINUAR.md) e o [changelog](CHANGELOG.md) acompanham o trabalho.
 

@@ -3,9 +3,30 @@ import fs from 'node:fs';
 import { HEROES,skillPool,sandSynergy } from '../src/game/heroes.ts';
 import { calculateStats,rollCritical,difficultyAt } from '../src/game/progression.ts';
 import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
-import { formAt,portraitRegion } from '../src/game/evolution.ts';
+import { ASUMA_ATLAS,FORMS,formAt,portraitRegion } from '../src/game/evolution.ts';
+import { directionalArt } from '../src/game/directionalArt.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
 assert.equal(HEROES.length,24);
+const motionPairs = new Set();
+let motionForms = 0;
+for (const {id} of HEROES) {
+  const forms = FORMS[id] ?? [formAt(id,1)];
+  for (const {level} of forms) {
+    motionForms++;
+    if (id==='asuma'||(id==='naruto'&&level===1)) {
+      assert.ok(fs.existsSync('public'+(id==='asuma'?ASUMA_ATLAS:'/assets/naruto-academia-walk-v1.png')));
+      continue;
+    }
+    const sheet=directionalArt(id,level);
+    assert.ok(sheet && fs.existsSync('public'+sheet.path),`folha ausente: ${id} nível ${level}`);
+    const row = sheet.firstRow ?? 0;
+    assert.ok(row>=0 && row%2===0 && row+1<sheet.rows,`dupla frente/costas inválida: ${id} nível ${level}`);
+    const pair = `${sheet.path}:${row}`;
+    assert.ok(!motionPairs.has(pair),`folha compartilhando quadros entre formas: ${pair}`);
+    motionPairs.add(pair);
+  }
+}
+assert.equal(motionForms,56);
 assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,72);
 {// Fase da obra (06/11/2026): Naruto começa só com Kage Bunshin; Sapo no Clássico, Rasengan no fim da Parte I, Modo Sábio no Shippuden.
  const {HERO_BY_ID,PHASE_LEVELS,SHARED_TECHNIQUES}=await import('../src/game/heroes.ts');const lv=(id,name)=>HERO_BY_ID[id].techniques.find(t=>t.name===name)?.unlockLevel;
@@ -149,6 +170,6 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  const g=rollGrowth(0,HEROES.find(h=>h.id==='naruto').techniques[0],()=>0);assert.ok(g.growth.damage>=.3,'técnica de ataque sempre ganha dano');
  const PL=await import('../src/game/pills.ts');assert.deepEqual(Object.values(PL.PILL_RARITY_LEVELS),[1,2,3,4,5]);const pills={'Pílula do Soldado':8};PL.grantPill(pills,'Pílula do Soldado',5);assert.equal(pills['Pílula do Soldado'],10,'níveis por raridade respeitam o limite');
  assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Soldado':10}).physical-calculateStats('naruto',1).physical-1)<1e-9,'bônus recalculado só dos níveis');}
-const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
+const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,motionForms,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 
 

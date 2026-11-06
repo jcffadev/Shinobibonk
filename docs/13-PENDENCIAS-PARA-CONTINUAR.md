@@ -6,8 +6,8 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 `%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`; git em `C:\Program Files\Git\cmd\git.exe`).
 
 ## Fila do Codex
-- **IMPLEMENTADO:** poses base de caminhada, pulo, dash, ataque, dano e Ultimate em todas as formas jogáveis. Asuma tem atlas próprio e Naruto Academia mantém suas folhas. **PENDENTE:** substituir a deformação genérica por folhas direcionais dedicadas nas demais formas e animar os monstros.
-- **IMPLEMENTADO:** folhas direcionais para todas as formas do Time 7 e para Asuma. Próximos lotes: demais shinobis e evoluções, cada folha baseada no sprite estático da forma.
+- **IMPLEMENTADO** — folhas direcionais de caminhada nas 56 formas dos 24 shinobis jogáveis. Os 20 shinobis deste lote acrescentam 45 formas ao Time 7 e Asuma.
+- **PENDENTE** — expandir as folhas dedicadas de ataque, dano, Ultimate, pulo e dash por forma, e animar os monstros.
 - **IMPLEMENTADO:** fila de confirmação para itens da roleta, pílulas e habilidades reservadas para level-up, teto de quatro ofertas, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação da câmera por movimento do mouse.
 - **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
 - **Impactos e sons**: faltam integração e revisão. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (não publicado, licença não verificada): procurar outros sons depois, com licença livre verificada.
@@ -38,7 +38,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **Recalibração de atributos para todos os níveis** (não só até o 50).
 - **Sorte** — FEITO (06/11/2026): curva de raridade e chance de uma quarta carta com Sorte. Validar jogando.
 - **Roleta da Tsunade** — FEITO: entrega em fila, E aceita e V vende. Novos giros excluem pílulas; itens que ficarem no limite viram Ryu. Validar jogando.
-- **Animações**: levar a animação do Naruto (caminhada, diagonal, arremesso) para todos os shinobis com a skill `movimentar-shinobi`/`criar-arte-shinobibonk`; monstros correndo animados em direção ao jogador. Exige gerar arte (folhas de sprites) — o Claude Code não gera PNG de arte; fazer no Codex.
+- **Animações** — caminhada direcional concluída para o jogador. Expandir poses específicas de arremesso e de outras ações para todo o elenco e criar folhas de corrida dos monstros. Consulte as skills `movimentar-shinobi` e `criar-arte-shinobibonk`.
 
 ## Calibração com ponto de partida
 - O usuário quer um ponto inicial de calibração baseado no PokéBonk. Fonte permitida: wiki pública (https://pokebonk-wiki.wiki) e observação de vídeos/prints de gameplay. Não fazer engenharia reversa do aplicativo. Levantar: crescimento de técnicas por nível, upgrades, curva de nível/Treino, inimigos por minuto, HP/dano por zona.

@@ -4,7 +4,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Mapa de arquivos
 
-`directionalArt.ts` registra as folhas por shinobi e forma. O Time 7 tem caminhada com quatro quadros de frente e quatro de costas, com espelhamento em X. A forma estática em `portraitRegion` é a referência para gerar as poses. `terrainArt.ts` define a cadeia de montanhas fora da área jogável e o céu em gradiente. `choiceCount` concentra o teto de quatro ofertas. A lista da roleta exclui pílulas dos novos giros.
+`directionalArt.ts` registra as folhas por shinobi e nível da forma. Os 24 shinobis jogáveis têm caminhada com quatro quadros de frente e quatro de costas por forma, com espelhamento em X. A pose parada continua usando o sprite de `portraitRegion`, referência para a caminhada. Nas folhas que reúnem formas, `firstRow` aponta para o primeiro quadro de frente da dupla de fileiras. A textura é carregada e reutilizada por caminho durante a missão. `terrainArt.ts` define a cadeia de montanhas fora da área jogável e o céu em gradiente. `choiceCount` concentra o teto de quatro ofertas. A lista da roleta exclui pílulas dos novos giros.
 
 O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o estado. `playerPose.ts` ajusta pernas e braços nos UVs da forma atual e mantém a câmera independente. `evolution.ts` aponta o Asuma para `public/assets/asuma-motion-v1.png`, folha original 4×4. A fila de recompensas fica em `GameCanvas.tsx` e aparece em `ItemTradeDialog.tsx`. O snapshot separa o total de inimigos (`enemyCount`) dos marcadores limitados do mapa (`enemies`).
 
@@ -62,6 +62,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/style.css`, `src/run-ui.css`, `src/sealing.css` | Hub, HUD/ficha/cartas e ritual de selamento/AUTO. |
 | `public/assets/shinobi-roster-v2.png` | Retratos base do elenco (grade 5×5). |
 | `public/assets/shinobi-evolutions-v2.png` | Retratos das formas evoluídas (grade 6×5). |
+| `public/assets/shinobi-motion/*.png` | Folhas de caminhada dos 20 shinobis adicionados ao lote do Time 7 e Asuma. Quatro colunas por folha e duas fileiras por forma registrada. |
 | `public/assets/shinobis/*.svg` | Sprites SVG por shinobi/forma (`<id>-<nível>.svg`). |
 | `public/assets/environment-v2.png` | Árvores, rochas, portão, construções e objetos de evento. |
 | `public/assets/shinobi-sprites-atlas.png` | Atlas antigo; ainda usado para inimigos comuns. |

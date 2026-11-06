@@ -1,4 +1,4 @@
-type DirectionalSheet = { path: string; rows: number; cast?: boolean };
+type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
 const sheets: Record<string, DirectionalSheet> = {
   'naruto-10': { path: '/assets/naruto-classico-motion-v1.png', rows: 2 },
   'naruto-25': { path: '/assets/naruto-shippuden-motion-v1.png', rows: 3, cast: true },
@@ -9,8 +9,47 @@ const sheets: Record<string, DirectionalSheet> = {
   'sakura-1': { path: '/assets/sakura-classico-motion-v1.png', rows: 2 },
   'sakura-15': { path: '/assets/sakura-shippuden-motion-v1.png', rows: 2 },
   'sakura-30': { path: '/assets/sakura-byakugou-motion-v1.png', rows: 2 },
+  'madara-15': { path: '/assets/shinobi-motion/madara-15-walk-v1.png', rows: 2 },
+  'madara-30': { path: '/assets/shinobi-motion/madara-walk-v1.png', rows: 6, firstRow: 2 },
+  'hashirama-20': { path: '/assets/shinobi-motion/hashirama-20-walk-v1.png', rows: 2 },
+  'orochimaru-15': { path: '/assets/shinobi-motion/orochimaru-15-walk-v1.png', rows: 2 },
+  'shikamaru-15': { path: '/assets/shinobi-motion/shikamaru-15-walk-v1.png', rows: 2 },
+  'shikamaru-30': { path: '/assets/shinobi-motion/shikamaru-walk-v1.png', rows: 6, firstRow: 2 },
+  'temari-15': { path: '/assets/shinobi-motion/temari-15-walk-v1.png', rows: 2 },
+  'kankuro-1': { path: '/assets/shinobi-motion/kankuro-1-walk-v1.png', rows: 2 },
+  'kankuro-15': { path: '/assets/shinobi-motion/kankuro-15-walk-v1.png', rows: 2 },
+  'kankuro-30': { path: '/assets/shinobi-motion/kankuro-30-walk-v1.png', rows: 2 },
+};
+
+// Cada par é frente/costas para uma forma. A ordem é a mesma das fileiras no PNG.
+const rosterForms: Record<string, readonly number[]> = {
+  gaara: [1, 15, 30],
+  madara: [1, 15, 30],
+  hashirama: [1, 20],
+  kakashi: [1, 25],
+  itachi: [1, 15],
+  minato: [1, 15],
+  tsunade: [1, 15, 30],
+  jiraiya: [1, 20],
+  orochimaru: [1, 15],
+  lee: [1, 15, 30],
+  neji: [1, 15],
+  hinata: [1, 15, 30],
+  shikamaru: [1, 15, 30],
+  temari: [1, 15],
+  tenten: [1, 15],
+  pain: [1],
+  tobirama: [1],
+  guy: [1, 15, 30],
+  kushina: [1],
 };
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
-  return sheets[`${hero}-${formLevel}`];
+  const custom = sheets[`${hero}-${formLevel}`];
+  if (custom) return custom;
+  const levels = rosterForms[hero];
+  if (!levels) return;
+  const form = levels.indexOf(formLevel);
+  if (form < 0) return;
+  return { path: `/assets/shinobi-motion/${hero}-walk-v1.png`, rows: levels.length * 2, firstRow: form * 2 };
 }

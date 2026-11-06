@@ -1,16 +1,16 @@
 # Personagens, NPCs, cronologia e roadmap
 
 ## Personagens existentes no protótipo
-**IMPLEMENTADO** em `src/game/heroes.ts`: **22 shinobis jogáveis** e selecionáveis no hub, todos também possíveis mega elites e aliados:
+**IMPLEMENTADO** em `src/game/heroes.ts` — **24 shinobis jogáveis** na seleção do hub:
 
-Naruto, Gaara, Madara, Hashirama, Sasuke, Sakura, Kakashi, Itachi, Minato, Tsunade, Jiraiya, Orochimaru, Rock Lee, Neji, Hinata, Shikamaru, Temari, Tenten, Pain, Tobirama, Kankuro e Might Guy.
+Naruto, Gaara, Madara, Hashirama, Sasuke, Sakura, Kakashi, Itachi, Minato, Tsunade, Jiraiya, Orochimaru, Rock Lee, Neji, Hinata, Shikamaru, Temari, Tenten, Pain, Tobirama, Kankuro, Might Guy, Asuma e Kushina.
 
 - **Ficha de cada um**: aldeia (Folha, Areia, Som, Chuva; clãs Uchiha/Hyuga/Nara contam como Folha), atributos base, passiva com bônus, 4 técnicas e Ultimate.
 - **Elenco aberto**: não há bloqueio por selamento permanente; todos já estão liberados no protótipo.
 - **Evoluções visuais por nível** (`src/game/evolution.ts`): Naruto Academia → Clássico (10) → Shippuden (25) → Manto da Kyuubi (50). Os outros trocam aos 15/20/25/30 conforme o personagem; Pain e Tobirama têm uma forma só. Cada evolução dá +25% do HP base.
 - **Passivas com regra especial no combate**: Naruto (dano por HP perdido), Gaara (armadura vira dano), Hashirama (bônus Sábio). As demais são bônus de atributo.
 - **Guardiões por zona** (`src/game/missions.ts`): zona 1 Lee/Neji/Temari; zona 2 Kankuro/Kakashi/Orochimaru; zona 3 Gaara/Hashirama/Madara/Pain.
-- **Arte**: retratos e sprites são provisórios (atlas PNG e SVGs gerados), sem animação por quadro.
+- **Arte** — as 56 formas jogáveis têm caminhada por quadros. Cada forma usa seu próprio sprite estático como referência de roupa, cores e acessórios.
 
 ## NPCs e apoios
 Shisui: vender/esquecer pílulas e recalcular atributos; Orochimaru: NPC de pacto/risco, não item; Guy: treinamento; sapo sábio: bênção; Ichiraku: fusão de habilidades (planejado). **No código atual** existem como evento: Maldição de Orochimaru, Bênção de Tsunade, **Sharingan de Kakashi** (copia 1 item da bolsa), **Barraca Ichiraku** (esquecer pílulas/técnicas por Ryu; a fusão continua pendente), Caça-níquel (roleta) e Mercador de armas. Shisui, Guy, sapo sábio e Kabuto **não estão implementados**. Apoios possíveis: Sakura, Sasuke, Shikamaru, Neji, Temari, Kankuro, Hinata, Rock Lee e outros, cada qual com buff único e golpe auxiliar. Kabuto/Edo Tensei: tema de encontros de selamento.

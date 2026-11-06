@@ -33,7 +33,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 ## Implementado na base atual
 
-- **Movimento e combate:** poses em todas as formas jogáveis, folhas dedicadas para Asuma e Naruto Academia, inclinação baixa da câmera com proteção de altura sobre o terreno.
+- **Movimento e combate** — caminhada em quatro direções nas 56 formas jogáveis dos 24 shinobis, com quadros próprios por forma. Pulo, dash e combate usam as poses disponíveis. A câmera mantém a proteção de altura sobre o terreno.
 - **Contagem da horda:** o HUD lê o total real de inimigos vivos e o minimapa mantém sua amostragem separada.
 - **Recompensas:** a fila de itens da Tsunade pede E para pegar ou V para vender. Habilidades e pílulas são escolhas de level-up. O máximo de cartas de recompensa é quatro, inclusive ao banir. A sinergia conta o ajudante de mesmo nome do jogador quando recrutado.
 

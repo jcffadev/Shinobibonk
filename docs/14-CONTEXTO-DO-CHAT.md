@@ -111,3 +111,13 @@ Mover o mouse gira e inclina a câmera durante a partida. Clique direito fixa o 
 **Resposta**
 
 O primeiro lote foi publicado no commit `729749a`: Asuma, animações base, sinergia, contador da horda e registro do chat. O lote seguinte cobre Time 7, regras das recompensas e câmera. A [fila](13-PENDENCIAS-PARA-CONTINUAR.md) guarda as folhas dos demais shinobis e formas, os testes de desempenho com a horda cheia, HUD, bijūs, efeitos e áudio.
+
+## Caminhada direcional de todo o elenco
+
+**Pedido**
+
+> Faça de todos
+
+**Resposta**
+
+Integrei as 45 formas dos 20 shinobis restantes. Os 24 jogáveis agora têm folhas de caminhada nas 56 formas, com quatro quadros de frente e quatro de costas por forma e espelhamento para a esquerda. Cada folha segue o sprite estático correspondente. A compilação, a verificação de cobertura das 56 formas e os 30 testes de navegador passaram. A [fila](13-PENDENCIAS-PARA-CONTINUAR.md) registra as animações de ação que ainda precisam de folhas próprias.

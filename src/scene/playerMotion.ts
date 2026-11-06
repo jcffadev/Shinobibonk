@@ -113,7 +113,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (useDirection && directionMap && directionSheet) {
         const frame = directedCast ? Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4))
           : Math.floor(stepTime * 10) % 4;
-        const row = directedCast ? 2 : backwardView ? 1 : 0;
+        const row = directedCast ? 2 : (directionSheet.firstRow ?? 0) + Number(backwardView);
         const flip = directedCast ? mirror : leftward;
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
         directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
@@ -121,7 +121,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const usesSheet = useAsuma || useDirection || !!casting || !!walking;
       posePath = useDirection ? directionSheet!.path : '';
       sprite.material.map = useAsuma ? asuma : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
-      sprite.material.alphaTest = usesSheet || directionSheet ? .55 : .18;
+      sprite.material.alphaTest = usesSheet ? .55 : .18;
       const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? .07 : 0;
       const lift = state === 'jump' ? .095 : state === 'dash' ? .04 : 0;
       const reach = state === 'attack' ? Math.sin(Math.PI * attack / (throwingWeapon ? .25 : .22)) * .11

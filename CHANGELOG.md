@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Caminhada direcional de todo o elenco
+
+- Adiciona folhas direcionais às 45 formas dos 20 shinobis restantes. O elenco de 24 shinobis passa a ter 56 formas com caminhada por quadros, baseada na arte de repouso de cada forma.
+- O jogo escolhe a dupla de fileiras da forma ativa e espelha o movimento para a esquerda. A pose parada conserva o sprite estático.
+
 ## Folhas do Time 7, terreno e regras de oferta
 
 - Integra folhas direcionais de caminhada ao Naruto Clássico, Shippuden e Manto da Kyuubi, e às três formas de Sasuke e Sakura. As folhas de Sasuke e Sakura seguem a arte estática de cada forma. A Sakura inicial mantém o cabelo longo, traje da Academia e cores ao começar a caminhar.
