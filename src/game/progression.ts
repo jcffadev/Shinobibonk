@@ -40,9 +40,15 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
 }
 /** Escala das missões sobre a base Genin (o que é salvo no debug vale como Genin e é multiplicado por isto). */
 export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6};
+/** Crescimento por nível do shinobi é LINEAR (+3% dano/HP por nível): o nível passa de 1000 (referência PokéBonk); o dano massivo vem de técnicas, projéteis, críticos e itens. */
+/** Escala dos inimigos com o tempo da run. Valores provisórios; o debug multiplica por cima. */
+export const ENEMY_SCALING={hpPerMinute:1.1,damagePerMinute:1.05,maxEnemies:1400,minSpawnInterval:.03,armorPerMinute:.015,maxArmor:.6};
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1){
   const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60;
-  return {hp:tier*(1+minutes*.22)*curse,damage:tier*(1+minutes*.15)*curse,speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,spawnInterval:Math.max(.2,.7/(tier*(1+minutes*.12))),cap:Math.min(180,Math.floor(70+minutes*8+(tier-1)*20))};
+  // Escala exponencial (pedido do usuário, 06/11/2026): HP e dano dos inimigos crescem a cada minuto, a horda chega a ~1400
+  // e os inimigos ganham resistência (armor = fração do dano bloqueada) até forçar o jogador a avançar de zona.
+  const S=ENEMY_SCALING;
+  return {hp:tier*(1+minutes*.22)*Math.pow(S.hpPerMinute,minutes)*curse,damage:tier*(1+minutes*.15)*Math.pow(S.damagePerMinute,minutes)*curse,speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,spawnInterval:Math.max(S.minSpawnInterval,.7/(tier*(1+minutes*.3))),cap:Math.min(S.maxEnemies,Math.floor((70+minutes*14+minutes*minutes*1.1)*(.85+tier*.15))),armor:Math.min(S.maxArmor,minutes*S.armorPerMinute)};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}
 export function rollCritical(chance:number,criticalMultiplier=2.5,rng=Math.random):{tier:0|1|2;multiplier:number}{

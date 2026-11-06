@@ -18,7 +18,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - Testes atualizados ao trabalho do Codex: o selamento espera o ritual terminar (navegador de teste roda a poucos FPS); vitória por gancho `finishMission` (a missão agora termina no portal de saída); saída da partida pela pausa (Esc → Salvar e sair).
 
 ## Pedidos do usuário em 06/11/2026 (PENDENTES)
-- **Escala do jogo** (referência: hordas de até ~1400 inimigos, danos de milhões no fim): dano do shinobi crescendo de forma exponencial, HP dos monstros subindo, hordas crescendo com o tempo, inimigos ficando mais fortes e resistentes até forçar o jogador a pular de zona.
+- **Escala do jogo** — FEITO em parte: inimigos exponenciais com o tempo, resistência crescente e hordas até 1400 (`ENEMY_SCALING`). FALTA: crescimento grande do dano pelas técnicas (ex.: +X% de dano por nível de técnica, mais projéteis), dano megacrítico, níveis de "Treino" após acabarem os upgrades (referência do vídeo: nível 1254, dano +2484%, técnicas Nv. 10 com +300%/nível). Referência original: dano do shinobi crescendo de forma exponencial, HP dos monstros subindo, hordas crescendo com o tempo, inimigos ficando mais fortes e resistentes até forçar o jogador a pular de zona.
 - **Recalibração de atributos para todos os níveis** (não só até o 50).
 - **Sorte**: quase não afeta cartas e pílulas; buffar a chance de vir mais coisas (RNG muito rígido).
 - **Roleta da Tsunade**: nerfar e corrigir a entrega dos bônus (o usuário viu bônus não entregues).

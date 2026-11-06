@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2026-11-06 — escala dos inimigos e hordas
+- `difficultyAt` (`progression.ts`): HP dos inimigos ×1,10 por minuto e dano ×1,05 por minuto (além do crescimento linear), resistência a dano de +1,5% por minuto até 60% (`armor`, somada à defesa do tier), teto de inimigos até 1400 e spawn mais rápido (mín. 0,03 s). Constantes em `ENEMY_SCALING`. Ex. Genin: 10 min = HP ×8,3, 320 inimigos; 30 min = HP ×133, 1400 inimigos, 45% de resistência.
+- Crescimento por nível do shinobi segue linear (+3%): o nível passa de 1000 (referência do PokéBonk); o dano massivo deve vir de técnicas, projéteis, críticos e itens.
+
 ## 2026-11-06 — elemento base e bônus de natureza
 - Shinobis aprendem só Neutro + elemento base (afinidade) + elementos do próprio kit (+ Sábio para usuários do Modo Sábio); o Naruto deixa de aprender todos os elementos.
 - Técnicas do elemento base causam ×1,5 de dano (`NATURE_BONUS` em `heroes.ts`, aplicado em `itemDamageBonus`); o Plano de build mostra o bônus.
