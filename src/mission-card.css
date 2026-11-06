@@ -24,3 +24,4 @@
 .ms-locked-map small{display:block;font-size:13px;font-weight:600;opacity:.85;margin-top:6px}
 .ms-unlocks .mc{margin-top:6px;width:280px}
 .cs-card{position:relative}.cs-card:hover{z-index:30}
+.cs-mission-float{position:fixed;width:280px;z-index:500;pointer-events:none}

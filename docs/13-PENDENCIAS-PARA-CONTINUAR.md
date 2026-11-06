@@ -27,7 +27,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - "EXP necessária por nível" do debug só vale a partir do próximo nível.
 - Debug: `setAllUnlocked` (account.ts) existe, mas não há botão "desbloquear tudo / resetar conta" no painel F9.
 - Missões de desbloqueio com requisitos de história e abates: regras e UI prontas, **não testadas numa run real** até o shinobi surgir (testes automáticos usam `?test`, que não gera o Shinobi para selar). Testar sem `?test` ou criar hook.
-- Card de missão em hover pode ser cortado pela rolagem da grade de personagens (o painel de detalhes mostra o card completo).
+- Alvo fixo (botão direito): implementado; falta tecla remapeável própria e indicador no HUD.
 
 ## Balanceamento (todos os valores são provisórios)
 - Itens (94), pílulas (19), passivas (25), sinergias/combos, afinidade, setups, Senjutsu (25% · 1,5×), roleta, tiers de inimigo (elite 95 HP/30% defesa; mega 420 HP/55%), lamen de cura (15%/35%), abates e minutos das missões, custo da roleta.

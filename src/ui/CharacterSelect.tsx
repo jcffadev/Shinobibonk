@@ -1,5 +1,8 @@
 import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
+/** Ordem do elenco: jogáveis primeiro; bloqueados pela dificuldade da missão (Genin → Kage) e Lendários por último. */
+const DIFF_RANK: Record<string, number> = { Genin: 1, Chunin: 2, Jonin: 3, Kage: 4 };
+const unlockOrder = (id: string) => isHeroPlayable(id) ? 0 : (DIFF_RANK[UNLOCK_MISSIONS[id]?.difficulty ?? 'Genin'] ?? 1) * 10 + (LEGENDARY.has(id) ? 50 : 0);
 /** Símbolo da vila mostrado sobre a silhueta do shinobi bloqueado. */
 const VILLAGE_MARK: Record<string, string> = { 'Vila da Folha': '木', 'Vila da Areia': '砂', 'Vila do Som': '音', 'Vila da Chuva': '雨' };
 import { isHeroPlayable } from '../game/account';
@@ -48,7 +51,10 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
       && (!filters.village || h.village === filters.village)
       && (!filters.element || heroAffinity(h.id) === filters.element)
       && (!filters.org || groups.includes(filters.org));
-  }), [filters]);
+  }).sort((a, b) => unlockOrder(a.id) - unlockOrder(b.id)), [filters]);
+  // Card da missão em camada fixa (por cima de tudo, sem ser cortado pela grade).
+  const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
+  const showMission = (id: string, el: HTMLElement) => { if (isHeroPlayable(id) || !UNLOCK_MISSIONS[id]) { setHover(null); return; } const r = el.getBoundingClientRect(); const w = 280, x = Math.min(window.innerWidth - w - 8, Math.max(8, r.left + r.width / 2 - w / 2)); const below = r.bottom + 330 < window.innerHeight; setHover({ id, x, y: below ? r.bottom + 6 : Math.max(8, r.top - 330) }); };
 
   return <div className="cs-root">
     <div className="cs-filters" role="search">
@@ -74,7 +80,7 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
         return <button key={entry.id} type="button" aria-pressed={selected}
           title={isHeroPlayable(entry.id) ? `${entry.name} · ${entry.village} · ${element}${groups.length ? ' · ' + groups.join(', ') : ''}` : undefined}
           className={`character-card cs-card ${selected ? 'selected' : ''} ${isHeroPlayable(entry.id) ? '' : 'cs-locked'} ${LEGENDARY.has(entry.id) ? 'cs-legendary' : ''}`} style={{ ['--hero' as string]: entry.color }}
-          onClick={() => onSelect(entry.id)}>
+          onClick={() => onSelect(entry.id)} onMouseEnter={(e) => showMission(entry.id, e.currentTarget)} onMouseLeave={() => setHover(null)} onFocus={(e) => showMission(entry.id, e.currentTarget)} onBlur={() => setHover(null)}>
           <span className="cs-portrait">
             <span className="cs-initials" aria-hidden="true">{initials(entry.name)}</span>
             <HeroPortrait id={entry.id} />
@@ -83,11 +89,12 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
           </span>
           {LEGENDARY.has(entry.id) && <i className="cs-legend-tag">LENDÁRIO</i>}
           <b>{!isHeroPlayable(entry.id) && LEGENDARY.has(entry.id) ? '???' : entry.name}</b>
-          {!isHeroPlayable(entry.id) && UNLOCK_MISSIONS[entry.id] && <span className="cs-mission-pop" role="tooltip"><MissionCard id={entry.id} compact /></span>}
+          
           <small className="cs-village">{shortVillage(entry.village)}</small>
           {selected && <i className="cs-picked">SELECIONADO</i>}
         </button>;
       })}
+      {hover && <div className="cs-mission-float" style={{ left: hover.x, top: hover.y }} role="tooltip"><MissionCard id={hover.id} compact /></div>}
       {list.length === 0 && <p className="cs-empty">Nenhum shinobi combina com esses filtros. <button type="button" onClick={() => setFilters(EMPTY)}>Limpar filtros</button></p>}
     </div>
   </div>;

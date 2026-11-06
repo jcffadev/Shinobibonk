@@ -333,7 +333,15 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Se o alvo deixa de existir (evento usado, inimigo derrotado, recompensa coletada), a rota é limpa com aviso.
     const ROUTE_ARRIVE=3;
     /** Shinobi para selar: no máximo 1 por run (o 1º encontro especial). Em testes automáticos (?test) não surge sozinho. */
-    let forceElite=false,nextAccountAt=0;const accountTried=new Set<string>();const testRun=import.meta.env.DEV&&new URLSearchParams(location.search).has('test');
+    let forceElite=false,nextAccountAt=0,rightDownX=0,rightDownY=0;
+    // ───── Alvo fixo (clique com o botão direito, sem arrastar) ─────
+    // Prioridade: guardião/chefe > Mega Elite / Shinobi para selar > elite amarelo > maior HP, entre os inimigos visíveis até 30 m.
+    // As técnicas miram o alvo fixo quando ele está no alcance; clicar de novo solta. Arrastar continua girando a câmera.
+    let lockedTarget:Enemy|null=null;
+    const targetMarker=new THREE.Mesh(new THREE.RingGeometry(.9,1.15,32),new THREE.MeshBasicMaterial({color:'#ff3355',transparent:true,opacity:.9,side:THREE.DoubleSide,depthWrite:false}));targetMarker.rotation.x=-Math.PI/2;targetMarker.visible=false;
+    const targetPriority=(e:Enemy)=>e.guardian||e.boss?4:e.megaElite||e.account?3:e.elite?2:1;
+    function toggleTargetLock(){if(lockedTarget){lockedTarget=null;eventToast='Alvo solto.';return;}const visible=enemyList.filter(e=>!e.clone&&viewFrustum.containsPoint(e.sprite.position)&&Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<30);visible.sort((a,b)=>targetPriority(b)-targetPriority(a)||b.hp-a.hp);lockedTarget=visible[0]??null;eventToast=lockedTarget?'Alvo fixado: '+(lockedTarget.heroId?HERO_BY_ID[lockedTarget.heroId]?.name??'inimigo':lockedTarget.elite?'elite':'inimigo')+' (clique direito solta)':'Nenhum inimigo visível para fixar.';}
+    function updateTargetMarker(){if(lockedTarget&&!enemyList.includes(lockedTarget))lockedTarget=null;if(!targetMarker.parent)scene.add(targetMarker);targetMarker.visible=!!lockedTarget;if(lockedTarget){const p=lockedTarget.sprite.position;targetMarker.position.set(p.x,terrainHeight(p.x,p.z)+.12,p.z);targetMarker.rotation.z+=.04;const s=lockedTarget.megaElite?1.6:lockedTarget.elite?1.25:1;targetMarker.scale.set(s,s,s);}}const accountTried=new Set<string>();const testRun=import.meta.env.DEV&&new URLSearchParams(location.search).has('test');
     /** Frustum da câmera no último quadro: o mapa só mostra o que está/esteve na tela. */
     const viewFrustum=new THREE.Frustum();
     type RouteTarget={kind:RouteView['kind'];id:string;name:string;x:number;z:number};
@@ -383,9 +391,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function onToggleAuto(){if(enabledRef.current&&!defeated&&!victory)autoUlt=!autoUlt;}window.addEventListener('shinobi-toggle-auto-ult',onToggleAuto);
     const onKeyUp=(e:KeyboardEvent)=>{const raw=e.key.toLowerCase();keys.delete(translateKey(raw)||raw);keys.delete(raw);};
     const onBlur=()=>keys.clear();
-    const onDown=(e:PointerEvent)=>{if(e.button===2){drag=true;lastX=e.clientX;lastY=e.clientY;container.setPointerCapture(e.pointerId);}};
+    const onDown=(e:PointerEvent)=>{if(e.button===2){drag=true;lastX=e.clientX;lastY=e.clientY;rightDownX=e.clientX;rightDownY=e.clientY;container.setPointerCapture(e.pointerId);}};
     const onMove=(e:PointerEvent)=>{if(!drag)return;{const S=currentSettings();yaw-=(e.clientX-lastX)*.006*S.mouseSensitivity;pitch=Math.max(.08,Math.min(1.48,pitch+(e.clientY-lastY)*.004*S.mouseSensitivity*(S.invertY?-1:1)));}lastX=e.clientX;lastY=e.clientY;};
-    const onUp=()=>{drag=false;};const onContext=(e:MouseEvent)=>e.preventDefault();
+    const onUp=(e:PointerEvent)=>{if(e.button===2&&Math.hypot(e.clientX-rightDownX,e.clientY-rightDownY)<6)toggleTargetLock();drag=false;};const onContext=(e:MouseEvent)=>e.preventDefault();
     const onWheel=(e:WheelEvent)=>{zoom=Math.max(10,Math.min(32,zoom+Math.sign(e.deltaY)*1.6));resize();};
     const onPing=(event:Event)=>{const p=(event as CustomEvent<{x:number;z:number}>).detail;if(p&&Number.isFinite(p.x)&&Number.isFinite(p.z))setPingRoute(p.x,p.z);};window.addEventListener('shinobi-ping',onPing);
     // Mapa: clique num ícone visto → rota (mesmo id de novo ou id null limpa).
@@ -525,7 +533,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function castTechnique(t:Technique,origin:THREE.Vector3,g:SkillGrowth,ally=false,instant=false){if(t.setup)return ally?false:activateSetup(t,g);
       // Modo Sábio: taijutsu corpo a corpo do jogador vira golpe em área ao redor (raio ×1,8, escala com área).
       const sageArea=!ally&&sageModeActive()&&t.school==='Taijutsu'&&t.shape==='Corpo a corpo';
-      const range=t.range*(sageArea?1.8:1)*(1+Math.min(1,(level-1)*.005))*Math.sqrt(stats.area*(1+g.area));const target=enemyList.filter(e=>Math.hypot(e.sprite.position.x-origin.x,e.sprite.position.z-origin.z)<=range).sort((a,b)=>a.sprite.position.distanceToSquared(origin)-b.sprite.position.distanceToSquared(origin))[0];if(!target)return false;const direction=target.sprite.position.clone().sub(origin);direction.y=0;direction.normalize();
+      const range=t.range*(sageArea?1.8:1)*(1+Math.min(1,(level-1)*.005))*Math.sqrt(stats.area*(1+g.area));const target=(lockedTarget&&enemyList.includes(lockedTarget)&&Math.hypot(lockedTarget.sprite.position.x-origin.x,lockedTarget.sprite.position.z-origin.z)<=range)?lockedTarget:enemyList.filter(e=>Math.hypot(e.sprite.position.x-origin.x,e.sprite.position.z-origin.z)<=range).sort((a,b)=>a.sprite.position.distanceToSquared(origin)-b.sprite.position.distanceToSquared(origin))[0];if(!target)return false;const direction=target.sprite.position.clone().sub(origin);direction.y=0;direction.normalize();
       if(['Projétil','Em V','Onda'].includes(t.shape)){const count=t.shape==='Em V'?2:1;/* Projétil fracionário (sinergia da Folha, afinidade): chance por disparo de +1. */const chance=stats.projectileChance,projectiles=Math.floor(stats.projectiles)+Math.floor(chance)+(Math.random()<chance%1?1:0);for(let i=0;i<Math.min(12,count+projectiles-1);i++){const spread=t.shape==='Em V'?(i%2?.2:-.2):(i-(projectiles-1)/2)*.1,aim=direction.clone().applyAxisAngle(new THREE.Vector3(0,1,0),spread),object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(origin);object.visible=!hiddenEffects;scene.add(object);shots.push({mesh:object,direction:aim,remaining:range,range,speed:(t.name.includes('Bunshin')?6:10)*stats.projectileSpeed,radius:(t.shape==='Onda'?.85:.4)*Math.sqrt(stats.area*(1+g.area)),technique:t,origin:origin.clone(),hit:new Set(),growth:g,ally,bounces:!ally&&(t.shape==='Projétil'||t.shape==='Em V')?stats.bounce:0});}}
       else{const center=['Área'].includes(t.shape)?target.sprite.position:origin,radius=(t.shape==='Área'?1.2:t.shape==='Órbita'?1.7:range)*Math.sqrt(stats.area*(1+g.area));
         // Golpes e lançamentos sem projétil têm um preparo curto até o acerto, reduzido pela velocidade de projétil.
@@ -575,7 +583,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         }
         if(defeated)break;
       }
-      bossCombat.updateEffects(dt);
+      bossCombat.updateEffects(dt);updateTargetMarker();
       // Aliados seguem em formação, atacam automaticamente e fornecem regeneração de suporte.
       allyTimer-=dt;if(!defeated&&!sealing)for(const id of allies)gainAffinity(id,dt*AFFINITY_RULES.perSecond);
       for(let i=0;i<allyActors.length;i++){const ally=allyActors[i],angle=i*Math.PI*.8+1,goal=new THREE.Vector3(player.position.x+Math.cos(angle)*2.6,0,player.position.z+Math.sin(angle)*2.6);dir.copy(goal).sub(ally.position);dir.y=0;if(dir.length()>12)ally.position.copy(goal);else if(dir.length()>.25)ally.position.addScaledVector(dir.normalize(),Math.min(speed+2,dir.length()/dt)*dt);ally.position.y=terrainHeight(ally.position.x,ally.position.z)+1.2;
