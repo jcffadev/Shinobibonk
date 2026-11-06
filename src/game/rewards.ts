@@ -4,12 +4,12 @@
 
 export type RunDifficulty = 'Genin' | 'Chunin' | 'Jonin' | 'Kage';
 /** Recorte do WorldSnapshot usado na fórmula (mantém o módulo puro e testável). */
-export type RunResult = { elapsed: number; kills: number; level: number; zone: number; victory: boolean; allies: readonly string[] };
+export type RunResult = { elapsed: number; kills: number; level: number; zone: number; victory: boolean; bijuuReward?: number; allies: readonly string[] };
 export type LamenSource = { id: string; label: string; detail: string; value: number };
 export type LamenReward = { total: number; subtotal: number; multiplier: number; sources: LamenSource[] };
 
 export const LAMEN_RULES = {
-  perMinute: 20,          // por minuto completo sobrevivido (máx. 10 min = 200)
+  perMinute: 20,          // por minuto completo sobrevivido (máx. 30 min = 600)
   killsPerLamen: 15,      // 1 Lamen a cada 15 abates
   killCap: 200,           // teto da parcela de abates
   perLevel: 4,            // por nível acima do 1
@@ -21,7 +21,7 @@ export const LAMEN_RULES = {
 
 export function runLamens(result: RunResult, mission: RunDifficulty): LamenReward {
   const r = LAMEN_RULES;
-  const minutes = Math.floor(Math.max(0, Math.min(600, result.elapsed)) / 60);
+  const minutes = Math.floor(Math.max(0, Math.min(1800, result.elapsed)) / 60);
   const kills = Math.max(0, Math.floor(result.kills));
   const levels = Math.max(0, Math.floor(result.level) - 1);
   const zones = Math.max(0, Math.min(3, Math.floor(result.zone)) - 1);
@@ -36,5 +36,7 @@ export function runLamens(result: RunResult, mission: RunDifficulty): LamenRewar
   ];
   const subtotal = sources.reduce((sum, s) => sum + s.value, 0);
   const multiplier = r.difficulty[mission] ?? 1;
-  return { total: Math.round(subtotal * multiplier), subtotal, multiplier, sources };
+  const bijuuReward=result.victory?Math.max(0,result.bijuuReward??0):0;
+  if(bijuuReward) sources.push({id:'bijuu',label:'Bijū derrotada',detail:'Bônus do portal, já ajustado pela dificuldade',value:bijuuReward});
+  return { total: Math.round(subtotal * multiplier)+bijuuReward, subtotal, multiplier, sources };
 }

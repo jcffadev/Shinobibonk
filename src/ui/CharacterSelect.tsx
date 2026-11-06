@@ -47,10 +47,11 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
   const active = Object.values(filters).some(Boolean);
   const list = useMemo(() => HEROES.filter(h => {
     const groups = heroGroups(h.id);
-    return matchesSearch(h.name + ' ' + h.village + ' ' + groups.join(' '), filters.search)
+    const known = isHeroPlayable(h.id);
+    return matchesSearch(known ? h.name + ' ' + h.village + ' ' + groups.join(' ') : h.village, filters.search)
       && (!filters.village || h.village === filters.village)
-      && (!filters.element || heroAffinity(h.id) === filters.element)
-      && (!filters.org || groups.includes(filters.org));
+      && (!filters.element || known && heroAffinity(h.id) === filters.element)
+      && (!filters.org || known && groups.includes(filters.org));
   }).sort((a, b) => unlockOrder(a.id) - unlockOrder(b.id)), [filters]);
   // Card da missão em camada fixa (por cima de tudo, sem ser cortado pela grade).
   const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
@@ -76,25 +77,26 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
     </div>
     <div className="character-grid cs-grid">
       {list.map(entry => {
-        const element = heroAffinity(entry.id), groups = heroGroups(entry.id), selected = entry.id === selectedId;
+        const element = heroAffinity(entry.id), groups = heroGroups(entry.id), selected = entry.id === selectedId, playable = isHeroPlayable(entry.id);
         return <button key={entry.id} type="button" aria-pressed={selected}
           title={isHeroPlayable(entry.id) ? `${entry.name} · ${entry.village} · ${element}${groups.length ? ' · ' + groups.join(', ') : ''}` : undefined}
           className={`character-card cs-card ${selected ? 'selected' : ''} ${isHeroPlayable(entry.id) ? '' : 'cs-locked'} ${LEGENDARY.has(entry.id) ? 'cs-legendary' : ''}`} style={{ ['--hero' as string]: entry.color }}
           onClick={() => onSelect(entry.id)} onMouseEnter={(e) => showMission(entry.id, e.currentTarget)} onMouseLeave={() => setHover(null)} onFocus={(e) => showMission(entry.id, e.currentTarget)} onBlur={() => setHover(null)}>
           <span className="cs-portrait">
-            <span className="cs-initials" aria-hidden="true">{initials(entry.name)}</span>
-            <HeroPortrait id={entry.id} />
+            <span className="cs-initials" aria-hidden="true">{playable?initials(entry.name):null}</span>
+            <HeroPortrait id={entry.id} decorative={!playable} />
             {!isHeroPlayable(entry.id) && <span className="cs-village-mark" aria-hidden="true">{VILLAGE_MARK[entry.village] ?? '忍'}</span>}
-            <span className="cs-element" style={{ ['--el' as string]: ELEMENT_COLOR[element] }} title={`Elemento: ${element}`}>{ELEMENT_GLYPH[element]}</span>
+            {playable&&<span className="cs-element" style={{ ['--el' as string]: ELEMENT_COLOR[element] }} title={`Elemento: ${element}`}>{ELEMENT_GLYPH[element]}</span>}
           </span>
-          {LEGENDARY.has(entry.id) && <i className="cs-legend-tag">LENDÁRIO</i>}
-          <b>{!isHeroPlayable(entry.id) && LEGENDARY.has(entry.id) ? '???' : entry.name}</b>
+          {playable && LEGENDARY.has(entry.id) && <i className="cs-legend-tag">LENDÁRIO</i>}
+          {playable&&<b>{entry.name}</b>}
           
           <small className="cs-village">{shortVillage(entry.village)}</small>
+          {!playable&&<small className="cs-mission-label">Liberado com missão</small>}
           {selected && <i className="cs-picked">SELECIONADO</i>}
         </button>;
       })}
-      {hover && <div className="cs-mission-float" style={{ left: hover.x, top: hover.y }} role="tooltip"><MissionCard id={hover.id} compact /></div>}
+      {hover && <div className="cs-mission-float" style={{ left: hover.x, top: hover.y }} role="tooltip"><MissionCard id={hover.id} compact anonymous /></div>}
       {list.length === 0 && <p className="cs-empty">Nenhum shinobi combina com esses filtros. <button type="button" onClick={() => setFilters(EMPTY)}>Limpar filtros</button></p>}
     </div>
   </div>;

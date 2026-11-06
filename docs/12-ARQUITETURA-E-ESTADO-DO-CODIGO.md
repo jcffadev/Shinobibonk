@@ -30,6 +30,15 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/game/unlockMissions.ts` | Missões de desbloqueio por shinobi (`UNLOCK_MISSIONS`, `LEGENDARY`). |
 | `src/game/account.ts` | Conta: iniciais, desbloqueados, selados, pesquisa e progresso por mapa (`isDifficultyUnlocked`, `markMapCompleted`). |
 | `src/game/enemyTiers.ts` | Tipos de inimigo e saque por HP/dificuldade. |
+| `src/scene/playerMotion.ts` | (Codex, EM ANDAMENTO) Movimento do jogador: direção pela câmera, diagonais normalizadas, pulo (Espaço, 0,54 s, 1,3 m), dash/deslize (Shift, 0,24 s, 2,6×, recarga 0,9 s, 0,14 s invulnerável), quadros de caminhada/arremesso do Naruto Academia. Faltam poses próprias de pulo/dash. |
+| `src/scene/terrainArt.ts` + `public/assets/ground-materials-v1.png` | (Codex, EM ANDAMENTO) Materiais do chão e bordas do mapa; validação visual final pendente. |
+| `src/game/worldScale.ts` | (Codex) Escala do mundo: mapa de 160 m, limite, duração de zona (600 s), escala dos atores e alcance de ataques. |
+| `src/game/bijuu.ts` + `public/assets/bijuu-atlas-v1.png` | (Codex, EM ANDAMENTO) Bijuus (técnicas e dados). |
+| `src/game/powerlevel.ts` | (Codex) Recompensa extra por nível quando não há upgrades elegíveis (+0,8% conforme relatório do Codex); recalibração de atributos até o nível 50 pendente. |
+| `src/game/ranking.ts` | (Codex) Ranking local por mapa/dificuldade (`sb_local_ranking_v1`, top 25). |
+| `src/game/itemTrade.ts` + `src/ui/ItemTradeDialog.tsx` | (Codex) Compra/venda de itens por raridade na run. |
+| `src/game/inventoryArt.ts` + `scripts/generate-inventory-icons.mjs` + `public/assets/inventory*` , `pills-v3.png` | (Codex) Atlas de ícones de itens e pílulas, com layout fixo por ID. |
+| `public/assets/shinobi-folha-v3.png`, `sakura-genin-v1.png`, `naruto-academia-*-v1.png`, `leaf-landmarks-v1.png`, `map-previews-v1.png` | (Codex) Artes novas: elenco da Folha, Sakura Genin, caminhada/diagonal/arremesso do Naruto Academia, marcos da Folha e prévias dos mapas. Integração parcial (ver docs/13). |
 | `src/game/settings.ts` + `src/ui/SettingsScreen.tsx` + `src/settings.css` | Configurações completas (som, gráficos, tela, controles, teclas remapeáveis via `translateKey`, interface, conta) em `sb_settings_v1`; `currentSettings()` lido ao vivo pela simulação e pelo som. |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |

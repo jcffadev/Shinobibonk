@@ -20,3 +20,5 @@
   .skill-dock>.vitamin-row{max-height:44px;padding:4px 6px 6px}
   .skill-dock>.vitamin-row .inv-icon{width:26px;height:26px}
 }
+
+.vitamin-row .pill-slot-empty{display:grid;place-items:center;border:1px dashed #bd9bc66e;background:#221b33a6;color:#af93b9;font-size:14px}

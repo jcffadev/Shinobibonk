@@ -13,9 +13,10 @@ assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,69);
  const names=HEROES.flatMap(h=>uniqueTechniques(h.id).map(t=>t.name));assert.equal(new Set(names).size,names.length,'única pertence a um só shinobi');
  assert.ok(!skillPool('lee').some(t=>t.element!=='Neutro'),'Lee (sem natureza) só aprende Neutro');
  assert.ok(!skillPool('naruto').some(t=>t.name==='Raikiri'),'única do Kakashi bloqueada antes de selar');
- assert.ok(skillPool('naruto',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'única liberada depois de selar o Kakashi');
+ assert.ok(!skillPool('naruto',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'selar não ignora incompatibilidade elemental');
+ assert.ok(skillPool('sasuke',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'única liberada após selar para shinobi compatível');
  assert.ok(!skillPool('gaara').some(t=>t.name==='Punho da Folha'),'Neutro compartilhado de outra vila não entra');
- assert.ok(!skillPool('gaara').some(t=>t.name==='Lâminas Cruzadas'),'sem selar a Temari, nada dela entra');assert.ok(skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Lâminas Cruzadas'),'compartilhada da mesma vila com elemento compatível entra após selar');assert.ok(skillPool('naruto').every(t=>HEROES[0].techniques.some(k=>k.name===t.name)||t.unlockLevel<=4),'no começo: kit + básicas da Academia');assert.ok(skillPool('lee').some(t=>t.name==='Técnica de Substituição')&&!skillPool('lee').some(t=>t.name==='Katon: Fagulha'),'básicas respeitam a natureza');}
+ assert.ok(!skillPool('gaara').some(t=>t.name==='Lâminas Cruzadas'),'sem selar a Temari, nada dela entra');assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Kunai Tática'),'compartilhada da mesma vila com elemento compatível entra após selar');assert.ok(!skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Lâminas Cruzadas'),'Gaara (base Areia) não aprende Vento');assert.ok(!skillPool('naruto').some(t=>t.name==='Katon: Fagulha'),'Naruto (base Vento) não aprende Katon');assert.ok(skillPool('naruto').every(t=>HEROES[0].techniques.some(k=>k.name===t.name)||t.unlockLevel<=4),'no começo: kit + básicas da Academia');assert.ok(skillPool('lee').some(t=>t.name==='Técnica de Substituição')&&!skillPool('lee').some(t=>t.name==='Katon: Fagulha'),'básicas respeitam a natureza');}
 assert.equal(rollCritical(0,2.5,()=>0).tier,0);
 assert.deepEqual(rollCritical(1,2.5,()=>.8),{tier:1,multiplier:2.5});
 assert.deepEqual(rollCritical(1.5,2.5,()=>.49),{tier:2,multiplier:3});
@@ -35,7 +36,7 @@ const {itemAttribute}=await import('../src/game/combat.ts');
 assert.equal(ITEMS.filter(i=>i.rarity==='Raro'&&itemAttribute(i)==='Chance crítica').length,1);
 for(const id of ['damage','life','sandals','experience','coins','luck','pickup','bandana','critical','speed','clone','cooldown','tenten','recruit'])assert.ok(ITEMS.some(i=>i.id===id),'ícone da árvore sem item: '+id);
 const n1=calculateStats('naruto',1),n2=calculateStats('naruto',2);
-assert.ok(Math.abs(n2.damage/n1.damage-1.01)<1e-8);assert.equal(n1.maxHp,85);
+assert.ok(Math.abs(n2.damage/n1.damage-1.03)<1e-8);assert.equal(n1.maxHp,85);
 assert.ok(calculateStats('pain',1).maxHp>n1.maxHp);assert.ok(calculateStats('naruto',10).maxHp>calculateStats('naruto',9).maxHp+20);
 const gaara=calculateStats('gaara',1),armored=calculateStats('gaara',1,{'Bandana Reforçada':1});
 assert.equal(armored.armor,gaara.armor+6);assert.ok(Math.abs(armored.damage/gaara.damage-1.18/1.12)<1e-8);
@@ -94,7 +95,7 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.equal(R.rouletteCost(0,0),25);assert.equal(R.rouletteCost(4,0),45);assert.equal(R.rouletteCost(0,.24),19);assert.equal(R.rouletteCost(0,.9),15,'desconto limitado a 40%');
  assert.deepEqual(R.spendBonuses({},5000),{});assert.equal(R.spendBonuses({'Carteira Gama-chan':1},749).damage,.02);assert.equal(R.spendBonuses({'Carteira Gama-chan':1},99999).damage,.3);
  const wallet=calculateStats('naruto',1,{'Carteira Gama-chan':1},{},0,{},R.spendBonuses({'Carteira Gama-chan':1},500));assert.ok(Math.abs(wallet.damage/calculateStats('naruto',1).damage-1.02)<1e-9);assert.ok(Math.abs(wallet.moneyGain-1.12)<1e-9);}
-assert.ok(skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Corte do Leque'));assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Agulhas de Karasu'));assert.ok(!skillPool('gaara').some(t=>t.name==='Corte do Leque'));
+assert.ok(!skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Corte do Leque'),'única de Vento fora da base do Gaara');assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Agulhas de Karasu'));assert.ok(!skillPool('gaara').some(t=>t.name==='Corte do Leque'));
 assert.equal(choiceCount({}),3);assert.equal(choiceCount({'Quarta opção':1}),4);
 assert.deepEqual(choiceUses({'Atualizar':7,'Pular':7,'Banir':7}),{reroll:10,skip:10,ban:10});
 assert.equal(refund(purchase(NEW_ADMIN,300)).balance,999999);

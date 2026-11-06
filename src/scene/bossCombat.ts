@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { BIJUU_BY_ID, BIJUU_BOMB, beastPhase } from '../game/bijuu';
 import { HERO_BY_ID, ultimateBase, type Technique } from '../game/heroes';
 import { techniqueVisual, disposeObject } from './techniqueEffects';
 
@@ -23,7 +24,7 @@ export const BOSS_RULES = {
 
 type CastShape = 'circle' | 'cone' | 'line' | 'lineV' | 'ring';
 type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir: THREE.Vector3; range: number; width: number; windup: number; total: number; power: number; marker: THREE.Group; ultimate: boolean };
-export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string };
+export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; phase?:number; castCount:number };
 export type BossHost = { sprite: THREE.Sprite; hp: number; heroId?: string; guardian?: boolean; boss?: BossState };
 
 export type BossContext = {
@@ -44,7 +45,7 @@ function drawBar(state: BossState, ratio: number) {
   ctx.clearRect(0, 0, w, h);
   ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = '#0b0f1c';
   // Nome normal; durante a técnica mostra o golpe com aviso. A fonte encolhe para caber.
-  const label = state.lastCasting ? '⚠ ' + state.lastCasting : (state.guardian ? 'Guardião · ' : 'Mega Elite · ') + state.name;
+  const label = state.lastCasting ? '⚠ ' + state.lastCasting : (state.phase ? 'Bijuu · Fase '+state.phase+' · ' : state.guardian ? 'Guardião · ' : 'Mega Elite · ') + state.name;
   let size = 24; do { ctx.font = `bold ${size}px sans-serif`; size -= 1; } while (size > 12 && ctx.measureText(label).width > w - 12);
   ctx.strokeText(label, w / 2, 24); ctx.fillStyle = state.lastCasting ? '#ffb4c0' : '#ffffff'; ctx.fillText(label, w / 2, 24);
   ctx.fillStyle = '#0b0f1ce6'; ctx.fillRect(8, 34, w - 16, 22);
@@ -70,10 +71,11 @@ export function createBossCombat(ctx: BossContext) {
     const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
     const bar = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false, depthWrite: false }));
     bar.scale.set(4.2, .8, 1); bar.renderOrder = 10; ctx.scene.add(bar);
-    const name = HERO_BY_ID[host.heroId ?? '']?.name ?? 'Shinobi';
+    const beast=BIJUU_BY_ID[host.heroId??''];
+    const name = beast?.name ?? HERO_BY_ID[host.heroId ?? '']?.name ?? 'Shinobi';
     const zoneIndex = Math.min(2, Math.max(0, ctx.zone() - 1));
     const cooldown = BOSS_RULES.cooldownByZone[zoneIndex] * (guardian ? .8 : 1);
-    host.boss = { name, maxHp, guardian, cooldown, next: 2 + Math.random() * 1.5, ultimateUsed: false, bar, canvas, lastRatio: 1, lastCasting: '' };
+    host.boss = { name, maxHp, guardian, cooldown, next: 2 + Math.random() * 1.5, ultimateUsed: false, bar, canvas, lastRatio: 1, lastCasting: '',phase:beast?beastPhase(host.hp/maxHp):undefined,castCount:0 };
     drawBar(host.boss, 1);
   }
 
@@ -84,17 +86,22 @@ export function createBossCombat(ctx: BossContext) {
 
   function startCast(host: BossHost, state: BossState) {
     const hero = HERO_BY_ID[host.heroId ?? ''];
-    if (!hero) return;
+    const beast=BIJUU_BY_ID[host.heroId??''];
+    if (!hero&&!beast) return;
     const origin = host.sprite.position;
     const toPlayer = new THREE.Vector3(ctx.player.position.x - origin.x, 0, ctx.player.position.z - origin.z);
     const dir = toPlayer.lengthSq() > .0001 ? toPlayer.normalize() : new THREE.Vector3(1, 0, 0);
     const lowHp = host.hp / state.maxHp < .5;
     let technique: Technique, shape: CastShape, range: number, width = 1.5, power: number, ultimate = false;
-    if (state.guardian && lowHp && !state.ultimateUsed) {
+    if(beast){
+      const phase=state.phase??1,attackIndex=state.castCount++;
+      technique=phase>=2&&attackIndex%(phase===3?3:4)===2?BIJUU_BOMB:beast.attacks[attackIndex%beast.attacks.length];
+      shape=shapeOf(technique);range=technique.range*(1+(phase-1)*.12);width=1.5+(phase-1)*.3;power=technique.power*(1+(phase-1)*.16);
+    }else if (hero&&state.guardian && lowHp && !state.ultimateUsed) {
       // Ultimate do guardião, uma vez, abaixo de 50% de HP: grande área em volta dele.
       technique = { ...ultimateBase(hero), name: hero.ultimate, setup: undefined, shape: 'Área' };
       shape = 'circle'; range = 5.6; power = BOSS_RULES.ultimatePower; ultimate = true; state.ultimateUsed = true;
-    } else {
+    } else if(hero) {
       // Mega elites usam mais técnicas conforme a zona; guardiões usam o kit todo.
       // Técnicas de setup (buff puro) não causam dano e ficam fora do repertório do chefe.
       const available = hero.techniques.slice(0, state.guardian ? 4 : Math.min(4, 1 + ctx.zone())).filter((t) => !t.setup);
@@ -103,6 +110,7 @@ export function createBossCombat(ctx: BossContext) {
       shape = shapeOf(technique); power = technique.power;
       range = shape === 'circle' ? (technique.shape === 'Corpo a corpo' ? 2.6 : 2.4) : shape === 'cone' ? 6 : shape === 'ring' ? (technique.shape === 'Onda' ? 4.4 : 3.2) : 10;
     }
+    else return;
     // Círculo de técnica em Área cai sobre a posição atual do jogador; os demais saem do chefe.
     const center = (shape === 'circle' && !ultimate && technique.shape === 'Área') ? new THREE.Vector3(ctx.player.position.x, 0, ctx.player.position.z) : new THREE.Vector3(origin.x, 0, origin.z);
     const marker = new THREE.Group();
@@ -117,9 +125,9 @@ export function createBossCombat(ctx: BossContext) {
       }
     }
     marker.position.set(center.x, y, center.z); ctx.scene.add(marker);
-    const windup = ultimate ? BOSS_RULES.ultimateWindup : BOSS_RULES.windup;
+    const windup = state.phase ? (technique===BIJUU_BOMB?1.45:1.15-(state.phase-1)*.16) : ultimate ? BOSS_RULES.ultimateWindup : BOSS_RULES.windup;
     state.cast = { technique, shape, center, dir, range, width, windup, total: windup, power, marker, ultimate };
-    state.lastCasting = ultimate ? hero.ultimate + '!' : technique.name;
+    state.lastCasting = (state.phase?'Fase '+state.phase+' · ':'') + technique.name;
   }
 
   function playerInside(c: Cast) {
@@ -154,6 +162,8 @@ export function createBossCombat(ctx: BossContext) {
   function update(host: BossHost, dt: number, canAct: boolean) {
     const state = host.boss; if (!state) return false;
     const ratio = Math.max(0, Math.min(1, host.hp / state.maxHp));
+    const phase=state.phase?beastPhase(ratio):undefined;
+    if(phase&&phase!==state.phase){state.phase=phase;state.cooldown=Math.min(state.cooldown,.25);state.lastRatio=-1;}
     state.bar.position.set(host.sprite.position.x, host.sprite.position.y + host.sprite.scale.y * .62, host.sprite.position.z);
     if (state.cast) {
       state.cast.windup -= dt;
@@ -162,7 +172,7 @@ export function createBossCombat(ctx: BossContext) {
       if (state.cast.windup <= 0) fire(host, state);
     } else if (canAct) {
       state.cooldown -= dt;
-      if (state.cooldown <= 0) { startCast(host, state); state.cooldown = BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
+      if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.7,1.65,.75][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
     }
     if (Math.abs(ratio - state.lastRatio) > .004 || state.cast) { state.lastRatio = ratio; drawBar(state, ratio); }
     return Boolean(state.cast);

@@ -1,3 +1,4 @@
+import { ItemIcon } from './RunSheet';
 import { BuffText } from './BuffText';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ROULETTE_CASAS, ROULETTE_RULES, badChance, goodChance, type RoulettePrize, type RouletteView } from '../game/roulette';
@@ -98,7 +99,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
       <header className="tr-head">
         <small>EVENTO · A LENDÁRIA PERDEDORA</small>
         <h1>Roleta da Tsunade</h1>
-        <p>Cada giro cobra na hora. Prêmios <b>e penalidades</b> só são entregues quando você sair.</p>
+        <p>Cada giro cobra na hora. Prêmios e penalidades são entregues ao sair. Para cada item, escolha pegar com E ou vender com V.</p>
       </header>
       <div className="tr-body">
         <div className="tr-wheel-col">
@@ -108,7 +109,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
             <div className="tr-hub">綱</div>
           </div>
           <div className={`tr-result${last ? ' kind-' + last.kind : ''}`} aria-live="polite">
-            {spinning ? <span>Girando…{turbo ? ' (giro rápido)' : ''}</span> : last ? <><b>{last.icon} {last.label}</b><small>{last.detail}</small></> : <span>Aperte E para girar</span>}
+            {spinning ? <span>Girando…{turbo ? ' (giro rápido)' : ''}</span> : last ? <><b>{last.item||last.pill?<ItemIcon name={last.item??last.pill!}/>:last.icon} {last.label}</b><small>{last.detail}</small></> : <span>Aperte E para girar</span>}
           </div>
           {message && <p className="tr-message">{message}</p>}
           <div className="tr-actions">
@@ -132,7 +133,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
           </div>
           <div className="tr-pending">
             <b>Ganhos desta visita · {revealed.length} giro(s) · {live.sessionSpent} Ryu</b> <small>{goods} bons · {bads} ruins</small>
-            <ol>{[...revealed].reverse().map(p => <li key={p.seq} className={`kind-${p.kind}`}><i>{p.icon}</i><span>{p.label}<small><BuffText text={p.detail}/></small></span></li>)}</ol>
+            <ol>{[...revealed].reverse().map(p => <li key={p.seq} className={`kind-${p.kind}`}><i>{p.item||p.pill?<ItemIcon name={p.item??p.pill!}/>:p.icon}</i><span>{p.label}<small><BuffText text={p.detail}/></small></span></li>)}</ol>
             {!revealed.length && <p className="tr-empty">Nada ainda. Os resultados aparecem aqui e são entregues ao sair.</p>}
           </div>
         </div>

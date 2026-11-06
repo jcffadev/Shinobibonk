@@ -65,7 +65,7 @@ export const ITEMS:Item[] = [
   item('vampire-root','Raiz Vampira','Incomum',13,ANY,'Recupera 3% do dano causado como HP.',{lifesteal:.03}),
   item('chains','Correntes de Selamento','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
   item('katon-orb','Esfera Katon','Incomum',7,5,'5% de chance por acerto de queimar e +10% de dano de status (queimadura/veneno).',{burnChance:.05,statusDamage:.1}),
-  item('gold-tooth','Dente de Ouro','Incomum',8,3,'A Roleta da Tsunade custa 8% menos (até −24%).',{slotDiscount:.08}),
+  item('gold-tooth','Dente de Ouro','Incomum',8,3,'A Roleta da Tsunade e a atualização do Mercador custam 8% menos (até −24%).',{slotDiscount:.08}),
   item('akimichi-box','Marmita Akimichi','Incomum',8,ANY,'+1,2 HP/s de regeneração.',{regen:1.2}),
   item('green-tea','Chá Verde de Konoha','Incomum',13,3,'Ajudantes causam +25% de dano e atacam 15% mais rápido.',{allyDamage:.25,allySpeed:.15}),
   item('duration','Selo de Persistência','Incomum',6,ANY,'+20% de duração de efeitos de status.',{duration:.2}),
@@ -106,7 +106,7 @@ export const ITEMS:Item[] = [
   item('executioner','Lâmina do Carrasco','Raro',1,4,'Inimigos comuns abaixo de 8% do HP morrem na hora (+4 pontos por cópia extra).',{execute:.08}),
   item('luck','Colar do Primeiro Hokage','Raro',2,ANY,'+20 de Sorte. Melhora a raridade das ofertas de itens.',{luck:20}),
   // Referência: porta-moedas (buff por dinheiro gasto). A carteira de sapo do Naruto.
-  item('gama-chan','Carteira Gama-chan','Raro',8,1,'+12% de Ryu recebido, Roleta da Tsunade 6% mais barata e +1% de dano a cada 250 Ryu gastos na run (kunais, roleta, Ichiraku), até +30%.',{gold:.12,slotDiscount:.06,spendDamage:.01}),
+  item('gama-chan','Carteira Gama-chan','Raro',8,1,'+12% de Ryu recebido, Roleta da Tsunade e atualização do Mercador 6% mais baratas e +1% de dano a cada 250 Ryu gastos na run (kunais, roleta, Ichiraku), até +30%.',{gold:.12,slotDiscount:.06,spendDamage:.01}),
   item('herb-tea','Chá de Ervas','Raro',0,3,'A cada 30 s, se estiver ferido, cura 12% do HP máximo.',{periodicHeal:1}),
 
   // ───── Épico ─────
@@ -141,13 +141,19 @@ export const ITEM_BY_NAME = Object.fromEntries(ITEMS.map(i=>[i.name,i])) as Reco
 export function availableItems(unlocked:readonly string[], archived:readonly string[], allForPrototype:boolean) {
   return ITEMS.filter(i=>!archived.includes(i.id)&&(allForPrototype||i.rarity==='Comum'||unlocked.includes(i.id)));
 }
+/** Pesos por raridade. Sorte zero preserva a chance inicial de raro ou melhor (~0,11%). */
+export function luckRarityWeights(luck:number){
+  const bonus=Math.min(4,Math.max(0,luck)/100);
+  return [90,9.889+12*bonus,.1+8*bonus,.01+1.5*bonus*bonus,.001+.35*bonus*bonus];
+}
 /** `priority`: ids marcados como Prioridade na Bolsa da Missão; o peso deles é multiplicado por `priorityWeight` (não garante). */
 export function rollItems(pool:readonly Item[], owned:Record<string,number>, luck:number, count:number, rng= Math.random, priority:readonly string[]=[], priorityWeight=1):Item[] {
   const eligible=pool.filter(i=>(owned[i.name]||0)<i.max), result:Item[]=[];
   const rarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
   while(eligible.length&&result.length<count){
     // Divide pelo número de itens de cada raridade para o tamanho do catálogo não enviesar os pesos.
-    const weights=eligible.map(i=>{const n=rarities.indexOf(i.rarity);return [90,9.889,.1,.01,.001][n]*Math.pow(1+Math.min(500,Math.max(0,luck))/100,n)/eligible.filter(j=>j.rarity===i.rarity).length*(priority.includes(i.id)?priorityWeight:1);});
+    const rarityWeights=luckRarityWeights(luck),counts=rarities.map(rarity=>eligible.filter(i=>i.rarity===rarity).length);
+    const weights=eligible.map(i=>{const n=rarities.indexOf(i.rarity);return rarityWeights[n]/counts[n]*(priority.includes(i.id)?priorityWeight:1);});
     let roll=rng()*weights.reduce((a,b)=>a+b,0), index=weights.length-1;
     for(let i=0;i<weights.length;i++){roll-=weights[i];if(roll<0){index=i;break;}}
     result.push(eligible.splice(index,1)[0]);

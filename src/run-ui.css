@@ -64,3 +64,15 @@
 /* Setup (buff) ativo na barra de habilidades e linha Senjutsu na ficha. */
 .ability-bar button.setup-on{border-color:#ffe08a;box-shadow:0 0 0 2px #ffe08a88,0 0 14px #ffd75a99}
 .senjutsu-line{color:#f5da86;font-weight:800}
+.ability-bar button{position:relative}.skill-timer{position:absolute;inset:auto 4px 3px;display:block;color:#fff;font-size:9px;text-shadow:0 1px 3px #000;pointer-events:none}.skill-timer b{border-radius:5px;padding:1px 4px;background:#101728aa}.skill-timer b.skill-duration{color:#98ffba}.skill-timer i{display:block;height:2px;background:linear-gradient(90deg,#ffcd7a,#ffcd7a45);border-radius:4px;margin-top:2px}
+
+.build-plan-overview{padding:14px 16px;border-radius:14px;background:#1c2436;border:1px solid #4b5572}
+.build-plan-overview>div{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.build-plan-overview span{padding:4px 9px;border-radius:999px;background:#554523;color:#ffe5a4;font-size:12px}
+.build-plan-overview .excluded{background:#33394e;color:#d9ddea}
+
+.run-prices{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 10px;width:100%;margin-top:5px;color:#c4cee1;font-size:11px}
+.run-prices span{padding:2px 7px;border-radius:6px;background:#0c122573;white-space:nowrap}
+.run-prices b{color:#ffce72}
+
+.ichiraku-cost{display:inline-block;border-radius:999px;padding:4px 9px;background:#1a1a2a;color:#ffd475;font-weight:800}

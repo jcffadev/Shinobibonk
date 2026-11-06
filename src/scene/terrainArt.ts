@@ -1,0 +1,101 @@
+import * as THREE from 'three';
+import type { GameMap } from '../game/maps';
+import { MAP_SIZE } from '../game/worldScale';
+
+export const RENDERED_GROUND_SIZE = MAP_SIZE + 120;
+export const trailX = (z: number) => Math.sin(z * .09) * 5;
+const mound = (x: number, z: number, cx: number, cz: number, rx: number, rz: number, height: number) =>
+  height * Math.exp(-(((x - cx) / rx) ** 2 + ((z - cz) / rz) ** 2));
+
+export function groundHeight(map: GameMap['id'], x: number, z: number) {
+  const hills = .36 * Math.sin(x * .14) * Math.cos(z * .12)
+    + mound(x, z, -16, -9, 15, 12, 3.8)
+    + mound(x, z, 16, 7, 12, 13, 3.3);
+  if (map !== 'folha') return hills + mound(x, z, 3, -26, 22, 11, 4.8);
+  return hills + mound(x, z, 0, -45, 22, 17, 10)
+    + mound(x, z, 30, 24, 8, 14, 6)
+    + mound(x, z, 53, 24, 8, 14, 6);
+}
+
+const rgb = (hex: string) => [1, 3, 5].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
+
+/** Textura ortográfica: trilha e materiais usam as mesmas coordenadas do terreno. */
+export function groundArt(map: GameMap) {
+  const canvas = document.createElement('canvas');
+  const size = canvas.width = canvas.height = 1024;
+  const context = canvas.getContext('2d')!;
+  const pixels = context.createImageData(size, size);
+  const surfaces = new Uint8Array(size * size * 4);
+  const grass = rgb(map.terrain.low), dirt = rgb(map.terrain.trail), rock = rgb(map.terrain.high);
+  const plaza = rgb(map.id === 'folha' ? '#a3967d' : map.terrain.accent);
+  const water = rgb('#4d8392');
+  const seed = (x: number, z: number) => ((Math.imul(x + 215, 73428767) ^ Math.imul(z + 311, 912931)) >>> 0) % 1021 / 1021;
+  for (let j = 0; j < size; j++) {
+    const z = (j / size - .5) * RENDERED_GROUND_SIZE;
+    for (let i = 0; i < size; i++) {
+      const x = (i / size - .5) * RENDERED_GROUND_SIZE;
+      const fleck = seed(i, j), patch = Math.sin(x * .5 + Math.sin(z * .3)) * Math.cos(z * .63);
+      const onPath = Math.abs(x - trailX(z)) < 2.25 + patch * .45;
+      const inPlaza = Math.abs(x) < 9 && z > -22 && z < -11;
+      const river = map.id === 'folha' && Math.abs(x - 41.5 - Math.sin(z * .13) * 2) < 3.1 && z > 12;
+      const stone = groundHeight(map.id, x, z) > 4.2 + patch;
+      const color = river ? water : inPlaza ? plaza : onPath ? dirt : stone ? rock : grass;
+      let shade = .88 + .18 * fleck + .08 * patch;
+      if (inPlaza && !river) {
+        const row = Math.floor(j / 6);
+        const joint = j % 6 === 0 || (i + (row % 2) * 4) % 8 === 0;
+        shade *= joint ? .72 : .93 + seed(Math.floor(i / 8), row) * .16;
+      } else if (river) {
+        shade += Math.sin(x * 2 + z * 6) > .94 ? .25 : 0;
+      } else if (!onPath && fleck > .94) shade += .14;
+      const offset = 4 * (j * size + i);
+      if (!river) surfaces[4 * ((size - 1 - j) * size + i) + (inPlaza ? 3 : onPath ? 1 : stone ? 2 : 0)] = 255;
+      for (let channel = 0; channel < 3; channel++) pixels.data[offset + channel] = color[channel] * shade;
+      pixels.data[offset + 3] = 255;
+    }
+  }
+  context.putImageData(pixels, 0, 0);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.magFilter = THREE.NearestFilter;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  return { texture, surfaces, size };
+}
+
+
+/** Alta resolução local mesmo quando a máscara tem o tamanho da região inteira. */
+export function createGroundMaterial(map: GameMap) {
+  const { texture, surfaces, size } = groundArt(map);
+  const mask = new THREE.DataTexture(surfaces, size, size);
+  mask.minFilter = mask.magFilter = THREE.LinearFilter;
+  mask.needsUpdate = true;
+  const atlas = new THREE.TextureLoader().load('/assets/ground-materials-v1.png');
+  atlas.colorSpace = THREE.SRGBColorSpace;
+  atlas.anisotropy = 4;
+  const material = new THREE.MeshStandardMaterial({ map: texture, roughness: 1, flatShading: true });
+  material.onBeforeCompile = shader => {
+    shader.uniforms.terrainAtlas = { value: atlas };
+    shader.uniforms.terrainMask = { value: mask };
+    shader.uniforms.leafPalette = { value: map.id === 'folha' ? 1 : 0 };
+    shader.fragmentShader = `
+      uniform sampler2D terrainAtlas;
+      uniform sampler2D terrainMask;
+      uniform float leafPalette;
+      vec3 terrainSample(vec2 uv, vec2 cell, float meters) {
+        vec2 tile = 1.0 - abs(fract(uv * (${RENDERED_GROUND_SIZE.toFixed(1)} / meters) * .5) * 2.0 - 1.0);
+        return texture2D(terrainAtlas, cell * .5 + .002 + tile * .496).rgb;
+      }
+    ` + shader.fragmentShader.replace('#include <map_fragment>', `
+      #include <map_fragment>
+      vec4 coverage = texture2D(terrainMask, vMapUv);
+      vec3 tiles = terrainSample(vMapUv, vec2(0., 1.), 9.) * coverage.r
+        + terrainSample(vMapUv, vec2(1., 1.), 7.) * coverage.g
+        + terrainSample(vMapUv, vec2(0., 0.), 8.) * coverage.b
+        + terrainSample(vMapUv, vec2(1., 0.), 6.) * coverage.a;
+      float amount = dot(coverage, vec4(1.));
+      vec3 tinted = diffuseColor.rgb * clamp(dot(tiles, vec3(.299,.587,.114)) * 2.6, .55, 1.3);
+      diffuseColor.rgb = mix(diffuseColor.rgb, mix(tinted, tiles, leafPalette), amount * .91);
+    `);
+  };
+  return { material, dispose: () => { texture.dispose(); mask.dispose(); atlas.dispose(); } };
+}

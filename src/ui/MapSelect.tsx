@@ -39,19 +39,18 @@ export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, h
         <span className="ms-tab-symbol">{m.symbol}</span><span><b>{m.name}</b><small>{MAP_ELEMENTS[m.id].join(' · ')}</small></span><em title="Dificuldades vencidas">{open ? done.length + '/4' : '🔒'}</em>
       </button>;
     })}</nav>
-    <section className="ms-preview" style={{ ['--ground' as string]: map.ground.base, ['--low' as string]: map.terrain.low, ['--high' as string]: map.terrain.high, ['--sky' as string]: map.weathers[0].sky }}>
-      <span className="ms-watermark" aria-hidden="true">{map.symbol}</span>
+    <section className={`ms-preview ms-preview-${mapId}`}>
       {!mapOpen && <div className="ms-locked-map">🔒 {map.name} bloqueada<small>Vença o Genin em {MAP_BY_ID[MAP_ORDER[MAP_ORDER.indexOf(mapId) - 1] as MapId]?.name} para liberar este mapa.</small></div>}
       <div className="ms-region"><small>REGIÃO · {map.country.toUpperCase()}</small><h2>{map.name}</h2><div className="ms-tags">{MAP_ELEMENTS[mapId].map((el) => <i key={el}>{el}</i>)}</div><p>{map.description} Climas: {map.weathers.map((w) => w.name).join(' / ')}.</p></div>
       <button type="button" className="ms-hero" onClick={onChangeHero}><HeroPortrait id={heroId} /><span><small>Seu shinobi</small><b>{hero.name}</b><i>{heroAffinity(heroId)}</i></span><em>Trocar</em></button>
-      {unlockHere.length > 0 && <div className="ms-unlocks"><b>🔒 Shinobis para selar aqui ({unlockHere.length})</b>{unlockHere.filter(([, m]) => m.difficulty === mission).slice(0, 2).map(([id]) => <MissionCard key={id} id={id} compact />)}{unlockHere.filter(([, m]) => m.difficulty !== mission).length > 0 && <small>+ {unlockHere.filter(([, m]) => m.difficulty !== mission).length} em outras dificuldades</small>}</div>}
-      <div className="ms-guardians"><small>GUARDIÕES · a cada partida, um aleatório por zona</small><div>{map.zones.map((zone, i) => <div className="ms-zone" key={zone.name}><b>ZONA {i + 1} · {zone.name}</b><span>{zone.guardians.map((g) => <HeroPortrait key={g} id={g} />)}</span></div>)}</div></div>
+      {unlockHere.length > 0 && <details className="ms-unlocks"><summary>Missões de desbloqueio · {unlockHere.length}</summary><div>{unlockHere.filter(([, m]) => m.difficulty === mission).slice(0, 2).map(([id]) => <MissionCard key={id} id={id} compact />)}{unlockHere.filter(([, m]) => m.difficulty !== mission).length > 0 && <small>+ {unlockHere.filter(([, m]) => m.difficulty !== mission).length} em outras dificuldades</small>}</div></details>}
+      <div className="ms-guardians"><small>GUARDIÕES · um por zona, invocado no altar</small><div>{map.zones.map((zone, i) => <div className="ms-zone" key={zone.name}><b>ZONA {i + 1} · {zone.name}</b><span>{zone.guardians.map((g) => <HeroPortrait key={g} id={g} />)}</span></div>)}</div></div>
     </section>
     <aside className="ms-prepare">
       <div className="ms-prepare-head"><b>Preparar partida</b><small>{map.name}</small></div>
       <div className="ms-prepare-body">
         <h3>MODO</h3>
-        <div className="ms-modes"><button type="button" className="active"><b>Clássico</b><small>Zonas, guardiões e eventos · 10 min</small></button><button type="button" disabled><b>Sobrevivência</b><small>Hordas infinitas · em breve</small></button></div>
+        <div className="ms-modes"><button type="button" className="active"><b>Clássico</b><small>Zonas, guardiões e eventos · 10 min por zona</small></button><button type="button" disabled><b>Sobrevivência</b><small>Hordas infinitas · em breve</small></button></div>
         <h3>DIFICULDADE</h3>
         <div className="ms-diffs">{DIFFICULTY_ORDER.map((d, i) => {
           const open = isDifficultyUnlocked(mapId, d);

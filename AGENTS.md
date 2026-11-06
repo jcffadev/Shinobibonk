@@ -6,6 +6,10 @@ Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conf
 - Sempre que alterar código, configuração, controles, assets ou sistemas, siga `skills/documentar-projeto/SKILL.md` e sincronize os Markdown afetados na mesma tarefa.
 - Mantenha README.md, docs/00-LEIA-PRIMEIRO.md, docs/12-ARQUITETURA-E-ESTADO-DO-CODIGO.md, o documento temático e CHANGELOG.md alinhados ao estado real.
 
+## Skills de arte e movimento
+- Para criar ou integrar arte, siga `skills/criar-arte-shinobibonk/SKILL.md`; para movimento, pulo, dash e animação dos shinobis, siga `skills/movimentar-shinobi/SKILL.md`.
+- Claude Code e Codex trabalham no mesmo repositório: antes de começar, rode `git status`/`git pull` e leia `docs/13-PENDENCIAS-PARA-CONTINUAR.md` (fila em andamento). Ao terminar, documente e faça commit + push para o outro agente continuar na mesma página.
+
 ## Publicação no GitHub
 - Ao fim de **toda** tarefa que alterou arquivos, depois de documentar e verificar, siga `skills/publicar-github/SKILL.md`: commit em português e push para `origin main` (`https://github.com/jcffadev/Shinobibonk.git`). Nunca use force push. Nunca publique credenciais (ex.: `Feedback da versão.txt`, que está no `.gitignore`).
 
@@ -33,7 +37,7 @@ Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conf
 - H reduz renderização de efeitos/números sem desabilitar hits; 1500 inimigos simultâneos é meta de performance, não fato validado.
 - Geometria de terreno/obstáculos não impede hits dentro da área válida da habilidade.
 - Selamento (06/11/2026): o 1º encontro especial da run, se houver shinobi bloqueado, é o **Shinobi para selar** (contorno ciano): selar o DESBLOQUEIA na conta, sem buff, EXP ou drops. Os demais são **Mega Elites** (contorno vermelho): selados viram ajudantes da run e NÃO desbloqueiam na conta. **Elite amarelo** (contorno amarelo) não é capturável: mais forte, mais defesa, sem habilidades, mais Ryu/Chakra/EXP conforme HP e dificuldade. Mega Elites e elites não usam técnicas; só o guardião usa. Kill reward não duplica.
-- Técnicas: cada shinobi tem 1–2 técnicas ÚNICAS; o resto do kit vem da biblioteca compartilhada. Só aprende elementos das naturezas canônicas (+ Neutro; Sábio para usuários do Modo Sábio). Compartilhadas entram pelo pool da mesma vila (elemento compatível) ou de outra vila com o mesmo elemento. Únicas de outro shinobi só entram depois de selá-lo pela 1ª vez. Técnicas de outros precisam de 100% de pesquisa para entrar no Plano de build.
+- Técnicas: cada shinobi tem 1–2 técnicas ÚNICAS; o resto do kit vem da biblioteca compartilhada. Só aprende Neutro + o elemento BASE (afinidade; ex.: Naruto = Vento, pois todas as naturezas só viriam com o Modo Sábio dos Seis Caminhos) + os elementos do próprio kit (+ Sábio para usuários do Modo Sábio). Técnicas do elemento base causam ×1,5 de dano (`NATURE_BONUS`). Compartilhadas entram pelo pool da mesma vila (elemento compatível) ou de outra vila com o mesmo elemento. Únicas de outro shinobi só entram depois de selá-lo pela 1ª vez. Técnicas de outros precisam de 100% de pesquisa para entrar no Plano de build.
 - Debug: os parâmetros salvos são a base Genin; Chunin/Jonin/Kage multiplicam por cima.
 - Ao remover pílula, recalcular atributos desde as fontes, sem buffs residuais.
 

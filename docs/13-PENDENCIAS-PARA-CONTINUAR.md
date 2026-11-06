@@ -5,6 +5,18 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 `tsc --noEmit -p .`, `vite build`, `node scripts/verify-rules.mjs`, `node scripts/verify-runtime.mjs` (Node do Codex em
 `%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`; git em `C:\Program Files\Git\cmd\git.exe`).
 
+## Fila do Codex (EM ANDAMENTO, relatada pelo Codex em 06/11/2026; nada disso deve ser dado como concluído)
+- **Pulo e dash**: movimento implementado (`playerMotion.ts`), faltam poses próprias.
+- **Outras formas do Naruto**: artes geradas, sem integração nem validação.
+- **Outros shinobis**: faltam animações individuais (hoje só o Naruto Academia tem caminhada/arremesso).
+- **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
+- **Impactos e sons**: faltam integração e revisão (o pacote `artifacts/sb-swishes-source.zip` NÃO foi publicado: licença não verificada).
+- **Atributos até nível 50**: recalibração pendente; o bônus de +0,8% quando acabam os upgrades é regra separada (`powerlevel.ts`).
+- **Chão nas bordas**: alterações feitas (`terrainArt.ts`), validação visual final pendente.
+- Pedidos recentes do Codex em curso: bijuus, progressão extra e roleta.
+- Skills do Codex: `skills/criar-arte-shinobibonk` (padrão de arte de shinobis, itens, pílulas, cenários) e `skills/movimentar-shinobi` (movimento, pulo, dash, sprites de animação), com ponteiros em `.claude/skills/`.
+- **Teste quebrado**: `verify-runtime` falha em "Selamento mostra e recruta Temari" — o ritual fica em "selando" pelo gancho `defeatMega` do modo de teste; no jogo real o usuário confirmou que o selamento funciona. Corrigir o gancho/teste.
+
 ## Decisões aguardando o usuário
 1. **Hospedar a Alpha**: escolher GitHub Pages (repo precisa ficar público; criar workflow + `base` no vite.config), Netlify/Vercel/Cloudflare Pages (aceita repo privado) ou itch.io (zip do `dist`).
 2. **Coluna "Passivas" na ficha (P/Esc)**: o usuário estranhou buffs no nível 1; vêm das Passivas Shinobi compradas. Proposta: mostrar coluna Base · Passivas · +Nível · Total em `src/ui/RunSheet.tsx`.

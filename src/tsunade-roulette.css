@@ -41,3 +41,4 @@ li.kind-bom i,li.kind-bom em{color:#7fe0a5}li.kind-ruim i,li.kind-ruim em{color:
 .tr-pending li.kind-bom{border-left:3px solid #3aa86b}.tr-pending li.kind-ruim{border-left:3px solid #c2414d}.tr-pending li.kind-neutro{border-left:3px solid #666a80}
 .tr-empty{margin:6px 0 0;color:#bfae8e}
 @media (max-width:760px){.tr-body{grid-template-columns:1fr}.tr-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tr-head h1{font-size:24px}}
+.tr-result .catalog-icon,.tr-pending .catalog-icon{width:28px;height:28px;vertical-align:middle}

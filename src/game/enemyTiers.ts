@@ -30,3 +30,10 @@ export function lootScale(tier: EnemyTier, maxHp: number, normalHp: number, miss
   const hpWeight = tier === 'normal' ? 1 : Math.pow(Math.max(1, maxHp / Math.max(1, normalHp * ENEMY_TIERS[tier].hp / ENEMY_TIERS.normal.hp)), .35);
   return ENEMY_TIERS[tier].loot * hpWeight * missionLootFactor(missionTier);
 }
+
+/** Elites ganham a vida completa do tipo após cinco minutos de zona. */
+export function eliteHpRamp(tier: EnemyTier, zoneSeconds: number) {
+  const initial = tier === 'elite' ? .55 : tier === 'mega' ? .40 : 1;
+  const progress = Math.min(1, Math.max(0, zoneSeconds) / 300);
+  return initial + (1 - initial) * progress;
+}

@@ -1,10 +1,10 @@
-import type { Bonuses, Item, Rarity, StatKey } from './catalog';
+import { luckRarityWeights, type Bonuses, type Item, type Rarity, type StatKey } from './catalog.ts';
 import { bonusText } from './allies.ts';
 import type { Technique, Element } from './heroes';
 export type SkillGrowth={damage:number;area:number;haste:number;duration:number};
 export const NO_GROWTH:SkillGrowth={damage:0,area:0,haste:0,duration:0};
 export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rarity:Rarity;growth:SkillGrowth}{
- const weights=[90,9.889,.1,.01,.001].map((w,i)=>w*Math.pow(1+Math.min(500,Math.max(0,luck))/100,i));let value=rng()*weights.reduce((a,b)=>a+b,0),tier=4;
+ const weights=luckRarityWeights(luck);let value=rng()*weights.reduce((a,b)=>a+b,0),tier=4;
  for(let i=0;i<5;i++){value-=weights[i];if(value<0){tier=i;break;}}
  const keys:(keyof SkillGrowth)[]=technique.setup?['damage','haste','duration']:['damage','area','haste'];if(!technique.setup&&(technique.status||technique.burn))keys.push('duration');
  const growth={...NO_GROWTH};for(let n=0;n<(tier>=3?3:2)&&keys.length;n++){const key=keys.splice(Math.floor(rng()*keys.length),1)[0];growth[key]=Math.round(([10,18,25,30,40][tier]+rng()*[8,10,10,15,15][tier]))/100;}

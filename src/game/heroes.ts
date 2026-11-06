@@ -108,10 +108,13 @@ export const SAGE_USERS=new Set(['naruto','jiraiya','hashirama','minato']);
 /** Técnicas únicas de um shinobi: as do kit que não estão na biblioteca compartilhada (1–2 por shinobi). */
 export function uniqueTechniques(heroId:string){return (HERO_BY_ID[heroId]?.techniques??[]).filter(t=>!SHARED_TECHNIQUES.has(t.name));}
 /**
- * Elementos que o shinobi pode aprender: Neutro + naturezas canônicas (HERO_NATURES) + Sábio para usuários do Modo Sábio
+ * Elementos que o shinobi pode aprender (regra do usuário, 06/11/2026): Neutro + elemento BASE (afinidade, ex.: Naruto = Vento;
+ * todas as naturezas só viriam com o Modo Sábio dos Seis Caminhos, que o jogo não tem) + Sábio para usuários do Modo Sábio
  * (+ os elementos do próprio kit). Elemento fora disso nunca entra no pool, mesmo que seja da mesma vila.
  */
-export function allowedElements(heroId:string){const set=new Set<Element>(['Neutro',...(HERO_NATURES[heroId]??[])]);if(SAGE_USERS.has(heroId))set.add('Sábio');for(const tech of HERO_BY_ID[heroId]?.techniques??[])set.add(tech.element);return set;}
+export function allowedElements(heroId:string){const set=new Set<Element>(['Neutro',heroAffinity(heroId)]);if(SAGE_USERS.has(heroId))set.add('Sábio');for(const tech of HERO_BY_ID[heroId]?.techniques??[])set.add(tech.element);return set;}
+/** Bônus de dano de técnicas do elemento natural (afinidade) do shinobi. */
+export const NATURE_BONUS=1.5;
 export type PoolSource='kit'|'basica'|'vila'|'elemento'|'única';
 export type PoolTechnique=Technique&{source:PoolSource;origin:string;locked?:boolean};
 /** Nível de desbloqueio no level-up: compartilhadas a partir do 8; únicas de outros shinobis a partir do 12. */

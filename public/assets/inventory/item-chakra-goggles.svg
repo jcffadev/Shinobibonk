@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges"><defs><clipPath id="silhouette"><path d="M3 9H13L16 12L19 9H29V20L25 24H19L16 21L13 24H7L3 21Z" fill="white" fill-rule="evenodd" /></clipPath></defs>
+ <path d="M3 9H13L16 12L19 9H29V20L25 24H19L16 21L13 24H7L3 21Z" fill="#517fba" fill-rule="evenodd" stroke="#1a2031" stroke-width="1.5" stroke-linejoin="round" />
+ <g clip-path="url(#silhouette)">
+ <path d="M0 20H10V23H18V25H25V15H32V32H0Z" fill="#314d71" fill-rule="evenodd" />
+ <path d="M0 4H25V7H14V10H8V14H0Z" fill="#6dabfb" fill-rule="evenodd" />
+ </g>
+ <path d="M16 6H24L19 14H24L12 26L14 18H8Z" fill="#9debff" fill-rule="evenodd" stroke="#1a2031" stroke-width="1.5" stroke-linejoin="round" transform="translate(6 6) scale(.63)"/>
+ </svg>

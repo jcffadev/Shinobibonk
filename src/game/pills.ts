@@ -6,6 +6,7 @@ import type { Bonuses, StatKey } from './catalog.ts';
 // Pílulas nunca concedem Chakra diretamente; a Pílula Hiden apenas acelera a recarga da Ultimate.
 // BALANCEAMENTO PROVISÓRIO: valores por nível derivados da referência de formato com ajustes leves.
 export const PILL_MAX = 10;
+export const PILL_SLOTS = 6;
 
 export type PillDef = {
   id: string;
@@ -94,21 +95,28 @@ export function pillDescription(name: string): string {
 }
 
 /** Descrição da carta de level-up gerada dos dados. */
-export function pillOfferText(name: string, current: number): string {
+export function pillOfferText(name: string, current: number, extraCap = 0): string {
   const def = PILL_BY_NAME[name];
   if (!def) return '';
-  return `${pillEffectText(name, 1)}. Nv. ${current} → ${current + 1} / ${def.max}`;
+  return `${pillEffectText(name, 1)}. Nv. ${current} → ${current + 1} / ${def.max + extraCap}`;
+}
+
+/** Verifica o limite de níveis e de tipos na run. */
+export function canGrantPill(pills: Record<string, number>, name: string, extraCap = 0): boolean {
+  const def = PILL_BY_NAME[name], current = pills[name] || 0;
+  return Boolean(def && current < def.max + extraCap &&
+    (current > 0 || Object.values(pills).filter(level => level > 0).length < PILL_SLOTS));
 }
 
 /** Nível efetivo de uma pílula, limitado ao máximo. */
-export const pillLevel = (pills: Record<string, number>, name: string) =>
-  Math.max(0, Math.min(PILL_BY_NAME[name]?.max ?? 0, pills[name] || 0));
+export const pillLevel = (pills: Record<string, number>, name: string, extraCap = 0) =>
+  Math.max(0, Math.min((PILL_BY_NAME[name]?.max ?? 0) + extraCap, pills[name] || 0));
 
 /** Soma os bônus de todas as pílulas conhecidas, recalculado sempre das fontes. */
-export function pillBonuses(pills: Record<string, number>): Bonuses {
+export function pillBonuses(pills: Record<string, number>, extraCap = 0): Bonuses {
   const out: Bonuses = {};
   for (const def of PILLS) {
-    const n = pillLevel(pills, def.name);
+    const n = pillLevel(pills, def.name, extraCap);
     if (!n) continue;
     for (const [key, value] of Object.entries(def.perLevel)) {
       const k = key as StatKey;
@@ -124,7 +132,7 @@ export function pillBonuses(pills: Record<string, number>): Bonuses {
  */
 export function grantPill(pills: Record<string, number>, name: string, amount = 1, extraCap = 0): boolean {
   const def = PILL_BY_NAME[name];
-  if (!def) return false;
+  if (!def || (amount > 0 && !canGrantPill(pills, name, extraCap))) return false;
   // extraCap: níveis extras de itens (Cabaça de Pílulas: +2, até 12).
   const before = pills[name] || 0, after = Math.max(0, Math.min(def.max + Math.max(0, extraCap), before + amount));
   if (after === before) return false;

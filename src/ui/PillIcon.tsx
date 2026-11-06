@@ -1,8 +1,10 @@
 import { PILL_BY_NAME } from '../game/pills';
+import { pillArt } from '../game/inventoryArt';
 
 /** Cápsula colorida com glifo da pílula (CSS inline, sem assets externos). */
 export function PillIcon({ name, className = '' }: { name: string; className?: string }) {
   const def = PILL_BY_NAME[name];
+  if(def&&pillArt[def.id])return <span aria-label={name} role="img" className={`catalog-icon ${className}`} style={pillArt[def.id]}/>;
   const color = def?.color ?? '#ff77bc';
   return <span
     aria-label={name}

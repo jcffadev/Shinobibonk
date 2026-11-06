@@ -8,11 +8,13 @@ import type { WorldSnapshot } from '../scene/GameCanvas';
 import type { LamenReward } from '../game/rewards';
 import '../summary.css';
 
+import type { LocalRank } from '../game/ranking';
+
 // Tela de estatísticas pós-run (somente leitura). Deriva tudo do WorldSnapshot final.
 const fmt=(value:number,digits=1)=>value.toLocaleString('pt-BR',{maximumFractionDigits:digits});
 const clock=(seconds:number)=>`${Math.floor(seconds/60)}:${String(Math.floor(seconds%60)).padStart(2,'0')}`;
 
-export function RunSummary({world,hero,mission,reward=null,onRetry,onPrepare}:{world:WorldSnapshot;hero:{id:string;name:string};mission:string;reward?:LamenReward|null;onRetry:()=>void;onPrepare:()=>void}){
+export function RunSummary({world,hero,mission,reward=null,rank=null,onRetry,onPrepare}:{world:WorldSnapshot;hero:{id:string;name:string};mission:string;reward?:LamenReward|null;rank?:LocalRank|null;onRetry:()=>void;onPrepare:()=>void}){
   const elapsed=Math.max(0,world.elapsed);
   const dps=elapsed>0?world.totalDamage/elapsed:0;
   const allDamage=world.totalDamage+world.allyDamage;
@@ -34,17 +36,18 @@ export function RunSummary({world,hero,mission,reward=null,onRetry,onPrepare}:{w
         <div className="summary-title">
           <small>MISSÃO {mission.toUpperCase()} · ENCERRADA</small>
           <h1>{world.victory?'Missão concluída!':'Seu shinobi caiu'}</h1>
-          <p><b>{hero.name}</b> · {form} · Nv. {world.level}{world.boss?` · Chefe: ${world.boss}`:''}</p>
-          <p className="summary-hint">{world.victory?'Você sobreviveu até o fim do cronômetro.':'Fique fora dos círculos vermelhos antes do impacto.'}</p>
+          <p><b>{hero.name}</b> · {form} · Nv. {world.level}{world.bijuu?` · Bijū: ${world.bijuu}`:world.boss?` · Chefe: ${world.boss}`:''}</p>
+          <p className="summary-hint">{world.victory?'Você derrotou a Bijū e atravessou o portal de saída.':'Fique fora dos círculos vermelhos antes do impacto.'}</p>
         </div>
       </header>
       <div className="summary-metrics">{metrics.map(([value,label])=><div key={label}><strong>{value}</strong><small>{label}</small></div>)}</div>
       {reward&&<section className="summary-lamens" aria-label="Lamens ganhos">
         <div className="summary-lamens-total"><span>🍜</span><div><strong>+{fmt(reward.total,0)} Lamens</strong><small>Creditados na carteira · desempenho da run (Ryu não converte)</small></div></div>
         <ul>{reward.sources.map(s=><li key={s.id} className={s.value?'':'zero'}><span>{s.label}</span><small>{s.detail}</small><b>+{fmt(s.value,0)}</b></li>)}
-          <li className="mult"><span>Dificuldade {mission}</span><small>subtotal {fmt(reward.subtotal,0)} × {fmt(reward.multiplier,2)}</small><b>= {fmt(reward.total,0)}</b></li></ul>
+          <li className="mult"><span>Dificuldade {mission}</span><small>subtotal {fmt(reward.subtotal,0)} × {fmt(reward.multiplier,2)}</small><b>= {fmt(Math.round(reward.subtotal*reward.multiplier),0)}</b></li></ul>
       </section>}
       <div className="summary-body">
+        {rank&&<section className="summary-col summary-ranking"><h2 className="stripe gold">Ranking local <small>Posição {rank.position} nesta região e dificuldade</small></h2><ol>{rank.top.map((entry,index)=><li key={index}><b>{HERO_BY_ID[entry.heroId]?.name??entry.heroId}</b><span>{entry.victory?'Vitória':'Zona '+entry.zone} · {entry.kills} abates · {clock(entry.elapsed)}</span></li>)}</ol></section>}
         <section className="summary-col">
           <h2 className="stripe blue">Dano por técnica <small>{damageRows.length} fontes</small></h2>
           {damageRows.length?<ol className="summary-damage">{damageRows.map(([name,value])=>{const t=techniqueByName[name],share=world.totalDamage>0?value/world.totalDamage*100:0;return <li key={name}>
@@ -61,9 +64,11 @@ export function RunSummary({world,hero,mission,reward=null,onRetry,onPrepare}:{w
           <h3 className="section-label">SUPORTES · {world.allies.length}/{world.stats.supportSlots}{world.synergies?.length?' · SINERGIAS: '+world.synergies.map(s=>`${s.name} (${s.members.length})`).join(', '):''}</h3>
           <div className="summary-allies">{world.allies.length?world.allies.map((id,i)=><div key={i}><HeroPortrait id={id}/><small>{HERO_BY_ID[id]?.name??NPC_NAMES[id]??id}</small></div>):<p className="summary-empty">Nenhum suporte recrutado.</p>}</div>
         </section>
-        <section className="summary-col">
+        <section className="summary-col summary-attributes">
           <h2 className="stripe purple">Atributos finais</h2>
+          <div className="summary-attribute-grid">
           {STAT_GROUPS.map(group=><div className="stat-group" key={group.name}><h3>{group.name}</h3>{group.rows.map(([key,label,percent])=><div className="summary-stat" key={key}><span>{label}</span><b>{fmt(world.stats[key]*(percent?100:1))}{percent?'%':''}</b></div>)}</div>)}
+          </div>
         </section>
       </div>
       <footer className="summary-footer">

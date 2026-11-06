@@ -8,8 +8,7 @@
 .ms-tabs button.active{border-color:#f5c542;background:linear-gradient(100deg,color-mix(in srgb,var(--map) 45%,#1a2030),#1a2030)}
 .ms-tab-symbol{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;background:var(--map);color:#10141c;font-size:22px;font-weight:900}
 .ms-tabs b{display:block}.ms-tabs small{font-size:11px;opacity:.75}.ms-tabs em{margin-left:auto;font-style:normal;font-weight:900;font-size:12px;opacity:.85}
-.ms-preview{position:relative;overflow:hidden;border-radius:20px;border:3px solid #ffffffcc;min-height:420px;background:linear-gradient(180deg,var(--sky) 0 30%,transparent 30%),repeating-linear-gradient(160deg,var(--low) 0 26px,color-mix(in srgb,var(--low) 80%,#000) 26px 34px,var(--ground) 34px 58px,var(--high) 58px 64px);box-shadow:0 10px 30px #0008}
-.ms-watermark{position:absolute;right:4%;top:6%;font-size:min(30vw,320px);font-weight:900;color:#ffffff1f;line-height:1;pointer-events:none}
+
 .ms-region{position:absolute;left:22px;top:16px;max-width:min(520px,70%)}
 .ms-region small{font-weight:900;letter-spacing:.12em;font-size:11px;text-shadow:0 1px 3px #000}
 .ms-region h2{margin:0;font-size:clamp(34px,5vw,60px);font-weight:900;color:#fff;-webkit-text-stroke:2px #1a1a1a;paint-order:stroke fill;text-shadow:0 4px 0 #0006}
@@ -17,7 +16,6 @@
 .ms-region p{margin:0;padding:10px 14px;border-radius:12px;background:#10141ccc;font-size:14px}
 .ms-hero{position:absolute;right:18px;top:16px;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:16px;border:0;background:#10141cdd;color:#fff;cursor:pointer;text-align:left}
 .ms-hero>:first-child{width:52px;height:52px;border-radius:50%;overflow:hidden}.ms-hero small{display:block;font-size:10px;opacity:.75}.ms-hero b{display:block;font-size:17px}.ms-hero i{font-style:normal;font-size:10px;padding:1px 8px;border-radius:999px;background:#6b46c1}.ms-hero em{font-style:normal;font-weight:800;font-size:12px;color:#f5c542;align-self:flex-start}
-.ms-unlocks{position:absolute;right:18px;top:100px;display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;background:#10141cdd;font-size:12px}.ms-unlocks b{color:#5ff0ff}
 .ms-guardians{position:absolute;left:18px;bottom:16px;right:18px;padding:10px 12px;border-radius:14px;background:#10141cdd}
 .ms-guardians small{font-weight:900;font-size:11px;letter-spacing:.06em}.ms-guardians>div{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
 .ms-zone{flex:1 1 160px;padding:6px 8px;border-radius:10px;border:1px solid #ffffff22}.ms-zone b{display:block;font-size:10px;letter-spacing:.04em;margin-bottom:4px}
@@ -37,3 +35,34 @@
 .ms-start{margin:10px 14px 14px;padding:14px;border:0;border-radius:16px;background:linear-gradient(#ff6b6b,#e2474f);color:#fff;font-size:22px;font-weight:900;cursor:pointer;box-shadow:inset 0 -5px 0 #0004}
 .ms-start:disabled{background:#3a4357;cursor:not-allowed;font-size:16px}.ms-start kbd{font-size:11px;background:#0003;border-radius:6px;padding:2px 6px;margin-left:8px;font-family:inherit}
 @media (max-width:900px){.ms-page{grid-template-columns:1fr}.ms-preview{min-height:520px}.ms-hero{position:static;margin:200px 18px 0}.ms-unlocks{position:static;margin:8px 18px}}
+
+.ms-preview {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border:1px solid #a8bdd063;
+  border-radius:20px;
+  min-height:420px;
+  background:#233a37 url('/assets/map-previews-v1.png') 0 0 / 200% 200% no-repeat;
+  box-shadow:0 10px 30px #0008;
+}
+.ms-preview-areia {background-position:100% 0}
+.ms-preview-pedra {background-position:0 100%}
+.ms-preview-nevoa {background-position:100% 100%}
+.ms-preview::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(150deg,#111824e8,transparent 58%),linear-gradient(0deg,#111824c9,transparent 32%);
+}
+.ms-region h2 {-webkit-text-stroke:0;text-shadow:0 2px 14px #000a}
+.ms-region p {background:#10141cb8;max-width:390px}
+.ms-guardians {right:18px;bottom:16px;background:#101723dd}
+.ms-unlocks {position:absolute;right:18px;top:94px;max-width:min(290px,85%);z-index:2;background:#141d2bf2;border:1px solid #ffffff36;border-radius:12px;font-size:12px}
+.ms-unlocks summary {cursor:pointer;padding:9px 12px;font-weight:800}
+.ms-unlocks>div {display:grid;gap:7px;max-height:230px;overflow:auto;padding:0 8px 8px}
+@media (max-width:900px){
+  .ms-preview {min-height:560px}
+  .ms-unlocks {top:258px}
+}

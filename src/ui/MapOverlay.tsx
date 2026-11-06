@@ -1,3 +1,4 @@
+import { MAP_SIZE } from '../game/worldScale';
 import type { MouseEvent, ReactNode } from 'react';
 import type { WorldSnapshot } from '../scene/GameCanvas';
 import { HeroPortrait } from './RunSheet';
@@ -17,7 +18,7 @@ const NPC_PORTRAIT: Record<string, string> = { arsenal: 'tenten', shikamaru: 'sh
 /** Ícone/cor por tipo de evento. tone → classe CSS (map.css). */
 const EVENT_STYLE: Record<string, { glyph: string; tone: string }> = {
   arsenal: { glyph: '🗡️', tone: 'npc' }, shikamaru: { glyph: '♟️', tone: 'npc' }, slot: { glyph: '🎰', tone: 'npc' }, ebisu: { glyph: '🕶', tone: 'npc' }, iruka: { glyph: '📚', tone: 'npc' },
-  orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: '⚔️', tone: 'danger' }, challenge: { glyph: '⛩️', tone: 'challenge' }, altar: { glyph: '🛕', tone: 'altar' },
+  orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: '⛩️', tone: 'danger' }, challenge: { glyph: '⛩️', tone: 'challenge' }, altar: { glyph: '🛕', tone: 'altar' },
   trader: { glyph: '⚖️', tone: 'shop' }, ichiraku: { glyph: '🍜', tone: 'shop' },
 };
 const PICKUP_LABEL: Record<string, string> = { kunai: 'Kunai (pago em Ryu)', shuriken: 'Shuriken (pago em Ryu)', ryu: 'Bolsa de Ryu', sealDrop: 'Kunai de recompensa grátis' };
@@ -67,14 +68,15 @@ export function MinimapMarkers({ world }: { world: WorldSnapshot }) {
 /** Painel do mapa (M completo / Tab rápido): ícones vistos, clique = rota, área livre = ping. */
 export function MapPanel({ world, quick }: { world: WorldSnapshot; quick: boolean }) {
   const r = world.route;
-  const pos = (x: number, z: number) => ({ left: `${50 + x}%`, top: `${50 + z}%` });
+  const coordinate = (meters: number) => 50 + meters * 100 / MAP_SIZE;
+  const pos = (x: number, z: number) => ({ left: `${coordinate(x)}%`, top: `${coordinate(z)}%` });
   const pick = (id: string) => (e: MouseEvent) => { e.stopPropagation(); route(id); };
   const rows = [...world.events].sort((a, b) => dist(world, a.x, a.z) - dist(world, b.x, b.z));
   return <div className={`map-layout${quick ? ' quick' : ''}`}>
-    <div className="world-map" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); window.dispatchEvent(new CustomEvent('shinobi-ping', { detail: { x: ((e.clientX - rect.left) / rect.width - .5) * 100, z: ((e.clientY - rect.top) / rect.height - .5) * 100 } })); }}>
+    <div className="world-map" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); window.dispatchEvent(new CustomEvent('shinobi-ping', { detail: { x: ((e.clientX - rect.left) / rect.width - .5) * MAP_SIZE, z: ((e.clientY - rect.top) / rect.height - .5) * MAP_SIZE } })); }}>
       <div className="map-terrain" />
       {world.explored.map((cell, i) => <span className="map-revealed" key={i} style={pos(cell.x, cell.z)} />)}
-      {r && <svg className="map-route-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={50 + world.player.x} y1={50 + world.player.z} x2={50 + r.x} y2={50 + r.z} /></svg>}
+      {r && <svg className="map-route-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1={coordinate(world.player.x)} y1={coordinate(world.player.z)} x2={coordinate(r.x)} y2={coordinate(r.z)} /></svg>}
       <span className="world-player" style={pos(world.player.x, world.player.z)}>▲</span>
       {world.enemies.map((enemy, i) => <b key={i} style={pos(enemy.x, enemy.z)} />)}
       {world.pickups.map((p, i) => <i className={`known-map-event map-marker pickup${r?.id === p.id ? ' routed' : ''}`} key={p.id ?? 'p' + i} style={pos(p.x, p.z)} title={`${p.name ?? PICKUP_LABEL[p.kind]} · ${meters(dist(world, p.x, p.z))} · clique para traçar rota`} onClick={p.id ? pick(p.id) : undefined}><PickupIcon p={p} size="map" /></i>)}

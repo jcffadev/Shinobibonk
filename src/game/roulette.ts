@@ -12,14 +12,14 @@ export type RouletteCasa = { id: RouletteCasaId; label: string; icon: string; ki
 
 /** Casas na ordem em que aparecem na roda (alternando boas/ruins para a animação ficar legível). */
 export const ROULETTE_CASAS: RouletteCasa[] = [
-  { id: 'kunai', label: 'Kunai', icon: '🗡', kind: 'bom', weight: 13, description: '+1 kunai (trocável no Mercador).' },
+  { id: 'kunai', label: 'Kunai', icon: '🗡', kind: 'bom', weight: 13, description: '+1 kunai no contador da missão.' },
   { id: 'lose', label: 'Dívida de jogo', icon: '💸', kind: 'ruim', weight: 10, description: 'Perde Ryu igual ao custo do giro (ao sair).' },
   { id: 'pill', label: 'Pílula', icon: '💊', kind: 'bom', weight: 12, description: '+1 nível de uma pílula sorteada.' },
   { id: 'empty', label: 'Casa vazia', icon: '·', kind: 'neutro', weight: 12, description: 'Nada acontece.' },
   { id: 'ryu', label: 'Ryu de volta', icon: '🪙', kind: 'bom', weight: 10, description: 'Recebe o dobro do custo do giro.' },
   { id: 'debuff', label: 'Azar da Lendária Perdedora', icon: '🌧', kind: 'ruim', weight: 8, description: '−10% de dano e −8% de movimento por 45 s.' },
   { id: 'item', label: 'Recompensa de item', icon: '🎁', kind: 'bom', weight: 6, premium: true, description: '+1 escolha de item (como uma kunai).' },
-  { id: 'shuriken', label: 'Shuriken', icon: '🌀', kind: 'bom', weight: 13, description: '+1 shuriken (trocável no Mercador).' },
+  { id: 'shuriken', label: 'Shuriken', icon: '🌀', kind: 'bom', weight: 13, description: '+1 shuriken no contador da missão.' },
   { id: 'ambush', label: 'Credores da Tsunade', icon: '⚔️', kind: 'ruim', weight: 7, description: 'Emboscada leve ao sair da roleta.' },
   { id: 'buff', label: 'Bênção de Tsunade', icon: '✚', kind: 'bom', weight: 7, description: 'Buff temporário de 90 s (dano, velocidade de ataque ou vitalidade).' },
   { id: 'jackpot', label: 'Sorte Grande', icon: '🎰', kind: 'bom', weight: 2, premium: true, description: '+1 escolha de item e o triplo do custo em Ryu.' },
@@ -111,5 +111,5 @@ export function spendBonuses(items: Record<string, number>, spent: number): Bonu
   return { damage: Math.min(SPEND_RULES.cap, Math.floor(Math.max(0, spent) / SPEND_RULES.step) * perStep) } as Partial<Record<StatKey, number>>;
 }
 
-export type RoulettePrize = { seq: number; id: RouletteCasaId; label: string; icon: string; kind: RouletteKind; detail: string; cost: number; amount?: number; pill?: string; blessing?: number };
+export type RoulettePrize = { seq: number; id: RouletteCasaId; label: string; icon: string; kind: RouletteKind; detail: string; cost: number; amount?: number; pill?: string; item?: string; blessing?: number };
 export type RouletteView = { cost: number; spins: number; sessionSpins: number; sessionSpent: number; ryuSpent: number; discount: number; money: number; luck: number; pressure: number; weights: Record<RouletteCasaId, number>; pending: RoulettePrize[] };

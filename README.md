@@ -63,6 +63,7 @@ Atalhos locais:
 - `history/`: versões antigas (v0.1–v0.5.2). Não é fonte da verdade.
 - `docs/`: requisitos, decisões de produto e estado do projeto.
 - `skills/documentar-projeto/SKILL.md`: rotina para manter os Markdown sincronizados a cada alteração.
+- `skills/criar-arte-shinobibonk/SKILL.md` e `skills/movimentar-shinobi/SKILL.md` (criadas no Codex): padrão para criar arte (shinobis, itens, pílulas, cenários) e para movimento/animações (pulo, dash, caminhada).
 - `skills/publicar-github/SKILL.md`: rotina de commit e push para o GitHub ao fim de cada atualização. `.claude/skills/publicar-github/` aponta para ela, para uso no Claude Code (`/publicar-github`).
 - `.gitignore`: exclui `node_modules/`, `dist/`, segredos, `Feedback da versão.txt` (tem credenciais) e a prévia com marca d'água.
 - `assets/referencia/prints/`: capturas de referência, a maioria de outro jogo. Os 50 originais do chat ficam em `originais/`.
