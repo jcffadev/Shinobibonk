@@ -13,10 +13,10 @@ type Marker = WorldSnapshot['events'][number];
 type Pickup = WorldSnapshot['pickups'][number];
 
 /** Eventos com NPC: retrato do atlas (src/game/evolution.ts → portraitRegion). */
-const NPC_PORTRAIT: Record<string, string> = { kakashi: 'kakashi', shikamaru: 'shikamaru', slot: 'tsunade', ebisu: 'ebisu', iruka: 'iruka', orochimaru: 'orochimaru' };
+const NPC_PORTRAIT: Record<string, string> = { arsenal: 'tenten', shikamaru: 'shikamaru', slot: 'tsunade', ebisu: 'ebisu', iruka: 'iruka', orochimaru: 'orochimaru' };
 /** Ícone/cor por tipo de evento. tone → classe CSS (map.css). */
 const EVENT_STYLE: Record<string, { glyph: string; tone: string }> = {
-  kakashi: { glyph: '👁', tone: 'npc' }, shikamaru: { glyph: '♟️', tone: 'npc' }, slot: { glyph: '🎰', tone: 'npc' }, ebisu: { glyph: '🕶', tone: 'npc' }, iruka: { glyph: '📚', tone: 'npc' },
+  arsenal: { glyph: '🗡️', tone: 'npc' }, shikamaru: { glyph: '♟️', tone: 'npc' }, slot: { glyph: '🎰', tone: 'npc' }, ebisu: { glyph: '🕶', tone: 'npc' }, iruka: { glyph: '📚', tone: 'npc' },
   orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: '⚔️', tone: 'danger' }, challenge: { glyph: '⛩️', tone: 'challenge' }, altar: { glyph: '🛕', tone: 'altar' },
   trader: { glyph: '⚖️', tone: 'shop' }, ichiraku: { glyph: '🍜', tone: 'shop' },
 };

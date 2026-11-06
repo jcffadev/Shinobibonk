@@ -36,8 +36,10 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
     supportSlots:3+Math.min(1,add('support'))+Math.min(1,p('Suporte adicional')),allyDamage:1+add('allyDamage'),allySpeed:1+add('allySpeed'),allyBuff:1+add('allyBuff'),
   };
 }
+/** Escala das missões sobre a base Genin (o que é salvo no debug vale como Genin e é multiplicado por isto). */
+export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6};
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1){
-  const tier=({Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6})[rank], minutes=Math.max(0,seconds)/60;
+  const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60;
   return {hp:tier*(1+minutes*.22)*curse,damage:tier*(1+minutes*.15)*curse,speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,spawnInterval:Math.max(.2,.7/(tier*(1+minutes*.12))),cap:Math.min(180,Math.floor(70+minutes*8+(tier-1)*20))};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}

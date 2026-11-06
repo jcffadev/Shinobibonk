@@ -36,7 +36,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Hub**:
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
   - Elenco de 22 shinobis em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
-  - Biblioteca com 4 técnicas por shinobi e plano de build (planejar ou deixar em casa técnicas, pílulas e itens).
+  - Kit de 4 técnicas por shinobi (1–2 únicas, o resto compartilhado) e plano de build (planejar ou deixar em casa técnicas, pílulas e itens).
   - Árvore permanente com 16 nós e loja de 94 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
 - **Run**:
@@ -80,10 +80,10 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - técnica de ataque com barra de recarga;
   - elemento, escola, % de dano e intervalo.
   - Emboscadas periódicas.
-  - **Sharingan de Kakashi (NPC)**:
+  - **Arsenal da Tenten (NPC, antes Sharingan de Kakashi)**:
     - Uma vez por zona, copia 1 item à escolha que o jogador já carrega (+1 cópia, até o limite do item).
     - A tela própria lista só itens abaixo do limite.
-    - Não tem Atualizar/Banir; X cancela sem gastar o Kakashi.
+    - Não tem Atualizar/Banir; X cancela sem gastar o Arsenal.
 - **Kunais/shurikens no mapa**: abrir custa Ryu (20, depois +10 por abertura) e oferece uma escolha de item.
 - **Chefes (mega elites e guardiões)**: barra de vida com nome acima do personagem. Usam as técnicas do próprio shinobi contra o jogador, a cada 3–4,6 s conforme a zona, sempre com aviso vermelho no chão. Quem sai da área marcada não leva dano. Golpes com controle deixam o jogador lento. O guardião usa a Ultimate dele uma vez, abaixo de 50% de HP.
 - **Mega elites e selamento**:
@@ -107,7 +107,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **HUD inferior**: pílulas numa linha própria acima das habilidades (quebra em até 2 linhas, com rolagem). Ajuda de teclas abaixo, à direita do botão "← Preparação".
 - **Modo debug (sem login)**: existe só no servidor de desenvolvimento (`pnpm dev`/`ABRIR_JOGO.bat`); a build de produção não o tem. Na missão, F9 (ou a tecla à esquerda do 1) abre o painel para:
   - ler valores ao vivo;
-  - ajustar no meio da run 13 parâmetros:
+  - ajustar no meio da run 41 parâmetros (base Genin; Chunin/Jonin/Kage multiplicam por cima):
     - **Inimigos:** HP (inclusive dos vivos), dano, velocidade, spawn e teto.
     - **Personagem:** dano e recarga da Ultimate.
     - **Ganhos:** EXP e Ryu.
@@ -132,7 +132,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 ## Verificação (05/11/2026)
 
 - **TESTADO nesta data**: `tsc -b` e `vite build` concluídos sem erro. O Vite avisa que o bundle JS tem 879 kB, acima de 500 kB.
-- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 88 técnicas, 94 itens, distribuição de crítico e raridade).
+- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 67 técnicas, 94 itens, distribuição de crítico e raridade).
 - **TESTADO nesta data**: `node scripts/verify-runtime.mjs` (Playwright/Edge) passou nas 23 verificações sem erros de JS, inclusive a nova verificação da tecla Y, já com debug, resumo e pílulas integrados.
 - **TESTADO nesta data (debug sem login)**: teste avulso no navegador confirmou:
   - o modal de conta não tem campos de login nem de senha;

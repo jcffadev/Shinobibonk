@@ -33,6 +33,7 @@ export const PASSIVES:PassiveDef[] = [
   {name:'Baú do Clã',buff:'+5 vagas "Em casa" na Bolsa da Missão por nível; cada 2 itens desbloqueados dão +1 vaga. Itens em casa não aparecem nas recompensas da run',base:60,max:6,icon:'gama-chan',section:'Equipe da partida'},
   {name:'Meditação de Chakra',buff:'A Ultimate carrega 4% mais rápido por nível',base:120,max:5,icon:'chakra-goggles',section:'Equipe da partida'},
   {name:'Bolsa Grande',buff:'Marque 3 itens como Prioridade na Bolsa da Missão (em vez de 2)',base:250,max:1,icon:'coins',section:'Equipe da partida'},
+  {name:'Pesquisa',buff:'+25% de progresso de pesquisa por nível: técnicas de outros shinobis precisam de 100% de pesquisa para entrar no Plano de build',base:140,max:4,icon:'experience',section:'Equipe da partida'},
   {name:'Treinamento com Jiraiya',buff:'Melhora os espaços das suas técnicas favoritas (★): quanto maior a raridade do espaço, mais elas aparecem no level-up',base:200,max:8,icon:'el-sage',section:'Equipe da partida'},
 ];
 export const passiveCost=(def:PassiveDef,level:number)=>def.base+level*25;

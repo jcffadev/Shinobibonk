@@ -1,3 +1,4 @@
+import { isHeroPlayable } from '../game/account';
 import { useMemo, useState } from 'react';
 import { HEROES, HERO_CLAN, ORGANIZATIONS, heroAffinity, heroOrganizations, type Element } from '../game/heroes';
 import { HeroPortrait } from './RunSheet';
@@ -68,7 +69,7 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
         const element = heroAffinity(entry.id), groups = heroGroups(entry.id), selected = entry.id === selectedId;
         return <button key={entry.id} type="button" aria-pressed={selected}
           title={`${entry.name} · ${entry.village} · ${element}${groups.length ? ' · ' + groups.join(', ') : ''}`}
-          className={`character-card cs-card ${selected ? 'selected' : ''}`} style={{ ['--hero' as string]: entry.color }}
+          className={`character-card cs-card ${selected ? 'selected' : ''} ${isHeroPlayable(entry.id) ? '' : 'cs-locked'}`} style={{ ['--hero' as string]: entry.color }}
           onClick={() => onSelect(entry.id)}>
           <span className="cs-portrait">
             <span className="cs-initials" aria-hidden="true">{initials(entry.name)}</span>

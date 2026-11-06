@@ -54,7 +54,7 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
 - **Guardião de zona (IMPLEMENTADO)**: invocado pelo Selo do guardião quando o jogador quiser, ou automaticamente aos 160 s de cada zona de 200 s; sorteado da lista da zona em `src/game/missions.ts` (`GUARDIAN_RULES`, `guardianHpMultiplier`).
 - **Proteção de altar (CONFIRMADO)**: defender o altar durante o evento. **IMPLEMENTADO PARCIAL**: ficar 20 s dentro do círculo de 4 m dá uma kunai grátis. Ondas dedicadas e falha ao sair estão **PENDENTES**.
 - **Mercador (IMPLEMENTADO)**: troca kunai/shuriken guardadas por 5 Ryu cada.
-- **Kakashi interativo (CONFIRMADO; IMPLEMENTADO)**: NPC "Sharingan de Kakashi" no mapa. Ao interagir com E, o jogador escolhe um item que já carrega e ganha mais uma cópia dele, respeitando o limite do item. Pode ser usado uma vez por zona, e cancelar não gasta o uso.
+- **Arsenal da Tenten (CONFIRMADO; IMPLEMENTADO; antes "Sharingan de Kakashi", trocado a pedido do usuário em 06/11/2026)**: NPC com sprite da Tenten no mapa (id `arsenal`). Ao interagir com E, o jogador escolhe um item que já carrega e ganha mais uma cópia dele, respeitando o limite do item. Pode ser usado uma vez por zona, e cancelar não gasta o uso.
 - **Emboscadas (IMPLEMENTADO)**: a cada 18–30 s surgem 8 + 2×zona inimigos ao redor do jogador.
 - **Tempo e clima (CONFIRMADO; IMPLEMENTADO)**: um clima sorteado a cada zona. Névoa reduz a visibilidade; tempestade de areia reduz o movimento em 27%. Outros climas por bioma estão **PENDENTES**.
 - **Descoberta (CONFIRMADO)**: minimapa e mapa M mostram ícones só depois de o evento ser visto pela câmera. **IMPLEMENTADO**: teste de frustum da câmera até 40 m, com registro persistente. Oclusão por terreno ou árvores está **PENDENTE**. Tab abre o mapa rápido e P abre a ficha.
@@ -63,7 +63,7 @@ Mapas por bioma, mapa procedural, colisão, pulo, spawn configurável por zona, 
 
 ## Mapa, rota e ping (IMPLEMENTADO em 06/11/2026, pedido do usuário)
 - `src/ui/MapOverlay.tsx` + `src/map.css`. M (completo) e Tab (rápido) mostram ícones só do que já foi **visto em tela** na run:
-  - NPCs com retrato e selo da função (Kakashi 👁, Shikamaru ♟️, Tsunade 🎰, Ebisu 🕶, Iruka 📚, Orochimaru 🐍);
+  - NPCs com retrato e selo da função (Tenten 🗡️ no Arsenal, Shikamaru ♟️, Tsunade 🎰, Ebisu 🕶, Iruka 📚, Orochimaru 🐍);
   - eventos com ícone e cor próprios (Selo do guardião, altares, mercador, Ichiraku);
   - mega elites, guardião e Naruto Totem com retrato e borda pulsante;
   - recompensas no chão (kunai, shuriken, Ryu).

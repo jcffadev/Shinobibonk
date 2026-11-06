@@ -1,0 +1,32 @@
+/**
+ * Tipos de inimigo (regra do usuário em 06/11/2026). Valores provisórios; os multiplicadores do debug (tuning.ts)
+ * valem como base Genin e as dificuldades seguintes multiplicam por cima (MISSION_TIER).
+ * - normal: EXP/Ryu/Chakra normais.
+ * - elite (contorno amarelo): não captura, mais forte, mais defesa, sem habilidades; mais Ryu/Chakra/EXP (pelo HP e pela dificuldade).
+ * - mega: Mega Elite, pode ser selado como ajudante da run (NÃO libera na conta), muito mais forte e resistente, sem habilidades.
+ * - account: "Shinobi para selar": libera o shinobi na CONTA; não dá buff nem EXP nem drops.
+ * Guardião (chefe da zona) e Naruto Totem têm regras próprias e mantêm as técnicas de chefe.
+ * defense = fração do dano recebido que é bloqueada (0,3 = recebe 70%).
+ */
+export type EnemyTier = 'normal' | 'elite' | 'mega' | 'account';
+export const ENEMY_TIERS: Record<EnemyTier, { hp: number; damage: number; defense: number; speed: number; loot: number }> = {
+  normal: { hp: 22, damage: 1, defense: 0, speed: 1, loot: 1 },
+  elite: { hp: 95, damage: 1.6, defense: .3, speed: 1.25, loot: 3 },
+  mega: { hp: 420, damage: 2.6, defense: .55, speed: .95, loot: 9 },
+  account: { hp: 180, damage: 1.5, defense: .25, speed: 1, loot: 0 },
+};
+/** Chance de um inimigo comum surgir como elite amarelo (× tuning.eliteRate). */
+export const ELITE_CHANCE = .08;
+/** Drops base de um inimigo normal (EXP, Ryu, Chakra) e chances. Elites e mega elites garantem Ryu e Chakra. */
+export const BASE_LOOT = { xp: 8, ryu: 3, chakra: 9, ryuChance: .72, chakraChance: .28 };
+/** Peso da dificuldade da missão no tamanho dos drops: tier^0,5 (Genin 1, Chunin 1,18, Jonin 1,38, Kage 1,61). */
+export function missionLootFactor(tier: number) { return Math.sqrt(Math.max(1, tier)); }
+/**
+ * Multiplicador de saque de um tier: base do tier × peso do HP real (HP atual do inimigo ÷ HP de um normal no mesmo momento)^0,35
+ * × dificuldade da missão. O expoente baixo faz o HP pesar sem explodir os valores.
+ */
+export function lootScale(tier: EnemyTier, maxHp: number, normalHp: number, missionTier: number) {
+  if (tier === 'account') return 0;
+  const hpWeight = tier === 'normal' ? 1 : Math.pow(Math.max(1, maxHp / Math.max(1, normalHp * ENEMY_TIERS[tier].hp / ENEMY_TIERS.normal.hp)), .35);
+  return ENEMY_TIERS[tier].loot * hpWeight * missionLootFactor(missionTier);
+}

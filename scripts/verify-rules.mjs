@@ -6,7 +6,16 @@ import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
 import { formAt,portraitRegion } from '../src/game/evolution.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
 assert.equal(HEROES.length,22);
-assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,88);
+assert.equal(new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,67);
+{// Regra do usuário: 1–2 técnicas únicas por shinobi; pool respeita elemento; únicas de outros só após selar.
+ const {uniqueTechniques,allowedElements,techniquePool}=await import('../src/game/heroes.ts');
+ for(const h of HEROES){const n=uniqueTechniques(h.id).length;assert.ok(n>=1&&n<=2,h.id+' tem '+n+' únicas');const allowed=allowedElements(h.id);for(const t of techniquePool(h.id))assert.ok(allowed.has(t.element),h.id+' não pode aprender '+t.name+' ('+t.element+')');}
+ const names=HEROES.flatMap(h=>uniqueTechniques(h.id).map(t=>t.name));assert.equal(new Set(names).size,names.length,'única pertence a um só shinobi');
+ assert.ok(!skillPool('lee').some(t=>t.element!=='Neutro'),'Lee (sem natureza) só aprende Neutro');
+ assert.ok(!skillPool('naruto').some(t=>t.name==='Raikiri'),'única do Kakashi bloqueada antes de selar');
+ assert.ok(skillPool('naruto',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'única liberada depois de selar o Kakashi');
+ assert.ok(!skillPool('gaara').some(t=>t.name==='Punho da Folha'),'Neutro compartilhado de outra vila não entra');
+ assert.ok(skillPool('gaara').some(t=>t.name==='Lâminas Cruzadas'),'compartilhada da mesma vila com elemento compatível entra');}
 assert.equal(rollCritical(0,2.5,()=>0).tier,0);
 assert.deepEqual(rollCritical(1,2.5,()=>.8),{tier:1,multiplier:2.5});
 assert.deepEqual(rollCritical(1.5,2.5,()=>.49),{tier:2,multiplier:3});
@@ -65,13 +74,13 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const {setupNumbers,setupLines,hasSenjutsu,SENJUTSU,affectedTechniques,itemAttribute:attr}=await import('../src/game/combat.ts');const {HERO_BY_ID,ultimateBase}=await import('../src/game/heroes.ts');
  assert.equal(calculateStats('naruto',1).projectileSpeed,1);assert.ok(Math.abs(calculateStats('naruto',1,{'Lente do Atirador':2}).projectileSpeed-1.28)<1e-9);assert.equal(calculateStats('naruto',1,{'Seixo Polido do Rio':2}).bounce,2);
  assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Arremesso':3}).projectileSpeed-1.3)<1e-9);
- const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual(setups,['Byakugou','Modo Sábio','Modo Sábio dos Sapos','Portão da Dor','Portões do Inferno']);
+ const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual([...new Set(setups)],['Byakugou','Modo Sábio','Portões do Inferno']);
  const gates=HERO_BY_ID.lee.techniques.find(t=>t.setup);const g=setupNumbers(gates);assert.equal(g.cooldown,11);assert.equal(g.duration,6);assert.ok(Math.abs(g.uptime-6/11)<1e-9);assert.ok(setupLines(gates).includes('Ativo 55% do tempo'));assert.ok(setupLines(gates).includes('Acumulável: Não'));
  assert.ok(setupNumbers(gates,{damage:0,area:0,haste:.1,duration:.2}).uptime>g.uptime,'afixos de recarga/duração aumentam o tempo ativo');
  assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Kage Bunshin');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
  assert.ok(HEROES.every(h=>!h.techniques[0].setup),'a técnica inicial sempre ataca');
  assert.equal(SENJUTSU.multiplier,1.5);const rasengan=HERO_BY_ID.naruto.techniques.find(t=>t.name==='Rasengan'),punch=HERO_BY_ID.hashirama.techniques[0];
- assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID.jiraiya.techniques[2],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
+ assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID.hashirama.techniques[3],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
  const lens=ITEMS.find(i=>i.id==='sniper-lens'),pebble=ITEMS.find(i=>i.id==='river-pebble');assert.ok(lens&&pebble);assert.equal(attr(pebble),'Velocidade');
  assert.ok(!affectedTechniques(lens,HERO_BY_ID.lee.techniques).includes('Portões do Inferno'),'itens de ataque não afetam setups');assert.equal(affectedTechniques(lens,HERO_BY_ID.lee.techniques).length,3);}
 {// Roleta da Tsunade: casas boas/ruins, sorte com teto, dificuldade compensando, custo crescente e buff por Ryu gasto.
@@ -85,14 +94,14 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.equal(R.rouletteCost(0,0),25);assert.equal(R.rouletteCost(4,0),45);assert.equal(R.rouletteCost(0,.24),19);assert.equal(R.rouletteCost(0,.9),15,'desconto limitado a 40%');
  assert.deepEqual(R.spendBonuses({},5000),{});assert.equal(R.spendBonuses({'Carteira Gama-chan':1},749).damage,.02);assert.equal(R.spendBonuses({'Carteira Gama-chan':1},99999).damage,.3);
  const wallet=calculateStats('naruto',1,{'Carteira Gama-chan':1},{},0,{},R.spendBonuses({'Carteira Gama-chan':1},500));assert.ok(Math.abs(wallet.damage/calculateStats('naruto',1).damage-1.02)<1e-9);assert.ok(Math.abs(wallet.moneyGain-1.12)<1e-9);}
-assert.ok(skillPool('gaara').some(t=>t.name==='Corte do Leque'));assert.ok(skillPool('gaara').some(t=>t.name==='Agulhas de Karasu'));
+assert.ok(skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Corte do Leque'));assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Agulhas de Karasu'));assert.ok(!skillPool('gaara').some(t=>t.name==='Corte do Leque'));
 assert.equal(choiceCount({}),3);assert.equal(choiceCount({'Quarta opção':1}),4);
 assert.deepEqual(choiceUses({'Atualizar':7,'Pular':7,'Banir':7}),{reroll:10,skip:10,ban:10});
 assert.equal(refund(purchase(NEW_ADMIN,300)).balance,999999);
 assert.ok(!availableItems(['critical'],['critical'],false).some(i=>i.id==='critical'));
 // Passivas Shinobi: seções, nós novos com efeito real, Bolsa da Missão e Treinamento com Jiraiya.
 {const P=await import('../src/game/preparation.ts');
- assert.equal(P.PASSIVES.length,24);assert.equal(new Set(P.PASSIVES.map(p=>p.name)).size,24);
+ assert.equal(P.PASSIVES.length,25);assert.equal(new Set(P.PASSIVES.map(p=>p.name)).size,25);
  assert.ok(P.PASSIVES.every(p=>P.PASSIVE_SECTIONS.some(s=>s.id===p.section)));assert.ok(P.PASSIVES.every(p=>ITEMS.some(i=>i.id===p.icon)),'ícone de cada passiva existe no catálogo');
  for(const name of ['Chakra Curativo','Expansão','Farmacologia Ninja','Selo de Ressurreição','Baú do Clã','Meditação de Chakra','Bolsa Grande','Treinamento com Jiraiya'])assert.ok(P.PASSIVES.some(p=>p.name===name),name);
  const s0=calculateStats('naruto',1),s1=calculateStats('naruto',1,{},{},0,{'Chakra Curativo':5,'Expansão':5,'Meditação de Chakra':5,'Farmacologia Ninja':2,'Selo de Ressurreição':1});
@@ -107,6 +116,6 @@ assert.ok(!availableItems(['critical'],['critical'],false).some(i=>i.id==='criti
  for(let i=0;i<20000;i++){base+=Number(rollItems(commons,{},0,1)[0].id===fav.id);prio+=Number(rollItems(commons,{},0,1,Math.random,[fav.id],P.PRIORITY_WEIGHT)[0].id===fav.id);}
  assert.ok(prio/base>1.9&&prio/base<2.4,'prioridade ×3 de peso: 20% → 3/7 entre 5 itens da mesma raridade');}
 assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attackRate);
-const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,techniques:HEROES.length*4,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
+const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 
 

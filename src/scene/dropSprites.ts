@@ -9,7 +9,7 @@ import * as THREE from 'three';
  * - pill: cápsula rosa; item: pergaminho laranja.
  * As texturas são criadas uma vez e compartilhadas; ao coletar, só o material do sprite é descartado.
  */
-export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'ramen' | 'pill' | 'item';
+export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'ramen' | 'pill' | 'item' | 'kunai' | 'kunaiFree' | 'shuriken';
 
 const SIZE = 128;
 const cache = new Map<DropVisual, THREE.Texture>();
@@ -124,7 +124,31 @@ function drawItem(g: CanvasRenderingContext2D) {
   g.fillStyle = '#c0392b'; g.font = '900 26px "Noto Sans JP","Yu Gothic","Meiryo",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('忍', 64, 65);
 }
 
-const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawRyu, ramen: drawRamen, pill: drawPill, item: drawItem };
+function drawKunaiShape(g: CanvasRenderingContext2D) {
+  g.save(); g.translate(64, 64); g.rotate(-Math.PI / 4);
+  const blade = g.createLinearGradient(-12, 0, 12, 0); blade.addColorStop(0, '#5c6773'); blade.addColorStop(.5, '#eef3f8'); blade.addColorStop(1, '#7b8794');
+  g.fillStyle = blade; g.beginPath(); g.moveTo(0, -50); g.lineTo(13, -10); g.lineTo(0, -2); g.lineTo(-13, -10); g.closePath(); g.fill();
+  g.strokeStyle = '#1d232b'; g.lineWidth = 3; g.stroke();
+  g.fillStyle = '#2b2f36'; g.fillRect(-5, -4, 10, 34); g.strokeRect(-5, -4, 10, 34);
+  g.strokeStyle = '#c9a26a'; g.lineWidth = 2; for (let y = 0; y < 30; y += 6) { g.beginPath(); g.moveTo(-5, y); g.lineTo(5, y + 4); g.stroke(); }
+  g.strokeStyle = '#1d232b'; g.lineWidth = 4; g.beginPath(); g.arc(0, 38, 8, 0, Math.PI * 2); g.stroke();
+  g.strokeStyle = '#c9ced6'; g.lineWidth = 2; g.stroke();
+  g.restore();
+}
+function drawKunai(g: CanvasRenderingContext2D) { glow(g, 'rgba(255,190,90,.45)', 58); drawKunaiShape(g); }
+function drawKunaiFree(g: CanvasRenderingContext2D) { glow(g, 'rgba(90,255,150,.6)', 62); drawKunaiShape(g); g.fillStyle = '#5bff9a'; g.font = '900 22px sans-serif'; g.textAlign = 'center'; g.fillText('✦', 98, 34); }
+function drawShuriken(g: CanvasRenderingContext2D) {
+  glow(g, 'rgba(120,170,255,.45)', 58);
+  g.save(); g.translate(64, 64);
+  const steel = g.createRadialGradient(-6, -6, 2, 0, 0, 44); steel.addColorStop(0, '#ffffff'); steel.addColorStop(.6, '#aab6c4'); steel.addColorStop(1, '#4d5866');
+  g.fillStyle = steel; g.beginPath();
+  for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2; g.lineTo(Math.cos(a) * 44, Math.sin(a) * 44); g.lineTo(Math.cos(a + Math.PI / 4) * 12, Math.sin(a + Math.PI / 4) * 12); }
+  g.closePath(); g.fill(); g.strokeStyle = '#1d232b'; g.lineWidth = 3; g.stroke();
+  g.fillStyle = '#1d232b'; g.beginPath(); g.arc(0, 0, 7, 0, Math.PI * 2); g.fill();
+  g.restore();
+}
+
+const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawRyu, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawShuriken };
 
 export function dropTexture(kind: DropVisual) {
   let texture = cache.get(kind);
@@ -143,13 +167,21 @@ export function dropTexture(kind: DropVisual) {
 export function dropScale(kind: DropVisual, value: number) {
   if (kind === 'xp') return value >= 90 ? 1.55 : value >= 20 ? 1.15 : .85;
   if (kind === 'ramen') return 1.15;
-  if (kind === 'ryu') return 1;
-  if (kind === 'chakra') return 1;
+  if (kind === 'ryu') return .8;
+  if (kind === 'chakra') return .8;
   return 1.05;
 }
 
+const materials = new Map<DropVisual, THREE.SpriteMaterial>();
+/** Material COMPARTILHADO por tipo (performance: centenas de drops sem criar/descartar materiais). Nunca descarte. */
+function dropMaterial(kind: DropVisual) {
+  let m = materials.get(kind);
+  if (!m) { m = new THREE.SpriteMaterial({ map: dropTexture(kind), transparent: true, depthWrite: false }); materials.set(kind, m); }
+  return m;
+}
+
 export function makeDropSprite(kind: DropVisual, value: number) {
-  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: dropTexture(kind), transparent: true, depthWrite: false }));
+  const sprite = new THREE.Sprite(dropMaterial(kind));
   const s = dropScale(kind, value);
   sprite.scale.set(s, s, 1);
   sprite.userData.baseScale = s;

@@ -4,9 +4,9 @@ import { ITEMS } from '../game/catalog';
 import { HEROES } from '../game/heroes';
 import { PILL_NAMES } from '../game/pills';
 import type { Stats } from '../game/progression';
-import { TUNING_FIELDS, DEFAULT_TUNING, dropChance, isDefaultTuning, replaceTuning, resetTuning, setTuning, subscribeTuning, tuning, type Tuning, type TuningGroup } from '../game/tuning';
+import { TUNING_FIELDS, DEFAULT_TUNING, dropChance, isDefaultTuning, replaceTuning, resetTuning, setTuning, subscribeTuning, tuning, type Tuning, type TuningGroup, TUNING_GROUPS } from '../game/tuning';
 
-const GROUPS: TuningGroup[] = ['Inimigos', 'Personagem', 'Ganhos', 'Drops'];
+const GROUPS: TuningGroup[] = TUNING_GROUPS;
 const pct = (value: number) => (value * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%';
 
 /** Valores lidos ao vivo da simulação pelo painel debug. */
@@ -121,7 +121,8 @@ export function DebugPanel({ getApi }: { getApi: () => DebugApi | null }) {
         {/* Campo numérico confirma no Enter ou ao sair do campo, para permitir digitar valores como 0,5. */}
         <input key={values[field.key]} type="number" min={field.min} max={field.max} step={field.step} defaultValue={values[field.key]} onBlur={(e) => setTuning(field.key, Number(e.target.value))} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }} />
       </label>)}
-      {group === 'Drops' && <p className="debug-note">Chance efetiva por abate: Ryu {pct(dropChance(.72, values.ryuDrop))} · Chakra {pct(dropChance(.28, values.chakraDrop))} · pílula {pct(dropChance(.015, values.pillDrop))} · item {pct(dropChance(.018, values.itemDrop))} (Ryu antes da Maldição de Orochimaru).</p>}
+      {group === 'Inimigos' && <p className="debug-note">Estes valores são a base GENIN. Chunin ×1,4, Jonin ×1,9 e Kage ×2,6 multiplicam por cima (HP, dano, spawn) e os drops crescem ×√tier, então o balanceamento salvo aqui se propaga para as dificuldades seguintes.</p>}
+      {group === 'Drops e mapa' && <p className="debug-note">Chance efetiva por abate: Ryu {pct(dropChance(.72, values.ryuDrop))} · Chakra {pct(dropChance(.28, values.chakraDrop))} · pílula {pct(dropChance(.015, values.pillDrop))} · item {pct(dropChance(.018, values.itemDrop))} (Ryu antes da Maldição de Orochimaru).</p>}
     </Section>)}
     <Section title="Parâmetros salvos">
       <div className="debug-row">

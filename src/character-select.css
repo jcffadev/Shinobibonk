@@ -38,3 +38,7 @@
   .cs-card>b{font-size:11px}
   .cs-initials{font-size:20px}
 }
+
+/* Shinobi bloqueado na conta: retrato apagado com cadeado. */
+.cs-card.cs-locked{filter:grayscale(.85) brightness(.7)}
+.cs-card.cs-locked::after{content:'🔒';position:absolute;top:6px;left:6px;font-size:18px;filter:none}

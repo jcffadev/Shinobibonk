@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2026-11-06 — técnicas únicas, selamento de conta, tipos de inimigo, debug completo e ímã de drops
+- **Técnicas**: 1–2 únicas por shinobi + 26 compartilhadas (67 no total; duplicatas removidas). Pool por vila/elemento canônico; únicas de outros só após selar o dono. Plano de build mostra a origem e exige 100% de **pesquisa** (nova passiva Pesquisa).
+- **Conta**: iniciais Naruto/Sasuke/Sakura; os demais 🔒 até selar o **Shinobi para selar** (contorno ciano, 1º encontro especial da run), que só desbloqueia na conta.
+- **Inimigos**: **elite amarelo** (contorno, não capturável, mais forte e resistente, mais saque), **Mega Elite** (contorno vermelho, capturável como ajudante, sem técnicas, muito mais saque). Saque escala com HP e dificuldade.
+- **Debug**: 41 parâmetros (todos os atributos do personagem, elites, EXP/curva, Ryu, Chakra, lamen, kunais no chão, preço da kunai) como base Genin; dificuldades multiplicam por cima.
+- **Drops**: coleta por ímã dentro da área de coleta, teto de 260 com fusão, materiais compartilhados; kunai/shuriken no chão com sprites desenhados.
+- **Mapa**: inimigos no mapa só quando visíveis na câmera; câmera inclina mais (pitch 0,08) e descoberta até 60 m.
+- **Arsenal da Tenten** substitui o Sharingan de Kakashi (cópia de item).
+- Verificação: tsc, build, verify-rules (asserts das regras de técnica) e verify-runtime passaram; teste de navegador para elite, Shinobi para selar (desbloqueou Kakashi), kunai e debug.
+
 ## 2026-11-06 — Passivas Shinobi, Bolsa da Missão, mapa com rota, drops novos e cores de ganho/perda
 - **Passivas Shinobi** (antiga Progressão): 24 nós em Treinamento/Equipe da partida; novos Chakra Curativo, Expansão, Farmacologia Ninja, Selo de Ressurreição, Baú do Clã, Meditação de Chakra, Bolsa Grande e **Treinamento com Jiraiya** (técnicas favoritas aparecem mais). Pesquisa PENDENTE.
 - **Bolsa da Missão**: abas, busca, capacidade em casa, prioridade ★, predefinições 1–4 e hudzinho. "Arquivar" virou **Deixar em casa**; itens em casa não entram no pool.

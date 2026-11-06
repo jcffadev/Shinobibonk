@@ -10,6 +10,18 @@
 - Insígnia do Comandante, Tambor de Guerra e Selo de Cooperação saíram do catálogo na troca para o formato da referência (05/11/2026).
 
 ## Selamentos
+**Regra vigente (IMPLEMENTADA em 06/11/2026, pedido do usuário; substitui o desenho abaixo onde divergir)** — `src/game/enemyTiers.ts`, `src/game/account.ts`:
+
+| Tipo | Contorno | Captura | Força (base Genin, provisória) | Recompensa |
+|---|---|---|---|---|
+| Monstro normal | — | não | HP 22 | EXP 8, Ryu 3 (72%), Chakra 9 (28%), lamen 15% |
+| Elite amarelo (8% dos spawns) | amarelo | não | HP 95, dano ×1,6, bloqueia 30% do dano, sem técnicas | Ryu e Chakra garantidos; EXP/Ryu/Chakra ×3 × peso do HP × √tier da missão |
+| Mega Elite (a cada 45–70 s, até 9) | vermelho | sim, como ajudante da run (NÃO desbloqueia na conta) | HP 420, dano ×2,6, bloqueia 55%, sem técnicas | saque ×9 × peso do HP × √tier; 3 moedas e 2 orbes de chakra |
+| Shinobi para selar (1º encontro especial da run, se houver shinobi bloqueado) | ciano | sim, 1 tentativa: E sela, G deixa escapar | HP 180, dano ×1,5, bloqueia 25% | só DESBLOQUEIA na conta (sem buff, EXP ou drops) |
+| Guardião / Naruto Totem | — | regras próprias | guardião mantém técnicas de chefe | ver docs/01 |
+
+- Iniciais jogáveis: Naruto, Sasuke e Sakura (PROPOSTO, ajustável em `STARTER_HEROES`). Os demais aparecem 🔒 na seleção até serem selados. Em testes automáticos (`?test`) todos ficam jogáveis e o Shinobi para selar não surge sozinho.
+- Selar um shinobi na conta também libera as técnicas ÚNICAS dele para o pool dos outros (respeitando elemento).
 1. **Apoio temporário**: mega-elite Edo Tensei, até 3 tentativas; se todas falham, foge, sem bônus de aliado. Ao derrotar o shinobi, mostrar o próprio personagem e a animação do selo antes de confirmar a entrada dele na equipe. Se o jogador recusar com G, o elite deixa uma kunai/shuriken; coletar o drop abre uma escolha de item cuja qualidade considera Sorte. O abate não pode duplicar a recompensa.
 2. **Desbloqueio permanente**: mega-elite com menos HP, 1 tentativa; sucesso libera personagem jogável na conta.
 

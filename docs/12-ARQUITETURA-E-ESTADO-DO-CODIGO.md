@@ -30,7 +30,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
 | `src/game/pills.ts` | Fonte única das 19 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |
-| `src/game/tuning.ts` | 13 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 4 grupos: Inimigos, Personagem, Ganhos, Drops. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
+| `src/game/tuning.ts` | 41 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 5 grupos: Inimigos, Elites e Mega Elites, Personagem (todos os atributos), Ganhos (EXP, curva de EXP, Ryu, Chakra, saque de elites), Drops e mapa (chances, lamen, kunais no chão, preço da kunai). Valem como base Genin; `MISSION_TIER` multiplica por cima. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
 | `src/ui/RunSheet.tsx` | Ficha da run (P), ícones de item/pílula e retrato do herói; exporta os grupos de atributos. |
 | `src/ui/RunSummary.tsx` + `src/summary.css` | Tela de resumo pós-run (vitória/derrota), derivada do `WorldSnapshot`, com a faixa de Lamens ganhos. |
 | `src/game/allies.ts` | Buff passivo único de cada um dos 22 shinobis como ajudante (`ALLY_BUFFS`), soma escalada pela força de suporte (`alliesBonuses`) e texto do cartão (`allyBuffText`). |
@@ -196,12 +196,12 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
     - A barraca continua aberta para esquecer mais. Sem Ryu suficiente, mostra um aviso e não muda nada. X fecha.
     - O evento nunca é desativado.
   - **Bênção de Tsunade**: virou casa da Roleta da Tsunade (buff temporário de 90 s).
-  - **Sharingan de Kakashi** (sprite do Kakashi em x −21, z −1): uma vez por zona.
+  - **Arsenal da Tenten** (id `arsenal`, antes Sharingan de Kakashi; sprite da Tenten em x −21, z −1): uma vez por zona.
     - `openKakashi` abre uma escolha (`choiceLevel = −1`) com os itens da bolsa que ainda estão abaixo do limite, do mais raro ao mais comum.
     - Escolher chama `grantItem`, que dá +1 cópia, e desativa o evento.
     - X (`rewardAction('skip')`) fecha sem gastar o evento nem os usos de pular. Atualizar e banir não se aplicam.
     - Sem itens copiáveis, só mostra um aviso.
-    - Na UI: título "KAKASHI · SHARINGAN", selo "CÓPIA" e grade de até 4 colunas com rolagem para muitas cartas.
+    - Na UI: título "ARSENAL DA TENTEN", selo "CÓPIA" e grade de até 4 colunas com rolagem para muitas cartas.
     - Clicar numa carta dispara o evento `shinobi-choose` com o índice (funciona além da 4ª carta). O teclado aceita 1–9.
 - **Mega elites**:
   - O primeiro surge entre 30 e 55 s; os seguintes a cada 45–70 s, até 9 por run.

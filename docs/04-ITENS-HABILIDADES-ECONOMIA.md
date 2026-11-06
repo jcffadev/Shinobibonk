@@ -1,5 +1,16 @@
 # Pool, habilidades, itens, economia
 
+## Técnicas únicas, compartilhadas e pesquisa (IMPLEMENTADO em 06/11/2026, pedido do usuário)
+- Cada shinobi tem **1–2 técnicas únicas**; o resto do kit (4 técnicas) vem de uma biblioteca de **26 técnicas compartilhadas** (`L` em `src/game/heroes.ts`). Duplicatas foram removidas (Shuriken Uchiha/do Corvo/Gêmeas, Punho Senju/Demolidor/da Hokage, Palma Gentil/do Vazio, Rasengan de Minato/do Sábio, Modo Sábio dos Sapos, Portão da Dor, Katon, Mar de Serpentes, Receptor de Chakra, Mísseis Asura, Dragão Aquático, Impacto Sísmico, Escudo de Sansho, Chuva Venenosa, Chute da Juventude). Total: 67 técnicas.
+- **Elemento**: o shinobi só aprende Neutro + suas naturezas canônicas (Narutopedia) + Sábio se for usuário do Modo Sábio (Naruto, Jiraiya, Hashirama, Minato). Lee e Tenten só Neutro.
+- **Pool da run** (`techniquePool`/`skillPool`): kit; compartilhadas de colegas da **mesma vila** com elemento compatível (Nv. 8+); compartilhadas de **outras vilas só com o mesmo elemento** não Neutro (Nv. 8+); **únicas de outros** com elemento compatível (Nv. 12+) somente depois de **selar aquele shinobi pela 1ª vez**.
+- **Plano de build**: mostra a origem de cada técnica (kit, mesma vila, mesmo elemento, única de X, 🔒 bloqueada). Técnicas de outros shinobis precisam de **100% de pesquisa** para poder ser planejadas: +25% ao aprender e +25% ao melhorar na run, × (1 + 25% por nível da passiva **Pesquisa**, 4 níveis). Salvo em `sb_research_v1`.
+
+## Drops: ímã, teto e performance (IMPLEMENTADO em 06/11/2026)
+- O drop fica 0,35 s no chão; dentro da área de coleta voa até o personagem e só é coletado ao encostar (0,75 m).
+- Teto de 260 drops vivos: acima disso, EXP/Ryu/Chakra novos se fundem ao drop do mesmo tipo mais próximo. Materiais de sprite compartilhados por tipo; som de coleta limitado. Chakra e Ryu ficam pequenos de propósito (hordas grandes).
+- Kunai, shuriken e kunai grátis no chão agora são sprites desenhados (antes ícones SVG).
+
 ## Velocidade de ataque, velocidade de projétil, setups e Senjutsu (IMPLEMENTADO em 06/11/2026, valores provisórios)
 Pedido do usuário: velocidade de ataque é um dos atributos mais importantes; velocidade de projétil deve existir e influenciar praticamente todas as técnicas de golpe, projétil e lançamento, exceto as de buff ("setup").
 
