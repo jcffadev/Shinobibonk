@@ -20,6 +20,15 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 ## EM ANDAMENTO no Claude Code (06/11/2026) — se esta seção existir, NÃO está concluído
 - **Performance** (subagente): medir e otimizar FPS para ~1600 inimigos tomando hit (hoje 9–15 FPS no navegador de teste com 1600). Pistas: textura do atlas clonada por inimigo em `spriteMaterial` (nunca descartada), `new THREE.Color` por inimigo por quadro, números de dano criando canvas por hit, consultas O(n²).
 
+## HUD — correção de alinhamento (pedido do usuário, 06/11/2026; print com Naruto Nv. 194, 5 ajudantes, ~80 itens)
+- **Ajudantes** (`src/ui/AllyCards.tsx`, `src/allies.css`): com 5 ajudantes a coluna desce até o rodapé e cobre o dock de técnicas/pílulas (canto inferior esquerdo). Usar cartão compacto quando houver mais de 3 (retrato + nome + passiva numa linha, afinidade como barra fina), altura máxima da coluna até o topo do dock e rolagem; painel de SINERGIAS recolhível.
+- **Pílulas** (dock acima das habilidades, `src/hud-dock.css`): a faixa "Pílulas aparecerão aqui" fica escondida atrás dos cartões de ajudante; manter visível e alinhada ao dock.
+- **Ícones de habilidades** (dock inferior esquerdo + botão R/AUTO): ficam sob os cartões de ajudante; alinhar dock e Ultimate numa linha própria, com respiro do rodapé de ajuda.
+- **Itens** (grade inferior direita, `RunSheet`/inventário do HUD): a grade com ~80 itens ocupa quase meia tela; limitar a 2–3 linhas com rolagem/expandir, ícones menores e contador de quantidade legível.
+- **Mapa/minimapa** (superior direito, `map.css`): ícones e retratos cortados na borda do círculo; selo "DEBUG · F9" sobreposto ao rótulo do minimapa.
+- **Informações da missão no topo** (`game-topbar` em `main.tsx`): duas linhas apertadas (missão, relógio, Ryu, kunai/shuriken, clima/zona, preços de kunai/shuriken/mercador/roleta). Reorganizar em blocos: missão e zona; relógio grande (ou "FINAL SWARM +m:ss"); recursos (Ryu em formato curto, kunai, shuriken); preços em linha secundária menor ou só no tooltip; aviso de emboscada/eventos fora da barra.
+- Validar em 1440×900 e 1366×768 com 5 ajudantes, 80 itens e 4 técnicas + Ultimate, sem sobreposição.
+
 ## Feito em 06/11/2026 (validar jogando)
 - Técnicas por fase da obra, Invocação do Sapo, escala da horda até 1600, Final Swarm, pílulas com raridade, sorte, roleta nerfada e economia exponencial (ver CHANGELOG).
 - Pendências desses itens: Ryu do HUD já em formato curto (`compactNumber`); falta aplicar nos toasts e nos preços de kunai/roleta/mercador; Ryu por abate não escala com o tempo (ajustar se o fim ficar caro demais); saves antigos podem restaurar `pendingItemRewards` de drops antigos; slider `itemDrop` do debug não tem mais efeito; Ultimate por fase (Rasenshuriken só no Shippuden) é proposta que conflita com "Ultimate desde o Nv. 1"; fala e efeito visual próprios da Invocação do Sapo.
