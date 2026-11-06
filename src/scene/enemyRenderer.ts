@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+﻿import * as THREE from 'three';
 
 /**
  * Renderização em lote (instancing) dos inimigos comuns/elite e dos avisos de golpe no chão.
@@ -123,8 +123,9 @@ function billboardMaterial(map: THREE.Texture, solid: boolean) {
   const material = new THREE.ShaderMaterial({
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { alphaTest: { value: solid ? .1 : .5 }, uDepthOffset: { value: solid ? .02 : 0 } }]),
     // Corpo: opaco com alphaTest (oclusão correta pela profundidade, sem ordenar milhares de instâncias).
-    // Contorno: passa transparente sem escrever profundidade, para não cobrir corpos de outros inimigos.
-    vertexShader: billboardVertex, fragmentShader: billboardFragment, fog: true, transparent: solid, depthWrite: !solid,
+    // Contorno: também na passada opaca, mas desenhado ANTES dos corpos (renderOrder 1 < 2) e sem escrever profundidade:
+    // como no sprite original (contorno renderOrder 1, corpo 2), o contorno nunca cobre o corpo de outro inimigo.
+    vertexShader: billboardVertex, fragmentShader: billboardFragment, fog: true, transparent: false, depthWrite: !solid,
   });
   material.uniforms.map = { value: map };
   if (solid) material.defines = { SOLID: '' };
@@ -142,6 +143,7 @@ export function createEnemyRenderer(scene: THREE.Scene, atlas: THREE.Texture) {
   const layout = { iOffset: 3, iSize: 2, iUv: 4, iColor: 4 };
   const bodies = new Batch(quad, billboardMaterial(atlas, false), layout, scene);
   const outlines = new Batch(quad, billboardMaterial(atlas, true), layout, scene);
+  outlines.mesh.renderOrder = 3; bodies.mesh.renderOrder = 2;
   const ringShape = new THREE.RingGeometry(.1 / 1.35, 1, 32);
   const markerMaterial = new THREE.ShaderMaterial({
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { diffuse: { value: new THREE.Color('#ff3b55') } }]),
@@ -191,6 +193,8 @@ export function createEnemyRenderer(scene: THREE.Scene, atlas: THREE.Texture) {
       }
       bodies.commit(); outlines.commit(); markers.commit();
     },
+    /** Contagem de instâncias do último quadro (ganchos de teste). */
+    stats() { return { bodies: bodies.count, outlines: outlines.count, markers: markers.count }; },
     dispose() { bodies.dispose(); outlines.dispose(); markers.dispose(); quad.dispose(); ringShape.dispose(); markerGeometry.dispose(); markerData.dispose(); },
   };
 }
