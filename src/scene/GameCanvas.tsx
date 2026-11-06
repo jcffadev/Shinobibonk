@@ -32,7 +32,7 @@ import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
 import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, setupNumbers, techniqueDetail, type SkillGrowth } from '../game/combat';
 import type { Bonuses } from '../game/catalog';
-import { techniqueVisual, disposeObject } from './techniqueEffects';
+import { animateTechniqueVisual, techniqueImpact, techniqueVisual, disposeObject } from './techniqueEffects';
 import { calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, ENEMY_SCALING, type Difficulty, type Stats } from '../game/progression';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
 import { rollRarityTier, RARITY_ORDER } from '../game/combat';
@@ -678,6 +678,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       for(const d of drops)scene.remove(d.mesh);drops.length=0;
       for(const p of pickups)scene.remove(p.mesh);pickups.length=0;
       for(const shot of shots){scene.remove(shot.mesh);disposeObject(shot.mesh);}shots.length=0;
+      for(const fx of visuals){scene.remove(fx.object);disposeObject(fx.object);}visuals.length=0;
       pendingHits.length=0;totem=null;totemBar?.dispose();totemBar=null;totemDiscovered=false;
       pendingSeals.length=0;lockedTarget=null;currentPing=null;clearRoute();exploredCells.clear();
       defenseAltar=null;defenseActive=false;defenseTime=0;defenseDone=false;altarCircle.visible=false;
@@ -754,6 +755,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         if(Math.random()<ex('rootChance')){enemy.control='Paralisar';enemy.controlTime=1.2*stats.duration;}
         if(Math.random()<ex('chillChance')){enemy.control='Lentidão';enemy.controlTime=1.8*stats.duration;enemy.slow=1.8*stats.duration;}
       }
+      if(!hiddenEffects&&visuals.length<24){
+        const impact=techniqueImpact(t);
+        impact.position.copy(enemy.sprite.position);
+        impact.quaternion.copy(camera.quaternion);
+        scene.add(impact);visuals.push({object:impact,life:.2});
+      }
       takeDamage(enemy,damage,t.color,ally,crit.tier,t.name);
       // Linha Senjutsu (modo sábio): Ninjutsu infundido com Sábio tem chance de um golpe extra de 1,5× o dano deste acerto.
       if(!ally&&hasSenjutsu(t,stats.sage>0||sageModeActive())&&enemyList.includes(enemy)&&Math.random()<(senjutsuOverride??SENJUTSU.chance)){senjutsuProcs++;takeDamage(enemy,damage*SENJUTSU.multiplier,SENJUTSU.color,false,crit.tier,t.name);}
@@ -772,7 +779,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const range=ATTACK_SCALE*t.range*(sageArea?1.8:1)*(1+Math.min(1,(level-1)*.005))*Math.sqrt(stats.area*(1+g.area));const target=(lockedTarget&&enemyList.includes(lockedTarget)&&Math.hypot(lockedTarget.sprite.position.x-origin.x,lockedTarget.sprite.position.z-origin.z)<=range)?lockedTarget:enemyList.filter(e=>Math.hypot(e.sprite.position.x-origin.x,e.sprite.position.z-origin.z)<=range).sort((a,b)=>a.sprite.position.distanceToSquared(origin)-b.sprite.position.distanceToSquared(origin))[0];if(!target)return false;const direction=target.sprite.position.clone().sub(origin);direction.y=0;direction.normalize();
       const projectile=['Projétil','Em V','Onda'].includes(t.shape);
       const academyThrow=!ally&&heroId==='naruto'&&level<10&&projectile&&/shuriken|kunai/i.test(t.name);
-      if(projectile){const launch=()=>{const count=t.shape==='Em V'?2:1;/* Projétil fracionário (sinergia da Folha, afinidade): chance por disparo de +1. */const chance=stats.projectileChance,projectiles=Math.floor(stats.projectiles)+Math.floor(chance)+(Math.random()<chance%1?1:0);for(let i=0;i<Math.min(12,count+projectiles-1);i++){const spread=t.shape==='Em V'?(i%2?.2:-.2):(i-(projectiles-1)/2)*.1,aim=direction.clone().applyAxisAngle(new THREE.Vector3(0,1,0),spread),object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(origin);object.scale.multiplyScalar(ATTACK_SCALE);object.visible=!hiddenEffects;scene.add(object);shots.push({mesh:object,direction:aim,remaining:range,range,speed:(t.name.includes('Bunshin')?6:10)*stats.projectileSpeed,radius:ATTACK_SCALE*(t.shape==='Onda'?.85:.4)*Math.sqrt(stats.area*(1+g.area)),technique:t,origin:origin.clone(),hit:new Set(),growth:g,ally,bounces:!ally&&(t.shape==='Projétil'||t.shape==='Em V')?stats.bounce:0});}};
+      if(projectile){const launch=()=>{const count=t.shape==='Em V'?2:1;/* Projétil fracionário (sinergia da Folha, afinidade): chance por disparo de +1. */const chance=stats.projectileChance,projectiles=Math.floor(stats.projectiles)+Math.floor(chance)+(Math.random()<chance%1?1:0);for(let i=0;i<Math.min(12,count+projectiles-1);i++){const spread=t.shape==='Em V'?(i%2?.2:-.2):(i-(projectiles-1)/2)*.1,aim=direction.clone().applyAxisAngle(new THREE.Vector3(0,1,0),spread),object=techniqueVisual(t,()=>makeHero(ally?'naruto':heroId,ally?1:level));object.position.copy(origin);animateTechniqueVisual(object,0,aim);object.scale.multiplyScalar(ATTACK_SCALE);object.visible=!hiddenEffects;scene.add(object);shots.push({mesh:object,direction:aim,remaining:range,range,speed:(t.name.includes('Bunshin')?6:10)*stats.projectileSpeed,radius:ATTACK_SCALE*(t.shape==='Onda'?.85:.4)*Math.sqrt(stats.area*(1+g.area)),technique:t,origin:origin.clone(),hit:new Set(),growth:g,ally,bounces:!ally&&(t.shape==='Projétil'||t.shape==='Em V')?stats.bounce:0});}};
         if(academyThrow&&!instant)pendingHits.push({time:.12,run:launch});
         else launch();
       }
@@ -780,12 +787,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         // Golpes e lançamentos sem projétil têm um preparo curto até o acerto, reduzido pela velocidade de projétil.
         const resolve=()=>{
         for(const enemy of [...enemyList]){const delta=enemy.sprite.position.clone().sub(origin);delta.y=0;const d=delta.length(),along=delta.dot(direction),cross=Math.abs(delta.x*direction.z-delta.z*direction.x);let inside=false;if(t.shape==='Linha')inside=along>=0&&along<=range&&cross<ATTACK_SCALE*.65*Math.sqrt(stats.area*(1+g.area));else if(t.shape==='Cone')inside=d<=range&&(d<.2||delta.normalize().dot(direction)>.65);else inside=Math.hypot(enemy.sprite.position.x-center.x,enemy.sprite.position.z-center.z)<=radius;if(inside)hit(enemy,t,g,origin,ally);}
-        const object=techniqueVisual(t);object.position.copy(center);object.scale.multiplyScalar(Math.max(.55,radius));object.visible=!hiddenEffects;scene.add(object);visuals.push({object,life:.35});addRing(center,sageArea?SENJUTSU.color:t.color,Math.min(radius,sageArea?4:3));};
+        const object=techniqueVisual(t);object.position.copy(center);animateTechniqueVisual(object,0,direction);object.scale.multiplyScalar(Math.max(.55,radius));object.visible=!hiddenEffects;scene.add(object);visuals.push({object,life:.35});if(sageArea)addRing(center,SENJUTSU.color,Math.min(radius,4));};
         const delay=(t.school==='Taijutsu'?IMPACT_DELAY.Taijutsu:IMPACT_DELAY.other)/Math.max(.3,stats.projectileSpeed);
         if(instant||delay<=0)resolve();else pendingHits.push({time:delay,run:resolve});}
       if(!ally){playerMotion.attack(t.school==='Taijutsu'||academyThrow,direction.x*Math.cos(yaw)-direction.z*Math.sin(yaw)<0,false,t.school!=='Taijutsu'?undefined:t.name==='Furacão da Folha'||t.name==='Lótus Primária'?'kick':'punch');playTechniqueSound(t);}return true;
     }
-    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,heroId==='lee'?'kick':heroId==='guy'?'punch':undefined);if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const t={...ultimateBase(hero),name:hero.ultimate,power:6,shape:'Área' as const,setup:undefined};playTechniqueSound(t,true);addRing(player.position,hero.color,3.4);const object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(player.position);object.scale.multiplyScalar(2.8);object.visible=!hiddenEffects;scene.add(object);visuals.push({object,life:.7});for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<4.2*Math.sqrt(stats.area))hit(enemy,t,NO_GROWTH,player.position);}
+    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,heroId==='lee'?'kick':heroId==='guy'?'punch':undefined);if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const t={...ultimateBase(hero),name:hero.ultimate,power:6,shape:'Área' as const,setup:undefined};playTechniqueSound(t,true);const object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(player.position);object.scale.multiplyScalar(2.8);object.visible=!hiddenEffects;scene.add(object);visuals.push({object,life:.7});for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<4.2*Math.sqrt(stats.area))hit(enemy,t,NO_GROWTH,player.position);}
     renderer.setAnimationLoop((now)=>{const fpsCap=currentSettings().fpsLimit;if(fpsCap>0&&now-lastFrameAt<1000/fpsCap-1)return;lastFrameAt=now;const perfT0=performance.now();const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;if(enabledRef.current&&!pausedRef.current&&!choiceData&&!roulette&&!defeated&&!victory&&!debugState.frozen){
       refreshStats();invulnerability=Math.max(0,invulnerability-dt);playerSlow=Math.max(0,playerSlow-dt);
       // Temporizadores dos itens.
@@ -845,7 +852,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       chakra=Math.min(100,chakra+100*dt/55*stats.ultimateRate*tune().ultimateRate);if(autoUlt&&chakra>=100)castUltimate();
       for(const t of techniques){if(!skillLevels[t.name])continue;cooldowns[t.name]=(cooldowns[t.name]||0)-dt;if(cooldowns[t.name]<=0){const g=growth[t.name]??NO_GROWTH;if(castTechnique(t,player.position,g))cooldowns[t.name]=t.setup?setupNumbers(t,g).cooldown:t.cooldown/Math.max(.1,stats.attackSpeed*(1+g.haste)*tempAttackSpeed());}}
       for(let i=pendingHits.length-1;i>=0;i--){pendingHits[i].time-=dt;if(pendingHits[i].time<=0){const p=pendingHits.splice(i,1)[0];p.run();}}
-      for(let i=shots.length-1;i>=0;i--){const shot=shots[i],travel=Math.min(shot.remaining,shot.speed*dt);shot.mesh.position.addScaledVector(shot.direction,travel);shot.mesh.position.y=terrainHeight(shot.mesh.position.x,shot.mesh.position.z)+1.1;shot.remaining-=travel;shot.mesh.rotation.y+=dt*6;
+      for(let i=shots.length-1;i>=0;i--){const shot=shots[i],travel=Math.min(shot.remaining,shot.speed*dt);shot.mesh.position.addScaledVector(shot.direction,travel);shot.mesh.position.y=terrainHeight(shot.mesh.position.x,shot.mesh.position.z)+1.1;shot.remaining-=travel;animateTechniqueVisual(shot.mesh,dt,shot.direction);
         for(const enemy of [...enemyList])if(!shot.hit.has(enemy)&&Math.hypot(enemy.sprite.position.x-shot.mesh.position.x,enemy.sprite.position.z-shot.mesh.position.z)<shot.radius+.4){shot.hit.add(enemy);hit(enemy,shot.technique,shot.growth,shot.origin,shot.ally);if(shot.technique.shape==='Projétil')shot.remaining=0;}
         // Ricochete (Seixo Polido do Rio): ao terminar, o projétil salta para o inimigo mais próximo ainda não atingido (até 6 m).
         if(shot.remaining<=0&&shot.bounces>0&&shot.hit.size>0){const next=enemyList.filter(e=>!shot.hit.has(e)&&Math.hypot(e.sprite.position.x-shot.mesh.position.x,e.sprite.position.z-shot.mesh.position.z)<6).sort((a,b)=>a.sprite.position.distanceToSquared(shot.mesh.position)-b.sprite.position.distanceToSquared(shot.mesh.position))[0];if(next){shot.bounces--;shot.direction.copy(next.sprite.position).sub(shot.mesh.position);shot.direction.y=0;shot.direction.normalize();shot.remaining=Math.min(shot.range,6.5);}}
@@ -868,7 +875,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       } // Vivo
       } // Fora do ritual de selamento
       for(let i=effects.length-1;i>=0;i--){const fx=effects[i];fx.scale.multiplyScalar(1+dt*2.4);const mat=fx.material as THREE.MeshBasicMaterial;mat.opacity-=dt*1.35;if(mat.opacity<=0){scene.remove(fx);fx.geometry.dispose();mat.dispose();effects.splice(i,1);}}
-      for(let i=visuals.length-1;i>=0;i--){const fx=visuals[i];fx.life-=dt;fx.object.rotation.y+=dt*5;if(fx.life<=0){scene.remove(fx.object);disposeObject(fx.object);visuals.splice(i,1);}}
+      for(let i=visuals.length-1;i>=0;i--){const fx=visuals[i];fx.life-=dt;animateTechniqueVisual(fx.object,dt);if(fx.object instanceof THREE.LineSegments&&fx.object.userData.impact){fx.object.quaternion.copy(camera.quaternion);fx.object.scale.setScalar(1.4-3*fx.life);fx.object.material.opacity=Math.max(0,fx.life*5);}if(fx.life<=0){scene.remove(fx.object);disposeObject(fx.object);visuals.splice(i,1);}}
       for(let i=numbers.length-1;i>=0;i--){const n=numbers[i];n.life-=dt;n.sprite.position.y+=dt*1.3;n.sprite.material.opacity=Math.max(0,n.life/.8);if(n.life<=0){damageNumbers.recycle(n.sprite);numbers.splice(i,1);}}
       for(const tree of decor)tree.material.opacity=tree.position.distanceTo(player.position)<3?.45:1;
       // Só registra o evento depois que ele entra no campo visível da câmera.
@@ -964,6 +971,11 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       motion:()=>({pose:playerMotion.state(),atlas:playerMotion.atlas(),jumpHeight,slideTime,x:player.position.x,z:player.position.z,cameraHeight:cameraTarget.y,pitch,yaw}),
       campaign:()=>({zone,zoneElapsed:zoneElapsed(),arena,portal:portal?.kind,plansUsed,bijuuReward,beast:enemyList.find(e=>e.bijuu)?.heroId,events:events.map(e=>({id:e.id,x:e.x,z:e.z})),ryu:pickups.filter(p=>p.active&&p.kind==='ryu').length}),
       enterPortal:()=>enterPortal(),
+      bossArt:(id:string)=>{
+        const beast=enemyList.find(e=>e.bijuu&&e.heroId===id)??spawnBijuu(id);
+        const art=beast.sprite.material.map?.image as HTMLImageElement|undefined;
+        return art?.naturalWidth?art.src:'';
+      },
       merchant:()=>showMerchant(),
       roulette:{
         open:()=>openRoulette(),
@@ -998,7 +1010,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         megaSeen:(id:string,x?:number,z?:number)=>{const e=spawnEnemy(false,true,false,id);e.seen=true;e.speed=0;e.control='Paralisar';e.controlTime=1e9;if(x!==undefined&&z!==undefined)e.sprite.position.set(x,terrainHeight(x,z)+1.6,z);return 'mega-'+e.uid;},
         kill:(markerId:string)=>{const e=enemyList.find(e=>'mega-'+e.uid===markerId);if(!e)return false;removeEnemy(e);sealing=null;pendingSeals.length=0;return true;},
       },
-      inspect:()=>({skillDamage:{...skillDamage},kunaiPrice:kunaiPrice(),defeated,pills:{...knownPills},hp,chakra,autoUlt,player:{x:player.position.x,z:player.position.z},atlasReady:!!(player.material.map?.image as HTMLImageElement)?.width,visibleShots:shots.filter(s=>s.mesh.visible).length,visibleNumbers:numbers.filter(n=>n.sprite.visible).length,heroId,level,form:formAt(heroId,level).name,hiddenEffects,totalDamage,stats,allies,synergy:sandSynergy(allies),synergies:activeSynergies(heroId,allies),skills:{...skillLevels},growth:{...growth},enemies:enemyList.map(e=>({maxHp:e.boss?.maxHp,casting:e.boss?.cast?.technique.name,bar:!!e.boss?.bar.parent,hp:e.hp,heroId:e.heroId,control:e.control,controlTime:e.controlTime})),items:{...knownItems},uses:{...uses},paidWeapons,runMoney,choice:choiceData,sealing,elapsed}),
+      inspect:()=>({skillDamage:{...skillDamage},kunaiPrice:kunaiPrice(),defeated,pills:{...knownPills},hp,chakra,autoUlt,player:{x:player.position.x,z:player.position.z},atlasReady:!!(player.material.map?.image as HTMLImageElement)?.width,visibleShots:shots.filter(s=>s.mesh.visible).length,impacts:visuals.filter(fx=>fx.object.userData.impact&&fx.object.visible).length,visibleNumbers:numbers.filter(n=>n.sprite.visible).length,heroId,level,form:formAt(heroId,level).name,hiddenEffects,totalDamage,stats,allies,synergy:sandSynergy(allies),synergies:activeSynergies(heroId,allies),skills:{...skillLevels},growth:{...growth},enemies:enemyList.map(e=>({maxHp:e.boss?.maxHp,casting:e.boss?.cast?.technique.name,bar:!!e.boss?.bar.parent,hp:e.hp,heroId:e.heroId,control:e.control,controlTime:e.controlTime})),items:{...knownItems},uses:{...uses},paidWeapons,runMoney,choice:choiceData,sealing,elapsed}),
     };
     // API do painel debug. GameCanvas só a entrega com debug=true (servidor de desenvolvimento).
     const disposeEnemy=(e:Enemy)=>{bossCombat.dispose(e);scene.remove(e.sprite);e.sprite.material.dispose();if(e.marker){scene.remove(e.marker);e.marker.geometry.dispose();(e.marker.material as THREE.Material).dispose();}};

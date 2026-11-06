@@ -12,15 +12,17 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **REGRA DE ENTREGA** — novos shinobis e evoluções precisam vir com repouso, caminhada, ataque, pulo e dash/esquiva. Atualizar as skills, documentação, contexto e GitHub a cada entrega.
 - **IMPLEMENTADO:** fila de confirmação para itens da roleta, pílulas e habilidades reservadas para level-up, teto de quatro ofertas, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação da câmera por movimento do mouse.
 - **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
-- **Impactos e sons**: faltam integração e revisão. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (não publicado, licença não verificada): procurar outros sons depois, com licença livre verificada.
+- **IMPLEMENTADO** — efeitos por natureza e golpes característicos, com impactos nos inimigos. **PENDENTE** — refinamento de efeitos por técnica e sons. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (licença não verificada). Procurar outros sons com licença livre verificada.
 - **Atributos até nível 50**: recalibração pendente; o bônus de +0,8% quando acabam os upgrades é regra separada (`powerlevel.ts`).
 - **Chão nas bordas**: relevo e céu em gradiente em `terrainArt.ts`. Falta conferir mais climas e os extremos do mapa em jogo.
-- Bijuus: revisão de arte de Chōmei e Gyūki pendente. Progressão: bônus aleatório de 0,8% implementado e recalibração geral pendente.
+- **IMPLEMENTADO** — revisão de Chōmei e Gyūki com as referências do usuário e botões de raridade na Bolsa da Missão. Progressão: bônus aleatório de 0,8% implementado e recalibração geral pendente.
 - Skills do Codex: `skills/criar-arte-shinobibonk` (padrão de arte de shinobis, itens, pílulas, cenários) e `skills/movimentar-shinobi` (movimento, pulo, dash, sprites de animação), com ponteiros em `.claude/skills/`.
 - Testes atualizados ao trabalho do Codex: o selamento espera o ritual terminar (navegador de teste roda a poucos FPS); vitória por gancho `finishMission` (a missão agora termina no portal de saída); saída da partida pela pausa (Esc → Salvar e sair).
 
-## EM ANDAMENTO no Claude Code (06/11/2026) — se esta seção existir, NÃO está concluído
-- **Performance** (subagente, PARCIAL — salvo no commit desta data sem relatório final; revisar `src/scene/enemyRenderer.ts` e as mudanças em `GameCanvas.tsx`, rodar `verify-runtime` e medir FPS antes de seguir): medir e otimizar FPS para ~1600 inimigos tomando hit (hoje 9–15 FPS no navegador de teste com 1600). Pistas: textura do atlas clonada por inimigo em `spriteMaterial` (nunca descartada), `new THREE.Color` por inimigo por quadro, números de dano criando canvas por hit, consultas O(n²).
+## Desempenho com 1.600 inimigos
+
+- **IMPLEMENTADO** — o código do Claude agrupa corpos, contornos e avisos dos inimigos comuns e elites em lotes instanciados.
+- **TESTADO** — `verify-runtime` mediu 1.600 inimigos em movimento no Edge headless com ANGLE/SwiftShader. A amostra de 2,51 s ficou em 6,77 FPS e 101 chamadas de desenho no quadro final. O resultado mede renderização por software. **PENDENTE** — medir em GPU no navegador normal antes de declarar desempenho suficiente.
 
 ## HUD — correção de alinhamento (pedido do usuário, 06/11/2026; print com Naruto Nv. 194, 5 ajudantes, ~80 itens)
 - **Ajudantes** — FEITO em parte: com 4+ ajudantes os cartões ficam compactos e a coluna para antes do dock, com rolagem (`allies.css`). Falta: SINERGIAS recolhível. Problema original: com 5 ajudantes a coluna desce até o rodapé e cobre o dock de técnicas/pílulas (canto inferior esquerdo). Usar cartão compacto quando houver mais de 3 (retrato + nome + passiva numa linha, afinidade como barra fina), altura máxima da coluna até o topo do dock e rolagem; painel de SINERGIAS recolhível.
@@ -73,7 +75,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 
 ## Balanceamento (todos os valores são provisórios)
 - Itens (94), pílulas (19), passivas (25), sinergias/combos, afinidade, setups, Senjutsu (25% · 1,5×), roleta, tiers de inimigo (elite 95 HP/30% defesa; mega 420 HP/55%), lamen de cura (15%/35%), abates e minutos das missões, custo da roleta.
-- Performance com 1600 inimigos não medida (há teto de 260 drops com fusão).
+- O limite da horda e a amostra de desempenho estão registrados na seção de desempenho acima.
 
 ## Divergências canônicas registradas (Narutopedia), não alteradas
 - Orochimaru só como Vila do Som (canonicamente também Konoha/Akatsuki); Temari só Areia (também ligada a Konoha).

@@ -179,3 +179,25 @@ Passaram a compilação, as regras e 34 verificações no navegador, incluindo o
 **Resposta**
 
 Primeiro vem a revisão de caminhada, ataque, pulo e dash/esquiva por forma, com Naruto Academia e Manto da Kurama fora da revisão. A fila anterior mantém o atlas de habilidades no HUD, impactos e áudio, escala de atributos, desempenho com 1.600 inimigos, acabamento do terreno e revisão de Chōmei e Gyūki.
+
+## Efeitos da obra, bijū, Bolsa e desempenho
+
+**Pedidos**
+
+> Faça efeitos para as habilidades que se pareçam com as habilidades na obra... pegue referencia de outros jogos de naruto, Chomei e 8 caudas precisa de revisão.
+> O desempenho de 1600 personagens acho que o Claude fez.
+> Coloque filtro na bolsa de itens ao selecionar, botões referente as raridades.
+> Depois faça a validação e a publicação Depois fica a revisão, forma por forma, de caminhada, ataque, pulo e dash/esquiva
+
+> Choumei
+> Use como referência para criar a nossa, seja fiel.
+
+> Hachibi 8 caudas, use como referência para criar a nossa, seja fiel.
+
+**Resposta**
+
+Os efeitos usam a leitura visual de Ultimate Ninja STORM para técnicas como Rasengan e Chidori, com geometria original do projeto. Há efeitos por natureza, golpes característicos e impacto no alvo. Chōmei e Gyūki foram refeitos a partir das duas imagens anexadas e entram na arena com as novas texturas. A Bolsa da Missão ganhou botões de raridade combináveis com busca e estado.
+
+O código do Claude já usa instanciamento para corpos, contornos e avisos dos inimigos. O teste automatizado agora registra uma amostra com 1.600 em movimento. A revisão de caminhada, ataque, pulo e dash por forma continua na fila conforme a ordem solicitada.
+
+A compilação, as regras e 37 verificações no navegador passaram. A amostra final registrou 6,77 FPS no Edge headless com SwiftShader durante 2,51 s e 1.600 inimigos em movimento. A medição com aceleração por GPU está pendente.

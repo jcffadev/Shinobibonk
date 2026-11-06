@@ -1,6 +1,7 @@
 {
-  "date": "2026-11-06T19:06:08.015Z",
+  "date": "2026-11-06T19:39:35.361Z",
   "checks": [
+    "Bolsa da Missão combina raridade, busca e aba de estado",
     "24 shinobis selecionáveis",
     "Filtro Areia: Gaara / Temari / Kankuro",
     "Relógio começa sem guardião antecipado",
@@ -15,6 +16,7 @@
     "Selamento mostra e recruta Temari após animação",
     "Sinergia só ativa com os três suportes da Areia",
     "H oculta projéteis/números sem impedir dano",
+    "Rasengan exibe impacto no inimigo quando H está desativado",
     "Ultimate R e selo AUTO",
     "Tecla Y alterna a Ultimate automática",
     "Recusa G deixa kunai grátis com três escolhas",
@@ -34,8 +36,23 @@
     "Pílula rara sobe um nível e seu banimento exclui todas as raridades e níveis",
     "Desistência exige dois cliques na pausa e resumo volta ao menu",
     "Sasuke inicial usa quadros de ataque, pulo e dash; cursor e fundo do dock estão ocultos",
+    "Chōmei e Gyūki usam as novas texturas na cena",
     "Sem exceções JavaScript ou assets 404"
   ],
   "errors": [],
-  "missing": []
+  "missing": [],
+  "performanceSample": {
+    "renderer": "Edge headless · ANGLE/SwiftShader",
+    "enemies": 1600,
+    "seconds": 2.51070000000298,
+    "fps": 6.771020034245359,
+    "cpuUpdateMs": 1.1647058821776335,
+    "cpuRenderMs": 58.02352941211532,
+    "drawCalls": 101,
+    "instances": {
+      "bodies": 1600,
+      "outlines": 135,
+      "markers": 26
+    }
+  }
 }

@@ -16,7 +16,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/main.tsx` | Componente `App`: páginas do hub, estado local (herói, carteira, árvore, desbloqueios, arquivamentos, plano), HUD da run, mapas, cartas de recompensa, selamento e telas de vitória/derrota. |
 | `src/scene/GameCanvas.tsx` | Cena Three.js e simulação da run inteira; envia `WorldSnapshot` para o React. |
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
-| `src/scene/techniqueEffects.ts` | Objetos visuais das técnicas e descarte de recursos. |
+| `src/scene/techniqueEffects.ts` | Geometria original por golpe e elemento, orientação na direção do ataque, rotação de efeitos, raios de impacto e descarte de recursos. O limite local de efeitos de impacto evita criar uma malha por inimigo em hordas grandes. |
 | `src/game/heroes.ts` | 22 shinobis: aldeia, atributos base, passiva, bônus, 4 técnicas (escola, elemento, forma, status), Ultimate. `skillPool` adiciona a 1ª técnica de colegas da mesma aldeia (nível 8+). `sandSynergy`. Formas do Naruto. `HERO_CLAN`, `ORGANIZATIONS`, `HERO_NATURES` (naturezas canônicas da Narutopedia) e `heroAffinity`. |
 | `src/game/catalog.ts` | 94 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
@@ -30,7 +30,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/roulette.ts` + `src/ui/TsunadeRoulette.tsx` + `src/tsunade-roulette.css` | Roleta da Tsunade: casas, pesos por sorte/dificuldade, custo crescente e overlay. |
 | `src/scene/dropSprites.ts` | Sprites procedurais (canvas) dos drops: essência roxa de XP (3 tamanhos), orbe azul de chakra, moeda 両 de Ryu, tigela de lamen de cura (`RAMEN_DROP` em GameCanvas: 15%/35%), pílula e pergaminho. Hooks `dropShowcase`/`drops`. |
 | `src/ui/MapOverlay.tsx` + `src/map.css` | Ícones do mapa M/Tab e do minimapa, rota/ping, seta e metros na HUD, "Chegou!". Evento `shinobi-route`. |
-| `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, "em casa", prioridade, predefinições e hudzinho do hub. |
+| `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, busca, botões de raridade, "em casa", prioridade, predefinições e hudzinho do hub. |
 | `src/ui/BuffText.tsx` | Pinta ganhos em verde e perdas em vermelho nos textos dos cards. |
 | `src/game/maps.ts` + `src/maps.css` | 4 mapas temáticos (`MAPS`, `MAP_BY_ID`), zonas e guardiões por mapa; CSS do seletor de mapas, seleção bloqueada e pausa. |
 | `src/game/unlockMissions.ts` | Missões de desbloqueio por shinobi (`UNLOCK_MISSIONS`, `LEGENDARY`). |
@@ -39,7 +39,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/scene/playerMotion.ts` | (Codex, EM ANDAMENTO) Movimento do jogador: direção pela câmera, diagonais normalizadas, pulo (Espaço, 0,54 s, 1,3 m), dash/deslize (Shift, 0,24 s, 2,6×, recarga 0,9 s, 0,14 s invulnerável), quadros de caminhada/arremesso do Naruto Academia. Faltam poses próprias de pulo/dash. |
 | `src/scene/terrainArt.ts` + `public/assets/ground-materials-v1.png` | (Codex, EM ANDAMENTO) Materiais do chão e bordas do mapa; validação visual final pendente. |
 | `src/game/worldScale.ts` | (Codex) Escala do mundo: mapa de 160 m, limite, duração de zona (600 s), escala dos atores e alcance de ataques. |
-| `src/game/bijuu.ts` + `public/assets/bijuu-atlas-v1.png` | (Codex, EM ANDAMENTO) Bijuus (técnicas e dados). |
+| `src/game/bijuu.ts` + `public/assets/bijuu-atlas-v1.png` + `public/assets/bijuu/` | Dados das nove bijū e texturas. Chōmei e Gyūki têm texturas próprias. Os outros sete continuam no atlas 3×3. |
 | `src/game/powerlevel.ts` | (Codex) Recompensa extra por nível quando não há upgrades elegíveis (+0,8% conforme relatório do Codex); recalibração de atributos até o nível 50 pendente. |
 | `src/game/ranking.ts` | (Codex) Ranking local por mapa/dificuldade (`sb_local_ranking_v1`, top 25). |
 | `src/game/itemTrade.ts` + `src/ui/ItemTradeDialog.tsx` | (Codex) Compra/venda de itens por raridade na run. |

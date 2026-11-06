@@ -141,6 +141,10 @@ A Pílula do Mercador afeta só o Ryu recebido na run, nunca os Lamens.
 - Rola 2 afixos, ou 3 em épico/lendário, entre dano, raio, velocidade de ataque e duração (duração só em técnicas com status ou queimadura).
 - Faixas por raridade: 10–18%, 18–28%, 25–35%, 30–45%, 40–55%.
 
+## Efeitos das técnicas
+
+`techniqueEffects.ts` desenha os golpes no espaço 3D, com famílias visuais por elemento e efeitos próprios para Rasengan, Rasenshuriken, Chidori/Raikiri, Kirin, Dragão de Água, Mokuton, técnicas de areia, Amaterasu, invocações e ataques das bijū. A tecla H oculta os efeitos. O visual acompanha a direção do disparo e o impacto nasce na posição do inimigo. Dano, alcance, acerto e status continuam na simulação. [Referência de Rasengan e Chidori em STORM Connections](https://www.bandainamcoent.com/news/naruto-x-boruto-ultimate-ninja-storm-connections-join-the-new-in-game-ninja-battle), [Técnicas no material oficial de STORM Connections](https://www.bandainamcoent.com/news/naruto-x-boruto-ultimate-ninja-storm-connections-patch-notes-version-1-30).
+
 Proposta original:
 
 Afixos compatíveis com cada habilidade. Setup prioriza duração e recarga, podendo rolar potência dos buffs de dano, movimento e velocidade de ataque. Duração: comum até +10%, incomum >10–15%, raro até 25%, épico até 35%, lendário até 45% (faixas provisórias). Ofensivas: área, projéteis, crítico, dano, chance de status, duração etc. Raridades altas podem ter mais linhas. Ao esgotar pool, subir de nível aumenta ficha aleatoriamente, **exceto XP%**.

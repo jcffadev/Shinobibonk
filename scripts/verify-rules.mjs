@@ -7,6 +7,11 @@ import { ASUMA_ATLAS,FORMS,formAt,portraitRegion } from '../src/game/evolution.t
 import { actionArt, directionalArt } from '../src/game/directionalArt.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
 assert.equal(HEROES.length,24);
+for(const id of ['chomei','gyuki']){
+ const portrait=portraitRegion(id);
+ assert.equal(portrait.path,`/assets/bijuu/${id}-v2.png`);
+ assert.ok(fs.existsSync('public'+portrait.path));
+}
 const motionPairs = new Set();
 let motionForms = 0;
 for (const {id} of HEROES) {

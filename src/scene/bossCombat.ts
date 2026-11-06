@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { BIJUU_BY_ID, BIJUU_BOMB, beastPhase } from '../game/bijuu';
 import { HERO_BY_ID, ultimateBase, type Technique } from '../game/heroes';
-import { techniqueVisual, disposeObject } from './techniqueEffects';
+import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techniqueEffects';
 
 /**
  * Mega elites e guardiões (chefes):
@@ -147,6 +147,7 @@ export function createBossCombat(ctx: BossContext) {
     }
     if (!ctx.hidden()) {
       const visual = techniqueVisual(c.technique);
+      animateTechniqueVisual(visual,0,c.dir);
       visual.position.set(c.shape === 'circle' ? c.center.x : host.sprite.position.x + c.dir.x * Math.min(3, c.range / 2), ctx.height(c.center.x, c.center.z) + .9, c.shape === 'circle' ? c.center.z : host.sprite.position.z + c.dir.z * Math.min(3, c.range / 2));
       visual.scale.multiplyScalar(Math.max(1.2, c.range * .7));
       ctx.scene.add(visual);
@@ -180,7 +181,7 @@ export function createBossCombat(ctx: BossContext) {
 
   /** Efeitos de impacto (somem sozinhos). */
   function updateEffects(dt: number) {
-    for (let i = flashes.length - 1; i >= 0; i--) { const f = flashes[i]; f.life -= dt; f.object.rotation.y += dt * 4; if (f.life <= 0) { ctx.scene.remove(f.object); disposeObject(f.object); flashes.splice(i, 1); } }
+    for (let i = flashes.length - 1; i >= 0; i--) { const f = flashes[i]; f.life -= dt; animateTechniqueVisual(f.object,dt); if (f.life <= 0) { ctx.scene.remove(f.object); disposeObject(f.object); flashes.splice(i, 1); } }
   }
 
   /** Reescala o HP máximo quando o multiplicador de HP do debug muda. */

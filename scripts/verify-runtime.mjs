@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { createServer } from 'vite';
 import { chromium } from 'file:///C:/Users/jcffa/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs';
 const server=await createServer({server:{host:'127.0.0.1',port:5176,strictPort:true}});await server.listen();
-let browser;const checks=[],errors=[],missing=[];
+let browser,performanceSample;const checks=[],errors=[],missing=[];
 try {
 browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--mute-audio','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 const page=await browser.newPage({viewport:{width:1440,height:900}});
@@ -19,6 +19,18 @@ const start=async()=>{
  await page.getByRole('button',{name:/Começar!/}).click();await wait();
 };
 await page.goto('http://127.0.0.1:5176/?test=1');
+await page.getByRole('button',{name:'Bolsa da Missão',exact:true}).click();
+const rarityGroup=page.getByRole('group',{name:'Filtrar itens por raridade'});
+await rarityGroup.getByRole('button',{name:'Raro',exact:true}).click();
+const bagCards=page.locator('.bag-card');
+assert.ok(await bagCards.count()>0);
+assert.equal(await bagCards.count(),await page.locator('.bag-card.rarity-raro').count());
+await page.getByRole('searchbox',{name:'Buscar itens da bolsa'}).fill('Colete Jonin');
+assert.equal(await bagCards.count(),1);
+await page.getByRole('tab',{name:/Bloqueado/}).click();
+assert.ok(await bagCards.count()<=1);
+await page.getByRole('button',{name:'SHINOBIBONK'}).click();
+checks.push('Bolsa da Missão combina raridade, busca e aba de estado');
 await page.getByRole('button',{name:'Escolher shinobi',exact:false}).click();
 assert.equal(await page.locator('.character-card').count(),24);checks.push('24 shinobis selecionáveis');
 await page.getByLabel('Aldeia').selectOption('Vila da Areia');assert.equal(await page.locator('.character-card').count(),3);checks.push('Filtro Areia: Gaara / Temari / Kankuro');
@@ -69,7 +81,11 @@ await debug('recruitAlly','gaara');assert.equal((await state()).synergy,false);a
 await debug('clearEnemies');await debug('target',2);await debug('setCrit',2);await debug('learn','Rasengan');
 await page.keyboard.press('h');await wait();const damageBefore=(await state()).totalDamage;
 await debug('cast','Rasengan');await wait();const hidden=await state();assert.ok(hidden.totalDamage>damageBefore);assert.equal(hidden.hiddenEffects,true);assert.equal(hidden.visibleShots,0);assert.equal(hidden.visibleNumbers,0);checks.push('H oculta projéteis/números sem impedir dano');
-await page.keyboard.press('h');await debug('cast','Rasengan');await wait();await page.screenshot({path:'artifacts/rasengan.png'});
+await page.keyboard.press('h');
+const impact=await page.evaluate(()=>{const d=window.__shinobiTest;d.cast('Rasengan');return d.inspect().impacts;});
+assert.ok(impact>0);
+await page.screenshot({path:'artifacts/rasengan.png'});
+checks.push('Rasengan exibe impacto no inimigo quando H está desativado');
 await debug('setChakra');await page.keyboard.press('r');assert.ok((await state()).chakra<100);await page.locator('.ultimate-auto-mark').click();assert.equal((await state()).autoUlt,true);checks.push('Ultimate R e selo AUTO');
 await page.keyboard.press('y');assert.equal((await state()).autoUlt,false);await page.keyboard.press('y');assert.equal((await state()).autoUlt,true);checks.push('Tecla Y alterna a Ultimate automática');
 await debug('clearEnemies');await debug('dismiss');await wait();await debug('defeatMega','neji');await page.keyboard.press('g');await wait();
@@ -154,9 +170,14 @@ assert.deepEqual((await state()).pills,beforePrizes.pills);
 assert.equal(Object.values((await state()).items).reduce((n,k)=>n+k,0),1);
 checks.push('Prêmios em sequência: vender primeiro item e receber o segundo com E');
 
-await debug('clearEnemies');await debug('setTime',600);await debug('horde',1600,14,1e6,false);
+await debug('clearEnemies');await debug('setTime',600);await page.evaluate(()=>window.__shinobiTest.mapRoute.god(true));await debug('horde',1600,14,1e6,true);
 await page.waitForFunction(()=>Number(document.querySelector('.runtime-readout')?.textContent?.match(/(\d+) inimigos vivos/)?.[1])>=1600);
 assert.ok((await debug('perf')).instances.bodies>300);
+await debug('perf',true);await page.waitForTimeout(2500);
+const load=await debug('perf');
+assert.ok(load.enemies>=1600&&load.frames>0);
+performanceSample={renderer:'Edge headless · ANGLE/SwiftShader',enemies:load.enemies,seconds:load.seconds,fps:load.fps,cpuUpdateMs:load.updateMs,cpuRenderMs:load.renderMs,drawCalls:load.calls,instances:load.instances};
+await page.evaluate(()=>window.__shinobiTest.mapRoute.god(false));
 checks.push('Horda passa de 300 e o HUD mostra 1.600 inimigos');
 
 await debug('setTime',20);await debug('clearEnemies');await debug('clearDrops');
@@ -211,8 +232,14 @@ await debug('target',1);assert.equal(await debug('cast','Kunai Tática'),true);
 await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='attack'&&m.atlas.endsWith('/sasuke-classico-action-v1.png');});
 checks.push('Sasuke inicial usa quadros de ataque, pulo e dash; cursor e fundo do dock estão ocultos');
 
+for(const id of ['chomei','gyuki']){
+ await debug('clearEnemies');
+ await page.waitForFunction(name=>window.__shinobiTest.bossArt(name).endsWith('/bijuu/'+name+'-v2.png'),id);
+}
+checks.push('Chōmei e Gyūki usam as novas texturas na cena');
+
 assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);checks.push('Sem exceções JavaScript ou assets 404');
-console.log(JSON.stringify({checks,errors,missing},null,2));fs.writeFileSync('artifacts/runtime-checks.json',JSON.stringify({date:new Date().toISOString(),checks,errors,missing},null,2));
+console.log(JSON.stringify({checks,errors,missing,performanceSample},null,2));fs.writeFileSync('artifacts/runtime-checks.json',JSON.stringify({date:new Date().toISOString(),checks,errors,missing,performanceSample},null,2));
 }finally{await browser?.close();await server.close();}
 
 

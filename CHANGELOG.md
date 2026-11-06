@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Efeitos das técnicas, bijū e filtros da Bolsa
+
+- Adiciona efeitos visuais por natureza e golpes característicos com impacto no alvo. Dragão de Água, Chidori, Rasengan, Mokuton, areia e invocações têm visuais próprios.
+- Redesenha Chōmei e Gyūki com as duas referências do usuário e liga as texturas à arena. As demais bijū continuam no atlas.
+- Acrescenta botões de raridade à Bolsa da Missão, combináveis com busca e estado do item.
+
 ## Ações, ofertas e interface da missão
 
 - Adiciona conjuração do Naruto Clássico, arremesso/pulo/dash do Sasuke inicial e socos e chutes nas três formas de Rock Lee e Might Guy.

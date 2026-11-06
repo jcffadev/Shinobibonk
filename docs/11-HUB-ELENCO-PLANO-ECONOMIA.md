@@ -72,3 +72,4 @@ Buffs propostos por nível: Treinamento +4% dano; Resistência +8 HP; Agilidade 
 As capturas enviadas servem de referência de organização: cartão de personagem e passiva, botão separado para ataques, planejamento de build, árvore de melhorias e catálogo de itens com ação de arquivar. Não copiar nomes, personagens, ativos ou marca Pokémon.
 
 O contexto geral exige quatro habilidades comuns automáticas; a tela de plano deve preservar essa regra, mesmo que as imagens de referência mostrem oito ou mais ataques planejados. A tela de planejamento é pré-run; desbloqueios e arquivamento devem permanecer conceitos distintos.
+Na Bolsa da Missão, os botões Comum, Incomum, Raro, Épico e Lendário combinam com a busca e com as abas de estado do item. **Todas as raridades** limpa apenas esse filtro.

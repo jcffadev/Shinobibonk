@@ -26,6 +26,8 @@ O elenco atual tem 24 shinobis, 56 formas jogáveis com folhas direcionais de ca
 
 O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
 
+As técnicas combinam efeitos por natureza com visuais próprios para golpes como Rasengan, Chidori e Dragão de Água. A Bolsa da Missão tem filtros por raridade, e os visuais revisados de Chōmei e Gyūki aparecem na arena final.
+
 O [contexto do chat](docs/14-CONTEXTO-DO-CHAT.md) reúne pedidos e respostas. A [fila de pendências](docs/13-PENDENCIAS-PARA-CONTINUAR.md) e o [changelog](CHANGELOG.md) acompanham o trabalho.
 
 - `src/main.tsx`: hub, elenco, ataques, plano de build, árvore permanente, loja, missões, HUD da run e modais.

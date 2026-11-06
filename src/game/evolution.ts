@@ -37,6 +37,7 @@ export function portraitRegion(id:string,level=1){
  const leafIndex = leafPortraits.indexOf(id);
  if(leafIndex >= 0) return {path:'/assets/shinobi-folha-v3.png',cols:3,rows:1,index:leafIndex};
  if(id==='sakura'&&level<15)return {path:'/assets/sakura-genin-v1.png',cols:1,rows:1,index:0};
+ if(id==='chomei'||id==='gyuki')return {path:`/assets/bijuu/${id}-v2.png`,cols:1,rows:1,index:0};
  const beast=BIJUU.findIndex(entry=>entry.id===id);
  if(beast>=0)return {path:'/assets/bijuu-atlas-v1.png',cols:3,rows:3,index:beast};
  const form=formAt(id,level);

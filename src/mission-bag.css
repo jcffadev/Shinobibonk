@@ -47,6 +47,9 @@
 .bag-tabs button { padding: 7px 12px; border: 0; border-radius: 18px; background: none; color: #dfe5ee; cursor: pointer; font-size: 12px; font-weight: 800; }
 .bag-tabs button b { margin-left: 4px; padding: 1px 7px; border-radius: 10px; background: #2a3550; font-size: 10px; }
 .bag-tabs button.active { background: #34446a; color: #fff; }
+.bag-rarities { display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+.bag-rarities button { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #ffffff25; border-radius:14px; background:#141c2bee; color:#dfe5ee; font:inherit; font-size:11px; font-weight:800; cursor:pointer; }
+.bag-rarities button[aria-pressed=true] { border-color:#ffcb64; background:#3d3326; color:#fff1ce; }
 .bag-search { flex: 1; min-width: 180px; padding: 9px 14px; border: 1px solid #ffffff22; border-radius: 20px; background: #141c2bee; color: #f4f0e8; font: inherit; font-size: 12px; }
 .bag-capacity { display: grid; padding: 6px 14px; border: 1px solid #ffffff22; border-radius: 18px; background: #141c2bee; text-align: right; }
 .bag-capacity b { font-size: 13px; }
