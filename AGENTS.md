@@ -9,6 +9,7 @@ Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conf
 
 ## Skills de arte e movimento
 - Para criar ou integrar arte, siga `skills/criar-arte-shinobibonk/SKILL.md`; para movimento, pulo, dash e animação dos shinobis, siga `skills/movimentar-shinobi/SKILL.md`.
+- Todo novo shinobi jogável entra com repouso, caminhada direcional, ataque, pulo e dash/esquiva testados em cada forma, inclusive evoluções. Use a arte estática da forma e as técnicas do personagem como referências. Na revisão do elenco existente, preserve Naruto Academia e Manto da Kurama conforme pedido do usuário.
 - Claude Code e Codex trabalham no mesmo repositório: antes de começar, rode `git status`/`git pull` e leia `docs/13-PENDENCIAS-PARA-CONTINUAR.md` (fila em andamento). Ao terminar, documente e faça commit + push para o outro agente continuar na mesma página.
 
 ## Publicação no GitHub

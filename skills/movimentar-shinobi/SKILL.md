@@ -9,7 +9,7 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 
 ## Simulação
 
-- Calcule a direção horizontal na base direita/frente da câmera usando o yaw. Normalize diagonais antes de aplicar a velocidade. Suavize mudanças enquanto há entrada e pare ao soltar a última tecla.
+- Calcule a direção horizontal na base direita/frente da câmera usando o yaw. Normalize diagonais e normalize de novo a direção após suavizar a mudança, para manter a mesma velocidade ao adicionar ou soltar uma tecla. Pare ao soltar a última tecla.
 - Use altura do terreno para o apoio. Guarde a altura do pulo e o estado do dash separadamente. Faça a câmera seguir um alvo em X/Z com altura baseada no terreno, independente da altura, escala e rotação do sprite.
 - Espaço pula. A curva atual dura 0,54 s e chega a 1,3 m. Shift desliza na direção recente por 0,24 s a até 2,6× a velocidade, com 0,9 s de recarga e 0,14 s de invulnerabilidade. São parâmetros do protótipo. Conserve controles remapeáveis e use o delta de simulação para os tempos.
 - Pause a simulação em overlays, perda de foco ou fim da run. Limpe teclas ao perder foco. Considere a transição de zona antes de carregar estados de movimento.
@@ -19,6 +19,7 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 
 - Use a forma atual do personagem. A caminhada do Naruto Academia usa quatro quadros por fileira, com frente em cima e costas embaixo. Espelhe em X para a esquerda. Use uma folha diagonal com a mesma ordem e o mesmo ponto de apoio.
 - Cadastre a folha por ID do shinobi e nível da forma em `src/game/directionalArt.ts`. Os recortes de caminhada são 4×2. Em folhas 4×3, a terceira linha pode ter os quadros de conjuração. A pose parada continua vindo do sprite estático que orientou a arte.
+- A entrega de um novo jogável ou evolução inclui quadros próprios de caminhada, ataque, pulo e dash/esquiva. Teste cada ação depois de trocar de forma. Use `actionArt` quando os quadros de ação estiverem em folha separada.
 - Mantenha a fase do ciclo ao trocar direção. Ancore os pés em todos os quadros. Deixe o deslocamento vertical a cargo do pulo e do terreno. Mova braços e pernas dentro do quadro, sem balançar câmera ou corpo para simular passos.
 - Troque UVs de texturas exclusivas do jogador. Mantenha em cache os materiais do elenco e descarte recursos da animação ao sair. Em formas sem atlas, anime o sprite existente com `playerPose.ts`.
 - Nas folhas de caminhada, reserve quatro colunas para os quadros e uma dupla de fileiras (frente e costas) por forma. Registre o número total de fileiras e o início da dupla em `directionalArt.ts`. Confira a troca de atlas e de retrato ao cruzar os níveis de evolução.

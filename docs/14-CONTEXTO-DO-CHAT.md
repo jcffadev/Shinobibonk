@@ -121,3 +121,61 @@ O primeiro lote foi publicado no commit `729749a`: Asuma, animações base, sine
 **Resposta**
 
 Integrei as 45 formas dos 20 shinobis restantes. Os 24 jogáveis agora têm folhas de caminhada nas 56 formas, com quatro quadros de frente e quatro de costas por forma e espelhamento para a esquerda. Cada folha segue o sprite estático correspondente. A compilação, a verificação de cobertura das 56 formas e os 30 testes de navegador passaram. A [fila](13-PENDENCIAS-PARA-CONTINUAR.md) registra as animações de ação que ainda precisam de folhas próprias.
+
+## Banimento, interface e revisão das ações do elenco
+
+**Pedidos**
+
+> Encontrei bugs, quando  gente banir, é pra banir e não aparecer mais a habilidade/pilula, mas parece que ainda aparece em outro nível da habilidade/pilula no pool.
+> A ideia é se eu bani, incomum, raro, comum... banir ela do pool.
+>
+> Outro problema, as pilulas estão acrescentando também a quantidade do nível de raridade dela, exemplo se eu pego uma pilula incomum, ela já conta 2 estágios de level da pilula, isso está errado.
+>
+> Outro problema, cadê as pilulas de incenso para colocar mais monstros, mais dificuldade, mais dinheiro?
+> cadê a pilula de experiência?
+> O mouse deve sumir não precisa ficar a cruszinha na tela.
+> E a camera está quase perfeita
+> Mudar o ícone do Portal do Boss no mapa, coloque um simbolo que remeta as bijuus.
+
+> O spreet do Naruto na segunda forma, esta bugado quando ele ataca, revise, não está conforma da academia e com o manto da nove caudas...
+
+> Faltando botão ir para o menu nesta tela.
+
+> Sasuke com o mesmo problema na animação de atacar na versao base.
+> Revise se você fez animação de ataque igual o naruto academia/manto da kurama para todos os personagens.
+
+> O salto e o dash do sasuke também esta estranho/sem animação, deixar igual naruto academia
+
+> Ao clicar em desistir, aparece no navegador opção desistir da run, deverá ficar dentro do jogo, confirmar o desistir ali mesmo clicando novamente, aparecendo: Realmente deseja desistir? Clique novamente
+> Ai já desiste da run ao clicar.
+
+> RockLee e Might Guy, terão movimentação de ataques unicas, usando chutes socos. Consegue fazer?
+
+> Ja pedi pra você arrumar este hud, pra ficar compacto assim, ele ta sobrando o fadezinho atrás.
+> O que esta na sua fila?
+
+> Na realidade, você vai ter que revisar os ataques e movimentações de todos os personagens, incluindo da segunda forma do naruto, todos eles estão errados...
+
+> Duas coisas, estou sofrendo body block perto de algumas estruturas.
+> e além disso, essa estrutura com falta de terreno embaixo, fica feio demais, temos que corrigir isto.
+>
+> Outra coisa, ao andar com o WD ou WA pressionados, não podemos sofrer diferença de movimentação, tem que ser igual pressionando apenas um botão W, S, A, D.
+
+> Coloque na sua lista e não esqueça de atualizar a documentação e o contexto...
+> Revisar e atualizar o ataque de todos os personagens e em suas evoluções, também adicionar pulo e dash/esquiva a eles, estão faltando as animações para todos e já fique como nota, para sempre que fizermos a introdução de um novo personagem no jogo, você já criar tudo isso sem eu precisar pedir. (tirando Naruto Academia e Naruto Manto Kurama)
+
+**Resposta**
+
+A caminhada completa foi publicada no commit `9ff5dfb`. Nesta rodada, integrei quadros de conjuração do Naruto Clássico, ataque/pulo/dash do Sasuke inicial e socos e chutes próprios para Rock Lee e Might Guy em suas três formas. A fila registra a revisão das demais ações e evoluções, com Naruto Academia e Manto da Kurama fora da revisão. As skills e `AGENTS.md` exigem essas ações na entrega de novos jogáveis e formas.
+
+Pílulas sobem um nível por escolha. A raridade aumenta a potência de 1× a 2×. Banir exclui o nome de novas ofertas na run. A Pílula do Pergaminho concede experiência e a Pílula de Incenso aumenta densidade, dificuldade e Ryu. O portal final recebeu o símbolo das bijū, a cena esconde a mira, o dock de pílulas perdeu a faixa de fundo, e o resumo ganhou Ir para o menu. Desistir pede um segundo clique na pausa. O terreno ganhou apoio mais largo sob as estátuas, com transparência em cenários próximos que ocultariam o jogador, e a transição para diagonais mantém a velocidade.
+
+Passaram a compilação, as regras e 34 verificações no navegador, incluindo os novos quadros de Naruto e Sasuke, nível de pílula, banimento e saída da missão. Ainda falta reproduzir em jogo o bloqueio relatado perto da estrutura.
+
+**Pedido**
+
+> o que temos na fila?
+
+**Resposta**
+
+Primeiro vem a revisão de caminhada, ataque, pulo e dash/esquiva por forma, com Naruto Academia e Manto da Kurama fora da revisão. A fila anterior mantém o atlas de habilidades no HUD, impactos e áudio, escala de atributos, desempenho com 1.600 inimigos, acabamento do terreno e revisão de Chōmei e Gyūki.

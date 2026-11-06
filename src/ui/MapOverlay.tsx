@@ -29,6 +29,7 @@ const meters = (n: number) => `${Math.max(0, Math.round(n))} m`;
 const dist = (world: WorldSnapshot, x: number, z: number) => Math.hypot(x - world.player.x, z - world.player.z);
 
 function markerTone(m: Marker) {
+  if (m.icon === 'bijuu-portal') return 'danger';
   if (m.kind === 'enemy') return m.id === 'naruto-totem' ? 'totem' : m.guardian ? 'guardian' : 'elite';
   return EVENT_STYLE[m.id]?.tone ?? 'event';
 }
@@ -42,7 +43,9 @@ export function MarkerIcon({ m, size }: { m: Marker; size: 'map' | 'mini' }) {
   const portrait = m.portrait ?? NPC_PORTRAIT[m.id];
   const glyph = EVENT_STYLE[m.id]?.glyph ?? m.icon;
   return <span className={`mk mk-${size} tone-${markerTone(m)}${portrait ? ' has-portrait' : ''}${m.active === false ? ' used' : ''}`}>
-    {portrait ? <HeroPortrait id={portrait} /> : <em>{glyph}</em>}
+    {portrait ? <HeroPortrait id={portrait} /> : glyph === 'bijuu-portal'
+      ? <img src="/assets/icons/bijuu-portal.svg" alt="" />
+      : <em>{glyph}</em>}
     {portrait && <sup>{glyph}</sup>}
   </span>;
 }

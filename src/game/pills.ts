@@ -1,7 +1,6 @@
 import type { Bonuses, Rarity, StatKey } from './catalog.ts';
 
-// Fonte única das pílulas da run (cartas de level-up, drop rosa, caça-níquel, build e ficha).
-// Formato: cada pílula eleva UM atributo por nível, acumulando até PILL_MAX níveis.
+// Fonte única das pílulas da run (cartas de level-up, build e ficha).
 // Os bônus são somados em calculateStats a partir de knownPills a cada recálculo (sem buff residual).
 // Pílulas nunca concedem Chakra diretamente; a Pílula Hiden apenas acelera a recarga da Ultimate.
 // BALANCEAMENTO PROVISÓRIO: valores por nível derivados da referência de formato com ajustes leves.
@@ -45,6 +44,7 @@ export const PILLS: PillDef[] = [
   pill('fortuna', 'Pílula da Fortuna', '運', '#2fa874', { luck: 5 }, 'Amuleto comestível de boa sorte.'),
   pill('ima', 'Pílula Magnética', '引', '#8fa0bd', { pickupFlat: 1 }, 'Atrai drops de mais longe.'),
   pill('hiden', 'Pílula Hiden', '秘', '#7b5cff', { cool: .08 }, 'Técnica secreta que acelera a recarga da Ultimate. Não concede Chakra.'),
+  pill('incenso', 'Pílula de Incenso', '香', '#c28157', { enemyCount: .10, threat: .05, gold: .12 }, 'Atrai uma horda maior e fortalece os inimigos em troca de mais Ryu.'),
 ];
 
 export const PILL_BY_NAME: Record<string, PillDef> = Object.fromEntries(PILLS.map(p => [p.name, p]));
@@ -73,6 +73,8 @@ const STAT_FORMAT: Partial<Record<StatKey, StatFormat>> = {
   luck: { label: 'sorte', percent: false },
   pickupFlat: { label: 'm de coleta', percent: false },
   cool: { label: 'recarga da Ultimate', percent: true },
+  enemyCount: { label: 'densidade da horda', percent: true },
+  threat: { label: 'dificuldade', percent: true },
 };
 
 const num = (value: number) => value.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
@@ -94,19 +96,14 @@ export function pillDescription(name: string): string {
   return def ? `${pillEffectText(name, 1)} por nível (máx. ${def.max}). ${def.flavor}` : '';
 }
 
-/**
- * Qualidade das cartas de pílula (igual às técnicas): a raridade é sorteada pela Sorte (rollRarityTier/luckRarityWeights)
- * e define quantos NÍVEIS a carta concede de uma vez. Os níveis continuam sendo a única fonte do bônus (recalculado de knownPills),
- * então não há buff residual; o total respeita o limite (PILL_MAX + pillCap).
- */
-export const PILL_RARITY_LEVELS: Record<Rarity, number> = { Comum: 1, Incomum: 2, Raro: 3, Épico: 4, Lendário: 5 };
+/** A raridade multiplica o bônus da escolha. Cada carta continua valendo um nível. */
+export const PILL_RARITY_POWER: Record<Rarity, number> = { Comum: 1, Incomum: 1.25, Raro: 1.5, Épico: 1.75, Lendário: 2 };
 
-/** Descrição da carta de level-up gerada dos dados (`amount` = níveis concedidos pela raridade, limitado ao máximo). */
-export function pillOfferText(name: string, current: number, extraCap = 0, amount = 1): string {
+export function pillOfferText(name: string, current: number, extraCap = 0, rarity: Rarity = 'Comum'): string {
   const def = PILL_BY_NAME[name];
   if (!def) return '';
-  const after = Math.min(def.max + extraCap, current + Math.max(1, amount));
-  return `${pillEffectText(name, after - current)} (${after - current} nív.). Nv. ${current} → ${after} / ${def.max + extraCap}`;
+  const after = Math.min(def.max + extraCap, current + 1);
+  return `${pillEffectText(name, (after - current) * PILL_RARITY_POWER[rarity])}. Nv. ${current} → ${after} / ${def.max + extraCap}`;
 }
 
 /** Verifica o limite de níveis e de tipos na run. */
@@ -121,29 +118,24 @@ export const pillLevel = (pills: Record<string, number>, name: string, extraCap 
   Math.max(0, Math.min((PILL_BY_NAME[name]?.max ?? 0) + extraCap, pills[name] || 0));
 
 /** Soma os bônus de todas as pílulas conhecidas, recalculado sempre das fontes. */
-export function pillBonuses(pills: Record<string, number>, extraCap = 0): Bonuses {
+export function pillBonuses(pills: Record<string, number>, extraCap = 0, quality: Record<string, number> = {}): Bonuses {
   const out: Bonuses = {};
   for (const def of PILLS) {
     const n = pillLevel(pills, def.name, extraCap);
     if (!n) continue;
     for (const [key, value] of Object.entries(def.perLevel)) {
       const k = key as StatKey;
-      out[k] = (out[k] || 0) + (value || 0) * n;
+      out[k] = (out[k] || 0) + (value || 0) * (n + Math.min(n, quality[def.name] || 0));
     }
   }
   return out;
 }
 
 /**
- * Concede `amount` níveis de uma pílula por nome, respeitando o limite.
- * Muta `pills` e retorna true se o nível mudou. Usável por drops, cartas e pelo painel de debug.
+ * Concede um nível de uma pílula por nome, respeitando os limites da run.
  */
-export function grantPill(pills: Record<string, number>, name: string, amount = 1, extraCap = 0): boolean {
-  const def = PILL_BY_NAME[name];
-  if (!def || (amount > 0 && !canGrantPill(pills, name, extraCap))) return false;
-  // extraCap: níveis extras de itens (Cabaça de Pílulas: +2, até 12).
-  const before = pills[name] || 0, after = Math.max(0, Math.min(def.max + Math.max(0, extraCap), before + amount));
-  if (after === before) return false;
-  if (after) pills[name] = after; else delete pills[name];
+export function grantPill(pills: Record<string, number>, name: string, extraCap = 0): boolean {
+  if (!canGrantPill(pills, name, extraCap)) return false;
+  pills[name] = (pills[name] || 0) + 1;
   return true;
 }

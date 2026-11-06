@@ -96,3 +96,4 @@ Modo H: ocultar números flutuantes, trilhas e efeitos ofensivos opcionais, mas 
 # Atualização da câmera e da partida
 
 O mouse gira e inclina a câmera de 0,12 a 1,48 radianos durante a partida. Clique direito fixa o alvo. A câmera fica acima do terreno. O volume ortográfico inclui o primeiro plano mesmo em inclinação baixa. A área jogável tem novas elevações e uma cadeia de montanhas ao redor dá profundidade ao horizonte. O céu usa um gradiente conforme o clima. O HUD conta os inimigos vivos da simulação e o minimapa amostra até 300 marcadores para manter a leitura.
+O portal da arena final usa o marcador de nove caudas no mapa e no minimapa. Durante o controle da câmera, o cursor fica oculto sobre o cenário. Na Vila da Folha, as estátuas do vale se apoiam em topos mais largos. Cenários que ficam à frente e próximos do jogador perdem opacidade para manter o shinobi visível.

@@ -3,7 +3,8 @@
 html, body, #root { width: 100%; height: 100%; margin: 0; overflow: hidden; }
 button { font: inherit; }
 .game-shell { position: relative; width: 100%; height: 100%; background: #182433; overflow: hidden; }
-.scene { position: absolute; inset: 0; touch-action: none; cursor: crosshair; }
+.scene { position: absolute; inset: 0; touch-action: none; }
+.scene-live { cursor: none; }
 .scene canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 .home-shade { position: absolute; inset: 0; display: flex; flex-direction: column; background: linear-gradient(90deg, #111827eF 0%, #111827d9 38%, #11182758 74%, #11182791 100%), linear-gradient(0deg, #101722bb, transparent 35%, #10172255); }
 .home-topbar { height: 76px; flex: 0 0 76px; display: flex; align-items: center; justify-content: space-between; padding: 0 36px; background: #1118279c; border-bottom: 1px solid #e8d6aa24; }

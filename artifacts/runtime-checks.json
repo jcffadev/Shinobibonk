@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-06T15:47:31.307Z",
+  "date": "2026-11-06T19:06:08.015Z",
   "checks": [
     "24 shinobis selecionáveis",
     "Filtro Areia: Gaara / Temari / Kankuro",
@@ -7,6 +7,7 @@
     "Textura PNG do personagem carregada",
     "Movimento WASD",
     "Evoluções do Naruto carregam a folha da forma atual",
+    "Naruto Clássico usa quadros de lançamento com a roupa da forma",
     "Rasengan bloqueado nos níveis iniciais",
     "Atualizar, banir e pular debitam usos; banimento exclui futuras ofertas",
     "Afixos sorteados aplicados à habilidade escolhida",
@@ -30,6 +31,9 @@
     "Movimento do mouse inclina a câmera sem botão até perto do horizonte",
     "Prêmios em sequência: vender primeiro item e receber o segundo com E",
     "Horda passa de 300 e o HUD mostra 1.600 inimigos",
+    "Pílula rara sobe um nível e seu banimento exclui todas as raridades e níveis",
+    "Desistência exige dois cliques na pausa e resumo volta ao menu",
+    "Sasuke inicial usa quadros de ataque, pulo e dash; cursor e fundo do dock estão ocultos",
     "Sem exceções JavaScript ou assets 404"
   ],
   "errors": [],

@@ -8,6 +8,8 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o estado. `playerPose.ts` ajusta pernas e braços nos UVs da forma atual e mantém a câmera independente. `evolution.ts` aponta o Asuma para `public/assets/asuma-motion-v1.png`, folha original 4×4. A fila de recompensas fica em `GameCanvas.tsx` e aparece em `ItemTradeDialog.tsx`. O snapshot separa o total de inimigos (`enemyCount`) dos marcadores limitados do mapa (`enemies`).
 
+`actionArt` aponta para os atlases 4×2 de ações por forma. `playerMotion` seleciona a segunda fileira pela direção no Naruto Clássico, pela ação de pulo/dash no Sasuke inicial e pelo chute no Lee/Guy. `SavedRun.pillQuality` guarda somente o bônus extra de raridade, separado de `knownPills`. Saves anteriores sem o campo mantêm os níveis e seus bônus base.
+
 | Caminho | Responsabilidade |
 |---|---|
 | `index.html` | Entrada HTML do Vite, com o root React. |
@@ -46,7 +48,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/settings.ts` + `src/ui/SettingsScreen.tsx` + `src/settings.css` | Configurações completas (som, gráficos, tela, controles, teclas remapeáveis via `translateKey`, interface, conta) em `sb_settings_v1`; `currentSettings()` lido ao vivo pela simulação e pelo som. |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
-| `src/game/pills.ts` | Fonte única das 19 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |
+| `src/game/pills.ts` | Catálogo de 20 pílulas, seis espaços distintos na run, limite base de dez níveis por tipo e potência por raridade. `grantPill` sempre concede um nível. |
 | `src/game/tuning.ts` | 41 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 5 grupos: Inimigos, Elites e Mega Elites, Personagem (todos os atributos), Ganhos (EXP, curva de EXP, Ryu, Chakra, saque de elites), Drops e mapa (chances, lamen, kunais no chão, preço da kunai). Valem como base Genin; `MISSION_TIER` multiplica por cima. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
 | `src/ui/RunSheet.tsx` | Ficha da run (P), ícones de item/pílula e retrato do herói; exporta os grupos de atributos. |
 | `src/ui/RunSummary.tsx` + `src/summary.css` | Tela de resumo pós-run (vitória/derrota), derivada do `WorldSnapshot`, com a faixa de Lamens ganhos. |

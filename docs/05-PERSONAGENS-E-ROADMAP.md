@@ -11,6 +11,7 @@ Naruto, Gaara, Madara, Hashirama, Sasuke, Sakura, Kakashi, Itachi, Minato, Tsuna
 - **Passivas com regra especial no combate**: Naruto (dano por HP perdido), Gaara (armadura vira dano), Hashirama (bônus Sábio). As demais são bônus de atributo.
 - **Guardiões por zona** (`src/game/missions.ts`): zona 1 Lee/Neji/Temari; zona 2 Kankuro/Kakashi/Orochimaru; zona 3 Gaara/Hashirama/Madara/Pain.
 - **Arte** — as 56 formas jogáveis têm caminhada por quadros. Cada forma usa seu próprio sprite estático como referência de roupa, cores e acessórios.
+- **Ações** — o Naruto Clássico tem conjuração, Sasuke inicial tem arremesso, salto e dash, e Rock Lee e Might Guy têm socos e chutes próprios por forma. A revisão das demais ações e evoluções está na fila.
 
 ## NPCs e apoios
 Shisui: vender/esquecer pílulas e recalcular atributos; Orochimaru: NPC de pacto/risco, não item; Guy: treinamento; sapo sábio: bênção; Ichiraku: fusão de habilidades (planejado). **No código atual** existem como evento: Maldição de Orochimaru, Bênção de Tsunade, **Sharingan de Kakashi** (copia 1 item da bolsa), **Barraca Ichiraku** (esquecer pílulas/técnicas por Ryu; a fusão continua pendente), Caça-níquel (roleta) e Mercador de armas. Shisui, Guy, sapo sábio e Kabuto **não estão implementados**. Apoios possíveis: Sakura, Sasuke, Shikamaru, Neji, Temari, Kankuro, Hinata, Rock Lee e outros, cada qual com buff único e golpe auxiliar. Kabuto/Edo Tensei: tema de encontros de selamento.

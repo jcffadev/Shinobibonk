@@ -34,6 +34,8 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 ## Implementado na base atual
 
 - **Movimento e combate** — caminhada em quatro direções nas 56 formas jogáveis dos 24 shinobis, com quadros próprios por forma. Pulo, dash e combate usam as poses disponíveis. A câmera mantém a proteção de altura sobre o terreno.
+- **Ações com quadros próprios neste lote** — conjuração do Naruto Clássico, ataque/pulo/dash do Sasuke inicial e socos/chutes de Lee e Guy em todas as suas formas. A fila registra a revisão do restante do elenco.
+- **Ofertas e saída** — uma pílula por escolha e um nível por pílula. A raridade aumenta a potência. Banir remove a opção do sorteio pelo nome durante a run. Na pausa, clique duas vezes em Desistir para confirmar. O resumo tem o botão Ir para o menu.
 - **Contagem da horda:** o HUD lê o total real de inimigos vivos e o minimapa mantém sua amostragem separada.
 - **Recompensas:** a fila de itens da Tsunade pede E para pegar ou V para vender. Habilidades e pílulas são escolhas de level-up. O máximo de cartas de recompensa é quatro, inclusive ao banir. A sinergia conta o ajudante de mesmo nome do jogador quando recrutado.
 

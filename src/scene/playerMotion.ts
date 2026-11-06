@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import { ASUMA_ATLAS, formAt } from '../game/evolution';
 import { createPlayerPose } from './playerPose';
-import { directionalArt } from '../game/directionalArt';
+import { actionArt, directionalArt } from '../game/directionalArt';
+
+export type StrikePose = 'punch' | 'kick';
 
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string) {
   const hasWalkAtlas = heroId === 'naruto';
@@ -52,34 +54,45 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   let previousLevel = 0;
   let directionSheet: ReturnType<typeof directionalArt>;
   let directionMap: THREE.Texture | undefined;
+  let actionSheet: ReturnType<typeof actionArt>;
+  let actionMap: THREE.Texture | undefined;
+  let strike: StrikePose | undefined;
   const directionTextures = new Map<string, THREE.Texture>();
   const animatedMaps = new Set<THREE.Texture | null>([walk, diagonal, throwing, asuma]);
+  const sheetTexture = (path: string) => {
+    let texture = directionTextures.get(path);
+    if (!texture) {
+      texture = new THREE.TextureLoader().load(path);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.minFilter = texture.magFilter = THREE.NearestFilter;
+      texture.generateMipmaps = false;
+      directionTextures.set(path, texture);
+      animatedMaps.add(texture);
+    }
+    return texture;
+  };
   let attack = 0, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
   return {
-    attack: (weapon = false, left?: boolean, special = false) => {
+    attack: (weapon = false, left?: boolean, special = false, pose?: StrikePose) => {
       if (ultimate && attack > 0 && !special) return;
       attack = special ? .55 : weapon ? .25 : .22;
       ultimate = special;
       throwingWeapon = weapon;
+      strike = pose;
       if (left !== undefined) mirror = left;
     },
     state: () => state,
     atlas: () => posePath,
     hurt: () => { hurt = .23; },
-    update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean) {
+    update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean, jumpProgress: number, slideProgress: number) {
       if (!animatedMaps.has(sprite.material.map)) idleMap = sprite.material.map;
       if (level !== previousLevel) {
         previousLevel = level;
-        directionSheet = directionalArt(heroId, formAt(heroId, level).level);
-        directionMap = directionSheet && directionTextures.get(directionSheet.path);
-        if (directionSheet && !directionMap) {
-          directionMap = new THREE.TextureLoader().load(directionSheet.path);
-          directionMap.colorSpace = THREE.SRGBColorSpace;
-          directionMap.minFilter = directionMap.magFilter = THREE.NearestFilter;
-          directionMap.generateMipmaps = false;
-          directionTextures.set(directionSheet.path, directionMap);
-          animatedMaps.add(directionMap);
-        }
+        const form = formAt(heroId, level).level;
+        directionSheet = directionalArt(heroId, form);
+        actionSheet = actionArt(heroId, form);
+        directionMap = directionSheet && sheetTexture(directionSheet.path);
+        actionMap = actionSheet && sheetTexture(actionSheet.path);
       }
       attack = Math.max(0, attack - dt);
       stepTime = walkingInput ? stepTime + dt : 0;
@@ -110,6 +123,17 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       }
       const directedCast = !!directionSheet?.cast && (state === 'attack' || state === 'ultimate');
       const useDirection = !!directionMap?.image && (state === 'walk' || directedCast);
+      const attacking = state === 'attack' || state === 'ultimate';
+      const acrobatics = actionSheet?.kind === 'acrobatics' && (state === 'jump' || state === 'dash');
+      const useAction = !!actionMap?.image && (acrobatics || (attacking && (actionSheet?.kind !== 'taijutsu' || !!strike)));
+      if (useAction && actionMap && actionSheet) {
+        const castFrame = Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4));
+        const frame = state === 'jump' ? Number(jumpProgress > .66)
+          : state === 'dash' ? 2 + Number(slideProgress > .7) : castFrame;
+        const secondRow = acrobatics || (actionSheet.kind === 'cast' && rear) || (actionSheet.kind === 'taijutsu' && strike === 'kick');
+        actionMap.repeat.set(mirror ? -.25 : .25, .5);
+        actionMap.offset.set((frame + Number(mirror)) / 4, secondRow ? 0 : .5);
+      }
       if (useDirection && directionMap && directionSheet) {
         const frame = directedCast ? Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4))
           : Math.floor(stepTime * 10) % 4;
@@ -118,9 +142,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
         directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
       }
-      const usesSheet = useAsuma || useDirection || !!casting || !!walking;
-      posePath = useDirection ? directionSheet!.path : '';
-      sprite.material.map = useAsuma ? asuma : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
+      const usesSheet = useAsuma || useAction || useDirection || !!casting || !!walking;
+      posePath = useAction ? actionSheet!.path : useDirection ? directionSheet!.path : '';
+      sprite.material.map = useAsuma ? asuma : useAction ? actionMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
       sprite.material.alphaTest = usesSheet ? .55 : .18;
       const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? .07 : 0;
       const lift = state === 'jump' ? .095 : state === 'dash' ? .04 : 0;

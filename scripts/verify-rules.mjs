@@ -4,7 +4,7 @@ import { HEROES,skillPool,sandSynergy } from '../src/game/heroes.ts';
 import { calculateStats,rollCritical,difficultyAt } from '../src/game/progression.ts';
 import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
 import { ASUMA_ATLAS,FORMS,formAt,portraitRegion } from '../src/game/evolution.ts';
-import { directionalArt } from '../src/game/directionalArt.ts';
+import { actionArt, directionalArt } from '../src/game/directionalArt.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
 assert.equal(HEROES.length,24);
 const motionPairs = new Set();
@@ -17,6 +17,8 @@ for (const {id} of HEROES) {
       assert.ok(fs.existsSync('public'+(id==='asuma'?ASUMA_ATLAS:'/assets/naruto-academia-walk-v1.png')));
       continue;
     }
+    const action=actionArt(id,level);
+    if(action)assert.ok(fs.existsSync('public'+action.path),`folha de ação ausente: ${id} nível ${level}`);
     const sheet=directionalArt(id,level);
     assert.ok(sheet && fs.existsSync('public'+sheet.path),`folha ausente: ${id} nível ${level}`);
     const row = sheet.firstRow ?? 0;
@@ -168,7 +170,10 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  for(let i=0;i<5000;i++)commons+=Number(rollItems(pool,{},360,1,r3)[0].rarity==='Comum');assert.ok(commons/5000<.06,'Sorte 360 com poucos raros desbloqueados: Comum < 6%');
  const {rollGrowth,rollRarityTier}=await import('../src/game/combat.ts');let lc=0;for(let i=0;i<5000;i++)lc+=Number(rollRarityTier(360,r3)===0);assert.ok(lc/5000<.06&&lc>0,'Sorte 360: Comum raro mas nunca 0%');
  const g=rollGrowth(0,HEROES.find(h=>h.id==='naruto').techniques[0],()=>0);assert.ok(g.growth.damage>=.3,'técnica de ataque sempre ganha dano');
- const PL=await import('../src/game/pills.ts');assert.deepEqual(Object.values(PL.PILL_RARITY_LEVELS),[1,2,3,4,5]);const pills={'Pílula do Soldado':8};PL.grantPill(pills,'Pílula do Soldado',5);assert.equal(pills['Pílula do Soldado'],10,'níveis por raridade respeitam o limite');
+ const PL=await import('../src/game/pills.ts');const pills={'Pílula do Soldado':8};PL.grantPill(pills,'Pílula do Soldado');assert.equal(pills['Pílula do Soldado'],9,'cada escolha vale um nível');
+ assert.match(PL.pillOfferText('Pílula do Soldado',8,0,'Lendário'),/\+20%.*Nv\. 8 → 9/);
+ assert.deepEqual(PL.pillBonuses({'Pílula de Incenso':1}),{enemyCount:.10,threat:.05,gold:.12});
+ assert.ok(calculateStats('naruto',1,{},{'Pílula do Pergaminho':1}).xpGain>calculateStats('naruto',1).xpGain);
  assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Soldado':10}).physical-calculateStats('naruto',1).physical-1)<1e-9,'bônus recalculado só dos níveis');}
 const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,motionForms,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 

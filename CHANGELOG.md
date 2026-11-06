@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Ações, ofertas e interface da missão
+
+- Adiciona conjuração do Naruto Clássico, arremesso/pulo/dash do Sasuke inicial e socos e chutes nas três formas de Rock Lee e Might Guy.
+- Cada pílula ganha um nível por carta. Raridade aumenta a potência. Inclui Pílula de Incenso e confirma a Pílula do Pergaminho como fonte de experiência.
+- Banimento exclui o mesmo nome em qualquer nível e raridade. O clique identifica a carta exibida para evitar selecionar um índice antigo.
+- Adiciona confirmação de desistência na pausa, botão Ir para o menu no resumo, dock de pílulas compacto sem faixa e símbolo das bijū no portal da arena.
+- Oculta o cursor no cenário durante a partida, mantém a velocidade durante a transição para diagonais e melhora o apoio e a visibilidade perto das estátuas.
+
 ## Caminhada direcional de todo o elenco
 
 - Adiciona folhas direcionais às 45 formas dos 20 shinobis restantes. O elenco de 24 shinobis passa a ter 56 formas com caminhada por quadros, baseada na arte de repouso de cada forma.

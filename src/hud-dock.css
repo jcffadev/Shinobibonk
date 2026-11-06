@@ -4,11 +4,10 @@
 .skill-dock{position:absolute;z-index:3;left:20px;bottom:96px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:calc(100% - 40px);pointer-events:none}
 .skill-dock>.vitamin-row,.skill-dock>.ability-bar{position:static;left:auto;right:auto;bottom:auto;transform:none;pointer-events:auto}
 .skill-dock>.ability-bar{width:auto;flex-wrap:nowrap}
-/* A linha de pílulas acompanha a largura da barra de habilidades e quebra linha em vez de alargar o HUD. */
-.skill-dock>.vitamin-row{box-sizing:border-box;width:0;min-width:100%;flex-wrap:wrap;align-content:flex-start;gap:8px 6px;min-height:0;max-height:96px;overflow-y:auto;overflow-x:hidden;padding:5px 8px 8px;scrollbar-width:thin}
-.skill-dock>.vitamin-row .inv-icon{width:30px;height:30px;flex:none}
-.skill-dock>.vitamin-row .inv-icon small{right:-3px;bottom:-4px}
-.skill-dock>.vitamin-row>span{padding:2px 4px;white-space:nowrap}
+.skill-dock>.vitamin-row{width:max-content;min-height:0;max-width:100%;gap:4px;padding:0;background:none;box-shadow:none;backdrop-filter:none}
+.skill-dock>.vitamin-row .inv-icon{width:26px;height:26px;flex:none}
+.skill-dock>.vitamin-row .catalog-icon{width:100%;height:100%}
+.skill-dock>.vitamin-row .inv-icon small{right:0;bottom:0;min-width:10px;padding:0 2px;font-size:8px}
 /* Ajuda de teclas fica abaixo do dock, à direita do botão "← Preparação" (left:16px; bottom:17px). */
 .game-help{left:124px;bottom:14px;max-width:400px}
 /* Escolha com muitas cartas (cópia do Kakashi): grade de até 4 colunas com rolagem. */
@@ -17,8 +16,7 @@
 @media(max-width:700px){
   .level-choice-cards.many-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .skill-dock{left:8px;bottom:50px;gap:6px;max-width:calc(100% - 16px)}
-  .skill-dock>.vitamin-row{max-height:44px;padding:4px 6px 6px}
-  .skill-dock>.vitamin-row .inv-icon{width:26px;height:26px}
+  .skill-dock>.vitamin-row .inv-icon{width:23px;height:23px}
 }
 
 .vitamin-row .pill-slot-empty{display:grid;place-items:center;border:1px dashed #bd9bc66e;background:#221b33a6;color:#af93b9;font-size:14px}

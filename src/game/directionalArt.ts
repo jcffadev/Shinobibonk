@@ -1,4 +1,9 @@
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
+export function actionArt(hero: string, formLevel: number) {
+  if (hero === 'naruto' && formLevel === 10) return { path: '/assets/naruto-classico-action-v1.png', kind: 'cast' as const };
+  if (hero === 'sasuke' && formLevel === 1) return { path: '/assets/sasuke-classico-action-v1.png', kind: 'acrobatics' as const };
+  if (hero === 'lee' || hero === 'guy') return { path: `/assets/shinobi-motion/${hero}-${formLevel}-action-v1.png`, kind: 'taijutsu' as const };
+}
 const sheets: Record<string, DirectionalSheet> = {
   'naruto-10': { path: '/assets/naruto-classico-motion-v1.png', rows: 2 },
   'naruto-25': { path: '/assets/naruto-shippuden-motion-v1.png', rows: 3, cast: true },

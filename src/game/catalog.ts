@@ -10,7 +10,7 @@ export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'cri
   |'healthPct'|'regenMult'|'eliteDamage'|'controlledDamage'|'statusStack'|'lowHpDamage'|'noHitDamage'|'killDamage'|'armorPhysical'|'bigCrit'
   |'lifesteal'|'thorns'|'killHeal'|'execute'|'burnChance'|'poisonChance'|'sleepChance'|'rootChance'|'chillChance'|'statusDamage'
   |'revive35'|'revive60'|'shield'|'rush'|'stance'|'smoke'|'emergencyHeal'|'periodicHeal'|'bolts'|'beam'|'freezeOnHit'
-  |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'pillCap'|'skillCap'|'ultReset'
+  |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'threat'|'pillCap'|'skillCap'|'ultReset'
   // Roleta da Tsunade: +dano a cada 250 Ryu gastos na run (src/game/roulette.ts · spendBonuses)
   |'spendDamage';
 export type Bonuses = Partial<Record<StatKey, number>>;

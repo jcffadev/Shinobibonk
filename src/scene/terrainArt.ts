@@ -25,9 +25,12 @@ export function groundHeight(map: GameMap['id'], x: number, z: number) {
     + mound(x, z, -44, -42, 15, 17, 10)
     + ridge;
   if (map !== 'folha') return hills + mound(x, z, 3, -26, 22, 11, 4.8);
-  return hills + mound(x, z, 0, -45, 22, 17, 10)
-    + mound(x, z, 30, 24, 8, 14, 6)
-    + mound(x, z, 53, 24, 8, 14, 6);
+  const monument = mound(x, z, 0, -45, 22, 17, 10);
+  // Perto das estátuas, mantenha um topo largo sob toda a base do sprite.
+  const pedestal = (center: number) =>
+    mound(center + Math.sign(x - center) * Math.max(0, Math.abs(x - center) - 3.5),
+      24 + Math.sign(z - 24) * Math.max(0, Math.abs(z - 24) - 2.5), center, 24, 6.5, 12, 6);
+  return hills + monument + pedestal(30) + pedestal(53);
 }
 
 /** Céu acompanha o clima, com a cor da névoa no horizonte. */

@@ -12,12 +12,12 @@ export type Stats={sage:number;maxHp:number;damage:number;armor:number;moveSpeed
   /** Soma bruta de todos os bônus (itens, pílulas, buffs da run); a simulação lê daqui as mecânicas de item (elementos, procs, roubo de vida...). */
   extra:Bonuses};
 export const HERO_BASE=Object.fromEntries(HEROES.map(h=>[h.id,h.base]));
-export function calculateStats(heroId:string,level:number,items:Record<string,number>={},pills:Record<string,number>={},bonusHp=0,permanent:Record<string,number>={},runBuffs:Bonuses={},powerlevel:Powerlevel={}):Stats {
+export function calculateStats(heroId:string,level:number,items:Record<string,number>={},pills:Record<string,number>={},bonusHp=0,permanent:Record<string,number>={},runBuffs:Bonuses={},powerlevel:Powerlevel={},pillQuality:Record<string,number>={}):Stats {
   const base=HERO_BASE[heroId]??HERO_BASE.naruto,n=Math.max(0,level-1),b:Bonuses={...HERO_BY_ID[heroId]?.bonuses};
   for(const [key,value] of Object.entries(runBuffs)){const k=key as keyof Bonuses;b[k]=(b[k]||0)+value;}
   for(const [name,count] of Object.entries(items)){const item=ITEM_BY_NAME[name];if(!item)continue;for(const [key,value] of Object.entries(item.bonuses)){const k=key as keyof Bonuses;b[k]=(b[k]||0)+value*Math.min(item.max,Math.max(0,count));}}
   // Pílulas: bônus por nível vindos de src/game/pills.ts, recalculados sempre a partir de knownPills.
-  for(const [key,value] of Object.entries(pillBonuses(pills, (b.pillCap ?? 0)+Math.min(2,Math.max(0,permanent['Farmacologia Ninja']||0))))){const k=key as keyof Bonuses;b[k]=(b[k]||0)+(value||0);}
+  for(const [key,value] of Object.entries(pillBonuses(pills, (b.pillCap ?? 0)+Math.min(2,Math.max(0,permanent['Farmacologia Ninja']||0)),pillQuality))){const k=key as keyof Bonuses;b[k]=(b[k]||0)+(value||0);}
   const p=(name:string)=>Math.max(0,Math.min(10,permanent[name]||0));
   // Passivas Shinobi que viram mecânicas da run (src/game/preparation.ts): entram em `extra` para a simulação ler (pillCap, revive35...).
   const perm:Bonuses={regen:p('Chakra Curativo')*.2,area:p('Expansão')*.03,cool:p('Meditação de Chakra')*.04,pillCap:Math.min(2,p('Farmacologia Ninja')),revive35:Math.min(1,p('Selo de Ressurreição'))};

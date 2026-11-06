@@ -7,7 +7,9 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 
 ## Fila do Codex
 - **IMPLEMENTADO** — folhas direcionais de caminhada nas 56 formas dos 24 shinobis jogáveis. Os 20 shinobis deste lote acrescentam 45 formas ao Time 7 e Asuma.
-- **PENDENTE** — expandir as folhas dedicadas de ataque, dano, Ultimate, pulo e dash por forma, e animar os monstros.
+- **IMPLEMENTADO NESTE LOTE** — quadros de conjuração do Naruto Clássico, ataque/pulo/dash de Sasuke inicial e socos/chutes nas três formas de Rock Lee e Might Guy.
+- **PENDENTE** — revisar caminhada, ataque, pulo e dash/esquiva de todo o elenco por forma, inclusive transição do sprite estático para as ações. Naruto Academia e Manto da Kurama ficam fora desta revisão por pedido do usuário. Priorizar formas com pose procedural e validar os quadros em jogo. Dano, Ultimate e animação dos monstros permanecem na fila.
+- **REGRA DE ENTREGA** — novos shinobis e evoluções precisam vir com repouso, caminhada, ataque, pulo e dash/esquiva. Atualizar as skills, documentação, contexto e GitHub a cada entrega.
 - **IMPLEMENTADO:** fila de confirmação para itens da roleta, pílulas e habilidades reservadas para level-up, teto de quatro ofertas, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação da câmera por movimento do mouse.
 - **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
 - **Impactos e sons**: faltam integração e revisão. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (não publicado, licença não verificada): procurar outros sons depois, com licença livre verificada.
@@ -38,7 +40,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **Recalibração de atributos para todos os níveis** (não só até o 50).
 - **Sorte** — FEITO (06/11/2026): curva de raridade e chance de uma quarta carta com Sorte. Validar jogando.
 - **Roleta da Tsunade** — FEITO: entrega em fila, E aceita e V vende. Novos giros excluem pílulas; itens que ficarem no limite viram Ryu. Validar jogando.
-- **Animações** — caminhada direcional concluída para o jogador. Expandir poses específicas de arremesso e de outras ações para todo o elenco e criar folhas de corrida dos monstros. Consulte as skills `movimentar-shinobi` e `criar-arte-shinobibonk`.
+- **Animações** — as folhas de caminhada estão integradas. A revisão de consistência e a criação de quadros próprios de ataque, pulo e dash por forma seguem conforme a fila acima. Consulte as skills `movimentar-shinobi` e `criar-arte-shinobibonk`.
 
 ## Calibração com ponto de partida
 - O usuário quer um ponto inicial de calibração baseado no PokéBonk. Fonte permitida: wiki pública (https://pokebonk-wiki.wiki) e observação de vídeos/prints de gameplay. Não fazer engenharia reversa do aplicativo. Levantar: crescimento de técnicas por nível, upgrades, curva de nível/Treino, inimigos por minuto, HP/dano por zona.

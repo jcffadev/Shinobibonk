@@ -45,6 +45,11 @@ for(const [level,form] of [[10,'classico'],[25,'shippuden'],[50,'kyuubi']]){
  await page.keyboard.up('w');
 }
 checks.push('Evoluções do Naruto carregam a folha da forma atual');
+await debug('setLevel',10);
+await debug('target',1);
+assert.equal(await debug('cast','Invocação do Sapo'),true);
+await page.waitForFunction(()=>window.__shinobiTest.motion().atlas.endsWith('/naruto-classico-action-v1.png'));
+checks.push('Naruto Clássico usa quadros de lançamento com a roupa da forma');
 await debug('setLevel',1);
 await debug('clearEnemies');await debug('reward');await wait();
 const low=(await state()).choice;assert.ok(low.filter(c=>c.kind==='skill').every(c=>c.name==='Kage Bunshin'));checks.push('Rasengan bloqueado nos níveis iniciais');
@@ -154,6 +159,57 @@ await page.waitForFunction(()=>Number(document.querySelector('.runtime-readout')
 assert.ok((await debug('perf')).instances.bodies>300);
 checks.push('Horda passa de 300 e o HUD mostra 1.600 inimigos');
 
+await debug('setTime',20);await debug('clearEnemies');await debug('clearDrops');
+await debug('setRunBuff','luck',500);
+let pillCard;
+for(let n=0;n<30&&!pillCard;n++){
+ await debug('reward');
+ pillCard=(await state()).choice.find(c=>c.kind==='pill'&&c.rarity!=='Comum');
+}
+assert.ok(pillCard);
+await page.getByRole('button',{name:new RegExp(pillCard.name)}).click();
+assert.equal((await state()).pills[pillCard.name],1);
+await debug('setRunBuff','luck',0);
+for(let n=0;n<100;n++){
+ await debug('reward');
+ if((await state()).choice.some(c=>c.name===pillCard.name))break;
+}
+await page.getByRole('button',{name:/Banir/}).click();
+await page.getByRole('button',{name:new RegExp(pillCard.name)}).click();
+await debug('setLevel',30);
+for(let n=0;n<20;n++){
+ await debug('reward');
+ assert.ok((await state()).choice.every(c=>c.name!==pillCard.name));
+}
+assert.equal((await state()).pills[pillCard.name],1);
+checks.push('Pílula rara sobe um nível e seu banimento exclui todas as raridades e níveis');
+await debug('dismiss');
+await page.locator('.level-choice-backdrop').waitFor({state:'hidden'});
+await page.keyboard.press('Escape');
+await page.getByRole('button',{name:'Desistir',exact:true}).click();
+const confirm=page.getByRole('button',{name:'Realmente deseja desistir? Clique novamente'});
+await confirm.waitFor();
+assert.equal((await state()).defeated,false);
+await confirm.click();
+await page.getByRole('button',{name:'Ir para o menu'}).click();
+await page.getByRole('button',{name:'Jogar como convidado',exact:false}).waitFor();
+checks.push('Desistência exige dois cliques na pausa e resumo volta ao menu');
+
+await page.getByRole('button',{name:'Escolher shinobi',exact:false}).click();
+await page.locator('.character-card').filter({hasText:'Sasuke'}).click();
+await start();
+assert.equal(await page.locator('.scene').evaluate(el=>getComputedStyle(el).cursor),'none');
+assert.equal(await page.locator('.vitamin-row').evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
+await debug('clearEnemies');await debug('clearDrops');
+await page.keyboard.press('Space');
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/sasuke-classico-action-v1.png');});
+await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
+await page.keyboard.press('Shift');
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/sasuke-classico-action-v1.png');});
+await page.waitForFunction(()=>window.__shinobiTest.motion().slideTime===0);
+await debug('target',1);assert.equal(await debug('cast','Kunai Tática'),true);
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='attack'&&m.atlas.endsWith('/sasuke-classico-action-v1.png');});
+checks.push('Sasuke inicial usa quadros de ataque, pulo e dash; cursor e fundo do dock estão ocultos');
 
 assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);checks.push('Sem exceções JavaScript ou assets 404');
 console.log(JSON.stringify({checks,errors,missing},null,2));fs.writeFileSync('artifacts/runtime-checks.json',JSON.stringify({date:new Date().toISOString(),checks,errors,missing},null,2));

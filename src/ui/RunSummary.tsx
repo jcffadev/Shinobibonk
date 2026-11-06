@@ -14,7 +14,7 @@ import type { LocalRank } from '../game/ranking';
 const fmt=(value:number,digits=1)=>value.toLocaleString('pt-BR',{maximumFractionDigits:digits});
 const clock=(seconds:number)=>`${Math.floor(seconds/60)}:${String(Math.floor(seconds%60)).padStart(2,'0')}`;
 
-export function RunSummary({world,hero,mission,reward=null,rank=null,onRetry,onPrepare}:{world:WorldSnapshot;hero:{id:string;name:string};mission:string;reward?:LamenReward|null;rank?:LocalRank|null;onRetry:()=>void;onPrepare:()=>void}){
+export function RunSummary({world,hero,mission,reward=null,rank=null,onRetry,onPrepare,onMenu}:{world:WorldSnapshot;hero:{id:string;name:string};mission:string;reward?:LamenReward|null;rank?:LocalRank|null;onRetry:()=>void;onPrepare:()=>void;onMenu:()=>void}){
   const elapsed=Math.max(0,world.elapsed);
   const dps=elapsed>0?world.totalDamage/elapsed:0;
   const allDamage=world.totalDamage+world.allyDamage;
@@ -74,6 +74,7 @@ export function RunSummary({world,hero,mission,reward=null,rank=null,onRetry,onP
       <footer className="summary-footer">
         <button className="continue-run" onClick={onRetry}>Tentar novamente</button>
         <button onClick={onPrepare}>Preparar outra missão</button>
+        <button onClick={onMenu}>Ir para o menu</button>
       </footer>
     </section>
   </div>;
