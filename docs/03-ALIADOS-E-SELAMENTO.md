@@ -42,39 +42,57 @@ Chance depende de Sorte, itens específicos e árvore permanente. **Recompensa d
 | Minato | +12% movimento | Pain | +40 HP máximo |
 | Tsunade | +1,5 HP/s de cura | Tobirama | +1,5 m de coleta |
 | Kankuro | +20% veneno | Might Guy | +10% taijutsu, +6% movimento |
-  - Iruka (NPC, não jogável): entra como ajudante pelo evento do Iruka com +25% de XP já no máximo; ataque "Kunai da Academia". Dados em `src/game/npcs.ts` (`NPC_ALLIES`).
-  - Divergência registrada: o requisito original (contexto do chat) dizia que o protagonista não conta na contagem de vila, que composição mista recebe sinergia reduzida e que a ativação mostra notificação. O código atual conta o herói e não implementa as duas outras regras. Decisão do usuário PENDENTE.
+  - Iruka (NPC, não jogável): entra como ajudante pelo evento do Iruka, já com afinidade máxima (+25% de XP); ataque "Kunai da Academia". Dados em `src/game/npcs.ts` (`NPC_ALLIES`).
   - Itens que afetam aliados: Chá Verde de Konoha, Estandarte da Aliança e Pergaminho de Recrutamento.
-- **IMPLEMENTADO: vagas e sinergia**
+- **IMPLEMENTADO: afinidade do ajudante** (pedido do usuário em 06/11/2026, valores provisórios)
+  - Níveis 1–5 (mínimo de 0 / 40 / 100 / 180 / 280 pontos). Ganha +1 ponto por segundo na equipe (fora do selamento) e +0,2 por abate da equipe.
+  - A passiva individual vale 40% / 55% / 70% / 85% / 100% conforme o nível (× força de suporte). Quem entra por selamento ou substituição começa no Nv. 1; o Iruka entra no máximo. Aviso na tela ao subir de nível.
+  - Cartões mostram passiva atual e máxima e "AFINIDADE n/5" com barra.
+  - Projétil fracionário: a parte inteira é garantida e a fração vira chance por disparo (`projectileChance`); ex.: 1,5 = +1 projétil e 50% de chance de mais um.
+- **IMPLEMENTADO: vagas, substituição e configuração de captura**
   - Vagas: 3 + 1 pelo Pergaminho de Recrutamento + 1 pelo nó permanente "Suporte adicional", máximo 5.
-  - Sinergias de vila e organização (`src/game/synergy.ts`, pedido do usuário em 06/11/2026):
-    - A equipe é o herói + os ajudantes. Uma sinergia ativa com 2+ membros, desde que ao menos 1 seja ajudante.
-    - Faixas 2 / 3 / 4+ multiplicam a base por ×1 / ×1,75 / ×2,5. Não escalam com a força de suporte.
-    - Um membro acumula a vila e todas as organizações dele (ex.: Itachi + Pain ativam Akatsuki; Itachi também conta para Folha e Uchiha).
-    - Organizações e clãs ficam em `ORGANIZATIONS`/`HERO_CLAN` de `src/game/heroes.ts`.
-    - HUD: painel "SINERGIAS" abaixo do card do herói (ícone, nome, nº de membros, bônus; tooltip com membros). Cada cartão de ajudante mostra o selo PASSIVA com o nome e o valor da passiva individual, e as tags das sinergias às quais contribui. O resumo pós-run lista as sinergias.
-    - Valores provisórios (base com 2 membros):
+  - Equipe cheia → tela de substituição (choiceLevel −7): cards dos ajudantes atuais (atributo, afinidade, passiva atual/máx., sinergias após a troca) e o card do novo destacado. Clicar no novo (ou X) dispensa sem recompensa; clicar num atual (ou teclas 1–9) substitui, e o novo entra no Nv. 1 de afinidade. Mega elites simultâneos entram em fila. O abate é contado uma vez só.
+  - Configurações (botão "⚙ Configurações" no hub ou caixa no card de selamento, `src/game/settings.ts`): desligar o card/animação de captura sela direto com um aviso; com equipe cheia, abre a tela de substituição. Com a opção desligada não há recusa com G (kunai grátis).
+- **IMPLEMENTADO: combos de aldeia e organização** (`src/game/synergy.ts`, pedido do usuário em 06/11/2026)
+  - Contam **só ajudantes** (o herói não conta). Cada faixa é o valor total, não soma com as anteriores.
+  - Cada aldeia tem uma família de atributo tirada do tema na Narutopedia. **Nenhum combo dá dano % e projétil juntos.** Misturar vilas (ex.: 3 Nuvem + 2 Folha) ativa os dois combos.
+  - Organizações ativam com 2+ ajudantes e acumulam com a vila: base com 2, ×1,6 com 3, ×2,2 com 4, ×3 com 5.
+  - Listas já incluem ids do elenco futuro (Kisame, Deidara, Ino, Zabuza…), que contam quando existirem.
+  - HUD: painel "SINERGIAS" abaixo do card do herói com membros/próxima faixa; cartões mostram as tags das sinergias.
 
-| Sinergia | Bônus base |
+| Aldeia (tema) | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|
+| Folha (projétil/XP/coleta) | +3% XP, +0,5 m coleta | +1 projétil, +5% XP, +2 m | +1,5 projétil, +5% XP, +2 m | +2 projéteis, +10% XP, +3 m |
+| Nuvem (dano) | +4% dano | +8% | +12% | +20% dano, +5% cadência |
+| Névoa (crítico) | +3% crítico | +4% crít., +15% dano crít. | +6%, +25% | +9%, +45% |
+| Pedra (armadura/HP) | +3 armadura | +5 armadura, +25 HP | +8, +40 | +12, +70 |
+| Areia (área/armadura) | +5% área | +10% área, +3 armadura | +14%, +5 | +22%, +8 |
+| Som (cadência/vel. projétil) | +4% cadência | +7% cad., +10% vel. proj. | +10%, +15% | +15%, +25% |
+| Chuva (status) | +5% chance de status | +8%, +15% duração | +11%, +20% | +15%, +35% |
+| Cachoeira (cura) | +0,4 HP/s | +0,7 HP/s, +20 HP | +1, +35 | +1,6, +60 |
+| Grama (Ultimate/evasão) | +6% recarga Ultimate | +10%, +3% evasão | +14%, +4% | +22%, +6% |
+
+| Organização | Base (2 ajudantes) |
 |---|---|
-| Vila da Folha | +3% dano total |
-| Vila da Areia | +4 armadura |
-| Vila do Som | +5% chance de status (só 1 membro no elenco atual) |
-| Vila da Chuva | +20 HP (só 1 membro no elenco atual) |
-| Akatsuki (Itachi, Pain, Orochimaru) | +8% dano, +4% crítico |
-| Sannin Lendários | +30 HP, +0,6 HP/s |
-| Hokages | +8% XP, +6% área |
-| Time 7 | +10% dano total |
-| Time Guy | +10% taijutsu, +6% cadência |
-| Irmãos da Areia | 2: +6 armadura/+7% dano; 3: +12 armadura/+15% dano |
-| Clã Uchiha | +3% crítico, +15% dano crítico |
-| Clã Hyuga | +12% dano crítico, +3% evasão |
-| Clã Senju | +0,6 HP/s, +20 HP |
+| Akatsuki | +3% crítico, +10% dano crítico |
+| Sannin | +30 HP, +0,6 HP/s |
+| Hokages | +6% XP, +5% área |
+| Time 7 | +5% dano |
+| Time Guy | +10% taijutsu, +5% cadência |
+| Uchiha | +3% crítico, +15% dano crítico |
+| Hyuga | +12% dano crítico, +3% evasão |
+| Senju | +0,6 HP/s, +20 HP |
+| Ino-Shika-Chō | +6% área, +10% duração |
+| Time 8 | +0,8 m coleta, +5% movimento |
+| Sete Espadachins | +20% dano crítico, +5% cadência |
+| Irmãos da Areia | faixas fixas: 2 → +6 armadura/+7% dano; 3 → +12/+15% |
+
+- **Divergências com a Narutopedia (registradas, não alteradas)**: Lee e Tenten não têm natureza (kit tem Vento/Fogo); Neji (Fogo/Terra/Água), Hinata (Fogo/Raio) e Guy (Fogo/Raio) aparecem com Vento no kit; Itachi aparece como Sombra (canônico Fogo/Água/Vento/Yin/Yang); Pain/Nagato é do Clã Uzumaki, que falta em `HERO_CLAN`; Orochimaru também foi de Konoha e Akatsuki; Temari também é ligada a Konoha. Decisão do usuário PENDENTE.
 - **PENDENTE**:
   - Até 3 tentativas com chance de falha e fuga; minigame.
   - Selamento permanente (1 tentativa) para desbloquear personagem jogável.
-  - Notificação (toast) ao ativar sinergia e conversão do selamento em item kunai.
-  - Balanceamento das sinergias.
+  - Aviso na tela ao ativar sinergia; configuração de captura também no HUD da run.
+  - Balanceamento dos combos e da afinidade.
 - Sprites e animação são provisórios. As capturas em `assets/referencia/prints` servem como norte visual.
 
 ## Aliados e sinergias

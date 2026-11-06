@@ -12,7 +12,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Objetos visuais das técnicas e descarte de recursos. |
 | `src/game/heroes.ts` | 22 shinobis: aldeia, atributos base, passiva, bônus, 4 técnicas (escola, elemento, forma, status), Ultimate. `skillPool` adiciona a 1ª técnica de colegas da mesma aldeia (nível 8+). `sandSynergy`. Formas do Naruto. |
-| `src/game/catalog.ts` | 93 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
+| `src/game/catalog.ts` | 94 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
 | `src/game/progression.ts` (nota) | `Stats.extra` guarda a soma bruta de todos os bônus; `genjutsu` é o multiplicador da escola Genjutsu; `healthPct` e `regenMult` ajustam HP máximo e regeneração. |
 | `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
@@ -21,6 +21,8 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis; `GUARDIAN_RULES` e `guardianHpMultiplier(zoneElapsed)` (0,6× → 1,0× aos 160 s). |
 | `src/game/npcs.ts` | Ebisu e Iruka: `NPC_RULES`, `LEGENDARY_VALUES`, `TOTEM_RULES`, sorteio de trocas, `NPC_ALLIES.iruka`, `NPC_NAMES` e retratos SVG provisórios. Telas de escolha: −3 Ebisu, −4 menu do Iruka, −5 pergaminho lendário. |
 | `src/scene/narutoTotem.ts` | Barra 3D do Naruto Totem (nome, HP, segundos restantes). |
+| `src/game/roulette.ts` + `src/ui/TsunadeRoulette.tsx` + `src/tsunade-roulette.css` | Roleta da Tsunade: casas, pesos por sorte/dificuldade, custo crescente e overlay. |
+| `src/game/settings.ts` | Configurações do jogador (`sealAnimation`), em localStorage com try/catch. |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
 | `src/game/pills.ts` | Fonte única das 19 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |
@@ -149,7 +151,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - 10 linhas de atributo com 10 níveis cada; custo = base + 25 × nível comprado.
   - Quarta opção, Atualizar/Pular/Banir (+1 uso por nível, até 10), Suporte adicional e Quarta técnica.
 - **Loja**:
-  - 93 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
+  - 94 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
   - Desbloquear só adiciona ao pool. Há filtros e a opção de arquivar da run.
 - **Missões**: Genin, Chunin, Jonin e Kage alteram a escala de dificuldade.
 - **Reset**: devolve tudo o que foi gasto e limpa árvore, desbloqueios, arquivamentos e plano.
@@ -183,13 +185,13 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - **Maldição de Orochimaru**: +20% de dificuldade, +25% de XP e saque.
   - **Altar para proteger**: ficar 20 s no círculo dá uma kunai grátis.
   - **Mercador de armas**: troca cada kunai/shuriken guardada por 5 Ryu.
-  - **Caça-níquel**: 25 Ryu por giro; o resultado sai entre kunai, shuriken, pílula e recompensa de item. Antes se chamava "Caça-níquel do Ichiraku" e usava o sprite da barraca; agora usa o sprite padrão de evento.
+  - **Roleta da Tsunade** (evento `slot`, antigo Caça-níquel): overlay `TsunadeRoulette` pedindo giros via `CustomEvent('shinobi-roulette')`; regras puras em `src/game/roulette.ts` (`ROULETTE_RULES`, `rouletteWeights`, `rollRoulette`, `rouletteCost`, `spendBonuses`). Estado `roulette` pausa o loop; `ryuSpent` soma kunais, roleta e Ichiraku. Hook `__shinobiTest.roulette`.
   - **Barraca Ichiraku** (sprite 5 de `environment-v2.png`, em x 13, z 21):
     - `openIchiraku` abre uma escolha (`choiceLevel = −2`) com as técnicas aprendidas, só se houver mais de uma, e as pílulas.
     - `forgetAtIchiraku` cobra `10 + 5 × nível` em Ryu. Na pílula, apaga todos os níveis de `knownPills`; na técnica, apaga `skillLevels`, `growth` e `cooldowns`, liberando o espaço. Depois chama `refreshStats()`.
     - A barraca continua aberta para esquecer mais. Sem Ryu suficiente, mostra um aviso e não muda nada. X fecha.
     - O evento nunca é desativado.
-  - **Bênção de Tsunade**: uma vez por zona, sorteia +12% de dano, +24 HP ou +15% de XP.
+  - **Bênção de Tsunade**: virou casa da Roleta da Tsunade (buff temporário de 90 s).
   - **Sharingan de Kakashi** (sprite do Kakashi em x −21, z −1): uma vez por zona.
     - `openKakashi` abre uma escolha (`choiceLevel = −1`) com os itens da bolsa que ainda estão abaixo do limite, do mais raro ao mais comum.
     - Escolher chama `grantItem`, que dá +1 cópia, e desativa o evento.
@@ -215,7 +217,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - Ao derrotar um mega elite, a run pausa na decisão. E inicia o ritual de 2,7 s (instantâneo com a Shuriken Selo da Tenten); G recusa e deixa uma kunai grátis.
   - Equipe cheia ou personagem repetido impede selar.
   - Se vários mega elites caem, as decisões entram em fila.
-- **Aliados e sinergia**: vagas 3 + Pergaminho de Recrutamento + nó "Suporte adicional" (máximo 5). Sinergias de vila/organização com 2+ membros (herói + ajudantes), acumuláveis; ver docs/03.
+- **Aliados e sinergia**: vagas 3 + Pergaminho de Recrutamento + nó "Suporte adicional" (máximo 5). Combos de vila/organização contando só ajudantes, afinidade por ajudante, substituição com equipe cheia (choiceLevel −7) e configuração de captura (`src/game/settings.ts`, `sb_settings_v1`); ver docs/03.
 - **Fim da run**: vitória ao chegar a 0:00; derrota com HP 0.
 
 ### UI durante a run

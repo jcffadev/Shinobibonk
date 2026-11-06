@@ -14,7 +14,8 @@ function heroGroups(id: string): string[] {
   if (clan && !names.includes(clan)) names.push(clan);
   return names;
 }
-const ORG_OPTIONS = [...new Set([...ORGANIZATIONS.map(o => o.name), ...Object.values(HERO_CLAN)])];
+// Só organizações com pelo menos 1 shinobi jogável (ORGANIZATIONS já lista membros do elenco futuro).
+const ORG_OPTIONS = [...new Set([...ORGANIZATIONS.filter(o => o.members.some(id => HEROES.some(h => h.id === id))).map(o => o.name), ...Object.values(HERO_CLAN)])];
 const VILLAGE_OPTIONS = [...new Set(HEROES.map(h => h.village))].sort();
 const ELEMENT_OPTIONS = [...new Set(HEROES.map(h => heroAffinity(h.id)))].sort();
 const shortVillage = (village: string) => village.replace(/^Vila d[aoe]s?\s+/i, '');

@@ -3,14 +3,16 @@ export type Rarity = 'Comum' | 'Incomum' | 'Raro' | 'Épico' | 'Lendário';
  * Atributos que itens/pílulas/buffs podem dar. Os do primeiro bloco viram campos de `Stats`;
  * os do segundo bloco (mecânicas de item) ficam em `Stats.extra` e são lidos pela simulação (GameCanvas).
  */
-export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'crit'|'critDamage'|'cool'|'gold'|'exp'|'area'|'projectiles'|'dodge'|'duration'|'dot'|'status'|'attackSpeed'|'projectileSpeed'|'luck'|'pickup'|'pickupFlat'|'regen'|'support'|'allyDamage'|'allySpeed'|'allyBuff'|'sage'
+export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'crit'|'critDamage'|'cool'|'gold'|'exp'|'area'|'projectiles'|'projectileChance'|'dodge'|'duration'|'dot'|'status'|'attackSpeed'|'projectileSpeed'|'luck'|'pickup'|'pickupFlat'|'regen'|'support'|'allyDamage'|'allySpeed'|'allyBuff'|'sage'
   // Dano por elemento da técnica (+%) e Genjutsu (escola)
   |'elFogo'|'elAgua'|'elVento'|'elTerra'|'elRaio'|'elMadeira'|'elAreia'|'elSombra'|'elNeutro'|'elSabio'|'genjutsu'
   // Mecânicas de item
   |'healthPct'|'regenMult'|'eliteDamage'|'controlledDamage'|'statusStack'|'lowHpDamage'|'noHitDamage'|'killDamage'|'armorPhysical'|'bigCrit'
   |'lifesteal'|'thorns'|'killHeal'|'execute'|'burnChance'|'poisonChance'|'sleepChance'|'rootChance'|'chillChance'|'statusDamage'
   |'revive35'|'revive60'|'shield'|'rush'|'stance'|'smoke'|'emergencyHeal'|'periodicHeal'|'bolts'|'beam'|'freezeOnHit'
-  |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'pillCap'|'skillCap'|'ultReset';
+  |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'pillCap'|'skillCap'|'ultReset'
+  // Roleta da Tsunade: +dano a cada 250 Ryu gastos na run (src/game/roulette.ts · spendBonuses)
+  |'spendDamage';
 export type Bonuses = Partial<Record<StatKey, number>>;
 export type Item = { id:string; name:string; rarity:Rarity; cost:number; icon:string; sprite:number; max:number; description:string; bonuses:Bonuses };
 const COST:Record<Rarity,number>={Comum:0,Incomum:150,Raro:300,'Épico':500,'Lendário':900};
@@ -63,7 +65,7 @@ export const ITEMS:Item[] = [
   item('vampire-root','Raiz Vampira','Incomum',13,ANY,'Recupera 3% do dano causado como HP.',{lifesteal:.03}),
   item('chains','Correntes de Selamento','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
   item('katon-orb','Esfera Katon','Incomum',7,5,'5% de chance por acerto de queimar e +10% de dano de status (queimadura/veneno).',{burnChance:.05,statusDamage:.1}),
-  item('gold-tooth','Dente de Ouro','Incomum',8,3,'O caça-níquel custa 8% menos (até −24%).',{slotDiscount:.08}),
+  item('gold-tooth','Dente de Ouro','Incomum',8,3,'A Roleta da Tsunade custa 8% menos (até −24%).',{slotDiscount:.08}),
   item('akimichi-box','Marmita Akimichi','Incomum',8,ANY,'+1,2 HP/s de regeneração.',{regen:1.2}),
   item('green-tea','Chá Verde de Konoha','Incomum',13,3,'Ajudantes causam +25% de dano e atacam 15% mais rápido.',{allyDamage:.25,allySpeed:.15}),
   item('duration','Selo de Persistência','Incomum',6,ANY,'+20% de duração de efeitos de status.',{duration:.2}),
@@ -103,6 +105,8 @@ export const ITEMS:Item[] = [
   item('banner','Estandarte da Aliança','Raro',11,2,'+40% de força dos buffs dos ajudantes.',{allyBuff:.4}),
   item('executioner','Lâmina do Carrasco','Raro',1,4,'Inimigos comuns abaixo de 8% do HP morrem na hora (+4 pontos por cópia extra).',{execute:.08}),
   item('luck','Colar do Primeiro Hokage','Raro',2,ANY,'+20 de Sorte. Melhora a raridade das ofertas de itens.',{luck:20}),
+  // Referência: porta-moedas (buff por dinheiro gasto). A carteira de sapo do Naruto.
+  item('gama-chan','Carteira Gama-chan','Raro',8,1,'+12% de Ryu recebido, Roleta da Tsunade 6% mais barata e +1% de dano a cada 250 Ryu gastos na run (kunais, roleta, Ichiraku), até +30%.',{gold:.12,slotDiscount:.06,spendDamage:.01}),
   item('herb-tea','Chá de Ervas','Raro',0,3,'A cada 30 s, se estiver ferido, cura 12% do HP máximo.',{periodicHeal:1}),
 
   // ───── Épico ─────

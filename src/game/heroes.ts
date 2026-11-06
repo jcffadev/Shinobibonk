@@ -51,17 +51,23 @@ HERO_BY_ID.naruto.techniques[3].unlockLevel=15;
 export function skillPool(heroId:string):Technique[]{const hero=HERO_BY_ID[heroId]??HEROES[0];return [...hero.techniques,...HEROES.filter(other=>other.id!==hero.id&&other.village===hero.village).map(other=>({...other.techniques[0],unlockLevel:8}))];}
 /** Clã de origem (o campo `village` converte clãs da Folha para "Vila da Folha"). */
 export const HERO_CLAN:Record<string,string>={madara:'Clã Uchiha',sasuke:'Clã Uchiha',itachi:'Clã Uchiha',neji:'Clã Hyuga',hinata:'Clã Hyuga',shikamaru:'Clã Nara',hashirama:'Clã Senju',tobirama:'Clã Senju',tsunade:'Clã Senju',naruto:'Clã Uzumaki'};
-/** Organizações/equipes canônicas usadas por filtros e sinergias. Um shinobi pode estar em várias. */
+/**
+ * Organizações/equipes canônicas usadas por filtros e sinergias. Um shinobi pode estar em várias.
+ * Ids que ainda não existem no elenco (ex.: kisame, ino, zabuza) já ficam listados para o elenco futuro; não contam até existirem.
+ */
 export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
- {id:'akatsuki',name:'Akatsuki',members:['itachi','pain','orochimaru']},
+ {id:'akatsuki',name:'Akatsuki',members:['itachi','pain','orochimaru','kisame','deidara','sasori','hidan','kakuzu','konan','obito','zetsu']},
  {id:'sannin',name:'Sannin Lendários',members:['jiraiya','tsunade','orochimaru']},
- {id:'hokage',name:'Hokages',members:['hashirama','tobirama','minato','tsunade','kakashi','naruto']},
- {id:'time7',name:'Time 7',members:['naruto','sasuke','sakura','kakashi']},
+ {id:'hokage',name:'Hokages',members:['hashirama','tobirama','minato','tsunade','kakashi','naruto','hiruzen']},
+ {id:'time7',name:'Time 7',members:['naruto','sasuke','sakura','kakashi','sai','yamato']},
  {id:'timeguy',name:'Time Guy',members:['guy','lee','neji','tenten']},
  {id:'areia',name:'Irmãos da Areia',members:['gaara','temari','kankuro']},
- {id:'uchiha',name:'Clã Uchiha',members:['madara','sasuke','itachi']},
- {id:'hyuga',name:'Clã Hyuga',members:['neji','hinata']},
+ {id:'uchiha',name:'Clã Uchiha',members:['madara','sasuke','itachi','obito','shisui']},
+ {id:'hyuga',name:'Clã Hyuga',members:['neji','hinata','hiashi','hanabi']},
  {id:'senju',name:'Clã Senju',members:['hashirama','tobirama','tsunade']},
+ {id:'time10',name:'Ino-Shika-Chō',members:['shikamaru','ino','choji','asuma']},
+ {id:'time8',name:'Time 8',members:['hinata','kiba','shino','kurenai']},
+ {id:'espadachins',name:'Sete Espadachins da Névoa',members:['kisame','zabuza','mangetsu','suigetsu','chojuro','kushimaru','jinpachi','fuguki','jinin','ameyuri']},
 ];
 export function heroOrganizations(heroId:string){return ORGANIZATIONS.filter(o=>o.members.includes(heroId));}
 /** Afinidade elemental principal: elemento não neutro mais frequente no kit (Neutro se não houver). */

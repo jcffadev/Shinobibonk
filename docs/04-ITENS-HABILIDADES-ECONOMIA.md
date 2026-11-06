@@ -56,13 +56,13 @@ Pedido do usuário: velocidade de ataque é um dos atributos mais importantes; v
 ## Economia
 Lamens = moeda permanente, ganha por partidas/conquistas; compra árvore, seus níveis, e desbloqueia itens não comuns para entrar no pool aleatório. Comuns entram sem compra. Desbloquear não concede item imediatamente. Chakra não é concedido diretamente por itens; efeitos podem acelerar recarga da Ultimate. Drops de normais/épicos/lendários escalam por dificuldade para XP, dinheiro e carga da Ultimate.
 
-**Separação financeira confirmada em 05/11/2026:** o Ryu coletado durante a run é temporário (kunais, caça-níquel); Lamens continuam sendo a moeda permanente da conta para desbloqueios e passivas. Kunais e shurikens são as recompensas de mapa que abrem escolhas de item.
+**Separação financeira confirmada em 05/11/2026:** o Ryu coletado durante a run é temporário (kunais, Roleta da Tsunade); Lamens continuam sendo a moeda permanente da conta para desbloqueios e passivas. Kunais e shurikens são as recompensas de mapa que abrem escolhas de item.
 
 **Estado do código**:
 - **IMPLEMENTADO**:
   - Ryu da run vem de drops amarelos e bolsas no mapa.
   - Kunai/shuriken no chão custam 20 Ryu, +10 por abertura paga; as kunais de recompensa são grátis.
-  - Mercador paga 5 Ryu por arma; caça-níquel custa 25 Ryu.
+  - Mercador paga 5 Ryu por arma; Roleta da Tsunade custa 25 Ryu +5 por giro na run (ver docs/01).
   - Carteira permanente local de administrador com 999.999 de crédito e Reset que devolve o gasto.
 - **IMPLEMENTADO**: o hub mostra a moeda permanente como Lamens (🍜); o Ryu (🪙) aparece só na run.
 - **IMPLEMENTADO (PROPOSTO nos valores): Lamens por desempenho**, em `src/game/rewards.ts`, creditados uma vez por run em `main.tsx` e mostrados no resumo pós-run.
@@ -96,7 +96,7 @@ Slots 1–4: **somente automáticos**, cada um com recarga própria; o quarto é
   - Itens vêm só de recompensas: kunai, shuriken, eventos, drop de item e recusa de selamento.
   - Sem nada elegível, aparece uma carta de "Powerlevel" (+6 HP, +2% dano, +0,5 crítico, +1% movimento, +1 armadura ou +1% cadência).
 - **Atualizar, pular e banir**: teclas F/X/Z ou botões, com 3 usos base cada e até 10 com a árvore. Banir remove a opção pelo resto da run.
-- **Pílulas**: 19 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado do caça-níquel, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
+- **Pílulas**: 19 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado da Roleta da Tsunade, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
 
 ## Pílulas (IMPLEMENTADO, valores provisórios)
 O formato segue a página de vitaminas da wiki de referência: cada pílula aumenta **um atributo por nível**. Os nomes foram adaptados ao mundo ninja, sem Pokémon.
@@ -143,7 +143,7 @@ Afixos compatíveis com cada habilidade. Setup prioriza duração e recarga, pod
 ## Catálogo
 O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 
-**IMPLEMENTADO** em `src/game/catalog.ts`: **93 itens** no formato da página de itens da wiki de referência (raridade · efeito · gatilho · limite de cópias). Os nomes foram adaptados ao mundo ninja, os valores levemente alterados e nada lembra Pokémon.
+**IMPLEMENTADO** em `src/game/catalog.ts`: **94 itens** no formato da página de itens da wiki de referência (raridade · efeito · gatilho · limite de cópias). Os nomes foram adaptados ao mundo ninja, os valores levemente alterados e nada lembra Pokémon.
 - **Raridades**: 25 comuns, 27 incomuns, 15 raros, 14 épicos e 10 lendários.
 - **Custo de desbloqueio**: comum 0, incomum 150, raro 300, épico 500, lendário 900.
 - **Limites**: "sem limite" da referência vira 10 cópias; itens únicos têm 1.
@@ -181,7 +181,7 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
   - **Ataques automáticos**:
     - raios a cada 2,5 s (Pergaminho Chidori Nagashi);
     - chamas negras no inimigo mais forte a cada 6 s (Chamas de Amaterasu).
-  - **Economia e mapa**: desconto nas kunais (até −40%) e no caça-níquel (até −24%); ±% de inimigos no mapa.
+  - **Economia e mapa**: desconto nas kunais (até −40%) e na roleta (Dente de Ouro até −24%; com a Carteira Gama-chan, limite total −40%); Carteira Gama-chan (Raro, 1 cópia): +12% de Ryu, −6% no custo da roleta e +1% de dano a cada 250 Ryu gastos na run, até +30% (`spendDamage`); ±% de inimigos no mapa.
   - **Limites**: Cabaça de Pílulas (pílulas até 12) e Pergaminho Proibido (técnicas até nível 11).
 - **Mantidos por regra do projeto**: Remédio do Rock Lee (lendário, sem penalidade), Shuriken Selo da Tenten (+25% de dano e selamento instantâneo), Selo de Senjutsu (infusão Sábia de Hashirama), Pergaminho de Recrutamento e Colar do Primeiro Hokage.
 - **Sorteio**: pesos fortemente concentrados em comum (90 / 9,889 / 0,1 / 0,01 / 0,001) e corrigidos pela quantidade de itens de cada raridade.
@@ -195,4 +195,4 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 - pontos que crescem com o dinheiro gasto;
 - altares de símbolos.
 
-**PENDENTE**: balanceamento dos 93 itens; os efeitos visuais de raios e chamas são simples (anéis no chão).
+**PENDENTE**: balanceamento dos 94 itens; os efeitos visuais de raios e chamas são simples (anéis no chão).

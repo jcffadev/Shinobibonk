@@ -29,8 +29,10 @@ Atalhos locais:
 - `src/game/`: dados e regras sem React.
   - `heroes.ts`: 22 shinobis e 88 técnicas, clãs, organizações e afinidade elemental.
   - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
+  - `roulette.ts`: Roleta da Tsunade.
+  - `settings.ts`: configurações do jogador.
   - `npcs.ts`: eventos do Ebisu e do Iruka, Iruka como ajudante e regras do Naruto Totem.
-  - `catalog.ts`: 93 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
+  - `catalog.ts`: 94 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
   - `progression.ts`: atributos, dificuldade e crítico.
   - `evolution.ts`: formas por nível.
   - `combat.ts`: afixos de técnica.

@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2026-11-06 — combos de aldeia, afinidade de ajudantes, substituição e Roleta da Tsunade
+- **Combos de aldeia/organização** (`synergy.ts` reescrito): contam só ajudantes; faixas 2/3/4/5 por aldeia com família de atributo própria (Folha projétil/XP/coleta, Nuvem dano, Névoa crítico, Pedra armadura/HP, Areia área, Som cadência, Chuva status, Cachoeira cura, Grama Ultimate); nenhum combo junta dano % e projétil. Organizações acumulam (Akatsuki, Sannin, Hokages, Time 7, Time Guy, clãs, Ino-Shika-Chō, Time 8, Sete Espadachins).
+- **Afinidade de ajudante** 1–5: sobe com tempo e abates; a passiva individual escala de 40% a 100%. Projétil fracionário vira chance (`projectileChance`).
+- **Equipe cheia → tela de substituição** (choiceLevel −7): clicar no novo dispensa; clicar num atual substitui.
+- **Configurações** no hub (`settings.ts`): desligar card/animação de captura.
+- **Roleta da Tsunade** substitui o Caça-níquel e absorve a Bênção de Tsunade: overlay animado, casas boas e ruins, giro rápido segurando E (liga/desliga), E repetido mostra o resultado na hora, prêmios entregues ao sair, custo 25 +5 por giro, Sorte melhora as chances com piso de 15% de casas ruins e a dificuldade compensa.
+- **Item novo**: Carteira Gama-chan (Raro): +12% Ryu, −6% custo da roleta, +1% dano a cada 250 Ryu gastos (até +30%).
+- **Verificação**: tsc, vite build, verify-rules (94 itens) e verify-runtime passaram; testes de navegador à parte para combos, afinidade, configuração, substituição e roleta (inclusive estatística). Balanceamento PENDENTE.
+
 ## 2026-11-06 — velocidade de projétil, setups, Senjutsu, Ebisu, Iruka e Naruto Totem
 - **Cadência** revisada: também acelera os ajudantes (metade do bônus) e os procs periódicos de item.
 - **Velocidade de projétil** (atributo novo): acelera a viagem dos projéteis e o preparo dos golpes e lançamentos. Itens novos: Lente do Atirador e Seixo Polido do Rio (com ricochete); pílula nova: Pílula do Arremesso. Itens de pulo/deslize ficam PENDENTES.

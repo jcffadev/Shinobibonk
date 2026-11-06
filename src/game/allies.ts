@@ -3,7 +3,7 @@ import { NPC_RULES } from './npcs.ts';
 
 /**
  * Buff passivo único que cada shinobi dá ao grupo quando é ajudante (selado na run).
- * Escalam com a força dos buffs de suporte (`allyBuff`: Estandarte da Aliança +40%).
+ * Escalam com a força dos buffs de suporte (`allyBuff`: Estandarte da Aliança +40%) e com a AFINIDADE do ajudante.
  * Médicos (Tsunade, Sakura) e Hashirama curam; ofensivos dão o tipo de dano/atributo que usam.
  * Valores são balanceamento provisório.
  */
@@ -58,23 +58,70 @@ const LABEL: Partial<Record<StatKey, (v: number) => string>> = {
   cool: (v) => `+${pct(v)} recarga da Ultimate`,
   area: (v) => `+${pct(v)} área`,
   projectiles: (v) => `+${num(v)} projétil`,
+  projectileChance: (v) => `+${pct(v)} chance de projétil extra`,
   health: (v) => `+${num(v)} HP máximo`,
   pickupFlat: (v) => `+${num(v)} m de coleta`,
   dot: (v) => `+${pct(v)} veneno`,
 };
 
-/** Bônus de um ajudante já multiplicados pela força de suporte. */
-export function allyBuffBonuses(id: string, strength = 1): Bonuses {
-  const out: Bonuses = {};
-  // Projéteis são inteiros no combate: a força de suporte não cria frações de projétil.
-  for (const [key, value] of Object.entries(ALLY_BUFFS[id]?.bonuses ?? {})) out[key as StatKey] = key === 'projectiles' ? Math.floor((value as number) * strength) : (value as number) * strength;
+/**
+ * Afinidade do ajudante (pedido do usuário em 06/11/2026: "definição de afinidade para buffs").
+ * Cada ajudante acumula pontos enquanto está na equipe: +1 por segundo de missão com ele e +0,2 por abate da equipe.
+ * O nível (1 a 5) define quanto da PASSIVA individual está ativo: 40% / 55% / 70% / 85% / 100%.
+ * Iruka (NPC) entra já no máximo. Quem entra por substituição começa no Nv. 1. Valores provisórios.
+ */
+export const AFFINITY_RULES = {
+  max: 5,
+  /** Pontos mínimos de cada nível (índice 0 = Nv. 1). */
+  thresholds: [0, 40, 100, 180, 280],
+  /** Fração da passiva ativa em cada nível. */
+  factor: [.4, .55, .7, .85, 1],
+  perSecond: 1,
+  perKill: .2,
+};
+export const maxAffinityPoints = () => AFFINITY_RULES.thresholds[AFFINITY_RULES.max - 1];
+/** Nível de afinidade (1..max) a partir dos pontos acumulados. */
+export function affinityLevel(points: number): number {
+  let level = 1;
+  AFFINITY_RULES.thresholds.forEach((min, i) => { if (points >= min) level = i + 1; });
+  return level;
+}
+export const affinityFactor = (points: number) => AFFINITY_RULES.factor[affinityLevel(points) - 1];
+/** Progresso dentro do nível atual (0..1; 1 no máximo). */
+export function affinityProgress(points: number): number {
+  const level = affinityLevel(points);
+  if (level >= AFFINITY_RULES.max) return 1;
+  const min = AFFINITY_RULES.thresholds[level - 1], next = AFFINITY_RULES.thresholds[level];
+  return Math.max(0, Math.min(1, (points - min) / (next - min)));
+}
+
+/**
+ * Projéteis fracionários: a parte inteira vira `projectiles`; a fração vira `projectileChance`
+ * (chance, por disparo, de +1 projétil). Ex.: 1,5 → +1 projétil e 50% de chance de mais 1.
+ */
+export function splitProjectiles(out: Bonuses): Bonuses {
+  const total = out.projectiles ?? 0;
+  if (!total) return out;
+  const whole = Math.floor(total + 1e-9), frac = Math.round((total - whole) * 1000) / 1000;
+  if (whole) out.projectiles = whole; else delete out.projectiles;
+  if (frac > 0) out.projectileChance = (out.projectileChance ?? 0) + frac;
   return out;
 }
 
+/**
+ * Bônus de um ajudante já multiplicados pela força de suporte e pela afinidade.
+ * `affinity` = pontos de afinidade; omitido = afinidade máxima (100% da passiva).
+ */
+export function allyBuffBonuses(id: string, strength = 1, affinity?: number): Bonuses {
+  const out: Bonuses = {}, factor = strength * (affinity === undefined ? 1 : affinityFactor(affinity));
+  for (const [key, value] of Object.entries(ALLY_BUFFS[id]?.bonuses ?? {})) out[key as StatKey] = Math.round((value as number) * factor * 1000) / 1000;
+  return splitProjectiles(out);
+}
+
 /** Soma dos buffs de todos os ajudantes (entra em calculateStats como buff da run). */
-export function alliesBonuses(allies: readonly string[], strength = 1): Bonuses {
+export function alliesBonuses(allies: readonly string[], strength = 1, affinity: Record<string, number> = {}): Bonuses {
   const out: Bonuses = {};
-  for (const id of allies) for (const [key, value] of Object.entries(allyBuffBonuses(id, strength))) out[key as StatKey] = (out[key as StatKey] || 0) + (value as number);
+  for (const id of allies) for (const [key, value] of Object.entries(allyBuffBonuses(id, strength, affinity[id] ?? maxAffinityPoints()))) out[key as StatKey] = (out[key as StatKey] || 0) + (value as number);
   return out;
 }
 
@@ -84,6 +131,6 @@ export function bonusText(bonuses: Bonuses): string {
 }
 
 /** Texto do buff com os valores efetivos, ex.: "+12% dano total". */
-export function allyBuffText(id: string, strength = 1): string {
-  return bonusText(allyBuffBonuses(id, strength));
+export function allyBuffText(id: string, strength = 1, affinity?: number): string {
+  return bonusText(allyBuffBonuses(id, strength, affinity));
 }

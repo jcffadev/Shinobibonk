@@ -37,7 +37,7 @@ export const NPC_RULES = {
   irukaLesson: { min: .03, max: .06 },
   /** Iruka (2): custo fixo do pergaminho lendário. */
   irukaLegendaryCost: .2,
-  /** Iruka (3): passiva de ajudante, já em força máxima (não há sistema de afinidade no código). */
+  /** Iruka (3): passiva de ajudante; ele entra com afinidade máxima (AFFINITY_RULES em allies.ts), então vale 100%. */
   irukaAllyExp: .25,
   /** Proteção: um custo não pode deixar o bônus aditivo do atributo abaixo deste piso. */
   costFloor: -.5,

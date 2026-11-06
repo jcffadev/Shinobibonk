@@ -40,13 +40,20 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
   - Invoca 4 clones das sombras a cada 0,6 s (teto 48 vivos) a 6–50 m do jogador; os clones vão direto atacar o jogador. Cada clone dá 5 de XP (sem Ryu/itens).
   - Morto: 2 level-ups na fila normal (só técnicas e pílulas). Se não morrer, some às 6:00 sem recompensa; os clones restantes se dissipam.
   - Entra no mapa só depois de visto em tela. Valores provisórios; performance com 48 clones + horda não medida.
-- **Bênção de Tsunade (CONFIRMADO; substitui a bênção da referência)**: buff aleatório para a run. **IMPLEMENTADO**: uma vez por zona, sorteia +12% de dano, +24 HP ou +15% de XP. A escolha entre opções e a tabela de raridade estão **PENDENTES**.
+- **Roleta da Tsunade (CONFIRMADO pelo usuário em 06/11/2026; substitui o Caça-níquel e absorve a Bênção de Tsunade)**: evento `slot` com sprite da Tsunade. **IMPLEMENTADO** (`src/game/roulette.ts`, `src/ui/TsunadeRoulette.tsx`):
+  - E abre o overlay da roleta; a run fica pausada enquanto está aberto.
+  - Controles: toque em E = 1 giro animado (1,6 s); segurar E = giro rápido contínuo (280 ms/giro) enquanto houver Ryu; E durante a animação = resultado instantâneo; F/botão liga e desliga o giro rápido (`sb_roulette_fast`).
+  - Prêmios e penalidades acumulam numa lista e só são entregues ao sair (Esc/X/"Sair e receber").
+  - Custo por giro: (25 + 5 × giros na run) × (1 − desconto, máx. 40%); não reseta por zona.
+  - Casas (peso base): Kunai 13, Shuriken 13, Pílula 12, Ryu de volta 10 (2× custo), Bênção de Tsunade 7 (90 s: +15% dano, ou +12% cadência, ou +2,5 HP/s e +6 armadura), Item 6, Sorte Grande 2 (item + 3× custo); ruins: Dívida de jogo 10, Azar da Lendária Perdedora 8 (−10% dano, −8% movimento por 45 s), Credores da Tsunade 7 (emboscada); neutra: Casa vazia 12.
+  - Sorte multiplica casas boas por 1 + min(2, sorte/100) (premium ao quadrado); a pressão de dificuldade (maldição, zona, missão) multiplica as ruins; a fatia ruim fica sempre entre 15% e 60%. Ex.: sorte 0 = 63% boas/25% ruins; sorte 100+ = ~81%/15%.
+  - Buffs e debuffs são temporários e recalculados das fontes. Valores provisórios.
 - **Altar de desafio (CONFIRMADO)**: interagir inicia uma pequena horda; concluir concede uma kunai grátis. **IMPLEMENTADO**: 6 inimigos de desafio surgem a 7 m. Escala e duração estão **PENDENTES**.
 - **Maldição de Orochimaru (CONFIRMADO; substitui Gengar)**: risco/recompensa opcional. **IMPLEMENTADO**: +20% de dificuldade e +25% de XP/saque, uma vez por zona.
 - **Mega elite (CONFIRMADO)**: encontros especiais surgem organicamente e podem ser selados após a derrota. **IMPLEMENTADO**: shinobi aleatório do elenco (que ainda não é aliado). O primeiro surge entre 30 e 55 s e os seguintes a cada 45–70 s, até 9 por run. Rotação por zona e elegibilidade estão **PENDENTES**.
 - **Guardião de zona (IMPLEMENTADO)**: invocado pelo Selo do guardião quando o jogador quiser, ou automaticamente aos 160 s de cada zona de 200 s; sorteado da lista da zona em `src/game/missions.ts` (`GUARDIAN_RULES`, `guardianHpMultiplier`).
 - **Proteção de altar (CONFIRMADO)**: defender o altar durante o evento. **IMPLEMENTADO PARCIAL**: ficar 20 s dentro do círculo de 4 m dá uma kunai grátis. Ondas dedicadas e falha ao sair estão **PENDENTES**.
-- **Mercador e caça-níquel (IMPLEMENTADO)**: o mercador troca kunai/shuriken guardadas por 5 Ryu cada. O caça-níquel do Ichiraku custa 25 Ryu e sorteia kunai, shuriken, pílula ou recompensa de item.
+- **Mercador (IMPLEMENTADO)**: troca kunai/shuriken guardadas por 5 Ryu cada.
 - **Kakashi interativo (CONFIRMADO; IMPLEMENTADO)**: NPC "Sharingan de Kakashi" no mapa. Ao interagir com E, o jogador escolhe um item que já carrega e ganha mais uma cópia dele, respeitando o limite do item. Pode ser usado uma vez por zona, e cancelar não gasta o uso.
 - **Emboscadas (IMPLEMENTADO)**: a cada 18–30 s surgem 8 + 2×zona inimigos ao redor do jogador.
 - **Tempo e clima (CONFIRMADO; IMPLEMENTADO)**: um clima sorteado a cada zona. Névoa reduz a visibilidade; tempestade de areia reduz o movimento em 27%. Outros climas por bioma estão **PENDENTES**.

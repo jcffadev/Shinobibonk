@@ -46,7 +46,7 @@ export function itemElement(item:Item){
 export function itemAttribute(item:Item){
  if(has(item,'crit','bigCrit'))return 'Chance crítica';
  if(has(item,'critDamage'))return 'Dano crítico';
- if(has(item,'damage','normal','element','genjutsu','dot','eliteDamage','controlledDamage','statusStack','lowHpDamage','noHitDamage','killDamage','armorPhysical','execute','statusDamage','beam','bolts')||itemElement(item)!=='Universal'&&(Object.keys(item.bonuses) as StatKey[]).some(k=>ELEMENT_BY_KEY[k]))return 'Dano';
+ if(has(item,'damage','normal','element','genjutsu','dot','eliteDamage','controlledDamage','statusStack','lowHpDamage','noHitDamage','killDamage','armorPhysical','execute','statusDamage','beam','bolts','spendDamage')||itemElement(item)!=='Universal'&&(Object.keys(item.bonuses) as StatKey[]).some(k=>ELEMENT_BY_KEY[k]))return 'Dano';
  if(has(item,'health','healthPct','defense','dodge','regen','lifesteal','thorns','killHeal','revive35','revive60','shield','smoke','emergencyHeal','periodicHeal','freezeOnHit'))return 'Defesa';
  if(has(item,'status','duration','burnChance','poisonChance','sleepChance','rootChance','chillChance'))return 'Status';
  if(has(item,'support','allyDamage','allySpeed','allyBuff'))return 'Ajudantes';

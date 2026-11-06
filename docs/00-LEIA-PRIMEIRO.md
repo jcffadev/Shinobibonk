@@ -25,11 +25,11 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - Missões nomeiam a dificuldade como Genin, Chunin, Jonin e Kage.
 - Teclas: M abre o mapa completo; Tab o mapa rápido; P a ficha; G o ping “Aqui”; E interage.
 - Ultimate manual no R. **A tecla Y é obrigatória** e alterna a Ultimate automática; o selo AUTO no botão R faz o mesmo por clique e mostra o estado.
-- Economia da run: Ryu, kunai e shuriken. Kunai/shuriken são recompensas no mapa; o mercador troca armas por Ryu; o caça-níquel consome Ryu.
+- Economia da run: Ryu, kunai e shuriken. Kunai/shuriken são recompensas no mapa; o mercador troca armas por Ryu; a Roleta da Tsunade consome Ryu.
 - Lamens é a moeda permanente da conta (árvore e desbloqueios), separada do Ryu da run.
 - O pool de level-up/drop é escolhido pelo jogador.
 - Orochimaru substitui Gengar no evento de maldição. Mega elites derrotados podem ser selados (E) ou recusados (G), e a recusa deixa um drop de item afetado por Sorte.
-- Nada relacionado a Pokémon: os eventos de referência foram renomeados no código ("Plano do Shikamaru" e "Bênção de Tsunade").
+- Nada relacionado a Pokémon: os eventos de referência foram renomeados no código ("Plano do Shikamaru" e "Roleta da Tsunade").
 
 ## Implementado na base atual
 
@@ -37,7 +37,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
   - Elenco de 22 shinobis em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
   - Biblioteca com 4 técnicas por shinobi e plano de build (planejar/arquivar técnicas, pílulas e itens).
-  - Árvore permanente com 16 nós e loja de 93 itens com filtros e arquivamento.
+  - Árvore permanente com 16 nós e loja de 94 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
 - **Run**:
   - Contagem regressiva de 10:00 e vitória ao chegar a 0:00. Derrota ao zerar o HP.
@@ -68,9 +68,8 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Altar de desafio: horda de 6.
   - Maldição de Orochimaru: +20% de dificuldade e +25% de XP/saque.
   - Altar para proteger: ficar 20 s no círculo.
-  - Bênção de Tsunade: buff aleatório.
   - Mercador de armas.
-  - Caça-níquel: 25 Ryu por giro.
+  - Roleta da Tsunade: overlay animado com casas boas e ruins, giro rápido segurando E, prêmios entregues ao sair, custo 25 +5 por giro; Sorte melhora as chances (nunca 100%) e a dificuldade compensa.
   - **Barraca Ichiraku**: o sprite da barraca de lámen.
     - Esquecer uma pílula (todos os níveis) ou uma técnica custa 10 + 5 × nível em Ryu, quantas vezes quiser. A barraca nunca se esgota.
     - A última técnica não pode ser esquecida.
@@ -95,7 +94,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Seguem o jogador em formação e atacam sozinhos com a primeira técnica deles.
   - Cada aliado dá um **buff passivo único** ao grupo (tabela em [03](03-ALIADOS-E-SELAMENTO.md)). Os médicos curam; os outros dão o atributo que combina com o estilo deles.
   - Vagas: 3 base, +1 por item, +1 por passiva permanente; máximo 5.
-  - Sinergias de vila e organização (`src/game/synergy.ts`): ativam com 2+ membros na equipe (herói + ajudantes, ao menos 1 ajudante) e acumulam (ex.: Itachi conta para Folha, Akatsuki e Uchiha). Painel "SINERGIAS" abaixo do card do herói; cada cartão de ajudante mostra a PASSIVA individual e as tags das sinergias para as quais contribui. Irmãos da Areia completos mantêm +12 armadura e +15% dano.
+  - Sinergias de vila e organização (`src/game/synergy.ts`): contam só AJUDANTES (o herói não conta); combos por aldeia com faixas 2/3/4/5 e família de atributo própria (nenhum combo dá dano % e projétil juntos), mais organizações acumuláveis. Cada ajudante tem afinidade 1–5 que sobe durante a run e escala a passiva individual (40% → 100%). Equipe cheia abre a tela de substituição. A captura pode ser feita sem card/animação (Configurações). Ver [03](03-ALIADOS-E-SELAMENTO.md).
 - **Descoberta**: eventos e kunais só entram no minimapa e no mapa depois de aparecerem no campo de visão da câmera (frustum, até 40 m).
 - **H** oculta projéteis, efeitos e números sem desligar dano.
 - **Ficha (P)**: atributos, técnicas com dano causado, itens, pílulas, aliados, sinergia e escala de dificuldade.
@@ -123,7 +122,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - **Limite de inimigos**: está fixado em **no máximo 180 vivos**. A meta de 1.500 não foi implementada nem medida.
 - **Descoberta**: não considera oclusão por terreno ou árvores.
 - **Selamento**: não tem tentativas nem chance de falha (a regra das 3 tentativas não está implementada). Também não existe selamento permanente para desbloquear personagens.
-- **Aliados**: os valores dos buffs únicos são provisórios. Sinergias de vila/organização existem (`synergy.ts`), mas divergem do requisito original: o herói conta na vila, não há redução para composição mista nem notificação ao ativar (decisão do usuário PENDENTE).
+- **Aliados**: os valores dos buffs únicos são provisórios. Combos de vila/organização e afinidade são provisórios; não há aviso na tela ao ativar uma sinergia.
 - **Moeda**: a fórmula de Lamens por desempenho é provisória e não foi balanceada. Com o modo debug dá para inflar a recompensa (avançar tempo, mudar nível), e parâmetros salvos (por exemplo, mais EXP) também afetam os Lamens das próximas runs.
 - **Conta**: login, cadastro, save da run, ranking, backend e multiplayer não existem. O progresso fica em `localStorage`.
 - **Atributos e itens**: a Sorte só afeta a raridade das ofertas de item e de técnica. Remover pílula/item (Shisui/Ichiraku) não existe.
@@ -133,7 +132,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 ## Verificação (05/11/2026)
 
 - **TESTADO nesta data**: `tsc -b` e `vite build` concluídos sem erro. O Vite avisa que o bundle JS tem 879 kB, acima de 500 kB.
-- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 88 técnicas, 93 itens, distribuição de crítico e raridade).
+- **TESTADO nesta data**: `node scripts/verify-rules.mjs` passou (22 shinobis, 88 técnicas, 94 itens, distribuição de crítico e raridade).
 - **TESTADO nesta data**: `node scripts/verify-runtime.mjs` (Playwright/Edge) passou nas 23 verificações sem erros de JS, inclusive a nova verificação da tecla Y, já com debug, resumo e pílulas integrados.
 - **TESTADO nesta data (debug sem login)**: teste avulso no navegador confirmou:
   - o modal de conta não tem campos de login nem de senha;
