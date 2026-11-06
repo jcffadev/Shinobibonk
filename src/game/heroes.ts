@@ -38,6 +38,23 @@ HERO_BY_ID.naruto.techniques[1].unlockLevel=10;
 HERO_BY_ID.naruto.techniques[2].unlockLevel=5;
 HERO_BY_ID.naruto.techniques[3].unlockLevel=15;
 export function skillPool(heroId:string):Technique[]{const hero=HERO_BY_ID[heroId]??HEROES[0];return [...hero.techniques,...HEROES.filter(other=>other.id!==hero.id&&other.village===hero.village).map(other=>({...other.techniques[0],unlockLevel:8}))];}
+/** Clã de origem (o campo `village` converte clãs da Folha para "Vila da Folha"). */
+export const HERO_CLAN:Record<string,string>={madara:'Clã Uchiha',sasuke:'Clã Uchiha',itachi:'Clã Uchiha',neji:'Clã Hyuga',hinata:'Clã Hyuga',shikamaru:'Clã Nara',hashirama:'Clã Senju',tobirama:'Clã Senju',tsunade:'Clã Senju',naruto:'Clã Uzumaki'};
+/** Organizações/equipes canônicas usadas por filtros e sinergias. Um shinobi pode estar em várias. */
+export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
+ {id:'akatsuki',name:'Akatsuki',members:['itachi','pain','orochimaru']},
+ {id:'sannin',name:'Sannin Lendários',members:['jiraiya','tsunade','orochimaru']},
+ {id:'hokage',name:'Hokages',members:['hashirama','tobirama','minato','tsunade','kakashi','naruto']},
+ {id:'time7',name:'Time 7',members:['naruto','sasuke','sakura','kakashi']},
+ {id:'timeguy',name:'Time Guy',members:['guy','lee','neji','tenten']},
+ {id:'areia',name:'Irmãos da Areia',members:['gaara','temari','kankuro']},
+ {id:'uchiha',name:'Clã Uchiha',members:['madara','sasuke','itachi']},
+ {id:'hyuga',name:'Clã Hyuga',members:['neji','hinata']},
+ {id:'senju',name:'Clã Senju',members:['hashirama','tobirama','tsunade']},
+];
+export function heroOrganizations(heroId:string){return ORGANIZATIONS.filter(o=>o.members.includes(heroId));}
+/** Afinidade elemental principal: elemento não neutro mais frequente no kit (Neutro se não houver). */
+export function heroAffinity(heroId:string):Element{const hero=HERO_BY_ID[heroId];if(!hero)return 'Neutro';const count=new Map<Element,number>();for(const tech of hero.techniques)if(tech.element!=='Neutro')count.set(tech.element,(count.get(tech.element)||0)+1);let best:Element='Neutro',n=0;for(const [el,c] of count)if(c>n){best=el;n=c;}return best;}
 export function sandSynergy(allies:readonly string[]){return ['gaara','temari','kankuro'].every(id=>allies.includes(id));}
 export const NARUTO_FORMS=[{level:1,name:'Academia',file:'naruto-academia'},{level:10,name:'Clássico',file:'naruto-classico'},{level:25,name:'Shippuden',file:'naruto-shippuden'},{level:50,name:'Manto da Kyuubi',file:'naruto-kyuubi'}];
 export function narutoForm(level:number){return [...NARUTO_FORMS].reverse().find(f=>level>=f.level)??NARUTO_FORMS[0];}

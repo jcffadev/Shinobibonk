@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2026-11-06 — sinergias, seleção com filtros e guardião invocável
+- **Sinergias de vila e organização** (`src/game/synergy.ts`): ativam com 2+ membros (herói + ajudantes, ao menos 1 ajudante), faixas 2/3/4+, acumulam vila + organizações (ex.: Akatsuki). Substituem a antiga sinergia fixa da Areia (Irmãos da Areia completos mantêm +12 armadura/+15% dano). Painel "SINERGIAS" abaixo do card do herói; cartões de ajudante mostram a PASSIVA individual e as tags das sinergias. Dados de clã/organização/afinidade em `heroes.ts` (`HERO_CLAN`, `ORGANIZATIONS`, `heroOrganizations`, `heroAffinity`).
+- **Seleção de shinobi** (`src/ui/CharacterSelect.tsx`): grade de retratos com selo de elemento; filtros por vila, elemento, organização/clã e busca; contagem "X de 22".
+- **Guardião invocável**: Selo do guardião (E) invoca o guardião da zona quando o jogador quiser; HP × (0,6 + 0,4 × segundos na zona ÷ 160). Continua surgindo sozinho aos 160 s se não for invocado.
+- **Plano do Shikamaru** substitui a Provocação do guardião (ex-referência Pokémon): +1 kunai por acionamento ao derrotar o guardião, limite 3 por zona, sem penalidade de dificuldade/saque. Nenhuma referência a Pokémon resta em `src/`.
+- **Verificação**: tsc, vite build, verify-rules (com asserts de sinergia) e verify-runtime (24 checks) passaram; testes de navegador à parte para sinergias, filtros (desktop e 375px) e guardião/Shikamaru. Balanceamento PENDENTE.
+
 ## 2026-11-05 — catálogo de 91 itens no formato da referência
 - **Catálogo:** `src/game/catalog.ts` foi refeito com 91 itens (25 comuns, 27 incomuns, 15 raros, 14 épicos, 10 lendários) seguindo o formato da página de itens da wiki: raridade, efeito, gatilho e limite. Os nomes são ninjas, os valores foram levemente alterados e não há Pokémon.
 - **Itens pedidos:** Pergaminho do Monte Myoboku (+28% Sábio) e Pergaminho Genjutsu (+28% Genjutsu), no molde dos pergaminhos de elemento (Katon, Suiton, Fuuton, Doton, Raiton, Mokuton, Areia, Sombra, Neutro).

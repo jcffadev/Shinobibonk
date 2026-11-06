@@ -5,7 +5,7 @@ Data: 05/11/2026. Valores da árvore marcados como proposta; não estão balance
 ## Fluxo do hub
 
 1. **Tela inicial**: continuar como convidado, escolher shinobi, ver a prévia da cena, consultar progressão e abrir a loja. A carteira de teste se chama "Administrador", sem login; o modal de conta avisa que o cadastro ainda não existe.
-2. **Elenco**: 22 shinobis com retrato, aldeia, passiva, atributos base, kit de quatro técnicas e Ultimate. Filtros por aldeia, tipo de dano e elemento.
+2. **Elenco**: 22 shinobis com retrato, aldeia, passiva, atributos base, kit de quatro técnicas e Ultimate. Grade de retratos (`src/ui/CharacterSelect.tsx`, `src/character-select.css`) com selo de elemento e vila; filtros combináveis por vila, elemento (afinidade principal, `heroAffinity`) e organização/clã (`ORGANIZATIONS`, `HERO_CLAN`), busca por nome, contagem "X de 22" e botão Limpar filtros. O painel de detalhes mostra selos de elemento e organizações.
 3. **Ataques**: biblioteca do shinobi selecionado, com nível de desbloqueio de cada técnica, técnicas de colegas da mesma aldeia e filtros por escola, elemento e forma.
 4. **Plano**: planejar e arquivar técnicas, pílulas e itens. Os arquivados não aparecem na run; a técnica inicial é obrigatória.
 5. **Árvore e loja**: a moeda permanente compra níveis permanentes ou desbloqueia itens. Desbloquear item só o inclui no pool.

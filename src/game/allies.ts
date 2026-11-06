@@ -72,7 +72,12 @@ export function alliesBonuses(allies: readonly string[], strength = 1): Bonuses 
   return out;
 }
 
+/** Texto legível de um conjunto de bônus, ex.: "+12% dano total · +10 armadura". */
+export function bonusText(bonuses: Bonuses): string {
+  return Object.entries(bonuses).map(([key, value]) => LABEL[key as StatKey]?.(value as number) ?? `+${num(value as number)} ${key}`).join(' · ');
+}
+
 /** Texto do buff com os valores efetivos, ex.: "+12% dano total". */
 export function allyBuffText(id: string, strength = 1): string {
-  return Object.entries(allyBuffBonuses(id, strength)).map(([key, value]) => LABEL[key as StatKey]?.(value as number) ?? `+${num(value as number)} ${key}`).join(' · ');
+  return bonusText(allyBuffBonuses(id, strength));
 }

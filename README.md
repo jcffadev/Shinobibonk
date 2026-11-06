@@ -27,13 +27,14 @@ Atalhos locais:
 - `src/scene/techniqueEffects.ts`: visuais das técnicas. Dano e hitbox ficam na simulação.
 - `src/scene/bossCombat.ts`: chefes (mega elites e guardiões), com barra de vida e técnicas do personagem com aviso no chão.
 - `src/game/`: dados e regras sem React.
-  - `heroes.ts`: 22 shinobis e 88 técnicas.
+  - `heroes.ts`: 22 shinobis e 88 técnicas, clãs, organizações e afinidade elemental.
+  - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
   - `catalog.ts`: 91 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
   - `progression.ts`: atributos, dificuldade e crítico.
   - `evolution.ts`: formas por nível.
   - `combat.ts`: afixos de técnica.
   - `preparation.ts`: árvore permanente e carteira.
-  - `missions.ts`: três zonas.
+  - `missions.ts`: três zonas e HP do guardião invocável.
   - `pills.ts`: 18 pílulas.
   - `tuning.ts`: parâmetros de balanceamento do modo debug (salvos e aplicados em todas as runs).
   - `rewards.ts`: Lamens ganhos pelo desempenho da run.
@@ -43,7 +44,8 @@ Atalhos locais:
   - resumo pós-run (`RunSummary`);
   - painel de debug (`DebugPanel`);
   - ícones de pílula (`PillIcon`);
-  - cartões de ajudantes (`AllyCards`);
+  - cartões de ajudantes com passiva e painel de sinergias (`AllyCards`);
+  - seleção de shinobi com retratos e filtros (`CharacterSelect`);
   - plano de build, filtros e ícones de técnica.
 - `src/audio/sfx.ts`: efeitos sonoros sintetizados no navegador.
 - `src/style.css`, `src/run-ui.css`, `src/sealing.css`, `src/summary.css`, `src/debug.css`, `src/hud-dock.css`: estilos do hub, da HUD/ficha, do selamento, do resumo pós-run, do debug e do bloco inferior (pílulas acima das habilidades).

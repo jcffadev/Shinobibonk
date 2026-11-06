@@ -10,6 +10,20 @@
 .ally-info header em{padding:1px 6px;border-radius:7px;background:#2f9e5b;color:#eafff2;font-size:8px;font-style:normal;font-weight:900;letter-spacing:.05em}
 .ally-info header em.synergy{background:#d98c2b;color:#fff6e3}
 .ally-buff{margin:0;color:#dfe6f5;font-size:10px;font-weight:700;line-height:1.2}
+.ally-buff b{margin-right:4px;color:#ffe08a}
+.ally-passive{display:inline-block;margin-right:5px;padding:0 4px;border-radius:5px;background:#3b4670;color:#cfe0ff;font-size:7px;font-weight:900;letter-spacing:.06em;vertical-align:1px}
+.ally-synergy-tags{display:flex;flex-wrap:wrap;gap:3px}
+.ally-synergy-tags em{padding:0 5px;border-radius:6px;background:#2f9e5b;color:#eafff2;font-size:7.5px;font-style:normal;font-weight:900;letter-spacing:.04em}
+.ally-synergy-tags em.organizacao{background:#d98c2b;color:#fff6e3}
+/* Painel de sinergias: compacto, acima dos cartões de ajudantes. */
+.synergy-panel{display:grid;gap:3px;padding:6px 8px;border:2px solid #d98c2b;border-radius:12px;background:linear-gradient(90deg,#2a2016f2,#232a40e6);box-shadow:0 3px 10px #0008}
+.synergy-panel .ally-cards-title{padding-left:0;color:#ffcf8a}
+.synergy-row{display:grid;grid-template-columns:16px 1fr auto;align-items:center;column-gap:5px}
+.synergy-row .synergy-icon{font-size:12px;line-height:1}
+.synergy-row b{overflow:hidden;color:#fff;font-size:10.5px;white-space:nowrap;text-overflow:ellipsis}
+.synergy-row em{padding:0 5px;border-radius:6px;background:#2f9e5b;color:#eafff2;font-size:8px;font-style:normal;font-weight:900}
+.synergy-row.organizacao em{background:#d98c2b;color:#fff6e3}
+.synergy-row p{grid-column:2/4;margin:0;color:#dfe6f5;font-size:9px;font-weight:700;line-height:1.15}
 .ally-skill{display:flex;align-items:center;gap:6px}
 .ally-skill span{flex:none;max-width:110px;overflow:hidden;color:var(--ally);font-size:10px;font-weight:800;white-space:nowrap;text-overflow:ellipsis}
 .ally-skill i{flex:1;height:5px;overflow:hidden;border-radius:3px;background:#0d111d}

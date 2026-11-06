@@ -18,7 +18,9 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 | `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
 | `src/game/evolution.ts` | Formas por nível de cada shinobi, recorte de retrato nos atlas e nível de desbloqueio das técnicas. |
 | `src/game/preparation.ts` | 16 nós da árvore permanente, usos de atualizar/pular/banir, preço das kunais, carteira administrativa (999.999), compra e reembolso. |
-| `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis. |
+| `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis; `GUARDIAN_RULES` e `guardianHpMultiplier(zoneElapsed)` (0,6× → 1,0× aos 160 s). |
+| `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
+| `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
 | `src/game/pills.ts` | Fonte única das 18 pílulas (bônus por nível, limite 10, glifo/cor) e as funções `grantPill`, `pillBonuses` e textos de oferta. |
 | `src/game/tuning.ts` | 13 parâmetros de balanceamento do debug (`DEFAULT_TUNING` = 1) em 4 grupos: Inimigos, Personagem, Ganhos, Drops. Inclui limites, persistência, `replaceTuning` (colar JSON), `tuneThreat` e `dropChance`. `activeTuning()` devolve sempre os valores salvos, com ou sem o painel. |
 | `src/ui/RunSheet.tsx` | Ficha da run (P), ícones de item/pílula e retrato do herói; exporta os grupos de atributos. |
@@ -71,7 +73,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
       - Dano do personagem: em `hit()`, sem afetar os aliados.
       - EXP e Ryu: na coleta dos drops.
       - Ultimate: no ganho passivo de Chakra.
-      - Drops: em `removeEnemy`, via `dropChance(base, mult)`, limitado a 100%. As bases são Ryu 72% (×Maldição/Provocação, até 95%), Chakra 28%, pílula 1,5% e item 1,8%.
+      - Drops: em `removeEnemy`, via `dropChance(base, mult)`, limitado a 100%. As bases são Ryu 72% (×Maldição de Orochimaru, até 95%), Chakra 28%, pílula 1,5% e item 1,8%.
     - God mode ignora o dano recebido; "congelar" pausa a simulação. "Copiar/Colar JSON" exporta e reaplica os parâmetros.
     - A `difficultyScale` exibida na ficha não inclui os multiplicadores.
 
@@ -88,12 +90,12 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - `elapsed` vai de 0 a 600 s; o HUD mostra a contagem regressiva.
   - Zona = 1 + ⌊elapsed/200⌋ (máximo 3).
   - Ao trocar de zona: novo clima (Névoa espectral reduz a visão; Tempestade de areia dá −27% de movimento), eventos reativados e guardião rearmado.
-  - O guardião (shinobi da lista da zona) surge aos 160 s de cada zona.
+  - O guardião (shinobi da lista da zona) é invocado no Selo do guardião (`summonGuardian`, HP × `guardianHpMultiplier`) ou surge sozinho aos 160 s da zona. `guardianSpawned` garante um por zona.
 - **Dificuldade** (`difficultyAt`):
   - Multiplicador por rank: Genin 1, Chunin 1,4, Jonin 1,9, Kage 2,6.
   - Por minuto: HP +22%, dano +15%, velocidade e cadência sobem, intervalo de spawn cai.
   - Teto de **180 inimigos vivos**.
-  - Maldição e Provocação multiplicam a dificuldade da zona.
+  - A Maldição de Orochimaru multiplica a dificuldade da zona. O Plano do Shikamaru não altera dificuldade.
 - **Inimigos**:
   - Perseguem o jogador. Ao alcançar, marcam um círculo vermelho e atacam após um tempo de preparo; sair do círculo evita o dano.
   - O dano recebido passa por armadura (`100/(100+armadura)`) e evasão (máximo 60%).
@@ -122,7 +124,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 - **Aliados**:
   - Seguem o jogador em formação.
   - A cada 1,5 s ÷ cadência de aliados, cada um lança a 1ª técnica dele com 65% × dano de aliados.
-  - Cada aliado dá um buff passivo único (`ALLY_BUFFS` em `src/game/allies.ts`) × força de suporte (`allyBuff`). Em `refreshStats`, `alliesBonuses(allies, stats.allyBuff)` é somado aos buffs da run, junto com a sinergia da Areia. A regeneração genérica de +0,3 HP/s por aliado foi removida.
+  - Cada aliado dá um buff passivo único (`ALLY_BUFFS` em `src/game/allies.ts`) × força de suporte (`allyBuff`). Em `refreshStats`, `alliesBonuses(allies, stats.allyBuff)` é somado aos buffs da run, junto com `synergyBonuses(activeSynergies(heroId, allies))`. O snapshot leva `synergies` (lista ativa) para o painel SINERGIAS e os cartões; `synergy` (booleano do trio da Areia) ficou por compatibilidade. A regeneração genérica de +0,3 HP/s por aliado foi removida.
 - **Descoberta**:
   - Eventos e kunais/shurikens entram no mapa quando ficam dentro do frustum da câmera a menos de 40 m, e continuam registrados depois.
   - Células exploradas no mapa: grade de 5 m ao redor do caminho percorrido.
@@ -138,7 +140,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - A tela inicial tem "Continuar como convidado" e uma carteira local de teste chamada "Administrador", sem login.
   - O modal de conta explica que o cadastro ainda não existe e que o debug abre com F9 no servidor local. Não há campos de login nem de senha.
   - A carteira começa com 999.999 Lamens (🍜). O Ryu (🪙) é só o dinheiro da run.
-- **Elenco**: 22 shinobis com retrato, aldeia, passiva, atributos, kit e Ultimate. Filtros por aldeia, tipo de dano (escola) e elemento.
+- **Elenco**: 22 shinobis em grade de retratos (`CharacterSelect`), com aldeia, passiva, atributos, kit e Ultimate. Filtros por vila, elemento (afinidade) e organização/clã, mais busca.
 - **Ataques**: biblioteca do shinobi com nível de desbloqueio de cada técnica e filtros por escola, elemento e forma. Inclui técnicas de colegas da mesma aldeia.
 - **Plano de build**: planejar (marca visual) e arquivar técnicas, pílulas e itens. Os arquivados não aparecem na run; a técnica inicial não pode ser arquivada.
 - **Árvore permanente** (`PASSIVES`):
@@ -170,7 +172,9 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - Pílula com 1,5%.
   - Recompensa de item com 1,8% (abre uma escolha).
 - **Eventos fixos no mapa**:
-  - **Provocação do guardião**: até 3 vezes por zona; cada uma dá +10% de dificuldade da zona, +10% de saque e +30% de HP do guardião, e o guardião derrotado solta 1 + provocações kunais grátis.
+  - **Plano do Shikamaru** (NPC com sprite do Shikamaru): até 3 vezes por zona; cada uma dá +1 kunai grátis ao derrotar o guardião (1 + planos, máx. 4). Sem penalidade.
+  - **Selo do guardião**: invoca o guardião da zona na hora; HP cresce com o tempo na zona.
+  - Hooks de teste: `summonGuardian`, `shikamaru`, `defeatGuardian`, `guardian`.
   - **Altar de desafio**: 6 inimigos; vencer dá uma kunai grátis.
   - **Maldição de Orochimaru**: +20% de dificuldade, +25% de XP e saque.
   - **Altar para proteger**: ficar 20 s no círculo dá uma kunai grátis.
@@ -207,7 +211,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
   - Ao derrotar um mega elite, a run pausa na decisão. E inicia o ritual de 2,7 s (instantâneo com a Shuriken Selo da Tenten); G recusa e deixa uma kunai grátis.
   - Equipe cheia ou personagem repetido impede selar.
   - Se vários mega elites caem, as decisões entram em fila.
-- **Aliados e sinergia**: vagas 3 + Pergaminho de Recrutamento + nó "Suporte adicional" (máximo 5). A sinergia da Areia exige Gaara, Temari e Kankuro como aliados.
+- **Aliados e sinergia**: vagas 3 + Pergaminho de Recrutamento + nó "Suporte adicional" (máximo 5). Sinergias de vila/organização com 2+ membros (herói + ajudantes), acumuláveis; ver docs/03.
 - **Fim da run**: vitória ao chegar a 0:00; derrota com HP 0.
 
 ### UI durante a run

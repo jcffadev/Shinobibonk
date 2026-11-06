@@ -57,7 +57,7 @@ export function RunSummary({world,hero,mission,reward=null,onRetry,onPrepare}:{w
           <div className="summary-items">{inventory.length?inventory.map(([name,count])=><div className={`summary-item rarity-${ITEM_BY_NAME[name]?.rarity.toLowerCase()??'comum'}`} key={name} title={`${name} · ${ITEM_BY_NAME[name]?.rarity??''}`}><ItemIcon name={name}/><span>{name}</span><b>×{count}</b></div>):<p className="summary-empty">Nenhum item coletado.</p>}</div>
           <h3 className="section-label">PÍLULAS</h3>
           <div className="summary-items">{pills.length?pills.map(([name,count])=><div className="summary-item" key={name}><ItemIcon name={name}/><span title={name}>{name.replace(/^Pílula /,'')}</span><b>Nv. {count}</b></div>):<p className="summary-empty">Nenhuma pílula.</p>}</div>
-          <h3 className="section-label">SUPORTES · {world.allies.length}/{world.stats.supportSlots}{world.synergy?' · SINERGIA ATIVA':''}</h3>
+          <h3 className="section-label">SUPORTES · {world.allies.length}/{world.stats.supportSlots}{world.synergies?.length?' · SINERGIAS: '+world.synergies.map(s=>`${s.name} (${s.members.length})`).join(', '):''}</h3>
           <div className="summary-allies">{world.allies.length?world.allies.map((id,i)=><div key={i}><HeroPortrait id={id}/><small>{HERO_BY_ID[id]?.name??id}</small></div>):<p className="summary-empty">Nenhum suporte recrutado.</p>}</div>
         </section>
         <section className="summary-col">

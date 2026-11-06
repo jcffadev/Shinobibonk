@@ -29,19 +29,19 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - Lamens é a moeda permanente da conta (árvore e desbloqueios), separada do Ryu da run.
 - O pool de level-up/drop é escolhido pelo jogador.
 - Orochimaru substitui Gengar no evento de maldição. Mega elites derrotados podem ser selados (E) ou recusados (G), e a recusa deixa um drop de item afetado por Sorte.
-- Nada relacionado a Pokémon: os eventos de referência foram renomeados no código ("Provocação do guardião" e "Bênção de Tsunade").
+- Nada relacionado a Pokémon: os eventos de referência foram renomeados no código ("Plano do Shikamaru" e "Bênção de Tsunade").
 
 ## Implementado na base atual
 
 - **Hub**:
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
-  - Elenco de 22 shinobis com filtros por aldeia, tipo de dano e elemento.
+  - Elenco de 22 shinobis em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
   - Biblioteca com 4 técnicas por shinobi e plano de build (planejar/arquivar técnicas, pílulas e itens).
   - Árvore permanente com 16 nós e loja de 91 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
 - **Run**:
   - Contagem regressiva de 10:00 e vitória ao chegar a 0:00. Derrota ao zerar o HP.
-  - Três zonas de 200 s cada. Um guardião por zona chega aos 160 s da zona, e o clima é sorteado a cada zona.
+  - Três zonas de 200 s cada. Um guardião por zona: o jogador o invoca quando quiser no Selo do guardião (mais HP quanto mais tarde) ou ele chega sozinho aos 160 s da zona. O clima é sorteado a cada zona.
   - A dificuldade escala por rank da missão (Genin–Kage) e por tempo.
   - Inimigos telegrafam ataques com um marcador vermelho que pode ser evitado. Há armadura e evasão.
 - **Técnicas**:
@@ -64,7 +64,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Tecla Y ou clique no selo AUTO do botão R ligam e desligam o uso automático.
 - **Drops**: XP azul, Ryu amarelo, carga da Ultimate roxa, pílula rosa e recompensa de item laranja.
 - **Eventos**:
-  - Provocação do guardião: até 3 vezes; cada vez fortalece o guardião e a zona e dá +1 kunai grátis quando o guardião é derrotado.
+  - Plano do Shikamaru: até 3 vezes por zona; cada vez dá +1 kunai grátis quando o guardião é derrotado, sem penalidade.
   - Altar de desafio: horda de 6.
   - Maldição de Orochimaru: +20% de dificuldade e +25% de XP/saque.
   - Altar para proteger: ficar 20 s no círculo.
@@ -95,7 +95,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
   - Seguem o jogador em formação e atacam sozinhos com a primeira técnica deles.
   - Cada aliado dá um **buff passivo único** ao grupo (tabela em [03](03-ALIADOS-E-SELAMENTO.md)). Os médicos curam; os outros dão o atributo que combina com o estilo deles.
   - Vagas: 3 base, +1 por item, +1 por passiva permanente; máximo 5.
-  - A sinergia da Areia (Gaara + Temari + Kankuro) dá +12 de armadura e +15% de dano.
+  - Sinergias de vila e organização (`src/game/synergy.ts`): ativam com 2+ membros na equipe (herói + ajudantes, ao menos 1 ajudante) e acumulam (ex.: Itachi conta para Folha, Akatsuki e Uchiha). Painel "SINERGIAS" abaixo do card do herói; cada cartão de ajudante mostra a PASSIVA individual e as tags das sinergias para as quais contribui. Irmãos da Areia completos mantêm +12 armadura e +15% dano.
 - **Descoberta**: eventos e kunais só entram no minimapa e no mapa depois de aparecerem no campo de visão da câmera (frustum, até 40 m).
 - **H** oculta projéteis, efeitos e números sem desligar dano.
 - **Ficha (P)**: atributos, técnicas com dano causado, itens, pílulas, aliados, sinergia e escala de dificuldade.

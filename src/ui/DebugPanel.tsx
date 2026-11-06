@@ -121,7 +121,7 @@ export function DebugPanel({ getApi }: { getApi: () => DebugApi | null }) {
         {/* Campo numérico confirma no Enter ou ao sair do campo, para permitir digitar valores como 0,5. */}
         <input key={values[field.key]} type="number" min={field.min} max={field.max} step={field.step} defaultValue={values[field.key]} onBlur={(e) => setTuning(field.key, Number(e.target.value))} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }} />
       </label>)}
-      {group === 'Drops' && <p className="debug-note">Chance efetiva por abate: Ryu {pct(dropChance(.72, values.ryuDrop))} · Chakra {pct(dropChance(.28, values.chakraDrop))} · pílula {pct(dropChance(.015, values.pillDrop))} · item {pct(dropChance(.018, values.itemDrop))} (Ryu antes da Maldição/Provocação).</p>}
+      {group === 'Drops' && <p className="debug-note">Chance efetiva por abate: Ryu {pct(dropChance(.72, values.ryuDrop))} · Chakra {pct(dropChance(.28, values.chakraDrop))} · pílula {pct(dropChance(.015, values.pillDrop))} · item {pct(dropChance(.018, values.itemDrop))} (Ryu antes da Maldição de Orochimaru).</p>}
     </Section>)}
     <Section title="Parâmetros salvos">
       <div className="debug-row">

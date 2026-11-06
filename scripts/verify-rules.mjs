@@ -37,6 +37,13 @@ assert.equal(calculateStats('naruto',1,{'Pergaminho Genjutsu':1}).genjutsu,1.28)
 assert.equal(formAt('naruto',49).name,'Shippuden');assert.equal(formAt('naruto',50).name,'Manto da Kyuubi');
 for(const h of HEROES){const r=portraitRegion(h.id);assert.ok(r.index>=0&&r.index<25);assert.ok(fs.existsSync('public'+r.path));}
 assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['gaara','temari','kankuro']),true);
+{const {activeSynergies,synergyBonuses}=await import('../src/game/synergy.ts');
+ const sand=activeSynergies('naruto',['gaara','temari','kankuro']);const brothers=sand.find(s=>s.id==='org:areia');assert.equal(brothers.bonuses.defense,12);assert.equal(brothers.bonuses.damage,.15);assert.ok(sand.some(s=>s.id==='vila:Vila da Areia'));
+ assert.equal(activeSynergies('naruto',[]).length,0,'sem ajudantes não há sinergia');
+ assert.equal(activeSynergies('gaara',['naruto']).length,0,'herói sozinho na aldeia não ativa');
+ const akat=activeSynergies('itachi',['pain']);assert.ok(akat.some(s=>s.id==='org:akatsuki'));assert.ok(!akat.some(s=>s.kind==='vila'),'Itachi (Folha) + Pain (Chuva) não compartilham vila');
+ const uch=activeSynergies('itachi',['sasuke']);assert.deepEqual(uch.map(s=>s.id).sort(),['org:uchiha','vila:Vila da Folha'],'membro acumula vila + organização');
+ assert.ok((synergyBonuses(activeSynergies('naruto',['sasuke','sakura','kakashi'])).damage??0)>.2,'Time 7 com 4 membros escala');}
 assert.ok(skillPool('gaara').some(t=>t.name==='Corte do Leque'));assert.ok(skillPool('gaara').some(t=>t.name==='Agulhas de Karasu'));
 assert.equal(choiceCount({}),3);assert.equal(choiceCount({'Quarta opção':1}),4);
 assert.deepEqual(choiceUses({'Atualizar':7,'Pular':7,'Banir':7}),{reroll:10,skip:10,ban:10});
