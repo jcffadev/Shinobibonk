@@ -10,7 +10,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **Outras formas do Naruto**: artes geradas, sem integração nem validação.
 - **Outros shinobis**: faltam animações individuais (hoje só o Naruto Academia tem caminhada/arremesso).
 - **Atlas de habilidades**: gerado, ainda não integrado ao HUD.
-- **Impactos e sons**: faltam integração e revisão (o pacote `artifacts/sb-swishes-source.zip` NÃO foi publicado: licença não verificada).
+- **Impactos e sons**: faltam integração e revisão. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (não publicado, licença não verificada): procurar outros sons depois, com licença livre verificada.
 - **Atributos até nível 50**: recalibração pendente; o bônus de +0,8% quando acabam os upgrades é regra separada (`powerlevel.ts`).
 - **Chão nas bordas**: alterações feitas (`terrainArt.ts`), validação visual final pendente.
 - Pedidos recentes do Codex em curso: bijuus, progressão extra e roleta.
