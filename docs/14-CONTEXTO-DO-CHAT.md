@@ -541,3 +541,22 @@ As alterações são feitas no worktree ShinobiBonk_Codex_Arte. A pasta ShinobiB
 
 
 **Validação final desta continuação** — 56 verificações no Edge headless passaram, incluindo as duas abas, persistência do limite na run salva, novo uso por zona, mercador e retomada de P. Sem erros JavaScript ou assets 404. TypeScript, build e regras passaram. A revisão completa das animações continua pendente.
+
+
+## Pergunta sobre o restante da fila · 07/11/2026
+
+> O que resta fazer?
+
+### Resposta
+
+O lote atual foi publicado na main do GitHub em badcee4. Oficina com uso único compartilhado por zona, preços do mercador, WASD, Tab/P, afiliações e eventos passaram pela validação descrita acima.
+
+1. Integrar as duas linhas de trabalho. A pasta ShinobiBonk_Codex_Projeto_Completo está em c41bd79, com trabalho parcial do Claude salvo na branch wip/parcial-subagentes-07-11. A main remota e o worktree ShinobiBonk_Codex_Arte seguem os commits publicados pelo Codex. É preciso conciliar ambas para a pasta principal reunir os dois lotes.
+2. Finalizar e revisar as ações de todas as 56 versões. Há 16 versões com folhas cobrindo ataque/pulo/dash, nove com pulo/dash dedicados pendentes e 31 com os três tipos de ação pendentes. Todas têm caminhada. Ainda é necessária auditoria visual por versão e no papel de ajudante.
+3. Aplicar os selos de mãos ao restante do elenco e refinar as poses especiais de Gaara, Lee e Guy. Naruto tem quatro versões do selo cruzado.
+4. Integrar e validar o rascunho WebGL de Susanoo por lançador, incluindo suporte, Ultimate e prévia. Refinar efeitos por técnica e buscar sons com licença adequada.
+5. Recalibrar dano e atributos por nível, HP/defesa dos monstros/chefes, Sorte, economia, bônus de ajudantes e emboscadas. As tabelas de proposta permanecem em docs/15.
+6. Validar terreno, bordas, colisões e câmera em mais climas. Medir desempenho de hordas em GPU real. A suíte headless usa renderização por software.
+7. Completar testes prolongados de uma run comum, missões de desbloqueio, três zonas, bijuu, recompensas e ranking. Cadastro com servidor e hospedagem da alpha seguem como etapas posteriores, pois o perfil atual é local.
+
+A fila completa continua em docs/13-PENDENCIAS-PARA-CONTINUAR.md.

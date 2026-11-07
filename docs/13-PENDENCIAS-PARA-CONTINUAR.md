@@ -1,9 +1,13 @@
-# Pendências para continuar (estado em 06/11/2026, commit 24ab2de)
+# Pendências para continuar · atualização em 07/11/2026
 
 Levantamento feito ao fim da sessão do Claude Code para continuar no Codex. Tudo abaixo está **PENDENTE** salvo indicação.
 Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs/12. Verificação padrão:
 `tsc --noEmit -p .`, `vite build`, `node scripts/verify-rules.mjs`, `node scripts/verify-runtime.mjs` (Node do Codex em
 `%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`; git em `C:\Program Files\Git\cmd\git.exe`).
+
+## Integração local pendente
+
+A pasta principal está em `c41bd79` (trabalho parcial do Claude, salvo também em `wip/parcial-subagentes-07-11`). A main remota recebeu `badcee4` pelo worktree `ShinobiBonk_Codex_Arte`. As duas linhas divergem desde `2f7d7e9`. Conciliar os lotes antes de afirmar que a pasta principal e a main remota estão iguais.
 
 ## Fila do Codex
 - **IMPLEMENTADO** — dash esquerdo/direito no controlador compartilhado, WASD imediato, com prioridade à última tecla oposta pressionada, conta local, folhas das três Sakuras e dos três Gaaras, selo cruzado dos quatro Narutos e flutuação de Gaara Kazekage e Aliança.
@@ -17,7 +21,7 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **IMPLEMENTADO** — cinco folhas direcionais de ataque, pulo e dash para Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura/Rinnegan/Seis Caminhos. Validação visual de uma missão real com cada versão e ajudante continua na fila.
 - **PENDENTE (Susanoo WebGL)** — no trabalho local, o rig se baseia na Narutopedia. Validar estilo por lançador (Madara azul com lâminas, Sasuke roxo com arco, Itachi vermelho/laranja com Totsuka e Yata), Suporte, Ultimate e prévia. O rascunho de Kakashi usa Kamui, e a fase correspondente ainda não existe no elenco.
 - **FOLHAS QUE FALTAM PARA O CODEX (versões separadas)** — repouso vem do sprite estático em todas. Caminhada direcional existe em todas. Onde falta ação, `playerMotion` usa pose procedural (squash/stretch no pulo, inclinação e rastro no dash, deformação de braços no ataque):
-  - **Completas (repouso, caminhada, ataque, pulo, dash)**: Naruto Academia (`naruto`), Sasuke Genin (`sasuke`), Neji Genin e Neji Jonin (folha acrobática; ataque usa os mesmos quadros), Asuma.
+  - **Com folhas cobrindo ataque, pulo e dash (16 versões; revisão visual individual ainda pendente)**: Naruto Academia, Sasuke Genin/Rinnegan, Neji Genin/Jonin, Asuma, três Sakuras, três Gaaras, três Madaras e Itachi Akatsuki.
   - **Falta pulo e dash**: Naruto Genin (`naruto-genin`, forma 10), Naruto Shippuden (25), Naruto Kyuubi (50) — já têm conjuração; Rock Lee Genin/Shippuden/Portões e Might Guy Jonin/Sexto/Sétimo Portão — já têm socos e chutes.
   - **Falta ataque, pulo e dash**: Sasuke Shippuden (15); Hashirama Hokage/Sábio (1/20); Kakashi Jonin/Hokage (1/25); Itachi ANBU (1); Minato Jonin/Hokage (1/15); Tsunade Sannin/Hokage/Byakugou (1/15/30); Jiraiya Sannin/Sábio (1/20); Orochimaru Sannin/Som (1/15); Hinata Genin/Shippuden/Leões (1/15/30); Shikamaru Genin/Estrategista/Conselheiro (1/15/30); Temari Genin/Shippuden (1/15); Tenten Genin/Shippuden (1/15); Kankuro Genin/Shippuden/Aliança (1/15/30); Pain, Tobirama e Kushina (1).
   - Para novas folhas completas, usar atlas 4×4 em `public/assets/shinobi-motion/<família>-<forma>-action-v2.png`, com conjuração frente/costas e pulo/dash frente/costas. Registrar em `actionArt` com `kind: 'full'`.
