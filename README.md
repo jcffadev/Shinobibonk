@@ -24,7 +24,7 @@ Atalhos locais:
 
 O elenco atual tem 24 famílias de shinobis e 56 versões jogáveis separadas (ex.: Naruto Academia, Genin, Shippuden e Kyuubi), cada uma com kit, passiva e atributos da fase, folhas direcionais de caminhada e 97 técnicas no total. Cada versão nova é liberada por missão jogando com a anterior. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total da simulação.
 
-O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
+O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara têm folhas próprias de conjuração, pulo e dash em frente e costas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
 
 As técnicas combinam efeitos por natureza com visuais próprios para golpes como Rasengan, Chidori e Dragão de Água. A Bolsa da Missão tem filtros por raridade, e os visuais revisados de Chōmei e Gyūki aparecem na arena final.
 

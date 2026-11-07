@@ -13,6 +13,8 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 ## Base executável
 
+- **IMPLEMENTADO** — cinco folhas novas de ação para Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. As 56 versões têm caminhada direcional. Veja a cobertura de ataque, pulo e dash na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
+
 - React 19, TypeScript 7, Three.js 0.187 e Vite 8; iniciada com `pnpm dev`.
 - `src/main.tsx`: hub local com elenco de **22 shinobis**, biblioteca de ataques, plano de build, árvore permanente, loja de itens e seleção de missão.
 - `src/scene/GameCanvas.tsx`: cena 3D isométrica e simulação local da run.

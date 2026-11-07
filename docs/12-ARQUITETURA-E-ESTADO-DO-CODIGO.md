@@ -8,7 +8,7 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o estado. `playerPose.ts` ajusta pernas e braços nos UVs da forma atual e mantém a câmera independente. `evolution.ts` aponta o Asuma para `public/assets/asuma-motion-v1.png`, folha original 4×4. A fila de recompensas fica em `GameCanvas.tsx` e aparece em `ItemTradeDialog.tsx`. O snapshot separa o total de inimigos (`enemyCount`) dos marcadores limitados do mapa (`enemies`).
 
-`actionArt` aponta para os atlases 4×2 de ações por forma. `playerMotion` seleciona a segunda fileira pela direção no Naruto Clássico, pela ação de pulo/dash no Sasuke inicial e pelo chute no Lee/Guy. `SavedRun.pillQuality` guarda somente o bônus extra de raridade, separado de `knownPills`. Saves anteriores sem o campo mantêm os níveis e seus bônus base.
+`actionArt` aponta para os atlases de ações por forma. As folhas 4×4 (`kind: 'full'`) têm duas fileiras de conjuração e duas de pulo/dash, frente e costas em cada par. São usadas por Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. `playerMotion` seleciona a segunda fileira pela direção no Naruto Clássico, pela ação de pulo/dash no Sasuke inicial e pelo chute no Lee/Guy. `SavedRun.pillQuality` guarda somente o bônus extra de raridade, separado de `knownPills`. Saves anteriores sem o campo mantêm os níveis e seus bônus base.
 
 | Caminho | Responsabilidade |
 |---|---|
@@ -304,7 +304,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 ## Integração atual de preparação, combate e arte
 
 - `BuildPlanner` separa lista com rolagem do detalhe. `TechniquePreview` desenha alvos de treino no Three.js usando os efeitos do jogo, o controlador de poses e a sequência de Gamabunta. O detalhe traz status, chance/dano crítico inicial e recarga. `SkillIcon` usa atlas de famílias, retratos Sábios e ícone de Gamabunta.
-- `playerMotion` serve jogador, ajudantes, shinobis inimigos, clones e a prévia. Recebe o id da versão e usa as folhas da família na forma da versão. As folhas exclusivas de Naruto Academia, Sasuke Genin e Neji cobrem pulo/dash. As demais formas combinam folhas direcionais com pose procedural onde ainda faltam quadros próprios.
+- `playerMotion` serve jogador, ajudantes, shinobis inimigos, clones e a prévia. Recebe o id da versão e usa as folhas da família na forma da versão. As folhas exclusivas de Naruto Academia, Sasuke Genin, Neji, Sasuke Rinnegan, Itachi Akatsuki e Madara cobrem pulo/dash. Formas ainda sem folhas próprias combinam folhas direcionais com pose procedural onde ainda faltam quadros próprios.
 - `enemyRenderer` mantém corpos, contornos e avisos instanciados. A seleção de quadro é UV por instância. Projéteis inimigos usam sprites compartilhados, limite simultâneo e teste de colisão pelo segmento percorrido por quadro.
 - `gamabunta.ts` escolhe as quatro poses, emite óleo pela boca e inicia ignição no ponto-alvo. A animação e o impacto compartilham o mesmo relógio. Referência: [Fire Release: Toad Oil Flame Bullet](https://naruto.fandom.com/wiki/Fire_Release%3A_Toad_Oil_Flame_Bullet).
 - `techniqueMerge.ts` produz uma técnica a partir de duas receitas; as fusões e combinações são persistidas com os respectivos estados em `CampaignSave`. Combinação reutiliza as duas resoluções originais. Fusão combina naturezas e afixos.

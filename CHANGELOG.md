@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Folhas direcionais de ação para o elenco com Susanoo
+
+- Adiciona cinco folhas 4×4 de conjuração, pulo e dash em frente e costas para Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura, Rinnegan e Seis Caminhos. O controlador compartilhado seleciona as poses pela versão em jogo. As 80 células, direções e poses foram conferidas no Edge headless; build e suítes de regras e runtime passaram.
+
 ## Calibração com referência pública
 
 - Adiciona `docs/15-CALIBRACAO-REFERENCIA.md`, com a wiki pública do PokéBonk (level-up, vitaminas, Lab, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário.

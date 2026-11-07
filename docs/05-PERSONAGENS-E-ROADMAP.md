@@ -5,6 +5,8 @@
 
 Naruto, Gaara, Madara, Hashirama, Sasuke, Sakura, Kakashi, Itachi, Minato, Tsunade, Jiraiya, Orochimaru, Rock Lee, Neji, Hinata, Shikamaru, Temari, Tenten, Pain, Tobirama, Kankuro, Might Guy, Asuma e Kushina.
 
+Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura, Rinnegan e Seis Caminhos usam folhas próprias de conjuração, pulo e dash. A identidade visual de cada folha vem da arte da própria forma.
+
 ### Versões separadas (IMPLEMENTADO e TESTADO em `verify-rules`/`verify-runtime`)
 - Cada forma de `evolution.ts` virou um **personagem próprio** (`Hero.family`, `Hero.form`, `Hero.title`). O id do shinobi base é a **primeira versão** (`naruto` = Naruto Academia, `sasuke` = Sasuke Genin…); as outras têm id próprio (`naruto-genin`, `naruto-shippuden`, `naruto-kyuubi`…).
 - **Sem evolução dentro da run**: a versão fica sempre na própria forma (`formAt` ignora o nível para shinobis jogáveis). A troca de forma passou a ser a troca de personagem, liberada pela cadeia de missões. O bônus de +25% de HP por forma continua valendo para as versões avançadas.

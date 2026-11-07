@@ -1,5 +1,14 @@
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
+const fullActionForms: Record<string, readonly number[]> = {
+  sasuke: [30],
+  itachi: [15],
+  madara: [1, 15, 30],
+};
+
 export function actionArt(hero: string, formLevel: number) {
+  if (fullActionForms[hero]?.includes(formLevel)) {
+    return { path: `/assets/shinobi-motion/${hero}-${formLevel}-action-v2.png`, kind: 'full' as const, rows: 4 };
+  }
   if (hero === 'neji') return { path:'/assets/shinobi-motion/neji-action-v1.png', kind:'acrobatics' as const, rows:4, firstRow:formLevel>=15?2:0 };
   if (hero === 'naruto' && formLevel === 1) return { path: '/assets/naruto-academia-acrobatics-v1.png', kind: 'acrobatics' as const, directional: true };
   if (hero === 'naruto' && formLevel === 10) return { path: '/assets/naruto-classico-action-v1.png', kind: 'cast' as const };

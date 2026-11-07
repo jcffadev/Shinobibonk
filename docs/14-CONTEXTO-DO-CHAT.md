@@ -411,3 +411,14 @@ Pílulas: antes só mostravam o bônus ("+4% chance crítica") e o nível; agora
 **Resposta**
 
 Calibração: novo `docs/15-CALIBRACAO-REFERENCIA.md` com level-up, vitaminas × pílulas, Lab × Passivas, chefes, Survival × Final Swarm e economia, todos com URL da wiki. Nenhum valor foi alterado. As maiores diferenças ficaram como PROPOSTO para o usuário: venda de item fixa enquanto a kunai fica cara, Ryu por abate sem inflação, desbloqueios estruturais baratos e HP do guardião que não lê o dano do jogador.
+## Auditoria do GitHub e folhas de ação dos usuários de Susanoo
+
+**Pedidos**
+
+> Leia os arquivos do github e da pasta e veja se estão iguais e atualizados, leia os .md para saber onde estamos.
+>
+> Depois leia e siga, atualize as sprite sheets, pegue o susano e a referência que ele usou e aplique para todos. Mostre a fila de a fazeres para decidirmos o que é mais importante após revisar onde estamos.
+
+**Resposta**
+
+Na conferência inicial, `HEAD` e `origin/main` apontavam para `2f7d7e9`. A pasta compartilhada tinha trabalho local em andamento, inclusive a integração de Susanoo e partículas WebGL. As cinco folhas de ataque, pulo e dash (Sasuke Rinnegan, Itachi Akatsuki e três Madaras) foram integradas numa cópia de trabalho separada. O Edge headless validou as 80 células e as poses no controlador compartilhado; as suítes de regras e de runtime passaram. A referência usada para revisar o efeito é a [Narutopedia](https://naruto.fandom.com/wiki/Susanoo). Restam a integração visual por lançador e a verificação em partida, prévia e apoio assim que a base WebGL estiver disponível em main. A [fila de pendências](13-PENDENCIAS-PARA-CONTINUAR.md) separa animação, combate, balanceamento e desempenho.

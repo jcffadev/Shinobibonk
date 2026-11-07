@@ -100,8 +100,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (walkingInput && !attack) { mirror = leftward; rear = backwardView; }
       // Pulo e dash têm prioridade sobre o dano: no meio da horda o jogador recebe golpes o tempo todo e o estado 'hurt'
       // (0,23 s a cada acerto) escondia os quadros de pulo/dash do Naruto Academia. O dano continua visível pela tinta vermelha.
-      state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : hurt > 0 ? 'hurt'
-        : attack > 0 ? (ultimate ? 'ultimate' : 'attack') : walkingInput ? 'walk' : 'idle';
+      const showAttack = attack > 0 && (actionSheet?.kind === 'full' || hurt === 0);
+      state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : showAttack ? (ultimate ? 'ultimate' : 'attack')
+        : hurt > 0 ? 'hurt' : walkingInput ? 'walk' : 'idle';
       const academy = hasWalkAtlas && formAt(heroId, level).level === 1;
       const casting = academy && state === 'attack' && throwing?.image;
       const walkAtlas = diagonalInput && diagonal?.image ? diagonal : walk;
@@ -127,15 +128,18 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const useDirection = !!directionMap?.image && (state === 'walk' || directedCast || state==='jump' || state==='dash');
       const attacking = state === 'attack' || state === 'ultimate';
       const acrobatics = actionSheet?.kind === 'acrobatics' && (state === 'jump' || state === 'dash');
-      const useAction = !!actionMap?.image && (acrobatics || (attacking && (actionSheet?.kind !== 'taijutsu' || !!strike) && !(academy && actionSheet?.kind==='acrobatics')));
+      const fullAction = actionSheet?.kind === 'full' && (attacking || state === 'jump' || state === 'dash');
+      const useAction = !!actionMap?.image && (fullAction || acrobatics || (attacking && (actionSheet?.kind !== 'taijutsu' || !!strike) && !(academy && actionSheet?.kind==='acrobatics')));
       if (useAction && actionMap && actionSheet) {
         const castFrame = Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4));
         const frame = state === 'jump' ? Number(jumpProgress > .22 && jumpProgress < .77)
           : state === 'dash' ? 2 + Number(slideProgress > .7) : castFrame;
         const secondRow = (acrobatics && ('directional' in actionSheet ? backwardView : true)) || (actionSheet.kind === 'cast' && rear) || (actionSheet.kind === 'taijutsu' && strike === 'kick');
-        const flip = acrobatics ? leftward : mirror;
+        const flip = acrobatics || (fullAction && !attacking) ? leftward : mirror;
         const rows=actionSheet.rows??2;
-        const row=(actionSheet.firstRow??0)+Number(secondRow);
+        const row = fullAction
+          ? attacking ? Number(rear) : 2 + Number(backwardView)
+          : (actionSheet.firstRow ?? 0) + Number(secondRow);
         actionMap.repeat.set(flip ? -.25 : .25, 1/rows);
         actionMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
       }
