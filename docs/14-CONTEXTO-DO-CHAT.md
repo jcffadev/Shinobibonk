@@ -616,3 +616,28 @@ IMPLEMENTADO: nove folhas novas de pulo/dash (três Narutos, três Lees, três G
 
 
 Validação concluída antes do envio: 58 verificações no navegador passaram, sem erros JavaScript nem assets 404; inclui Esc sem clique, Tab, mercador, oficina, ajudantes por versão e emboscadas. TypeScript, build e regras passaram. A medição de desempenho em renderização por software não comprova desempenho em GPU real.
+
+## Pedido de publicação imediata e reserva de uso · 07/11/2026
+
+> Faça a atualização do git, depois siga a sua fila
+>
+> atualize o github novamente agora, porque seus tokens semanais vão acabar, restam 2%
+
+### Resposta e providências
+
+Codex confirmou o primeiro push para origin/main em 11e0d18, com 58 verificações no navegador, TypeScript, build e regras aprovados. Continuou a criação de folhas de ações e a prévia do Susanoo. Ao receber o pedido de envio imediato do segundo lote, respondeu: “Vou publicar agora o segundo lote e salvar o ponto de continuação. Vou deixar registrado o que foi integrado, o que passou nos testes e o que ainda falta revisar.”
+
+
+## Lote de animações salvo para continuação · 07/11/2026
+
+IMPLEMENTADO: 24 folhas completas adicionais 4×4 de ataque/selo/pulo/dash: Kakashi 1/25, Itachi 1, Minato 1/15, Tsunade 1/15/30, Jiraiya 1/20, Orochimaru 1/15, Hinata 1/15/30, Pain 1, Shikamaru 1/15/30, Tobirama 1, Temari 1/15 e Tenten 1/15. Todas foram empacotadas em células uniformes e registradas em directionalArt.ts, usado também pelos ajudantes. As três folhas completas de Sasuke 15 e Hashirama 1/20 já foram publicadas no lote anterior. Os prompts e referências estão em docs/arte-atlas-2026-11-07.json, gerados com ImageGen.
+
+IMPLEMENTADO: prévia de Susanoo utiliza o mesmo rig WebGL e partículas do combate, escolhendo o estilo pela família do lançador. TypeScript, build e regras passaram após as mudanças.
+
+PENDENTE: criar folhas completas de Kankuro 1/15/30 e Kushina 1 (quatro versões); revisar/refinar ataques antigos de Neji 1/15, Sasuke Genin e Naruto Clássico/Shippuden. A existência da folha não confirma que todas as poses foram aprovadas visualmente. Conferir consistência com o sprite parado, frente/costas e dash esquerdo em cada versão e como ajudante.
+
+O script scripts/verify-motion-atlases.mjs exercita o controlador em fixture isolada e produz artifacts/motion-review.json e quatro folhas de contato. A primeira execução tinha duas instâncias de Three.js; corrigido o import por scripts/motion-review-entry.ts. Conferir o resultado final antes de considerar a auditoria completa.
+
+Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em combate de todos os lançadores, sons com licença verificada e uma run prolongada de três zonas até bijuu/saída/ranking. Preservar o balanceamento existente conforme instrução do usuário. Não publicar artifacts/sb-swishes-source.zip: é um arquivo preexistente de origem/licença não verificada.
+
+Validação deste lote: scripts/verify-motion-atlases.mjs concluiu com 56 versões, 560 estados, zero erros JavaScript e zero assets ausentes. Foram geradas quatro folhas de contato; a aprovação visual completa e a revisão em combate continuam pendentes.

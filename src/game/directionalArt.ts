@@ -5,7 +5,12 @@ const fullActionForms: Record<string, readonly number[]> = {
   itachi: [15],
   madara: [1, 15, 30],
 };
-const revisedActionForms:Record<string,readonly number[]>={sasuke:[15],hashirama:[1,20]};
+const revisedActionForms:Record<string,readonly number[]>={
+  sasuke:[15],hashirama:[1,20],kakashi:[1,25],itachi:[1],
+  minato:[1,15],tsunade:[1,15,30],jiraiya:[1,20],orochimaru:[1,15],
+  hinata:[1,15,30],pain:[1],shikamaru:[1,15,30],tobirama:[1],
+  temari:[1,15],tenten:[1,15],
+};
 export function acrobaticsArt(family:string,form:number){
   if((family==='naruto'&&form>1)||family==='lee'||family==='guy')
     return {path:`/assets/shinobi-motion/${family}-${form}-acrobatics-v2.png`,kind:'acrobatics' as const,directional:true,rows:2,firstRow:0};

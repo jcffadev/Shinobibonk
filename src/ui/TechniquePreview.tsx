@@ -6,6 +6,8 @@ import { animateTechniqueVisual, disposeObject, techniqueImpact, techniqueVisual
 import { createAtlasEffect } from '../scene/atlasEffects';
 import { createPlayerMotion } from '../scene/playerMotion';
 import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from '../scene/gamabunta';
+import { createParticleFx } from '../scene/particleFx';
+import { createSusanooFx, susanooStyleFor } from '../scene/susanooFx';
 
 export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:string}){
   const host=useRef<HTMLDivElement>(null);
@@ -41,6 +43,9 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
     const grid=new THREE.GridHelper(12,12,'#397065','#2c4f50');
     scene.add(grid);
     const forward=new THREE.Vector3(1,0,0);
+    const susanoo=/susano/i.test(technique.name);
+    const particles=susanoo?createParticleFx(scene,()=>0):null;
+    const guardian=particles?createSusanooFx(scene,particles,()=>0):null;
     const impact=techniqueImpact(technique);impact.position.copy(dummies[0].position);scene.add(impact);
     const frog=familyOf(heroId)==='naruto'&&technique.name==='Invocação do Sapo'
       ?createGamabunta(texture('/assets/gamabunta-oil-v1.png'),player.position,dummies[0].position,forward):null;
@@ -64,11 +69,15 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
       start ||= now;
       const age=(now-start)/1000%2.65,dt=Math.min(.05,(now-(last||now))/1000);
       last=now;
-      if(lastAge<.25&&age>=.25)playerMotion.attack(['Projétil','Em V'].includes(technique.shape),false,false,technique.school==='Taijutsu'?'punch':undefined,/Bunshin|Caixão de Areia/.test(technique.name));
+      if(age<lastAge){guardian?.clear();particles?.clear();}
+      if(lastAge<.25&&age>=.25){
+        playerMotion.attack(['Projétil','Em V'].includes(technique.shape),false,false,technique.school==='Taijutsu'?'punch':undefined,/Bunshin|Caixão de Areia/.test(technique.name));
+        guardian?.trigger(susanooStyleFor(familyOf(heroId)),player.position,forward,dummies[0].position,1.2);
+      }
       lastAge=age;
       playerMotion.update(dt,0,1,1,false,false,false,1,0,false,false,0,0);
       const p=Math.max(0,Math.min(1,(age-.33)/.54));
-      const hitAt=frog?GAMABUNTA_IGNITION+.23:.88;
+      const hitAt=frog?GAMABUNTA_IGNITION+.23:susanoo?.47:.88;
       const hit=!technique.setup&&age>=hitAt&&age<hitAt+.23;
       for(const [i,dummy] of dummies.entries()){
         const contacted=i===0||['Área','Cone','Onda','Órbita','Em V'].includes(technique.shape);
@@ -83,7 +92,13 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
         cloneMotion?.update(dt,0,1,1,clone.visible,false,false,1,0,false,false,0,0);
         if(import.meta.env.DEV)renderer.domElement.dataset.clonePose=cloneMotion?.state()??'';
       }
-      if(frog){
+      if(guardian){
+        effect.visible=false;
+        impact.visible=false;
+        guardian.update(dt,camera);
+        particles?.update(dt);
+        if(import.meta.env.DEV)renderer.domElement.dataset.susanoo=JSON.stringify(guardian.active());
+      }else if(frog){
         effect.visible=age>=.23&&age<.23+GAMABUNTA_TIME;
         if(effect.visible)frog.tick(age-.23);
       }else{
@@ -97,7 +112,7 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
       renderer.render(scene,camera);
     });
     return()=>{
-      renderer.setAnimationLoop(null);observer.disconnect();cloneMotion?.dispose();playerMotion.dispose();sage?.dispose();effect.removeFromParent();disposeObject(effect);
+      renderer.setAnimationLoop(null);observer.disconnect();guardian?.dispose();particles?.dispose();cloneMotion?.dispose();playerMotion.dispose();sage?.dispose();effect.removeFromParent();disposeObject(effect);
       scene.traverse(child=>{
         if(child instanceof THREE.Sprite)child.material.dispose();
       });
