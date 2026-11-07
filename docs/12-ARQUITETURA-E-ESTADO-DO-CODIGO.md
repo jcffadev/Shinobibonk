@@ -315,3 +315,24 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 
 - `atlasEffects.ts` anima quatro quadros de Substituição e quatro da aura de Modo Sábio. A aura segue o jogador enquanto o setup está ativo. A prévia reutiliza as duas sequências.
 - `VillageEmblem` resolve nome original, abreviação e símbolo para seleção, suporte, missões e mapas. A chave portuguesa usada por `VILLAGE_COMBOS` permanece estável. [Símbolos da Narutopedia](https://naruto.fandom.com/wiki/Module%3AInfobox/icons)
+
+
+## Oficina, controles, mercador e eventos · 07/11/2026
+
+**IMPLEMENTADO**
+
+- Oficina dos Sapos Sábios com abas Fundir e Combinar, ícones das duas técnicas e ficha acessível pelo botão P. As duas operações compartilham um único uso por zona. Abrir, fechar ou trocar de aba conserva o uso. O consumo ocorre após a união válida.
+- O save guarda `campaign.sagesUsedZone`. Ao retomar, a zona usada continua bloqueada. Ao passar para outra zona, há um novo uso. Saves antigos com uniões e sem esse campo consideram o uso consumido na zona atual.
+- WASD responde imediatamente. Em teclas opostas sobrepostas, vence a última pressionada naquele eixo. Soltá-la retoma a outra ainda segurada. Diagonais mantêm velocidade normalizada.
+- Tab é reservado ao mapa rápido, com movimento e simulação ativos. P abre e fecha a ficha. Fechar a ficha por uma ação do usuário solicita a captura do ponteiro naquele mesmo evento.
+- O estoque atual do mercador conserva os preços ao comprar e ao reabrir. Cada novo estoque considera raridade, compras acumuladas, atualizações acumuladas e tempo. O preço da atualização sobe por uso, com desconto dos itens.
+- Cada zona sorteia uma Shuriken Amaldiçoada e um Corpo de Ninja. A shuriken concede +8% de dano total e chama emboscada. O corpo chama emboscada e concede um nível ao concluir, mantendo a escolha normal de level-up. O tamanho da onda cresce com dificuldade e zona. O +8% é calibração provisória do protótipo.
+- Afiliações filtram a versão representada. As 56 versões possuem bônus de suporte. Curadores recebem regeneração e coleta. Ofensivos recebem bônus de sua escola, preservando os demais efeitos próprios. Valores são originais do jogo e seguem sujeitos a balanceamento.
+
+**PENDENTE**
+
+A revisão visual individual de caminhada, ataque, pulo e dash de todas as 56 versões continua na fila. Este lote não cria novas folhas de ação.
+
+### Arquivos e estado
+
+`src/ui/SagesWorkshop.tsx` e `sages-workshop.css` renderizam a oficina. O evento `shinobi-sages-tab` solicita os pares da aba ativa. O consumo é protegido em `applyMerge`, e a operação válida salva imediatamente. `merchant.prices` guarda as cotações por posição do estoque. Saves anteriores recebem cotações uma vez ao abrir. `campaign.pendingLevels` preserva níveis ainda não apresentados. O corpo em combate pode reiniciar sua onda ao retomar, pois inimigos comuns não são serializados.

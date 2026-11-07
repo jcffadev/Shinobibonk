@@ -73,3 +73,12 @@ Estado em 05/11/2026:
 
 ## Nota visual
 `references/concept_art/` contém artes de **referência visual geradas**, não capturas do jogo. `references/screenshots/` tem capturas do protótipo 2D antigo. `artifacts/` tem screenshots reais da base atual.
+
+
+## Afiliações por fase · 07/11/2026
+
+A filiação usada pelos filtros e combos considera a fase representada. Itachi ANBU fica fora da Akatsuki. Naruto Academia fica fora do Time 7. Os Narutos disponíveis ficam fora dos Hokages. Minato e Tsunade só entram como Hokage nas respectivas versões. Orochimaru Sannin usa Konoha, e Orochimaru do Som usa Otogakure. Sasuke Shippuden representa Taka. Versões avançadas da guerra podem compor a Aliança Shinobi.
+
+O recorte das fases do jogo é uma interpretação das afiliações narradas. As fontes descrevem a história e o treinamento médico de Sakura após a fase Genin. Percentuais de combos são regras próprias do protótipo. [Team 7](https://naruto.fandom.com/wiki/Team_7_(Kakashi)), [Taka](https://naruto.fandom.com/wiki/Taka), [Aliança Shinobi](https://naruto.fandom.com/wiki/Allied_Shinobi_Forces), [Sakura](https://naruto.fandom.com/wiki/Sakura_Haruno), [Itachi](https://naruto.fandom.com/wiki/Itachi_Uchiha), [Orochimaru](https://naruto.fandom.com/wiki/Orochimaru).
+
+A antiga nota deste documento que atribuía fusão ao Ichiraku está superada. Ichiraku remove técnicas e pílulas. A oficina dos Sapos Sábios realiza Fundir/Combinar, uma operação por zona.

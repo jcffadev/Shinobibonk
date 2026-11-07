@@ -120,3 +120,8 @@ Personagens e nomes do universo Naruto são propriedade de terceiros. Publicaç�
 Escolher o shinobi atualiza o painel, preservando a cena de fundo. A região é escolhida na tela de mapas e a arena 3D é criada ao começar. Na preparação, abra uma técnica para ver seus atributos base e uma demonstração com alvos. Cada shinobi pode bloquear até 60% das técnicas que pode aprender. Planejar marca a técnica para a missão. Com o Treinamento com Jiraiya, até quatro técnicas planejadas podem ser treinadas (+15% de dano). Pílulas podem ser planejadas. Exclusão de itens continua na Bolsa da Missão.
 
 Tab mostra o mapa enquanto pressionado, permitindo movimento. P ou **Ver build e ficha** abre a ficha sobre uma escolha pendente. Esc, perda de foco e F9 liberam a kunai do ponteiro. A escolha final devolve o controle ao jogo. **Reset de conta** confirma antes de limpar o progresso local.
+
+
+## Oficina e controles · 07/11/2026
+
+A oficina tem abas Fundir e Combinar, com um uso compartilhado por zona salvo na run. WASD muda a direção imediatamente, Tab mantém o mapa rápido sem pausa e P abre/fecha a ficha. O mercador conserva os preços do estoque atual ao comprar ou reabrir. Shurikens amaldiçoadas e corpos de ninja iniciam emboscadas por zona. Veja as regras e as limitações na documentação temática.

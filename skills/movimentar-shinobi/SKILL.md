@@ -9,10 +9,10 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 
 ## Simulação
 
-- Calcule a direção horizontal na base direita/frente da câmera usando o yaw. Normalize diagonais e suavize a mudança de rumo pelo menor ângulo. Mantenha o vetor de movimento unitário ao virar, inclusive ao inverter o sentido, para preservar a velocidade ao adicionar ou soltar uma tecla. Pare ao soltar a última tecla.
+- Calcule a direção horizontal na base direita/frente da câmera usando o yaw. Normalize diagonais e aplique a direção imediatamente, sem interpolar o deslocamento. Quando duas teclas opostas estiverem pressionadas, use a última naquele eixo; soltá-la retoma a outra ainda pressionada. Mantenha o vetor de movimento unitário ao virar, inclusive ao inverter o sentido, para preservar a velocidade ao adicionar ou soltar uma tecla. Pare ao soltar a última tecla.
 - Use altura do terreno para o apoio. Guarde a altura do pulo e o estado do dash separadamente. Faça a câmera seguir um alvo em X/Z com altura baseada no terreno, independente da altura, escala e rotação do sprite.
 - Espaço pula. A curva atual dura 0,54 s e chega a 1,3 m. Shift captura a direção das teclas ao ser pressionado (ou o último rumo, se nenhuma estiver pressionada) e desliza nessa direção por 0,24 s a até 2,6× a velocidade, com 0,9 s de recarga e 0,14 s de invulnerabilidade. São parâmetros do protótipo. Conserve controles remapeáveis e use o delta de simulação para os tempos.
-- Pause a simulação em overlays, perda de foco ou fim da run. Limpe teclas ao perder foco. Considere a transição de zona antes de carregar estados de movimento.
+- Pause a simulação em overlays de decisão/ficha, perda de foco ou fim da run. Tab é mapa rápido e mantém movimento e simulação ativos. Reserve Tab mesmo em configurações antigas. Ao fechar a ficha por P ou pelo botão, solicite a captura do ponteiro no mesmo evento do usuário. Limpe teclas ao perder foco. Considere a transição de zona antes de carregar estados de movimento.
 - Separe preparação do golpe, pose de soltura e efeito. O arremesso do Naruto Academia usa 0,12 s até o lançamento. Preserve tempo de recarga, trajetória, alvos, colisão e dano quando mudar a pose.
 
 ## Sprites

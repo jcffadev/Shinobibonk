@@ -35,7 +35,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 ## Implementado na base atual
 
-- **Movimento e combate** — caminhada em quatro direções nas 56 versões jogáveis dos 24 shinobis, com quadros próprios por forma. WASD suaviza a mudança de rumo. Shift captura a direção no início do dash e espelha o sprite à esquerda. Gaara Kazekage e Aliança podem manter Espaço para flutuar brevemente na areia. A câmera mantém a proteção de altura sobre o terreno.
+- **Movimento e combate** — caminhada em quatro direções nas 56 versões jogáveis dos 24 shinobis, com quadros próprios por forma. WASD muda o rumo imediatamente e prioriza a última tecla oposta pressionada. Shift captura a direção no início do dash e espelha o sprite à esquerda. Gaara Kazekage e Aliança podem manter Espaço para flutuar brevemente na areia. A câmera mantém a proteção de altura sobre o terreno.
 - **Ações com quadros próprios neste lote** — conjuração do Naruto Clássico, ataque/pulo/dash do Sasuke inicial e socos/chutes de Lee e Guy em todas as suas formas. A fila registra a revisão do restante do elenco.
 - **Efeitos e preparação** — técnicas com visuais por natureza e golpes característicos. Chōmei e Gyūki seguem as referências do usuário. A Bolsa da Missão permite combinar busca, estado e raridade.
 - **Ofertas e saída** — uma pílula por escolha e um nível por pílula. A raridade aumenta a potência. Banir remove a opção do sorteio pelo nome durante a run. Na pausa, clique duas vezes em Desistir para confirmar. O resumo tem o botão Ir para o menu.
@@ -178,3 +178,20 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 O Genin abre com menos inimigos e menor HP dos comuns. Eles alternam caminhada/corrida, ataque, pulo e dash; parte deles é sorteada para atacar de longe com kunai, shuriken ou shuriken Fūma. Mega elites, guardiões e bijū mostram HP atual/máximo. Os encontros de conta preservam os requisitos do mapa, dificuldade, história, abates e minutos.
 
 Teuchi fica diante da barraca do Ichiraku. Os Sapos Sábios sobre Gamakichi combinam dois ataques em um espaço ou fundem em uma técnica nova. NPCs com cartas mostram sua arte junto ao atendimento. A tigela de cura tem teto de 5% por abate e recupera 35% do HP máximo no padrão. A recompensa permanente continua por desempenho da missão.
+
+
+## Oficina, controles, mercador e eventos · 07/11/2026
+
+**IMPLEMENTADO**
+
+- Oficina dos Sapos Sábios com abas Fundir e Combinar, ícones das duas técnicas e ficha acessível pelo botão P. As duas operações compartilham um único uso por zona. Abrir, fechar ou trocar de aba conserva o uso. O consumo ocorre após a união válida.
+- O save guarda `campaign.sagesUsedZone`. Ao retomar, a zona usada continua bloqueada. Ao passar para outra zona, há um novo uso. Saves antigos com uniões e sem esse campo consideram o uso consumido na zona atual.
+- WASD responde imediatamente. Em teclas opostas sobrepostas, vence a última pressionada naquele eixo. Soltá-la retoma a outra ainda segurada. Diagonais mantêm velocidade normalizada.
+- Tab é reservado ao mapa rápido, com movimento e simulação ativos. P abre e fecha a ficha. Fechar a ficha por uma ação do usuário solicita a captura do ponteiro naquele mesmo evento.
+- O estoque atual do mercador conserva os preços ao comprar e ao reabrir. Cada novo estoque considera raridade, compras acumuladas, atualizações acumuladas e tempo. O preço da atualização sobe por uso, com desconto dos itens.
+- Cada zona sorteia uma Shuriken Amaldiçoada e um Corpo de Ninja. A shuriken concede +8% de dano total e chama emboscada. O corpo chama emboscada e concede um nível ao concluir, mantendo a escolha normal de level-up. O tamanho da onda cresce com dificuldade e zona. O +8% é calibração provisória do protótipo.
+- Afiliações filtram a versão representada. As 56 versões possuem bônus de suporte. Curadores recebem regeneração e coleta. Ofensivos recebem bônus de sua escola, preservando os demais efeitos próprios. Valores são originais do jogo e seguem sujeitos a balanceamento.
+
+**PENDENTE**
+
+A revisão visual individual de caminhada, ataque, pulo e dash de todas as 56 versões continua na fila. Este lote não cria novas folhas de ação.

@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-06T22:24:10.047Z",
+  "date": "2026-11-07T03:42:37.869Z",
   "checks": [
     "Bolsa da Missão combina raridade, busca e aba de estado",
     "Selecionar shinobi preserva a cena de fundo",
@@ -8,7 +8,9 @@
     "Relógio começa sem guardião antecipado",
     "Textura PNG do personagem carregada",
     "Movimento WASD",
+    "WASD: a última tecla oposta muda a direção sem travar, e a anterior volta ao soltar",
     "Naruto Academia usa quadros de pulo e dash, inclusive ao levar dano",
+    "Dash A/D mantém deslocamento e espelhamento depois de soltar a tecla",
     "Naruto Academia fica na própria forma em qualquer nível",
     "Só Kage Bunshin nos níveis iniciais do Naruto Academia",
     "Ficha por cima do level-up retorna às mesmas cartas",
@@ -45,27 +47,31 @@
     "Teuchi aparece diante da barraca e no atendimento por E",
     "Inimigo normal sorteado como ranged dispara arma visível",
     "Naruto Totem mantém selo de mãos e clones correm com quadros próprios",
-    "Oficina dos Sapos Sábios troca duas técnicas por uma fusão de nível 1",
+    "Sapos têm abas com ícones, uso compartilhado por zona, persistência e renovação na próxima zona",
     "Naruto Genin usa a forma Clássico, quadros de lançamento e Gamabunta incendeia o óleo",
     "As 3 kunais do guardião (1 + 2 planos do Shikamaru) são coletáveis antes do portal",
     "Missão de versão: Naruto Genin só aparece jogando com o Naruto Academia em Folha · Chunin após 3 min e 300 abates",
+    "P fecha a ficha e retoma o controle sem clique; Tab só abre o mapa rápido",
     "Prévia anima a corrida do clone, botão devolve técnica ao pool, planejamento habilita treino e ponteiro volta após escolha",
+    "Cadastro preserva o progresso do convidado, logout abre o próximo Guest e login restaura o progresso",
+    "Mercador fixa os preços do estoque ao comprar e reabrir; roletar atualiza o estoque e a tarifa",
+    "Shuriken Amaldiçoada fortalece o jogador e invoca ninjas; concluir o corpo concede um nível",
     "Sem exceções JavaScript ou assets 404"
   ],
   "errors": [],
   "missing": [],
   "performanceSample": {
     "renderer": "Edge headless · ANGLE/SwiftShader",
-    "enemies": 3207,
-    "seconds": 2.653,
-    "fps": 4.900113079532605,
-    "cpuUpdateMs": 28.107692307004562,
-    "cpuRenderMs": 47.16923077060626,
-    "drawCalls": 200,
+    "enemies": 3372,
+    "seconds": 2.7180999999940396,
+    "fps": 4.7827526581172535,
+    "cpuUpdateMs": 41.05384615522165,
+    "cpuRenderMs": 19.715384615155365,
+    "drawCalls": 198,
     "instances": {
-      "bodies": 3201,
-      "outlines": 220,
-      "markers": 67
+      "bodies": 3367,
+      "outlines": 282,
+      "markers": 95
     }
   }
 }

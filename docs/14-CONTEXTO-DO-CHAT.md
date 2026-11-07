@@ -507,3 +507,37 @@ Registrar em `docs/14-CONTEXTO-DO-CHAT.md` os pedidos, as perguntas, as resposta
 - A fila reúne a revisão por fase das afiliações usando a Narutopedia, os papéis dos ajudantes, as shurikens amaldiçoadas, os corpos com emboscada e a validação do restante do elenco.
 
 O Edge confirmou o dash para ambos os lados com soltura imediata da tecla, o selo do Naruto e o cadastro com migração e retorno ao perfil. Em partidas separadas, Gaara Kazekage flutuou e desceu ao soltar Espaço, e Sakura Byakugou trocou a folha de caminhada pela de pulo.
+
+
+## Continuação · 07/11/2026
+
+### Pedidos do usuário
+
+> as vezes aperto WASD e fica meio travada a movimentação, é pra ser continuo apertou o botão andou, apertou outro, mudou direção/andou.
+
+> COmo esta a fila?
+
+> Siga trabalhando
+
+> O mercador de itens, não deve aumentar o preço ao comprar os itens do pool na hora de escolher. Ele tem que aumentar o valor da roletada e os novos itens que ir aparecendo. Se eu decidir não comprar nada, não aumenta se eu clicar novamente para ver os mesmo itens, só aumenta ao clicar na roleta, os itens devem seguir uma precificação de acordo com a raridade e o scale de valor ao ir comprando também.
+
+> ao apertar tab, ele esta abrindo as estatisticas como se fosse o P e pausando, remova isso... Também toda vez que vejo a ficha do personagem tenho que clicar para soltar o jogo novamente, deve ser fluido, saiu da ficha ja continua jogando
+
+> Nos sapos, deve ter 2 abas, fundir/combinar esse hud está ridiculo de feio, conserte mostrando os icones das habilidades, deixando bem mais bonito
+
+> Só deve ser possivel fundir/combinar 1x por zona
+
+### Respostas e implementação
+
+A fila segue com a validação de controles, economia, oficina e eventos. O WASD passa a reagir diretamente, com prioridade à última tecla oposta pressionada. Tab abre o mapa rápido sem pausar. Fechar P solicita a captura do ponteiro para continuar a missão.
+
+Os preços do estoque atual do mercador ficam fixos ao comprar e ao reabrir. Compras acumuladas entram na cotação do próximo estoque. Atualizar o estoque aumenta o preço da próxima atualização e das novas ofertas, considerando também raridade e tempo de run.
+
+A oficina tem duas abas, com os ícones das técnicas de cada par. Fundir ou Combinar consome o mesmo uso único por zona, salvo na run e renovado ao avançar. Ver os pares ou trocar de aba preserva o uso.
+
+As afiliações por fase, os bônus de apoio para as 56 versões e as emboscadas da shuriken e do corpo foram implementados nesta continuação. A revisão de animação do restante do elenco continua pendente.
+
+As alterações são feitas no worktree ShinobiBonk_Codex_Arte. A pasta ShinobiBonk_Codex_Projeto_Completo conserva rascunhos locais do Claude e pode estar atrás do GitHub.
+
+
+**Validação final desta continuação** — 56 verificações no Edge headless passaram, incluindo as duas abas, persistência do limite na run salva, novo uso por zona, mercador e retomada de P. Sem erros JavaScript ou assets 404. TypeScript, build e regras passaram. A revisão completa das animações continua pendente.

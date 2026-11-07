@@ -58,3 +58,8 @@ Status: PROPOSTA DE DESIGN — não implementada nem validada no jogo.
 
 ## Próximo marco de implementação
 1. Motor de dados para atributos, status, itens, raridades e pool; 2. presets/arquivamento; 3. progressão de dificuldade e mapa procedural; 4. fusão e Shisui; 5. backend/coop e métricas de desempenho. Todos exigem execução e testes; este documento não afirma que foram implementados.
+
+
+## Oficina atual · 07/11/2026
+
+Fundir e Combinar aparecem em abas separadas, com ícones dos dois ataques, lista de pares e acesso à ficha. Uma união válida consome o único uso compartilhado da zona. Fechar ou trocar a aba preserva esse uso. A run salva o número da zona consumida. A zona seguinte libera outra operação. Não é possível reutilizar uma técnica já incorporada em outra união. A fusão começa no nível 1 com ×2 da média de dano e afixos somados. A combinação mantém os dois ataques no mesmo espaço, cada um com ×1,5 de dano.

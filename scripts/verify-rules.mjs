@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { HEROES,skillPool,sandSynergy } from '../src/game/heroes.ts';
+import { HEROES,HERO_BY_ID,heroOrganizations,skillPool,sandSynergy,versionForEncounter } from '../src/game/heroes.ts';
 import { calculateStats,rollCritical,difficultyAt,heroDamageScale,xpToLevelUp,effectiveLootLuck } from '../src/game/progression.ts';
 import { megaEliteHp,rollMegaSchedule } from '../src/game/enemyTiers.ts';
 import { guardianVitality,guardianDefense } from '../src/game/missions.ts';
@@ -132,18 +132,26 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.equal(activeSynergies('gaara',['naruto']).length,0,'1 ajudante não ativa');
  assert.equal(activeSynergies('naruto',['sakura']).length,0,'herói da Folha + 1 ajudante da Folha não ativa (herói não conta)');
  assert.ok(!activeSynergies('itachi',['pain']).length,'Itachi herói + Pain: 1 ajudante só');
- assert.ok(activeSynergies('naruto',['itachi','pain']).some(s=>s.id==='org:akatsuki'));
+ assert.ok(activeSynergies('naruto',['itachi-akatsuki','pain']).some(s=>s.id==='org:akatsuki'));
  const uch=activeSynergies('naruto',['itachi','sasuke']);assert.deepEqual(uch.map(s=>s.id).sort(),['org:uchiha','vila:Vila da Folha'],'ajudante acumula vila + organização');
  const leaf=n=>activeSynergies('gaara',['naruto','sakura','kakashi','lee','tenten'].slice(0,n)).find(s=>s.id==='vila:Vila da Folha');
  assert.deepEqual(leaf(2).bonuses,{exp:.03,pickupFlat:.5});assert.deepEqual(leaf(3).bonuses,{projectiles:1,exp:.05,pickupFlat:2});
  assert.deepEqual(leaf(4).bonuses,{projectiles:1,projectileChance:.5,exp:.05,pickupFlat:2},'1,5 projétil = +1 e 50% de chance de +1');assert.deepEqual(leaf(5).bonuses,{projectiles:2,exp:.1,pickupFlat:3});
  assert.ok(activeSynergies('gaara',['iruka','sakura','lee']).some(s=>s.id==='vila:Vila da Folha'&&s.tier===3),'Iruka (NPC) conta para a Folha');
  assert.ok(activeSynergies('naruto',['naruto','sakura','kakashi','lee','tenten']).some(s=>s.id==='vila:Vila da Folha'&&s.tier===5),'Ajudante Naruto conta mesmo com Naruto jogável');
- assert.ok((synergyBonuses(activeSynergies('gaara',['naruto','sasuke','sakura','kakashi'])).damage??0)>=.11,'Time 7 com 4 ajudantes escala');
+ assert.ok((synergyBonuses(activeSynergies('gaara',['naruto-genin','sasuke','sakura','kakashi'])).damage??0)>=.11,'Time 7 com 4 ajudantes escala');
  // Afinidade: Nv. 1..5, passiva 40%→100%; Iruka/omitido = máximo.
  assert.equal(affinityLevel(0),1);assert.equal(affinityLevel(maxAffinityPoints()),AFFINITY_RULES.max);assert.equal(affinityFactor(0),.4);assert.equal(affinityFactor(maxAffinityPoints()),1);
+ assert.equal(HERO_BY_ID.orochimaru.village,'Vila da Folha');assert.equal(HERO_BY_ID['orochimaru-som'].village,'Vila do Som');
+ assert.ok(!heroOrganizations('itachi').some(o=>o.id==='akatsuki'));assert.ok(heroOrganizations('itachi-akatsuki').some(o=>o.id==='akatsuki'));
+ assert.ok(heroOrganizations('gaara-alianca').some(o=>o.id==='alianca'));assert.ok(!heroOrganizations('gaara').some(o=>o.id==='alianca'));
+ assert.ok(allyBuffBonuses('sakura-shippuden').regen>0&&allyBuffBonuses('sakura-shippuden').pickupFlat>0);
+ assert.ok(allyBuffBonuses('tsunade').regen>0&&allyBuffBonuses('tsunade').pickupFlat>0);
+ assert.ok(allyBuffBonuses('itachi-akatsuki').genjutsu>0&&allyBuffBonuses('asuma').normal>0);
+ for(const hero of HEROES)assert.ok(Object.keys(allyBuffBonuses(hero.id)).length>0,hero.id+' tem passiva de ajudante');
+ assert.equal(versionForEncounter('gaara',1,'Genin'),'gaara');assert.equal(versionForEncounter('gaara',3,'Kage'),'gaara-alianca');
  assert.equal(allyBuffBonuses('naruto',1,0).damage,.048);assert.equal(allyBuffBonuses('naruto').damage,.12);assert.equal(allyBuffBonuses('naruto',1.4).damage,.168);
- assert.deepEqual(allyBuffBonuses('tenten',1,0),{projectileChance:.4},'Tenten Nv. 1: 40% de chance de +1 projétil');assert.deepEqual(allyBuffBonuses('tenten',1.4),{projectiles:1,projectileChance:.4});
+ assert.deepEqual(allyBuffBonuses('tenten',1,0),{normal:.032,projectileChance:.4},'Tenten Nv. 1: 40% de chance de +1 projétil');assert.deepEqual(allyBuffBonuses('tenten',1.4),{normal:.112,projectiles:1,projectileChance:.4});
  assert.equal(alliesBonuses(['iruka'],1,{iruka:maxAffinityPoints()}).exp,.25);assert.deepEqual(splitProjectiles({projectiles:2.25}),{projectiles:2,projectileChance:.25});
  assert.equal(calculateStats('naruto',1,{},{},0,{},{projectileChance:.5}).projectileChance,.5);}
 {// Velocidade de projétil, setups (buff puro) e linha Senjutsu.
@@ -174,7 +182,7 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.equal(R.rouletteCost(0,0,59),30,'inflação só por minuto inteiro');assert.equal(R.rouletteCost(0,0,600),121);assert.ok(R.rouletteCost(40,0,1800)>1e6,'fim de run: milhões');
  {const P=await import('../src/game/preparation.ts'),T=await import('../src/game/itemTrade.ts');
   assert.deepEqual([0,1,2,3].map(n=>P.weaponPrice(n)),[20,30,45,68]);assert.equal(P.weaponPrice(0,600),81);assert.ok(P.weaponPrice(25,1200)>2e6,'kunai no fim custa milhões');
-  assert.equal(T.merchantPrice('Comum',0),45);assert.equal(T.merchantPrice('Comum',2),82);assert.equal(T.merchantRerollPrice(0,0),20);assert.equal(T.merchantRerollPrice(2,0),45);assert.equal(T.merchantRerollPrice(0,.9),12);}
+  assert.equal(T.merchantPrice('Comum',0),45);assert.ok(T.merchantPrice('Comum',1,0,1)>T.merchantPrice('Comum',0));assert.equal(T.merchantPrice('Comum',2),82);assert.equal(T.merchantRerollPrice(0,0),20);assert.equal(T.merchantRerollPrice(2,0),45);assert.equal(T.merchantRerollPrice(0,.9),12);}
  assert.deepEqual(R.spendBonuses({},5000),{});assert.equal(R.spendBonuses({'Carteira Gama-chan':1},749).damage,.02);assert.equal(R.spendBonuses({'Carteira Gama-chan':1},99999).damage,.3);
  const wallet=calculateStats('naruto',1,{'Carteira Gama-chan':1},{},0,{},R.spendBonuses({'Carteira Gama-chan':1},500));assert.ok(Math.abs(wallet.damage/calculateStats('naruto',1).damage-1.02)<1e-9);assert.ok(Math.abs(wallet.moneyGain-1.12)<1e-9);}
 assert.ok(!skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Corte do Leque'),'única de Vento fora da base do Gaara');assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Agulhas de Karasu'));assert.ok(!skillPool('gaara').some(t=>t.name==='Corte do Leque'));

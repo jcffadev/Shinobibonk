@@ -16,7 +16,7 @@ export function ItemTradeDialog({ choice, money, onSheet }: { choice: NonNullabl
       <aside className="choice-npc">{merchant?<span role="img" aria-label="Barraca do Mercador" className="merchant-portrait"/>:<HeroPortrait id="tsunade"/>}</aside>
       <div className="level-choice-title">
         <h1>{title}</h1>
-        <p>{merchant ? `${compactNumber(money)} Ryu disponíveis · cada compra aumenta o preço das próximas` : 'Pegue a recompensa ou venda pelo valor indicado.'}</p>
+        <p>{merchant ? `${compactNumber(money)} Ryu disponíveis · preços fixos até roletar outro estoque` : 'Pegue a recompensa ou venda pelo valor indicado.'}</p>
       </div>
       <div className="level-choice-cards" style={{ gridTemplateColumns: `repeat(${choice.cards.length},minmax(0,1fr))` }}>
         {choice.cards.map((card, index) => <button key={card.id} className={`level-choice-card rarity-${card.rarity.toLowerCase()}`}

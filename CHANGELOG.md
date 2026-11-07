@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Oficina por zona, controles, mercador e emboscadas · 07/11/2026
+
+- Cria a oficina com abas Fundir/Combinar, ícones das técnicas, retrato dos sapos e acesso à ficha. As operações compartilham um uso por zona, consumido após a união válida e persistido no save.
+- Torna WASD imediato ao alternar teclas opostas. Reserva Tab para o mapa rápido e permite fechar P com retomada do ponteiro no mesmo comando.
+- Fixa os preços do estoque atual do mercador. Compras afetam a cotação de novos estoques. O custo da atualização cresce ao usar.
+- Acrescenta suporte por versão e afiliações por fase. Shuriken Amaldiçoada dá +8% dano total com emboscada. O Corpo de Ninja concede um nível após eliminar a onda.
+- **TESTADO** — TypeScript, build, regras e 56 verificações no Edge headless. A oficina conserva o bloqueio ao salvar/retomar e renova o uso na próxima zona. Sem exceções JavaScript e sem assets 404. Captura em `artifacts/sages-workshop.png`.
+- **PENDENTE** — auditoria visual de todas as ações das 56 versões e balanceamento em partida comum. O teste de desempenho usa renderização por software e não valida FPS em GPU real.
+
+
+
 ## Dash, Sakura, Gaara, Naruto e perfis locais
 
 - Corrige a orientação do dash para todo o elenco e suaviza as mudanças de direção no WASD.
