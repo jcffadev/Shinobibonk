@@ -185,6 +185,22 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
   return group;
 }
 
+/** Técnicas com malha própria reconhecível (invocações, Rasengan, dragões…). As demais usam só partículas (particleFx.ts). */
+const SIGNATURE_AREA = /^Rasengan|Rasenshuriken|Bijūdama|Dragão de Água|Dragão de Madeira|Kirin|Técnica de Substituição|Invocação do Sapo|Gamabunta|Katsuyu|Invocação de Manda|Turbilhão de Tentáculos|Nuvem de Escamas|Rasante Alada|Nuvem de Tinta/;
+const SIGNATURE_SHOT = /Bunshin|Kunai|Shuriken|Senbon/;
+export const hasSignatureVisual = (t: Technique, projectile: boolean) => SIGNATURE_AREA.test(t.name) || (projectile && SIGNATURE_SHOT.test(t.name));
+
+/** Cópia de um modelo em cache: compartilha geometria/material (sem alocar por cast). disposeObject ignora cópias compartilhadas. */
+const visualCache = new Map<string, THREE.Object3D>();
+export function cachedTechniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE.Object3D {
+  if (t.name.includes('Bunshin') || t.name === 'Técnica de Substituição') return techniqueVisual(t, clone);
+  let template = visualCache.get(t.name);
+  if (!template) { template = techniqueVisual(t); visualCache.set(t.name, template); }
+  const copy = template.clone();
+  copy.userData.shared = true;
+  return copy;
+}
+
 /** Impacto curto no alvo. Mantém o efeito legível mesmo com vários acertos. */
 export function techniqueImpact(t: Technique) {
   const color = t.name.startsWith('Rasengan') ? '#a4edff' : t.element==='Areia' ? '#f3d798' : t.color;
@@ -207,6 +223,7 @@ export function animateTechniqueVisual(object: THREE.Object3D, dt: number, direc
 }
 
 export function disposeObject(object:THREE.Object3D) {
+  if(object.userData.shared) return;
   const materials = new Set<THREE.Material>();
   object.traverse(child=>{
     if(child instanceof THREE.Mesh || child instanceof THREE.Line) child.geometry.dispose();

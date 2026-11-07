@@ -1,5 +1,6 @@
 import type { Bonuses, StatKey } from './catalog';
 import { NPC_RULES } from './npcs.ts';
+import { HERO_VERSIONS, versionStep } from './heroes.ts';
 
 /**
  * Buff passivo único que cada shinobi dá ao grupo quando é ajudante (selado na run).
@@ -33,9 +34,23 @@ export const ALLY_BUFFS: Record<string, AllyBuff> = {
   tobirama: { title: 'Percepção Sensorial', bonuses: { pickupFlat: 1.5 } },
   kankuro: { title: 'Veneno de Marionete', bonuses: { dot: .2 } },
   guy: { title: 'Portões Abertos', bonuses: { normal: .1, move: .06 } },
+  // Faltava (06/11/2026): Asuma não tinha buff de ajudante.
+  asuma: { title: 'Lâminas de Chakra', bonuses: { normal: .1, area: .06 } },
   // NPC não jogável (evento da Iruka, src/game/npcs.ts): entra já com a passiva em força máxima.
   iruka: { title: 'Lições da Academia', bonuses: { exp: NPC_RULES.irukaAllyExp } },
 };
+
+/**
+ * Versões avançadas como ajudante (06/11/2026): o buff é o da FAMÍLIA, escalado pela versão (+25% por passo:
+ * Naruto Shippuden = Vontade do Fogo ×1,5). O título ganha o nome da fase. Projéteis inteiros não escalam (Tenten fica +1).
+ */
+export const ALLY_VERSION_SCALE = .25;
+for (const version of HERO_VERSIONS) {
+  const base = ALLY_BUFFS[version.family!]; if (!base) continue;
+  const scale = 1 + ALLY_VERSION_SCALE * versionStep(version.id), bonuses: Bonuses = {};
+  for (const [key, value] of Object.entries(base.bonuses)) bonuses[key as StatKey] = key === 'projectiles' ? value as number : Math.round((value as number) * scale * 1000) / 1000;
+  ALLY_BUFFS[version.id] = { title: base.title + ' · ' + version.title, bonuses };
+}
 
 const pct = (v: number) => `${Math.round(v * 1000) / 10}%`.replace('.', ',');
 const num = (v: number) => (Math.round(v * 100) / 100).toLocaleString('pt-BR');

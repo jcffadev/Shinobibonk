@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Filtro de raridade com as cores do jogo
+
+- O plano de build (aba Itens) ganha botões de raridade coloridos e combináveis: Comum (cinza), Incomum (verde), Raro (azul), Épico (roxo) e Lendário (dourado), com contagem por raridade, "Todas as raridades" e aviso de raridades combinadas. Funciona com a busca e com os filtros de tipo, elemento e atributo; "Limpar filtros" também limpa as raridades. Os itens da lista ganham uma faixa lateral na cor da raridade.
+- A Bolsa da Missão passa a usar o mesmo componente (`src/ui/RarityFilter.tsx`), agora combinável (antes era uma raridade por vez).
+- Cores centralizadas em `src/rarity.css` (`--rarity-comum` … `--rarity-lendario` e variantes `-strong`), com os mesmos valores já usados no texto de raridade, nos pontos dos cards da Bolsa e nas bordas das cartas de oferta. As classes `rarity-*` expõem `--rarity`/`--rarity-strong`.
+- Validado no Edge headless: Raro + Épico no plano (16 + 14 itens), busca combinada, Limpar filtros e Raro + Lendário na Bolsa. `tsc`, build, `verify-rules` e `verify-runtime` passaram.
+
+## Ultimate por fase e Mega Elites/ajudantes como versões
+
+- **Ultimate por fase**: conferidas as 56 versões; todas têm Ultimate própria desde o Nv. 1 (R manual e Y/AUTO), baseada numa técnica do próprio kit. Corrigidas duas fora de fase: Madara Armadura → Susanoo Perfeito; Might Guy Sétimo Portão → Tigre do Meio-Dia Supremo.
+- **Mega Elites e ajudantes como versões**: a versão segue zona e dificuldade (Genin/zona 1 → inicial; Kage/zona 3 → mais avançada), com retrato, kit e buff da versão (buff da família +25% por passo). Sinergias e organizações por família; a equipe não repete família. Asuma ganhou buff de ajudante (Lâminas de Chakra), que faltava.
+- Testes: `verify-rules` (Ultimate no kit da fase, mapeamento zona/dificuldade, buffs e sinergias por família) e `verify-runtime` (Kage: Mega Elite Sasuke Shippuden, selamento de Gaara Kazekage, família repetida recusada, Irmãos da Areia com versões).
+
 ## Calibração com referência pública
 
 - Adiciona `docs/15-CALIBRACAO-REFERENCIA.md`, com a wiki pública do PokéBonk (level-up, vitaminas, Lab, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário.

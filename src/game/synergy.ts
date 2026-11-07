@@ -1,5 +1,5 @@
 import type { Bonuses, StatKey } from './catalog';
-import { HERO_BY_ID, ORGANIZATIONS } from './heroes.ts';
+import { HERO_BY_ID, ORGANIZATIONS, familyOf } from './heroes.ts';
 import { NPC_ALLIES } from './npcs.ts';
 import { bonusText, splitProjectiles } from './allies.ts';
 
@@ -133,10 +133,10 @@ function tierFor(def: SynergyDef, count: number): number | undefined {
 /** Sinergias ativas: contam só os ajudantes (heroId fica fora). Aldeias primeiro. */
 export function activeSynergies(_heroId: string, allies: readonly string[]): ActiveSynergy[] {
   // O jogador fica fora, mas um ajudante recrutado do mesmo shinobi ocupa uma vaga real.
-  const team = new Set(allies);
+  // Sinergias e organizações por FAMÍLIA: um ajudante Naruto Shippuden conta como Naruto. members devolve os ids reais.
   const out: ActiveSynergy[] = [];
   for (const def of synergyDefinitions()) {
-    const members = def.members.filter((id) => team.has(id));
+    const members = allies.filter((id) => def.members.includes(familyOf(id)));
     const tier = tierFor(def, members.length);
     if (tier === undefined) continue;
     const tiers = Object.keys(def.tiers).map(Number).sort((a, b) => a - b);

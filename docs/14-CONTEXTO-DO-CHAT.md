@@ -411,3 +411,25 @@ Pílulas: antes só mostravam o bônus ("+4% chance crítica") e o nível; agora
 **Resposta**
 
 Calibração: novo `docs/15-CALIBRACAO-REFERENCIA.md` com level-up, vitaminas × pílulas, Lab × Passivas, chefes, Survival × Final Swarm e economia, todos com URL da wiki. Nenhum valor foi alterado. As maiores diferenças ficaram como PROPOSTO para o usuário: venda de item fixa enquanto a kunai fica cara, Ryu por abate sem inflação, desbloqueios estruturais baratos e HP do guardião que não lê o dano do jogador.
+## Ultimate por fase e Mega Elites/ajudantes como versões
+
+**Pedido** (via coordenador; o usuário deixou a decisão com ele)
+
+> 11. Ultimate por fase: conferir se as versões separadas resolvem e se a regra "Ultimate desde o Nv. 1" com Y obrigatório continua valendo.
+> 12. Ajudantes e Mega Elites como versões avançadas conforme zona e dificuldade, com retrato, kit e buff da versão; sinergias por família; sem família repetida na equipe; saves válidos.
+
+Confirmação do usuário: a Ultimate continua disponível desde o nível 1 em todas as versões; não mudar o AGENTS.md.
+
+**Resposta**
+
+Ultimate: parcial — as versões já davam Ultimate própria desde o Nv. 1, com R e Y valendo para todas; corrigi duas fora de fase (Madara Armadura → Susanoo Perfeito; Guy Sétimo Portão → Tigre do Meio-Dia Supremo). Mega Elites e ajudantes: novo — a versão segue zona e dificuldade, o buff é o da família escalado pela versão, sinergias e organizações contam por família e a equipe não repete família. Asuma ganhou o buff de ajudante que faltava. Saves com ids base continuam válidos.
+
+## Filtro de raridade colorido no planejamento
+
+**Pedido** (via coordenador)
+
+> Criar um filtro de raridade com cores na aba de itens do planejamento da missão, com botões combináveis nas cores do jogo (Comum cinza, Incomum verde, Raro azul, Épico roxo, Lendário dourado), reaproveitando as cores e os botões que o Codex fez na Bolsa.
+
+**Resposta**
+
+A Bolsa já tinha botões de raridade, mas com uma raridade por vez e cor só no ponto; o plano tinha só um seletor. Criei o componente `RarityFilter`, colorido, combinável e com contagem, e o usei no plano (aba Itens) e na Bolsa. As cores foram para variáveis em `src/rarity.css`, com os valores que o jogo já usava. Testes de navegador, `tsc`, build, `verify-rules` e `verify-runtime` passaram.

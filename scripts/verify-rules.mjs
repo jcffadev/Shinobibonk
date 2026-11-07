@@ -216,6 +216,22 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  assert.deepEqual(PL.pillBonuses({'Pílula de Incenso':1}),{enemyCount:.10,threat:.05,gold:.12});
  assert.ok(calculateStats('naruto',1,{},{'Pílula do Pergaminho':1}).xpGain>calculateStats('naruto',1).xpGain);
  assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Soldado':10}).physical-calculateStats('naruto',1).physical-1)<1e-9,'bônus recalculado só dos níveis');}
+{// Ultimate por fase (06/11/2026): toda versão tem Ultimate própria desde o Nv. 1, baseada numa técnica de ataque do PRÓPRIO kit.
+ const {HERO_BY_ID,ultimateBase,versionForEncounter,versionStep}=await import('../src/game/heroes.ts');
+ for(const h of HEROES){assert.ok(h.ultimate,h.id+' sem Ultimate');const b=ultimateBase(h);assert.ok(h.techniques.includes(b)&&!b.setup,h.id+': Ultimate fora do kit da fase');}
+ assert.equal(new Set(HEROES.map(h=>h.ultimate)).size>=50,true,'Ultimates próprias por versão');
+ assert.equal(HERO_BY_ID.naruto.ultimate,'Tajū Kage Bunshin');assert.equal(HERO_BY_ID['naruto-shippuden'].ultimate,'Rasenshuriken Supremo');
+ assert.equal(HERO_BY_ID.madara.ultimate,'Susanoo Perfeito','Meteorito (Tengai Shinsei) exige o Rinnegan');assert.equal(HERO_BY_ID['madara-rinnegan'].ultimate,'Tengai Shinsei');
+ assert.notEqual(HERO_BY_ID['guy-setimo-portao'].ultimate,'Oito Portões','Oito Portões é fase posterior ao Sétimo Portão');
+ // Ajudantes e Mega Elites como versões: Genin/zona 1 → inicial; Kage/zona 3 → mais avançada.
+ assert.equal(versionForEncounter('naruto',1,'Genin'),'naruto');assert.equal(versionForEncounter('naruto',3,'Kage'),'naruto-kyuubi');
+ assert.equal(versionForEncounter('sasuke',1,'Jonin'),'sasuke-shippuden');assert.equal(versionForEncounter('kakashi',3,'Chunin'),'kakashi-hokage');assert.equal(versionForEncounter('pain',3,'Kage'),'pain');
+ for(const family of ['naruto','gaara','neji'])for(const d of ['Genin','Chunin','Jonin','Kage'])for(let z=1;z<3;z++)assert.ok(versionStep(versionForEncounter(family,z,d))<=versionStep(versionForEncounter(family,z+1,d)),'versão não regride com a zona');
+ const {allyBuffBonuses,ALLY_BUFFS}=await import('../src/game/allies.ts');const {activeSynergies}=await import('../src/game/synergy.ts');
+ assert.equal(allyBuffBonuses('naruto-shippuden').damage,.18,'buff da família ×1,5 no 2º passo');assert.equal(allyBuffBonuses('tenten-shippuden').projectiles,1);assert.ok(ALLY_BUFFS['gaara-alianca'].title.includes('Aliança'));
+ for(const h of HEROES)assert.ok(ALLY_BUFFS[h.id],h.id+' sem buff de ajudante');
+ assert.ok(sandSynergy(['gaara-kazekage','temari-shippuden','kankuro']),'Irmãos da Areia por família');
+ const team=activeSynergies('naruto',['itachi-akatsuki','pain']);assert.ok(team.some(s=>s.id==='org:akatsuki'&&s.members.includes('itachi-akatsuki')),'organização por família com id real da versão');}
 const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,motionForms,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 
 

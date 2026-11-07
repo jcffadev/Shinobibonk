@@ -139,7 +139,7 @@ export const SHARED_TECHNIQUES=new Set(Object.values(L).map(x=>x.name));
 export const HEROES:Hero[]=[
  h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[U.kageBunshin,L.shuriken,L.kunai,U.rendan],'Tajū Kage Bunshin','Clones, projéteis e velocidade de ataque',0),
  h('gaara','Gaara','Vila da Areia','#c87557',145,22,4,6.3,'Defesa Ofensiva · +8 armadura e +1% de dano total para cada ponto de armadura.',{defense:8},[L.agulhasAreia,U.caixao,L.ondaAreia,U.sepultamento],'Funeral do Deserto','Área, armadura e duração',1),
- h('madara','Madara','Clã Uchiha','#b94f61',120,24,3,6.8,'Sharingan · +7 pontos de chance crítica: 12% total; críticos causam 250% do dano.',{crit:.07},[U.leque,L.bolaFogo,L.susanoo,U.chamas],'Meteorito','Crítico, fogo e ninjutsu',2),
+ h('madara','Madara','Clã Uchiha','#b94f61',120,24,3,6.8,'Sharingan · +7 pontos de chance crítica: 12% total; críticos causam 250% do dano.',{crit:.07},[U.leque,L.bolaFogo,L.susanoo,U.chamas],'Susanoo Perfeito','Crítico, fogo e ninjutsu',2),
  h('hashirama','Hashirama','Vila da Folha','#62a678',155,23,8,6.2,'Poder Sábio · +20% de dano em ataques de elemento Sábio; infusão disponível por técnica ou item.',{regen:.8},[L.punho,U.estacas,L.raizes,L.dragaoAgua],'Nascimento das Árvores','Regeneração, vida e área',3),
  h('sasuke','Sasuke','Clã Uchiha','#818adc',120,21,5,7,'Afinidade Raiton · +20% dano de ninjutsu.',{element:.2},[L.kunai,L.bolaFogo,U.leao,U.chidori],'Selo Amaldiçoado do Céu','Ninjutsu, crítico e status'),
  h('sakura','Sakura','Vila da Folha','#e78fa8',140,25,7,6.5,'Controle de Chakra · +20% dano de taijutsu e +0,5 HP/s de regeneração.',{normal:.2,regen:.5},[L.kunai,L.punho,L.chute,U.shannaro],'Sakura Interior','Taijutsu, vida e velocidade de ataque'),
@@ -228,7 +228,7 @@ export const HERO_VERSIONS:Hero[]=[
  version('kankuro','kankuro-shippuden','Shippuden',15,1,'Teatro de Sasori · +25% duração de status e veneno de 30% do impacto em 3 s.',{duration:.25,dot:.3},[U.karasu,L.kunai,L.parede,U.milBracos],'Teatro das Três Marionetes','Veneno e projéteis'),
  version('kankuro','kankuro-alianca','Aliança',30,2,'Marionetista da Aliança · +30% duração, veneno de 35% e +10% dano dos ajudantes.',{duration:.3,dot:.35,allyDamage:.1},[U.kuroari,L.parede,L.kunai,U.milBracos],'Prisão de Kuroari','Veneno, controle e ajudantes'),
  version('guy','guy-sexto-portao','Sexto Portão',15,1,'Sexto Portão · +35% taijutsu e +15% movimento.',{normal:.35,move:.15},[L.furacao,L.portoes,U.chuteDinamico,U.pavao],'Pavão da Manhã Supremo','Taijutsu e movimento'),
- version('guy','guy-setimo-portao','Sétimo Portão',30,2,'Sétimo Portão · +40% taijutsu, +15% movimento e +15% velocidade de ataque.',{normal:.4,move:.15,attackSpeed:.15},[U.pavao,L.portoes,L.furacao,U.tigre],'Oito Portões','Taijutsu, velocidade e crítico'),
+ version('guy','guy-setimo-portao','Sétimo Portão',30,2,'Sétimo Portão · +40% taijutsu, +15% movimento e +15% velocidade de ataque.',{normal:.4,move:.15,attackSpeed:.15},[U.pavao,L.portoes,L.furacao,U.tigre],'Tigre do Meio-Dia Supremo','Taijutsu, velocidade e crítico'),
 ];
 HEROES.push(...HERO_VERSIONS);
 /** Família (id do shinobi base) de qualquer id; ids que não são shinobis jogáveis voltam como estão. */
@@ -236,6 +236,18 @@ export function familyOf(id:string){return HERO_FAMILY[id]??id;}
 const HERO_FAMILY:Record<string,string>=Object.fromEntries(HEROES.map(x=>[x.id,x.family??x.id]));
 /** Versões de uma família, em ordem de forma (a primeira é o próprio id base). */
 export function familyVersions(family:string){return HEROES.filter(x=>x.family===family).sort((a,b)=>(a.form??1)-(b.form??1));}
+/** Passo da versão na família (0 = primeira versão, 1 = segunda…). */
+export function versionStep(id:string){return Math.max(0,familyVersions(familyOf(id)).findIndex(x=>x.id===id));}
+const DIFFICULTY_STEP:Record<string,number>={Genin:0,Chunin:1,Jonin:2,Kage:3};
+/**
+ * Versão da família que aparece como Mega Elite / ajudante (decisão de 06/11/2026): Genin na zona 1 → versão inicial;
+ * Kage na zona 3 → versão mais avançada. Escala 0–5 = dificuldade (0–3) + zona − 1 (0–2), distribuída pelas versões.
+ */
+export function versionForEncounter(family:string,zone:number,difficulty:string){
+  const list=familyVersions(family);if(list.length<=1)return list[0]?.id??family;
+  const score=Math.max(0,Math.min(5,(DIFFICULTY_STEP[difficulty]??0)+Math.max(0,zone-1)));
+  return list[Math.round(score/5*(list.length-1))].id;
+}
 /** Determinação (Naruto): bônus máximo de dano conforme perde HP, por versão. */
 export const DETERMINATION:Record<string,number>={naruto:.2,'naruto-genin':.25,'naruto-shippuden':.25,'naruto-kyuubi':.3};
 export function ultimateBase(hero:Hero):Technique{return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];}

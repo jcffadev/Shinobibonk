@@ -1,0 +1,31 @@
+/* Cores de raridade do jogo, compartilhadas. Valores levantados das regras existentes:
+   texto/ponto (style.css .rarity.*, mission-bag.css .compact-rarity i) e borda das cartas de oferta
+   (style.css/run-ui.css .level-choice-card.rarity-*, summary.css). */
+:root{
+  --rarity-comum:#cbd1d6;--rarity-incomum:#6fd27b;--rarity-raro:#6eb8ff;--rarity-epico:#c59aff;--rarity-lendario:#f3c35d;
+  --rarity-comum-strong:#aab6cc;--rarity-incomum-strong:#41c879;--rarity-raro-strong:#4d9cff;--rarity-epico-strong:#bb84f0;--rarity-lendario-strong:#ffc44e;
+}
+/* As classes rarity-* (geradas com rarity.toLowerCase()) expõem --rarity/--rarity-strong para quem quiser usar. */
+.rarity-comum{--rarity:var(--rarity-comum);--rarity-strong:var(--rarity-comum-strong)}
+.rarity-incomum{--rarity:var(--rarity-incomum);--rarity-strong:var(--rarity-incomum-strong)}
+.rarity-raro{--rarity:var(--rarity-raro);--rarity-strong:var(--rarity-raro-strong)}
+.rarity-épico{--rarity:var(--rarity-epico);--rarity-strong:var(--rarity-epico-strong)}
+.rarity-lendário{--rarity:var(--rarity-lendario);--rarity-strong:var(--rarity-lendario-strong)}
+
+/* Filtro de raridade (src/ui/RarityFilter.tsx): botões coloridos combináveis com contagem. */
+.rarity-filter{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:9px 0}
+.rarity-filter button{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid #ffffff25;border-radius:14px;background:#141c2bee;color:#dfe5ee;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+.rarity-filter button i{width:9px;height:9px;flex:none;border-radius:50%;background:var(--rarity,#8b95a7);box-shadow:0 0 0 2px #0006}
+.rarity-filter button b{min-width:16px;padding:0 5px;border-radius:8px;background:#ffffff14;color:#c6cfdd;font-size:10px;text-align:center}
+.rarity-filter button[class*=rarity-]:not(.rarity-all){border-color:color-mix(in srgb,var(--rarity) 45%,transparent);color:var(--rarity)}
+.rarity-filter button[class*=rarity-]:not(.rarity-all):hover{background:color-mix(in srgb,var(--rarity) 14%,#141c2b)}
+.rarity-filter button[class*=rarity-]:not(.rarity-all)[aria-pressed=true]{border-color:var(--rarity-strong);background:var(--rarity-strong);color:#10141f;box-shadow:0 0 0 2px color-mix(in srgb,var(--rarity) 40%,transparent)}
+.rarity-filter button[class*=rarity-]:not(.rarity-all)[aria-pressed=true] i{background:#10141f;box-shadow:none}
+.rarity-filter button[class*=rarity-]:not(.rarity-all)[aria-pressed=true] b{background:#10141f33;color:#10141f}
+.rarity-filter button:disabled{opacity:.45;cursor:not-allowed}
+.rarity-filter .rarity-all[aria-pressed=true]{border-color:#ffcb64;background:#3d3326;color:#fff1ce}
+.rarity-filter small{color:#9aa6bb;font-size:10px}
+
+/* Lista de itens do plano de build: faixa lateral na cor da raridade. */
+.build-tech-list .pool-card[class*=rarity-]{border-left:4px solid var(--rarity-strong)}
+.build-tech-list .pool-card[class*=rarity-] .build-entry small{color:var(--rarity)}

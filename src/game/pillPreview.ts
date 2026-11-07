@@ -62,5 +62,19 @@ export function pillStatPreview(name: string, stats: Stats, heroId: string, leve
   });
 }
 
+/**
+ * Prévia ao ESQUECER a pílula na Barraca Ichiraku: "atual → depois de esquecer", removendo `levels` níveis efetivos
+ * (nível da pílula + bônus de raridade acumulado em pillQuality). Mesmas regras e tetos de `pillStatPreview`.
+ */
+export function pillForgetPreview(name: string, stats: Stats, heroId: string, levels: number): PillStatLine[] {
+  const def = PILL_BY_NAME[name];
+  if (!def || levels <= 0) return [];
+  return Object.entries(def.perLevel).flatMap(([key, value]) => {
+    const rule = RULES[key as StatKey];
+    if (!rule || !value) return [];
+    return [{ label: rule.label, from: rule.show(rule.read(stats)), to: rule.show(rule.next(stats, -value * levels, heroId)) }];
+  });
+}
+
 /** Texto curto (tooltip): "Chance crítica 5% → 9% · Armadura 12 → 16". */
 export const pillStatText = (lines: PillStatLine[]) => lines.map(l => `${l.label} ${l.from} → ${l.to}`).join(' · ');

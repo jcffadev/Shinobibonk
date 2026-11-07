@@ -1,11 +1,11 @@
 import { BuffText } from './BuffText';
 import { useState, type ReactNode } from 'react';
 import { ITEMS, type Item, type Rarity } from '../game/catalog';
-import { RARITY_ORDER } from '../game/combat';
+import { RarityFilter, rarityCounts } from './RarityFilter';
 import { matchesSearch } from './PoolFilters';
 import { ItemIcon } from './RunSheet';
 import { PASSIVES } from '../game/preparation';
-import { PRESET_LIMIT, PRESET_NAME_MAX, PRESET_DESCRIPTION_MAX, addPreset, duplicatePreset, editPreset, removePreset, type BagPresets } from '../game/missionBag';
+import { PRESET_LIMIT, PRESET_NAME_MAX, PRESET_DESCRIPTION_MAX, addPreset, duplicatePreset, editPreset, movePreset, removePreset, type BagPresets } from '../game/missionBag';
 
 /** Hudzinho do hub: Lamens, níveis das Passivas Shinobi, itens no pool e vagas em casa. */
 export function HubHud({lamens,levels,poolCount,home,capacity}:{lamens:number;levels:Record<string,number>;poolCount:number;home:number;capacity:number}){
@@ -33,12 +33,13 @@ export function MissionBag({unlocked,home,capacity,fromUnlocks,priority,priority
   onToggleHome:(id:string)=>void;onTogglePriority:(id:string)=>void;onPresets:(next:BagPresets)=>void;onApply:(index:number)=>void;
 }){
   const [tab,setTab]=useState<Tab>('Todos'),[search,setSearch]=useState(''),[view,setView]=useState<'catalogo'|'listas'>('catalogo');
-  const [rarity,setRarity]=useState<Rarity|null>(null);
+  const [rarities,setRarities]=useState<Rarity[]>([]);
   const isUnlocked=(i:Item)=>i.rarity==='Comum'||unlocked.includes(i.id);
   const stateOf=(i:Item):Tab=>!isUnlocked(i)?'Bloqueado':home.includes(i.id)?'Em casa':'No pool';
   const counts:Record<Tab,number>={Todos:ITEMS.length,Bloqueado:0,'No pool':0,'Em casa':0};for(const i of ITEMS)counts[stateOf(i)]++;
   const full=home.length>=capacity;
-  const list=ITEMS.filter(i=>(tab==='Todos'||stateOf(i)===tab)&&(!rarity||i.rarity===rarity)&&matchesSearch(i.name+' '+i.description,search));
+  const beforeRarity=ITEMS.filter(i=>(tab==='Todos'||stateOf(i)===tab)&&matchesSearch(i.name+' '+i.description,search));
+  const list=beforeRarity.filter(i=>!rarities.length||rarities.includes(i.rarity));
   const switcher=<div className="bag-views" role="tablist" aria-label="Seções da Bolsa da Missão">
     <button role="tab" aria-selected={view==='catalogo'} className={view==='catalogo'?'active':''} onClick={()=>setView('catalogo')}>Itens da bolsa</button>
     <button role="tab" aria-selected={view==='listas'} className={view==='listas'?'active':''} onClick={()=>setView('listas')}>Itens em casa <b>{presets.slots.length}/{PRESET_LIMIT} listas</b></button>
@@ -51,10 +52,7 @@ export function MissionBag({unlocked,home,capacity,fromUnlocks,priority,priority
       <input className="bag-search" type="search" placeholder="Buscar por nome ou efeito…" aria-label="Buscar itens da bolsa" value={search} onChange={e=>setSearch(e.target.value)}/>
       <div className={`bag-capacity ${full?'full':''}`} title="Vagas do Baú do Clã (Passivas Shinobi) + 1 a cada 2 itens desbloqueados"><b>Em casa {home.length}/{capacity}</b><small>+{fromUnlocks} por itens desbloqueados</small></div>
     </div>
-    <div className="bag-rarities" role="group" aria-label="Filtrar itens por raridade">
-      <button aria-pressed={rarity===null} onClick={()=>setRarity(null)}>Todas as raridades</button>
-      {RARITY_ORDER.map(r=><button className={`rarity-${r.toLowerCase()}`} aria-pressed={rarity===r} key={r} onClick={()=>setRarity(r)}><span className="compact-rarity"><i/></span>{r}</button>)}
-    </div>
+    <RarityFilter selected={rarities} onChange={setRarities} counts={rarityCounts(beforeRarity)}/>
     <p className="bag-note">Itens <b>em casa</b> não aparecem nas recompensas da run (kunai, shuriken, eventos). <b>★ Prioridade</b> ({priority.length}/{prioritySlots}): itens marcados aparecem com mais frequência nas recompensas, sem garantia.</p>
     <div className="compact-grid">{list.map(item=>{const state=stateOf(item),atHome=state==='Em casa',locked=state==='Bloqueado',prio=priority.includes(item.id);
       return <CompactItemCard key={item.id} item={item} status={state} className={`bag-card ${atHome?'at-home':''} ${locked?'locked':''}`} star={<button className={`prio-star ${prio?'on':''}`} title={prio?'Remover prioridade':'Marcar como prioridade'} aria-pressed={prio} disabled={locked||atHome||(!prio&&priority.length>=prioritySlots)} onClick={()=>onTogglePriority(item.id)}>{prio?'★':'☆'}</button>}>
@@ -71,7 +69,8 @@ export function MissionBag({unlocked,home,capacity,fromUnlocks,priority,priority
  * as mudanças feitas na aba de itens. Formato salvo em sb_bag_presets_v1 (src/game/missionBag.ts).
  */
 function HomeLists({home,capacity,presets,onPresets,onApply}:{home:string[];capacity:number;presets:BagPresets;onPresets:(next:BagPresets)=>void;onApply:(index:number)=>void}){
-  const [confirm,setConfirm]=useState<number|null>(null);
+  const [confirm,setConfirm]=useState<number|null>(null),[dragging,setDragging]=useState<number|null>(null);
+  const move=(from:number,to:number)=>{setConfirm(null);onPresets(movePreset(presets,from,to));};
   const full=presets.slots.length>=PRESET_LIMIT;
   const icons=(ids:string[],max=10)=><span className="preset-icons">{ids.slice(0,max).map(id=>{const it=ITEMS.find(i=>i.id===id);return it?<ItemIcon key={id} name={it.name}/>:null;})}{ids.length>max&&<small>+{ids.length-max}</small>}{!ids.length&&<small>Nada em casa</small>}</span>;
   return <section className="home-lists" aria-label="Listas de itens em casa">
@@ -84,8 +83,14 @@ function HomeLists({home,capacity,presets,onPresets,onApply}:{home:string[];capa
       </div>
     </header>
     {!presets.slots.length&&<p className="bag-empty">Nenhuma lista salva. Crie uma para alternar rapidamente entre conjuntos de itens deixados em casa.</p>}
-    <div className="bag-preset-rows">{presets.slots.map((slot,index)=><div className={`bag-preset home-list ${presets.active===index?'in-use':''}`} key={index}>
-      <span className="preset-number">{index+1}</span>
+    <div className="bag-preset-rows">{presets.slots.map((slot,index)=><div className={`bag-preset home-list ${presets.active===index?'in-use':''} ${dragging===index?'dragging':''}`} key={index}
+      onDragOver={e=>{if(dragging!==null){e.preventDefault();e.dataTransfer.dropEffect='move';}}}
+      onDrop={e=>{e.preventDefault();if(dragging!==null)move(dragging,index);setDragging(null);}}>
+      <span className="preset-number preset-handle" draggable title="Arraste para reordenar" onDragStart={e=>{setDragging(index);e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(index));}} onDragEnd={()=>setDragging(null)}>⠿ {index+1}</span>
+      <span className="preset-order">
+        <button aria-label={`Subir a lista ${index+1}`} title="Subir" disabled={index===0} onClick={()=>move(index,index-1)}>▲</button>
+        <button aria-label={`Descer a lista ${index+1}`} title="Descer" disabled={index===presets.slots.length-1} onClick={()=>move(index,index+1)}>▼</button>
+      </span>
       <div className="home-list-text">
         <input aria-label={`Nome da lista ${index+1}`} placeholder="Nome da lista" value={slot.name} maxLength={PRESET_NAME_MAX} onChange={e=>onPresets(editPreset(presets,index,{name:e.target.value}))}/>
         <textarea aria-label={`Descrição da lista ${index+1}`} placeholder="Descrição (ex.: build de Ninjutsu de Fogo, sem itens de Taijutsu)" rows={2} value={slot.description??''} maxLength={PRESET_DESCRIPTION_MAX} onChange={e=>onPresets(editPreset(presets,index,{description:e.target.value}))}/>

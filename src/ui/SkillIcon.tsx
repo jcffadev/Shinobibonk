@@ -11,7 +11,7 @@ const namedIcons: Record<string,number> = {
   'Agulhas de Água':19,'Byakugou':21,'Força dos Cem':21,'Modo Sábio':22,
   'Shinra Tensei':23,'Chibaku Tensei':14,'Correntes de Selamento':24,
   'Prisão de Correntes da Kurama':24,'Caixão de Areia':12,'Funeral do Deserto':12,
-  'Mil Mãos de Madeira':13,'Meteorito':14,'Kamui':15,'Oito Portões':17,
+  'Mil Mãos de Madeira':13,'Meteorito':14,'Tengai Shinsei':14,'Bijūdama Rasenshuriken':4,'Kamui':15,'Oito Portões':17,
 };
 const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:14,Sombra:15,Sábio:22,Neutro:18};
 // Arte do atlas por técnica ou família. O ícone vetorial cobre técnicas sem célula dedicada.

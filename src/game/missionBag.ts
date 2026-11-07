@@ -57,6 +57,15 @@ export function removePreset(presets:BagPresets,index:number):BagPresets{
   const active=presets.active===index?null:presets.active!==null&&presets.active>index?presets.active-1:presets.active;
   return {active,slots:presets.slots.filter((_,i)=>i!==index)};
 }
+/** Move a lista `from` para a posição `to` (subir/descer ou arrastar); a lista em uso continua em uso no novo índice. */
+export function movePreset(presets:BagPresets,from:number,to:number):BagPresets{
+  const n=presets.slots.length;
+  if(!presets.slots[from]||!Number.isInteger(to)||to<0||to>=n||to===from)return presets;
+  const slots=[...presets.slots];const [moved]=slots.splice(from,1);slots.splice(to,0,moved);
+  let active=presets.active;
+  if(active!==null){if(active===from)active=to;else if(from<active&&to>=active)active--;else if(from>active&&to<=active)active++;}
+  return {active,slots};
+}
 export function editPreset(presets:BagPresets,index:number,patch:Partial<Pick<BagPreset,'name'|'description'>>):BagPresets{
   return {...presets,slots:presets.slots.map((s,i)=>i===index?{...s,...(patch.name!==undefined?{name:patch.name.slice(0,PRESET_NAME_MAX)}:{}),...(patch.description!==undefined?{description:patch.description.slice(0,PRESET_DESCRIPTION_MAX)}:{})}:s)};
 }

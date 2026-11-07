@@ -24,11 +24,7 @@
 .compact-item > header div { display: grid; flex: 1; min-width: 0; }
 .compact-item > header b { overflow: hidden; font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
 .compact-rarity { display: flex; align-items: center; gap: 4px; color: #aab4c4; font-size: 9px; font-weight: 800; }
-.compact-rarity i { width: 7px; height: 7px; border-radius: 50%; background: #cbd1d6; }
-.rarity-incomum .compact-rarity i { background: #6fd27b; }
-.rarity-raro .compact-rarity i { background: #6eb8ff; }
-.rarity-épico .compact-rarity i { background: #c59aff; }
-.rarity-lendário .compact-rarity i { background: #f3c35d; }
+.compact-rarity i { width: 7px; height: 7px; border-radius: 50%; background: var(--rarity, var(--rarity-comum)); } /* cores em src/rarity.css */
 .compact-item p { flex: 1; margin: 6px 0; color: #c1c9d5; font-size: 10px; line-height: 1.4; }
 .compact-item footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; color: #9ba5b4; font-size: 9.5px; font-weight: 800; }
 .compact-item footer button { padding: 5px 9px; border: 1px solid #ffffff2a; border-radius: 12px; background: #2a3550; color: #f4f0e8; cursor: pointer; font-size: 10px; font-weight: 900; }
@@ -47,9 +43,6 @@
 .bag-tabs button { padding: 7px 12px; border: 0; border-radius: 18px; background: none; color: #dfe5ee; cursor: pointer; font-size: 12px; font-weight: 800; }
 .bag-tabs button b { margin-left: 4px; padding: 1px 7px; border-radius: 10px; background: #2a3550; font-size: 10px; }
 .bag-tabs button.active { background: #34446a; color: #fff; }
-.bag-rarities { display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
-.bag-rarities button { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #ffffff25; border-radius:14px; background:#141c2bee; color:#dfe5ee; font:inherit; font-size:11px; font-weight:800; cursor:pointer; }
-.bag-rarities button[aria-pressed=true] { border-color:#ffcb64; background:#3d3326; color:#fff1ce; }
 .bag-search { flex: 1; min-width: 180px; padding: 9px 14px; border: 1px solid #ffffff22; border-radius: 20px; background: #141c2bee; color: #f4f0e8; font: inherit; font-size: 12px; }
 .bag-capacity { display: grid; padding: 6px 14px; border: 1px solid #ffffff22; border-radius: 18px; background: #141c2bee; text-align: right; }
 .bag-capacity b { font-size: 13px; }
@@ -95,5 +88,11 @@
 .home-list .preset-icons { align-self: center; flex-wrap: wrap; }
 .home-list-count { align-self: center; color: #aab4c4; font-size: 10px; white-space: nowrap; }
 .home-list button { align-self: center; }
+.home-list .preset-handle { width: auto; min-width: 24px; padding: 0 7px; border-radius: 12px; cursor: grab; user-select: none; }
+.home-list .preset-handle:active { cursor: grabbing; }
+.home-list.dragging { opacity: .5; outline: 2px dashed #f4d485; }
+.preset-order { display: grid; gap: 2px; align-self: center; }
+.preset-order button { width: 26px; height: 20px; padding: 0; border: 0; border-radius: 6px; background: #2a3550; color: #f4f0e8; cursor: pointer; font-size: 10px; line-height: 1; }
+.preset-order button:disabled { opacity: .35; cursor: not-allowed; }
 .bag-preset .preset-danger { background: #a53043; color: #fff; }
 @media (max-width: 720px) { .home-list-text { width: 100%; } .home-lists-actions { margin-left: 0; } }

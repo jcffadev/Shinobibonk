@@ -10,7 +10,8 @@ Naruto, Gaara, Madara, Hashirama, Sasuke, Sakura, Kakashi, Itachi, Minato, Tsuna
 - **Sem evolução dentro da run**: a versão fica sempre na própria forma (`formAt` ignora o nível para shinobis jogáveis). A troca de forma passou a ser a troca de personagem, liberada pela cadeia de missões. O bônus de +25% de HP por forma continua valendo para as versões avançadas.
 - **Kit da fase**: cada versão só tem técnicas da própria fase da obra (Narutopedia). Técnicas avançadas saíram das versões iniciais (ex.: Naruto Academia não tem Rasengan nem Modo Sábio; Sasuke Genin não tem Amaterasu). Única: 1–2 por versão; a mesma única pode se repetir só dentro da família. Rasengan e Byakugou viraram compartilhadas (vários usuários canônicos).
 - **Mais fortes a cada passo**: HP e dano base +12% por passo, +1 armadura e +0,08 de movimento; passivas próprias mais fortes (valores PROPOSTOS). Arte: retrato de `portraitRegion` e folhas de `directionalArt`/`actionArt` da forma da família.
-- Versões de uma família não emprestam técnicas entre si; ajudantes e mega elites usam só os shinobis base.
+- Versões de uma família não emprestam técnicas entre si. Mega Elites e ajudantes aparecem como a versão coerente com zona e dificuldade (ver docs/03).
+- **Ultimate por fase**: cada versão tem a própria Ultimate, disponível desde o Nv. 1 (R manual, Y ou selo AUTO para o automático), baseada na última técnica de ataque do próprio kit. Correções de fase: Madara Armadura usa Susanoo Perfeito (o Meteorito/Tengai Shinsei exige o Rinnegan e ficou com Madara Rinnegan); Might Guy Sétimo Portão usa Tigre do Meio-Dia Supremo (Oito Portões é fase posterior).
 
 | Família | Versões (id · forma) | Destaques do kit |
 |---|---|---|
