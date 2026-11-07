@@ -1,11 +1,21 @@
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
 const fullActionForms: Record<string, readonly number[]> = {
+  sakura: [1, 15, 30],
   sasuke: [30],
   itachi: [15],
   madara: [1, 15, 30],
 };
 
+const gaaraSheet = (level: number) => `/assets/shinobi-motion/gaara-${level}-motion-v2.png`;
+export const NARUTO_HAND_SEALS = '/assets/shinobi-motion/naruto-hand-seal-v1.png';
+const narutoSealForms = [1, 10, 25, 50];
+export function handSealArt(family: string, level: number) {
+  const row = family === 'naruto' ? narutoSealForms.indexOf(level) : -1;
+  return row < 0 ? undefined : { path: NARUTO_HAND_SEALS, row };
+}
+
 export function actionArt(hero: string, formLevel: number) {
+  if (hero === 'gaara') return { path: gaaraSheet(formLevel), kind: 'full' as const, rows: 6, firstRow: 2 };
   if (fullActionForms[hero]?.includes(formLevel)) {
     return { path: `/assets/shinobi-motion/${hero}-${formLevel}-action-v2.png`, kind: 'full' as const, rows: 4 };
   }
@@ -39,7 +49,6 @@ const sheets: Record<string, DirectionalSheet> = {
 
 // Cada par é frente/costas para uma forma. A ordem é a mesma das fileiras no PNG.
 const rosterForms: Record<string, readonly number[]> = {
-  gaara: [1, 15, 30],
   madara: [1, 15, 30],
   hashirama: [1, 20],
   kakashi: [1, 25],
@@ -61,6 +70,7 @@ const rosterForms: Record<string, readonly number[]> = {
 };
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
+  if (hero === 'gaara') return { path: gaaraSheet(formLevel), rows: 6 };
   const custom = sheets[`${hero}-${formLevel}`];
   if (custom) return custom;
   const levels = rosterForms[hero];

@@ -20,6 +20,8 @@ Atalhos locais:
 - `node scripts/verify-rules.mjs` verifica as regras puras (elenco, técnicas, itens, crítico, raridade, atributos).
 - `scripts/verify-runtime.mjs` e `scripts/smoke-browser.mjs` rodam testes no navegador com Playwright e Microsoft Edge. Os caminhos de ambos estão fixados para este computador.
 
+O perfil local mostra um Guest numerado até o cadastro. Criar conta preserva o progresso do convidado e habilita **Iniciar Missão** no hub. A conta é armazenada no navegador.
+
 ## Estrutura
 
 O elenco atual tem 24 famílias de shinobis e 56 versões jogáveis separadas (ex.: Naruto Academia, Genin, Shippuden e Kyuubi), cada uma com kit, passiva e atributos da fase, folhas direcionais de caminhada e 97 técnicas no total. Cada versão nova é liberada por missão jogando com a anterior. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total da simulação.

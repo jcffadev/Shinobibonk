@@ -438,3 +438,72 @@ O elenco tem 56 versões com caminhada direcional. Neste lote, cinco receberam f
 **Resposta**
 
 Registrar em `docs/14-CONTEXTO-DO-CHAT.md` os pedidos, as perguntas, as respostas e as orientações complementares de cada rodada, junto com a documentação correspondente quando houver mudanças no projeto.
+
+## Dash, arte de Sakura e Gaara, selo do Naruto e conta local
+
+**Pedidos e complementos**
+
+> ah, o dash para trás com o A está errado tem que inverter o boneco
+>
+> a sakura ainda estava bugada a animação, deixe todos os sprites revisados
+>
+> Se logado na conta, não aparecer mais jogar como Convidado em jogar... aparecer iniciar Missão, apenas mostrar convidado se a conta não for logado, ai aparecer guest...numeral crescente para contas criadas. (lembrando ser possível, simplesmente clicar em criar conta e atribuir a conta guest a um login/senha/email para salvar o conteúdo já conquistado.
+>
+> Você vai usar o naruto wiki, para saber quais vilas, elementos, organizações os ninjas do nosso jogo farão parte e montar os buffs de combo/passivas únicas para cada.
+>
+> Os ninjas médicos sempre darão cura, coleta, ninjas mais ofensivos, darão taijutsu, genjutsu, ninjutsu, seja qual for a propriedade/ataques que eles utilizem.
+>
+> Shurikens amaldiçoadas devem dar buff, mas acontecer emboscadas.
+>
+> Corpos de Ninja no chão, também são emboscadas, completa-los da 1 nível, progressivo pela dificuldade que estamos/zona.
+>
+> Faça em ordem, me mostre como esta a fila
+>
+> Você viu que separawmos os personagens ne? agora eles não evoluem mais, são únicos. Referencias para fazer/refazer o Gaara
+>
+> A cabaça dele estava muito feia.
+>
+> me mostre o naruto e posições de mãos
+>
+> tem uma posição que você fez ele arremessando algo, quero que troque por essa referencia
+>
+> faça para todos os personagens essa substituição, ok?
+>
+> consegue fazer unicamente essa posição para todos eles?
+>
+> Conte quantos personagens jogáveis temos agora, quantos estão com passivas/habilidades/ajudantes/movimentação completamente prontas e para implementar/implementadas.
+>
+> Você tem todas as movimetnações feitas para eles, certo? completinhas, revisadas.
+>
+> posição do gaara ter uma única pode ser quando ultar, caixão de areia
+>
+> Referencias para o Gaara posições de mãos
+>
+> TODOO o restante pode seguir as posições/movimentações iguais ao naruto
+>
+> ele tem que ter dash para a esquerda também viu? todos os personagens...
+>
+> gaara também pode flutuar na areia, se conseguir fazer ele voar seria maneiro
+>
+> como esta a fila?
+>
+> lembre-se que o naruto é a padronização de movimentação para quase todo o resto, exceto: lee, guy, gaara... por enquanto
+>
+> voce nao pode esquecer tem até uma skill para isso, você atualizou depois dos reparos nas movimentações ?
+>
+> O que esta fazendo agora?
+>
+> Deixe a movimentação de WASD mais fluído também
+>
+> o dash em si seria para todos os personagens, ok?
+
+**Respostas e andamento**
+
+- O dash de todo jogável usa a direção capturada ao apertar Shift, inclusive se soltar a tecla em seguida. A folha e a pose procedural espelham para a esquerda. WASD suaviza a troca de direção sem reduzir a velocidade na diagonal. A skill de movimentação registra o padrão Naruto e as exceções Lee, Guy e Gaara.
+- Sakura Genin, Shippuden e Byakugou receberam folhas de soco, pulo e dash. As três versões do Gaara receberam cabaça de dois bojos em repouso e em movimento, palma aberta no Caixão de Areia e na Ultimate e folhas de caminhada e ações. Kazekage e Aliança flutuam por até 0,9 s se mantiverem Espaço pressionado no salto.
+- Naruto Academia, Genin, Shippuden e Manto da Kyuubi têm folha de selo cruzado para os jutsus Bunshin, com a pose do Totem e a prévia reaproveitando o mesmo padrão. Arremesso de arma continua associado aos golpes que arremessam armas. A aplicação do selo no restante do elenco está na fila.
+- Existem 56 versões independentes de 24 famílias. Todas têm passiva jogável, kit, Ultimate e caminhada. Após este lote, 16 têm folha que cobre ataque, pulo e dash, nove ainda precisam de pulo e dash dedicados e 31 precisam dos três. A auditoria visual individual em partida e como ajudante segue pendente. Na base publicada anterior havia passiva de apoio para 23 das 24 famílias; o Asuma e as versões avançadas estavam na cópia local em andamento do Claude.
+- A tela inicial mostra Guest numerado fora da conta e Iniciar Missão quando conectado. Criar conta com login, e-mail e senha promove o convidado com seu progresso. O cadastro e a numeração valem neste navegador.
+- A fila reúne a revisão por fase das afiliações usando a Narutopedia, os papéis dos ajudantes, as shurikens amaldiçoadas, os corpos com emboscada e a validação do restante do elenco.
+
+O Edge confirmou o dash para ambos os lados com soltura imediata da tecla, o selo do Naruto e o cadastro com migração e retorno ao perfil. Em partidas separadas, Gaara Kazekage flutuou e desceu ao soltar Espaço, e Sakura Byakugou trocou a folha de caminhada pela de pulo.

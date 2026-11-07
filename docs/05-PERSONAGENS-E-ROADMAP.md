@@ -7,6 +7,8 @@ Naruto, Gaara, Madara, Hashirama, Sasuke, Sakura, Kakashi, Itachi, Minato, Tsuna
 
 Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura, Rinnegan e Seis Caminhos usam folhas próprias de conjuração, pulo e dash. A identidade visual de cada folha vem da arte da própria forma.
 
+Sakura Genin, Shippuden e Byakugou têm folhas dedicadas de soco, pulo e dash. As três versões do Gaara compartilham o desenho da cabaça de dois bojos e têm quadros próprios de movimento e palma aberta, cada uma com seu traje. Kazekage e Aliança também flutuam brevemente no salto. As quatro versões do Naruto têm o selo cruzado de mãos para golpes Bunshin.
+
 ### Versões separadas (IMPLEMENTADO e TESTADO em `verify-rules`/`verify-runtime`)
 - Cada forma de `evolution.ts` virou um **personagem próprio** (`Hero.family`, `Hero.form`, `Hero.title`). O id do shinobi base é a **primeira versão** (`naruto` = Naruto Academia, `sasuke` = Sasuke Genin…); as outras têm id próprio (`naruto-genin`, `naruto-shippuden`, `naruto-kyuubi`…).
 - **Sem evolução dentro da run**: a versão fica sempre na própria forma (`formAt` ignora o nível para shinobis jogáveis). A troca de forma passou a ser a troca de personagem, liberada pela cadeia de missões. O bônus de +25% de HP por forma continua valendo para as versões avançadas.

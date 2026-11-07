@@ -64,7 +64,7 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
       start ||= now;
       const age=(now-start)/1000%2.65,dt=Math.min(.05,(now-(last||now))/1000);
       last=now;
-      if(lastAge<.25&&age>=.25)playerMotion.attack(['Projétil','Em V'].includes(technique.shape),false,false,technique.school==='Taijutsu'?'punch':undefined);
+      if(lastAge<.25&&age>=.25)playerMotion.attack(['Projétil','Em V'].includes(technique.shape),false,false,technique.school==='Taijutsu'?'punch':undefined,/Bunshin|Caixão de Areia/.test(technique.name));
       lastAge=age;
       playerMotion.update(dt,0,1,1,false,false,false,1,0,false,false,0,0);
       const p=Math.max(0,Math.min(1,(age-.33)/.54));

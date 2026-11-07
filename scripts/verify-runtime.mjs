@@ -66,6 +66,24 @@ await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
 await page.keyboard.press('Shift');
 await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/naruto-academia-acrobatics-v1.png');});
 checks.push('Naruto Academia usa quadros de pulo e dash, inclusive ao levar dano');
+// Dispara A e Shift no mesmo quadro e solta A logo após ativar.
+for (const [key,sign] of [['a',-1],['d',1]]) {
+ await page.waitForFunction(()=>window.__shinobiTest.motion().slideRecovery===0);
+ const from=await debug('motion');
+ await page.evaluate(key=>{
+  const send=(type,k)=>window.dispatchEvent(new KeyboardEvent(type,{key:k,bubbles:true}));
+  send('keydown',key);send('keydown','Shift');send('keyup',key);send('keyup','Shift');
+ },key);
+ const sample=await page.waitForFunction(()=>{
+  const m=window.__shinobiTest.motion();
+  return m.pose==='dash'&&m.atlas.endsWith('/naruto-academia-acrobatics-v1.png')?m:null;
+ });
+ const now=await sample.jsonValue();
+ const lateral=(now.x-from.x)*Math.cos(from.yaw)-(now.z-from.z)*Math.sin(from.yaw);
+ assert.ok(lateral*sign>.05,`Dash ${key} segue a direção pressionada`);
+ assert.equal(now.flipped,sign<0,`Dash ${key} espelha para o lado certo`);
+}
+checks.push('Dash A/D mantém deslocamento e espelhamento depois de soltar a tecla');
 await debug('setLevel',50);await wait();assert.equal((await state()).form,'Academia');await debug('setLevel',1);
 checks.push('Naruto Academia fica na própria forma em qualquer nível');
 await debug('setLevel',1);
@@ -103,8 +121,17 @@ await debug('setChakra');await page.keyboard.press('r');assert.ok((await state()
 await page.keyboard.press('y');assert.equal((await state()).autoUlt,false);await page.keyboard.press('y');assert.equal((await state()).autoUlt,true);checks.push('Tecla Y alterna a Ultimate automática');
 await debug('clearEnemies');await debug('dismiss');await wait();await debug('defeatMega','neji');await page.keyboard.press('g');await wait();
 assert.equal((await state()).sealing,null);await page.keyboard.press('e');await wait();assert.equal((await state()).choice.length,3);await page.keyboard.press('1');await wait();checks.push('Recusa G deixa kunai grátis com três escolhas');
-await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('setMoney',100);await debug('pickup','kunai');await wait();await page.keyboard.press('e');await wait();assert.equal((await state()).paidWeapons,1);assert.equal((await state()).runMoney,80);await page.keyboard.press('1');await wait();
-await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('pickup','kunai');await wait();await page.keyboard.press('e');await wait();assert.equal((await state()).paidWeapons,2);assert.equal((await state()).runMoney,50);await page.keyboard.press('1');await wait();checks.push('Kunais custam 20 e depois 30 Ryu');
+for (const [startMoney,paid,cost] of [[100,1,20],[80,2,30]]) {
+ await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('pickup','kunai');await wait();
+ const payment=await page.evaluate(money=>{
+  const test=window.__shinobiTest;test.setMoney(money);
+  window.dispatchEvent(new KeyboardEvent('keydown',{key:'e',bubbles:true}));
+  return test.inspect();
+ },startMoney);
+ assert.equal(payment.paidWeapons,paid);assert.equal(payment.runMoney,startMoney-cost);
+ await page.keyboard.press('1');await wait();
+}
+checks.push('Kunais custam 20 e depois 30 Ryu');
 await debug('grantItem','Pedra da Juventude');await debug('grantItem','Kunai Afiada');await debug('dismiss');await wait();
 await page.keyboard.press('p');await wait();const details=page.locator('.sheet-column').first().locator('details');await details.first().evaluate(el=>el.open=true);await details.first().scrollIntoViewIfNeeded();assert.ok(await page.locator('.pool-icon-row .catalog-icon').count()>0);checks.push('Ícones no pool de itens da ficha');
 await page.screenshot({path:'artifacts/sheet-pool.png'});await page.getByRole('button',{name:'Continuar missão',exact:true}).click();await wait();
@@ -289,7 +316,8 @@ await page.locator('.character-card').filter({hasText:'Naruto Genin'}).click();a
 assert.equal((await state()).heroId,'naruto-genin');assert.equal((await state()).form,'Clássico');
 await debug('clearEnemies');await debug('clearDrops');await debug('dismiss');
 await page.keyboard.down('w');await page.waitForFunction(()=>window.__shinobiTest.motion().atlas.endsWith('naruto-classico-motion-v1.png'));await page.keyboard.up('w');
-await debug('setLevel',5);await debug('dismiss');await debug('target',1);
+await debug('setLevel',5);await debug('dismiss');await page.evaluate(()=>window.__shinobiTest.mapRoute.god(true));await debug('target',1);
+await page.waitForFunction(()=>window.__shinobiTest.motion().atlas.endsWith('/naruto-hand-seal-v1.png'));
 assert.equal(await debug('cast','Invocação do Sapo'),true);
 await page.waitForFunction(()=>window.__shinobiTest.motion().atlas.endsWith('/naruto-classico-action-v1.png'));
 await page.waitForFunction(()=>['óleo','fogo'].includes(window.__shinobiTest.gamabuntaPhase()));
@@ -342,6 +370,33 @@ await lockPage.waitForFunction(()=>document.pointerLockElement?.classList.contai
 assert.equal(await lockPage.getByText('Clique para retomar o controle da missão').count(),0);
 checks.push('Prévia anima a corrida do clone, botão devolve técnica ao pool, planejamento habilita treino e ponteiro volta após escolha');
 await lockPage.close();
+const accountPage=await browser.newPage({viewport:{width:1280,height:800}});
+await accountPage.addInitScript(muteSpeech);
+await accountPage.goto('http://127.0.0.1:5176/');
+await accountPage.evaluate(()=>localStorage.setItem('sb_admin_wallet_v1',JSON.stringify({balance:4321,spent:0})));
+await accountPage.reload();
+await accountPage.getByRole('button',{name:/Jogar como convidado.*Guest001/}).waitFor();
+await accountPage.getByRole('button',{name:'Entrar / Criar conta'}).click();
+await accountPage.getByLabel('Login',{exact:true}).fill('TesteShinobi');
+await accountPage.getByLabel('E-mail',{exact:true}).fill('teste@example.invalid');
+await accountPage.getByLabel('Senha',{exact:true}).fill('conta-local-de-teste');
+await accountPage.getByRole('button',{name:'Criar conta',exact:true}).click();
+await accountPage.getByRole('button',{name:/Iniciar Missão/}).waitFor();
+assert.equal(await accountPage.getByRole('button',{name:/Jogar como convidado/}).count(),0);
+assert.equal(await accountPage.evaluate(()=>JSON.parse(localStorage.getItem('sb_admin_wallet_v1')).balance),4321);
+await accountPage.getByRole('button',{name:'Minha conta'}).click();
+await accountPage.getByRole('button',{name:'Sair da conta'}).click();
+await accountPage.getByRole('button',{name:/Jogar como convidado.*Guest002/}).waitFor();
+assert.notEqual(await accountPage.evaluate(()=>JSON.parse(localStorage.getItem('sb_admin_wallet_v1')).balance),4321);
+await accountPage.getByRole('button',{name:'Entrar / Criar conta'}).click();
+await accountPage.getByRole('button',{name:'Já tenho conta'}).click();
+await accountPage.getByLabel('Login ou e-mail').fill('teste@example.invalid');
+await accountPage.getByLabel('Senha',{exact:true}).fill('conta-local-de-teste');
+await accountPage.getByRole('button',{name:'Entrar',exact:true}).click();
+await accountPage.getByRole('button',{name:/Iniciar Missão/}).waitFor();
+assert.equal(await accountPage.evaluate(()=>JSON.parse(localStorage.getItem('sb_admin_wallet_v1')).balance),4321);
+checks.push('Cadastro preserva o progresso do convidado, logout abre o próximo Guest e login restaura o progresso');
+await accountPage.close();
 assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);checks.push('Sem exceções JavaScript ou assets 404');
 console.log(JSON.stringify({checks,errors,missing,performanceSample},null,2));fs.writeFileSync('artifacts/runtime-checks.json',JSON.stringify({date:new Date().toISOString(),checks,errors,missing,performanceSample},null,2));
 }finally{await browser?.close();await server.close();}

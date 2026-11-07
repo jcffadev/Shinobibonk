@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Dash, Sakura, Gaara, Naruto e perfis locais
+
+- Corrige a orientação do dash para todo o elenco e suaviza as mudanças de direção no WASD.
+- Adiciona folhas de ações às três Sakuras, redesenha a cabaça e as ações dos três Gaaras e aplica o selo cruzado às quatro versões de Naruto nos golpes Bunshin.
+- Adiciona perfis locais com Guest numerado e cadastro que preserva o progresso no mesmo navegador.
+
 ## Folhas direcionais de ação para o elenco com Susanoo
 
 - Adiciona cinco folhas 4×4 de conjuração, pulo e dash em frente e costas para Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura, Rinnegan e Seis Caminhos. O controlador compartilhado seleciona as poses pela versão em jogo. As 80 células, direções e poses foram conferidas no Edge headless; build e suítes de regras e runtime passaram.

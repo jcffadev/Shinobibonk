@@ -35,7 +35,7 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 ## Implementado na base atual
 
-- **Movimento e combate** — caminhada em quatro direções nas 56 versões jogáveis dos 24 shinobis, com quadros próprios por forma. Pulo, dash e combate usam as poses disponíveis. A câmera mantém a proteção de altura sobre o terreno.
+- **Movimento e combate** — caminhada em quatro direções nas 56 versões jogáveis dos 24 shinobis, com quadros próprios por forma. WASD suaviza a mudança de rumo. Shift captura a direção no início do dash e espelha o sprite à esquerda. Gaara Kazekage e Aliança podem manter Espaço para flutuar brevemente na areia. A câmera mantém a proteção de altura sobre o terreno.
 - **Ações com quadros próprios neste lote** — conjuração do Naruto Clássico, ataque/pulo/dash do Sasuke inicial e socos/chutes de Lee e Guy em todas as suas formas. A fila registra a revisão do restante do elenco.
 - **Efeitos e preparação** — técnicas com visuais por natureza e golpes característicos. Chōmei e Gyūki seguem as referências do usuário. A Bolsa da Missão permite combinar busca, estado e raridade.
 - **Ofertas e saída** — uma pílula por escolha e um nível por pílula. A raridade aumenta a potência. Banir remove a opção do sorteio pelo nome durante a run. Na pausa, clique duas vezes em Desistir para confirmar. O resumo tem o botão Ir para o menu.

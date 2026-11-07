@@ -1,3 +1,4 @@
+import { directionalArt } from './directionalArt.ts';
 import { HERO_BY_ID, HEROES, NARUTO_FORMS, familyOf } from './heroes.ts';
 export type Form={level:number;name:string;outfit?:string;detail?:string};
 // Níveis são design do jogo. Personagens sem outra fase apropriada mantêm a aparência.
@@ -44,7 +45,11 @@ export function portraitRegion(versionId:string,level=1){
  if(id==='asuma')return {path:ASUMA_ATLAS,cols:4,rows:4,index:0};
  const leafIndex = leafPortraits.indexOf(id);
  if(leafIndex >= 0) return {path:'/assets/shinobi-folha-v3.png',cols:3,rows:1,index:leafIndex};
- if(id==='sakura'&&level<15)return {path:'/assets/sakura-genin-v1.png',cols:1,rows:1,index:0};
+ if(id==='sakura'){
+  if(level<15)return {path:'/assets/sakura-genin-v1.png',cols:1,rows:1,index:0};
+  return {path:level>=30?'/assets/sakura-byakugou-motion-v1.png':'/assets/sakura-shippuden-motion-v1.png',cols:4,rows:2,index:0};
+ }
+ if(id==='gaara')return {path:directionalArt(id,level<15?1:level<30?15:30)!.path,cols:4,rows:6,index:8};
  if(id==='chomei'||id==='gyuki')return {path:`/assets/bijuu/${id}-v2.png`,cols:1,rows:1,index:0};
  const beast=BIJUU.findIndex(entry=>entry.id===id);
  if(beast>=0)return {path:'/assets/bijuu-atlas-v1.png',cols:3,rows:3,index:beast};
