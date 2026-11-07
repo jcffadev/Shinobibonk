@@ -430,3 +430,11 @@ Na conferência inicial, `HEAD` e `origin/main` apontavam para `2f7d7e9`. A past
 **Resposta**
 
 O elenco tem 56 versões com caminhada direcional. Neste lote, cinco receberam folhas completas de ação e passaram no teste do controlador no Edge. Contando a cobertura anterior, dez versões têm folhas para ataque, pulo e dash. Nove ainda precisam de quadros próprios de pulo e dash, e outras 37 precisam dos três tipos de ação. A revisão visual de cada versão em partida e como ajudante permanece na fila.
+
+**Orientação permanente**
+
+> Sempre coloque as perguntas e respostas lá
+
+**Resposta**
+
+Registrar em `docs/14-CONTEXTO-DO-CHAT.md` os pedidos, as perguntas, as respostas e as orientações complementares de cada rodada, junto com a documentação correspondente quando houver mudanças no projeto.
