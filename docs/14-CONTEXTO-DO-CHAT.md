@@ -422,3 +422,11 @@ Calibração: novo `docs/15-CALIBRACAO-REFERENCIA.md` com level-up, vitaminas ×
 **Resposta**
 
 Na conferência inicial, `HEAD` e `origin/main` apontavam para `2f7d7e9`. A pasta compartilhada tinha trabalho local em andamento, inclusive a integração de Susanoo e partículas WebGL. As cinco folhas de ataque, pulo e dash (Sasuke Rinnegan, Itachi Akatsuki e três Madaras) foram integradas numa cópia de trabalho separada. O Edge headless validou as 80 células e as poses no controlador compartilhado; as suítes de regras e de runtime passaram. A referência usada para revisar o efeito é a [Narutopedia](https://naruto.fandom.com/wiki/Susanoo). Restam a integração visual por lançador e a verificação em partida, prévia e apoio assim que a base WebGL estiver disponível em main. A [fila de pendências](13-PENDENCIAS-PARA-CONTINUAR.md) separa animação, combate, balanceamento e desempenho.
+
+**Pergunta complementar**
+
+> Você revisou a animação de todos os personagens?
+
+**Resposta**
+
+O elenco tem 56 versões com caminhada direcional. Neste lote, cinco receberam folhas completas de ação e passaram no teste do controlador no Edge. Contando a cobertura anterior, dez versões têm folhas para ataque, pulo e dash. Nove ainda precisam de quadros próprios de pulo e dash, e outras 37 precisam dos três tipos de ação. A revisão visual de cada versão em partida e como ajudante permanece na fila.
