@@ -1,5 +1,5 @@
 import type { Bonuses, StatKey } from './catalog';
-import { HERO_BY_ID, ORGANIZATIONS, familyOf } from './heroes.ts';
+import { HERO_BY_ID, HEROES, ORGANIZATIONS, familyOf, heroOrganizations } from './heroes.ts';
 import { NPC_ALLIES } from './npcs.ts';
 import { bonusText, splitProjectiles } from './allies.ts';
 
@@ -81,6 +81,8 @@ const ORG_FACTOR: Record<number, number> = { 2: 1, 3: 1.6, 4: 2.2, 5: 3 };
 /** Combos por organização/equipe canônica (base com 2 ajudantes). */
 export const ORG_COMBOS: Record<string, { tag: string; icon: string; theme: string; base?: Bonuses; tiers?: Tiers }> = {
   akatsuki: { tag: 'AKATSUKI', icon: '☁️', theme: 'Dupla de criminosos rank S: crítico.', base: { crit: .03, critDamage: .1 } },
+  alianca: { tag: 'ALIANÇA', icon: '🤝', theme: 'Divisões da Quarta Guerra: resistência e cura em conjunto.', base: { defense: 4, regen: .35 } },
+  taka: { tag: 'TAKA', icon: '🦅', theme: 'Incursões do esquadrão de Sasuke: velocidade e chance crítica.', base: { move: .05, crit: .03 } },
   sannin: { tag: 'SANNIN', icon: '🐸', theme: 'Os três ninjas lendários: vida e cura.', base: { health: 30, regen: .6 } },
   hokage: { tag: 'HOKAGE', icon: '🔥', theme: 'Líderes da Folha: experiência e área.', base: { exp: .06, area: .05 } },
   time7: { tag: 'TIME 7', icon: '7️⃣', theme: 'Trabalho em equipe do Time Kakashi: dano.', base: { damage: .05 } },
@@ -118,7 +120,8 @@ function definitions(): SynergyDef[] {
   for (const org of ORGANIZATIONS) {
     const cfg = ORG_COMBOS[org.id];
     if (!cfg) continue;
-    out.push({ id: 'org:' + org.id, kind: 'organizacao', name: org.name, tag: cfg.tag, icon: cfg.icon, theme: cfg.theme, members: org.members, tiers: cfg.tiers ?? scaledTiers(cfg.base ?? {}) });
+    const members=HEROES.filter(hero=>heroOrganizations(hero.id).includes(org)).map(hero=>hero.id);
+    out.push({ id: 'org:' + org.id, kind: 'organizacao', name: org.name, tag: cfg.tag, icon: cfg.icon, theme: cfg.theme, members, tiers: cfg.tiers ?? scaledTiers(cfg.base ?? {}) });
   }
   return out;
 }
@@ -134,9 +137,10 @@ function tierFor(def: SynergyDef, count: number): number | undefined {
 export function activeSynergies(_heroId: string, allies: readonly string[]): ActiveSynergy[] {
   // O jogador fica fora, mas um ajudante recrutado do mesmo shinobi ocupa uma vaga real.
   // Sinergias e organizações por FAMÍLIA: um ajudante Naruto Shippuden conta como Naruto. members devolve os ids reais.
+  const team = new Set(allies);
   const out: ActiveSynergy[] = [];
   for (const def of synergyDefinitions()) {
-    const members = allies.filter((id) => def.members.includes(familyOf(id)));
+    const members = [...new Map(def.members.filter(id => team.has(id)).map(id => [familyOf(id), id])).values()];
     const tier = tierFor(def, members.length);
     if (tier === undefined) continue;
     const tiers = Object.keys(def.tiers).map(Number).sort((a, b) => a - b);

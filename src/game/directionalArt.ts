@@ -1,5 +1,30 @@
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
+const fullActionForms: Record<string, readonly number[]> = {
+  sakura: [1, 15, 30],
+  sasuke: [30],
+  itachi: [15],
+  madara: [1, 15, 30],
+};
+const revisedActionForms:Record<string,readonly number[]>={sasuke:[15],hashirama:[1,20]};
+export function acrobaticsArt(family:string,form:number){
+  if((family==='naruto'&&form>1)||family==='lee'||family==='guy')
+    return {path:`/assets/shinobi-motion/${family}-${form}-acrobatics-v2.png`,kind:'acrobatics' as const,directional:true,rows:2,firstRow:0};
+}
+
+const gaaraSheet = (level: number) => `/assets/shinobi-motion/gaara-${level}-motion-v2.png`;
+export const NARUTO_HAND_SEALS = '/assets/shinobi-motion/naruto-hand-seal-v1.png';
+const narutoSealForms = [1, 10, 25, 50];
+export function handSealArt(family: string, level: number) {
+  const row = family === 'naruto' ? narutoSealForms.indexOf(level) : -1;
+  return row < 0 ? undefined : { path: NARUTO_HAND_SEALS, row };
+}
+
 export function actionArt(hero: string, formLevel: number) {
+  if(revisedActionForms[hero]?.includes(formLevel))return {path:`/assets/shinobi-motion/${hero}-${formLevel}-action-v3.png`,kind:'full' as const,rows:4};
+  if (hero === 'gaara') return { path: gaaraSheet(formLevel), kind: 'full' as const, rows: 6, firstRow: 2 };
+  if (fullActionForms[hero]?.includes(formLevel)) {
+    return { path: `/assets/shinobi-motion/${hero}-${formLevel}-action-v2.png`, kind: 'full' as const, rows: 4 };
+  }
   if (hero === 'neji') return { path:'/assets/shinobi-motion/neji-action-v1.png', kind:'acrobatics' as const, rows:4, firstRow:formLevel>=15?2:0 };
   if (hero === 'naruto' && formLevel === 1) return { path: '/assets/naruto-academia-acrobatics-v1.png', kind: 'acrobatics' as const, directional: true };
   if (hero === 'naruto' && formLevel === 10) return { path: '/assets/naruto-classico-action-v1.png', kind: 'cast' as const };
@@ -30,7 +55,6 @@ const sheets: Record<string, DirectionalSheet> = {
 
 // Cada par é frente/costas para uma forma. A ordem é a mesma das fileiras no PNG.
 const rosterForms: Record<string, readonly number[]> = {
-  gaara: [1, 15, 30],
   madara: [1, 15, 30],
   hashirama: [1, 20],
   kakashi: [1, 25],
@@ -52,6 +76,7 @@ const rosterForms: Record<string, readonly number[]> = {
 };
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
+  if (hero === 'gaara') return { path: gaaraSheet(formLevel), rows: 6 };
   const custom = sheets[`${hero}-${formLevel}`];
   if (custom) return custom;
   const levels = rosterForms[hero];

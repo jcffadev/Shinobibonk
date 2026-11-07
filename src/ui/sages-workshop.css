@@ -1,0 +1,26 @@
+.sages-backdrop{position:absolute;inset:0;z-index:28;display:grid;place-items:center;padding:24px;background:#07111ab8;backdrop-filter:blur(5px)}
+.sages-workshop{width:min(900px,100%);max-height:90vh;display:flex;flex-direction:column;padding:24px;border:1px solid #638a7580;border-radius:20px;background:linear-gradient(145deg,#1d3040,#131b2b);box-shadow:0 24px 80px #0008;color:#edf3f3}
+.sages-workshop header{display:flex;justify-content:space-between;gap:20px;align-items:center}
+.sages-workshop header>.hero-sprite{width:96px;height:96px;flex-shrink:0}
+.sages-workshop header small{font-size:10px;letter-spacing:.12em;color:#e6bf77}
+.sages-workshop h1{margin:7px 0;font-size:clamp(20px,3vw,30px)}
+.sages-workshop header p,.sages-help{font-size:12px;line-height:1.5;color:#b8c8cd}
+.sages-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
+.sages-tabs button{padding:13px;border:1px solid #536573;border-radius:12px;background:#142030;color:#c8d4de;font-size:16px;font-weight:800;text-align:left;cursor:pointer}
+.sages-tabs button[aria-selected=true]{border-color:#ecc477;background:#41574a;color:#fff0cc}
+.sages-tabs small{display:block;margin-top:5px;font-size:10px;font-weight:500;color:inherit}
+.sages-pairs{overflow:auto;min-height:120px;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px}
+.sages-pair{position:relative;display:flex;align-items:center;gap:12px;padding:17px 30px 17px 14px;min-height:118px;border:1px solid #586579;border-radius:12px;background:#1b283b;text-align:left;color:#e9eff5;cursor:pointer;transition:border-color .15s,background .15s}
+.sages-pair:hover,.sages-pair:focus-visible{border-color:#edc36c;background:#2b3c49;outline:0}
+.sages-pair-art{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.sages-pair-art .skill-art{width:42px;height:42px;flex-shrink:0}
+.sages-pair-art>span:not(.skill-art){color:#e9c481}
+.sages-pair,.sages-pair h2,.sages-pair h3{font-family:inherit}
+.sages-pair h2,.sages-pair h3{margin:3px 0;font-size:13px;font-weight:750}
+.sages-pair h3{color:#b2c7d3}
+.sages-pair p{margin:7px 0 0;color:#78d8ab;font-size:10px;line-height:1.5}
+.sages-pair kbd{position:absolute;right:10px;bottom:10px;background:#36465d;padding:2px 5px;border-radius:4px;color:#dbe5ee;font-size:10px}
+.sages-empty{grid-column:1/-1;align-self:center;justify-self:center;padding:25px;max-width:440px;text-align:center;color:#bbc8d5;font-size:13px;line-height:1.7}
+.sages-workshop footer{display:flex;justify-content:space-between;gap:12px;align-items:center;padding-top:18px}
+.sages-workshop footer .button{padding:11px 15px;font-size:12px}
+@media(max-width:680px){.sages-backdrop{padding:10px}.sages-workshop{padding:16px}.sages-pairs{grid-template-columns:1fr}.sages-workshop header>.hero-sprite{width:64px;height:64px}.sages-pair{min-height:90px}}

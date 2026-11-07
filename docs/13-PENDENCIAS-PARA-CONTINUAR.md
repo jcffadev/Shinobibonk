@@ -1,4 +1,4 @@
-# Pendências para continuar (estado em 06/11/2026, commit 24ab2de)
+# Pendências para continuar · atualização em 07/11/2026
 
 Levantamento feito ao fim da sessão do Claude Code para continuar no Codex. Tudo abaixo está **PENDENTE** salvo indicação.
 Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs/12. Verificação padrão:
@@ -10,16 +10,27 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 - **Filtro de raridade colorido no Plano de build** + **detalhes das técnicas** (`BuildPlanner.tsx`): parou antes do teste no navegador. Falta: conferir cores iguais às do jogo (Comum cinza, Incomum verde, Raro azul, Épico roxo, Lendário laranja), e cada técnica mostrar ""Kit de <personagem> · Lv. desbloqueio X · Dano · Efeito (status/chance) · outros (crítico, Senjutsu, recarga)"".
 - **Ultimate por fase (confirmado: Ultimate segue desde o Nv. 1) e ajudantes/Mega Elites como versões** (heroes.ts, `allies.ts`, `synergy.ts`, spawn de mega elites no GameCanvas): parou nos buffs por versão em `allies.ts` e no mapeamento de família em `synergy.ts`.
 - **Calibração pela wiki pública + detalhes** (`docs/15-CALIBRACAO-REFERENCIA.md`, prévia ao esquecer pílula no Ichiraku, reordenar listas de ""Itens em casa"", expandir grade de itens): parou na UI de mover/arrastar listas em `MissionBag.tsx`.
+
+## Integração local pendente
+
+A pasta principal está em `c41bd79` (trabalho parcial do Claude, salvo também em `wip/parcial-subagentes-07-11`). A main remota recebeu `badcee4` pelo worktree `ShinobiBonk_Codex_Arte`. As duas linhas divergem desde `2f7d7e9`. Conciliar os lotes antes de afirmar que a pasta principal e a main remota estão iguais.
+
 ## Fila do Codex
+- **IMPLEMENTADO** — dash esquerdo/direito no controlador compartilhado, WASD imediato, com prioridade à última tecla oposta pressionada, conta local, folhas das três Sakuras e dos três Gaaras, selo cruzado dos quatro Narutos e flutuação de Gaara Kazekage e Aliança.
+- **IMPLEMENTADO (07/11/2026)** — afiliações por versão e suporte médico/ofensivo para as 56 versões; shuriken amaldiçoada com buff e emboscada; corpo de ninja com onda escalonada e recompensa de um nível. Oficina Fundir/Combinar com abas e limite de uma operação por zona. Estoque do mercador com preços fixos até atualizar. Tab rápido sem pausa e P com retomada pelo próprio comando.
+- **PENDENTE** — avaliar o balanceamento dos novos buffs e ondas numa run comum e continuar a auditoria visual das ações do elenco.
+- **PENDENTE** — aplicar o padrão de poses do Naruto às versões restantes, incluindo selo de mãos. Preservar as exceções de Lee, Guy e Gaara e conferir a animação como jogável e ajudante.
 - **IMPLEMENTADO** — folhas direcionais de caminhada nas 56 formas dos 24 shinobis jogáveis. Os 20 shinobis deste lote acrescentam 45 formas ao Time 7 e Asuma.
 - **IMPLEMENTADO NESTE LOTE** — quadros de conjuração do Naruto Clássico, ataque/pulo/dash de Sasuke inicial e socos/chutes nas três formas de Rock Lee e Might Guy.
 - **PENDENTE** — revisar caminhada, ataque, pulo e dash/esquiva de todo o elenco por forma, inclusive transição do sprite estático para as ações. Priorizar formas com pose procedural e validar os quadros em jogo. Dano, Ultimate e animação dos monstros permanecem na fila.
-- **IMPLEMENTADO (06/11/2026)** — versões separadas: 56 versões jogáveis de 24 famílias com cadeia de missões (`playWith`). **PENDENTE**: balancear kits, passivas e números das missões jogando; testar uma run real sem `?test` até o Shinobi para selar da versão surgir (o teste automático confere `accountCandidates`, não o selamento completo). Mega Elites e ajudantes já aparecem como versões (zona + dificuldade); guardiões de zona continuam como shinobi base (PROPOSTO: versão por zona também).
+- **IMPLEMENTADO (06/11/2026)** — versões separadas: 56 versões jogáveis de 24 famílias com cadeia de missões (`playWith`). **PENDENTE**: balancear kits, passivas e números das missões jogando; testar uma run real sem `?test` até o Shinobi para selar da versão surgir (o teste automático confere `accountCandidates`, não o selamento completo); validar o balanceamento dos ajudantes/mega elites avançados, agora escolhidos por zona e dificuldade.
+- **IMPLEMENTADO** — cinco folhas direcionais de ataque, pulo e dash para Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura/Rinnegan/Seis Caminhos. Validação visual de uma missão real com cada versão e ajudante continua na fila.
+- **PENDENTE (Susanoo WebGL)** — no trabalho local, o rig se baseia na Narutopedia. Validar estilo por lançador (Madara azul com lâminas, Sasuke roxo com arco, Itachi vermelho/laranja com Totsuka e Yata), Suporte, Ultimate e prévia. O rascunho de Kakashi usa Kamui, e a fase correspondente ainda não existe no elenco.
 - **FOLHAS QUE FALTAM PARA O CODEX (versões separadas)** — repouso vem do sprite estático em todas. Caminhada direcional existe em todas. Onde falta ação, `playerMotion` usa pose procedural (squash/stretch no pulo, inclinação e rastro no dash, deformação de braços no ataque):
-  - **Completas (repouso, caminhada, ataque, pulo, dash)**: Naruto Academia (`naruto`), Sasuke Genin (`sasuke`), Neji Genin e Neji Jonin (folha acrobática; ataque usa os mesmos quadros), Asuma.
+  - **Com folhas cobrindo ataque, pulo e dash (16 versões; revisão visual individual ainda pendente)**: Naruto Academia, Sasuke Genin/Rinnegan, Neji Genin/Jonin, Asuma, três Sakuras, três Gaaras, três Madaras e Itachi Akatsuki.
   - **Falta pulo e dash**: Naruto Genin (`naruto-genin`, forma 10), Naruto Shippuden (25), Naruto Kyuubi (50) — já têm conjuração; Rock Lee Genin/Shippuden/Portões e Might Guy Jonin/Sexto/Sétimo Portão — já têm socos e chutes.
-  - **Falta ataque, pulo e dash**: Sasuke Shippuden (15) e Rinnegan (30); Sakura Genin (1), Shippuden (15) e Byakugou (30); Gaara Genin/Kazekage/Aliança (1/15/30); Madara Armadura/Rinnegan/Seis Caminhos (1/15/30); Hashirama Hokage/Sábio (1/20); Kakashi Jonin/Hokage (1/25); Itachi ANBU/Akatsuki (1/15); Minato Jonin/Hokage (1/15); Tsunade Sannin/Hokage/Byakugou (1/15/30); Jiraiya Sannin/Sábio (1/20); Orochimaru Sannin/Som (1/15); Hinata Genin/Shippuden/Leões (1/15/30); Shikamaru Genin/Estrategista/Conselheiro (1/15/30); Temari Genin/Shippuden (1/15); Tenten Genin/Shippuden (1/15); Kankuro Genin/Shippuden/Aliança (1/15/30); Pain, Tobirama e Kushina (1).
-  - Formato esperado: atlas 4×2 por forma em `public/assets/shinobi-motion/<família>-<forma>-action-v1.png` (fileira 1: quadros de ataque/pulo; fileira 2: costas ou dash, como o Sasuke Genin), registrado em `actionArt` (`src/game/directionalArt.ts`) com `kind: 'acrobatics'`.
+  - **Falta ataque, pulo e dash**: Sasuke Shippuden (15); Hashirama Hokage/Sábio (1/20); Kakashi Jonin/Hokage (1/25); Itachi ANBU (1); Minato Jonin/Hokage (1/15); Tsunade Sannin/Hokage/Byakugou (1/15/30); Jiraiya Sannin/Sábio (1/20); Orochimaru Sannin/Som (1/15); Hinata Genin/Shippuden/Leões (1/15/30); Shikamaru Genin/Estrategista/Conselheiro (1/15/30); Temari Genin/Shippuden (1/15); Tenten Genin/Shippuden (1/15); Kankuro Genin/Shippuden/Aliança (1/15/30); Pain, Tobirama e Kushina (1).
+  - Para novas folhas completas, usar atlas 4×4 em `public/assets/shinobi-motion/<família>-<forma>-action-v2.png`, com conjuração frente/costas e pulo/dash frente/costas. Registrar em `actionArt` com `kind: 'full'`.
 - **REGRA DE ENTREGA** — novos shinobis e evoluções precisam vir com repouso, caminhada, ataque, pulo e dash/esquiva. Atualizar as skills, documentação, contexto e GitHub a cada entrega.
 - **IMPLEMENTADO:** fila de confirmação para itens da roleta, pílulas e habilidades reservadas para level-up, teto de quatro ofertas, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação da câmera por movimento do mouse.
 - **Atlas de habilidades**: integrado ao HUD, às escolhas, ao elenco e ao plano de missão.
@@ -111,3 +122,18 @@ Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs
 1. Revisão visual individual das ações nas 56 formas e em suporte. Há caminhada direcional para todas, ações dedicadas para as formas registradas em `actionArt` e poses procedurais compartilhadas onde ainda faltam folhas. Naruto Academia e Neji receberam folhas novas neste lote. As ações dedicadas de pulo/dash das demais formas do Naruto permanecem na fila.
 2. Medir escala no meio e no final de missões reais. Comparar níveis, DPS, HP/defesa do guardião e abates por segundo. A curva já produz valores de milhões em mega elites e ~1 bilhão no cenário de guardião informado. O vídeo fornecido documenta a abertura.
 3. Medir 1.600 inimigos com GPU real, em diferentes climas, e continuar validando o chão nas bordas. Sons novos dependem de fontes com licença verificável.
+
+
+## Validação da continuação · 07/11/2026
+
+**TESTADO** — 56 verificações de runtime passaram, com limites e persistência da oficina, controles e mercador. Sem exceções JS ou assets ausentes. TypeScript, build e regras passaram. Os novos buffs de suporte e as emboscadas ainda precisam de avaliação prolongada de balanceamento. A fila seguinte continua sendo a revisão visual de ataque, pulo e dash por versão, os efeitos Susanoo e a calibração geral.
+
+## Estado desta publicação · 07/11/2026
+
+Esta seção substitui as notas antigas de divergência local: o merge reúne `c41bd79` e `78e6520`, com correções incrementais do Codex. TypeScript, build e regras passaram. A suíte de navegador é registrada em `artifacts/runtime-checks.json` quando concluir.
+
+- IMPLEMENTADO: retomada após Esc; Susanoo por lançador; atlas regionais de chão e construções.
+- IMPLEMENTADO: pulo/dash de Naruto 10/25/50, Lee 1/15/30 e Guy 1/15/30; ações completas de Sasuke 15 e Hashirama 1/20.
+- PENDENTE: auditoria visual dessas folhas e do restante das 56 versões, inclusive ajudantes; ainda faltam folhas completas para 28 versões, além de refinamentos em folhas existentes.
+- PENDENTE: prévia WebGL do Susanoo, efeitos e sons por técnica, inspeção visual dos mapas/bordas e run prolongada completa.
+- CONFIRMADO: o usuário informou que o balanceamento já existe. Preservar os números; conferir curvas e registrar evidências antes de propor qualquer alteração.

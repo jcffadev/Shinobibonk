@@ -148,7 +148,7 @@ export const HEROES:Hero[]=[
  h('minato','Minato','Vila da Folha','#ffe19a',115,19,4,7,'Relâmpago Amarelo · +20% movimento e +15% velocidade de ataque.',{move:.2,attackSpeed:.15},[U.hiraishin,L.corteRaio,L.vendaval,L.rasengan],'Hiraishin em Cadeia','Movimento, velocidade de ataque e projéteis'),
  h('tsunade','Tsunade','Vila da Folha','#86be8e',165,25,8,6,'Vitalidade Senju · +0,9 HP/s de regeneração e +15% taijutsu.',{regen:.9,normal:.15},[L.punho,U.palmaMistica,L.ruptura,U.chuteCeleste],'Invocação de Katsuyu','HP, regeneração e taijutsu'),
  h('jiraiya','Jiraiya','Vila da Folha','#d77d72',145,22,6,6.3,'Sábio dos Sapos · +20% raio de área e +15% recarga da Ultimate.',{area:.2,cool:.15},[U.cabelo,L.sapo,U.oleo,L.rasengan],'Invocação de Gamabunta','Área, ninjutsu e recarga'),
- h('orochimaru','Orochimaru','Vila do Som','#b898df',125,19,4,6.7,'Corpo Serpentino · +10 pontos de evasão e +20% duração de status.',{dodge:.1,duration:.2},[U.serpentes,U.kusanagi,L.nevoa,L.prisaoSombra],'Invocação de Manda','Veneno, duração e evasão'),
+ h('orochimaru','Orochimaru','Vila da Folha','#b898df',125,19,4,6.7,'Corpo Serpentino · +10 pontos de evasão e +20% duração de status.',{dodge:.1,duration:.2},[U.serpentes,U.kusanagi,L.nevoa,L.prisaoSombra],'Invocação de Manda','Veneno, duração e evasão'),
  h('lee','Rock Lee','Vila da Folha','#76c998',135,23,5,7,'Esforço Supremo · +25% taijutsu e +15% velocidade de ataque.',{normal:.25,attackSpeed:.15},[L.punho,L.furacao,U.lotus,L.portoes],'Portões Internos','Taijutsu, crítico e velocidade de ataque'),
  h('neji','Neji','Clã Hyuga','#d4d6e9',125,21,5,6.9,'Byakugan · +10 pontos de chance crítica e +15% taijutsu.',{crit:.1,normal:.15},[L.punhoGentil,U.kaiten,L.kunai,U.palmas64],'Oito Trigramas','Crítico e taijutsu'),
  h('hinata','Hinata','Clã Hyuga','#c1b2e9',130,19,6,6.7,'Proteção Gentil · +8 pontos de evasão e +15% taijutsu.',{dodge:.08,normal:.15},[L.punhoGentil,L.shuriken,L.kunai,U.protetoras],'Byakugan Desperto','Evasão, taijutsu e área'),
@@ -193,7 +193,7 @@ for(const hero of HEROES){hero.family=hero.id;hero.form=1;const title=BASE_TITLE
 /** Cria a versão `step` (1, 2, 3…) da família: HP/dano +12% por passo, +1 armadura e +0,08 de movimento por passo. */
 function version(family:string,id:string,title:string,form:number,step:number,passive:string,bonuses:Bonuses,techniques:Technique[],ultimate:string,build:string):Hero{
   const b=HEROES.find(x=>x.id===family)!,scale=1+.12*step;
-  const hero=h(id,SHORT_NAMES[family]+' '+title,b.village,b.color,Math.round(b.base.hp*scale),b.base.damage/.55*scale,b.base.armor+step,+(b.base.speed+.08*step).toFixed(2),passive,bonuses,techniques,ultimate,build,b.atlas);
+  const hero=h(id,SHORT_NAMES[family]+' '+title,id==='orochimaru-som'?'Vila do Som':b.village,b.color,Math.round(b.base.hp*scale),b.base.damage/.55*scale,b.base.armor+step,+(b.base.speed+.08*step).toFixed(2),passive,bonuses,techniques,ultimate,build,b.atlas);
   return {...hero,family,form,title};
 }
 export const HERO_VERSIONS:Hero[]=[
@@ -327,7 +327,9 @@ export const HERO_CLAN:Record<string,string>={madara:'Clã Uchiha',sasuke:'Clã 
  * Ids que ainda não existem no elenco (ex.: kisame, ino, zabuza) já ficam listados para o elenco futuro; não contam até existirem.
  */
 export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
- {id:'akatsuki',name:'Akatsuki',members:['itachi','pain','orochimaru','kisame','deidara','sasori','hidan','kakuzu','konan','obito','zetsu']},
+ {id:'akatsuki',name:'Akatsuki',members:['itachi','pain','kisame','deidara','sasori','hidan','kakuzu','konan','obito','zetsu']},
+ {id:'alianca',name:'Aliança Shinobi',members:['naruto','sasuke','sakura','gaara','kankuro','hinata','guy','lee']},
+ {id:'taka',name:'Taka',members:['sasuke','suigetsu','jugo','karin']},
  {id:'sannin',name:'Sannin Lendários',members:['jiraiya','tsunade','orochimaru']},
  {id:'hokage',name:'Hokages',members:['hashirama','tobirama','minato','tsunade','kakashi','naruto','hiruzen']},
  {id:'time7',name:'Time 7',members:['naruto','sasuke','sakura','kakashi','sai','yamato']},
@@ -341,7 +343,18 @@ export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
  {id:'time8',name:'Time 8',members:['hinata','kiba','shino','kurenai']},
  {id:'espadachins',name:'Sete Espadachins da Névoa',members:['kisame','zabuza','mangetsu','suigetsu','chojuro','kushimaru','jinpachi','fuguki','jinin','ameyuri']},
 ];
-export function heroOrganizations(heroId:string){const family=familyOf(heroId);return ORGANIZATIONS.filter(o=>o.members.includes(family));}
+// Fases representadas no jogo. A fonte canônica descreve a filiação; o recorte é da versão jogável.
+const ORGANIZATION_VERSIONS: Partial<Record<string, readonly string[]>> = {
+ akatsuki:['itachi-akatsuki','pain'],
+ hokage:['hashirama','hashirama-sabio','tobirama','minato-hokage','tsunade-hokage','tsunade-byakugou','kakashi-hokage'],
+ time7:['naruto-genin','naruto-shippuden','naruto-kyuubi','sasuke','sasuke-rinnegan','sakura','sakura-shippuden','sakura-byakugou','kakashi'],
+ alianca:['naruto-kyuubi','sasuke-rinnegan','sakura-byakugou','gaara-alianca','kankuro-alianca','hinata-leoes','guy-setimo-portao','lee-portoes'],
+ taka:['sasuke-shippuden'],
+};
+export function heroOrganizations(heroId:string){
+ const family=familyOf(heroId);
+ return ORGANIZATIONS.filter(o=>ORGANIZATION_VERSIONS[o.id]?.includes(heroId)??o.members.includes(family));
+}
 /** Clã de origem da família (versões herdam o clã do shinobi base). */
 export function heroClan(heroId:string):string|undefined{return HERO_CLAN[familyOf(heroId)];}
 /**

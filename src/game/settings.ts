@@ -45,7 +45,9 @@ function load(): GameSettings {
   try {
     const raw = localStorage.getItem(KEY);
     const parsed = raw ? JSON.parse(raw) as Partial<GameSettings> : {};
-    return { ...DEFAULT_SETTINGS, ...parsed, keys: { ...DEFAULT_KEYS, ...(parsed.keys ?? {}) } };
+    const keys = { ...DEFAULT_KEYS, ...(parsed.keys ?? {}) };
+    if (keys.sheet === 'tab') { keys.sheet = 'p'; keys.quickMap = 'tab'; }
+    return { ...DEFAULT_SETTINGS, ...parsed, keys };
   } catch { return { ...DEFAULT_SETTINGS, keys: { ...DEFAULT_KEYS } }; }
 }
 let current: GameSettings = load();
@@ -62,6 +64,7 @@ export function saveSettings(next: GameSettings): void {
 
 /** Remapeia uma ação; se outra ação usava a mesma tecla, as duas trocam. */
 export function rebind(settings: GameSettings, action: KeyAction, key: string): GameSettings {
+  if (key === 'tab' && action !== 'quickMap') return settings;
   const keys = { ...settings.keys };
   const other = (Object.keys(keys) as KeyAction[]).find((a) => a !== action && keys[a] === key);
   if (other) keys[other] = keys[action];

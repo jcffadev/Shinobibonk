@@ -105,3 +105,16 @@ O mouse gira e inclina a câmera de 0,12 a 1,48 radianos durante a partida. Cliq
 O portal da arena final usa o marcador de nove caudas no mapa e no minimapa. Durante o controle da câmera, o cursor fica oculto sobre o cenário. Na Vila da Folha, as estátuas do vale se apoiam em topos mais largos. Cenários que ficam à frente e próximos do jogador perdem opacidade para manter o shinobi visível.
 
 As texturas de Chōmei e Gyūki seguem as duas imagens enviadas pelo usuário. Chōmei tem três pares de asas laranjas com bordas verdes e uma cauda separada. Gyūki tem oito tentáculos com ventosas e o rosto bovino da referência. Os dois carregam texturas individuais pelo mesmo registro de arte das demais bijū. [Referência oficial de Naruto](https://naruto-official.com/en/news/01_2376), [Chōmei](https://naruto.fandom.com/wiki/Ch%C5%8Dmei), [Gyūki](https://naruto.fandom.com/wiki/Gy%C5%ABki).
+
+
+## Eventos e controles atuais · 07/11/2026
+
+Uma Shuriken Amaldiçoada e um Corpo de Ninja são posicionados aleatoriamente por zona. E inicia a interação. A primeira concede +8% de dano total e uma shuriken, além da emboscada. O corpo exige eliminar a onda antes de conceder um nível. O nível mantém o pool normal de habilidades e pílulas. No Genin da zona 1 as ondas têm quatro e cinco ninjas, respectivamente. Quantidade cresce por √dificuldade e +2 por zona adicional. O HP usa a escala de inimigos/desafios da run. Saves preservam corpos ainda ativos, cuja onda pode reiniciar ao retomar.
+
+Tab mostra o mapa rápido e permite continuar andando. P fecha a ficha pela mesma tecla e solicita a captura do ponteiro durante essa ação. A oficina dos sapos tem um uso compartilhado entre Fundir e Combinar por zona. O mercador atual oferece quatro itens e mantém a cotação do estoque até a próxima atualização. Isso substitui a antiga troca de armas por cinco Ryu.
+
+## Atlas regionais e retomada · 07/11/2026
+
+IMPLEMENTADO: Areia, Pedra e Névoa têm atlas de chão próprios e construções/marcos regionais no atlas `regional-landmarks-v1.png`. Areia inclui residência circular e entrada entre rochedos; Pedra inclui torres e ponte de pedra; Névoa inclui residência cilíndrica e passagem úmida. Referências de arquitetura: https://naruto.fandom.com/wiki/Sunagakure , https://naruto.fandom.com/wiki/Kazekage%27s_Office , https://naruto.fandom.com/wiki/Iwagakure e https://naruto.fandom.com/wiki/Kirigakure . As construções são interpretações originais para o atlas. Validação visual ingame dos quatro mapas: PENDENTE.
+
+Esc fecha a pausa e permite continuar a simulação sem clique extra; a captura do ponteiro é solicitada na interação seguinte com WASD quando o navegador a adia.

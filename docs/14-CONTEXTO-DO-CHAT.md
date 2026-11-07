@@ -433,3 +433,186 @@ Ultimate: parcial — as versões já davam Ultimate própria desde o Nv. 1, com
 **Resposta**
 
 A Bolsa já tinha botões de raridade, mas com uma raridade por vez e cor só no ponto; o plano tinha só um seletor. Criei o componente `RarityFilter`, colorido, combinável e com contagem, e o usei no plano (aba Itens) e na Bolsa. As cores foram para variáveis em `src/rarity.css`, com os valores que o jogo já usava. Testes de navegador, `tsc`, build, `verify-rules` e `verify-runtime` passaram.
+
+## Auditoria do GitHub e folhas de ação dos usuários de Susanoo
+
+**Pedidos**
+
+> Leia os arquivos do github e da pasta e veja se estão iguais e atualizados, leia os .md para saber onde estamos.
+>
+> Depois leia e siga, atualize as sprite sheets, pegue o susano e a referência que ele usou e aplique para todos. Mostre a fila de a fazeres para decidirmos o que é mais importante após revisar onde estamos.
+
+**Resposta**
+
+Na conferência inicial, `HEAD` e `origin/main` apontavam para `2f7d7e9`. A pasta compartilhada tinha trabalho local em andamento, inclusive a integração de Susanoo e partículas WebGL. As cinco folhas de ataque, pulo e dash (Sasuke Rinnegan, Itachi Akatsuki e três Madaras) foram integradas numa cópia de trabalho separada. O Edge headless validou as 80 células e as poses no controlador compartilhado; as suítes de regras e de runtime passaram. A referência usada para revisar o efeito é a [Narutopedia](https://naruto.fandom.com/wiki/Susanoo). Restam a integração visual por lançador e a verificação em partida, prévia e apoio assim que a base WebGL estiver disponível em main. A [fila de pendências](13-PENDENCIAS-PARA-CONTINUAR.md) separa animação, combate, balanceamento e desempenho.
+
+**Pergunta complementar**
+
+> Você revisou a animação de todos os personagens?
+
+**Resposta**
+
+O elenco tem 56 versões com caminhada direcional. Neste lote, cinco receberam folhas completas de ação e passaram no teste do controlador no Edge. Contando a cobertura anterior, dez versões têm folhas para ataque, pulo e dash. Nove ainda precisam de quadros próprios de pulo e dash, e outras 37 precisam dos três tipos de ação. A revisão visual de cada versão em partida e como ajudante permanece na fila.
+
+**Orientação permanente**
+
+> Sempre coloque as perguntas e respostas lá
+
+**Resposta**
+
+Registrar em `docs/14-CONTEXTO-DO-CHAT.md` os pedidos, as perguntas, as respostas e as orientações complementares de cada rodada, junto com a documentação correspondente quando houver mudanças no projeto.
+
+## Dash, arte de Sakura e Gaara, selo do Naruto e conta local
+
+**Pedidos e complementos**
+
+> ah, o dash para trás com o A está errado tem que inverter o boneco
+>
+> a sakura ainda estava bugada a animação, deixe todos os sprites revisados
+>
+> Se logado na conta, não aparecer mais jogar como Convidado em jogar... aparecer iniciar Missão, apenas mostrar convidado se a conta não for logado, ai aparecer guest...numeral crescente para contas criadas. (lembrando ser possível, simplesmente clicar em criar conta e atribuir a conta guest a um login/senha/email para salvar o conteúdo já conquistado.
+>
+> Você vai usar o naruto wiki, para saber quais vilas, elementos, organizações os ninjas do nosso jogo farão parte e montar os buffs de combo/passivas únicas para cada.
+>
+> Os ninjas médicos sempre darão cura, coleta, ninjas mais ofensivos, darão taijutsu, genjutsu, ninjutsu, seja qual for a propriedade/ataques que eles utilizem.
+>
+> Shurikens amaldiçoadas devem dar buff, mas acontecer emboscadas.
+>
+> Corpos de Ninja no chão, também são emboscadas, completa-los da 1 nível, progressivo pela dificuldade que estamos/zona.
+>
+> Faça em ordem, me mostre como esta a fila
+>
+> Você viu que separawmos os personagens ne? agora eles não evoluem mais, são únicos. Referencias para fazer/refazer o Gaara
+>
+> A cabaça dele estava muito feia.
+>
+> me mostre o naruto e posições de mãos
+>
+> tem uma posição que você fez ele arremessando algo, quero que troque por essa referencia
+>
+> faça para todos os personagens essa substituição, ok?
+>
+> consegue fazer unicamente essa posição para todos eles?
+>
+> Conte quantos personagens jogáveis temos agora, quantos estão com passivas/habilidades/ajudantes/movimentação completamente prontas e para implementar/implementadas.
+>
+> Você tem todas as movimetnações feitas para eles, certo? completinhas, revisadas.
+>
+> posição do gaara ter uma única pode ser quando ultar, caixão de areia
+>
+> Referencias para o Gaara posições de mãos
+>
+> TODOO o restante pode seguir as posições/movimentações iguais ao naruto
+>
+> ele tem que ter dash para a esquerda também viu? todos os personagens...
+>
+> gaara também pode flutuar na areia, se conseguir fazer ele voar seria maneiro
+>
+> como esta a fila?
+>
+> lembre-se que o naruto é a padronização de movimentação para quase todo o resto, exceto: lee, guy, gaara... por enquanto
+>
+> voce nao pode esquecer tem até uma skill para isso, você atualizou depois dos reparos nas movimentações ?
+>
+> O que esta fazendo agora?
+>
+> Deixe a movimentação de WASD mais fluído também
+>
+> o dash em si seria para todos os personagens, ok?
+
+**Respostas e andamento**
+
+- O dash de todo jogável usa a direção capturada ao apertar Shift, inclusive se soltar a tecla em seguida. A folha e a pose procedural espelham para a esquerda. WASD suaviza a troca de direção sem reduzir a velocidade na diagonal. A skill de movimentação registra o padrão Naruto e as exceções Lee, Guy e Gaara.
+- Sakura Genin, Shippuden e Byakugou receberam folhas de soco, pulo e dash. As três versões do Gaara receberam cabaça de dois bojos em repouso e em movimento, palma aberta no Caixão de Areia e na Ultimate e folhas de caminhada e ações. Kazekage e Aliança flutuam por até 0,9 s se mantiverem Espaço pressionado no salto.
+- Naruto Academia, Genin, Shippuden e Manto da Kyuubi têm folha de selo cruzado para os jutsus Bunshin, com a pose do Totem e a prévia reaproveitando o mesmo padrão. Arremesso de arma continua associado aos golpes que arremessam armas. A aplicação do selo no restante do elenco está na fila.
+- Existem 56 versões independentes de 24 famílias. Todas têm passiva jogável, kit, Ultimate e caminhada. Após este lote, 16 têm folha que cobre ataque, pulo e dash, nove ainda precisam de pulo e dash dedicados e 31 precisam dos três. A auditoria visual individual em partida e como ajudante segue pendente. Na base publicada anterior havia passiva de apoio para 23 das 24 famílias; o Asuma e as versões avançadas estavam na cópia local em andamento do Claude.
+- A tela inicial mostra Guest numerado fora da conta e Iniciar Missão quando conectado. Criar conta com login, e-mail e senha promove o convidado com seu progresso. O cadastro e a numeração valem neste navegador.
+- A fila reúne a revisão por fase das afiliações usando a Narutopedia, os papéis dos ajudantes, as shurikens amaldiçoadas, os corpos com emboscada e a validação do restante do elenco.
+
+O Edge confirmou o dash para ambos os lados com soltura imediata da tecla, o selo do Naruto e o cadastro com migração e retorno ao perfil. Em partidas separadas, Gaara Kazekage flutuou e desceu ao soltar Espaço, e Sakura Byakugou trocou a folha de caminhada pela de pulo.
+
+
+## Continuação · 07/11/2026
+
+### Pedidos do usuário
+
+> as vezes aperto WASD e fica meio travada a movimentação, é pra ser continuo apertou o botão andou, apertou outro, mudou direção/andou.
+
+> COmo esta a fila?
+
+> Siga trabalhando
+
+> O mercador de itens, não deve aumentar o preço ao comprar os itens do pool na hora de escolher. Ele tem que aumentar o valor da roletada e os novos itens que ir aparecendo. Se eu decidir não comprar nada, não aumenta se eu clicar novamente para ver os mesmo itens, só aumenta ao clicar na roleta, os itens devem seguir uma precificação de acordo com a raridade e o scale de valor ao ir comprando também.
+
+> ao apertar tab, ele esta abrindo as estatisticas como se fosse o P e pausando, remova isso... Também toda vez que vejo a ficha do personagem tenho que clicar para soltar o jogo novamente, deve ser fluido, saiu da ficha ja continua jogando
+
+> Nos sapos, deve ter 2 abas, fundir/combinar esse hud está ridiculo de feio, conserte mostrando os icones das habilidades, deixando bem mais bonito
+
+> Só deve ser possivel fundir/combinar 1x por zona
+
+### Respostas e implementação
+
+A fila segue com a validação de controles, economia, oficina e eventos. O WASD passa a reagir diretamente, com prioridade à última tecla oposta pressionada. Tab abre o mapa rápido sem pausar. Fechar P solicita a captura do ponteiro para continuar a missão.
+
+Os preços do estoque atual do mercador ficam fixos ao comprar e ao reabrir. Compras acumuladas entram na cotação do próximo estoque. Atualizar o estoque aumenta o preço da próxima atualização e das novas ofertas, considerando também raridade e tempo de run.
+
+A oficina tem duas abas, com os ícones das técnicas de cada par. Fundir ou Combinar consome o mesmo uso único por zona, salvo na run e renovado ao avançar. Ver os pares ou trocar de aba preserva o uso.
+
+As afiliações por fase, os bônus de apoio para as 56 versões e as emboscadas da shuriken e do corpo foram implementados nesta continuação. A revisão de animação do restante do elenco continua pendente.
+
+As alterações são feitas no worktree ShinobiBonk_Codex_Arte. A pasta ShinobiBonk_Codex_Projeto_Completo conserva rascunhos locais do Claude e pode estar atrás do GitHub.
+
+
+**Validação final desta continuação** — 56 verificações no Edge headless passaram, incluindo as duas abas, persistência do limite na run salva, novo uso por zona, mercador e retomada de P. Sem erros JavaScript ou assets 404. TypeScript, build e regras passaram. A revisão completa das animações continua pendente.
+
+
+## Pergunta sobre o restante da fila · 07/11/2026
+
+> O que resta fazer?
+
+### Resposta
+
+O lote atual foi publicado na main do GitHub em badcee4. Oficina com uso único compartilhado por zona, preços do mercador, WASD, Tab/P, afiliações e eventos passaram pela validação descrita acima.
+
+1. Integrar as duas linhas de trabalho. A pasta ShinobiBonk_Codex_Projeto_Completo está em c41bd79, com trabalho parcial do Claude salvo na branch wip/parcial-subagentes-07-11. A main remota e o worktree ShinobiBonk_Codex_Arte seguem os commits publicados pelo Codex. É preciso conciliar ambas para a pasta principal reunir os dois lotes.
+2. Finalizar e revisar as ações de todas as 56 versões. Há 16 versões com folhas cobrindo ataque/pulo/dash, nove com pulo/dash dedicados pendentes e 31 com os três tipos de ação pendentes. Todas têm caminhada. Ainda é necessária auditoria visual por versão e no papel de ajudante.
+3. Aplicar os selos de mãos ao restante do elenco e refinar as poses especiais de Gaara, Lee e Guy. Naruto tem quatro versões do selo cruzado.
+4. Integrar e validar o rascunho WebGL de Susanoo por lançador, incluindo suporte, Ultimate e prévia. Refinar efeitos por técnica e buscar sons com licença adequada.
+5. Recalibrar dano e atributos por nível, HP/defesa dos monstros/chefes, Sorte, economia, bônus de ajudantes e emboscadas. As tabelas de proposta permanecem em docs/15.
+6. Validar terreno, bordas, colisões e câmera em mais climas. Medir desempenho de hordas em GPU real. A suíte headless usa renderização por software.
+7. Completar testes prolongados de uma run comum, missões de desbloqueio, três zonas, bijuu, recompensas e ranking. Cadastro com servidor e hospedagem da alpha seguem como etapas posteriores, pois o perfil atual é local.
+
+A fila completa continua em docs/13-PENDENCIAS-PARA-CONTINUAR.md.
+
+## Continuação e publicação solicitada · 07/11/2026
+
+### Pedidos complementares do usuário
+
+> faça
+>
+> ponto 5. já existe no jogo
+> 6. parece estar ok
+> 7. Faça 1, 2, 4, 5, 7
+>
+> Lembrando os mapas devem ter o mesmo padrão de chão, construção do primeiro mapa, ou seja o atlas, exemplo liberei o mapa da areia e o chão não está polido... esta aquele mapa antigo, conserte e conserte pra todos.
+>
+> As construções e coisas marcantes também!
+>
+> AO SAIR DO ESC, ainda o jogo fica pausado se não clicar
+>
+> Continue o trabalho
+>
+> E continue com a fila de trabalho
+>
+> o que voce esta fazendo?
+>
+> Você precisa enviar para atualizar... envie logo, depois você atualiza
+
+### Respostas e estado real
+
+Codex informou que está conciliando os lotes do Claude e Codex, corrigindo Esc, integrando os atlas dos mapas e continuando as animações. Informou explicitamente que a revisão completa das 56 versões ainda não terminou e que este lote ainda não havia sido enviado ao GitHub naquele momento. Após o pedido de envio imediato, respondeu: “Vou enviar este lote agora, com a documentação indicando o que ainda falta validar. Depois continuo as atualizações e a fila.”
+
+IMPLEMENTADO: nove folhas novas de pulo/dash (três Narutos, três Lees, três Guys), três folhas completas de ações (Sasuke Shippuden, Hashirama base/Sábio), chão de Areia/Pedra/Névoa e nove construções/marcos regionais. Folhas conectadas ao controlador compartilhado; auditoria visual completa PENDENTE. A retomada por Esc passou no fluxo automatizado; o relatório final da suíte será atualizado ao concluir. O balanceamento existente foi preservado conforme a correção do usuário. O envio solicitado agora é uma entrega incremental; as demais pendências continuam registradas em docs/13.
+
+
+Validação concluída antes do envio: 58 verificações no navegador passaram, sem erros JavaScript nem assets 404; inclui Esc sem clique, Tab, mercador, oficina, ajudantes por versão e emboscadas. TypeScript, build e regras passaram. A medição de desempenho em renderização por software não comprova desempenho em GPU real.

@@ -22,7 +22,7 @@ const EVENT_STYLE: Record<string, { glyph: string; tone: string }> = {
   orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: 'guardian-bijuu', tone: 'guardian' }, challenge: { glyph: '⛩️', tone: 'challenge' }, altar: { glyph: '🛕', tone: 'altar' },
   trader: { glyph: '⚖️', tone: 'shop' }, ichiraku: { glyph: '🍜', tone: 'shop' }, 'sapos-sabios':{glyph:'🐸',tone:'shop'},
 };
-const PICKUP_LABEL: Record<string, string> = { kunai: 'Kunai (pago em Ryu)', shuriken: 'Shuriken (pago em Ryu)', ryu: 'Bolsa de Ryu', sealDrop: 'Kunai de recompensa grátis' };
+const PICKUP_LABEL: Record<string, string> = { kunai: 'Kunai (pago em Ryu)', shuriken: 'Shuriken (pago em Ryu)', ryu: 'Bolsa de Ryu', sealDrop: 'Kunai de recompensa grátis', cursedShuriken:'Shuriken Amaldiçoada', ninjaBody:'Corpo de ninja' };
 
 const route = (id: string | null) => window.dispatchEvent(new CustomEvent('shinobi-route', { detail: { id } }));
 const meters = (n: number) => `${Math.max(0, Math.round(n))} m`;
@@ -54,8 +54,8 @@ export function MapPlayerIcon({heading=0}:{heading?:number}) {
     style={{transform:`rotate(${heading}rad)`}} draggable={false}/>;
 }
 export function PickupIcon({ p, size }: { p: Pickup; size: 'map' | 'mini' }) {
-  return <span className={`mk mk-${size} tone-pickup${p.kind === 'sealDrop' ? ' free' : ''}`}>
-    {p.kind === 'ryu' ? <em>🪙</em> : <img src={'/assets/icons/' + (p.kind === 'shuriken' ? 'shuriken' : 'kunai') + '.svg'} alt={p.kind} />}
+  return <span className={`mk mk-${size} tone-pickup${p.kind === 'sealDrop' ? ' free' : ''}${p.kind === 'cursedShuriken' || p.kind === 'ninjaBody' ? ' tone-danger' : ''}`}>
+    {p.kind === 'ryu' ? <em>🪙</em> : p.kind === 'ninjaBody' ? <em>💀</em> : <img src={'/assets/icons/' + (p.kind === 'shuriken' || p.kind === 'cursedShuriken' ? 'shuriken' : 'kunai') + '.svg'} alt={p.kind} />}
   </span>;
 }
 

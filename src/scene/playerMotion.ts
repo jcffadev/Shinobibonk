@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { ASUMA_ATLAS, formAt } from '../game/evolution';
 import { createPlayerPose } from './playerPose';
-import { actionArt, directionalArt } from '../game/directionalArt';
+import { actionArt, acrobaticsArt, directionalArt, handSealArt } from '../game/directionalArt';
 import { familyOf } from '../game/heroes';
 
 export type StrikePose = 'punch' | 'kick';
@@ -50,6 +50,11 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   let directionMap: THREE.Texture | undefined;
   let actionSheet: ReturnType<typeof actionArt>;
   let actionMap: THREE.Texture | undefined;
+  let acrobaticsSheet:ReturnType<typeof acrobaticsArt>;
+  let acrobaticsMap:THREE.Texture|undefined;
+  let sealSheet: ReturnType<typeof handSealArt>;
+  let sealMap: THREE.Texture | undefined;
+  let handSign = false;
   let strike: StrikePose | undefined;
   const directionTextures = new Map<string, THREE.Texture>();
   const animatedMaps = new Set<THREE.Texture | null>([walk, diagonal, throwing, asuma]);
@@ -73,12 +78,14 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   }) : null;
   const trailHistory: THREE.Vector3[] = [];
   return {
-    attack: (weapon = false, left?: boolean, special = false, pose?: StrikePose) => {
+    attack: (weapon = false, left?: boolean, special = false, pose?: StrikePose, seal = false, back?: boolean) => {
       if (ultimate && attack > 0 && !special) return;
       attack = special ? .55 : weapon ? .25 : .22;
       ultimate = special;
       throwingWeapon = weapon;
       strike = pose;
+      handSign = seal;
+      if (back !== undefined) rear = back;
       if (left !== undefined) mirror = left;
     },
     state: () => state,
@@ -93,15 +100,20 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         actionSheet = actionArt(family, form);
         directionMap = directionSheet && sheetTexture(directionSheet.path);
         actionMap = actionSheet && sheetTexture(actionSheet.path);
+        acrobaticsSheet=acrobaticsArt(family,form);
+        acrobaticsMap=acrobaticsSheet&&sheetTexture(acrobaticsSheet.path);
+        sealSheet = handSealArt(family, form);
+        sealMap = sealSheet && sheetTexture(sealSheet.path);
       }
       attack = Math.max(0, attack - dt);
       stepTime = walkingInput ? stepTime + dt : 0;
       hurt = Math.max(0, hurt - dt);
-      if (walkingInput && !attack) { mirror = leftward; rear = backwardView; }
+      if (sliding || (walkingInput && !attack)) { mirror = leftward; rear = backwardView; }
       // Pulo e dash têm prioridade sobre o dano: no meio da horda o jogador recebe golpes o tempo todo e o estado 'hurt'
       // (0,23 s a cada acerto) escondia os quadros de pulo/dash do Naruto Academia. O dano continua visível pela tinta vermelha.
-      state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : hurt > 0 ? 'hurt'
-        : attack > 0 ? (ultimate ? 'ultimate' : 'attack') : walkingInput ? 'walk' : 'idle';
+      const showAttack = attack > 0 && (actionSheet?.kind === 'full' || hurt === 0);
+      state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : showAttack ? (ultimate ? 'ultimate' : 'attack')
+        : hurt > 0 ? 'hurt' : walkingInput ? 'walk' : 'idle';
       const academy = hasWalkAtlas && formAt(heroId, level).level === 1;
       const casting = academy && state === 'attack' && throwing?.image;
       const walkAtlas = diagonalInput && diagonal?.image ? diagonal : walk;
@@ -126,18 +138,32 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const directedCast = !!directionSheet?.cast && (state === 'attack' || state === 'ultimate');
       const useDirection = !!directionMap?.image && (state === 'walk' || directedCast || state==='jump' || state==='dash');
       const attacking = state === 'attack' || state === 'ultimate';
-      const acrobatics = actionSheet?.kind === 'acrobatics' && (state === 'jump' || state === 'dash');
-      const useAction = !!actionMap?.image && (acrobatics || (attacking && (actionSheet?.kind !== 'taijutsu' || !!strike) && !(academy && actionSheet?.kind==='acrobatics')));
-      if (useAction && actionMap && actionSheet) {
-        const castFrame = Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4));
+      const useSeal = attacking && handSign && !!sealMap?.image;
+      if (useSeal && sealMap && sealSheet) {
+        const progress = 1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22);
+        const frame = (rear ? 2 : 0) + Number(progress >= .22);
+        sealMap.repeat.set(mirror ? -.25 : .25, .25);
+        sealMap.offset.set((frame + Number(mirror)) / 4, (3 - sealSheet.row) / 4);
+      }
+      const poseSheet=(state==='jump'||state==='dash')&&acrobaticsSheet?acrobaticsSheet:actionSheet;
+      const poseMap=(state==='jump'||state==='dash')&&acrobaticsSheet?acrobaticsMap:actionMap;
+      const acrobatics = poseSheet?.kind === 'acrobatics' && (state === 'jump' || state === 'dash');
+      const fullAction = poseSheet?.kind === 'full' && (attacking || state === 'jump' || state === 'dash');
+      const useAction = !!poseMap?.image && (fullAction || acrobatics || (attacking && (poseSheet?.kind !== 'taijutsu' || !!strike) && !(academy && poseSheet?.kind==='acrobatics')));
+      if (useAction && poseMap && poseSheet) {
+        const progress = 1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22);
+        const castFrame = family === 'gaara' && (ultimate || handSign) && progress >= .35 && progress < .84
+          ? 2 : Math.min(3, Math.floor(progress * 4));
         const frame = state === 'jump' ? Number(jumpProgress > .22 && jumpProgress < .77)
           : state === 'dash' ? 2 + Number(slideProgress > .7) : castFrame;
-        const secondRow = (acrobatics && ('directional' in actionSheet ? backwardView : true)) || (actionSheet.kind === 'cast' && rear) || (actionSheet.kind === 'taijutsu' && strike === 'kick');
-        const flip = acrobatics ? leftward : mirror;
-        const rows=actionSheet.rows??2;
-        const row=(actionSheet.firstRow??0)+Number(secondRow);
-        actionMap.repeat.set(flip ? -.25 : .25, 1/rows);
-        actionMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
+        const secondRow = (acrobatics && ('directional' in poseSheet ? backwardView : true)) || (poseSheet.kind === 'cast' && rear) || (poseSheet.kind === 'taijutsu' && strike === 'kick');
+        const flip = acrobatics || (fullAction && !attacking) ? leftward : mirror;
+        const rows=poseSheet.rows??2;
+        const row = fullAction
+          ? (poseSheet.firstRow ?? 0) + (attacking ? Number(rear) : 2 + Number(backwardView))
+          : (poseSheet.firstRow ?? 0) + Number(secondRow);
+        poseMap.repeat.set(flip ? -.25 : .25, 1/rows);
+        poseMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
       }
       if (useDirection && directionMap && directionSheet) {
         const frame = directedCast ? Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4))
@@ -147,9 +173,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
         directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
       }
-      const usesSheet = useAsuma || useAction || useDirection || !!casting || !!walking;
-      posePath = useAction ? actionSheet!.path : useDirection ? directionSheet!.path : '';
-      sprite.material.map = useAsuma ? asuma : useAction ? actionMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
+      const usesSheet = useSeal || useAsuma || useAction || useDirection || !!casting || !!walking;
+      posePath = useSeal ? sealSheet!.path : useAction ? poseSheet!.path : useDirection ? directionSheet!.path : '';
+      sprite.material.map = useSeal ? sealMap! : useAsuma ? asuma : useAction ? poseMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
       sprite.material.alphaTest = usesSheet ? .55 : .18;
       const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.13 : 0;
       const lift = state === 'jump' ? Math.sin(Math.PI*jumpProgress)*.16 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.065 : 0;

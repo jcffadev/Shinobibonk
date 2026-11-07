@@ -224,3 +224,10 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 - Clipe fornecido pelo usuário (2:00 de arquivo): Gastly Nv. 1 e 33 de Sorte no início; ~0:27 Nv. 2 / 10 abates; ~0:59 Nv. 4 / 33; 1:26 Nv. 6 / 63 / 4.122 de dano total. O golpe inicial fica perto de 38. Isso orientou menor pressão no começo do Genin e ganho progressivo pelo kit. O trecho cobre a abertura.
 - Nas ofertas, o peso da Sorte vai de 20% a 100% em 150 s. Bloqueio pré-missão de técnicas usa `floor(pool aprendível × 0,6)` por shinobi e protege o ataque inicial. Pílulas ficam disponíveis. O Treinamento com Jiraiya exige planejar antes de marcar a estrela e concede ×1,15 a até quatro técnicas.
 - Fusão consome dois ataques e cria uma técnica de área nível 1 com o dobro da média de poder, afixos somados e as duas naturezas quando distintas. Combinação ocupa um espaço e mantém os dois ataques, com ×1,5 para cada. As receitas ficam no save da missão.
+
+
+## Cotação do mercador · 07/11/2026
+
+O estoque de quatro ofertas guarda seus preços. Comprar remove somente a oferta comprada. Reabrir conserva estoque e preços.
+
+A cotação de um novo estoque usa base por raridade (45/65/95/145/220 Ryu) × 1,35^compras × 1,12^atualizações × 1,15^minutos inteiros. O preço final de cada oferta fica salvo. Atualizar custa arredondado(20 × 1,5^atualizações × (1 − desconto)), com desconto máximo de 40%. O custo da atualização cresce ao usá-la. Novas ofertas são sorteadas apenas nessa atualização. Essas regras substituem a descrição antiga de venda de armas neste documento.

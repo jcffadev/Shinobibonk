@@ -1,11 +1,11 @@
 import type { Bonuses, StatKey } from './catalog';
 import { NPC_RULES } from './npcs.ts';
-import { HERO_VERSIONS, versionStep } from './heroes.ts';
+import { HEROES, familyOf, familyVersions, type School } from './heroes.ts';
 
 /**
  * Buff passivo único que cada shinobi dá ao grupo quando é ajudante (selado na run).
  * Escalam com a força dos buffs de suporte (`allyBuff`: Estandarte da Aliança +40%) e com a AFINIDADE do ajudante.
- * Médicos (Tsunade, Sakura) e Hashirama curam; ofensivos dão o tipo de dano/atributo que usam.
+ * Médicos dão cura e coleta. Os demais acrescentam um bônus da escola principal do próprio kit.
  * Valores são balanceamento provisório.
  */
 export type AllyBuff = { title: string; bonuses: Bonuses };
@@ -17,7 +17,7 @@ export const ALLY_BUFFS: Record<string, AllyBuff> = {
   madara: { title: 'Pressão Uchiha', bonuses: { crit: .06 } },
   hashirama: { title: 'Células Senju', bonuses: { regen: 1.2 } },
   sasuke: { title: 'Chakra de Raio', bonuses: { element: .15 } },
-  sakura: { title: 'Ninjutsu Médico', bonuses: { regen: 1 } },
+  sakura: { title: 'Controle de Chakra', bonuses: { normal: .10 } },
   kakashi: { title: 'Ritmo de Jonin', bonuses: { attackSpeed: .12 } },
   itachi: { title: 'Ilusão Persistente', bonuses: { status: .12 } },
   minato: { title: 'Passo Relâmpago', bonuses: { move: .12 } },
@@ -34,22 +34,34 @@ export const ALLY_BUFFS: Record<string, AllyBuff> = {
   tobirama: { title: 'Percepção Sensorial', bonuses: { pickupFlat: 1.5 } },
   kankuro: { title: 'Veneno de Marionete', bonuses: { dot: .2 } },
   guy: { title: 'Portões Abertos', bonuses: { normal: .1, move: .06 } },
-  // Faltava (06/11/2026): Asuma não tinha buff de ajudante.
   asuma: { title: 'Lâminas de Chakra', bonuses: { normal: .1, area: .06 } },
   // NPC não jogável (evento da Iruka, src/game/npcs.ts): entra já com a passiva em força máxima.
   iruka: { title: 'Lições da Academia', bonuses: { exp: NPC_RULES.irukaAllyExp } },
 };
 
-/**
- * Versões avançadas como ajudante (06/11/2026): o buff é o da FAMÍLIA, escalado pela versão (+25% por passo:
- * Naruto Shippuden = Vontade do Fogo ×1,5). O título ganha o nome da fase. Projéteis inteiros não escalam (Tenten fica +1).
- */
 export const ALLY_VERSION_SCALE = .25;
-for (const version of HERO_VERSIONS) {
-  const base = ALLY_BUFFS[version.family!]; if (!base) continue;
-  const scale = 1 + ALLY_VERSION_SCALE * versionStep(version.id), bonuses: Bonuses = {};
-  for (const [key, value] of Object.entries(base.bonuses)) bonuses[key as StatKey] = key === 'projectiles' ? value as number : Math.round((value as number) * scale * 1000) / 1000;
-  ALLY_BUFFS[version.id] = { title: base.title + ' · ' + version.title, bonuses };
+const SCHOOL_STAT = { Taijutsu: 'normal', Ninjutsu: 'element', Genjutsu: 'genjutsu' } as const;
+const mainSchool: Record<string, School> = { itachi: 'Genjutsu', shikamaru: 'Genjutsu' };
+for (const hero of HEROES) {
+  const family = familyOf(hero.id);
+  const base = ALLY_BUFFS[family];
+  const step = familyVersions(family).findIndex(v => v.id === hero.id);
+  const medical = family === 'tsunade' || family === 'sakura' && step > 0;
+  const bonuses = { ...base.bonuses };
+  let title = base.title;
+  if (medical) {
+    if (family === 'sakura') { delete bonuses.normal; title = 'Ninjutsu Médico'; }
+    bonuses.regen ??= 1;
+    bonuses.pickupFlat = 1;
+  } else {
+    const schools = hero.techniques.filter(t => !t.setup).map(t => t.school);
+    const counts = schools.reduce((out, school) => (out[school]++, out), { Taijutsu: 0, Ninjutsu: 0, Genjutsu: 0 });
+    const school = mainSchool[family] ?? schools.reduce((best, candidate) => counts[candidate] > counts[best] ? candidate : best, schools[0] ?? 'Ninjutsu');
+    bonuses[SCHOOL_STAT[school]] ??= .08;
+  }
+  const scale = 1 + ALLY_VERSION_SCALE * step;
+  for (const key of Object.keys(bonuses) as StatKey[]) bonuses[key] = key === 'projectiles' ? bonuses[key] : Math.round(bonuses[key]! * scale * 1000) / 1000;
+  ALLY_BUFFS[hero.id] = { title: step ? title + ' · ' + hero.title : title, bonuses };
 }
 
 const pct = (v: number) => `${Math.round(v * 1000) / 10}%`.replace('.', ',');
@@ -61,6 +73,7 @@ const LABEL: Partial<Record<StatKey, (v: number) => string>> = {
   critDamage: (v) => `+${pct(v)} dano crítico`,
   regen: (v) => `+${num(v)} HP/s de cura`,
   element: (v) => `+${pct(v)} dano de ninjutsu`,
+  genjutsu: (v) => `+${pct(v)} dano de genjutsu`,
   normal: (v) => `+${pct(v)} dano de taijutsu`,
   attackSpeed: (v) => `+${pct(v)} velocidade de ataque`,
   projectileSpeed: (v) => `+${pct(v)} velocidade de projétil`,

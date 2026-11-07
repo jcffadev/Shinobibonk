@@ -4,6 +4,15 @@ import { MAP_SIZE } from '../game/worldScale';
 
 export const RENDERED_GROUND_SIZE = MAP_SIZE + 180;
 export const trailX = (z: number) => Math.sin(z * .09) * 5;
+export const REGIONAL_PLACES = [
+  {x:0,z:-36,w:14,h:12,column:0},
+  {x:34,z:18,w:18,h:13,column:1},
+  {x:-32,z:-23,w:12,h:10,column:2},
+  {x:-10,z:-15,w:6,h:6,column:2},
+  {x:10,z:-18,w:6,h:6,column:2},
+  {x:-12,z:19,w:6,h:6,column:2},
+  {x:13,z:25,w:6,h:6,column:2},
+];
 const mound = (x: number, z: number, cx: number, cz: number, rx: number, rz: number, height: number) =>
   height * Math.exp(-(((x - cx) / rx) ** 2 + ((z - cz) / rz) ** 2));
 
@@ -24,7 +33,16 @@ export function groundHeight(map: GameMap['id'], x: number, z: number) {
     + mound(x, z, 48, -31, 16, 19, 12)
     + mound(x, z, -44, -42, 15, 17, 10)
     + ridge;
-  if (map !== 'folha') return hills + mound(x, z, 3, -26, 22, 11, 4.8);
+  if (map !== 'folha') {
+    let height=hills+mound(x,z,3,-26,22,11,4.8);
+    for(const place of REGIONAL_PLACES) {
+      const distance=Math.max(Math.abs(x-place.x),Math.abs(z-place.z));
+      const edge=place.w*.46;
+      const blend=THREE.MathUtils.smoothstep(distance,edge,edge+5);
+      height=THREE.MathUtils.lerp(3.5,height,blend);
+    }
+    return height;
+  }
   const monument = mound(x, z, 0, -45, 22, 17, 10);
   // Perto das estátuas, mantenha um topo largo sob toda a base do sprite.
   const pedestal = (center: number) =>
@@ -110,14 +128,14 @@ export function createGroundMaterial(map: GameMap) {
   const mask = new THREE.DataTexture(surfaces, size, size);
   mask.minFilter = mask.magFilter = THREE.LinearFilter;
   mask.needsUpdate = true;
-  const atlas = new THREE.TextureLoader().load('/assets/ground-materials-v1.png');
+  const atlas = new THREE.TextureLoader().load(map.id==='folha'?'/assets/ground-materials-v1.png':`/assets/ground-${map.id}-v2.png`);
   atlas.colorSpace = THREE.SRGBColorSpace;
   atlas.anisotropy = 4;
   const material = new THREE.MeshStandardMaterial({ map: texture, roughness: 1, flatShading: true });
   material.onBeforeCompile = shader => {
     shader.uniforms.terrainAtlas = { value: atlas };
     shader.uniforms.terrainMask = { value: mask };
-    shader.uniforms.leafPalette = { value: map.id === 'folha' ? 1 : 0 };
+    shader.uniforms.leafPalette = { value: 1 };
     shader.fragmentShader = `
       uniform sampler2D terrainAtlas;
       uniform sampler2D terrainMask;

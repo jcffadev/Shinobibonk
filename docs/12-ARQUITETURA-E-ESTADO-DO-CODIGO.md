@@ -6,9 +6,11 @@ Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 `directionalArt.ts` registra as folhas por shinobi e nível da forma. Os 24 shinobis jogáveis têm caminhada com quatro quadros de frente e quatro de costas por forma, com espelhamento em X. A pose parada continua usando o sprite de `portraitRegion`, referência para a caminhada. Nas folhas que reúnem formas, `firstRow` aponta para o primeiro quadro de frente da dupla de fileiras. A textura é carregada e reutilizada por caminho durante a missão. `terrainArt.ts` define a cadeia de montanhas fora da área jogável e o céu em gradiente. `choiceCount` concentra o teto de quatro ofertas. A lista da roleta exclui pílulas dos novos giros.
 
-O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o estado. `playerPose.ts` ajusta pernas e braços nos UVs da forma atual e mantém a câmera independente. `evolution.ts` aponta o Asuma para `public/assets/asuma-motion-v1.png`, folha original 4×4. A fila de recompensas fica em `GameCanvas.tsx` e aparece em `ItemTradeDialog.tsx`. O snapshot separa o total de inimigos (`enemyCount`) dos marcadores limitados do mapa (`enemies`).
+O cadastro local fica em `localProfile.ts`. Os perfis e verificadores PBKDF2 ficam no navegador. Ao trocar de perfil, os dados `sb_*` ativos são arquivados e os do perfil escolhido passam a ser os dados ativos. A criação de conta promove o Guest sem trocar os dados ativos.
 
-`actionArt` aponta para os atlases 4×2 de ações por forma. `playerMotion` seleciona a segunda fileira pela direção no Naruto Clássico, pela ação de pulo/dash no Sasuke inicial e pelo chute no Lee/Guy. `SavedRun.pillQuality` guarda somente o bônus extra de raridade, separado de `knownPills`. Saves anteriores sem o campo mantêm os níveis e seus bônus base.
+O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o estado. `GameCanvas` suaviza o ângulo de caminhada sem reduzir o comprimento do vetor. No dash, o vetor capturado ao acionar Shift orienta deslocamento, fileira e espelho. `playerPose.ts` ajusta pernas e braços nos UVs da forma atual e mantém a câmera independente. `evolution.ts` aponta o Asuma para `public/assets/asuma-motion-v1.png`, folha original 4×4. A fila de recompensas fica em `GameCanvas.tsx` e aparece em `ItemTradeDialog.tsx`. O snapshot separa o total de inimigos (`enemyCount`) dos marcadores limitados do mapa (`enemies`).
+
+`actionArt` aponta para os atlases de ações por forma. As folhas 4×4 (`kind: 'full'`) têm duas fileiras de conjuração e duas de pulo/dash, frente e costas em cada par. São usadas por Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. `playerMotion` seleciona a segunda fileira pela direção no Naruto Clássico, pela ação de pulo/dash no Sasuke inicial e pelo chute no Lee/Guy. `SavedRun.pillQuality` guarda somente o bônus extra de raridade, separado de `knownPills`. Saves anteriores sem o campo mantêm os níveis e seus bônus base.
 
 | Caminho | Responsabilidade |
 |---|---|
@@ -305,7 +307,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 ## Integração atual de preparação, combate e arte
 
 - `BuildPlanner` separa lista com rolagem do detalhe. `TechniquePreview` desenha alvos de treino no Three.js usando os efeitos do jogo, o controlador de poses e a sequência de Gamabunta. O detalhe traz status, chance/dano crítico inicial e recarga. `SkillIcon` usa atlas de famílias, retratos Sábios e ícone de Gamabunta.
-- `playerMotion` serve jogador, ajudantes, shinobis inimigos, clones e a prévia. Recebe o id da versão e usa as folhas da família na forma da versão. As folhas exclusivas de Naruto Academia, Sasuke Genin e Neji cobrem pulo/dash. As demais formas combinam folhas direcionais com pose procedural onde ainda faltam quadros próprios.
+- `playerMotion` serve jogador, ajudantes, shinobis inimigos, clones e a prévia. Recebe o id da versão e usa as folhas da família na forma da versão. As folhas exclusivas de Naruto Academia, Sasuke Genin, Neji, Sasuke Rinnegan, Itachi Akatsuki e Madara cobrem pulo/dash. Formas ainda sem folhas próprias combinam folhas direcionais com pose procedural onde ainda faltam quadros próprios.
 - `enemyRenderer` mantém corpos, contornos e avisos instanciados. A seleção de quadro é UV por instância. Projéteis inimigos usam sprites compartilhados, limite simultâneo e teste de colisão pelo segmento percorrido por quadro.
 - `gamabunta.ts` escolhe as quatro poses, emite óleo pela boca e inicia ignição no ponto-alvo. A animação e o impacto compartilham o mesmo relógio. Referência: [Fire Release: Toad Oil Flame Bullet](https://naruto.fandom.com/wiki/Fire_Release%3A_Toad_Oil_Flame_Bullet).
 - `techniqueMerge.ts` produz uma técnica a partir de duas receitas; as fusões e combinações são persistidas com os respectivos estados em `CampaignSave`. Combinação reutiliza as duas resoluções originais. Fusão combina naturezas e afixos.
@@ -314,3 +316,32 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 
 - `atlasEffects.ts` anima quatro quadros de Substituição e quatro da aura de Modo Sábio. A aura segue o jogador enquanto o setup está ativo. A prévia reutiliza as duas sequências.
 - `VillageEmblem` resolve nome original, abreviação e símbolo para seleção, suporte, missões e mapas. A chave portuguesa usada por `VILLAGE_COMBOS` permanece estável. [Símbolos da Narutopedia](https://naruto.fandom.com/wiki/Module%3AInfobox/icons)
+
+
+## Oficina, controles, mercador e eventos · 07/11/2026
+
+**IMPLEMENTADO**
+
+- Oficina dos Sapos Sábios com abas Fundir e Combinar, ícones das duas técnicas e ficha acessível pelo botão P. As duas operações compartilham um único uso por zona. Abrir, fechar ou trocar de aba conserva o uso. O consumo ocorre após a união válida.
+- O save guarda `campaign.sagesUsedZone`. Ao retomar, a zona usada continua bloqueada. Ao passar para outra zona, há um novo uso. Saves antigos com uniões e sem esse campo consideram o uso consumido na zona atual.
+- WASD responde imediatamente. Em teclas opostas sobrepostas, vence a última pressionada naquele eixo. Soltá-la retoma a outra ainda segurada. Diagonais mantêm velocidade normalizada.
+- Tab é reservado ao mapa rápido, com movimento e simulação ativos. P abre e fecha a ficha. Fechar a ficha por uma ação do usuário solicita a captura do ponteiro naquele mesmo evento.
+- O estoque atual do mercador conserva os preços ao comprar e ao reabrir. Cada novo estoque considera raridade, compras acumuladas, atualizações acumuladas e tempo. O preço da atualização sobe por uso, com desconto dos itens.
+- Cada zona sorteia uma Shuriken Amaldiçoada e um Corpo de Ninja. A shuriken concede +8% de dano total e chama emboscada. O corpo chama emboscada e concede um nível ao concluir, mantendo a escolha normal de level-up. O tamanho da onda cresce com dificuldade e zona. O +8% é calibração provisória do protótipo.
+- Afiliações filtram a versão representada. As 56 versões possuem bônus de suporte. Curadores recebem regeneração e coleta. Ofensivos recebem bônus de sua escola, preservando os demais efeitos próprios. Valores são originais do jogo e seguem sujeitos a balanceamento.
+
+**PENDENTE**
+
+A revisão visual individual de caminhada, ataque, pulo e dash de todas as 56 versões continua na fila. Este lote não cria novas folhas de ação.
+
+### Arquivos e estado
+
+`src/ui/SagesWorkshop.tsx` e `sages-workshop.css` renderizam a oficina. O evento `shinobi-sages-tab` solicita os pares da aba ativa. O consumo é protegido em `applyMerge`, e a operação válida salva imediatamente. `merchant.prices` guarda as cotações por posição do estoque. Saves anteriores recebem cotações uma vez ao abrir. `campaign.pendingLevels` preserva níveis ainda não apresentados. O corpo em combate pode reiniciar sua onda ao retomar, pois inimigos comuns não são serializados.
+
+## Integração e atlas · 07/11/2026
+
+`directionalArt.ts` separa as folhas de pulo/dash das folhas de ataque por versão; `playerMotion.ts` seleciona a folha por estado sem substituir as poses de lançamento. Novas ações completas: Sasuke Shippuden e Hashirama base/Sábio. Pulo/dash dedicados: Naruto Clássico/Shippuden/Kyuubi, três Lees e três Guys. O mesmo controlador atende ajudantes. Revisão visual de todas as versões: PENDENTE.
+
+`terrainArt.ts` usa atlas próprios de chão para Areia/Pedra/Névoa e plataformas suaves sob `REGIONAL_PLACES`; `GameCanvas.tsx` posiciona o atlas regional de nove construções/marcos. `scripts/pack-sprite-atlas.ps1` normaliza células por transparência, escala uniforme e alinhamento dos pés. Os assets são arte original gerada via ImageGen, sem download de sprites oficiais.
+
+Ao fechar Esc, a simulação depende de foco e ausência de painel, sem exigir captura imediata do ponteiro. O próximo WASD solicita a captura novamente. O Susanoo usa a família do lançador inclusive em técnicas de ajudantes.

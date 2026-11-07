@@ -20,11 +20,13 @@ Atalhos locais:
 - `node scripts/verify-rules.mjs` verifica as regras puras (elenco, técnicas, itens, crítico, raridade, atributos).
 - `scripts/verify-runtime.mjs` e `scripts/smoke-browser.mjs` rodam testes no navegador com Playwright e Microsoft Edge. Os caminhos de ambos estão fixados para este computador.
 
+O perfil local mostra um Guest numerado até o cadastro. Criar conta preserva o progresso do convidado e habilita **Iniciar Missão** no hub. A conta é armazenada no navegador.
+
 ## Estrutura
 
 O elenco atual tem 24 famílias de shinobis e 56 versões jogáveis separadas (ex.: Naruto Academia, Genin, Shippuden e Kyuubi), cada uma com kit, passiva e atributos da fase, folhas direcionais de caminhada e 97 técnicas no total. Cada versão nova é liberada por missão jogando com a anterior. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total da simulação.
 
-O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
+O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara têm folhas próprias de conjuração, pulo e dash em frente e costas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
 
 As técnicas combinam efeitos por natureza com visuais próprios para golpes como Rasengan, Chidori e Dragão de Água. A Bolsa da Missão tem filtros por raridade, e os visuais revisados de Chōmei e Gyūki aparecem na arena final.
 
@@ -118,3 +120,12 @@ Personagens e nomes do universo Naruto são propriedade de terceiros. Publicaç�
 Escolher o shinobi atualiza o painel, preservando a cena de fundo. A região é escolhida na tela de mapas e a arena 3D é criada ao começar. Na preparação, abra uma técnica para ver seus atributos base e uma demonstração com alvos. Cada shinobi pode bloquear até 60% das técnicas que pode aprender. Planejar marca a técnica para a missão. Com o Treinamento com Jiraiya, até quatro técnicas planejadas podem ser treinadas (+15% de dano). Pílulas podem ser planejadas. Exclusão de itens continua na Bolsa da Missão.
 
 Tab mostra o mapa enquanto pressionado, permitindo movimento. P ou **Ver build e ficha** abre a ficha sobre uma escolha pendente. Esc, perda de foco e F9 liberam a kunai do ponteiro. A escolha final devolve o controle ao jogo. **Reset de conta** confirma antes de limpar o progresso local.
+
+
+## Oficina e controles · 07/11/2026
+
+A oficina tem abas Fundir e Combinar, com um uso compartilhado por zona salvo na run. WASD muda a direção imediatamente, Tab mantém o mapa rápido sem pausa e P abre/fecha a ficha. O mercador conserva os preços do estoque atual ao comprar ou reabrir. Shurikens amaldiçoadas e corpos de ninja iniciam emboscadas por zona. Veja as regras e as limitações na documentação temática.
+
+## Lote integrado · 07/11/2026
+
+IMPLEMENTADO: integração dos rascunhos do Claude com a main do Codex; retomada da simulação ao fechar Esc sem clique adicional; atlas regionais de Areia, Pedra e Névoa com construções próprias; nove folhas novas de pulo/dash e três folhas completas de ações. TypeScript, build e regras passaram. A auditoria visual das 56 versões e dos mapas permanece PENDENTE. O balanceamento existente foi preservado.

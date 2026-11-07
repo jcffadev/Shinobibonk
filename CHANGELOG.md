@@ -13,6 +13,27 @@
 - **Mega Elites e ajudantes como versões**: a versão segue zona e dificuldade (Genin/zona 1 → inicial; Kage/zona 3 → mais avançada), com retrato, kit e buff da versão (buff da família +25% por passo). Sinergias e organizações por família; a equipe não repete família. Asuma ganhou buff de ajudante (Lâminas de Chakra), que faltava.
 - Testes: `verify-rules` (Ultimate no kit da fase, mapeamento zona/dificuldade, buffs e sinergias por família) e `verify-runtime` (Kage: Mega Elite Sasuke Shippuden, selamento de Gaara Kazekage, família repetida recusada, Irmãos da Areia com versões).
 
+## Oficina por zona, controles, mercador e emboscadas · 07/11/2026
+
+- Cria a oficina com abas Fundir/Combinar, ícones das técnicas, retrato dos sapos e acesso à ficha. As operações compartilham um uso por zona, consumido após a união válida e persistido no save.
+- Torna WASD imediato ao alternar teclas opostas. Reserva Tab para o mapa rápido e permite fechar P com retomada do ponteiro no mesmo comando.
+- Fixa os preços do estoque atual do mercador. Compras afetam a cotação de novos estoques. O custo da atualização cresce ao usar.
+- Acrescenta suporte por versão e afiliações por fase. Shuriken Amaldiçoada dá +8% dano total com emboscada. O Corpo de Ninja concede um nível após eliminar a onda.
+- **TESTADO** — TypeScript, build, regras e 56 verificações no Edge headless. A oficina conserva o bloqueio ao salvar/retomar e renova o uso na próxima zona. Sem exceções JavaScript e sem assets 404. Captura em `artifacts/sages-workshop.png`.
+- **PENDENTE** — auditoria visual de todas as ações das 56 versões e balanceamento em partida comum. O teste de desempenho usa renderização por software e não valida FPS em GPU real.
+
+
+
+## Dash, Sakura, Gaara, Naruto e perfis locais
+
+- Corrige a orientação do dash para todo o elenco e suaviza as mudanças de direção no WASD.
+- Adiciona folhas de ações às três Sakuras, redesenha a cabaça e as ações dos três Gaaras e aplica o selo cruzado às quatro versões de Naruto nos golpes Bunshin.
+- Adiciona perfis locais com Guest numerado e cadastro que preserva o progresso no mesmo navegador.
+
+## Folhas direcionais de ação para o elenco com Susanoo
+
+- Adiciona cinco folhas 4×4 de conjuração, pulo e dash em frente e costas para Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura, Rinnegan e Seis Caminhos. O controlador compartilhado seleciona as poses pela versão em jogo. As 80 células, direções e poses foram conferidas no Edge headless; build e suítes de regras e runtime passaram.
+
 ## Calibração com referência pública
 
 - Adiciona `docs/15-CALIBRACAO-REFERENCIA.md`, com a wiki pública do PokéBonk (level-up, vitaminas, Lab, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário.
@@ -528,3 +549,11 @@ Os docs foram editados até cerca de 15h; o código continuou mudando até cerca
 - Consolidado código executável mais recente (v0.5.3), docs, artes conceituais, screenshots e histórico disponível.
 - Não houve migração para 3D nesta consolidação.
 - Origem: arquivos locais de versões anteriores desta conversa.
+
+## 07/11/2026 — Integração dos lotes e continuação de arte
+
+- Concilia os rascunhos locais do Claude e a main do Codex, preservando ambas as linhas.
+- Corrige retomada da simulação após Esc e identificação do lançador no Susanoo de ajudantes.
+- Integra chão e construções regionais de Areia, Pedra e Névoa.
+- Integra nove folhas de pulo/dash e três folhas completas de ações; adiciona empacotador de atlas.
+- Preserva a calibração existente. Revisão visual integral dos mapas e das 56 versões continua pendente.
