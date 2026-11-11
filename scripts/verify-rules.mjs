@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { HEROES,HERO_BY_ID,heroOrganizations,skillPool,sandSynergy,versionForEncounter } from '../src/game/heroes.ts';
+import { HEROES,HERO_BY_ID,heroOrganizations,skillPool,sandSynergy,versionForEncounter,isProjectileUltimate } from '../src/game/heroes.ts';
 import { calculateStats,rollCritical,difficultyAt,heroDamageScale,xpToLevelUp,effectiveLootLuck } from '../src/game/progression.ts';
 import { megaEliteHp,rollMegaSchedule } from '../src/game/enemyTiers.ts';
 import { guardianVitality,guardianDefense } from '../src/game/missions.ts';
@@ -228,7 +228,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  const {HERO_BY_ID,ultimateBase,versionForEncounter,versionStep}=await import('../src/game/heroes.ts');
  for(const h of HEROES){assert.ok(h.ultimate,h.id+' sem Ultimate');const b=ultimateBase(h);assert.ok(h.techniques.includes(b)&&!b.setup,h.id+': Ultimate fora do kit da fase');}
  assert.equal(new Set(HEROES.map(h=>h.ultimate)).size>=50,true,'Ultimates próprias por versão');
- assert.equal(HERO_BY_ID.naruto.ultimate,'Tajū Kage Bunshin');assert.equal(HERO_BY_ID['naruto-shippuden'].ultimate,'Rasenshuriken Supremo');
+ assert.equal(HERO_BY_ID.naruto.ultimate,'Jutsu Sexy');assert.equal(isProjectileUltimate('naruto'),false);assert.equal(isProjectileUltimate('naruto-genin'),true);assert.equal(HERO_BY_ID['naruto-shippuden'].ultimate,'Rasenshuriken Supremo');
  assert.equal(HERO_BY_ID.madara.ultimate,'Susanoo Perfeito','Meteorito (Tengai Shinsei) exige o Rinnegan');assert.equal(HERO_BY_ID['madara-rinnegan'].ultimate,'Tengai Shinsei');
  assert.notEqual(HERO_BY_ID['guy-setimo-portao'].ultimate,'Oito Portões','Oito Portões é fase posterior ao Sétimo Portão');
  // Ajudantes e Mega Elites como versões: Genin/zona 1 → inicial; Kage/zona 3 → mais avançada.

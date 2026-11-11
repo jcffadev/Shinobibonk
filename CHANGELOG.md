@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Ajuste automático de desempenho (FPS) · 11/11/2026
+
+- Novo `src/scene/adaptiveGovernor.ts`: mede o intervalo real entre quadros (inclui a espera do GPU) e, se o FPS cair abaixo de ~55, reduz o pixel ratio do renderizador em passos (×0,85, piso 0,5); se sobrar folga (~80 fps ou mais), devolve (×1,12, nunca além do ratio configurado). Warmup de 4 s, histerese 18/12 ms contra oscilação, pausa quando o jogo está parado e ignora intervalos >250 ms (aba oculta/travada).
+- Nova opção **Ajuste automático de desempenho** em Gráficos (ligada por padrão); desligar devolve o ratio ao valor configurado. Não altera dano nem jogabilidade — só a resolução da imagem.
+- Motivo (CONFIRMADO): as configurações ficam por navegador/domínio (`sb_settings_v1` no localStorage), então um domínio novo (ex.: Netlify) começa com os padrões — qualidade `alta`, resolução automática (até 1,5× os pixels do dispositivo) e FPS sem limite — mais pesado que os ajustes usados em `localhost`. Versões recentes também somaram efeitos (partículas, Susanoo, totens). A simulação não é o gargalo (TESTADO: 1,8 ms/frame com 1.200 inimigos).
+- **TESTADO**: testes do governor (descida em carga pesada, recuperação, piso, inativo, teto novo, snap), `tsc -b`, `vite build`, `verify-rules` e smoke no Edge headless com 1.200 inimigos — `autoRatio` caiu de 1 → 0,61 sob carga, sem erros de página.
+- **PENDENTE**: validar em GPU real (máquina do usuário) no deploy Netlify. Se ainda estiver baixo: Gráficos → Qualidade `Média`/`Baixa` ou Tela → Resolução `900p`/`720p`.
+
+## Deploy Netlify · 11/11/2026
+
+- O 404 "page not found" do Netlify (CONFIRMADO pelo print do usuário) veio da publicação parcial: o primeiro upload arrastou só o `index.html` raiz sem a pasta `assets/` (drag & drop do Netlify fica instável acima de ~50 MB; o site construído tem ~204 MB / 343 arquivos). Subindo a pasta `dist` (ou um zip com a estrutura `index.html` + `assets/` na raiz) o site carregou — usuário: "acho que deu certo".
+- `netlify.toml` existe no projeto (build `npm run build`, public `dist`, SPA fallback) para uso futuro via Git/CLI; o deploy atual é manual, sem conexão com o GitHub.
+
 ## Filtro de raridade com as cores do jogo
 
 - O plano de build (aba Itens) ganha botões de raridade coloridos e combináveis: Comum (cinza), Incomum (verde), Raro (azul), Épico (roxo) e Lendário (dourado), com contagem por raridade, "Todas as raridades" e aviso de raridades combinadas. Funciona com a busca e com os filtros de tipo, elemento e atributo; "Limpar filtros" também limpa as raridades. Os itens da lista ganham uma faixa lateral na cor da raridade.

@@ -1,0 +1,14 @@
+# Publicação no Netlify. Se o site apontar para uma pasta acima desta,
+# defina "Base directory" como esta pasta no painel do Netlify.
+[build]
+  command = "pnpm install --frozen-lockfile && pnpm exec vite build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Aplicação de página única: qualquer rota cai no index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

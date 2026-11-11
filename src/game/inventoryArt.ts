@@ -29,5 +29,7 @@ function atlasCell(path: string, index: number, sheet: number) {
 
 const itemCells = Object.fromEntries(itemPages.flatMap((ids, page) =>
   ids.map((id, index) => [id, atlasCell(`/assets/inventory-v3-${page + 1}.png`, index, page)])));
-export const itemArt = (id: string) => itemCells[id];
+/** Itens novos sem célula no atlas usam um SVG avulso em /assets/inventory/ até ganharem arte no atlas. */
+const looseItems: Record<string, ReturnType<typeof atlasCell>> = Object.fromEntries(['shinobi-bait'].map(id => [id, { backgroundImage: `url(/assets/inventory/item-${id}.svg)`, backgroundSize: '100% 100%', backgroundPosition: 'center' }]));
+export const itemArt = (id: string) => itemCells[id] ?? looseItems[id];
 export const pillArt = Object.fromEntries(pills.map((id, index) => [id, atlasCell('/assets/pills-v3.png', index, 4)]));

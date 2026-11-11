@@ -4,7 +4,7 @@ import type { Difficulty } from './progression';
  * Mapas jogáveis (pedido do usuário em 06/11/2026): cada um com temática, paleta, clima, cenário e guardiões próprios.
  * As 3 zonas de 200 s e o guardião aos 160 s de cada zona são iguais em todos os mapas (ZONES em missions.ts).
  * Progressão por mapa: Chunin libera ao vencer o Genin daquele mapa, Jonin ao vencer o Chunin e Kage ao vencer o Jonin.
- * Cenário: o atlas de ambiente tem árvores (0), arbustos/rochas (1–2) e pedras grandes (3); cada mapa pesa e tinge esses tipos.
+ * Cenário: o atlas de ambiente tem árvore (0), pinheiro (1), bambu (2) e rocha (3); cada mapa pesa e tinge esses tipos.
  */
 export type MapId = 'folha' | 'areia' | 'pedra' | 'nevoa';
 export type MapWeather = { name: string; sky: string; near: number; far: number; slow?: number };
@@ -37,7 +37,7 @@ export const MAPS: GameMap[] = [
     description: 'Dunas escaldantes, cânions de arenito e tempestades de areia.',
     ground: { base: '#e3c48c', flecks: ['#d4ad6f', '#f0d9a8', '#c99a5c', '#e8cf9a'] },
     terrain: { low: '#d9b072', trail: '#b98546', high: '#a5703f', accent: '#f1d08e' },
-    scenery: { weights: [1, 3, 3, 4], tint: '#f2c98a', count: 110 },
+    scenery: { weights: [0, 0, 1, 8], tint: '#f2c98a', count: 90 },
     weathers: [{ name: 'Tempestade de areia', sky: '#a9825c', near: 26, far: 72, slow: .73 }, { name: 'Sol do deserto', sky: '#f0c27a', near: 34, far: 90 }],
     zones: [
       { name: 'Dunas de Suna', description: 'Areia fofa e marionetes perdidas · kunais enterradas pelo caminho.', guardians: ['temari', 'kankuro', 'lee'] },
@@ -50,7 +50,7 @@ export const MAPS: GameMap[] = [
     description: 'Montanhas rochosas, pontes de pedra e pedreiras abandonadas.',
     ground: { base: '#a39a90', flecks: ['#8c8379', '#b8afa4', '#7a726a', '#c2b9ad'] },
     terrain: { low: '#7f776d', trail: '#6b5440', high: '#4f4a52', accent: '#c06a3a' },
-    scenery: { weights: [1, 2, 4, 5], tint: '#d6cdc2', count: 130 },
+    scenery: { weights: [1, 4, 0, 7], tint: '#d6cdc2', count: 130 },
     weathers: [{ name: 'Ventania das montanhas', sky: '#9aa3ad', near: 22, far: 66 }, { name: 'Poeira de pedreira', sky: '#8a7f73', near: 16, far: 52 }],
     zones: [
       { name: 'Pedreira de Iwa', description: 'Terreno irregular · rochas, armas e altares escondidos.', guardians: ['sakura', 'neji', 'tenten'] },

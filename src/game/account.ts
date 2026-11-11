@@ -33,7 +33,9 @@ export function setAllUnlocked(on: boolean) { allUnlockedOverride = on; write('s
 export function unlockedHeroes(): Set<string> {
   return new Set([...STARTER_HEROES, ...read<string[]>(UNLOCKED_KEY, [])]);
 }
-export function isHeroPlayable(id: string) { return allUnlockedOverride || testMode() || unlockedHeroes().has(id); }
+/** TESTE (pedido do usuário, 11/11/2026): todo o elenco liberado para testar. Volte para false para reativar as missões de desbloqueio. */
+export const TEST_UNLOCK_ALL = true;
+export function isHeroPlayable(id: string) { return TEST_UNLOCK_ALL || allUnlockedOverride || testMode() || unlockedHeroes().has(id); }
 export function sealedHeroes(): Set<string> { return new Set(read<string[]>(SEALED_KEY, [])); }
 
 /** Selamento de conta: libera o shinobi para jogar e libera as técnicas únicas dele para os outros. */

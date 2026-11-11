@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-07T07:19:59.675Z",
+  "date": "2026-11-07T07:50:00.488Z",
   "scope": "Controlador real em fixture isolada; inspeção visual pelas folhas de contato",
   "coverage": [
     {
@@ -2137,72 +2137,72 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kankuro-1-action-v3.png",
           "uv": [
-            0,
-            0,
-            0.2,
-            0.2
+            0.25,
+            0.75,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kankuro-1-action-v3.png",
           "uv": [
-            0,
-            0,
-            0.2,
-            0.2
+            0.25,
+            0.5,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kankuro-1-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-1-action-v3.png",
           "uv": [
-            0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kankuro-1-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-1-action-v3.png",
           "uv": [
-            0.5,
+            0.25,
             0,
             0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-1-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-1-action-v3.png",
           "uv": [
             0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-1-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-1-action-v3.png",
           "uv": [
             0.75,
-            0.5,
+            0.25,
             -0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-1-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-1-action-v3.png",
           "uv": [
             0.5,
             0,
             0.25,
-            0.5
+            0.25
           ]
         }
       ]
@@ -2347,72 +2347,72 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kushina-1-action-v3.png",
           "uv": [
-            0.6666666666666666,
-            0,
-            0.3333333333333333,
-            1
+            0.25,
+            0.75,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kushina-1-action-v3.png",
           "uv": [
-            0.6666666666666666,
-            0,
-            0.3333333333333333,
-            1
+            0.25,
+            0.5,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kushina-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kushina-1-action-v3.png",
           "uv": [
-            0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kushina-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kushina-1-action-v3.png",
           "uv": [
-            0.5,
+            0.25,
             0,
             0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kushina-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kushina-1-action-v3.png",
           "uv": [
             0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kushina-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kushina-1-action-v3.png",
           "uv": [
             0.75,
-            0.5,
+            0.25,
             -0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kushina-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kushina-1-action-v3.png",
           "uv": [
             0.5,
             0,
             0.25,
-            0.5
+            0.25
           ]
         }
       ]
@@ -5497,72 +5497,72 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kankuro-15-action-v3.png",
           "uv": [
-            0.16666666666666666,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.75,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kankuro-15-action-v3.png",
           "uv": [
-            0.16666666666666666,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.5,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kankuro-15-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-15-action-v3.png",
           "uv": [
-            0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kankuro-15-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-15-action-v3.png",
           "uv": [
-            0.5,
+            0.25,
             0,
             0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-15-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-15-action-v3.png",
           "uv": [
             0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-15-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-15-action-v3.png",
           "uv": [
             0.75,
-            0.5,
+            0.25,
             -0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-15-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-15-action-v3.png",
           "uv": [
             0.5,
             0,
             0.25,
-            0.5
+            0.25
           ]
         }
       ]
@@ -5602,72 +5602,72 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kankuro-30-action-v3.png",
           "uv": [
-            0.3333333333333333,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.75,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/kankuro-30-action-v3.png",
           "uv": [
-            0.3333333333333333,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.5,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kankuro-30-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-30-action-v3.png",
           "uv": [
-            0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/kankuro-30-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-30-action-v3.png",
           "uv": [
-            0.5,
+            0.25,
             0,
             0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-30-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-30-action-v3.png",
           "uv": [
             0.5,
-            0.5,
             0.25,
-            0.5
+            0.25,
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-30-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-30-action-v3.png",
           "uv": [
             0.75,
-            0.5,
+            0.25,
             -0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/kankuro-30-walk-v1.png",
+          "atlas": "/assets/shinobi-motion/kankuro-30-action-v3.png",
           "uv": [
             0.5,
             0,
             0.25,
-            0.5
+            0.25
           ]
         }
       ]

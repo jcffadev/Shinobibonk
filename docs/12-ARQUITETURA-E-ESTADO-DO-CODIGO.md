@@ -1,6 +1,6 @@
 # Arquitetura e estado do código
 
-Atualizado em 05/11/2026 após leitura do código, `tsc -b`, `vite build` e `scripts/verify-rules.mjs`. Este é o inventário da base presente, não uma promessa de produto final.
+Atualizado em 11/11/2026 após leitura do código, `tsc -b`, `vite build` e `scripts/verify-rules.mjs`. Este é o inventário da base presente, não uma promessa de produto final.
 
 ## Mapa de arquivos
 
@@ -19,6 +19,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/scene/GameCanvas.tsx` | Cena Three.js e simulação da run inteira; envia `WorldSnapshot` para o React. |
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Geometria original por golpe e elemento, orientação na direção do ataque, rotação de efeitos, raios de impacto e descarte de recursos. O limite local de efeitos de impacto evita criar uma malha por inimigo em hordas grandes. |
+| `src/scene/adaptiveGovernor.ts` | Ajuste automático de desempenho: mede o intervalo real entre quadros (EMA) e, se o FPS cair, reduz o pixel ratio do renderizador (piso 0,5) até rodar liso, devolvendo quando sobra folga (teto = ratio configurado em `pixelRatioFor`). Histerese 18/12 ms, warmup de 4 s, pausa quando o jogo está parado. Lido por `GameCanvas` a cada quadro; a opção liga/desliga fica em `autoPerformance` (Gráficos). |
 | `src/game/heroes.ts` | 24 famílias e 56 versões jogáveis (`HERO_VERSIONS`; `family`, `form`, `title`; `familyOf`, `familyVersions`, `versionStep`, `versionForEncounter`, `DETERMINATION`): aldeia, atributos base, passiva, bônus, 4 técnicas da fase (escola, elemento, forma, status), Ultimate. Bibliotecas `L` (compartilhadas) e `U` (únicas por família). `skillPool` respeita elemento, vila e selamento; versões da mesma família não emprestam técnicas. `sandSynergy` por família. Formas do Naruto. `HERO_CLAN`, `ORGANIZATIONS`, `HERO_NATURES` (naturezas canônicas da Narutopedia) e `heroAffinity`. |
 | `src/game/catalog.ts` | 94 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
@@ -48,7 +49,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/itemTrade.ts` + `src/ui/ItemTradeDialog.tsx` | (Codex) Compra/venda de itens por raridade na run. |
 | `src/game/inventoryArt.ts` + `scripts/generate-inventory-icons.mjs` + `public/assets/inventory*` , `pills-v3.png` | (Codex) Atlas de ícones de itens e pílulas, com layout fixo por ID. |
 | `public/assets/shinobi-folha-v3.png`, `sakura-genin-v1.png`, `naruto-academia-*-v1.png`, `leaf-landmarks-v1.png`, `map-previews-v1.png` | (Codex) Artes novas: elenco da Folha, Sakura Genin, caminhada/diagonal/arremesso do Naruto Academia, marcos da Folha e prévias dos mapas. Integração parcial (ver docs/13). |
-| `src/game/settings.ts` + `src/ui/SettingsScreen.tsx` + `src/settings.css` | Configurações completas (som, gráficos, tela, controles, teclas remapeáveis via `translateKey`, interface, conta) em `sb_settings_v1`; `currentSettings()` lido ao vivo pela simulação e pelo som. |
+| `src/game/settings.ts` + `src/ui/SettingsScreen.tsx` + `src/settings.css` | Configurações completas (som, gráficos, tela, controles, teclas remapeáveis via `translateKey`, interface, conta) em `sb_settings_v1`; `currentSettings()` lido ao vivo pela simulação e pelo som. Gráficos inclui `autoPerformance` (ajuste automático de resolução, padrão ligado). |
 | `src/game/synergy.ts` | Sinergias de vila e organização: `activeSynergies(heroId, allies)`, `synergyBonuses`, `synergiesOf`. Faixas 2/3/4+ membros. |
 | `src/ui/CharacterSelect.tsx` + `src/character-select.css` | Seleção de shinobi em grade de retratos com filtros por vila, elemento, organização/clã e busca; `CharacterTags` para o painel de detalhes. |
 | `src/game/pills.ts` | Catálogo de 20 pílulas, seis espaços distintos na run, limite base de dez níveis por tipo e potência por raridade. `grantPill` sempre concede um nível. |
@@ -117,7 +118,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - Botão direito: yaw livre e pitch entre 0,18 e 1,48 rad. Scroll: zoom de 10 a 32.
   - Terreno de 100×100 com relevo de senos e três montes gaussianos, colorido por grama, trilha, pedra e lava.
   - Vegetação e construções são sprites de `environment-v2.png`; ficam translúcidos quando o jogador está a menos de 3 m.
-  - O jogador fica limitado a ±46. Não há colisão com cenário nem pulo.
+  - O jogador fica limitado a ±`WORLD_LIMIT` (76 m). **IMPLEMENTADO (11/11/2026)**: colisão de movimento em `src/scene/collision.ts` (`COLLISION_RULES`). Cada árvore, pinheiro, bambu, rocha e construção vira um círculo na base do sprite; o jogador desliza pela borda (inclusive na diagonal). Inimigos só contornam construções. Eventos e coletáveis nunca nascem dentro de construções. Hits e projéteis não são bloqueados. Na arena da bijū não há colisão.
 - **Personagens**: o jogador, os aliados e os mega elites usam o controlador de animação e a forma correspondente. Inimigos comuns usam a folha instanciada.
 - **Tempo e zonas**:
   - `elapsed` vai de 0 a 600 s; o HUD mostra a contagem regressiva.
@@ -288,7 +289,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 - **Selamento**: não tem 3 tentativas nem chance de falha; também não existe o selamento permanente com 1 tentativa.
 - **Aliados**: atacam só com a 1ª técnica do kit, e os valores dos buffs únicos são provisórios.
 - **Sinergias**: só a da Areia existe.
-- **Mapa**: arena única, sem colisão, pulo, dash, biomas ou mapa procedural.
+- **Mapa**: quatro mapas (Folha, Areia, Pedra, Névoa) com colisão de movimento, pulo e dash; sem mapa procedural.
 - **Descoberta**: sem oclusão.
 - **Inimigos**: teto de 180 vivos; meta de 1.500 não medida.
 - **Remoção de pílula/item**: Ichiraku permite esquecer técnicas e pílulas. Sapos Sábios oferecem fusão e combinação.

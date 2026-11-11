@@ -65,7 +65,17 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
 - **Tempo e clima (CONFIRMADO; IMPLEMENTADO)**: um clima sorteado a cada zona. Névoa reduz a visibilidade; tempestade de areia reduz o movimento em 27%. Outros climas por bioma estão **PENDENTES**.
 - **Descoberta (CONFIRMADO)**: minimapa e mapa M mostram ícones só depois de o evento ser visto pela câmera. **IMPLEMENTADO**: teste de frustum da câmera até 40 m, com registro persistente. Oclusão por terreno ou árvores está **PENDENTE**. Tab abre o mapa rápido e P abre a ficha.
 
-Mapas por bioma, mapa procedural, colisão, pulo, spawn configurável por zona, balanceamento e multiplayer seguem **PENDENTES**. A arena atual tem 100×100 m. Consulte [estado do código](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md).
+## Mapas e física · revisão de 11/11/2026
+
+**TESTADO** no Edge headless (capturas dos quatro mapas no centro, nos cantos, nas bordas, nas construções e com zoom máximo):
+
+- **Bordas sem vazio**: no canto do mapa a cordilheira cortava o plano próximo da câmera e deixava ver o céu. O plano próximo da câmera ortográfica agora fica em −70 m ou menos, e a montanha aparece inteira.
+- **Colisão de movimento** (`src/scene/collision.ts`): construções, estátuas, casas, árvores, pinheiros, bambus e rochas bloqueiam o deslocamento do jogador, que desliza pela borda. Medido: andando reto contra uma construção a distância mínima ao centro ficou igual ao limite (raio + corpo), e raspando de lado o jogador contorna e segue. Inimigos contornam só as construções. O portal torii da Folha continua atravessável. Para desligar tudo: `COLLISION_RULES.enabled = false`.
+- **Eventos e coletáveis** não nascem mais dentro de construções (altares exigem 5 m de folga).
+- **Vegetação por bioma**: a Areia deixou de ter pinheiros e quase não tem bambu (rochas); a Pedra troca bambu por pinheiros e rochas.
+- **PENDENTE**: conferir em GPU real a câmera deitada (pitch baixo) nos cantos, os climas e a prévia da seleção de mapa. Ajudantes e clones ainda atravessam o cenário.
+
+Mapa procedural, spawn configurável por zona, balanceamento e multiplayer seguem **PENDENTES**. A arena atual tem 100×100 m. Consulte [estado do código](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md).
 
 ## Mapas jogáveis e progressão (IMPLEMENTADO em 06/11/2026, pedido do usuário)
 - `src/game/maps.ts`: **4 mapas** com paleta de chão/terreno, cenário (pesos e tinta do atlas), climas e 3 zonas com nomes e guardiões próprios.

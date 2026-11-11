@@ -1,0 +1,156 @@
+{
+  "date": "2026-11-07T07:34:15.691Z",
+  "kind": "formula-snapshot",
+  "assumptions": {
+    "hero": "naruto (Academia)",
+    "mission": "Genin",
+    "zone": 1,
+    "curse": 1,
+    "items": [],
+    "pills": [],
+    "permanent": [],
+    "powerlevel": [],
+    "debug": "padrão",
+    "timing": "Permanece na zona 1; Final Swarm após 600 s",
+    "scope": "Fórmulas atuais, não uma run medida. Dano base não é DPS nem dano final de uma técnica."
+  },
+  "levels": [
+    {
+      "level": 1,
+      "damage": 9.9,
+      "baseMultiplier": 1,
+      "hp": 85,
+      "attackSpeed": 1,
+      "crit": 0.05,
+      "xpNext": 30
+    },
+    {
+      "level": 10,
+      "damage": 17.664159744000006,
+      "baseMultiplier": 1.7842585600000005,
+      "hp": 108,
+      "attackSpeed": 1.072,
+      "crit": 0.0635,
+      "xpNext": 78.25482625482626
+    },
+    {
+      "level": 25,
+      "damage": 39.16385510400001,
+      "baseMultiplier": 3.9559449600000005,
+      "hp": 146,
+      "attackSpeed": 1.192,
+      "crit": 0.08600000000000001,
+      "xpNext": 204.04379562043795
+    },
+    {
+      "level": 50,
+      "damage": 110.51301137066667,
+      "baseMultiplier": 11.162930441481482,
+      "hp": 210,
+      "attackSpeed": 1.392,
+      "crit": 0.1235,
+      "xpNext": 472.60200668896323
+    },
+    {
+      "level": 100,
+      "damage": 490.78316390400016,
+      "baseMultiplier": 49.574056960000014,
+      "hp": 337,
+      "attackSpeed": 1.792,
+      "crit": 0.1985,
+      "xpNext": 1173.6618911174787
+    },
+    {
+      "level": 250,
+      "damage": 6760.360341504,
+      "baseMultiplier": 682.86468096,
+      "hp": 720,
+      "attackSpeed": 2.992,
+      "crit": 0.4235,
+      "xpNext": 3997.0100200400802
+    },
+    {
+      "level": 1000,
+      "damage": 900337.737429504,
+      "baseMultiplier": 90943.20580096,
+      "hp": 2632,
+      "attackSpeed": 8.992,
+      "crit": 1.5485,
+      "xpNext": 21992.80064051241
+    }
+  ],
+  "enemies": [
+    {
+      "minutes": 0,
+      "normalHp": 22,
+      "megaHp": 20000,
+      "megaDefense": 0.33,
+      "megaEffectiveHp": 29850.74626865672,
+      "guardianHp": 156,
+      "guardianDefense": 0.65,
+      "guardianEffectiveHp": 445.7142857142857,
+      "spawnPerSecond": 1.32,
+      "cap": 39
+    },
+    {
+      "minutes": 2,
+      "normalHp": 48,
+      "megaHp": 35125,
+      "megaDefense": 0.41500000000000004,
+      "megaEffectiveHp": 60042.73504273505,
+      "guardianHp": 841,
+      "guardianDefense": 0.6883795687773465,
+      "guardianEffectiveHp": 2698.7960856748305,
+      "spawnPerSecond": 13.048,
+      "cap": 247
+    },
+    {
+      "minutes": 5,
+      "normalHp": 121,
+      "megaHp": 167084,
+      "megaDefense": 0.5425,
+      "megaEffectiveHp": 365210.9289617486,
+      "guardianHp": 5002,
+      "guardianDefense": 0.735189842449889,
+      "guardianEffectiveHp": 18889.00352719081,
+      "spawnPerSecond": 32,
+      "cap": 670
+    },
+    {
+      "minutes": 10,
+      "normalHp": 423,
+      "megaHp": 2248003,
+      "megaDefense": 0.7000000000000001,
+      "megaEffectiveHp": 7493343.333333335,
+      "guardianHp": 44092,
+      "guardianDefense": 0.7913504478732305,
+      "guardianEffectiveHp": 211320.84660891563,
+      "spawnPerSecond": 62,
+      "cap": 1600
+    },
+    {
+      "minutes": 18,
+      "normalHp": 21389,
+      "megaHp": 143872177,
+      "megaDefense": 0.85,
+      "megaEffectiveHp": 959147846.6666665,
+      "guardianHp": 12822664,
+      "guardianDefense": 0.8442174599628925,
+      "guardianEffectiveHp": 82311303.93011717,
+      "spawnPerSecond": 2000,
+      "cap": 8000
+    },
+    {
+      "minutes": 30,
+      "normalHp": 439816,
+      "megaHp": 73662554613,
+      "megaDefense": 0.85,
+      "megaEffectiveHp": 491083697419.99994,
+      "guardianHp": 2190980310,
+      "guardianDefense": 0.8794787503440253,
+      "guardianEffectiveHp": 18179203387.403522,
+      "spawnPerSecond": 2000,
+      "cap": 8000
+    }
+  ]
+}

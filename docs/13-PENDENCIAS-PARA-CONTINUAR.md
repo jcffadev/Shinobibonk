@@ -1,153 +1,79 @@
-# Pendências para continuar · atualização em 07/11/2026
+# Fila atual do ShinobiBonk · 07/11/2026
 
-Levantamento feito ao fim da sessão do Claude Code para continuar no Codex. Tudo abaixo está **PENDENTE** salvo indicação.
-Antes de mexer: leia AGENTS.md (regras e invariantes), README.md, docs/00 e docs/12. Verificação padrão:
-`tsc --noEmit -p .`, `vite build`, `node scripts/verify-rules.mjs`, `node scripts/verify-runtime.mjs` (Node do Codex em
-`%USERPROFILE%\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe`; git em `C:\Program Files\Git\cmd\git.exe`).
+Este é o estado consolidado após os commits 11e0d18 e bee4bba. Substitui as listas antigas de integração e contagens de folhas pendentes. Histórico preservado no Git e no contexto do chat.
 
-## PARCIAL — subagentes interrompidos pelo limite de uso (07/11/2026). Compila (tsc), NÃO validado (sem verify-runtime). Revisar e testar antes de seguir.
-- **Efeitos WebGL das técnicas + Susano'o** (`src/scene/techniqueEffects.ts` e chamadas no `GameCanvas.tsx`): parou ao integrar o rastro dos projéteis e o laço de atualização. Falta: concluir integração, efeitos por natureza × forma (baforada de fogo em cone, bola de fogo com explosão, jatos de água, lâminas de vento, raios, pedras, raízes, areia, sombra, golpes de taijutsu, auras de buff), Susano'o por personagem (pesquisar cores/armas na Narutopedia: Madara, Sasuke, Itachi, Kakashi), medir FPS, prints.
-- **Filtro de raridade colorido no Plano de build** + **detalhes das técnicas** (`BuildPlanner.tsx`): parou antes do teste no navegador. Falta: conferir cores iguais às do jogo (Comum cinza, Incomum verde, Raro azul, Épico roxo, Lendário laranja), e cada técnica mostrar ""Kit de <personagem> · Lv. desbloqueio X · Dano · Efeito (status/chance) · outros (crítico, Senjutsu, recarga)"".
-- **Ultimate por fase (confirmado: Ultimate segue desde o Nv. 1) e ajudantes/Mega Elites como versões** (heroes.ts, `allies.ts`, `synergy.ts`, spawn de mega elites no GameCanvas): parou nos buffs por versão em `allies.ts` e no mapeamento de família em `synergy.ts`.
-- **Calibração pela wiki pública + detalhes** (`docs/15-CALIBRACAO-REFERENCIA.md`, prévia ao esquecer pílula no Ichiraku, reordenar listas de ""Itens em casa"", expandir grade de itens): parou na UI de mover/arrastar listas em `MissionBag.tsx`.
+## Confirmado e entregue
 
-## Integração local pendente
+- 56 versões jogáveis de 24 famílias, com versões independentes; não há evolução de traje durante a run.
+- Caminhada direcional nas 56 versões. As folhas registradas são usadas pelo controlador compartilhado do jogador, ajudantes e clones.
+- Integração dos rascunhos do Claude com a main do Codex concluída em 11e0d18.
+- Nove folhas novas de pulo/dash para Naruto 10/25/50, Lee 1/15/30 e Guy 1/15/30.
+- 27 folhas completas action-v3: Sasuke 15; Hashirama 1/20; Kakashi 1/25; Itachi 1; Minato 1/15; Tsunade 1/15/30; Jiraiya 1/20; Orochimaru 1/15; Hinata 1/15/30; Pain 1; Shikamaru 1/15/30; Tobirama 1; Temari 1/15; Tenten 1/15.
+- Folhas anteriores: Naruto Academia, Sasuke Genin/Rinnegan, Neji Genin/Jonin, Asuma, três Sakuras, três Gaaras, três Madaras e Itachi Akatsuki. A existência da folha não equivale a aprovação visual.
+- Retomada após Esc sem clique extra, Tab rápido sem pausa e ficha por P; mercador mantém preços do estoque atual; oficina tem Fundir/Combinar e um uso compartilhado por zona.
+- Afiliações por versão e bônus de suporte; shuriken amaldiçoada e corpo de ninja com emboscadas.
+- Chão de Areia/Pedra/Névoa e atlas de nove construções/marcos regionais conectados à cena.
+- Susanoo por lançador no combate e prévia ligada ao mesmo rig WebGL.
+- Reordenação das listas na Bolsa, prévia ao esquecer pílula no Ichiraku e botão de expandir inventário estão implementados. Conferir acabamento visual.
 
-A pasta principal está em `c41bd79` (trabalho parcial do Claude, salvo também em `wip/parcial-subagentes-07-11`). A main remota recebeu `badcee4` pelo worktree `ShinobiBonk_Codex_Arte`. As duas linhas divergem desde `2f7d7e9`. Conciliar os lotes antes de afirmar que a pasta principal e a main remota estão iguais.
+## Validação já executada
 
-## Fila do Codex
-- **IMPLEMENTADO** — dash esquerdo/direito no controlador compartilhado, WASD imediato, com prioridade à última tecla oposta pressionada, conta local, folhas das três Sakuras e dos três Gaaras, selo cruzado dos quatro Narutos e flutuação de Gaara Kazekage e Aliança.
-- **IMPLEMENTADO (07/11/2026)** — afiliações por versão e suporte médico/ofensivo para as 56 versões; shuriken amaldiçoada com buff e emboscada; corpo de ninja com onda escalonada e recompensa de um nível. Oficina Fundir/Combinar com abas e limite de uma operação por zona. Estoque do mercador com preços fixos até atualizar. Tab rápido sem pausa e P com retomada pelo próprio comando.
-- **PENDENTE** — avaliar o balanceamento dos novos buffs e ondas numa run comum e continuar a auditoria visual das ações do elenco.
-- **PENDENTE** — aplicar o padrão de poses do Naruto às versões restantes, incluindo selo de mãos. Preservar as exceções de Lee, Guy e Gaara e conferir a animação como jogável e ajudante.
-- **IMPLEMENTADO** — folhas direcionais de caminhada nas 56 formas dos 24 shinobis jogáveis. Os 20 shinobis deste lote acrescentam 45 formas ao Time 7 e Asuma.
-- **IMPLEMENTADO NESTE LOTE** — quadros de conjuração do Naruto Clássico, ataque/pulo/dash de Sasuke inicial e socos/chutes nas três formas de Rock Lee e Might Guy.
-- **PENDENTE** — revisar caminhada, ataque, pulo e dash/esquiva de todo o elenco por forma, inclusive transição do sprite estático para as ações. Priorizar formas com pose procedural e validar os quadros em jogo. Dano, Ultimate e animação dos monstros permanecem na fila.
-- **IMPLEMENTADO (06/11/2026)** — versões separadas: 56 versões jogáveis de 24 famílias com cadeia de missões (`playWith`). **PENDENTE**: balancear kits, passivas e números das missões jogando; testar uma run real sem `?test` até o Shinobi para selar da versão surgir (o teste automático confere `accountCandidates`, não o selamento completo); validar o balanceamento dos ajudantes/mega elites avançados, agora escolhidos por zona e dificuldade.
-- **IMPLEMENTADO** — cinco folhas direcionais de ataque, pulo e dash para Sasuke Rinnegan, Itachi Akatsuki e Madara Armadura/Rinnegan/Seis Caminhos. Validação visual de uma missão real com cada versão e ajudante continua na fila.
-- **PENDENTE (Susanoo WebGL)** — no trabalho local, o rig se baseia na Narutopedia. Validar estilo por lançador (Madara azul com lâminas, Sasuke roxo com arco, Itachi vermelho/laranja com Totsuka e Yata), Suporte, Ultimate e prévia. O rascunho de Kakashi usa Kamui, e a fase correspondente ainda não existe no elenco.
-- **FOLHAS QUE FALTAM PARA O CODEX (versões separadas)** — repouso vem do sprite estático em todas. Caminhada direcional existe em todas. Onde falta ação, `playerMotion` usa pose procedural (squash/stretch no pulo, inclinação e rastro no dash, deformação de braços no ataque):
-  - **Com folhas cobrindo ataque, pulo e dash (16 versões; revisão visual individual ainda pendente)**: Naruto Academia, Sasuke Genin/Rinnegan, Neji Genin/Jonin, Asuma, três Sakuras, três Gaaras, três Madaras e Itachi Akatsuki.
-  - **Falta pulo e dash**: Naruto Genin (`naruto-genin`, forma 10), Naruto Shippuden (25), Naruto Kyuubi (50) — já têm conjuração; Rock Lee Genin/Shippuden/Portões e Might Guy Jonin/Sexto/Sétimo Portão — já têm socos e chutes.
-  - **Falta ataque, pulo e dash**: Sasuke Shippuden (15); Hashirama Hokage/Sábio (1/20); Kakashi Jonin/Hokage (1/25); Itachi ANBU (1); Minato Jonin/Hokage (1/15); Tsunade Sannin/Hokage/Byakugou (1/15/30); Jiraiya Sannin/Sábio (1/20); Orochimaru Sannin/Som (1/15); Hinata Genin/Shippuden/Leões (1/15/30); Shikamaru Genin/Estrategista/Conselheiro (1/15/30); Temari Genin/Shippuden (1/15); Tenten Genin/Shippuden (1/15); Kankuro Genin/Shippuden/Aliança (1/15/30); Pain, Tobirama e Kushina (1).
-  - Para novas folhas completas, usar atlas 4×4 em `public/assets/shinobi-motion/<família>-<forma>-action-v2.png`, com conjuração frente/costas e pulo/dash frente/costas. Registrar em `actionArt` com `kind: 'full'`.
-- **REGRA DE ENTREGA** — novos shinobis e evoluções precisam vir com repouso, caminhada, ataque, pulo e dash/esquiva. Atualizar as skills, documentação, contexto e GitHub a cada entrega.
-- **IMPLEMENTADO:** fila de confirmação para itens da roleta, pílulas e habilidades reservadas para level-up, teto de quatro ofertas, contagem do ajudante com o mesmo ID do jogador, contador real da horda e inclinação da câmera por movimento do mouse.
-- **Atlas de habilidades**: integrado ao HUD, às escolhas, ao elenco e ao plano de missão.
-- **IMPLEMENTADO** — efeitos por natureza e golpes característicos, com impactos nos inimigos. **PENDENTE** — refinamento de efeitos por técnica e sons. O usuário reprovou os sons do pacote `artifacts/sb-swishes-source.zip` (licença não verificada). Procurar outros sons com licença livre verificada.
-- **Atributos até nível 50**: recalibração pendente; o bônus de +0,8% quando acabam os upgrades é regra separada (`powerlevel.ts`).
-- **Chão nas bordas**: relevo e céu em gradiente em `terrainArt.ts`. Falta conferir mais climas e os extremos do mapa em jogo.
-- **IMPLEMENTADO** — revisão de Chōmei e Gyūki com as referências do usuário e botões de raridade na Bolsa da Missão. Progressão: bônus aleatório de 0,8% implementado e recalibração geral pendente.
-- Skills do Codex: `skills/criar-arte-shinobibonk` (padrão de arte de shinobis, itens, pílulas, cenários) e `skills/movimentar-shinobi` (movimento, pulo, dash, sprites de animação), com ponteiros em `.claude/skills/`.
-- Testes atualizados ao trabalho do Codex: o selamento espera o ritual terminar (navegador de teste roda a poucos FPS); vitória por gancho `finishMission` (a missão agora termina no portal de saída); saída da partida pela pausa (Esc → Salvar e sair).
+| Evidência | Cobertura | Limite |
+|---|---|---|
+| TypeScript, build e regras | Aprovados no lote bee4bba | Não aprovam aparência ou balanceamento |
+| artifacts/runtime-checks.json | 58 verificações, sem exceções JS/404; lote integrado | Anterior às 24 folhas adicionais e à última integração da prévia Susanoo |
+| artifacts/motion-review.json | 56 versões × 10 estados = 560 amostras; sem erros/404 | Fixture isolada; fallback também passa pelo estado. Não comprova que todas têm folhas próprias ou ataque correto em combate |
+| artifacts/motion-review-1.png até -4.png | Folhas de contato reais do controlador | Inspeção visual completa ainda pendente |
+| Performance headless | Última amostra: 3.029 inimigos, ~4,71 FPS em SwiftShader | Renderização por software; não é medição de GPU real |
 
-## Final Swarm, pílulas e altares (06/11/2026)
-- **IMPLEMENTADO e TESTADO (headless)** — Final Swarm cresce além de 1.600 até `FINAL_SWARM.maxEnemies` = 8.000; pílulas só por escolha (`CHOICE_GUARD` 0,5 s); altares por raridade começam ao pisar e caem fora do círculo (`ALTAR_RULES`).
-- **PENDENTE** — medir FPS com 4.800–8.000 inimigos em GPU real; se cair demais, baixar `FINAL_SWARM.maxEnemies`. No headless (SwiftShader) ficou em ~20 FPS tanto com 1.600 quanto com 8.000.
-- **PENDENTE** — confirmar jogando que não há mais pílula "sozinha". Se ainda ocorrer, observar se o jogador clica de forma contínua (a proteção cobre só os primeiros 0,5 s de cada conjunto de cartas). Ondas dedicadas durante o altar continuam pendentes.
+## Prioridades em ordem
 
-## Desempenho com 1.600 inimigos
+1. **URGENTE — Kankuro sem ataque animado.** Criar folhas completas de Kankuro Genin (1), Shippuden (15) e Aliança (30), preservando seus trajes e acessórios. Criar também Kushina (1), a quarta versão ainda sem folha completa. Confirmar o ataque básico disparado automaticamente em combate e como ajudante. A reclamação do usuário confirma que o fallback atual é insuficiente.
+2. **Revisar as 56 versões visualmente.** Prioridade a Neji 1/15, Sasuke Genin e Naruto Clássico/Shippuden. Conferir repouso → andar → ataque, frente/costas, pulo, dash direito/esquerdo e recuperação. Naruto Academia é o padrão; Lee/Guy/Gaara preservam exceções. Repetir como ajudantes e em contexto de horda.
+3. **Estudar e medir balanceamento.** Preservar o sistema existente. Comparar versões datadas da referência, vídeo fornecido e runs equivalentes. Registrar dano por alvo, tempo para matar, XP/minuto, abates/minuto, economia e Sorte. Diagnóstico inicial: a fórmula do mega cresce muito mais que a do guardião na mesma abertura. Ver docs/16. Não copiar propostas antigas de docs/15 como se fossem parâmetros aprovados.
+4. **Efeitos e prévias.** Validar Susanoo de Madara/Sasuke/Itachi no jogador, ajudante, Ultimate e prévia; Kakashi tem estilo preparado, mas não possui versão Susanoo no elenco. Refinar efeitos por nome/natureza, origem nas mãos/boca, trajetórias, impacto e H. Conferir clones correndo e óleo/fogo de Gamabunta.
+5. **Mapas e física.** Conferir os quatro mapas, chão/construções regionais, bases apoiadas, bordas sem vazio, câmera/zoom, climas, colisões e diagonais. Melhorar prévia da seleção caso ainda use representação antiga.
+6. **Run completa e regressões.** Três zonas → bijuu em três fases → saída → Lamens/ranking/save. Exercitar desbloqueio por selamento em run normal; roleta E/V, banimento por identidade, pílulas somente no level-up, seis tipos de pílula por run, oficina e mercador.
+7. **Desempenho.** Medir 1.600 inimigos e Final Swarm com GPU real, em diferentes climas e com efeitos. Teto configurado do Final Swarm é 8.000; desempenho jogável ainda não está validado. Reduzir trabalho visual somente a partir de medidas.
+8. **Sonoplastia.** Selecionar sons com licença verificada, integrar e validar volume/frequência. O pacote sb-swishes-source.zip foi reprovado e continua fora do Git.
 
-- **IMPLEMENTADO** — o código do Claude agrupa corpos, contornos e avisos dos inimigos comuns e elites em lotes instanciados.
-- **TESTADO** — `verify-runtime` mediu 1.600 inimigos em movimento no Edge headless com ANGLE/SwiftShader. A amostra de 2,51 s ficou em 6,77 FPS e 101 chamadas de desenho no quadro final. O resultado mede renderização por software. **PENDENTE** — medir em GPU no navegador normal antes de declarar desempenho suficiente.
+## Lote de feedback da comunidade · 11/11/2026 (PROPOSTO, aguardando definições do usuário)
 
-## HUD — correção de alinhamento (pedido do usuário, 06/11/2026; print com Naruto Nv. 194, 5 ajudantes, ~80 itens)
-- **Ajudantes** — FEITO: cartões compactos com 4+ ajudantes e coluna limitada acima do dock, com rolagem (Codex). Painel SINERGIAS recolhível pelo título, estado salvo em `localStorage` (`shinobibonk.hud.synergiesCollapsed`).
-- **Pílulas** — FEITO (Codex): dock de pílulas compacto acima das habilidades, sem faixa; não fica mais sob os cartões.
-- **Ícones de habilidades** — FEITO: com 5 ajudantes a coluna termina antes do dock (1366×768: coluna até y=538, dock a partir de y=563).
-- **Itens** — FEITO: grade limitada a 3 linhas com rolagem e ícones de 25 px (Codex); contador de quantidade com fundo escuro e fonte 9 px. PENDENTE opcional: botão de expandir a grade.
-- **Mapa/minimapa** — FEITO: marcadores em raio de 38% e pontos de inimigo em raio circular de 45% (não cortam na borda); rótulo "Tab rápido · M mapa" sob o círculo; selo DEBUG e painel abaixo do rótulo, acompanhando a escala do HUD/minimapa.
-- **Informações da missão no topo** — FEITO: grade em blocos (missão + clima/zona | relógio grande ou FINAL SWARM | Ryu curto + kunai/shuriken) e preços em linha secundária menor, todos em `compactNumber`. Avisos (toasts) ficam abaixo da barra.
-- **Validação** — TESTADO em Edge headless (1440×900 e 1366×768, 5 ajudantes, 80 itens, Nv. 194, 123.456.789 Ryu), sem sobreposição medida entre barra, minimapa, rótulo, DEBUG, ajudantes, dock e itens. PENDENTE: conferir com 4 técnicas aprendidas e em resoluções menores que 1050 px.
+Lista colada pelo usuário em 11/11/2026. Estado por item:
 
-## Pílulas, pergaminhos e listas em casa (06/11/2026)
-- **FEITO** — pílulas com "atributo atual → novo" (cartas, ficha P, plano de build, tooltip da barra). Prévia aproximada: o bônus aleatório por nível (powerlevel) e bônus condicionais de combate não entram. PENDENTE opcional: prévia no Ichiraku ao esquecer pílula.
-- **FEITO** — "Melhora:" dos pergaminhos de elemento lista só técnicas do mesmo elemento.
-- **FEITO** — sub-aba "Itens em casa" na Bolsa da Missão com até 12 listas (nome, descrição, aplicar, duplicar, apagar). PENDENTE opcional: reordenar listas e escolher ícone próprio.
-- **FEITO** — filtro de raridade colorido e combinável no plano de build (aba Itens) e na Bolsa da Missão (`RarityFilter`, cores em `src/rarity.css`). PENDENTE opcional: usar o mesmo filtro no Arsenal de itens (hoje é um seletor) e migrar as regras antigas de cor (`style.css`, `run-ui.css`, `summary.css`) para as variáveis.
+1. **Kekkei Genkai +15% de dano** combinando 2 habilidades do mesmo elemento (não Neutro) ou par de KG que o personagem tem (PROPOSTO). Pares (CONFIRMADO via Narutopedia, https://naruto.fandom.com/wiki/Kekkei_Genkai): Ranton = Vento+Água; Madeira = Terra+Água; Ímã = Terra+Raio (a naruto-wiki diz Vento+Terra — divergência a revisar com o usuário); Vapor = Fogo+Água; Lava = Fogo+Terra. Implementar em `src/game/techniqueMerge.ts`.
+2. **Combinar: 1,5× + atributo aleatório relacionado às técnicas** (PROPOSTO). O ×1,5 já existe em `combine`; falta o bônus aleatório.
+3. **Fundir: soma afixos + 2× dano** (CONFIRMADO já existir em `fuse` — validar o texto da descrição).
+4. **Preparador/plano: mostrar quais habilidades são necessárias para a fusão** (PROPOSTO; `src/main.tsx` página de build).
+5. **Pool: badge “Habilidade de fusão”** (PROPOSTO; o badge “★ Planejado para Missão” já existe).
+6. **Inimigos comuns atiram kunai vermelho pequeno** em vez da marca no chão; bosses/elites mantêm a área de acerto (PROPOSTO; usar o mecanismo `enemyShots` existente, dano `10*(dmgMult??1)*threat.damage`, `makeDropSprite('kunai')`).
+7. **Som dos hits “estourado”** (PROPOSTO): `playSfx('impact')` dispara por abate — limitar taxa em `src/audio/sfx.ts` e reduzir o ganho do impact (≈0,055×vol).
+8. **Melhor visualização do inimigo focado/tomando dano** (PROPOSTO): `lockedTarget` + `targetMarker` já existem; plano é tingir o sprite do alvo travado de vermelho.
+9. **Textura da água** (PROPOSTO; `src/scene/terrainArt.ts` linha ≈90).
+10. **Horizonte mais bonito / perspectiva dos morros “esquisita”** (PROPOSTO; `groundHeight` em `terrainArt.ts` — item grande, precisa de revisão visual).
+11. **Câmera estilo PokéBonk: “quem tem que andar é o personagem e não a câmera”** (AGUARDANDO CLAREZA — a câmera já segue o jogador com damping; pedir referência do que exatamente mudar; conferir `assets/referencia/prints/` e docs/15).
+12. **RawInput do mouse “fixo”** (AGUARDANDO CLAREZA — com pointer lock a câmera já usa `movementX/Y` + `MathUtils.damp`; a web não expõe RawInput real; pedir o que exatamente está quebrando).
+13. **Andar livre enquanto ataca** (INVESTIGAR — procurar o travamento de movimento durante conjuração em `castTechnique`/loop de movimento).
 
-## Feito em 06/11/2026 (validar jogando)
-- Técnicas por fase da obra, Invocação do Sapo, escala da horda até 1600, Final Swarm, pílulas com raridade, sorte, roleta nerfada e economia exponencial (ver CHANGELOG).
-- Pendências desses itens: Ryu em formato curto (`compactNumber`) no HUD, preços da barra, roleta, mercador/prêmio e toasts — FEITO; Ryu por abate não escala com o tempo (ajustar se o fim ficar caro demais); saves antigos podem restaurar `pendingItemRewards` de drops antigos; slider `itemDrop` do debug não tem mais efeito; Ultimate por fase (Rasenshuriken só no Shippuden) é proposta que conflita com "Ultimate desde o Nv. 1"; fala e efeito visual próprios da Invocação do Sapo.
+### Desempenho e deploy · 11/11/2026
 
-## Pedidos do usuário em 06/11/2026 (PENDENTES)
-- **Escala do jogo** — FEITO em parte: inimigos exponenciais com o tempo, resistência crescente e hordas até 1400 (`ENEMY_SCALING`). FALTA: crescimento grande do dano pelas técnicas (ex.: +X% de dano por nível de técnica, mais projéteis), dano megacrítico, níveis de "Treino" após acabarem os upgrades (referência do vídeo: nível 1254, dano +2484%, técnicas Nv. 10 com +300%/nível). Referência original: dano do shinobi crescendo de forma exponencial, HP dos monstros subindo, hordas crescendo com o tempo, inimigos ficando mais fortes e resistentes até forçar o jogador a pular de zona.
-- **Recalibração de atributos para todos os níveis** (não só até o 50).
-- **Sorte** — FEITO (06/11/2026): curva de raridade e chance de uma quarta carta com Sorte. Validar jogando.
-- **Roleta da Tsunade** — FEITO: entrega em fila, E aceita e V vende. Novos giros excluem pílulas; itens que ficarem no limite viram Ryu. Validar jogando.
-- **Animações** — as folhas de caminhada estão integradas. A revisão de consistência e a criação de quadros próprios de ataque, pulo e dash por forma seguem conforme a fila acima. Consulte as skills `movimentar-shinobi` e `criar-arte-shinobibonk`.
+- **IMPLEMENTADO**: ajuste automático de desempenho (`src/scene/adaptiveGovernor.ts` + opção em Gráficos). TESTADO em governor unit + headless com 1.200 inimigos.
+- **PENDENTE**: validar FPS em GPU real no deploy Netlify (máquina do usuário). Se ainda estiver baixo: Qualidade `Média`/`Baixa` ou Resolução `900p`/`720p`.
+- **CONFIRMADO**: deploy manual no Netlify funcionando (upload da pasta `dist`/zip). `netlify.toml` pronto para deploy via Git/CLI no futuro.
 
-## Calibração com ponto de partida
-- O usuário quer um ponto inicial de calibração baseado no PokéBonk. Fonte permitida: wiki pública (https://pokebonk-wiki.wiki) e observação de vídeos/prints de gameplay. Não fazer engenharia reversa do aplicativo. Levantar: crescimento de técnicas por nível, upgrades, curva de nível/Treino, inimigos por minuto, HP/dano por zona.
-- **FEITO (levantamento)** — [docs/15-CALIBRACAO-REFERENCIA.md](15-CALIBRACAO-REFERENCIA.md): tabelas ref. × atual × proposta. Nenhum valor alterado. **AGUARDANDO O USUÁRIO** (seção 7 do doc): venda de item proporcional ao preço da kunai, Ryu por abate com inflação, HP do guardião pelo dano do jogador e teto de golpe de chefe, preços dos desbloqueios estruturais, máximos das passivas, Atualizar/Pular/Banir 2/2/1, opção de desenhar só os N inimigos mais próximos. A wiki não publica a curva de HP por minuto: segue PENDENTE medir por vídeo.
+## Backlog posterior e propostas
 
-## Decisões aguardando o usuário
-1. **Hospedar a Alpha**: escolher GitHub Pages (repo precisa ficar público; criar workflow + `base` no vite.config), Netlify/Vercel/Cloudflare Pages (aceita repo privado) ou itch.io (zip do `dist`).
-2. **Coluna "Passivas" na ficha (P/Esc)**: o usuário estranhou buffs no nível 1; vêm das Passivas Shinobi compradas. Proposta: mostrar coluna Base · Passivas · +Nível · Total em `src/ui/RunSheet.tsx`.
-3. **Animações**: procedural (balanço, inclinação, squash no pulo, rastro no dash, recuo ao lançar) já é possível; sprite sheets dependem de arte. Direção preferida: personagem 3D low-poly com aparência pixelada (ver AGENTS.md, direção de arte).
+- Contas atuais são locais ao navegador. Backend, login online, hospedagem da alpha, multiplayer e modo Sobrevivência são etapas posteriores.
+- Revisar apresentação da ficha (fontes base/passivas/nível/itens) e HUD abaixo de 1050 px.
+- Conferir arte de Iruka/Ebisu/Kushina e drops nos locais realmente usados; a presença de um SVG antigo não prova que ele esteja em uso.
+- Minigame/probabilidade de selamento e aviso de sinergia são propostas antigas, ainda exigem definição final.
+- docs/15 contém propostas históricas sobre preços permanentes, venda proporcional, ferramentas 2/2/1 e HP adaptado ao DPS. Elas não substituem as decisões já dadas pelo usuário (inclusive 3 usos iniciais e até 10).
+- Bônus extra de +0,8% em um atributo aleatório quando não restam upgrades é regra separada do crescimento normal por nível.
+- Análise dos arquivos externos do PokéBonk é local e não publica instalador, diretório, código, assets ou extrações no GitHub.
 
-## Arte
-- **Sprites a revisar no Codex** (gerados por código, fora do padrão do atlas): **Iruka** (`public/assets/shinobis/iruka-1.svg`), **Ebisu** (`ebisu-1.svg`) e **Kushina** (`kushina-1.svg`), todos em `scripts/generate-sprites.mjs` (`--npcs`). Também procedurais: drops e kunai/shuriken no chão (`src/scene/dropSprites.ts`).
-- Rever níveis de liberação de técnicas por fase do personagem (ex.: técnicas da fase Shippuden só nos níveis altos); hoje só Naruto (Modo Sábio 25) e Sasuke (Amaterasu 25) foram ajustados.
-- Revisar **Iruka, Ebisu e Kushina** (`scripts/generate-sprites.mjs --npcs`, SVG) seguindo a receita de arte do AGENTS.md. Kushina ainda não tem célula no atlas `shinobi-roster-v2.png` (usa `NPC_PORTRAITS`).
-- Tela "Escolha o mapa": a prévia usa gradiente CSS por mapa, não captura real do cenário.
-- Mapas: Areia/Pedra/Névoa mudam só paleta, tinta e pesos do atlas de cenário; faltam objetos próprios (cactos, rochas, pontes, água).
+## Retomar
 
-## Sistemas "em breve" (aparecem desativados na UI)
-- **Mochila** (itens levados antes da partida) na tela do mapa: sistema ainda a definir com o usuário.
-- **Modo Sobrevivência**.
-- Configurações: música/trilha, tremor de tela, brilho dos efeitos, mira manual, controle (gamepad), outros idiomas, tema claro, dicas das primeiras partidas.
-- **Pulo e deslize** (teclas e itens da referência: +1 pulo, onda ao aterrissar, invulnerável no deslize etc.).
-
-## Mecânicas incompletas
-- Selamento de Mega Elite com até 3 tentativas/falha/fuga (invariante do AGENTS.md) e minigame: não implementado (hoje sempre sela).
-- Aviso na tela ao ativar sinergia.
-- "EXP necessária por nível" do debug só vale a partir do próximo nível.
-- Debug: `setAllUnlocked` (account.ts) existe, mas não há botão "desbloquear tudo / resetar conta" no painel F9.
-- Missões de desbloqueio com requisitos de história e abates: regras e UI prontas, **não testadas numa run real** até o shinobi surgir (testes automáticos usam `?test`, que não gera o Shinobi para selar). Testar sem `?test` ou criar hook.
-- Alvo fixo (botão direito): implementado; falta tecla remapeável própria e indicador no HUD.
-
-## Balanceamento (todos os valores são provisórios)
-- Itens (94), pílulas (19), passivas (25), sinergias/combos, afinidade, setups, Senjutsu (25% · 1,5×), roleta, tiers de inimigo (elite 95 HP/30% defesa; mega 420 HP/55%), lamen de cura (até 5%/35%), abates e minutos das missões, custo da roleta.
-- O limite da horda e a amostra de desempenho estão registrados na seção de desempenho acima.
-
-## Divergências canônicas registradas (Narutopedia), não alteradas
-- Orochimaru só como Vila do Som (canonicamente também Konoha/Akatsuki); Temari só Areia (também ligada a Konoha).
-
-## Testes
-- `verify-runtime` tem uma checagem instável de saldo de Ryu (um drop coletado durante a compra da kunai); rodar de novo resolve; correção sugerida: `clearEnemies` antes da compra.
-
-## Próxima revisão após este lote
-
-1. Revisão visual individual das ações nas 56 formas e em suporte. Há caminhada direcional para todas, ações dedicadas para as formas registradas em `actionArt` e poses procedurais compartilhadas onde ainda faltam folhas. Naruto Academia e Neji receberam folhas novas neste lote. As ações dedicadas de pulo/dash das demais formas do Naruto permanecem na fila.
-2. Medir escala no meio e no final de missões reais. Comparar níveis, DPS, HP/defesa do guardião e abates por segundo. A curva já produz valores de milhões em mega elites e ~1 bilhão no cenário de guardião informado. O vídeo fornecido documenta a abertura.
-3. Medir 1.600 inimigos com GPU real, em diferentes climas, e continuar validando o chão nas bordas. Sons novos dependem de fontes com licença verificável.
-
-
-## Validação da continuação · 07/11/2026
-
-**TESTADO** — 56 verificações de runtime passaram, com limites e persistência da oficina, controles e mercador. Sem exceções JS ou assets ausentes. TypeScript, build e regras passaram. Os novos buffs de suporte e as emboscadas ainda precisam de avaliação prolongada de balanceamento. A fila seguinte continua sendo a revisão visual de ataque, pulo e dash por versão, os efeitos Susanoo e a calibração geral.
-
-## Estado desta publicação · 07/11/2026
-
-Esta seção substitui as notas antigas de divergência local: o merge reúne `c41bd79` e `78e6520`, com correções incrementais do Codex. TypeScript, build e regras passaram. A suíte de navegador é registrada em `artifacts/runtime-checks.json` quando concluir.
-
-- IMPLEMENTADO: retomada após Esc; Susanoo por lançador; atlas regionais de chão e construções.
-- IMPLEMENTADO: pulo/dash de Naruto 10/25/50, Lee 1/15/30 e Guy 1/15/30; ações completas de Sasuke 15 e Hashirama 1/20.
-- PENDENTE: auditoria visual dessas folhas e do restante das 56 versões, inclusive ajudantes; ainda faltam folhas completas para 28 versões, além de refinamentos em folhas existentes.
-- PENDENTE: prévia WebGL do Susanoo, efeitos e sons por técnica, inspeção visual dos mapas/bordas e run prolongada completa.
-- CONFIRMADO: o usuário informou que o balanceamento já existe. Preservar os números; conferir curvas e registrar evidências antes de propor qualquer alteração.
-
-## Lote de animações salvo para continuação · 07/11/2026
-
-IMPLEMENTADO: 24 folhas completas adicionais 4×4 de ataque/selo/pulo/dash: Kakashi 1/25, Itachi 1, Minato 1/15, Tsunade 1/15/30, Jiraiya 1/20, Orochimaru 1/15, Hinata 1/15/30, Pain 1, Shikamaru 1/15/30, Tobirama 1, Temari 1/15 e Tenten 1/15. Todas foram empacotadas em células uniformes e registradas em directionalArt.ts, usado também pelos ajudantes. As três folhas completas de Sasuke 15 e Hashirama 1/20 já foram publicadas no lote anterior. Os prompts e referências estão em docs/arte-atlas-2026-11-07.json, gerados com ImageGen.
-
-IMPLEMENTADO: prévia de Susanoo utiliza o mesmo rig WebGL e partículas do combate, escolhendo o estilo pela família do lançador. TypeScript, build e regras passaram após as mudanças.
-
-PENDENTE: criar folhas completas de Kankuro 1/15/30 e Kushina 1 (quatro versões); revisar/refinar ataques antigos de Neji 1/15, Sasuke Genin e Naruto Clássico/Shippuden. A existência da folha não confirma que todas as poses foram aprovadas visualmente. Conferir consistência com o sprite parado, frente/costas e dash esquerdo em cada versão e como ajudante.
-
-O script scripts/verify-motion-atlases.mjs exercita o controlador em fixture isolada e produz artifacts/motion-review.json e quatro folhas de contato. A primeira execução tinha duas instâncias de Three.js; corrigido o import por scripts/motion-review-entry.ts. Conferir o resultado final antes de considerar a auditoria completa.
-
-Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em combate de todos os lançadores, sons com licença verificada e uma run prolongada de três zonas até bijuu/saída/ranking. Preservar o balanceamento existente conforme instrução do usuário. Não publicar artifacts/sb-swishes-source.zip: é um arquivo preexistente de origem/licença não verificada.
-
-Validação deste lote: scripts/verify-motion-atlases.mjs concluiu com 56 versões, 560 estados, zero erros JavaScript e zero assets ausentes. Foram geradas quatro folhas de contato; a aprovação visual completa e a revisão em combate continuam pendentes.
+1. Ler AGENTS.md, README, docs/00, docs/12 e esta fila. Conferir git status e remoto antes de editar.
+2. Consultar skills/criar-arte-shinobibonk e skills/movimentar-shinobi. Prompts anteriores: docs/arte-atlas-2026-11-07.json. Empacotador: scripts/pack-sprite-atlas.ps1.
+3. Verificações: node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build; node scripts/verify-rules.mjs; node scripts/verify-runtime.mjs para gameplay/HUD; node scripts/verify-motion-atlases.mjs para atlas.
+4. Atualizar contexto, documentos temáticos e changelog na mesma entrega. Publicar somente os arquivos do projeto autorizados, sem incluir executáveis ou pesquisa privada.

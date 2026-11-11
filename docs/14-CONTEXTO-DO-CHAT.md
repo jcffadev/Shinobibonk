@@ -614,6 +614,28 @@ Codex informou que está conciliando os lotes do Claude e Codex, corrigindo Esc,
 
 IMPLEMENTADO: nove folhas novas de pulo/dash (três Narutos, três Lees, três Guys), três folhas completas de ações (Sasuke Shippuden, Hashirama base/Sábio), chão de Areia/Pedra/Névoa e nove construções/marcos regionais. Folhas conectadas ao controlador compartilhado; auditoria visual completa PENDENTE. A retomada por Esc passou no fluxo automatizado; o relatório final da suíte será atualizado ao concluir. O balanceamento existente foi preservado conforme a correção do usuário. O envio solicitado agora é uma entrega incremental; as demais pendências continuam registradas em docs/13.
 
+## Deploy Netlify e FPS · 11/11/2026
+
+**Pedido**
+
+> [print do erro 404 do Netlify: “page not found” / “index.html não existe”]
+> Entenda do que se trata, veja os skills e toda documentação… Após isso corrija um problema que estamos com o index.html, quando carregamos no netlify ele fica dando page not found, porque fala que o index.html não existe/está gerado.
+
+> [print do site rodando no Netlify]
+> Olha como ficou subindo seu .zip no netlify
+
+> acho que deu certo, vou fazer 1 teste apenas
+
+> Porque o FPS está tão baixo? Eu não tinha problemas de FPS antes
+
+> Resolva o FPS que eu subo no netilify
+
+**Resposta e estado real**
+
+- **Netlify 404 (CONFIRMADO)**: o erro veio de uma publicação parcial — o primeiro upload arrastou só o `index.html` da raiz sem a pasta `assets/` (drag & drop do Netlify fica instável acima de ~50 MB; o build tem ~204 MB / 343 arquivos). Subindo a pasta `dist` inteira (ou um zip com `index.html` + `assets/` na raiz), o site carregou: o print do usuário mostra o jogo rodando em `*.netlify.app`. O deploy é manual (sem Git/CLI).
+- **FPS (IMPLEMENTADO)**: causa principal (CONFIRMADO) — as configurações ficam por domínio no `localStorage` (`sb_settings_v1`), então o domínio novo do Netlify começou com os padrões (qualidade `alta`, resolução automática até 1,5× os pixels do dispositivo, FPS sem limite), mais pesado que os ajustes usados localmente; versões recentes também somaram efeitos. A simulação não é o gargalo (TESTADO: 1,8 ms/frame com 1.200 inimigos). Solução: `src/scene/adaptiveGovernor.ts` (mede o intervalo real entre quadros e reduz/devolve o pixel ratio automaticamente) + opção **Ajuste automático de desempenho** em Gráficos (ligada por padrão). **TESTADO**: testes do governor, `tsc -b`, build, `verify-rules` e smoke headless com 1.200 inimigos (`autoRatio` 1 → 0,61 sob carga, sem erros de página). **PENDENTE**: validar em GPU real no deploy do usuário.
+- Lote de feedback da comunidade (fusão/Kekkei Genkai, projéteis vermelhos dos inimigos comuns, água, som de hit, terreno/horizonte, câmera estilo PokéBonk, mouse, badges do pool) registrado em docs/13, aguardando definições do usuário sobre os itens ambíguos.
+
 
 Validação concluída antes do envio: 58 verificações no navegador passaram, sem erros JavaScript nem assets 404; inclui Esc sem clique, Tab, mercador, oficina, ajudantes por versão e emboscadas. TypeScript, build e regras passaram. A medição de desempenho em renderização por software não comprova desempenho em GPU real.
 

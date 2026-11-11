@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" shape-rendering="crispEdges">
+ <!-- Isca Shinobi: boneco de palha de treino com bandana e etiqueta. Rascunho para o Codex refinar. -->
+ <path d="M15 1H17V5H15Z" fill="#8a5a2b" stroke="#1a2031" stroke-width="1"/>
+ <path d="M11 5H21V13H11Z" fill="#e0b55c" stroke="#1a2031" stroke-width="1.5" stroke-linejoin="round"/>
+ <path d="M10 7H22V10H10Z" fill="#446785" stroke="#1a2031" stroke-width="1"/>
+ <path d="M14 8H18V9H14Z" fill="#c7e2f6"/>
+ <path d="M22 8L26 6V9L23 10Z" fill="#446785" stroke="#1a2031" stroke-width="1"/>
+ <path d="M13 11H14V12H13ZM18 11H19V12H18Z" fill="#1a2031"/>
+ <path d="M3 14H29V18H22V27H19V30H13V27H10V18H3Z" fill="#d9a441" stroke="#1a2031" stroke-width="1.5" stroke-linejoin="round"/>
+ <path d="M10 18H22V20H10ZM10 24H22V25H10Z" fill="#a8742a"/>
+ <path d="M3 15H6V17H3ZM26 15H29V17H26Z" fill="#f0cd7a"/>
+ <path d="M14 19H19V25H14Z" fill="#f6ecd2" stroke="#1a2031" stroke-width="1"/>
+ <path d="M15 20H18V21H15ZM16 21H17V24H16Z" fill="#b8322a"/>
+ <path d="M12 14H13V17H12ZM16 14H17V17H16ZM20 14H21V17H20Z" fill="#b98a35"/>
+</svg>

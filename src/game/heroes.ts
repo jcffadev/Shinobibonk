@@ -137,7 +137,7 @@ const U={
 export const SHARED_TECHNIQUES=new Set(Object.values(L).map(x=>x.name));
 // Temas canônicos; percentuais, atributos e composições são regras originais de protótipo. U = única, L.* = compartilhada.
 export const HEROES:Hero[]=[
- h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[U.kageBunshin,L.shuriken,L.kunai,U.rendan],'Tajū Kage Bunshin','Clones, projéteis e velocidade de ataque',0),
+ h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[U.kageBunshin,L.shuriken,L.kunai,U.rendan],'Jutsu Sexy','Clones em área, projéteis e atordoamento',0),
  h('gaara','Gaara','Vila da Areia','#c87557',145,22,4,6.3,'Defesa Ofensiva · +8 armadura e +1% de dano total para cada ponto de armadura.',{defense:8},[L.agulhasAreia,U.caixao,L.ondaAreia,U.sepultamento],'Funeral do Deserto','Área, armadura e duração',1),
  h('madara','Madara','Clã Uchiha','#b94f61',120,24,3,6.8,'Sharingan · +7 pontos de chance crítica: 12% total; críticos causam 250% do dano.',{crit:.07},[U.leque,L.bolaFogo,L.susanoo,U.chamas],'Susanoo Perfeito','Crítico, fogo e ninjutsu',2),
  h('hashirama','Hashirama','Vila da Folha','#62a678',155,23,8,6.2,'Poder Sábio · +20% de dano em ataques de elemento Sábio; infusão disponível por técnica ou item.',{regen:.8},[L.punho,U.estacas,L.raizes,L.dragaoAgua],'Nascimento das Árvores','Regeneração, vida e área',3),
@@ -180,7 +180,7 @@ export const ACADEMY:Technique[]=[
  {...t('Raiton: Faísca','Ninjutsu','Raio','Linha',.7),unlockLevel:4},
 ];
 /** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
-export function isProjectileUltimate(id:string){const family=familyOf(id);return family==='naruto'||family==='tenten'||family==='minato';}
+export function isProjectileUltimate(id:string){const family=familyOf(id);if(id==='naruto')return false;/* Academia: Jutsu Sexy é em área */return family==='naruto'||family==='tenten'||family==='minato';}
 /**
  * VERSÕES SEPARADAS (pedido do usuário, 06/11/2026): cada forma de evolution.ts virou um personagem jogável próprio, com kit,
  * passiva e atributos da fase. O id do shinobi base continua sendo a PRIMEIRA versão (ex.: `naruto` = Naruto Academia), por isso

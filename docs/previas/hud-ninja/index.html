@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>ShinobiBonk · prévia da HUD ninja</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- PRÉVIA ESTÁTICA (PROPOSTO, 11/11/2026). Não é o jogo: é o desenho da HUD para aprovação do usuário.
+     Fontes do Google Fonts (licença OFL). Retratos: atlas do próprio projeto. Fundo: captura real do jogo. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Reggae+One&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#1d1410; --tinta2:#3a2a20; --papel:#efe0b9; --papel2:#dcc48d; --papel3:#c4a66a;
+  --madeira:#6a4426; --madeira2:#3b2414; --madeira3:#8d5f37; --selo:#b8322a; --selo2:#7d1c17;
+  --ouro:#e8b04a; --chakra:#3aa6ee; --vida:#58b84a; --xp:#9b6ae0; --corda:#c9a36a;
+  --titulo:'Reggae One','Baloo 2',system-ui,sans-serif; --texto:'Baloo 2',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+body{background:#14100d;color:var(--papel);font-family:var(--texto);padding:28px 0 60px}
+h1.doc{font-family:var(--titulo);font-size:34px;text-align:center;color:var(--ouro)}
+p.doc{text-align:center;color:#bda98a;margin:6px 0 26px;font-size:16px}
+h2.doc{width:1600px;margin:34px auto 10px;font-family:var(--titulo);font-size:22px;color:var(--papel)}
+h2.doc small{font-family:var(--texto);font-size:15px;color:#a8947a;margin-left:10px}
+.tela{width:1600px;height:900px;margin:0 auto;position:relative;overflow:hidden;border:3px solid #000;border-radius:6px;background:#222}
+.atlas{background-image:url(../../../public/assets/shinobi-roster-v2.png);background-size:500% 500%;image-rendering:pixelated}
+
+/* ───── peças reutilizáveis ───── */
+/* Pergaminho: papel com dois rolos de madeira nas pontas. */
+.pergaminho{position:relative;background:linear-gradient(180deg,#f6ebcc,var(--papel) 18%,var(--papel) 82%,var(--papel2));color:var(--tinta);
+  border-top:3px solid var(--papel3);border-bottom:3px solid var(--papel3);box-shadow:0 6px 0 rgba(0,0,0,.35),inset 0 0 26px rgba(122,84,34,.28)}
+.pergaminho::before,.pergaminho::after{content:"";position:absolute;top:-9px;bottom:-9px;width:18px;border-radius:9px;
+  background:linear-gradient(90deg,var(--madeira2),var(--madeira3) 45%,var(--madeira) 60%,var(--madeira2));box-shadow:0 0 0 2px #1a0f08}
+.pergaminho::before{left:-10px}.pergaminho::after{right:-10px}
+/* Placa de madeira (ema). */
+.placa{background:linear-gradient(180deg,var(--madeira3),var(--madeira) 55%,var(--madeira2));border:3px solid #1a0f08;border-radius:8px;color:#f7e6c0;
+  box-shadow:inset 0 2px 0 rgba(255,220,160,.25),inset 0 -3px 0 rgba(0,0,0,.35),0 5px 0 rgba(0,0,0,.4)}
+/* Selo vermelho (hanko). */
+.selo{background:radial-gradient(circle at 35% 30%,#d9483d,var(--selo) 55%,var(--selo2));color:#fff3df;border:2px solid #4a0f0c;font-family:var(--titulo);
+  display:grid;place-items:center;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+/* Barra em pincelada. */
+.pincel{height:16px;background:#2a1c14;border:2px solid #120b07;border-radius:3px 9px 4px 10px;overflow:hidden;position:relative}
+.pincel i{display:block;height:100%;border-radius:0 8px 3px 0;box-shadow:inset 0 3px 0 rgba(255,255,255,.28),inset 0 -3px 0 rgba(0,0,0,.25)}
+.pincel b{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;text-shadow:0 1px 0 #000,0 0 3px #000;letter-spacing:.3px}
+.kanji{font-family:var(--titulo)}
+.tag{display:inline-block;padding:1px 9px;border-radius:3px;font-weight:800;font-size:13px;border:2px solid rgba(0,0,0,.45)}
+
+/* ───── TELA 1: HUD em combate ───── */
+#t1{background:url(cena.jpg) center/cover}
+#t1::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 160px rgba(0,0,0,.45)}
+.ficha{position:absolute;left:22px;top:18px;width:372px;height:128px;padding:12px 22px 10px 122px;z-index:2}
+.ficha .retrato{position:absolute;left:14px;top:-6px;width:100px;height:112px;border-radius:8px;border:3px solid #1a0f08;
+  background-color:#f4c98a;background-position:0 0;box-shadow:inset 0 0 0 3px var(--ouro)}
+.ficha .nivel{position:absolute;left:78px;top:82px;width:44px;height:44px;border-radius:50%;font-size:19px}
+.ficha h3{font-family:var(--titulo);font-size:20px;line-height:1.05}
+.ficha h3 small{display:block;font-family:var(--texto);font-size:13px;font-weight:700;color:#7a5a32}
+.ficha .pincel{margin-top:6px}.ficha .pincel.fino{height:15px}.ficha .pincel.fino b{font-size:11px}
+.topo{position:absolute;left:45.5%;top:0;transform:translateX(-50%);display:flex;align-items:flex-start;gap:14px;z-index:2}
+.relogio{width:210px;padding:18px 0 10px;text-align:center;border-radius:0 0 14px 14px;border-top:0;position:relative}
+.relogio::before,.relogio::after{content:"";position:absolute;top:0;width:6px;height:16px;background:var(--corda);border:1px solid #1a0f08}
+.relogio::before{left:34px}.relogio::after{right:34px}
+.relogio b{font-family:var(--titulo);font-size:44px;line-height:1;color:#fff0cf;text-shadow:0 3px 0 #1a0f08}
+.relogio small{display:block;font-weight:800;font-size:13px;color:#f3cf8e;letter-spacing:.6px;margin-top:2px}
+.faixa{margin-top:10px;padding:6px 16px;font-weight:800;font-size:14px;line-height:1.25}
+.faixa em{font-style:normal;color:var(--selo2)}
+.recursos{position:absolute;right:226px;top:18px;display:flex;gap:8px;z-index:2}
+.recursos .placa{padding:5px 12px 4px;font-weight:800;font-size:17px;display:flex;align-items:center;gap:7px}
+.moeda{width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a0,var(--ouro) 60%,#9b6a16);border:2px solid #5a3b08;display:inline-grid;place-items:center;font-size:10px;color:#5a3b08;font-family:var(--titulo)}
+.orbe{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d6f1ff,var(--chakra) 60%,#11518a);border:2px solid #0b3156;display:inline-block}
+.precos{position:absolute;right:226px;top:62px;display:flex;gap:6px;z-index:2}
+.precos span{background:rgba(29,20,16,.88);border:2px solid var(--madeira3);border-radius:4px;padding:1px 9px;font-size:13px;font-weight:700;color:#f3dfb8}
+.precos b{color:var(--ouro)}
+.mapa{position:absolute;right:20px;top:14px;width:190px;height:190px;border-radius:50%;z-index:2;
+  background:radial-gradient(circle,#31402c 0 58%,#263222 59% 100%);border:5px solid var(--madeira2);
+  box-shadow:0 0 0 4px var(--corda),0 0 0 6px #1a0f08,0 8px 0 rgba(0,0,0,.4)}
+.mapa::before{content:"";position:absolute;inset:14px;border-radius:50%;background:
+  repeating-linear-gradient(0deg,transparent 0 22px,rgba(240,220,170,.12) 22px 23px),repeating-linear-gradient(90deg,transparent 0 22px,rgba(240,220,170,.12) 22px 23px)}
+.mapa .eu{position:absolute;left:50%;top:50%;width:0;height:0;border:7px solid transparent;border-bottom:14px solid #fff;transform:translate(-50%,-70%)}
+.mapa i{position:absolute;width:8px;height:8px;border-radius:50%;background:#e2483d;border:1px solid #000}
+.mapa u{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--ouro);border:2px solid #1a0f08}
+.mapa .n{position:absolute;left:50%;top:-16px;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;font-size:15px}
+.teclas{position:absolute;right:28px;top:214px;font-size:13px;font-weight:700;color:#f3dfb8;text-shadow:0 1px 2px #000;z-index:2}
+kbd{font-family:var(--texto);background:var(--papel);color:var(--tinta);border:2px solid #1a0f08;border-bottom-width:4px;border-radius:5px;padding:0 6px;font-weight:800;font-size:13px}
+.sinergias{position:absolute;left:22px;top:170px;width:230px;padding:8px 18px;z-index:2}
+.sinergias h4{font-family:var(--titulo);font-size:14px;color:var(--selo2);border-bottom:2px dashed var(--papel3);padding-bottom:3px;margin-bottom:4px}
+.sinergias p{font-size:13px;font-weight:700;line-height:1.3}
+.sinergias p b{color:#2f6b25}
+.ajudantes{position:absolute;left:22px;top:292px;display:flex;flex-direction:column;gap:8px;z-index:2}
+.ajudante{width:206px;height:54px;padding:5px 10px 5px 60px;position:relative;font-size:13px;font-weight:800}
+.ajudante .atlas{position:absolute;left:5px;top:-5px;width:50px;height:56px;border-radius:6px;border:2px solid #1a0f08;background-color:#e9cf9c}
+.ajudante .pincel{height:9px;margin-top:3px}
+.pilulas{position:absolute;left:26px;bottom:142px;display:flex;gap:6px;z-index:2}
+.pilula{width:34px;height:34px;border-radius:50%;border:2px solid #1a0f08;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 0 #000;box-shadow:inset 0 3px 0 rgba(255,255,255,.35),0 3px 0 rgba(0,0,0,.4)}
+.barra-tec{position:absolute;left:22px;bottom:22px;display:flex;align-items:flex-end;gap:10px;z-index:2}
+/* Slot de técnica: etiqueta de papel (ofuda) pendurada. */
+.ofuda{width:84px;height:108px;background:linear-gradient(180deg,#f8eed2,var(--papel) 70%,var(--papel2));border:3px solid #1a0f08;border-radius:4px;position:relative;
+  box-shadow:0 5px 0 rgba(0,0,0,.4),inset 0 0 0 3px rgba(184,50,42,.35);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:5px;color:var(--tinta)}
+.ofuda .num{position:absolute;left:-9px;top:-9px;width:28px;height:28px;border-radius:50%;font-size:14px}
+.ofuda .icone{width:58px;height:58px;border-radius:50%;border:3px solid #1a0f08;margin-bottom:3px;display:grid;place-items:center;font-family:var(--titulo);font-size:26px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.5)}
+.ofuda b{font-size:12px;line-height:1}.ofuda small{font-size:11px;font-weight:700;color:#7a5a32}
+.ofuda.vazio{background:rgba(29,20,16,.6);border-style:dashed;border-color:var(--papel3);box-shadow:none;color:var(--papel3);justify-content:center;font-size:12px;font-weight:700;text-align:center}
+.ofuda .recarga{position:absolute;left:0;right:0;bottom:0;height:42%;background:rgba(29,20,16,.62)}
+.ult{width:118px;height:118px;border-radius:50%;margin-left:8px;position:relative;font-size:40px;
+  box-shadow:0 0 0 5px var(--corda),0 0 0 8px #1a0f08,0 0 26px rgba(255,170,60,.75)}
+.ult small{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);white-space:nowrap}
+.ult .auto{background:#2f6b25;color:#eaffd8;border-color:#0f2a0b}
+.ult kbd{position:absolute;top:-8px;right:-4px}
+.mochila{position:absolute;right:22px;bottom:22px;width:372px;padding:8px 18px 10px;z-index:2}
+.mochila h4{font-family:var(--titulo);font-size:14px;color:var(--selo2);display:flex;justify-content:space-between}
+.mochila .grade{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-top:5px}
+.item{aspect-ratio:1;border-radius:5px;border:2px solid #1a0f08;position:relative;background:#f7ecd0;display:grid;place-items:center;font-size:17px}
+.item b{position:absolute;right:-4px;bottom:-5px;background:var(--tinta);color:#fff;font-size:10px;border-radius:8px;padding:0 4px;border:1px solid #000}
+.r1{box-shadow:inset 0 0 0 3px #9aa0a6}.r2{box-shadow:inset 0 0 0 3px #4caf50}.r3{box-shadow:inset 0 0 0 3px #3d8bfd}.r4{box-shadow:inset 0 0 0 3px #9b59d0}.r5{box-shadow:inset 0 0 0 3px #f08c1a}
+.rodape{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);background:rgba(29,20,16,.85);border:2px solid var(--madeira3);border-radius:4px;padding:1px 12px;font-size:13px;font-weight:700;color:#f3dfb8;z-index:2}
+.aviso{position:absolute;left:45.5%;top:150px;transform:translateX(-50%);padding:8px 34px;font-family:var(--titulo);font-size:18px;z-index:2;white-space:nowrap}
+
+/* ───── TELA 2: menu principal ───── */
+#t2{background:
+  repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 2px,transparent 2px 46px),repeating-linear-gradient(-45deg,rgba(255,255,255,.035) 0 2px,transparent 2px 46px),
+  radial-gradient(ellipse at 70% 40%,#3f6a8f,#1c2f45 60%,#101b29)}
+.logo{position:absolute;left:70px;top:44px;font-family:var(--titulo);font-size:76px;line-height:.95;color:#ffb22e;
+  text-shadow:0 5px 0 #7a2b10,0 0 0 #000,4px 4px 0 #1a0f08,-3px -3px 0 #1a0f08,3px -3px 0 #1a0f08,-3px 3px 0 #1a0f08}
+.logo small{display:block;font-family:var(--texto);font-size:18px;color:var(--papel);text-shadow:0 2px 0 #000;letter-spacing:3px;margin-top:8px}
+.rolos{position:absolute;left:84px;top:236px;display:flex;flex-direction:column;gap:22px;width:470px}
+.rolo{height:74px;display:flex;align-items:center;gap:16px;padding:0 34px;font-family:var(--titulo);font-size:27px}
+.rolo .selo{width:46px;height:46px;border-radius:8px;font-size:22px;flex:none}
+.rolo small{font-family:var(--texto);font-size:14px;font-weight:700;color:#7a5a32;display:block;line-height:1}
+.rolo.ativo{transform:translateX(26px) scale(1.04);box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 4px var(--ouro),inset 0 0 26px rgba(122,84,34,.28)}
+.rolo.fechado{filter:grayscale(.7) brightness(.75)}
+.heroi{position:absolute;right:120px;top:70px;width:560px;height:620px;background-position:0 0;filter:drop-shadow(0 18px 0 rgba(0,0,0,.35))}
+.fala{position:absolute;right:86px;bottom:60px;width:640px;padding:16px 34px;font-size:19px;font-weight:700;line-height:1.3}
+.fala b{font-family:var(--titulo);color:var(--selo2);display:block;font-size:17px}
+.conta{position:absolute;right:40px;top:30px;padding:8px 18px;font-weight:800;font-size:16px;display:flex;gap:16px;align-items:center}
+
+/* ───── TELA 3: seleção de shinobi ───── */
+#t3{background:radial-gradient(ellipse at 50% 45%,#f2c56a,#c8742c 55%,#5a2a14 100%)}
+#t3::before{content:"忍";position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);font-family:var(--titulo);font-size:760px;color:rgba(90,30,12,.16);line-height:1}
+.cab{position:absolute;left:50%;top:18px;transform:translateX(-50%);padding:8px 60px;font-family:var(--titulo);font-size:30px;white-space:nowrap}
+.lado{position:absolute;left:36px;top:108px;width:400px;bottom:36px;padding:20px 26px}
+.lado .grande{height:330px;margin:0 -6px;background-position:0 0;background-color:rgba(184,50,42,.12);border-radius:8px;border:3px solid #1a0f08}
+.lado h3{font-family:var(--titulo);font-size:30px;margin-top:12px;line-height:1}
+.lado h3 small{display:block;font-family:var(--texto);font-size:15px;color:#7a5a32;font-weight:800}
+.lado dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin-top:10px;font-weight:800;font-size:15px}
+.lado dt{color:#7a5a32}.lado .pincel{height:13px;align-self:center}
+.lado .tec{margin-top:10px;display:flex;flex-direction:column;gap:5px}
+.lado .tec span{background:rgba(29,20,16,.9);color:#f7e6c0;border-radius:4px;padding:3px 10px;font-size:14px;font-weight:700;display:flex;justify-content:space-between}
+.lado .tec span.u{background:linear-gradient(90deg,var(--selo2),var(--selo));}
+.grade-sel{position:absolute;left:470px;right:36px;top:108px;display:grid;grid-template-columns:repeat(8,1fr);gap:10px}
+.carta{aspect-ratio:1/1.08;background:linear-gradient(180deg,#f8eed2,var(--papel2));border:3px solid #1a0f08;border-radius:6px;position:relative;box-shadow:0 5px 0 rgba(0,0,0,.4);overflow:hidden}
+.carta .atlas{position:absolute;inset:4px 4px 22px}
+.carta b{position:absolute;left:0;right:0;bottom:0;background:var(--tinta);color:#f7e6c0;font-size:12px;text-align:center;line-height:20px;white-space:nowrap}
+.carta em{position:absolute;right:3px;top:3px;width:24px;height:24px;border-radius:50%;font-style:normal;font-size:13px;z-index:1}
+.carta.sel{outline:5px solid var(--ouro);outline-offset:2px;transform:scale(1.07);z-index:2}
+.carta.trancada .atlas{filter:brightness(0) opacity(.55)}
+.carta.trancada::after{content:"?";position:absolute;inset:0 0 20px;display:grid;place-items:center;font-family:var(--titulo);font-size:54px;color:rgba(247,230,192,.85)}
+.fases{position:absolute;left:470px;right:36px;bottom:36px;height:112px;padding:10px 30px;display:flex;align-items:center;gap:16px}
+.fases h4{font-family:var(--titulo);font-size:17px;color:var(--selo2);width:150px;line-height:1.1}
+.fase{width:200px;height:84px;border:3px solid #1a0f08;border-radius:6px;background:#f8eed2;position:relative;padding:8px 8px 8px 84px;font-weight:800;font-size:14px;line-height:1.15}
+.fase .atlas{position:absolute;left:4px;top:4px;width:72px;height:70px}
+.fase small{display:block;color:#7a5a32;font-size:12px}
+.fase.sel{box-shadow:0 0 0 4px var(--ouro)}
+.fases .ir{margin-left:auto;padding:14px 30px;font-family:var(--titulo);font-size:24px;border-radius:8px}
+
+/* ───── TELA 4: subida de nível + ficha do item ───── */
+#t4{background:url(cena.jpg) center/cover}
+#t4::before{content:"";position:absolute;inset:0;background:rgba(16,10,6,.72)}
+.titulo-nivel{position:absolute;left:50%;top:44px;transform:translateX(-50%);padding:10px 80px;font-family:var(--titulo);font-size:34px;white-space:nowrap}
+.cartas{position:absolute;left:50%;top:150px;transform:translateX(-50%);display:flex;gap:26px}
+.escolha{width:300px;height:520px;padding:22px 26px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.escolha .icone{width:120px;height:120px;border-radius:50%;border:4px solid #1a0f08;display:grid;place-items:center;font-family:var(--titulo);font-size:54px;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.5);box-shadow:0 0 0 5px var(--corda),0 0 0 7px #1a0f08;margin:8px 0 14px}
+.escolha h3{font-family:var(--titulo);font-size:23px;line-height:1.05}
+.escolha .tipo{margin:6px 0 10px}
+.escolha p{font-size:15px;font-weight:700;line-height:1.3;color:var(--tinta2)}
+.escolha ul{list-style:none;padding:0;margin-top:auto;width:100%;font-size:14px;font-weight:800}
+.escolha li{display:flex;justify-content:space-between;border-top:2px dashed var(--papel3);padding:4px 2px}
+.escolha li b{color:#2f6b25}
+.escolha .tecla{position:absolute;top:-16px;left:50%;transform:translateX(-50%);width:40px;height:40px;border-radius:50%;font-size:19px}
+.escolha.raro{box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 4px #3d8bfd,0 0 30px rgba(61,139,253,.7),inset 0 0 26px rgba(122,84,34,.28)}
+.escolha.epico{box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 4px #9b59d0,0 0 30px rgba(155,89,208,.7),inset 0 0 26px rgba(122,84,34,.28)}
+.acoes{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);display:flex;gap:16px}
+.acoes .placa{padding:9px 24px;font-weight:800;font-size:17px}
+</style>
+</head>
+<body>
+<h1 class="doc">ShinobiBonk · prévia da HUD ninja</h1>
+<p class="doc">Proposta de visual: pergaminho, placa de madeira, selo vermelho e barras em pincelada. Nada disto está no jogo ainda.</p>
+
+<h2 class="doc">1 · HUD em combate <small>fundo: captura real do jogo; os elementos ficam nos mesmos lugares de hoje</small></h2>
+<section class="tela" id="t1">
+  <div class="ficha pergaminho">
+    <div class="retrato atlas"></div><div class="nivel selo">12</div>
+    <h3>Naruto Academia <small>Vila da Folha · Vento 風</small></h3>
+    <div class="pincel"><i style="width:78%;background:var(--vida)"></i><b>166 / 212</b></div>
+    <div class="pincel fino"><i style="width:46%;background:var(--xp)"></i><b>XP 54 / 118</b></div>
+  </div>
+  <div class="sinergias pergaminho"><h4>SINERGIAS ▾</h4><p>Time 7 <b>+12% dano</b></p><p>Vila da Folha <b>+8% HP</b></p></div>
+  <div class="ajudantes">
+    <div class="ajudante placa"><div class="atlas" style="background-position:100% 0"></div>Sasuke Genin<div class="pincel"><i style="width:64%;background:var(--chakra)"></i></div></div>
+    <div class="ajudante placa"><div class="atlas" style="background-position:0 25%"></div>Sakura Genin<div class="pincel"><i style="width:88%;background:var(--chakra)"></i></div></div>
+    <div class="ajudante placa"><div class="atlas" style="background-position:25% 25%"></div>Kakashi Jonin<div class="pincel"><i style="width:30%;background:var(--chakra)"></i></div></div>
+  </div>
+  <div class="topo">
+    <div class="faixa pergaminho">Missão <em>Genin</em> · Vila da Folha<br>Zona 1/3 · Céu limpo</div>
+    <div class="relogio placa"><b>7:42</b><small>GUARDIÃO EM 2:02</small></div>
+    <div class="faixa pergaminho">Abates <em>1.284</em><br>Horda <em>312</em> vivos</div>
+  </div>
+  <div class="aviso pergaminho">Mega Elite à vista! <span style="color:var(--selo)">Sele com E</span></div>
+  <div class="recursos"><div class="placa"><span class="moeda">両</span>12,4 mil</div><div class="placa"><span class="orbe"></span>68%</div><div class="placa">🗡 3 · ✦ 2</div></div>
+  <div class="precos"><span>Kunai <b>240</b></span><span>Shuriken <b>180</b></span><span>Roleta <b>900</b></span></div>
+  <div class="mapa"><div class="n selo">北</div><div class="eu"></div>
+    <i style="left:40%;top:30%"></i><i style="left:62%;top:38%"></i><i style="left:30%;top:60%"></i><i style="left:58%;top:66%"></i><i style="left:70%;top:52%"></i>
+    <u style="left:22%;top:34%"></u><u style="left:66%;top:20%"></u><u style="left:48%;top:76%"></u></div>
+  <div class="teclas"><kbd>Tab</kbd> rápido · <kbd>M</kbd> mapa · <kbd>P</kbd> ficha</div>
+  <div class="pilulas">
+    <div class="pilula" style="background:#d94a4a">3</div><div class="pilula" style="background:#3d8bfd">2</div><div class="pilula" style="background:#4caf50">5</div>
+    <div class="pilula" style="background:#e8b04a">1</div><div class="pilula" style="background:#9b59d0">2</div><div class="pilula" style="background:#e06aa8">1</div>
+  </div>
+  <div class="barra-tec">
+    <div class="ofuda"><div class="num selo">1</div><div class="icone" style="background:#f08c1a">影</div><b>Kage Bunshin</b><small>Nv. 4</small></div>
+    <div class="ofuda"><div class="num selo">2</div><div class="icone" style="background:#7a8794">手</div><b>Shuriken</b><small>Nv. 3</small><div class="recarga"></div></div>
+    <div class="ofuda"><div class="num selo">3</div><div class="icone" style="background:#58b6a0">風</div><b>Rendan</b><small>Nv. 2</small></div>
+    <div class="ofuda vazio">4<br>bloqueado</div>
+    <div class="ult selo">忍<kbd>R</kbd><small class="tag auto">AUTO · Y</small></div>
+  </div>
+  <div class="mochila pergaminho"><h4><span>BOLSA NINJA</span><span>14 itens ⤢</span></h4>
+    <div class="grade">
+      <div class="item r5">📜<b>1</b></div><div class="item r4">🔮<b>2</b></div><div class="item r3">🥋<b>3</b></div><div class="item r3">🗡<b>1</b></div>
+      <div class="item r2">🍵<b>4</b></div><div class="item r2">🎋<b>2</b></div><div class="item r1">👝<b>6</b></div><div class="item r1">🪙<b>5</b></div>
+    </div></div>
+  <div class="rodape">60 FPS · 312 inimigos vivos</div>
+</section>
+
+<h2 class="doc">2 · Menu inicial <small>cada opção é um pergaminho; o shinobi escolhido comenta a opção</small></h2>
+<section class="tela" id="t2">
+  <div class="logo">SHINOBI<br>BONK<small>SOBREVIVA · SELE · EVOLUA</small></div>
+  <div class="conta placa"><span>Guest001</span><span>🍜 12.480 Lamens</span><span>⚙</span></div>
+  <div class="rolos">
+    <div class="rolo pergaminho ativo"><div class="selo">任</div><div>Missão<small>Escolher mapa e dificuldade</small></div></div>
+    <div class="rolo pergaminho"><div class="selo">忍</div><div>Shinobis<small>56 versões · 24 famílias</small></div></div>
+    <div class="rolo pergaminho"><div class="selo">術</div><div>Plano de build<small>Técnicas, pílulas e itens</small></div></div>
+    <div class="rolo pergaminho"><div class="selo">袋</div><div>Bolsa da Missão<small>Itens que vão ou ficam em casa</small></div></div>
+    <div class="rolo pergaminho"><div class="selo">麺</div><div>Loja do Ichiraku<small>Passivas e desbloqueios com Lamens</small></div></div>
+    <div class="rolo pergaminho fechado"><div class="selo">生</div><div>Sobrevivência<small>Em breve</small></div></div>
+  </div>
+  <div class="heroi atlas"></div>
+  <div class="fala pergaminho"><b>Naruto Academia</b>Escolha o mapa e a dificuldade. Vencer o Genin de uma vila libera a próxima!</div>
+</section>
+
+<h2 class="doc">3 · Seleção de shinobi <small>grade de retratos; ao escolher, as fases (versões) aparecem embaixo</small></h2>
+<section class="tela" id="t3">
+  <div class="cab pergaminho">Escolha seu shinobi</div>
+  <div class="lado pergaminho">
+    <div class="grande atlas"></div>
+    <h3>Naruto <small>Academia · Clã Uzumaki · Vila da Folha</small></h3>
+    <dl><dt>Vida</dt><div class="pincel"><i style="width:65%;background:var(--vida)"></i></div><dt>Força</dt><div class="pincel"><i style="width:45%;background:var(--selo)"></i></div><dt>Velocidade</dt><div class="pincel"><i style="width:70%;background:var(--chakra)"></i></div></dl>
+    <div class="tec"><span>Kage Bunshin <em>inicial</em></span><span>Shuriken <em>Nv. 3</em></span><span>Rendan <em>Nv. 8</em></span><span class="u">Ultimate · Jutsu Sexy <em>R</em></span></div>
+  </div>
+  <div class="grade-sel" id="grade"></div>
+  <div class="fases pergaminho"><h4>FASES DE NARUTO</h4>
+    <div class="fase sel"><div class="atlas" style="background-position:0 0"></div>Academia<small>Liberado</small></div>
+    <div class="fase"><div class="atlas" style="background-position:50% 100%"></div>Genin<small>Liberado</small></div>
+    <div class="fase"><div class="atlas" style="background-position:75% 100%"></div>Shippuden<small>Missão: Jonin</small></div>
+    <div class="fase"><div class="atlas" style="background-position:100% 100%"></div>Manto da Kurama<small>Missão: Kage</small></div>
+    <div class="ir selo">Confirmar ▶</div>
+  </div>
+</section>
+
+<h2 class="doc">4 · Subida de nível <small>cartas em pergaminho; a cor da raridade vira o brilho da borda</small></h2>
+<section class="tela" id="t4">
+  <div class="titulo-nivel pergaminho">Nível 13! <span style="color:var(--selo)">Escolha um aprimoramento</span></div>
+  <div class="cartas">
+    <div class="escolha pergaminho"><div class="tecla selo">1</div><div class="icone" style="background:#f08c1a">影</div><h3>Kage Bunshin</h3><span class="tag tipo" style="background:#e9d9a8">Técnica · Nv. 4 → 5</span><p>O clone explode ao tocar o alvo e acerta todos em volta.</p><ul><li>Dano <b>+18%</b></li><li>Área <b>+10%</b></li><li>Recarga <b>−0,1 s</b></li></ul></div>
+    <div class="escolha pergaminho raro"><div class="tecla selo">2</div><div class="icone" style="background:#3d8bfd">風</div><h3>Rasengan</h3><span class="tag tipo" style="background:#bcd6ff">Técnica nova · Rara</span><p>Esfera de chakra em espiral que empurra os inimigos.</p><ul><li>Dano <b>42</b></li><li>Efeito <b>Empurrar 60%</b></li><li>Natureza <b>×1,5 Vento</b></li></ul></div>
+    <div class="escolha pergaminho"><div class="tecla selo">3</div><div class="icone" style="background:#d94a4a">丸</div><h3>Pílula do Soldado</h3><span class="tag tipo" style="background:#e9d9a8">Pílula · 3/10</span><p>Aumenta o dano de todas as técnicas.</p><ul><li>Dano total <b>+6%</b></li><li>Hoje <b>118%</b></li><li>Depois <b>124%</b></li></ul></div>
+    <div class="escolha pergaminho epico"><div class="tecla selo">4</div><div class="icone" style="background:#9b59d0">速</div><h3>Pílula do Relâmpago</h3><span class="tag tipo" style="background:#e2c9f5">Pílula · Épica</span><p>Aumenta a velocidade de ataque.</p><ul><li>Vel. de ataque <b>+14%</b></li><li>Hoje <b>1,20×</b></li><li>Depois <b>1,34×</b></li></ul></div>
+  </div>
+  <div class="acoes"><div class="placa"><kbd>E</kbd> Trocar cartas · 3</div><div class="placa"><kbd>V</kbd> Banir · 2</div><div class="placa"><kbd>G</kbd> Pular</div></div>
+</section>
+
+<script>
+// Grade da tela 3: 25 retratos do atlas do projeto + casas trancadas.
+const nomes=['Naruto','Gaara','Madara','Hashirama','Sasuke','Sakura','Kakashi','Itachi','Minato','Tsunade','Jiraiya','Orochimaru','Rock Lee','Neji','Hinata','Shikamaru','Temari','Tenten','Pain','Tobirama','Kankuro','Might Guy'];
+const el=['風','砂','火','木','雷','土','雷','火','風','水','火','風','体','体','体','影','風','武','輪','水','砂','体'];
+const grade=document.getElementById('grade');
+for(let i=0;i<32;i++){
+  const c=document.createElement('div');c.className='carta'+(i===0?' sel':'')+(i>=22?' trancada':'');
+  const k=i<22?i:(i*7)%22;
+  c.innerHTML=`<div class="atlas" style="background-position:${(k%5)*25}% ${Math.floor(k/5)*25}%"></div>`+(i<22?`<em class="selo">${el[i]}</em><b>${nomes[i]}</b>`:'<b>Sele para liberar</b>');
+  grade.appendChild(c);
+}
+</script>
+</body>
+</html>
