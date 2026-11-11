@@ -663,3 +663,21 @@ O script scripts/verify-motion-atlases.mjs exercita o controlador em fixture iso
 Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em combate de todos os lançadores, sons com licença verificada e uma run prolongada de três zonas até bijuu/saída/ranking. Preservar o balanceamento existente conforme instrução do usuário. Não publicar artifacts/sb-swishes-source.zip: é um arquivo preexistente de origem/licença não verificada.
 
 Validação deste lote: scripts/verify-motion-atlases.mjs concluiu com 56 versões, 560 estados, zero erros JavaScript e zero assets ausentes. Foram geradas quatro folhas de contato; a aprovação visual completa e a revisão em combate continuam pendentes.
+
+## Arquivar e remover o material do jogo de referência · 11/11/2026
+
+> Pergunta: Você consegue gerar um arquivo com todo o contexto de referência de todos os vídeos/prints que relacionam o pokebonk e deletar COMPLETAMENTE do projeto/pasta do projeto qualquer coisa que relacione pokebonk? Incluindo entender as prints que são referente ao pokebonk?
+
+### Resposta e providências
+
+CONCLUÍDO no commit `4ef107c`. O material saiu do repositório para `arquivo-pokebonk/` na raiz do workspace (fora do Git): `CONTEXTO-COMPLETO.md` reúne os docs antigos íntegros (ex-docs/15–17), as 44 prints com descrição, as 54 imagens originais, as citações do chat e as medições do vídeo de referência; `prints/` e `prints/originais/` guardam os PNGs. Foram removidos 101 arquivos do projeto e reescritos 11 arquivos para eliminarem a menção direta ao jogo de referência (passam a falar de “jogo de referência”/“arquivo arquivado”). O vídeo `referencia.mp4` (~240 MB) ficou na pasta de clips do Medal do usuário.
+
+ATENÇÃO: os arquivos removidos continuam no **histórico do Git** (foram removidos apenas da ponta); apagá-los do histórico exigiria reescrever o histórico/force push — proibido pelas regras. Decisão separada do usuário, caso queira.
+
+## Arquivo de contexto permanente de perguntas/respostas · 11/11/2026
+
+> Crie um .md de contexto de perguntas/respostas para sempre manter o contexto de tudo que perguntamos/falamos para sempre manter a direção do que estamos conversando
+
+### Resposta e providências
+
+IMPLEMENTADO. Criado `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` como arquivo de contexto permanente: §0 regras de manutenção (toda rodada atualiza o resumo/direção; nunca apagar entradas passadas), §1 o que é o ShinobiBonk, §2 direção atual, §3 decisões permanentes do usuário com data, §4 registro cronológico resumido das 25 rodadas com estados (CONFIRMADO/IMPLEMENTADO/TESTADO/PROPOSTO/PENDENTE), §5 estado atual, §6 pendências vivas e §7 mapa de onde cada conteúdo vive. O texto integral continua em docs/14 (evita manutenção dupla). Atualizados AGENTS.md (leitura inicial + regra de documentação contínua), README.md e docs/00 (ponteiros para o docs/18).

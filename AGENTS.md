@@ -1,11 +1,12 @@
 # Instruções para Codex — ShinobiBonk
 
-Leia primeiro README.md e docs/00-LEIA-PRIMEIRO.md; consulte os demais docs conforme a tarefa. A base atual executável é React + Three.js em src/; game/index.html é a versão Canvas 2D legada. Histórico em history/ não é fonte de verdade do código atual.
+Leia primeiro README.md, docs/00-LEIA-PRIMEIRO.md e docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md (direção permanente e registro resumido de perguntas/respostas); consulte os demais docs conforme a tarefa. A base atual executável é React + Three.js em src/; game/index.html é a versão Canvas 2D legada. Histórico em history/ não é fonte de verdade do código atual.
 
 ## Documentação contínua
 - Sempre que alterar código, configuração, controles, assets ou sistemas, siga `skills/documentar-projeto/SKILL.md` e sincronize os Markdown afetados na mesma tarefa.
 - Mantenha README.md, docs/00-LEIA-PRIMEIRO.md, docs/12-ARQUITETURA-E-ESTADO-DO-CODIGO.md, o documento temático e CHANGELOG.md alinhados ao estado real.
 - Para toda nova solicitação do usuário, registre o pedido e a resposta em `docs/14-CONTEXTO-DO-CHAT.md`. Inclua mensagens complementares da mesma rodada e preserve dados sensíveis fora do arquivo versionado.
+- Na mesma tarefa, atualize o resumo da rodada (§4) e a direção/estado (§2/§5) em `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md`. O texto integral fica no docs/14; nunca apague entradas passadas do docs/18 — decisão nova substitui a antiga com data, sem remover.
 
 ## Skills de arte e movimento
 - Para criar ou integrar arte, siga `skills/criar-arte-shinobibonk/SKILL.md`; para movimento, pulo, dash e animação dos shinobis, siga `skills/movimentar-shinobi/SKILL.md`.

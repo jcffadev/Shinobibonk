@@ -2,6 +2,8 @@
 
 Este documento resume o que é decisão de produto e o que o código da base atual realmente executa. A referência técnica detalhada é [12-ARQUITETURA-E-ESTADO-DO-CODIGO.md](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md).
 
+A direção permanente e o registro resumido de todas as perguntas e respostas estão em [18-CONTEXTO-PERGUNTAS-RESPOSTAS.md](18-CONTEXTO-PERGUNTAS-RESPOSTAS.md); o texto integral do chat está em [14-CONTEXTO-DO-CHAT.md](14-CONTEXTO-DO-CHAT.md).
+
 ## Como classificar
 
 - **CONFIRMADO**: decisão passada pelo usuário.
