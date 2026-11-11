@@ -49,7 +49,7 @@
 
 ## Calibração com referência pública
 
-- Adiciona a calibração com o jogo de referência (level-up, pílulas, melhorias permanentes, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário. (Documento arquivado fora do projeto: arquivo-pokebonk/CONTEXTO-COMPLETO.md)
+- Adiciona a calibração com o jogo de referência (level-up, pílulas, melhorias permanentes, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário. (Documento arquivado fora do projeto)
 
 ## Pílulas com atributo atual → novo, pergaminhos por elemento e listas de itens em casa
 

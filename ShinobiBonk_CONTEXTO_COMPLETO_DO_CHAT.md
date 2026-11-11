@@ -58,7 +58,7 @@ Usar sempre: **CONFIRMADO** (decisão do usuário), **IMPLEMENTADO** (presente n
 | Inferior direito | **Todos os itens adquiridos**, ícones pequenos e **quantidades/empilhamentos** |
 | Tab | Ficha completa, itens atuais, itens **planejados na build**, itens arquivados, habilidades disponíveis no pool, habilidades equipadas, pílulas e atributos |
 
-- Referência de interface: screenshots do jogo de referência enviados pelo usuário (arquivados em arquivo-pokebonk/prints/, fora do projeto), com painéis escuros, cartões e ícones, sem copiar cegamente a identidade visual.
+- Referência de interface: screenshots do jogo de referência enviados pelo usuário (arquivados numa pasta fora do projeto, `prints/`), com painéis escuros, cartões e ícones, sem copiar cegamente a identidade visual.
 - A **ficha** precisa mostrar contribuição de cada origem: atributos base, ganhos por nível, árvore permanente, itens, pílulas, passivas de aliados, buffs/debuffs de eventos. Distinguir bônus aditivos de multiplicadores **[x]**, e apresentar valores finais e, quando possível, subtotais.
 - Configurações gráficas: limite de FPS, escala da interface, transparência, taxa do minimapa, simplificação de inimigos, densidade de efeitos, números de dano, tela cheia, qualidade visual e opção H. Interface deve ser legível mesmo com muitos inimigos.
 - Ranking de kills: **local**, comparando runs anteriores inclusive do próprio jogador, atualização durante a partida a cada kill; indicar posição, meta para superar recorde, filtros futuros por ninja/mapa/dificuldade, tela de fim com dano por fonte, DPS, tempo, recompensas. Ranking global exigirá backend e **não deve ser simulado como online**.

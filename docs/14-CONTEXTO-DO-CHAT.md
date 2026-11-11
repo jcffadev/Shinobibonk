@@ -406,7 +406,7 @@ Pílulas: antes só mostravam o bônus ("+4% chance crítica") e o nível; agora
 
 **Pedido** (via coordenador)
 
-> Ponto de partida de calibração com a wiki pública do jogo de referência (sem engenharia reversa): tabelas referência × valor atual × proposta (arquivadas em arquivo-pokebonk/CONTEXTO-COMPLETO.md, fora do projeto), aplicando só o que for claramente inconsistente. Detalhes: prévia do atributo ao esquecer pílula no Ichiraku, reordenar as listas de "Itens em casa" e botão para expandir/recolher a grade de itens do HUD com estado salvo.
+> Ponto de partida de calibração com a wiki pública do jogo de referência (sem engenharia reversa): tabelas referência × valor atual × proposta (arquivadas no arquivo de contexto fora do projeto), aplicando só o que for claramente inconsistente. Detalhes: prévia do atributo ao esquecer pílula no Ichiraku, reordenar as listas de "Itens em casa" e botão para expandir/recolher a grade de itens do HUD com estado salvo.
 
 **Resposta**
 
@@ -578,7 +578,7 @@ O lote atual foi publicado na main do GitHub em badcee4. Oficina com uso único 
 2. Finalizar e revisar as ações de todas as 56 versões. Há 16 versões com folhas cobrindo ataque/pulo/dash, nove com pulo/dash dedicados pendentes e 31 com os três tipos de ação pendentes. Todas têm caminhada. Ainda é necessária auditoria visual por versão e no papel de ajudante.
 3. Aplicar os selos de mãos ao restante do elenco e refinar as poses especiais de Gaara, Lee e Guy. Naruto tem quatro versões do selo cruzado.
 4. Integrar e validar o rascunho WebGL de Susanoo por lançador, incluindo suporte, Ultimate e prévia. Refinar efeitos por técnica e buscar sons com licença adequada.
-5. Recalibrar dano e atributos por nível, HP/defesa dos monstros/chefes, Sorte, economia, bônus de ajudantes e emboscadas. As tabelas de proposta permanecem no arquivo de contexto arquivado (arquivo-pokebonk/CONTEXTO-COMPLETO.md, fora do projeto).
+5. Recalibrar dano e atributos por nível, HP/defesa dos monstros/chefes, Sorte, economia, bônus de ajudantes e emboscadas. As tabelas de proposta permanecem no arquivo de contexto arquivado, fora do projeto.
 6. Validar terreno, bordas, colisões e câmera em mais climas. Medir desempenho de hordas em GPU real. A suíte headless usa renderização por software.
 7. Completar testes prolongados de uma run comum, missões de desbloqueio, três zonas, bijuu, recompensas e ranking. Cadastro com servidor e hospedagem da alpha seguem como etapas posteriores, pois o perfil atual é local.
 
@@ -670,7 +670,7 @@ Validação deste lote: scripts/verify-motion-atlases.mjs concluiu com 56 versõ
 
 ### Resposta e providências
 
-CONCLUÍDO no commit `4ef107c`. O material saiu do repositório para `arquivo-pokebonk/` na raiz do workspace (fora do Git): `CONTEXTO-COMPLETO.md` reúne os docs antigos íntegros (ex-docs/15–17), as 44 prints com descrição, as 54 imagens originais, as citações do chat e as medições do vídeo de referência; `prints/` e `prints/originais/` guardam os PNGs. Foram removidos 101 arquivos do projeto e reescritos 11 arquivos para eliminarem a menção direta ao jogo de referência (passam a falar de “jogo de referência”/“arquivo arquivado”). O vídeo `referencia.mp4` (~240 MB) ficou na pasta de clips do Medal do usuário.
+CONCLUÍDO no commit `4ef107c`. O material saiu do repositório para uma pasta arquivada na raiz do workspace (fora do Git): `CONTEXTO-COMPLETO.md` reúne os docs antigos íntegros (ex-docs/15–17), as 44 prints com descrição, as 54 imagens originais, as citações do chat e as medições do vídeo de referência; `prints/` e `prints/originais/` guardam os PNGs. Foram removidos 101 arquivos do projeto e reescritos 11 arquivos para eliminarem a menção direta ao jogo de referência (passam a falar de “jogo de referência”/“arquivo arquivado”). O vídeo `referencia.mp4` (~240 MB) ficou na pasta de clips do Medal do usuário.
 
 ATENÇÃO: os arquivos removidos continuam no **histórico do Git** (foram removidos apenas da ponta); apagá-los do histórico exigiria reescrever o histórico/force push — proibido pelas regras. Decisão separada do usuário, caso queira.
 

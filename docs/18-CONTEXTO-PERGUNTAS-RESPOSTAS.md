@@ -23,7 +23,7 @@ Survivor/roguelite de ninja (temática Naruto, identidade 100% original) para na
 
 ## 2. Direção atual (11/11/2026)
 
-**Onde estamos:** o jogo roda no Netlify (404 resolvido — era upload parcial); o FPS baixo no domínio novo foi tratado com ajuste automático de desempenho (`adaptiveGovernor.ts`, TESTADO headless, **PENDENTE** validação em GPU real). O material do jogo de referência saiu do projeto e vive em `arquivo-pokebonk/` (raiz do workspace, fora do repo).
+**Onde estamos:** o jogo roda no Netlify (404 resolvido — era upload parcial); o FPS baixo no domínio novo foi tratado com ajuste automático de desempenho (`adaptiveGovernor.ts`, TESTADO headless, **PENDENTE** validação em GPU real). O material do jogo de referência saiu do projeto e vive numa pasta arquivada na raiz do workspace (fora do repositório).
 
 **Próximos passos (fila viva em [13-PENDENCIAS-PARA-CONTINUAR.md](13-PENDENCIAS-PARA-CONTINUAR.md), em ordem do usuário):**
 1. **Kankuro sem ataque animado (URGENTE)** — folhas completas de Kankuro 1/15/30 e Kushina 1; revisar/refinar Neji 1/15, Sasuke Genin, Naruto Clássico/Shippuden.
@@ -43,7 +43,7 @@ Decisões de longa duração. Mudança de qualquer item = nova entrada aqui com 
 |---|---|
 | 05/11 | **Sempre commit + push ao finalizar cada tarefa** (pedido repetido do usuário). |
 | 05/11 | **Sempre registrar perguntas e respostas** no contexto do chat (docs/14) — e, desde 11/11, também o resumo/direção neste arquivo. |
-| 05/11 | Nada de Pokémon nem nomes/tema do jogo de referência no projeto; eventos renomeados (Provocação do guardião, Bênção de Tsunade, Maldição de Orochimaru, Roleta da Tsunade, Plano do Shikamaru). Em 11/11 o material de referência foi **removido** do projeto e arquivado em `arquivo-pokebonk/` (fora do repo). |
+| 05/11 | Nada de Pokémon nem nomes/tema do jogo de referência no projeto; eventos renomeados (Provocação do guardião, Bênção de Tsunade, Maldição de Orochimaru, Roleta da Tsunade, Plano do Shikamaru). Em 11/11 o material de referência foi **removido** do projeto e arquivado numa pasta fora do repositório (raiz do workspace). |
 | 05/11 | **Naruto Academia e Manto da Kurama são o padrão** de movimentação/animação; fora de revisão. Exceções: Lee, Guy e Gaara (movimentação própria). |
 | 06/11 | Level-up oferece **somente técnicas e pílulas**; itens só por recompensas (mapa, roleta, drops). Máximo de **4 cartas** (inclusive após banir/atualizar). |
 | 06/11 | **Banir é por nome**, do pool inteiro da run (independente de raridade/nível). |
@@ -84,7 +84,7 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 | 12 | Final Swarm + pílulas + altares | Swarm parava em 300/1.600; pílula "pegada sozinha"; altar por raridade pisar/cair | Teto 1.600×fator até 8.000 com reposição; cartas novas ignoram entrada por 0,5 s; altar começa ao pisar, dreno 4–18%/s por raridade | IMPLEMENTADO/TESTADO |
 | 13 | Versões separadas | 56 personagens únicos (não evoluem); cadeia de missões (jogar com anterior + capturar); pulo/dash do Naruto Academia; 3 kunais do boss | Versões independentes com kit/passiva/atributos; `playWith` + missões escaladas; prioridade de pulo/dash; kunais em círculo com coleta prioritária; saves válidos | IMPLEMENTADO/TESTADO |
 | 14 | Pílulas com prévia + listas | Pílula mostra atributo atual→novo; pergaminhos por elemento; "Itens em casa" com até 12 listas | `pillPreview.ts` em cartas/ficha/plano/barra; filtro por elemento; sub-aba de listas compatível com o save antigo | IMPLEMENTADO/TESTADO |
-| 15 | Calibração com a wiki de referência | Tabelas referência × atual × proposta, só mudar o claramente inconsistente | docs/15 criado **sem alterar nada**; propostas (venda proporcional, Ryu com inflação, HP do guardião pelo dano do jogador, preços do Lab, máximos 5–8) ficaram PROPOSTO. Em 11/11 o doc foi arquivado em `arquivo-pokebonk/` | PROPOSTO (aguardando decisão) |
+| 15 | Calibração com a wiki de referência | Tabelas referência × atual × proposta, só mudar o claramente inconsistente | docs/15 criado **sem alterar nada**; propostas (venda proporcional, Ryu com inflação, HP do guardião pelo dano do jogador, preços do Lab, máximos 5–8) ficaram PROPOSTO. Em 11/11 o doc foi arquivado fora do projeto | PROPOSTO (aguardando decisão) |
 | 16 | Ultimate por fase + ajudantes como versões | Conferir Ultimate Nv. 1 em todas; mega/ajudante como versão avançada por zona, sem família repetida | Corrigidas 2 Ultimates fora de fase; buff da família escalado; equipe sem família duplicada; saves válidos | CONFIRMADO/IMPLEMENTADO |
 | 17 | Filtro de raridade colorido | Botões combináveis nas cores do jogo no plano e na Bolsa | `RarityFilter` colorido, combinável, com contagem; cores em `src/rarity.css` | IMPLEMENTADO/TESTADO |
 | 18 | Auditoria GitHub + Susanoo | Conferir GitHub × pasta; folhas de Susanoo (Sasuke Rinnegan, Itachi, 3 Madaras); "sempre coloque as perguntas e respostas lá" | HEAD × origin conferidos; 5 folhas integradas na cópia de trabalho; 80 células validadas; registro P/R virou regra | IMPLEMENTADO/TESTADO; integração WebGL PENDENTE |
@@ -93,7 +93,7 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 | 21 | "O que resta?" | Fila do que falta | Conciliar as duas linhas de trabalho; 56 versões; selos; Susanoo WebGL; recalibração; terreno/GPU; run prolongada | PENDENTE (docs/13) |
 | 22 | Publicação imediata + mapas | Mesma padrão de chão/construções em todos os mapas; ESC sem clique; "envie logo" | 9 folhas de pulo/dash + 3 completas + chão de Areia/Pedra/Névoa + 9 construções; retomada por Esc; push `badcee4` | IMPLEMENTADO/TESTADO; auditoria visual PENDENTE |
 | 23 | **Netlify 404 + FPS** (11/11) | 404 "index.html não existe"; depois "por que o FPS está tão baixo? Resolva o FPS" | 404 era **upload parcial** (só index.html, sem assets/) — resolver subindo `dist` inteira/zip na raiz; FPS: config por domínio no `localStorage` fez o domínio novo nascer pesado → `adaptiveGovernor.ts` (reduz/devolve pixel ratio) + opção "Ajuste automático de desempenho" | IMPLEMENTADO/TESTADO headless; **validação em GPU real PENDENTE** |
-| 24 | **Arquivar e remover o jogo de referência** (11/11) | "Gerar um arquivo com todo o contexto… e deletar COMPLETAMENTE do projeto qualquer coisa que relate o jogo" | docs/15/16/17 íntegros + 44 prints descritos + 54 originais + citações de chat + medições do vídeo → `arquivo-pokebonk/CONTEXTO-COMPLETO.md` (fora do repo); 101 arquivos apagados do projeto; 11 arquivos reescritos para "jogo de referência"; commit `4ef107c` | CONCLUÍDO |
+| 24 | **Arquivar e remover o jogo de referência** (11/11) | "Gerar um arquivo com todo o contexto… e deletar COMPLETAMENTE do projeto qualquer coisa que relate o jogo" | docs/15/16/17 íntegros + 44 prints descritos + 54 originais + citações de chat + medições do vídeo → pasta arquivada na raiz do workspace (`CONTEXTO-COMPLETO.md`, fora do repo); 101 arquivos apagados do projeto; 11 arquivos reescritos para "jogo de referência"; commit `4ef107c` | CONCLUÍDO |
 | 25 | **Este arquivo** (11/11) | "Crie um .md de contexto de perguntas/respostas para sempre manter o contexto e a direção" | Criado `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` + regra no AGENTS.md de mantê-lo a cada rodada | IMPLEMENTADO |
 
 ## 5. Estado atual do projeto (11/11/2026)
@@ -102,7 +102,7 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 - **Build:** React 19 + TS + Three.js 0.187, Vite 8. Últimas validações: 56–58 verificações no Edge headless, `tsc -b`, build, `verify-rules` e `verify-runtime`.
 - **Publicação:** Netlify manual funcionando (`*.netlify.app`); FPS com governor automático (TESTADO headless: `autoRatio` 1 → 0,61 sob carga com 1.200 inimigos; simulação ~1,8 ms/frame).
 - **Conteúdo:** 56 versões jogáveis com caminhada; ~24 versões com folhas completas de ação; 4 mapas (auditoria visual pendente); catálogo de 94 itens; 19 pílulas; árvore permanente; oficina de fusão; roleta; altares por raridade; Final Swarm até 8.000.
-- **Fora do repositório:** `arquivo-pokebonk/` (raiz do workspace) — contexto completo do jogo de referência (docs antigos íntegros, prints, vídeo medido). O vídeo `referencia.mp4` (~240 MB) ficou na pasta de clips do Medal do usuário.
+- **Fora do repositório:** pasta arquivada na raiz do workspace — contexto completo do jogo de referência (docs antigos íntegros, prints, vídeo medido). O vídeo `referencia.mp4` (~240 MB) ficou na pasta de clips do Medal do usuário.
 - **Atenção ao GitHub:** os prints e docs/15–17 **continuam no histórico** do repositório (removidos só da ponta). Apagar do histórico exigiria reescrita/force push — proibido; decisão separada do usuário.
 
 ## 6. Pendências vivas (espelho de docs/13)
@@ -127,5 +127,5 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 | Estado do código | [12-ARQUITETURA-E-ESTADO-DO-CODIGO.md](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md) · [00-LEIA-PRIMEIRO.md](00-LEIA-PRIMEIRO.md) |
 | Sistemas (câmera/mapas, ficha/HUD, aliados, itens/economia, personagens, hub/plano) | docs/01, 02, 03, 04, 05, 09, 10, 11 |
 | Mudanças do jogo | [CHANGELOG.md](../CHANGELOG.md) |
-| Contexto do jogo de referência (fora do repo) | `arquivo-pokebonk/CONTEXTO-COMPLETO.md` + `arquivo-pokebonk/prints/` |
+| Contexto do jogo de referência (fora do repo) | pasta arquivada na raiz do workspace: `CONTEXTO-COMPLETO.md` + `prints/` |
 | Referências próprias do projeto (screenshots/concept art) | `references/` · `history/` (versões antigas) |
