@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Remoção do ajuste automático de desempenho · 11/11/2026
+
+- Pedido do usuário (CONFIRMADO): "Eu não quero o auto-render para melhorar FPS, deixe o jogador configurar como quiser nas configurações gráficas isso, volte ao normal como estava!"
+- Removido `src/scene/adaptiveGovernor.ts` e todo o uso em `GameCanvas.tsx` (loop de render, handler `shinobi-settings`, leitura de debug `autoRatio`/`autoDeficit`).
+- Removidos a opção **Ajuste automático de desempenho** de Gráficos (`SettingsScreen.tsx`) e o campo `autoPerformance` (`settings.ts`); configurações salvas antigas que o continham passam a ser ignoradas.
+- O pixel ratio volta a ser definido apenas por Qualidade/Resolução; Limite de FPS continua em Gráficos. Se o FPS estiver baixo, o jogador ajusta: Qualidade `Média`/`Baixa` ou Resolução `900p`/`720p`.
+- **TESTADO**: `tsc -b`, `vite build` e `verify-rules` passaram após a remoção. A entrada anterior permanece como registro histórico.
+
 ## Ajuste automático de desempenho (FPS) · 11/11/2026
 
 - Novo `src/scene/adaptiveGovernor.ts`: mede o intervalo real entre quadros (inclui a espera do GPU) e, se o FPS cair abaixo de ~55, reduz o pixel ratio do renderizador em passos (×0,85, piso 0,5); se sobrar folga (~80 fps ou mais), devolve (×1,12, nunca além do ratio configurado). Warmup de 4 s, histerese 18/12 ms contra oscilação, pausa quando o jogo está parado e ignora intervalos >250 ms (aba oculta/travada).

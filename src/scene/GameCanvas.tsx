@@ -16,7 +16,6 @@ import { DebugPanel, type DebugApi } from '../ui/DebugPanel';
 import { compactNumber } from '../game/format';
 import { createPlayerMotion } from './playerMotion';
 import { createPerfMonitor } from './perfMonitor';
-import { createAdaptiveGovernor } from './adaptiveGovernor';
 import { mergedTechnique, type TechniqueMerge } from '../game/techniqueMerge';
 import { createAtlasEffect } from './atlasEffects';
 import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from './gamabunta';
@@ -140,8 +139,6 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const camera = new THREE.OrthographicCamera(-12, 12, 7, -7, .1, 240);
     const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance' });
     renderer.setPixelRatio(pixelRatioFor(currentSettings())); renderer.outputColorSpace = THREE.SRGBColorSpace; container.appendChild(renderer.domElement);
-    // Ajuste automático de desempenho (adaptiveGovernor.ts): se o FPS cair, reduz o pixel ratio até rodar liso e devolve quando sobra folga.
-    const perfGovernor=createAdaptiveGovernor(pixelRatioFor(currentSettings()));let autoPerfToastAt=0;
     scene.add(new THREE.HemisphereLight('#d4e9ff', '#35402d', 2.4)); const sun = new THREE.DirectionalLight('#ffe6b0', 3); sun.position.set(-8, 18, 7); scene.add(sun);
     const terrainHeight=createHeightField((x:number,z:number)=>groundHeight(MAP.id,x,z),MAP_SIZE/2);
     const solids=createSolids();
@@ -1073,8 +1070,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         else{particles.cast({...t,shape:'Área'},player.position,aim,player.position,ultRadius,ultRadius,ultRadius*.3);if(hasSignatureVisual(t,false)){const object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(player.position);object.scale.multiplyScalar(2.8);scene.add(object);visuals.push({object,life:.7});}}}
       for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<4.2*Math.sqrt(stats.area))hit(enemy,t,NO_GROWTH,player.position);
       if(t.name===SEXY_JUTSU.name){const charm=SEXY_JUTSU.radius*Math.sqrt(stats.area);for(const enemy of enemyList)if(!enemy.bijuu&&!enemy.totem&&Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<charm){enemy.control='Atordoar';enemy.controlTime=Math.max(enemy.controlTime??0,(enemy.guardian||enemy.megaElite?SEXY_JUTSU.bossStun:SEXY_JUTSU.stun)*stats.duration);}if(!hiddenEffects)for(const [color,size] of [['#ffffff',.35],['#ffd1e8',.65],['#ff8fc7',1]] as const)addRing(player.position,color,charm*size);eventToast='Jutsu Sexy! Inimigos atordoados.';}}
-    renderer.setAnimationLoop((now)=>{choiceArmed();if(pointerLocked()&&!cameraCanMove())document.exitPointerLock();if(debugOpenRef.current)keys.clear();const fpsCap=currentSettings().fpsLimit;if(fpsCap>0&&now-lastFrameAt<1000/fpsCap-1)return;lastFrameAt=now;const perfT0=performance.now();const frameGap=now-last;const dt=Math.max(0,Math.min(frameGap/1000,.05));last=now;
-      if(currentSettings().autoPerformance&&currentSettings().fpsLimit===0){const g=perfGovernor.tick(frameGap,enabledRef.current&&!pausedRef.current&&!choiceData&&!defeated&&!victory);if(g!==null){renderer.setPixelRatio(g);if(g<perfGovernor.ceiling()-.01){const tMs=performance.now();if(tMs-autoPerfToastAt>10000){autoPerfToastAt=tMs;eventToast='Desempenho: resolução ajustada automaticamente para manter a fluidez.';snapshotTimer=0;}}}}if(enabledRef.current&&!pausedRef.current&&!choiceData&&!roulette&&!defeated&&!victory&&!debugState.frozen&&(document.hasFocus()||testPointer||debugOpenRef.current||sealing)){
+    renderer.setAnimationLoop((now)=>{choiceArmed();if(pointerLocked()&&!cameraCanMove())document.exitPointerLock();if(debugOpenRef.current)keys.clear();const fpsCap=currentSettings().fpsLimit;if(fpsCap>0&&now-lastFrameAt<1000/fpsCap-1)return;lastFrameAt=now;const perfT0=performance.now();const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;
+      if(enabledRef.current&&!pausedRef.current&&!choiceData&&!roulette&&!defeated&&!victory&&!debugState.frozen&&(document.hasFocus()||testPointer||debugOpenRef.current||sealing)){
       refreshStats();invulnerability=Math.max(0,invulnerability-dt);playerSlow=Math.max(0,playerSlow-dt);
       // Temporizadores dos itens.
       timeSinceHit+=dt;rushTimer=Math.max(0,rushTimer-dt);freezeCd=Math.max(0,freezeCd-dt);ultBuffTimer=Math.max(0,ultBuffTimer-dt);emergencyCd=Math.max(0,emergencyCd-dt);
@@ -1313,7 +1310,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       refreshStats();for(const id of s.allies)recruitAlly(id);Object.assign(allyAffinity,s.allyAffinity);refreshStats();hp=Math.min(stats.maxHp,s.hp);if(!roulette)showRouletteItem();
       player.position.set(s.player.x,terrainHeight(s.player.x,s.player.z)+1.15,s.player.z);player.material.dispose();player.material=heroMaterial(heroId,level);invulnerability=3;eventToast='Missão retomada de onde parou.';}
     if(resume&&resume.heroId===heroId)restoreRun(resume);
-    const onSettings=()=>{const S=currentSettings();let pr=perfGovernor.setCeiling(pixelRatioFor(S));if(!S.autoPerformance){const snap=perfGovernor.snapToCeiling();if(snap!==null)pr=snap;}if(pr!==null)renderer.setPixelRatio(pr);targetZoom=S.cameraDistance;resize();};window.addEventListener('shinobi-settings',onSettings);runCleanups.push(()=>window.removeEventListener('shinobi-settings',onSettings));
+    const onSettings=()=>{const S=currentSettings();renderer.setPixelRatio(pixelRatioFor(S));targetZoom=S.cameraDistance;resize();};window.addEventListener('shinobi-settings',onSettings);runCleanups.push(()=>window.removeEventListener('shinobi-settings',onSettings));
     const autosave=window.setInterval(()=>{if(enabledRef.current&&!pausedRef.current)saveRun();},15000);
     const onPageHide=()=>saveRun();window.addEventListener('pagehide',onPageHide);window.addEventListener('beforeunload',onPageHide);
     const onSaveEvent=()=>saveRun();window.addEventListener('shinobi-save',onSaveEvent);
@@ -1331,7 +1328,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       setTime:(n:number)=>{elapsed=n;},
       // Perfil de desempenho: horda de N inimigos comuns num disco ao redor do jogador (HP alto para sobreviverem aos golpes) e leitura do quadro.
       horde:(n:number,radius=14,hpEach=1e6,move=true)=>{for(let k=0;k<n;k++){const e=spawnEnemy(),a=Math.random()*Math.PI*2,r=2+Math.sqrt(Math.random())*radius,x=player.position.x+Math.cos(a)*r,z=player.position.z+Math.sin(a)*r;e.sprite.position.set(x,terrainHeight(x,z)+e.sprite.scale.y*.46,z);e.hp=hpEach;e.maxHp=hpEach;if(!move)e.speed=0;}return enemyList.length;},
-      perf:(reset=false)=>{const out={...perfMonitor.read(),fpsHud:fps,autoRatio:+perfGovernor.ratio().toFixed(3),autoDeficit:perfGovernor.deficit(),calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures,programs:renderer.info.programs?.length??0,sceneChildren:scene.children.length,instances:enemyRenderer.stats(),numberCache:damageNumbers.stats(),elites:enemyList.filter(e=>e.elite).length,enemies:enemyList.length,effects:effects.length,visuals:visuals.length,particles:particles.stats(),susanoo:susanoo.active(),numbers:numbers.length,drops:drops.length,shots:shots.length,heap:(performance as unknown as {memory?:{usedJSHeapSize:number}}).memory?.usedJSHeapSize??0};if(reset)perfMonitor.reset();return out;},
+      perf:(reset=false)=>{const out={...perfMonitor.read(),fpsHud:fps,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures,programs:renderer.info.programs?.length??0,sceneChildren:scene.children.length,instances:enemyRenderer.stats(),numberCache:damageNumbers.stats(),elites:enemyList.filter(e=>e.elite).length,enemies:enemyList.length,effects:effects.length,visuals:visuals.length,particles:particles.stats(),susanoo:susanoo.active(),numbers:numbers.length,drops:drops.length,shots:shots.length,heap:(performance as unknown as {memory?:{usedJSHeapSize:number}}).memory?.usedJSHeapSize??0};if(reset)perfMonitor.reset();return out;},
       teleport:(x:number,z:number)=>{player.position.set(x,terrainHeight(x,z)+1.15,z);},
       setMoney:(n:number)=>{runMoney=n;},pickup:(kind:MapPickup['kind'])=>spawnPickup(kind,player.position.x,player.position.z),bodyAmbush:()=>{const wave=enemyList.filter(e=>e.bodyAmbush===activeBody&&activeBody);return wave.length;},defeatBodyAmbush:()=>{for(const e of [...enemyList])if(activeBody&&e.bodyAmbush===activeBody)removeEnemy(e);},dismiss:()=>{choiceData=null;sealing=null;xp=0;},
       addXp:(n:number)=>{xp+=n;},setChakra:()=>{chakra=100;},setHp:(n:number)=>{hp=n;},

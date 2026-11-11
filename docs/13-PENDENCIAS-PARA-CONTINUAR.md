@@ -57,8 +57,8 @@ Lista colada pelo usuário em 11/11/2026. Estado por item:
 
 ### Desempenho e deploy · 11/11/2026
 
-- **IMPLEMENTADO**: ajuste automático de desempenho (`src/scene/adaptiveGovernor.ts` + opção em Gráficos). TESTADO em governor unit + headless com 1.200 inimigos.
-- **PENDENTE**: validar FPS em GPU real no deploy Netlify (máquina do usuário). Se ainda estiver baixo: Qualidade `Média`/`Baixa` ou Resolução `900p`/`720p`.
+- **REMOVIDO (pedido do usuário, 11/11/2026)**: ajuste automático de desempenho (governor) — `adaptiveGovernor.ts` apagado, opção em Gráficos e campo `autoPerformance` removidos. A imagem é configurada apenas pelo jogador (Qualidade, Limite de FPS, Resolução).
+- **PENDENTE**: validar FPS em GPU real no deploy Netlify (máquina do usuário). Se estiver baixo, o jogador ajusta em Gráficos: Qualidade `Média`/`Baixa` ou Resolução `900p`/`720p`.
 - **CONFIRMADO**: deploy manual no Netlify funcionando (upload da pasta `dist`/zip). `netlify.toml` pronto para deploy via Git/CLI no futuro.
 
 ## Backlog posterior e propostas

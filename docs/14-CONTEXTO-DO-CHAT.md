@@ -689,3 +689,11 @@ IMPLEMENTADO. Criado `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` como arquivo de c
 ### Resposta
 
 CONFIRMADO (permanente). A regra já constava no AGENTS.md ("Fale em português do Brasil. Seja objetivo, técnico e explícito."); agora também está registrada nas decisões permanentes do docs/18. Toda resposta a todo pedido, em qualquer canal, será em português.
+
+## Remoção do ajuste automático de desempenho · 11/11/2026
+
+> Eu não quero o auto-render para melhorar FPS, deixe o jogador configurar como quiser nas configurações gráficas isso, volte ao normal como estava!
+
+### Resposta e providências
+
+REMOVIDO (volta ao normal). Apagado `src/scene/adaptiveGovernor.ts`; removidos o uso em `GameCanvas.tsx` (tick no loop de render, `setCeiling`/`snapToCeiling` no handler de configurações, `autoRatio`/`autoDeficit` na leitura de debug), a opção "Ajuste automático de desempenho" de Gráficos (`SettingsScreen.tsx`) e o campo `autoPerformance` (`settings.ts`). O pixel ratio agora é definido apenas por Qualidade/Resolução, e o Limite de FPS segue disponível — o jogador configura como quiser, sem intervenção automática; configurações salvas antigas com o campo passam a ser ignoradas. `tsc -b`, `vite build` e `verify-rules` passaram. Decisão permanente registrada em docs/18 §3: **desempenho/imagem sem ajuste automático**.

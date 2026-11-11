@@ -17,7 +17,7 @@ export type GameSettings = {
   // Som
   volume: number; sfxVolume: number; voiceVolume: number; voiceLanguage: 'pt' | 'ja'; muteInBackground: boolean;
   // Gráficos
-  quality: Quality; fpsLimit: number; autoPerformance: boolean; hideMyAttacks: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
+  quality: Quality; fpsLimit: number; hideMyAttacks: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
   // Tela
   resolution: Resolution;
   // Controles
@@ -32,7 +32,7 @@ export type GameSettings = {
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
   volume: .7, sfxVolume: 1, voiceVolume: .8, voiceLanguage: 'pt', muteInBackground: true,
-  quality: 'alta', fpsLimit: 0, autoPerformance: true, hideMyAttacks: false, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
+  quality: 'alta', fpsLimit: 0, hideMyAttacks: false, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
   resolution: 'auto',
   mouseSensitivity: 1, invertY: false, cameraDistance: 19, autoUltimate: false,
   keys: { ...DEFAULT_KEYS },

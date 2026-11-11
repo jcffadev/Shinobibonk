@@ -23,7 +23,7 @@ Survivor/roguelite de ninja (temática Naruto, identidade 100% original) para na
 
 ## 2. Direção atual (11/11/2026)
 
-**Onde estamos:** o jogo roda no Netlify (404 resolvido — era upload parcial); o FPS baixo no domínio novo foi tratado com ajuste automático de desempenho (`adaptiveGovernor.ts`, TESTADO headless, **PENDENTE** validação em GPU real). O material do jogo de referência saiu do projeto e vive numa pasta arquivada na raiz do workspace (fora do repositório).
+**Onde estamos:** o jogo roda no Netlify (404 resolvido — era upload parcial); o ajuste automático de desempenho foi **removido a pedido do usuário** — a imagem fica 100% nas configurações de Gráficos (Qualidade, Limite de FPS, Resolução); **PENDENTE**: validar FPS em GPU real. O material do jogo de referência saiu do projeto e vive numa pasta arquivada na raiz do workspace (fora do repositório).
 
 **Próximos passos (fila viva em [13-PENDENCIAS-PARA-CONTINUAR.md](13-PENDENCIAS-PARA-CONTINUAR.md), em ordem do usuário):**
 1. **Kankuro sem ataque animado (URGENTE)** — folhas completas de Kankuro 1/15/30 e Kushina 1; revisar/refinar Neji 1/15, Sasuke Genin, Naruto Clássico/Shippuden.
@@ -62,6 +62,7 @@ Decisões de longa duração. Mudança de qualquer item = nova entrada aqui com 
 | 07/11 | **Direção de arte (receita do usuário):** pixel art chibi, cenário 3D isométrico (2.5D), paleta/proporção únicas, animações de caminhada/ataque/dano/Ultimate; nunca sprites/modelos oficiais; efeitos seguem **elemento + nome da habilidade** (referência visual STORM, geometria original). |
 | 07/11 | Modo Sábio: ícone com a **cara do personagem** + aura de atlas enquanto ativo. Gamabunta: **espada (tantō) + cachimbo**; óleo na boca, fogo perto do alvo. Clones **correm** até o alvo (nunca estáticos). |
 | 11/11 | **Nunca publicar** `artifacts/sb-swishes-source.zip` (origem/licença não verificada) nem credenciais. Nunca force push. |
+| 11/11 | **Desempenho/imagem: sem ajuste automático** (pedido do usuário) — o jogador configura como quiser em Gráficos (Qualidade, Limite de FPS, Resolução). O governor de 11/11 foi removido no mesmo dia. |
 | 11/11 | **Toda a comunicação com o usuário é sempre em português** (pedido reiterado do usuário), mesmo quando ele escreve em inglês. |
 | — | Terminologia: `attackSpeed` = **velocidade de ataque** (nunca "cadência"). pt-BR, objetivo e técnico. |
 
@@ -97,12 +98,13 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 | 24 | **Arquivar e remover o jogo de referência** (11/11) | "Gerar um arquivo com todo o contexto… e deletar COMPLETAMENTE do projeto qualquer coisa que relate o jogo" | docs/15/16/17 íntegros + 44 prints descritos + 54 originais + citações de chat + medições do vídeo → pasta arquivada na raiz do workspace (`CONTEXTO-COMPLETO.md`, fora do repo); 101 arquivos apagados do projeto; 11 arquivos reescritos para "jogo de referência"; commit `4ef107c` | CONCLUÍDO |
 | 25 | **Este arquivo** (11/11) | "Crie um .md de contexto de perguntas/respostas para sempre manter o contexto e a direção" | Criado `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` + regra no AGENTS.md de mantê-lo a cada rodada | IMPLEMENTADO |
 | 26 | **Idioma da comunicação** (11/11) | "Você sempre falará comigo em português… nossa comunicação sempre será em português" | Regra permanente confirmada; já consta no AGENTS.md ("Fale em português do Brasil"); registrada nas decisões permanentes | CONFIRMADO (permanente) |
+| 27 | **Remover o ajuste automático de FPS** (11/11) | "Eu não quero o auto-render para melhorar FPS, deixe o jogador configurar como quiser nas configurações gráficas isso, volte ao normal como estava!" | Removidos `adaptiveGovernor.ts`, o uso em `GameCanvas.tsx`, a opção em Gráficos e o campo `autoPerformance`; tsc/build/verify-rules passaram | IMPLEMENTADO (validação em GPU real: ajuste manual em Gráficos) |
 
 ## 5. Estado atual do projeto (11/11/2026)
 
 - **Repositório:** `https://github.com/jcffadev/Shinobibonk.git`, branch `main`, último commit `4ef107c` (remoção do material de referência). Worktree limpo; `artifacts/sb-swishes-source.zip` deliberadamente fora do Git.
 - **Build:** React 19 + TS + Three.js 0.187, Vite 8. Últimas validações: 56–58 verificações no Edge headless, `tsc -b`, build, `verify-rules` e `verify-runtime`.
-- **Publicação:** Netlify manual funcionando (`*.netlify.app`); FPS com governor automático (TESTADO headless: `autoRatio` 1 → 0,61 sob carga com 1.200 inimigos; simulação ~1,8 ms/frame).
+- **Publicação:** Netlify manual funcionando (`*.netlify.app`); desempenho **sem ajuste automático** (removido a pedido do usuário) — o jogador define Qualidade/Limite de FPS/Resolução em Gráficos (simulação ~1,8 ms/frame com 1.200 inimigos).
 - **Conteúdo:** 56 versões jogáveis com caminhada; ~24 versões com folhas completas de ação; 4 mapas (auditoria visual pendente); catálogo de 94 itens; 19 pílulas; árvore permanente; oficina de fusão; roleta; altares por raridade; Final Swarm até 8.000.
 - **Fora do repositório:** pasta arquivada na raiz do workspace — contexto completo do jogo de referência (docs antigos íntegros, prints, vídeo medido). O vídeo `referencia.mp4` (~240 MB) ficou na pasta de clips do Medal do usuário.
 - **Atenção ao GitHub:** os prints e docs/15–17 **continuam no histórico** do repositório (removidos só da ponta). Apagar do histórico exigiria reescrita/force push — proibido; decisão separada do usuário.

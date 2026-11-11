@@ -59,7 +59,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
     const d = DEFAULT_SETTINGS;
     const by: Record<Category, Partial<GameSettings>> = {
       som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
-      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, autoPerformance: d.autoPerformance, hideMyAttacks: d.hideMyAttacks, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
+      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, hideMyAttacks: d.hideMyAttacks, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
       tela: { resolution: d.resolution },
       controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, autoUltimate: d.autoUltimate, sealAnimation: d.sealAnimation },
       teclas: { keys: { ...DEFAULT_KEYS } },
@@ -86,7 +86,6 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
         {category === 'graficos' && <>
           <Card title="Qualidade" hint="Baixa dá mais desempenho"><Choice value={settings.quality} options={[{ value: 'alta', label: 'Alta' }, { value: 'media', label: 'Média' }, { value: 'baixa', label: 'Baixa' }]} onChange={(v) => set({ quality: v })} /></Card>
           <Card title="Limite de FPS" hint="Menos FPS = imagem mais estável e menos calor"><Choice value={settings.fpsLimit} options={[{ value: 0, label: 'Sem limite' }, { value: 30, label: '30' }, { value: 60, label: '60' }, { value: 90, label: '90' }, { value: 120, label: '120' }, { value: 144, label: '144' }]} onChange={(v) => set({ fpsLimit: v })} /></Card>
-          <Card title="Ajuste automático de desempenho" hint="Quando o FPS cai, reduz a resolução da imagem até rodar liso e devolve quando sobra folga. Não altera o dano nem a jogabilidade"><Toggle value={settings.autoPerformance} onChange={(v) => set({ autoPerformance: v })} /></Card>
           <Card title="Ocultar meus ataques" hint="Começa a partida sem desenhar os efeitos dos seus golpes (H alterna). O dano continua igual"><Toggle value={settings.hideMyAttacks} onChange={(v) => set({ hideMyAttacks: v })} /></Card>
           <Card title="Números de dano"><Toggle value={settings.damageNumbers} onChange={(v) => set({ damageNumbers: v })} /></Card>
           <Card title="Drops discretos" hint="EXP, Ryu e Chakra menores; são coletados igual"><Toggle value={settings.discreetDrops} onChange={(v) => set({ discreetDrops: v })} /></Card>
