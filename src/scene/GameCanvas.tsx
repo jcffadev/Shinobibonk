@@ -95,7 +95,8 @@ export const emptySnapshot: WorldSnapshot = { allyCharge:0, victory:false,remain
 export function captureGamePointer() {
   const shell=document.querySelector<HTMLElement>('.game-shell');
   if(!shell||document.pointerLockElement===shell||!shell.requestPointerLock)return;
-  try {void shell.requestPointerLock()?.catch(()=>{});} catch { /* navegador sem captura disponível */ }
+  // Raw input do navegador (Pointer Lock 2.0): movimento do mouse 1:1, sem a aceleração do sistema operacional. Navegadores antigos ignoram a opção e o lock segue funcionando.
+  try {void shell.requestPointerLock({unadjustedMovement:true})?.catch(()=>{});} catch { /* navegador sem captura disponível */ }
 }
 
 export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPool, preparation, enabled, paused, onSnapshot, onPanel, debug=false }: { heroId: string; mission:Difficulty; mapId?:MapId; resume?:SavedRun|null; itemPool:Item[]; preparation:{permanent:Record<string,number>;archivedSkills:string[];planned?:string[];trained?:string[];priorityItems?:string[]}; enabled: boolean; paused: boolean; onSnapshot: (snapshot: WorldSnapshot) => void; onPanel: (panel: 'map' | 'quickmap' | 'sheet' | 'pause' | null) => void; debug?: boolean }) {
@@ -616,7 +617,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Se o alvo deixa de existir (evento usado, inimigo derrotado, recompensa coletada), a rota é limpa com aviso.
     const ROUTE_ARRIVE=3;
     /** Shinobi para selar: no máximo 1 por run (o 1º encontro especial). Em testes automáticos (?test) não surge sozinho. */
-    let targetYaw=yaw,targetPitch=pitch,targetZoom=zoom;
+    let targetZoom=zoom;
     let forceElite=false,nextAccountAt=0,rightDownX=0,rightDownY=0;
     // ───── Alvo fixo (clique com o botão direito, sem arrastar) ─────
     // Prioridade: guardião/chefe > Mega Elite / Shinobi para selar > elite amarelo > maior HP, entre os inimigos visíveis até 30 m.
@@ -696,8 +697,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const cameraCanMove=()=>enabledRef.current&&!debugOpenRef.current&&!pausedRef.current&&!choiceData&&!roulette&&!sealing&&!defeated&&!victory;
     const turnCamera=(dx:number,dy:number)=>{
       const settings=currentSettings();
-      targetYaw-=dx*.006*settings.mouseSensitivity;
-      targetPitch=THREE.MathUtils.clamp(targetPitch+dy*.004*settings.mouseSensitivity*(settings.invertY?-1:1),.12,1.48);
+      // 1:1 direto, sem amortecimento: giro constante = movimento × sensibilidade configurada (sem aceleração).
+      yaw-=dx*.006*settings.mouseSensitivity;
+      pitch=THREE.MathUtils.clamp(pitch+dy*.004*settings.mouseSensitivity*(settings.invertY?-1:1),.12,1.48);
     };
     const onLockedMove=(e:MouseEvent)=>{if(pointerLocked()&&cameraCanMove())turnCamera(e.movementX,e.movementY);};
     const onLockedRight=(e:MouseEvent)=>{if(pointerLocked()&&e.button===2&&cameraCanMove())toggleTargetLock();};
@@ -1254,8 +1256,6 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       // Mega elites/guardiões entram no mapa só depois de vistos na câmera.
       for(const e of enemyList){if(e.megaElite&&!e.seen&&frustum.containsPoint(e.sprite.position)&&e.sprite.position.distanceTo(player.position)<40)e.seen=true;}
       }
-      yaw=THREE.MathUtils.damp(yaw,targetYaw,22,dt);
-      pitch=THREE.MathUtils.damp(pitch,targetPitch,20,dt);
       if(Math.abs(zoom-targetZoom)>.005){zoom=THREE.MathUtils.damp(zoom,targetZoom,16,dt);projectCamera();}
       if(scene.fog instanceof THREE.Fog){const extra=zoom*.65+10;scene.fog.near=weatherDef.near+extra;scene.fog.far=weatherDef.far+extra;}const targetHeight=terrainHeight(player.position.x,player.position.z)+1.15;
       const jumpedZone=Math.hypot(cameraTarget.x-player.position.x,cameraTarget.z-player.position.z)>10;

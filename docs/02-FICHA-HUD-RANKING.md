@@ -11,7 +11,7 @@ HP, XP, nível, Chakra/recarga da Ultimate, tempo, abates individuais, inimigos 
 - **Som**: volume geral, efeitos, vozes, silenciar em segundo plano (música: em breve).
 - **Gráficos**: qualidade (pixel ratio), limite de FPS (30–144), ocultar meus ataques, números de dano, drops discretos, efeitos de coleta, mostrar FPS.
 - **Tela**: tela cheia/janela e resolução (automática, nativa, 900p, 720p).
-- **Controles**: sensibilidade do mouse, inverter Y, distância da câmera, Ultimate automática ao começar, card de captura.
+- **Controles**: sensibilidade do mouse (1:1, sem aceleração — raw input via `unadjustedMovement` no pointer lock), inverter Y, distância da câmera, Ultimate automática ao começar, card de captura.
 - **Teclas**: 15 ações remapeáveis (troca automática se a tecla já era usada; Esc fixo). Pulo/deslize: em breve.
 - **Interface**: tamanho e opacidade do HUD, minimapa on/off e tamanho, avisos on/off.
 - **Idioma**: português (outros em breve). **Conta**: nome do jogador, começar do zero, apagar dados locais.

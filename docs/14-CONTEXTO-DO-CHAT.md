@@ -705,3 +705,11 @@ REMOVIDO (volta ao normal). Apagado `src/scene/adaptiveGovernor.ts`; removidos o
 ### Resposta e providências
 
 IMPLEMENTADO. Criada `skills/referencia-externa/SKILL.md`: quando qualquer agente receber material do jogo de referência (prints, vídeos, tabelas, textos, ou o nome em conversa), ele consome o conteúdo, anota tudo que for aprendido no contexto arquivado **fora** do projeto (`CONTEXTO-COMPLETO.md` + `prints/`, seção datada), nunca salva o arquivo no repositório e nunca escreve o nome em arquivo rastreado ou em commit. Propostas extraídas do material entram como PROPOSTO, aguardando o usuário. Regra adicionada ao AGENTS.md ("Material do jogo de referência (zero rastro)") e decisão permanente no docs/18 §3. O nome próprio do jogo também foi removido da citação da rodada 24 neste arquivo (antes preservado como palavra do usuário; a instrução de 11/11 é mais recente e vale: nada em lugar nenhum).
+
+## Mouse sem aceleração (raw input) · 11/11/2026
+
+> rawinputbuffer é em relação a aceleração do mouse, quanto mais mexe o mouse mais rápido fica, eu quero que isso não aconteça... quero que ele fique sempre a mesma velocidade e a sensibilidade funcione exatamente da forma que o jogador configurar nas configurações que temos no jogo
+
+### Resposta e providências
+
+CAUSA: a câmera perseguia o alvo do mouse com amortecimento exponencial (`MathUtils.damp` em `yaw`/`pitch`), então movimentos rápidos "apanhavam" a câmera e pareciam aceleração; e, sem `unadjustedMovement`, o `movementX/Y` que chega ao navegador já vem acelerado pelo sistema operacional do mouse. CORREÇÃO: (1) `captureGamePointer` agora pede o pointer lock com `{unadjustedMovement:true}` — raw input do navegador (Pointer Lock 2.0, baseline 2026; em navegadores antigos a opção é ignorada e o lock segue funcionando); (2) `turnCamera` aplica o movimento direto em `yaw`/`pitch` — removidos `targetYaw`/`targetPitch` e o `damp` do loop —, então o giro é exatamente `movimento × 0.006 (Y: 0.004) × sensibilidade`, constante, independente da velocidade do mouse; (3) a sensibilidade continua o multiplicador linear 0.20–3.00 de Controles, aplicada exatamente como o jogador configurar. `tsc -b`, `vite build` e `verify-rules` passaram.

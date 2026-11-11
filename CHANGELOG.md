@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Mouse sem aceleração (raw input) · 11/11/2026
+
+- Pedido do usuário (CONFIRMADO): "rawinputbuffer é em relação a aceleração do mouse, quanto mais mexe o mouse mais rápido fica, eu quero que isso não aconteça... quero que ele fique sempre a mesma velocidade e a sensibilidade funcione exatamente da forma que o jogador configurar nas configurações que temos no jogo".
+- Causa: a câmera perseguia o alvo do mouse com amortecimento exponencial (`MathUtils.damp` em `yaw`/`pitch`), então movimentos rápidos "apanhavam" a câmera e pareciam aceleração; e, sem `unadjustedMovement`, o `movementX/Y` que chega ao navegador já vem acelerado pelo sistema operacional do mouse.
+- `captureGamePointer` (`src/scene/GameCanvas.tsx`) agora pede o pointer lock com `{unadjustedMovement:true}` — raw input do navegador (Pointer Lock 2.0, baseline 2026); em navegadores antigos a opção é ignorada e o lock segue funcionando.
+- `turnCamera` aplica o movimento direto em `yaw`/`pitch`: removidos `targetYaw`/`targetPitch` e o `damp` do loop de render. O giro passa a ser exatamente `movimento × 0.006 (Y: 0.004) × sensibilidade`, constante, independente da velocidade do mouse.
+- A sensibilidade continua o multiplicador linear 0.20–3.00 de Controles (inverter Y e distância da câmera inalterados); o hint da opção agora explica o 1:1.
+- **TESTADO**: `tsc -b`, `vite build` e `verify-rules` passaram (56 personagens, 97 técnicas, 95 itens).
+
 ## Remoção do ajuste automático de desempenho · 11/11/2026
 
 - Pedido do usuário (CONFIRMADO): "Eu não quero o auto-render para melhorar FPS, deixe o jogador configurar como quiser nas configurações gráficas isso, volte ao normal como estava!"
