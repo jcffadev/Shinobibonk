@@ -681,3 +681,11 @@ ATENÇÃO: os arquivos removidos continuam no **histórico do Git** (foram remov
 ### Resposta e providências
 
 IMPLEMENTADO. Criado `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` como arquivo de contexto permanente: §0 regras de manutenção (toda rodada atualiza o resumo/direção; nunca apagar entradas passadas), §1 o que é o ShinobiBonk, §2 direção atual, §3 decisões permanentes do usuário com data, §4 registro cronológico resumido das 25 rodadas com estados (CONFIRMADO/IMPLEMENTADO/TESTADO/PROPOSTO/PENDENTE), §5 estado atual, §6 pendências vivas e §7 mapa de onde cada conteúdo vive. O texto integral continua em docs/14 (evita manutenção dupla). Atualizados AGENTS.md (leitura inicial + regra de documentação contínua), README.md e docs/00 (ponteiros para o docs/18).
+
+## Regra de idioma da comunicação · 11/11/2026
+
+> Você sempre falará comigo em português, mesmo que eu entenda em inglês, nossa comunicação sempre será em português.
+
+### Resposta
+
+CONFIRMADO (permanente). A regra já constava no AGENTS.md ("Fale em português do Brasil. Seja objetivo, técnico e explícito."); agora também está registrada nas decisões permanentes do docs/18. Toda resposta a todo pedido, em qualquer canal, será em português.

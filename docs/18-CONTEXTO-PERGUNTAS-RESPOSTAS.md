@@ -62,6 +62,7 @@ Decisões de longa duração. Mudança de qualquer item = nova entrada aqui com 
 | 07/11 | **Direção de arte (receita do usuário):** pixel art chibi, cenário 3D isométrico (2.5D), paleta/proporção únicas, animações de caminhada/ataque/dano/Ultimate; nunca sprites/modelos oficiais; efeitos seguem **elemento + nome da habilidade** (referência visual STORM, geometria original). |
 | 07/11 | Modo Sábio: ícone com a **cara do personagem** + aura de atlas enquanto ativo. Gamabunta: **espada (tantō) + cachimbo**; óleo na boca, fogo perto do alvo. Clones **correm** até o alvo (nunca estáticos). |
 | 11/11 | **Nunca publicar** `artifacts/sb-swishes-source.zip` (origem/licença não verificada) nem credenciais. Nunca force push. |
+| 11/11 | **Toda a comunicação com o usuário é sempre em português** (pedido reiterado do usuário), mesmo quando ele escreve em inglês. |
 | — | Terminologia: `attackSpeed` = **velocidade de ataque** (nunca "cadência"). pt-BR, objetivo e técnico. |
 
 ## 4. Registro cronológico de P/R (todas as rodadas)
@@ -95,6 +96,7 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 | 23 | **Netlify 404 + FPS** (11/11) | 404 "index.html não existe"; depois "por que o FPS está tão baixo? Resolva o FPS" | 404 era **upload parcial** (só index.html, sem assets/) — resolver subindo `dist` inteira/zip na raiz; FPS: config por domínio no `localStorage` fez o domínio novo nascer pesado → `adaptiveGovernor.ts` (reduz/devolve pixel ratio) + opção "Ajuste automático de desempenho" | IMPLEMENTADO/TESTADO headless; **validação em GPU real PENDENTE** |
 | 24 | **Arquivar e remover o jogo de referência** (11/11) | "Gerar um arquivo com todo o contexto… e deletar COMPLETAMENTE do projeto qualquer coisa que relate o jogo" | docs/15/16/17 íntegros + 44 prints descritos + 54 originais + citações de chat + medições do vídeo → pasta arquivada na raiz do workspace (`CONTEXTO-COMPLETO.md`, fora do repo); 101 arquivos apagados do projeto; 11 arquivos reescritos para "jogo de referência"; commit `4ef107c` | CONCLUÍDO |
 | 25 | **Este arquivo** (11/11) | "Crie um .md de contexto de perguntas/respostas para sempre manter o contexto e a direção" | Criado `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` + regra no AGENTS.md de mantê-lo a cada rodada | IMPLEMENTADO |
+| 26 | **Idioma da comunicação** (11/11) | "Você sempre falará comigo em português… nossa comunicação sempre será em português" | Regra permanente confirmada; já consta no AGENTS.md ("Fale em português do Brasil"); registrada nas decisões permanentes | CONFIRMADO (permanente) |
 
 ## 5. Estado atual do projeto (11/11/2026)
 
