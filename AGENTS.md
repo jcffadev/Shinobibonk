@@ -16,6 +16,11 @@ Leia primeiro README.md, docs/00-LEIA-PRIMEIRO.md e docs/18-CONTEXTO-PERGUNTAS-R
 ## Publicação no GitHub
 - Ao fim de **toda** tarefa que alterou arquivos, depois de documentar e verificar, siga `skills/publicar-github/SKILL.md`: commit em português e push para `origin main` (`https://github.com/jcffadev/Shinobibonk.git`). Nunca use force push. Nunca publique credenciais (ex.: `Feedback da versão.txt`, que está no `.gitignore`).
 
+## Material do jogo de referência (zero rastro)
+- **Decisão permanente (11/11/2026):** nada referente ao jogo de referência no projeto nem na publicação — nenhum arquivo, nome ou valor copiado em `src/`, `docs/`, `README.md`, `CHANGELOG.md`, `skills/` ou em commits.
+- Ao receber material sobre o jogo (prints, vídeos, tabelas, textos, ou o nome em conversa): siga `skills/referencia-externa/SKILL.md` — consumir o conteúdo, anotar tudo que for aprendido no contexto arquivado **fora** do projeto e nunca manter o arquivo no projeto.
+- Propostas extraídas do material são PROPOSTAS (aguardando o usuário), nunca parâmetros aprovados.
+
 ## Regras de colaboração
 - Fale em português do Brasil. Seja objetivo, técnico e explícito.
 - Classifique fatos como CONFIRMADO, IMPLEMENTADO, TESTADO, PROPOSTO ou PENDENTE. Não declare funcionalidade testada sem execução real.

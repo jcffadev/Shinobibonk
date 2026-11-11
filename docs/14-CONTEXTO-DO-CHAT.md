@@ -666,7 +666,7 @@ Validação deste lote: scripts/verify-motion-atlases.mjs concluiu com 56 versõ
 
 ## Arquivar e remover o material do jogo de referência · 11/11/2026
 
-> Pergunta: Você consegue gerar um arquivo com todo o contexto de referência de todos os vídeos/prints que relacionam o pokebonk e deletar COMPLETAMENTE do projeto/pasta do projeto qualquer coisa que relacione pokebonk? Incluindo entender as prints que são referente ao pokebonk?
+> Pergunta: Você consegue gerar um arquivo com todo o contexto de referência de todos os vídeos/prints que relacionam o jogo de referência e deletar COMPLETAMENTE do projeto/pasta do projeto qualquer coisa que relacione o jogo de referência? Incluindo entender as prints que são referente ao jogo de referência? *(O nome próprio do jogo foi omitido aqui a pedido do usuário — 11/11/2026: nada em nenhum lugar do projeto referente a ele.)*
 
 ### Resposta e providências
 
@@ -697,3 +697,11 @@ CONFIRMADO (permanente). A regra já constava no AGENTS.md ("Fale em português 
 ### Resposta e providências
 
 REMOVIDO (volta ao normal). Apagado `src/scene/adaptiveGovernor.ts`; removidos o uso em `GameCanvas.tsx` (tick no loop de render, `setCeiling`/`snapToCeiling` no handler de configurações, `autoRatio`/`autoDeficit` na leitura de debug), a opção "Ajuste automático de desempenho" de Gráficos (`SettingsScreen.tsx`) e o campo `autoPerformance` (`settings.ts`). O pixel ratio agora é definido apenas por Qualidade/Resolução, e o Limite de FPS segue disponível — o jogador configura como quiser, sem intervenção automática; configurações salvas antigas com o campo passam a ser ignoradas. `tsc -b`, `vite build` e `verify-rules` passaram. Decisão permanente registrada em docs/18 §3: **desempenho/imagem sem ajuste automático**.
+
+## Material do jogo de referência: consumir fora do projeto (skill) · 11/11/2026
+
+> (A mensagem do usuário cita o nome do jogo de referência; o nome é omitido aqui a pedido dele, para não ficar em lugar nenhum do projeto): "Você vai por no contexto de não termos nada referente ao [jogo de referência], fazer uma skill quando ele receber algo sobre [jogo de referência] para consumir o conteúdo, vai anotar tudo que aprender no contexto para termos nossas referencias atualizadas e não vai manter o arquivo no projeto. Isso servirá para quando publicarmos o jogo não ter NADA em nenhum lugar referente a [jogo de referência]"
+
+### Resposta e providências
+
+IMPLEMENTADO. Criada `skills/referencia-externa/SKILL.md`: quando qualquer agente receber material do jogo de referência (prints, vídeos, tabelas, textos, ou o nome em conversa), ele consome o conteúdo, anota tudo que for aprendido no contexto arquivado **fora** do projeto (`CONTEXTO-COMPLETO.md` + `prints/`, seção datada), nunca salva o arquivo no repositório e nunca escreve o nome em arquivo rastreado ou em commit. Propostas extraídas do material entram como PROPOSTO, aguardando o usuário. Regra adicionada ao AGENTS.md ("Material do jogo de referência (zero rastro)") e decisão permanente no docs/18 §3. O nome próprio do jogo também foi removido da citação da rodada 24 neste arquivo (antes preservado como palavra do usuário; a instrução de 11/11 é mais recente e vale: nada em lugar nenhum).

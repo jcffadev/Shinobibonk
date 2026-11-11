@@ -63,6 +63,7 @@ Decisões de longa duração. Mudança de qualquer item = nova entrada aqui com 
 | 07/11 | Modo Sábio: ícone com a **cara do personagem** + aura de atlas enquanto ativo. Gamabunta: **espada (tantō) + cachimbo**; óleo na boca, fogo perto do alvo. Clones **correm** até o alvo (nunca estáticos). |
 | 11/11 | **Nunca publicar** `artifacts/sb-swishes-source.zip` (origem/licença não verificada) nem credenciais. Nunca force push. |
 | 11/11 | **Desempenho/imagem: sem ajuste automático** (pedido do usuário) — o jogador configura como quiser em Gráficos (Qualidade, Limite de FPS, Resolução). O governor de 11/11 foi removido no mesmo dia. |
+| 11/11 | **Zero rastro do jogo de referência no projeto/publicação** (pedido do usuário) — nada de arquivo, nome ou valor copiado em lugar nenhum do repositório. Material recebido: consumir, anotar tudo no contexto arquivado FORA do projeto, nunca salvar o arquivo no projeto (skill `referencia-externa`). |
 | 11/11 | **Toda a comunicação com o usuário é sempre em português** (pedido reiterado do usuário), mesmo quando ele escreve em inglês. |
 | — | Terminologia: `attackSpeed` = **velocidade de ataque** (nunca "cadência"). pt-BR, objetivo e técnico. |
 
@@ -99,6 +100,7 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 | 25 | **Este arquivo** (11/11) | "Crie um .md de contexto de perguntas/respostas para sempre manter o contexto e a direção" | Criado `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` + regra no AGENTS.md de mantê-lo a cada rodada | IMPLEMENTADO |
 | 26 | **Idioma da comunicação** (11/11) | "Você sempre falará comigo em português… nossa comunicação sempre será em português" | Regra permanente confirmada; já consta no AGENTS.md ("Fale em português do Brasil"); registrada nas decisões permanentes | CONFIRMADO (permanente) |
 | 27 | **Remover o ajuste automático de FPS** (11/11) | "Eu não quero o auto-render para melhorar FPS, deixe o jogador configurar como quiser nas configurações gráficas isso, volte ao normal como estava!" | Removidos `adaptiveGovernor.ts`, o uso em `GameCanvas.tsx`, a opção em Gráficos e o campo `autoPerformance`; tsc/build/verify-rules passaram | IMPLEMENTADO (validação em GPU real: ajuste manual em Gráficos) |
+| 28 | **Material de referência: skill + zero rastro** (11/11) | "Fazer uma skill para quando receber algo sobre o jogo de referência: consumir o conteúdo, anotar tudo que aprender no contexto para as referências atualizadas, e não manter o arquivo no projeto… quando publicarmos o jogo não ter NADA em nenhum lugar referente a ele" (nome omitido, a pedido) | Criada `skills/referencia-externa/SKILL.md` + regra no AGENTS.md; nome removido também da citação da rodada 24 no docs/14 | IMPLEMENTADO |
 
 ## 5. Estado atual do projeto (11/11/2026)
 
@@ -132,4 +134,5 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 | Sistemas (câmera/mapas, ficha/HUD, aliados, itens/economia, personagens, hub/plano) | docs/01, 02, 03, 04, 05, 09, 10, 11 |
 | Mudanças do jogo | [CHANGELOG.md](../CHANGELOG.md) |
 | Contexto do jogo de referência (fora do repo) | pasta arquivada na raiz do workspace: `CONTEXTO-COMPLETO.md` + `prints/` |
+| Procedimento para material de referência | [skills/referencia-externa/SKILL.md](../skills/referencia-externa/SKILL.md) |
 | Referências próprias do projeto (screenshots/concept art) | `references/` · `history/` (versões antigas) |
