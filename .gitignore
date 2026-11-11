@@ -28,6 +28,4 @@ desktop.ini
 .claude/settings.local.json
 
 # Análise externa estritamente local: nunca publicar instaladores ou extrações.
-PokeBonk*.exe
-pokebonk-desktop/
 private-research/

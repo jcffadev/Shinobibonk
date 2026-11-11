@@ -230,14 +230,14 @@ O usuário pediu HUD de escolhas e de habilidades mais legível, mapa rápido po
 > Mouse ainda escapando da tela ao movimentar o mouse, tem que bloquear o mouse na janela do brownser/jogo
 > Só aparecer mouse quando der alttab/esc no jogo colocar um mouse personalizado, uma "kunaizinha"
 >
-> Preciso de rebalanceamento do HP dos monstros, diminuir um pouco a quantidade de genin, os mega elites/pokemons para capturar tem que aparecer com mais aleatoriedade, ser um RNG, mas tem que pelo menos aparecer de 4 a 6 ajudantes por zona para selar e uns 2 para selar para conta
+> Preciso de rebalanceamento do HP dos monstros, diminuir um pouco a quantidade de genin, os mega elites/criaturas para capturar tem que aparecer com mais aleatoriedade, ser um RNG, mas tem que pelo menos aparecer de 4 a 6 ajudantes por zona para selar e uns 2 para selar para conta
 >
 > Exemplo de rebalanceamento os megas tem que ter cerca de 20mil de hp o primeiro e ir escalando com o jogo, nos minutos finais já temos que estar na casa de milhão de HP...
 > Mas, o scale do personagem tem que acompanhar os números
 >
 > Dash do naruto/pulo esta "bugado" estático, revise
 >
-> A sorte inicial esta influenciando demais...Este é um exemplo de um personagem no segundo 01 do pokebonk
+> A sorte inicial esta influenciando demais...Este é um exemplo de um personagem no segundo 01 do jogo de referência
 >
 > Estude o scale e veja o que consegue aprender que podemos utilizar também referente ao jogo, no nosso projeto
 >
@@ -263,7 +263,7 @@ O usuário pediu HUD de escolhas e de habilidades mais legível, mapa rápido po
 **Resposta**
 Os controles de combate usam trava do ponteiro, movimento normalizado e câmera com rotação, inclinação e zoom interpolados. Teuchi está diante do Ichiraku e aparece no atendimento. O botão da ficha mantém as mesmas cartas quando se volta. Tab permite andar com mapa rápido, e F9 mostra a kunai do cursor. A escolha final devolve o controle sem tela de retomada. O mapa de preparação preserva sua cena ao trocar de personagem. Lamen de cura tem teto de 5%, com a recompensa final separada.
 
-O clipe de dois minutos permitiu estudar a abertura por marcos. O Gastly chega ao nível 4 perto de um minuto e ao nível 6 com 63 abates em 1:26, com o golpe inicial perto de 38. Vídeos mais longos podem ser estudados por quadros em marcos de nível, abates, dano e luta de guardião. A escala implementada está em `docs/04-ITENS-HABILIDADES-ECONOMIA.md`. A meta de 5 milhões ainda exige medir reposição e desempenho sustentado.
+O clipe de dois minutos permitiu estudar a abertura por marcos. O personagem da referência chega ao nível 4 perto de um minuto e ao nível 6 com 63 abates em 1:26, com o golpe inicial perto de 38. Vídeos mais longos podem ser estudados por quadros em marcos de nível, abates, dano e luta de guardião. A escala implementada está em `docs/04-ITENS-HABILIDADES-ECONOMIA.md`. A meta de 5 milhões ainda exige medir reposição e desempenho sustentado.
 
 Foram integradas folhas de ação de Naruto Academia e das duas formas de Neji. Aliados correm, saltam, esquivam e alternam ataques liberados. O Totem mantém o selo e os clones correm. Inimigos comuns alternam ataque, corrida, salto e esquiva, com sorteio corpo a corpo/à distância e três armas. A passiva de Tenten aplica ×1,5 uma vez a técnicas neutras ou de projétil. Quadros próprios de ataque, pulo e dash para todas as formas restantes seguem em revisão.
 
@@ -303,7 +303,7 @@ Foram integradas folhas de ação de Naruto Academia e das duas formas de Neji. 
 >
 > Revise o resto do elenco já, faça os ajudantes correrem e jogarem as habilidades... depois vá fazendo o restante, me mostre a fila agora.
 >
-> Eu te mandei um print do planejamento de missão do pokebonk... a nossa não esta igual ainda... precisa ser clean daquela forma a nossa também, ser possível favoritar habilidades, até porque favoritar e melhorar habilidades ja é um upgrade que temos, só ser possível não levar 60% das habilidades que o ninja pode aprender em missão, isso ser escalonável conforme vamos liberando novos shinobis e o jogo ir liberando novas habilidades que os shinobis podem aprender...
+> Eu te mandei um print do planejamento de missão do jogo de referência... a nossa não esta igual ainda... precisa ser clean daquela forma a nossa também, ser possível favoritar habilidades, até porque favoritar e melhorar habilidades ja é um upgrade que temos, só ser possível não levar 60% das habilidades que o ninja pode aprender em missão, isso ser escalonável conforme vamos liberando novos shinobis e o jogo ir liberando novas habilidades que os shinobis podem aprender...
 > Se no inicio com o Time7 liberado ele pode aprender 10, no jogo ele levaria 4, bloquearia 6.
 > Se no late game com todos os personagens ele pode aprender 100 habilidades, ele vai poder levar 40, bloquear 60... entendeu a mecânica?
 >
@@ -402,11 +402,11 @@ Versões: novo — as 56 formas viraram personagens próprios (24 famílias) com
 
 Pílulas: antes só mostravam o bônus ("+4% chance crítica") e o nível; agora mostram o atributo atual → novo nas cartas, na ficha, no plano de build e no tooltip da barra. Pergaminhos: o +3% de dano total fazia todas as técnicas aparecerem em "Melhora:"; agora só as do mesmo elemento. Bolsa: as 4 predefinições viraram a sub-aba "Itens em casa" com até 12 listas com descrição, compatível com o save antigo. Testes de navegador, `tsc`, build, `verify-rules` e `verify-runtime` passaram.
 
-## Calibração com a wiki do PokéBonk e detalhes de interface
+## Calibração com a wiki do jogo de referência e detalhes de interface
 
 **Pedido** (via coordenador)
 
-> Ponto de partida de calibração com a wiki pública do PokéBonk (sem engenharia reversa): tabelas referência × valor atual × proposta em docs/15, aplicando só o que for claramente inconsistente. Detalhes: prévia do atributo ao esquecer pílula no Ichiraku, reordenar as listas de "Itens em casa" e botão para expandir/recolher a grade de itens do HUD com estado salvo.
+> Ponto de partida de calibração com a wiki pública do jogo de referência (sem engenharia reversa): tabelas referência × valor atual × proposta (arquivadas em arquivo-pokebonk/CONTEXTO-COMPLETO.md, fora do projeto), aplicando só o que for claramente inconsistente. Detalhes: prévia do atributo ao esquecer pílula no Ichiraku, reordenar as listas de "Itens em casa" e botão para expandir/recolher a grade de itens do HUD com estado salvo.
 
 **Resposta**
 
@@ -578,7 +578,7 @@ O lote atual foi publicado na main do GitHub em badcee4. Oficina com uso único 
 2. Finalizar e revisar as ações de todas as 56 versões. Há 16 versões com folhas cobrindo ataque/pulo/dash, nove com pulo/dash dedicados pendentes e 31 com os três tipos de ação pendentes. Todas têm caminhada. Ainda é necessária auditoria visual por versão e no papel de ajudante.
 3. Aplicar os selos de mãos ao restante do elenco e refinar as poses especiais de Gaara, Lee e Guy. Naruto tem quatro versões do selo cruzado.
 4. Integrar e validar o rascunho WebGL de Susanoo por lançador, incluindo suporte, Ultimate e prévia. Refinar efeitos por técnica e buscar sons com licença adequada.
-5. Recalibrar dano e atributos por nível, HP/defesa dos monstros/chefes, Sorte, economia, bônus de ajudantes e emboscadas. As tabelas de proposta permanecem em docs/15.
+5. Recalibrar dano e atributos por nível, HP/defesa dos monstros/chefes, Sorte, economia, bônus de ajudantes e emboscadas. As tabelas de proposta permanecem no arquivo de contexto arquivado (arquivo-pokebonk/CONTEXTO-COMPLETO.md, fora do projeto).
 6. Validar terreno, bordas, colisões e câmera em mais climas. Medir desempenho de hordas em GPU real. A suíte headless usa renderização por software.
 7. Completar testes prolongados de uma run comum, missões de desbloqueio, três zonas, bijuu, recompensas e ranking. Cadastro com servidor e hospedagem da alpha seguem como etapas posteriores, pois o perfil atual é local.
 
@@ -634,7 +634,7 @@ IMPLEMENTADO: nove folhas novas de pulo/dash (três Narutos, três Lees, três G
 
 - **Netlify 404 (CONFIRMADO)**: o erro veio de uma publicação parcial — o primeiro upload arrastou só o `index.html` da raiz sem a pasta `assets/` (drag & drop do Netlify fica instável acima de ~50 MB; o build tem ~204 MB / 343 arquivos). Subindo a pasta `dist` inteira (ou um zip com `index.html` + `assets/` na raiz), o site carregou: o print do usuário mostra o jogo rodando em `*.netlify.app`. O deploy é manual (sem Git/CLI).
 - **FPS (IMPLEMENTADO)**: causa principal (CONFIRMADO) — as configurações ficam por domínio no `localStorage` (`sb_settings_v1`), então o domínio novo do Netlify começou com os padrões (qualidade `alta`, resolução automática até 1,5× os pixels do dispositivo, FPS sem limite), mais pesado que os ajustes usados localmente; versões recentes também somaram efeitos. A simulação não é o gargalo (TESTADO: 1,8 ms/frame com 1.200 inimigos). Solução: `src/scene/adaptiveGovernor.ts` (mede o intervalo real entre quadros e reduz/devolve o pixel ratio automaticamente) + opção **Ajuste automático de desempenho** em Gráficos (ligada por padrão). **TESTADO**: testes do governor, `tsc -b`, build, `verify-rules` e smoke headless com 1.200 inimigos (`autoRatio` 1 → 0,61 sob carga, sem erros de página). **PENDENTE**: validar em GPU real no deploy do usuário.
-- Lote de feedback da comunidade (fusão/Kekkei Genkai, projéteis vermelhos dos inimigos comuns, água, som de hit, terreno/horizonte, câmera estilo PokéBonk, mouse, badges do pool) registrado em docs/13, aguardando definições do usuário sobre os itens ambíguos.
+- Lote de feedback da comunidade (fusão/Kekkei Genkai, projéteis vermelhos dos inimigos comuns, água, som de hit, terreno/horizonte, câmera do jogo de referência, mouse, badges do pool) registrado em docs/13, aguardando definições do usuário sobre os itens ambíguos.
 
 
 Validação concluída antes do envio: 58 verificações no navegador passaram, sem erros JavaScript nem assets 404; inclui Esc sem clique, Tab, mercador, oficina, ajudantes por versão e emboscadas. TypeScript, build e regras passaram. A medição de desempenho em renderização por software não comprova desempenho em GPU real.

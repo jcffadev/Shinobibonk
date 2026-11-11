@@ -112,7 +112,7 @@ Slots 1–4: **somente automáticos**, cada um com recarga própria; o quarto é
 - **Prévia das pílulas**: cartas, ficha (P), plano de build e barra mostram o atributo do personagem com o valor atual e o novo (`src/game/pillPreview.ts`). **Pergaminhos de elemento**: "Melhora:" lista só técnicas do mesmo elemento; o +3% de dano total vale para todas, mas não é listado por técnica.
 
 ## Pílulas (IMPLEMENTADO, valores provisórios)
-O formato segue a página de vitaminas da wiki de referência: cada pílula aumenta **um atributo por nível**. Os nomes foram adaptados ao mundo ninja, sem Pokémon.
+O formato segue a página de vitaminas da wiki de referência: cada pílula aumenta **um atributo por nível**. Os nomes foram adaptados ao mundo ninja, sem nomes do jogo de referência.
 
 | Pílula | Por nível | Pílula | Por nível |
 |---|---|---|---|
@@ -161,7 +161,7 @@ Afixos compatíveis com cada habilidade. Setup prioriza duração e recarga, pod
 ## Catálogo
 O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 
-**IMPLEMENTADO** em `src/game/catalog.ts`: **94 itens** no formato da página de itens da wiki de referência (raridade · efeito · gatilho · limite de cópias). Os nomes foram adaptados ao mundo ninja, os valores levemente alterados e nada lembra Pokémon.
+**IMPLEMENTADO** em `src/game/catalog.ts`: **94 itens** no formato da página de itens da wiki de referência (raridade · efeito · gatilho · limite de cópias). Os nomes foram adaptados ao mundo ninja, os valores levemente alterados e nada lembra o jogo de referência.
 - **Raridades**: 25 comuns, 27 incomuns, 15 raros, 14 épicos e 10 lendários.
 - **Custo de desbloqueio**: comum 0, incomum 150, raro 300, épico 500, lendário 900.
 - **Limites**: "sem limite" da referência vira 10 cópias; itens únicos têm 1.
@@ -221,7 +221,7 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 - Mega Elite Genin: ~20 mil HP por volta de 55 s, dobrando a cada 80 s depois disso. Passa de 2 milhões no final da primeira zona. Dificuldade, ameaça, Shikamaru e debug multiplicam o resultado.
 - Guardião: `260 × ameaçaHP × (0,6 + 0,0025×segundosDaZona) × (1 + 0,32×minutosDaMissão) × 2^(segundosNoFinalSwarm/405) × (1 + 0,35×(zona−1))`. Na primeira zona Genin, 18 min de Final Swarm produzem ~990 milhões de HP no padrão. A defesa começa em 65%, se aproxima de 90% e tem +4 pontos na bijū.
 - Meta de 5 milhões de abates: ~2.778/s em 30 min ou ~1.389/s em 60 min. Com teto de 1.600 vivos, seria uma reposição total a cada 0,58 s ou 1,15 s. Falta medição sustentada. O contador soma abates reais.
-- Clipe fornecido pelo usuário (2:00 de arquivo): Gastly Nv. 1 e 33 de Sorte no início; ~0:27 Nv. 2 / 10 abates; ~0:59 Nv. 4 / 33; 1:26 Nv. 6 / 63 / 4.122 de dano total. O golpe inicial fica perto de 38. Isso orientou menor pressão no começo do Genin e ganho progressivo pelo kit. O trecho cobre a abertura.
+- Clipe fornecido pelo usuário (2:00 de arquivo): o personagem da referência Nv. 1 e 33 de Sorte no início; ~0:27 Nv. 2 / 10 abates; ~0:59 Nv. 4 / 33; 1:26 Nv. 6 / 63 / 4.122 de dano total. O golpe inicial fica perto de 38. Isso orientou menor pressão no começo do Genin e ganho progressivo pelo kit. O trecho cobre a abertura.
 - Nas ofertas, o peso da Sorte vai de 20% a 100% em 150 s. Bloqueio pré-missão de técnicas usa `floor(pool aprendível × 0,6)` por shinobi e protege o ataque inicial. Pílulas ficam disponíveis. O Treinamento com Jiraiya exige planejar antes de marcar a estrela e concede ×1,15 a até quatro técnicas.
 - Fusão consome dois ataques e cria uma técnica de área nível 1 com o dobro da média de poder, afixos somados e as duas naturezas quando distintas. Combinação ocupa um espaço e mantém os dois ataques, com ×1,5 para cada. As receitas ficam no save da missão.
 

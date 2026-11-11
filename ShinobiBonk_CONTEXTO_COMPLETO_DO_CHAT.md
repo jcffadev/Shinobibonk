@@ -2,7 +2,7 @@
 
 > **Aviso (revisão de 05/11/2026):** este arquivo é o **registro histórico** do chat anterior e não foi reescrito. Várias decisões mudaram depois.
 > - **Tab, P e Y**: Tab abre o **mapa rápido** e **P abre a ficha**. A Ultimate automática é alternada pela **tecla Y** (obrigatória) e também pelo **selo AUTO no botão R**.
-> - **Pokémon**: nomes de eventos de referência (Rhydon, Snorlax, Gengar) foram trocados por Provocação do guardião, Bênção de Tsunade e Maldição de Orochimaru.
+> - **Nomes da referência**: os nomes dos eventos do jogo de referência foram trocados por Provocação do guardião, Bênção de Tsunade e Maldição de Orochimaru.
 > - **Base atual**: React/Three.js em `src/`, e não mais `game/index.html` (seções 12–13 abaixo).
 >
 > Para o estado atual, use [docs/00-LEIA-PRIMEIRO.md](docs/00-LEIA-PRIMEIRO.md) e [AGENTS.md](AGENTS.md).
@@ -13,7 +13,7 @@
 
 ## 1. Visão e identidade
 
-- **ShinobiBonk**: survivor/roguelite inspirado na experiência de PokéBonk, com identidade visual e temática ninja/Naruto, progressão entre partidas e builds aleatórias.
+- **ShinobiBonk**: survivor/roguelite inspirado na experiência de um jogo de referência, com identidade visual e temática ninja/Naruto, progressão entre partidas e builds aleatórias.
 - **Meta visual obrigatória:** **mundo tridimensional (3D)**, cenários com relevo, elevações, montanhas, construções e exploração; personagens/inimigos em **mini pixel art 2D** orientados à câmera (billboards), combinados com cenário 3D leve.
 - **Câmera:** isométrica/orbital, rotação livre horizontal de 360° pelo mouse, inclinação/pitch até quase vertical (visão de cima), zoom e movimento consistente com a câmera. O jogador deve conseguir observar locais distantes e subir/explorar elevações.
 - **Plataforma prioritária:** navegador, jogável e leve, buscando FPS elevado e boa performance. Não confundir uma arte conceitual gerada com screenshot de jogo funcional.
@@ -58,7 +58,7 @@ Usar sempre: **CONFIRMADO** (decisão do usuário), **IMPLEMENTADO** (presente n
 | Inferior direito | **Todos os itens adquiridos**, ícones pequenos e **quantidades/empilhamentos** |
 | Tab | Ficha completa, itens atuais, itens **planejados na build**, itens arquivados, habilidades disponíveis no pool, habilidades equipadas, pílulas e atributos |
 
-- Referência de interface: screenshots do **PokéBonk** enviados pelo usuário, com painéis escuros, cartões e ícones, sem copiar cegamente a identidade visual.
+- Referência de interface: screenshots do jogo de referência enviados pelo usuário (arquivados em arquivo-pokebonk/prints/, fora do projeto), com painéis escuros, cartões e ícones, sem copiar cegamente a identidade visual.
 - A **ficha** precisa mostrar contribuição de cada origem: atributos base, ganhos por nível, árvore permanente, itens, pílulas, passivas de aliados, buffs/debuffs de eventos. Distinguir bônus aditivos de multiplicadores **[x]**, e apresentar valores finais e, quando possível, subtotais.
 - Configurações gráficas: limite de FPS, escala da interface, transparência, taxa do minimapa, simplificação de inimigos, densidade de efeitos, números de dano, tela cheia, qualidade visual e opção H. Interface deve ser legível mesmo com muitos inimigos.
 - Ranking de kills: **local**, comparando runs anteriores inclusive do próprio jogador, atualização durante a partida a cada kill; indicar posição, meta para superar recorde, filtros futuros por ninja/mapa/dificuldade, tela de fim com dano por fonte, DPS, tempo, recompensas. Ranking global exigirá backend e **não deve ser simulado como online**.

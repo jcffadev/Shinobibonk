@@ -49,7 +49,7 @@
 
 ## Calibração com referência pública
 
-- Adiciona `docs/15-CALIBRACAO-REFERENCIA.md`, com a wiki pública do PokéBonk (level-up, vitaminas, Lab, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário.
+- Adiciona a calibração com o jogo de referência (level-up, pílulas, melhorias permanentes, chefes, Survival e economia) ao lado das constantes atuais e de propostas. Nenhum valor de jogo mudou; as propostas aguardam o usuário. (Documento arquivado fora do projeto: arquivo-pokebonk/CONTEXTO-COMPLETO.md)
 
 ## Pílulas com atributo atual → novo, pergaminhos por elemento e listas de itens em casa
 
@@ -160,7 +160,7 @@
 
 ## 2026-11-06 — escala dos inimigos e hordas
 - `difficultyAt` (`progression.ts`): HP dos inimigos ×1,10 por minuto e dano ×1,05 por minuto (além do crescimento linear), resistência a dano de +1,5% por minuto até 60% (`armor`, somada à defesa do tier), teto de inimigos até 1400 e spawn mais rápido (mín. 0,03 s). Constantes em `ENEMY_SCALING`. Ex. Genin: 10 min = HP ×8,3, 320 inimigos; 30 min = HP ×133, 1400 inimigos, 45% de resistência.
-- Crescimento por nível do shinobi segue linear (+3%): o nível passa de 1000 (referência do PokéBonk); o dano massivo deve vir de técnicas, projéteis, críticos e itens.
+- Crescimento por nível do shinobi segue linear (+3%): o nível passa de 1000 (referência do jogo de referência); o dano massivo deve vir de técnicas, projéteis, críticos e itens.
 
 ## 2026-11-06 — elemento base e bônus de natureza
 - Shinobis aprendem só Neutro + elemento base (afinidade) + elementos do próprio kit (+ Sábio para usuários do Modo Sábio); o Naruto deixa de aprender todos os elementos.
@@ -249,11 +249,11 @@
 - **Sinergias de vila e organização** (`src/game/synergy.ts`): ativam com 2+ membros (herói + ajudantes, ao menos 1 ajudante), faixas 2/3/4+, acumulam vila + organizações (ex.: Akatsuki). Substituem a antiga sinergia fixa da Areia (Irmãos da Areia completos mantêm +12 armadura/+15% dano). Painel "SINERGIAS" abaixo do card do herói; cartões de ajudante mostram a PASSIVA individual e as tags das sinergias. Dados de clã/organização/afinidade em `heroes.ts` (`HERO_CLAN`, `ORGANIZATIONS`, `heroOrganizations`, `heroAffinity`).
 - **Seleção de shinobi** (`src/ui/CharacterSelect.tsx`): grade de retratos com selo de elemento; filtros por vila, elemento, organização/clã e busca; contagem "X de 22".
 - **Guardião invocável**: Selo do guardião (E) invoca o guardião da zona quando o jogador quiser; HP × (0,6 + 0,4 × segundos na zona ÷ 160). Continua surgindo sozinho aos 160 s se não for invocado.
-- **Plano do Shikamaru** substitui a Provocação do guardião (ex-referência Pokémon): +1 kunai por acionamento ao derrotar o guardião, limite 3 por zona, sem penalidade de dificuldade/saque. Nenhuma referência a Pokémon resta em `src/`.
+- **Plano do Shikamaru** substitui a Provocação do guardião (ex-nome do jogo de referência): +1 kunai por acionamento ao derrotar o guardião, limite 3 por zona, sem penalidade de dificuldade/saque. Nenhuma referência a esse jogo resta em `src/`.
 - **Verificação**: tsc, vite build, verify-rules (com asserts de sinergia) e verify-runtime (24 checks) passaram; testes de navegador à parte para sinergias, filtros (desktop e 375px) e guardião/Shikamaru. Balanceamento PENDENTE.
 
 ## 2026-11-05 — catálogo de 91 itens no formato da referência
-- **Catálogo:** `src/game/catalog.ts` foi refeito com 91 itens (25 comuns, 27 incomuns, 15 raros, 14 épicos, 10 lendários) seguindo o formato da página de itens da wiki: raridade, efeito, gatilho e limite. Os nomes são ninjas, os valores foram levemente alterados e não há Pokémon.
+- **Catálogo:** `src/game/catalog.ts` foi refeito com 91 itens (25 comuns, 27 incomuns, 15 raros, 14 épicos, 10 lendários) seguindo o formato da página de itens da wiki: raridade, efeito, gatilho e limite. Os nomes são ninjas, os valores foram levemente alterados e nada lembra o jogo de referência.
 - **Itens pedidos:** Pergaminho do Monte Myoboku (+28% Sábio) e Pergaminho Genjutsu (+28% Genjutsu), no molde dos pergaminhos de elemento (Katon, Suiton, Fuuton, Doton, Raiton, Mokuton, Areia, Sombra, Neutro).
 - **Mecânicas novas na simulação** (`GameCanvas.tsx`, via `Stats.extra`):
   - dano por elemento e Genjutsu, dano condicional e gatilhos por acerto;
@@ -507,14 +507,14 @@ Os docs foram editados até cerca de 15h; o código continuou mudando até cerca
   - Sinergia da Areia.
   - Descoberta por frustum da câmera.
   - Ganchos de teste `window.__shinobiTest` (dev com `?test`).
-- Eventos renomeados: "Rugido de Rhydon" → Provocação do guardião; "Bênção de Snorlax" → Bênção de Tsunade.
+- Eventos renomeados: os nomes dos eventos do jogo de referência viraram Provocação do guardião e Bênção de Tsunade.
 - Scripts `scripts/verify-rules.mjs`, `scripts/verify-runtime.mjs`, `scripts/smoke-browser.mjs` e scripts de integração já aplicados (`scripts/integrate-*.mjs`, `update-*.mjs`).
 
 **Documentação corrigida:**
 - README, `00-LEIA-PRIMEIRO` e `12-ARQUITETURA` reescritos conforme o código.
 - 01, 02, 03, 04, 05 e 11 receberam seções de estado do código.
 - 06 marcado como histórico.
-- 09, 10 e o contexto do chat receberam notas sobre as decisões que mudaram (Tab/P, AUTO no lugar de Y, moedas, nomes sem Pokémon).
+- 09, 10 e o contexto do chat receberam notas sobre as decisões que mudaram (Tab/P, AUTO no lugar de Y, moedas, nomes sem referência ao jogo de referência).
 
 **Divergências registradas como PENDENTES:**
 - A moeda permanente aparece como "Ryu" no hub (a decisão é Lamens).
@@ -528,7 +528,7 @@ Os docs foram editados até cerca de 15h; o código continuou mudando até cerca
 ## 2026-11-05 — run, selamento de Orochimaru, skill e referências
 - Copiados os 50 PNGs de clipboard disponíveis desta conversa para `assets/referencia/prints/originais/`, preservando os nomes originais; mantidas cópias organizadas na pasta principal.
 - Implementadas aparições naturais do mega elite Orochimaru e sequência após derrota: retrato do alvo, escolha E/G, animação do selo, registro de aliado temporário ou drop que abre três itens. Sorte do Talismã altera chance de raridade nessa escolha.
-- Substituída a Maldição de Gengar pela Maldição de Orochimaru; mantém o efeito de risco/recompensa provisório.
+- Substituída a maldição do evento do jogo de referência pela Maldição de Orochimaru; mantém o efeito de risco/recompensa provisório.
 - A roleta/eventos, coleta de armas/Ryu, altar de desafio, escolha de level-up, HUD de run, clima simples e mapa da zona estão implementados em `src/`; defesa de altar completa, zonas e IA de aliados continuam pendentes.
 - Ultimate automática agora é alternada pelo selo AUTO dentro do botão R; removido Y do guia visual do HUD. Naruto alterna VFX de shuriken, Rasengan, clone e rajada de chakra.
 - Criada `skills/documentar-projeto/SKILL.md` e integrada ao `AGENTS.md`: toda alteração em código/configuração/assets deve sincronizar Markdown na mesma tarefa.

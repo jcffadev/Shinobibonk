@@ -12,7 +12,7 @@ export function rollRarityTier(luck:number,rng=Math.random):number{
 }
 /**
  * Afixos por nível de técnica (%), por raridade [Comum, Incomum, Raro, Épico, Lendário]: base + aleatório(0..spread).
- * DANO das técnicas de ataque é a principal fonte de escala do jogador (referência PokéBonk: técnica Nv. 10 com +300%/nível):
+ * DANO das técnicas de ataque é a principal fonte de escala do jogador (na referência, a técnica Nv. 10 tinha +300%/nível):
  * sempre vem no level-up de técnica de ataque e cresce muito com a raridade. Área/recarga/duração e buffs (setups) usam a tabela menor.
  */
 export const GROWTH_ROLLS={damage:{base:[30,55,90,150,250],spread:[15,20,30,50,80]},other:{base:[10,18,25,30,40],spread:[8,10,10,15,15]}};

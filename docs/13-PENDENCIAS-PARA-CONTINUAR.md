@@ -30,7 +30,7 @@ Este é o estado consolidado após os commits 11e0d18 e bee4bba. Substitui as li
 
 1. **URGENTE — Kankuro sem ataque animado.** Criar folhas completas de Kankuro Genin (1), Shippuden (15) e Aliança (30), preservando seus trajes e acessórios. Criar também Kushina (1), a quarta versão ainda sem folha completa. Confirmar o ataque básico disparado automaticamente em combate e como ajudante. A reclamação do usuário confirma que o fallback atual é insuficiente.
 2. **Revisar as 56 versões visualmente.** Prioridade a Neji 1/15, Sasuke Genin e Naruto Clássico/Shippuden. Conferir repouso → andar → ataque, frente/costas, pulo, dash direito/esquerdo e recuperação. Naruto Academia é o padrão; Lee/Guy/Gaara preservam exceções. Repetir como ajudantes e em contexto de horda.
-3. **Estudar e medir balanceamento.** Preservar o sistema existente. Comparar versões datadas da referência, vídeo fornecido e runs equivalentes. Registrar dano por alvo, tempo para matar, XP/minuto, abates/minuto, economia e Sorte. Diagnóstico inicial: a fórmula do mega cresce muito mais que a do guardião na mesma abertura. Ver docs/16. Não copiar propostas antigas de docs/15 como se fossem parâmetros aprovados.
+3. **Estudar e medir balanceamento.** Preservar o sistema existente. Comparar versões datadas da referência, vídeo fornecido e runs equivalentes. Registrar dano por alvo, tempo para matar, XP/minuto, abates/minuto, economia e Sorte. Diagnóstico inicial: a fórmula do mega cresce muito mais que a do guardião na mesma abertura. Ver o arquivo de contexto arquivado (arquivo-pokebonk/CONTEXTO-COMPLETO.md, fora do projeto). Não copiar propostas antigas como se fossem parâmetros aprovados.
 4. **Efeitos e prévias.** Validar Susanoo de Madara/Sasuke/Itachi no jogador, ajudante, Ultimate e prévia; Kakashi tem estilo preparado, mas não possui versão Susanoo no elenco. Refinar efeitos por nome/natureza, origem nas mãos/boca, trajetórias, impacto e H. Conferir clones correndo e óleo/fogo de Gamabunta.
 5. **Mapas e física.** Conferir os quatro mapas, chão/construções regionais, bases apoiadas, bordas sem vazio, câmera/zoom, climas, colisões e diagonais. Melhorar prévia da seleção caso ainda use representação antiga.
 6. **Run completa e regressões.** Três zonas → bijuu em três fases → saída → Lamens/ranking/save. Exercitar desbloqueio por selamento em run normal; roleta E/V, banimento por identidade, pílulas somente no level-up, seis tipos de pílula por run, oficina e mercador.
@@ -51,7 +51,7 @@ Lista colada pelo usuário em 11/11/2026. Estado por item:
 8. **Melhor visualização do inimigo focado/tomando dano** (PROPOSTO): `lockedTarget` + `targetMarker` já existem; plano é tingir o sprite do alvo travado de vermelho.
 9. **Textura da água** (PROPOSTO; `src/scene/terrainArt.ts` linha ≈90).
 10. **Horizonte mais bonito / perspectiva dos morros “esquisita”** (PROPOSTO; `groundHeight` em `terrainArt.ts` — item grande, precisa de revisão visual).
-11. **Câmera estilo PokéBonk: “quem tem que andar é o personagem e não a câmera”** (AGUARDANDO CLAREZA — a câmera já segue o jogador com damping; pedir referência do que exatamente mudar; conferir `assets/referencia/prints/` e docs/15).
+11. **Câmera do jogo de referência: “quem tem que andar é o personagem e não a câmera”** (AGUARDANDO CLAREZA — a câmera já segue o jogador com damping; pedir referência do que exatamente mudar; conferir os prints arquivados em arquivo-pokebonk/, fora do projeto).
 12. **RawInput do mouse “fixo”** (AGUARDANDO CLAREZA — com pointer lock a câmera já usa `movementX/Y` + `MathUtils.damp`; a web não expõe RawInput real; pedir o que exatamente está quebrando).
 13. **Andar livre enquanto ataca** (INVESTIGAR — procurar o travamento de movimento durante conjuração em `castTechnique`/loop de movimento).
 
@@ -67,9 +67,9 @@ Lista colada pelo usuário em 11/11/2026. Estado por item:
 - Revisar apresentação da ficha (fontes base/passivas/nível/itens) e HUD abaixo de 1050 px.
 - Conferir arte de Iruka/Ebisu/Kushina e drops nos locais realmente usados; a presença de um SVG antigo não prova que ele esteja em uso.
 - Minigame/probabilidade de selamento e aviso de sinergia são propostas antigas, ainda exigem definição final.
-- docs/15 contém propostas históricas sobre preços permanentes, venda proporcional, ferramentas 2/2/1 e HP adaptado ao DPS. Elas não substituem as decisões já dadas pelo usuário (inclusive 3 usos iniciais e até 10).
+- O arquivo de contexto arquivado (arquivo-pokebonk/CONTEXTO-COMPLETO.md, fora do projeto) contém propostas históricas sobre preços permanentes, venda proporcional, ferramentas 2/2/1 e HP adaptado ao DPS. Elas não substituem as decisões já dadas pelo usuário (inclusive 3 usos iniciais e até 10).
 - Bônus extra de +0,8% em um atributo aleatório quando não restam upgrades é regra separada do crescimento normal por nível.
-- Análise dos arquivos externos do PokéBonk é local e não publica instalador, diretório, código, assets ou extrações no GitHub.
+- Análise dos arquivos externos do jogo de referência é local e não publica instalador, diretório, código, assets ou extrações no GitHub.
 
 ## Retomar
 

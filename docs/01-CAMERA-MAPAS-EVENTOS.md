@@ -24,7 +24,7 @@ Essas condições são **propostas**; números de buffs, penalidades, frequênci
 Escolta, altar, emboscada opcional, selamento, desafio de Guy, fendas/portais, proteção de objetivo, tesouro com maldição, chefes de área. Cada evento define objetivo, duração, recompensa, penalidade opcional e feedback no HUD.
 
 ### Regras acrescentadas pelas referências de 05/11/2026
-As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon fica no ShinobiBonk. Os nomes abaixo são os usados no código.
+As referências vieram de outro jogo; por decisão do usuário, nenhum nome ou tema daquele jogo fica no ShinobiBonk. Os nomes abaixo são os usados no código.
 
 - **Plano do Shikamaru (CONFIRMADO pelo usuário em 06/11/2026; substitui a antiga Provocação do guardião)**: NPC Shikamaru (sprite de herói) em x:14, z:8. **IMPLEMENTADO**: cada E dá +1 kunai grátis ao derrotar o guardião da zona; limite 3 por zona (o 4º é recusado). Sem penalidade de dificuldade e sem bônus de saque. Ao derrotar o guardião caem 1 + planos kunais grátis (máximo 4). Pode ser usado antes ou depois de invocar o guardião. A contagem zera na troca de zona.
 - **Selo do guardião (CONFIRMADO pelo usuário em 06/11/2026)**: em x:2, z:-12. **IMPLEMENTADO**: E invoca o guardião da zona a qualquer momento. HP = 260 × ameaça × M, com M = 0,6 + 0,4 × (segundos na zona ÷ 160): 0,6× no início, 1,0× aos 160 s. O painel de interação mostra o ×M atual. Se não for invocado, o guardião ainda surge sozinho aos 160 s da zona. Um guardião por zona; a kill reward não duplica. Valores provisórios.
@@ -49,7 +49,7 @@ As referências vieram de outro jogo; por decisão do usuário, nada de Pokémon
   - Sorte multiplica casas boas por 1 + min(2, sorte/100) (premium ao quadrado); a pressão de dificuldade (maldição, zona, missão) multiplica as ruins; a fatia ruim fica sempre entre 15% e 60%. Ex.: sorte 0 = 63% boas/25% ruins; sorte 100+ = ~81%/15%.
   - Buffs e debuffs são temporários e recalculados das fontes. Valores provisórios.
 - **Altar de desafio (CONFIRMADO)**: interagir inicia uma pequena horda; concluir concede uma kunai grátis. **IMPLEMENTADO**: 6 inimigos de desafio surgem a 7 m. Escala e duração estão **PENDENTES**.
-- **Maldição de Orochimaru (CONFIRMADO; substitui Gengar)**: risco/recompensa opcional. **IMPLEMENTADO**: +20% de dificuldade e +25% de XP/saque, uma vez por zona.
+- **Maldição de Orochimaru (CONFIRMADO; substitui a maldição do evento de referência)**: risco/recompensa opcional. **IMPLEMENTADO**: +20% de dificuldade e +25% de XP/saque, uma vez por zona.
 - **Mega elite (CONFIRMADO)**: encontros especiais surgem organicamente e podem ser selados após a derrota. **IMPLEMENTADO**: shinobi aleatório do elenco (que ainda não é aliado). O primeiro surge entre 30 e 55 s e os seguintes a cada 45–70 s, até 9 por run. Rotação por zona e elegibilidade estão **PENDENTES**.
 - **Guardião de zona (IMPLEMENTADO)**: invocado pelo Selo do guardião quando o jogador quiser, ou automaticamente aos 160 s de cada zona de 200 s; sorteado da lista da zona em `src/game/missions.ts` (`GUARDIAN_RULES`, `guardianHpMultiplier`).
 - **Altares por raridade ("Altar · Normal/Incomum/Raro/Épico/Lendário", CONFIRMADO pelo usuário em 06/11/2026)**: 8 por zona (os 5 primeiros cobrem as 5 raridades; os outros 3 são sorteados). **IMPLEMENTADO e TESTADO no navegador**:

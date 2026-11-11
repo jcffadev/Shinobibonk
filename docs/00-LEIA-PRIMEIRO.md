@@ -30,8 +30,8 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 - Economia da run: Ryu, kunai e shuriken. Kunai/shuriken são recompensas no mapa; o mercador troca armas por Ryu; a Roleta da Tsunade consome Ryu.
 - Lamens é a moeda permanente da conta (árvore e desbloqueios), separada do Ryu da run.
 - O pool de level-up/drop é escolhido pelo jogador.
-- Orochimaru substitui Gengar no evento de maldição. Mega elites derrotados podem ser selados (E) ou recusados (G), e a recusa deixa um drop de item afetado por Sorte.
-- Nada relacionado a Pokémon: os eventos de referência foram renomeados no código ("Plano do Shikamaru" e "Roleta da Tsunade").
+- Orochimaru comanda o evento de maldição (substitui o nome da referência). Mega elites derrotados podem ser selados (E) ou recusados (G), e a recusa deixa um drop de item afetado por Sorte.
+- Nada relacionado ao jogo de referência: os eventos foram renomeados no código ("Plano do Shikamaru" e "Roleta da Tsunade").
 
 ## Implementado na base atual
 
