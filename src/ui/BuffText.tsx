@@ -17,11 +17,12 @@ export function buffTone(clause: string): BuffTone {
 
 /**
  * Pinta um texto de efeito: trechos de bônus em verde e de perda/custo em vermelho, para o jogador ver
- * rapidamente o que ganha e o que perde. Divide por vírgula, "·", ";" e ponto final.
+ * rapidamente o que ganha e o que perde. Divide por vírgula, "·", ";", ponto final e a conjunção "e"
+ * (rodada 39: "+50% de experiência e -10% de movimento" — cada efeito ganhou o próprio tom).
  */
 export function BuffText({ text }: { text: string | undefined | null }) {
   if (!text) return null;
-  const parts = text.split(/(,\s+|\s+·\s+|;\s+|\.\s+|\s+\/\s+)/);
+  const parts = text.split(/(,\s+|\s+·\s+|;\s+|\.\s+|\s+\/\s+|\s+e\s+)/);
   return <>{parts.map((part, i) => {
     if (i % 2 === 1) return <Fragment key={i}>{part}</Fragment>;
     const tone = buffTone(part);

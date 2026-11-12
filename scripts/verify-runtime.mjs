@@ -403,7 +403,7 @@ await substitution.getByRole('button',{name:'Não aprender',exact:true}).click()
 assert.equal(await substitution.getByRole('button',{name:'Permitir aprender'}).isEnabled(),true);
 await substitution.getByRole('button',{name:'Permitir aprender'}).click();
 const starter=lockPage.locator('.build-tech-list .pool-card').filter({hasText:'Kage Bunshin'});
-await starter.getByRole('button',{name:'Planejar pra Missão'}).click();
+await starter.getByRole('button',{name:'Planejar para Missão'}).click();
 await starter.getByRole('button',{name:'Treinar Kage Bunshin com Jiraiya'}).click();
 assert.ok(await starter.getByRole('button',{name:'Remover treinamento de Kage Bunshin'}).isVisible());
 await lockPage.getByRole('button',{name:'Escolher missão →',exact:true}).click();

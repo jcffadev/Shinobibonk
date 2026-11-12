@@ -29,11 +29,27 @@ export function normalizePresets(raw:unknown):BagPresets{
   });
   return {active,slots};
 }
-export function readPresets():BagPresets{
+/** Rodada 39 — listas por herói: `sb_bag_presets_by_hero_v1` = { [herói]: BagPresets }.
+ *  A chave global antiga (`sb_bag_presets_v1`) segue lida como seed quando o herói ainda não tem
+ *  listas próprias (e nunca é apagada) — quem já tinha listas montadas não perde nada. */
+export const PRESETS_BY_HERO_KEY='sb_bag_presets_by_hero_v1';
+export function readPresets(heroId?:string):BagPresets{
+  if(heroId){
+    try{
+      const raw=localStorage.getItem(PRESETS_BY_HERO_KEY);
+      if(raw){const obj=JSON.parse(raw) as Record<string, unknown>;if(obj&&obj[heroId]!==undefined)return normalizePresets(obj[heroId]);}
+    }catch{/* armazenamento corrompido: segue para a chave global antiga */}
+  }
   try{return normalizePresets(JSON.parse(localStorage.getItem(PRESETS_KEY)||'null'));}catch{return EMPTY_PRESETS();}
 }
-export function savePresets(value:BagPresets){try{localStorage.setItem(PRESETS_KEY,JSON.stringify(value));}catch{/* armazenamento indisponível: segue só em memória */}}
-export function saveList(key:string,value:string[]){try{localStorage.setItem(key,JSON.stringify(value));}catch{/* idem */}}
+export function savePresets(heroId:string,value:BagPresets){
+  try{
+    const raw=localStorage.getItem(PRESETS_BY_HERO_KEY);
+    const obj=raw?(JSON.parse(raw) as Record<string, unknown>):{};
+    obj[heroId]=value;
+    localStorage.setItem(PRESETS_BY_HERO_KEY,JSON.stringify(obj));
+  }catch{/* armazenamento indisponível: segue só em memória */}
+}
 /** Atualiza a lista em uso com a lista atual de itens em casa. */
 export function syncActive(presets:BagPresets,home:string[]):BagPresets{
   if(presets.active===null||!presets.slots[presets.active])return presets;

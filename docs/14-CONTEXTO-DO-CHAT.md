@@ -1027,3 +1027,51 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 - **Commits:** `ec7c42a` (código) + commit de sync de docs desta entrega → `main`.
 - **PENDENTE:** (a) **arte das 3 expressões da Tsunade** (feliz/triste/nervosa) — por ora o mesmo retrato do roster + badge/glow de humor (a Tsunade **reage**, mas não são 3 artes distintas) — fila da fase de arte (skill `criar-arte-shinobibonk`); (b) **teste do usuário com GPU real** — calibração de custo/combos em iteração (regra da rodada 35).
 - **Descartado nesta rodada (JÁ EXISTE no jogo — regra do usuário 12/11):** HP com números na barra (já existe no HUD) · teclas 1–N no pool (já existe) · desconto de custo (Dente de Ouro −8% · Carteira Gama-chan −6% · teto −40% — mantido na nova fórmula) · White Flute (a Pílula de Incenso já existe; o **ITEM novo** "White Flute" aprovado na rodada 37 segue na fila da fase 4 — Incenso se mantém) · YOOOO sintetizado (MP3 real integrado na fase 1, `d05f168`) · HUD base/arte de menu (parcial na rodada 38, `fd79ced`) · animação de ataque + caminhada (rodada 38, `fd79ced`) · Kankuro (já resolvido — não tocar).
+
+## Rodada 39 · 12/11/2026 — Planner individual por personagem (salvo na conta), Fusões no planejamento, Táticas, tabela, buff verde/debuff vermelho, badges do pool e escala do personagem
+
+### Pedido integral do usuário
+
+> "Só que se lembre e pegue a referencia na nossa fonte de referência referente aos itens, pelos atributos, o que é o Incenso e o que é a Pilula.
+> Deve ser individual por personagem e ficar salvo na conta! PRINCIPALMENTE quando tivermos login funcionando, já teste.
+> Outra coisa, itens como este: [print de card de item com texto de efeito] O buff deve aparecer em verde, o debuff em vermelho na linha debaixo.
+> [print do planner — abas Habilidades/Pílulas/Itens] Quero em estilo tabela esse menu, reestilize
+> [print] Faça o mesmo para itens a reestilização em tabela
+> [print] Faça o mesmo para habilidades a reestrilização, em tabela
+> Nesse planejamento de missão, ter Habilidades/Pilulas/Fusões/Itens
+> Lembre-se do que falamos das fusões, são fusões das habilidades, com as regras que criamos...
+> Com os novos ninjas e mais habilidades DIFERENTES aparecendo com a particularidade de cada um...
+> Apareceram novas habilidades por elemento de chakra, ou seja vai aumentar as habilidades liberadas de elementos para TODOS os personagens que temos liberados...
+> Ainda em habilidades...
+> [print do Chute Giratório bloqueado no planner] Um exemplo do chute giratório, colocamos ele em planejar para missão (arrumar pra = para) se tivermos o buff Treinamento com Jiraya, será possível clicar em Treinar e ganhar o buff, vai aparecer também no pool de escolhas no jogo
+> Ajustar também ao Hud para caber na seleção do pool:
+> Planejado para Missão - Somente para planejadas
+> Requisito de Fusão - se for/tiver fusão selecionada
+> Treinada - Se estiver treinada
+> Para habilidades, temos um buff de conta que aumenta a % de dano de habilidades, isso é por NINJA!
+> Ser possível em planejar missão, salvar "Tática de Missão" um botão por personagem.
+> Agora faça uma lista da fila completa do que temos a fazer e me responda se preciso te dar acesso total sim ou não para você fazer tudo enquanto vou dormir.
+> Alguns personagens estão de um tamanho parados(maiores geralmente) quando andam diminuem, deixar a mesma proporção para qualquer movimento do jogo!
+> O único que vai crescer por enquanto será Choji ao utilizar JUTSU de Expansão!"
+
+### Interpretação e providências (resposta e trabalho desta rodada)
+
+1. **Incenso vs Pílula (referência):** na fonte arquivada (FORA do projeto, `CONTEXTO-COMPLETO.md` §1.2), as "vitaminas" do jogo de referência são cartas de level-up (Incenso Amaldiçoado +12% inimigos/+6% EXP/+6% ₽ → no nosso jogo = **Pílula de Incenso** `incenso` em `pills.ts`: +10% horda/+5% ameaça/+12% Ryu — **SE MANTÉM**); a **White Flute** (ref.: +12% inimigos/+10% EXP/+5 sorte) → no nosso jogo será o **ITEM novo "Flauta Provocadora"** (horda maior + Ryu/leveling + sorte) — **fila da fase 4** (itens/pílulas), ainda **não implementado**; o teto de pílulas aprovado (base 9 · buff de conta 13 · buff de item 15) também segue na fase 4 — hoje o código usa `PILL_MAX=10` + Cabaça +2 = 12.
+2. **Plano individual por personagem + salvo na conta (TESTADO com o login local):** `planned` (antiga global `sb_planned_attacks`), itens em casa (antiga global `sb_archived_items`), prioridade (antiga global `sb_priority_items`) e listas da bolsa (antiga global `sb_bag_presets_v1`) passam a ser **por herói**, em `sb_planned_by_hero_v1` / `sb_home_by_hero_v1` / `sb_priority_by_hero_v1` / `sb_bag_presets_by_hero_v1` — com **migração de fallback** (a chave antiga é lida como seed do herói atual e nunca apagada). `trained` e "Não aprender" **já eram** por herói. A conta continua **local ao navegador** (`localProfile.ts`); quando o login online existir, o mesmo formato viaja com o save.
+3. **Buff verde / debuff vermelho na linha de baixo do card:** `BuffText.tsx` agora também divide as cláusulas pela conjunção **" e "** — antes, "+50% de experiência e -10% de movimento" caía numa cláusula só (a regex negativa casava o `-10` e pintava tudo de vermelho). Agora cada efeito ganha o próprio tom (cores já existiam em `style.css`/`ninja-theme.css`).
+4. **Planner em TABELA (3 abas):** o menu do planejamento (Habilidades · Pílulas · Itens) foi **reestilizado como tabela** (colunas: opção · origem/efeito · raridade/estado · ações) — pedido literal do usuário ("Quero em estilo tabela esse menu, reestilize" + "Faça o mesmo para itens" + "para habilidades"). Todos os comportamentos preservados: filtros, raridades, visões (Todos/Planejado para Missão/Não aprender), ★Treinar, "Colocar na bolsa ninja", "Não aprender/Permitir aprender" e o painel de detalhe (prévia da técnica, status da pílula, dados base).
+5. **Nova aba FUSÕES no planejamento de missão:** pares de técnicas do pool do herói (sem setup/bloqueadas) com as **regras que criamos** (`techniqueMerge.ts`: **Fundir** = nova técnica Nv.1, dano = soma dos poderes, forma Área · **Combinar** = mantém as duas, dano ×1,5) — o par planejado (até 4 por herói, `sb_fusion_plan_by_hero_v1`) marca as técnicas com o badge **"⚗ Requisito de Fusão"** no pool do jogo; no workshop dos sapos a execução continua 1 uso por zona (regra existente).
+6. **Novos ninjas → novas habilidades elementais para TODOS:** a mecânica já existe (`techniquePool` em `heroes.ts`: compartilhadas **por vila e por elemento**; únicas só após selar) — quando a fase 7 criar kits novos com habilidades elementais, elas entram no pool de todos do mesmo elemento **automaticamente**. Registrado como regra (docs/13/18/21) para os kits da fase 7 respeitarem.
+7. **Chute Giratório + "pra" → "para":** textos do planner padronizados para **"Planejar para Missão"** / **"Planejado para Missão"** (era "pra"). O fluxo ★Treinar com Jiraiya (+15% de dano) já existia; o estado "Indisponível" de uma técnica = limite de bloqueios (`Não aprender`) esgotado para o herói — comportamento existente, sem mudança.
+8. **Badges no pool de level-up (HUD):** o card da carta agora mostra **"★ Planejado para Missão"** (somente planejadas — já existia), **"· Treinada"** (+15% — já existia) e o **novo "⚗ Requisito de Fusão"** (se a técnica faz parte de um par de fusão planejado do herói).
+9. **Buff de conta de dano de habilidades POR NINJA:** interpretado como consequência do item 2 — o plano/treino (e o +15% das ★) agora são **individuais por herói**, então o buff de dano de habilidades de cada ninja vale só para ele. **PERGUNTA EM ABERTO:** se o usuário quis um **buff novo** de conta (Passiva Shinobi por Lamens que aumenta % de dano de habilidades por ninja), responder na próxima rodada — fica registrado como PROPOSTO.
+10. **Tática de Missão (1 por personagem):** nova seção no planner — **"Salvar Tática de Missão"** grava um preset nomeado por herói (até 4: `sb_tactics_by_hero_v1`) com snapshot {planejado · treinadas · itens em casa · prioridade · fusões planejadas}; lista com **Aplicar**/**Excluir**. Um botão por personagem (a tática segue o herói atual).
+11. **Proporção do personagem em qualquer movimento:** medição por pixels (bbox alfa) mostrou que o "diminui" vem das **folhas de ataque action-v3** (personagem ocupa ~67–91% da célula, contra ~98–100% no repouso) — o código já usa escala fixa. Correção em `playerMotion.ts`: **normalização de escala por quadro** — mede o conteúdo do quadro em uso e do quadro de repouso do mesmo shinobi e aplica o fator (clamp 0,85–1,35) à altura/largura do sprite (os pés continuam ancorados); Gaara e Asumo são autoconsistentes (o repouso vem da própria folha → fator ≈ 1, sem mudança). **Exceção futura registrada:** Choji cresce com o Jutsu de Expansão (quando for criado, fase 7) — regra em docs/21/18.
+12. **Pergunta do usuário — acesso total?**: **NÃO precisa** — a leitura+escrita dentro de `C:\Shinobibonk projeto - Copia` já está autorizada; as únicas coisas fora do escopo são o download de áudio do YouTube (o usuário baixa) e a pasta arquivada (leitura, já funciona). Nada em Windows/registro é necessário.
+
+### Estado desta rodada
+
+- **IMPLEMENTADO + TESTADO** (validações na entrada do CHANGELOG e no commit): itens 2–8, 10 e 11; item 1 = referência aplicada ao registro (a implementação da White Flute/teto 9-13-15 segue na **fase 4**); item 9 = **PERGUNTA EM ABERTA** (buff novo × consequência do plano por ninja).
+- **Fila completa** (resposta ao pedido "faça uma lista da fila completa"): ver **docs/13** (rodadas 35–39 com estados) — resumo no retorno final ao usuário.
+- **Descartado nesta rodada (JÁ EXISTE — regra do usuário):** seleção do pool por teclas 1–N (já existe nos cards, `kbd [1..9]`); buffs de itens/pílulas visíveis na RunSheet (já existe — `PillStatPreview`/`affectedTechniquesText`); "★ Planejado para Missão" + "Treinada" no pool (já existiam — o novo é o badge de fusão); treino com Jiraiya +15% (já existe — agora individual por herói); limite de "Não aprender" por herói (já existe) · Kankuro (resolvido — não tocar).
+

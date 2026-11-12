@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Rodada 39 — Planner individual por personagem, tabela, Fusões, Táticas, buff verde/vermelho, badge de fusão, proporção idêntica · 12/11/2026
+
+- **IMPLEMENTADO (código nesta rodada; docs/13 e docs/14 registraram o estado final antes do código):**
+  - **Planner em TABELA** (colunas: Opção · Origem/efeito · Raridade/estado · Ações) nas abas Habilidades/Pílulas/Itens, comportamento e filtros preservados; painel de detalhe mantido.
+  - **Aba FUSÕES** no planner: pares de técnicas (sem setup/bloqueio), **até 4 por herói**, preview das regras **Fundir** (Épico)/**Combinar** (Raro) de `techniqueMerge.ts`; a execução continua na Oficina dos Sapos Sábios (1 uso por zona).
+  - **Táticas de Missão**: snapshot nomeado do plano {planejadas · treinadas · em casa · prioridade · fusões}, **até 4 por herói**, Aplicar/Excluir.
+  - **Buff verde / debuff vermelho** por cláusula no `BuffText.tsx` (split por vírgula · “ e ” · “;” · “.” · “/” e “ · ”).
+  - **Badge ⚗ Requisito de Fusão** no card do pool da run (técnicas de um par planejado).
+  - **“pra” → “para”** nos textos do planner.
+  - **Plano individual por personagem** salvo na conta: `sb_planned_by_hero_v1` · `sb_home_by_hero_v1` · `sb_priority_by_hero_v1` · `sb_bag_presets_by_hero_v1` · `sb_fusion_plan_by_hero_v1` · `sb_tactics_by_hero_v1` — chaves globais antigas lidas como fallback e **nunca apagadas** (migração não destrutiva); recarga ao trocar de herói (`useEffect([heroId])`).
+  - **Proporção idêntica em qualquer movimento**: `alphaFracOf` em `playerMotion.ts` (bbox alfa da célula em uso vs. repouso medido dinamicamente — a textura de repouso muda por nível —, cache por célula, fator clampado 0,85–1,35) — vale para jogador, ajudantes, clones e mega elites; Choji (Jutsu de Expansão, fase 7) seguirá a mesma regra.
+- **Arquivos alterados:** `src/main.tsx` · `src/ui/BuildPlanner.tsx` · `src/ui/BuffText.tsx` · `src/game/missionBag.ts` · `src/scene/playerMotion.ts` · `src/hud-dock.css` · `src/rarity.css` · `docs/13` · `docs/14` · `docs/18` · `CHANGELOG.md`.
+- **TESTADO:** `tsc -b --force` limpo · `vite build` OK (109 módulos; 1,27 MB JS / 378 kB gzip) · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 95) · `verify-motion-atlases.mjs` (56 versões · 560 estados · 0 erros · 0 ausentes) · `verify-runtime.mjs` (Edge headless) **PASSOU** — 58 checks · 0 erros JS · 0 assets 404 (FPS 6,4 é o render SwiftShader/software do headless, esperado; GPU real valida em separado).
+- **PENDENTE:** teste do usuário (planner em tabela · aba Fusões · Táticas · badge ⚗ · proporção em movimento) · buff de conta de dano de habilidades **por ninja** (pergunta em aberta — o +15% do Treinamento com Jiraiya já é individual por herói) · fases 4/6/7/8 em docs/13.
+- **Descartado nesta rodada (JÁ EXISTE):** teclas 1–N no pool · buffs de itens/pílulas visíveis na RunSheet · badges “★ Planejado para Missão”/“· Treinada” · Treinamento com Jiraiya +15% (agora individual por herói) · limite “Não aprender” por herói · Kankuro (RESOLVIDO — não tocado).
+
 ## Rodada 37 · Fase 3 — Caça-Níquel da Tsunade · 12/11/2026
 
 - **IMPLEMENTADO (código no commit `ec7c42a`; registro anterior ao código em `2b62cf1`):** renomear "Roleta da Tsunade" → **Caça-Níquel da Tsunade** (UI, toasts, nome do evento, descrições dos itens) + **combos de 3 iguais** (3 Tsunades = "Sorte da Tsunade" +10% dificuldade/+10% monstros até o fim da run · 3 Jirayas = 1 item Raro/Épico/Lendário · 3 Hiruzens = 4 escolhas de item (E pega · V vende) · 3 Hidan = −5% HP total (**piso 1 HP — não mata**) +5% dificuldade/+5% monstros · 3 Kakuzus = `round(120 × luckFactor × (1+pressão))` Ryu) + **emboscada invertida** (jogador **seguro** durante a interação — simulação pausada; ao sair, **armadilhas shinobi explodem em 8 m** e **matam os monstros próximos** — totem/bijuu/guardião excluídos; som novo `explosion`; a casa "Credores" que spawna inimigos se mantém) + **custo por giro em escala** (1,35 → **1,70/giro** + **fator de zona 0,25** + inflação por minuto — escala como o Ryu por zona) + **face da Tsunade** com humor por recompensa (feliz/triste/nervosa; retrato do roster + badge/glow; **arte das 3 expressões = PENDENTE**).

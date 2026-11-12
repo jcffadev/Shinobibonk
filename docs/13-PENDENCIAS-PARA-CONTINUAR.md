@@ -199,6 +199,25 @@ O usuário **autorizou** a fila inteira da rodada 35 ("Aprovo os Kages · Aprovo
 
 Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-runtime` quando gameplay/HUD) → documentar (docs/14/18/20/21 + CHANGELOG) → commit + push.
 
+## Rodada 39 · 12/11/2026 (Planner individual por personagem · tabela · Fusões · Táticas · buff verde/vermelho · badges do pool · proporção do personagem)
+
+**Status (sincronizado nesta rodada — evidências no CHANGELOG):**
+
+1. **Plano individual por personagem + salvo na conta (TESTADO com o login local)** — IMPLEMENTADO: `planned` (era global `sb_planned_attacks`) · itens em casa (era global `sb_archived_items`) · prioridade (era global `sb_priority_items`) · listas da bolsa (era global `sb_bag_presets_v1`) passam a ser **por herói** (`sb_planned_by_hero_v1` / `sb_home_by_hero_v1` / `sb_priority_by_hero_v1` / `sb_bag_presets_by_hero_v1`) com **migração de fallback** (a chave antiga é lida como seed do herói atual e **nunca é apagada**). `trained` e "Não aprender" **já eram** por herói. A conta segue **local ao navegador**; quando o login online existir, o mesmo formato viaja com o save.
+2. **Buff verde / debuff vermelho na linha de efeito dos cards** — IMPLEMENTADO (`BuffText.tsx` agora divide também por " e "; cada cláusula ganha o próprio tom — as cores já existiam).
+3. **Planner em TABELA** (Habilidades · Pílulas · Itens) — IMPLEMENTADO (colunas: opção · origem/efeito · raridade/estado · ações; **todos os comportamentos preservados**). Textos "pra" → **"para"**.
+4. **Aba FUSÕES no planejamento** — IMPLEMENTADO (pares do pool do herói com preview das duas regras que criamos — **Fundir** (dano = soma, forma Área) · **Combinar** (×1,5) —; par planejado até 4 por herói em `sb_fusion_plan_by_hero_v1`; badge **"⚗ Requisito de Fusão"** no pool do jogo; o **workshop dos sapos segue 1 uso por zona**).
+5. **Tática de Missão (1 por personagem)** — IMPLEMENTADO (botão **"Salvar Tática de Missão"** no planner; snapshot {planejado · treinadas · em casa · prioridade · fusões} até 4 por herói em `sb_tactics_by_hero_v1`; Aplicar/Excluir).
+6. **Badges no pool** — IMPLEMENTADO ("★ Planejado para Missão" + "· Treinada" **já existiam**; o **novo** é o "⚗ Requisito de Fusão").
+7. **Novos ninjas → habilidades elementais para TODOS** — REGRA CONFIRMADA (a mecânica **já existe** — `techniquePool` compartilhada por vila/elemento; únicas de outros só após selar): os kits da fase 7 devem criar habilidades elementais para que entrem no pool de todos do mesmo elemento **automaticamente**.
+8. **Proporção do personagem idêntica em qualquer movimento** — IMPLEMENTADO (`playerMotion.ts` normaliza por bbox alfa do quadro em uso × repouso, clamp **0,85–1,35**; Gaara/Asumo **autoconsistentes** — sem mudança). **Exceção futura registrada: Choji cresce com o Jutsu de Expansão** (quando for criado — fase 7).
+9. **Pergunta do usuário — acesso total?** — RESPOSTA: **NÃO PRECISA** (o escopo já é somente `C:\Shinobibonk projeto - Copia`; o único item fora do alcance é o download de áudio do YouTube — o usuário baixa e entrega a pasta).
+10. **Incenso vs Pílula (referência)** — Pílula de Incenso **se mantém**; White Flute = **ITEM novo "Flauta Provocadora"** (fila da **fase 4**, ainda não implementado); teto 9/13/15 segue na fase 4.
+
+**Pendências desta rodada:** (a) **PERGUNTA EM ABERTA** — "buff de conta que aumenta a % de dano de habilidades, isso é por NINJA!": implementado como **consequência** do plano individual (cada herói tem o +15% do próprio treino); se for um **buff NOVO** de conta (Passiva Shinobi por Lamens, por ninja), aguarda a resposta do usuário (PROPOSTO); (b) teste do usuário do planner em tabela + Fusões + Táticas.
+
+**Descartado nesta rodada (JÁ EXISTE — regra do usuário 12/11):** teclas 1–N no pool · buffs de itens/pílulas visíveis na RunSheet (`PillStatPreview`/`affectedTechniquesText`) · badges "★ Planejado para Missão"/"· Treinada" no pool (o novo é o de fusão) · Treinamento com Jiraiya +15% (agora individual por herói) · limite de "Não aprender" por herói · Kankuro (resolvido — não tocar).
+
 ## Retomar
 
 1. Ler AGENTS.md, **docs/19 (índice do conhecimento)**, README, docs/00, docs/12 e esta fila. Conferir git status e remoto antes de editar.

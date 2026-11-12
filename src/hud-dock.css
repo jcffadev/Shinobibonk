@@ -40,18 +40,52 @@
 .build-view-filters button[aria-pressed=true]{background:#987654;color:white}
 .build-view-filters small{margin-left:auto;color:#e3d8c5}
 .build-workspace{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:14px}
-.build-tech-list{display:flex;flex-direction:column;gap:7px;max-height:54vh;overflow:auto;padding-right:4px}
-.build-tech-list .pool-card{display:flex;flex-direction:row;flex:0 0 auto;align-items:center;min-height:54px;padding:7px 10px;gap:8px;border-radius:12px}
-.build-tech-list .pool-card .build-entry{display:flex;align-items:center;gap:10px;min-width:0;flex:1;text-align:left;border:0;background:transparent;color:#f0f4ff;padding:4px}
-.build-tech-list .pool-card.archived{opacity:1}
-.build-tech-list .pool-card.archived .build-entry{opacity:.65}
-.build-tech-list .pool-card .enable-skill{background:#14766b;color:#effffe;font-weight:800}
-.build-tech-list .pool-card .enable-skill:hover{background:#209d88}
-.build-tech-list .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #ffce61}
+/* Rodada 39 — planner em TABELA: Opção · Origem/efeito · Raridade/estado · Ações. */
+.build-tech-list{max-height:54vh;overflow:auto;padding-right:4px}
+table.build-table{width:100%;border-collapse:separate;border-spacing:0 6px}
+table.build-table thead th{position:sticky;top:0;z-index:2;background:#3a2a1e;color:#d9c8a9;font-size:10px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:6px 8px}
+table.build-table thead th.th-actions{text-align:right}
+tr.pool-card td{background:#3f2d22;border-top:1px solid rgba(201,163,106,.35);border-bottom:1px solid rgba(201,163,106,.35);vertical-align:middle;padding:7px 9px}
+tr.pool-card td:first-child{border-left:1px solid rgba(201,163,106,.45);border-radius:12px 0 0 12px}
+tr.pool-card td:last-child{border-right:1px solid rgba(201,163,106,.45);border-radius:0 12px 12px 0;text-align:right}
+tr.pool-card:hover td{background:#473428}
+tr.pool-card.planned td{background:#4a3a20}
+tr.pool-card.planned td:first-child{box-shadow:inset 3px 0 0 #ffce61}
+tr.pool-card.archived td{opacity:.65}
+.build-entry{display:flex;align-items:center;gap:10px;min-width:0;text-align:left;border:0;background:transparent;color:#f0f4ff;padding:4px}
+.build-entry b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
 .build-entry small{display:block}
 .build-entry .skill-art,.build-entry .catalog-icon{width:34px;height:34px;flex:none}
-.build-tech-list .pool-card footer{margin:0;gap:4px}
-.build-tech-list .pool-card footer button{font-size:11px;padding:5px 8px}
+.build-cell-desc span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.35;color:#dbe6f7}
+.build-cell-state{display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:700}
+.build-cell-state small.state-on{color:#ffce61}
+.build-cell-state small.state-warn{color:#9fd8ff}
+.build-cell-state small.state-off{color:#9aa6bb}
+.build-cell-actions{display:flex;align-items:center;justify-content:flex-end;gap:4px;flex-wrap:wrap}
+.build-cell-actions button{font-size:11px;padding:5px 8px}
+tr.pool-card .enable-skill{background:#14766b;color:#effffe;font-weight:800}
+tr.pool-card .enable-skill:hover{background:#209d88}
+tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #ffce61}
+/* Rodada 39 — Fusões planejadas e Táticas de Missão (individual por personagem, salvas na conta). */
+.build-fusion,.build-tactics{border:1px solid #796355;border-radius:14px;padding:14px 16px;background:#3a291e;color:#dce7ff;margin:12px 0}
+.build-fusion h3,.build-tactics h3{margin:0 0 8px;color:#ffd06b;font-size:15px}
+.build-fusion-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.build-fusion-form select{background:#241811;color:#f0e9d8;border:1px solid #796355;border-radius:9px;padding:7px 9px;max-width:260px}
+.fusion-preview{background:#241811;border:1px dashed #796355;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:12.5px}
+.fusion-preview p{margin:4px 0}
+.fusion-preview span{font-weight:800;color:#ffd06b}
+.fusion-preview small{color:#d4c5aa}
+.fusion-pairs{display:grid;gap:6px;margin-top:8px}
+.fusion-pair{display:flex;align-items:center;gap:10px;background:#302117;border:1px solid rgba(201,163,106,.35);border-radius:10px;padding:7px 10px}
+.fusion-pair b{flex:1;color:#f0e9d8}
+.fusion-pair b span{color:#b98cff}
+.build-tactics form{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.build-tactics input{flex:1;min-width:180px;background:#241811;color:#f0e9d8;border:1px solid #796355;border-radius:9px;padding:7px 10px}
+.tactic-list{display:grid;gap:6px}
+.tactic-chip{display:flex;align-items:center;gap:10px;background:#302117;border:1px solid rgba(201,163,106,.35);border-radius:10px;padding:7px 10px;flex-wrap:wrap}
+.tactic-chip b{color:#ffd06b}
+.tactic-chip small{flex:1;color:#d4c5aa}
+.fusion-badge{display:inline-block;background:#4a3a63;color:#d9c8ff;border:1px solid #7b63a8;padding:1px 8px;border-radius:999px;font-size:11px;font-style:normal}
 .build-detail{border:1px solid #796355;border-radius:14px;padding:20px;background:#3a291e;color:#dce7ff}
 .build-detail .skill-art,.build-detail .catalog-icon{width:56px;height:56px}
 .build-detail h2{margin:9px 0}
@@ -64,7 +98,7 @@
 .technique-preview canvas{display:block;width:100%;height:100%}
 .build-detail>small{display:block;margin-top:5px;color:#d4c5aa}
 .reset-danger{background:#a53043!important;color:#fff}
-@media(max-width:760px){.build-workspace{grid-template-columns:1fr}.build-tech-list{max-height:43vh}.build-tech-list .pool-card{flex-wrap:wrap}.build-tech-list .pool-card footer{margin-left:auto}}
+@media(max-width:760px){.build-workspace{grid-template-columns:1fr}.build-tech-list{max-height:43vh}.build-entry b{max-width:120px}table.build-table{display:block}table.build-table thead{display:none}tr.pool-card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:4px}tr.pool-card td{display:block;border-left:0;border-right:0}tr.pool-card td:first-child{border-radius:12px 12px 0 0}tr.pool-card td:last-child{border-radius:0 0 12px 12px}.build-cell-actions{justify-content:flex-start}}
 .game-panel-backdrop.over-choice{z-index:70}
 .choice-sheet-row{display:flex;justify-content:center;margin:10px 0 4px}
 .choice-sheet-button{padding:8px 14px;border:1px solid #b3977a;border-radius:11px;background:#493222;color:#e5f4ff;font-weight:750}

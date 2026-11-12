@@ -26,6 +26,7 @@
 .rarity-filter .rarity-all[aria-pressed=true]{border-color:#ffcb64;background:#3d3326;color:#fff1ce}
 .rarity-filter small{color:#9aa6bb;font-size:10px}
 
-/* Lista de itens do plano de build: faixa lateral na cor da raridade. */
-.build-tech-list .pool-card[class*=rarity-]{border-left:4px solid var(--rarity-strong)}
-.build-tech-list .pool-card[class*=rarity-] .build-entry small{color:var(--rarity)}
+/* Tabela de itens do plano de build (Rodada 39): faixa lateral na cor da raridade — `tr` não renderiza
+   border-left, então a faixa entra na primeira coluna via box-shadow. */
+.build-tech-list tr[class*=rarity-] td:first-child{box-shadow:inset 4px 0 0 var(--rarity-strong)}
+.build-tech-list tr[class*=rarity-] .build-cell-state span{color:var(--rarity)}

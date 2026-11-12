@@ -11,6 +11,40 @@ type Strike = { weapon: boolean; left?: boolean; special: boolean; pose?: Strike
  *  reinicia no quadro de preparação nem fica piscando. A Ultimate entra na hora. */
 const CHAIN_AT = .75;
 
+// Rodada 39 — proporção idêntica em qualquer movimento: os quadros das folhas de animação desenharam o corpo
+// com alturas diferentes (folhas de ação medem ~15–30% MENORES que o repouso nas medições PIL). Medimos a
+// bbox alfa da célula em uso e do repouso (medido DINAMICAMENTE, pois a textura de repouso muda por nível —
+// Gaara/Asumo ficam autoconsistentes sozinhos) e compensamos com um fator clampado em 0,85–1,35.
+// Cache por [textura, retângulo]: cada célula única é medida uma única vez (canvas 32×32, custo desprezível).
+const alphaFracCache = new Map<string, number>();
+const alphaFracOf = (map: THREE.Texture, px: number, py: number, pw: number, ph: number): number => {
+  const key = map.uuid + ':' + px + ':' + py + ':' + pw + ':' + ph;
+  const hit = alphaFracCache.get(key);
+  if (hit !== undefined) return hit;
+  const img = map.image as { width?: number; height?: number } | undefined;
+  if (!img || !img.width || !img.height) return 0; // imagem ainda carregando: tenta de novo no próximo frame
+  const S = 32;
+  const cv = document.createElement('canvas');
+  cv.width = S; cv.height = S;
+  const ctx = cv.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return 0;
+  ctx.clearRect(0, 0, S, S);
+  ctx.drawImage(img as CanvasImageSource, px, py, pw, ph, 0, 0, S, S);
+  let data: Uint8ClampedArray;
+  try { data = ctx.getImageData(0, 0, S, S).data; } catch { return 0; }
+  let top = S, bottom = -1;
+  for (let y = 0; y < S; y++) {
+    const row = y * S * 4;
+    for (let x = 0; x < S; x++) {
+      if (data[row + x * 4 + 3] > 24) { if (y < top) top = y; if (y > bottom) bottom = y; }
+    }
+  }
+  if (bottom < 0) return 0; // célula vazia (ex.: quadros de pausa): segue sem fator
+  const frac = (bottom - top + 1) / S;
+  alphaFracCache.set(key, frac);
+  return frac;
+};
+
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true) {
   // Versões usam as folhas da família na forma da versão (ex.: naruto-shippuden → folhas do Naruto no nível 25).
   const family = familyOf(heroId);
@@ -76,6 +110,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     return texture;
   };
   let attack = 0, attackDuration = .22, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
+  let idleFrac = 0; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
   let queued: Strike | undefined;
   let frameShown = 0, strideShown = 0, walkAttack = false;
   const begin = (next: Strike) => {
@@ -226,7 +261,28 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const landing = state === 'jump' ? Math.max(0, (jumpProgress - .8) / .2) : 0;
       const squashY = 1 + takeoff * .1 - landing * .1 - (state === 'dash' ? .05 : 0);
       const squashX = 1 - takeoff * .07 + landing * .09 + (state === 'dash' ? .08 : 0);
-      sprite.scale.set(width * squashX, height * squashY, 1);
+      // Rodada 39 — proporção idêntica em qualquer movimento: compensa quadros menores/maiores que o repouso.
+      // A âncora nos pés se mantém porque a posição y usa a escala final. Choji (Jutsu de Expansão, fase 7)
+      // seguirá a mesma regra: o repouso dele é medido na forma expandida, então o fator continua ≈ 1.
+      let cellFrac = 0;
+      const cellMap = sprite.material.map;
+      if (cellMap) {
+        const cellImg = cellMap.image as { width?: number; height?: number } | undefined;
+        if (cellImg && cellImg.width && cellImg.height) {
+          const rw = Math.abs(cellMap.repeat.x), rh = Math.abs(cellMap.repeat.y);
+          const u0 = Math.min(cellMap.offset.x, cellMap.offset.x + cellMap.repeat.x);
+          const v0 = Math.min(cellMap.offset.y, cellMap.offset.y + cellMap.repeat.y);
+          const W = cellImg.width, H = cellImg.height;
+          const cx = Math.max(0, Math.round(u0 * W));
+          const cw = Math.min(W - cx, Math.max(2, Math.round(rw * W)));
+          const cy = cellMap.flipY ? Math.round((1 - (v0 + rh)) * H) : Math.round(v0 * H);
+          const ch = Math.min(H - cy, Math.max(2, Math.round(rh * H)));
+          if (cw > 0 && ch > 0 && cy >= 0 && cx >= 0) cellFrac = alphaFracOf(cellMap, cx, cy, cw, ch);
+        }
+      }
+      if (state === 'idle' && !usesSheet && cellFrac > 0) idleFrac = cellFrac;
+      const propFactor = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;
+      sprite.scale.set(width * squashX * propFactor, height * squashY * propFactor, 1);
       sprite.position.y = floor + jumpHeight + sprite.scale.y*.5;
       if (trail) {
         trailHistory.unshift(sprite.position.clone());
