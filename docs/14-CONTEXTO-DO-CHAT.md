@@ -1227,3 +1227,42 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 ### Nota
 
 As pendências das rodadas 41/42/43 (Kuri/Kuroari/Sasori/arte Pillow · trilha sonora · sons de jutsu + levitação do Pain) seguem em aberto — espelhadas em docs/13 e docs/18 §6.
+
+## Rodada 45 · 12/11/2026 — Fluidez da caminhada “livre” + proporção ao atacar (suavização de escala e passada)
+
+**Pedido do usuário, na íntegra:**
+
+> "A animação de andar 'livre' ainda está fazendo um 'bug' de movimentação, essa mudança de sheet's/imagem entre animada e não animada deve ser sincrono, não pode aparecer falhas nessa movimentação, tem que ser totalmente fluído, estava fluído antes... mas, parece que ao tentarmos mexer na melhora da movimentação, pioramos isto.
+> TAMBÉM revise a questão dos personagens ficarem mudando de tamanho perdendo proporção ao atacar."
+
+### Diagnóstico (regressões introduzidas nas rodadas 38/39 — `src/scene/playerMotion.ts`)
+
+A troca de folha (repouso ↔ andar ↔ andar-atacando) tinha **três descontinuidades** que causavam o “pulo”/falha visível:
+
+1. **`propFactor` instantâneo (rodada 39)** — o fator de proporção (bbox alfa, clamp 0,85–1,35) era aplicado de uma vez em `sprite.scale`. Como `sprite.position.y = floor + jumpHeight + sprite.scale.y*.5` **segue a escala**, a cada troca de folha o personagem **saltava de tamanho E de altura**. Era o “mudando de tamanho perdendo proporção ao atacar”.
+2. **`strideShown` liga/desliga** — a deformação das pernas (`playerPose`) ia de `0` para o valor do passo (e vice-versa) **no mesmo frame** em que o golpe começava/terminava — a “falha de movimentação” na troca animada ↔ não animada.
+3. **`stepTime` zerava a cada parada** — `stepTime = walkingInput ? stepTime + dt : 0`. Ao parar e retomar, o ciclo de passos **reiniciava do quadro 0** (o “snap”).
+
+### O que foi feito (3 correções cirúrgicas — estado estacionário inalterado, só as transições suavizam)
+
+1. **Fator de proporção SUAVIZADO** — novo estado `propCur` (início 1) faz lerp exponencial `propCur += (propTarget − propCur) × (1 − e^(−14·dt))` (≈0,15 s para assentar). O “pulo” de tamanho/altura vira uma **transição fluida**; **os pés seguem ancorados** (a âncora usa a escala final). **Choji** (Jutsu de Expansão, fase 7), **Gaara** (flutua) e **Pain** (levitação `painFloat`, arco 0,38 m) **preservados** — âncora e arco continuam valendo.
+2. **Passada SUAVIZADA na troca de folha** — `strideShown` agora persegue o alvo `(proceduralMotion || walkAttack) ? stride : 0` com lerp exponencial `(1 − e^(−16·dt))` (≈0,1 s). A deformação das pernas **sobe/desce** no início/fim do golpe em vez de ligar/desligar — a passada termina e retoma **sem “pulo”**.
+3. **Fase de caminhada CONTÍNUA** — `stepTime` deixa de zerar: `stepTime += dt`. Ao parar e retomar, o ciclo de passos **continua de onde parou** (mais fluido, como caminhada real) em vez de reiniciar do quadro 0.
+
+**NÃO alterado (por segurança):** a troca de textura em si (repouso ↔ folha) segue binária — é a limitação de 1 sprite por estado; as correções acima eliminam os “pulos” de escala/passa/fase que tornavam essa troca visível. Exceções de movimento (Choji cresce · Gaara flutua · Pain levita · Naruto Academia tem atlas próprio · Asuma) **intocadas**.
+
+### Validação
+
+- **IMPLEMENTADO + VALIDADO**: `tsc -b` limpo · `vite build` OK (aviso de chunk >500 kB já existia antes — inofensivo) · `verify-rules.mjs` (roster **56** · técnicas **97** · itens **95**) · `verify-motion-atlases.mjs` (**56 versões · 560 estados · 0 erros**) · `verify-runtime.mjs` (Edge headless) **PASSOU — 0 erros JS · 0 assets 404**.
+- **Inspeção visual**: `artifacts/combat.png` (Naruto com tamanho correto, pés no chão, HUD/minimapa íntegros) e `artifacts/camera-horizonte.png` (câmera deitada no piso 0,05 rad, sem corte no horizonte, sem bug gráfico).
+
+### Decisões desta rodada (registradas, aguardando validação do usuário)
+
+1. Suavizar `propFactor` com lerp exponencial (em vez de salto bruto) — **mantém** a regra da rodada 39 (proporção idêntica em movimento) sem o “pulo”.
+2. Suavizar a amplitude da passada na troca de folha (em vez de ligar/desligar).
+3. `stepTime` contínuo (em vez de zerar a cada parada).
+4. Se o usuário ainda notar mudança perceptível de tamanho no golpe: o próximo passo é **reduzir a diferença de bbox entre as folhas de ação e o repouso na arte** (o clamp 0,85–1,35 da rodada 39 segue como teto).
+
+### Nota
+
+Aguardando o **teste do usuário no navegador** (fluidez da caminhada + sem “pulo” de tamanho ao atacar). Se aprovado, a regra 39 (proporção idêntica em movimento) volta a valer **sem** a regressão de fluidez.

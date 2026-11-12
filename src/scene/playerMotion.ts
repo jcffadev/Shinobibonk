@@ -111,6 +111,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   };
   let attack = 0, attackDuration = .22, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
   let idleFrac = 0; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
+  let propCur = 1; // Rodada 45: fator de proporção SUAVIZADO (lerp exponencial) — elimina o 'pulo' de tamanho/altura na troca de folha.
   let queued: Strike | undefined;
   let frameShown = 0, strideShown = 0, walkAttack = false;
   const begin = (next: Strike) => {
@@ -159,7 +160,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       attack = Math.max(0, attack - dt);
       if (queued && (attack === 0 || 1 - attack / attackDuration >= CHAIN_AT)) begin(queued);
       const attackProgress = attack > 0 ? 1 - attack / attackDuration : 1;
-      stepTime = walkingInput ? stepTime + dt : 0;
+      // Rodada 45 — fase contínua: antes, ao parar, stepTime zerava e a caminhada 'reiniciava' do quadro 0 ao retomar (o 'snap'/falha que o usuário via). Agora a fase segue, e o ciclo de passos continua de onde parou (mais fluido, como uma caminhada real).
+      stepTime += dt;
       hurt = Math.max(0, hurt - dt);
       if (sliding || (walkingInput && !attack)) { mirror = leftward; rear = backwardView; }
       // Pulo e dash têm prioridade sobre o dano: no meio da horda o jogador recebe golpes o tempo todo e o estado 'hurt'
@@ -254,7 +256,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         : state === 'ultimate' ? .09 : -stride * .55;
       const guard = state === 'ultimate' ? .085 : state === 'attack' ? .045 : state === 'hurt' ? .04 : 0;
       const proceduralMotion=!usesSheet||useDirection&&!useAction&&(state==='jump'||state==='dash');
-      strideShown = proceduralMotion || walkAttack ? stride : 0;
+      // Rodada 45 — suaviza a amplitude da passada na troca de folha (andar <-> andar-atacando): antes, a deformação das pernas LIGAVA/DESLIGAVA de uma vez no início/fim do golpe (a 'falha de movimentação' reportada). Agora sobe/desce em ~0,1 s e a passada termina/retoma sem 'pulo'.
+      const strideTarget = (proceduralMotion || walkAttack) ? stride : 0;
+      strideShown += (strideTarget - strideShown) * (1 - Math.exp(-dt * 16));
       if (!usesSheet) frameShown = 0;
       pose.apply(sprite.material, strideShown, proceduralMotion ? lift : 0,
         usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
@@ -286,8 +290,10 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         }
       }
       if (state === 'idle' && !usesSheet && cellFrac > 0) idleFrac = cellFrac;
-      const propFactor = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;
-      sprite.scale.set(width * squashX * propFactor, height * squashY * propFactor, 1);
+      const propTarget = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;
+      // Rodada 45 — suaviza o fator de proporção (lerp exponencial): antes, o fator era aplicado de uma vez e o personagem 'pulava' de tamanho (e de altura, pois position.y segue a escala) nas trocas repouso <-> andar <-> ataque. Agora a transição é fluida (~0,15 s) e os pés seguem ancorados. Choji (cresce), Gaara e Pain (flutuam) mantêm a âncora porque ela usa a escala final.
+      propCur += (propTarget - propCur) * (1 - Math.exp(-dt * 14));
+      sprite.scale.set(width * squashX * propCur, height * squashY * propCur, 1);
       const painFloat = painUltimate ? Math.sin(Math.PI * attackProgress) * .38 : 0;
       sprite.position.y = floor + jumpHeight + sprite.scale.y*.5 + painFloat;
       if (trail) {

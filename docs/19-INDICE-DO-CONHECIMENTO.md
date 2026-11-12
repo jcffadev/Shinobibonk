@@ -28,13 +28,13 @@
 | **Mapas e eventos** (4 mapas, zonas, clima, construções) | `docs/01` · [20](20-SCALING-E-REGULAS.md) §11 | `maps.ts` · `worldScale.ts` · `terrainArt.ts` |
 | **Selamento e suportes** (ajudantes, sinergias, altares) | `docs/03` | `allies.ts` · `synergy.ts` |
 | **Arte e spritesheets** (atlas, pack, identidade chibi 2.5D) | skill `criar-arte-shinobibonk` · `docs/arte-atlas-2026-11-07.json` | `directionalArt.ts` · `inventoryArt.ts` · `assets/` |
-| **Animações e movimento** (folhas, walk/action) | skill `movimentar-shinobi` | `src/scene/playerMotion.ts` |
+| **Animações e movimento** (folhas, walk/action; fluidez da caminhada + proporção ao atacar — rodada 45) | skill `movimentar-shinobi` | `src/scene/playerMotion.ts` (propFactor suavizado `propCur` · passada `strideShown` suavizada · `stepTime` contínuo) |
 | **HUD, ficha, ranking** | `docs/02` | `src/main.tsx` · `src/ui/*` |
 | **Performance e configurações** (FPS, GPU, V-Sync, debug F9) | `docs/12` · [20](20-SCALING-E-REGULAS.md) §12 | `settings.ts` · `tuning.ts` |
 | **Arquitetura técnica** | `docs/12` | `src/scene/GameCanvas.tsx` · `README.md` |
 | **Histórico e decisões** (todas as rodadas) | `docs/18` (resumo) · `docs/14` (integral) · `CHANGELOG.md` | — |
 | **Fila de trabalho** | `docs/13-PENDENCIAS-PARA-CONTINUAR.md` | — |
-| **Revisão para outros agentes** (o que o Qwen/Bionic fez + o que ficou p/ Claude-Codex — rodadas 41/42/43/44) | **[23-REVISAO-OUTROS-AGENTES.md](23-REVISAO-OUTROS-AGENTES.md)** (inventário por rodada · áreas de revisão com caminhos · notas p/ Claude-Codex · validações · push seguro) | `git log --oneline` (fonte da verdade do que entrou em cada commit) |
+| **Revisão para outros agentes** (o que o Qwen/Bionic fez + o que ficou p/ Claude-Codex — rodadas 41/42/43/44/45) | **[23-REVISAO-OUTROS-AGENTES.md](23-REVISAO-OUTROS-AGENTES.md)** (inventário por rodada · áreas de revisão com caminhos · notas p/ Claude-Codex · validações · push seguro) | `git log --oneline` (fonte da verdade do que entrou em cada commit) |
 
 ## Regras permanentes de manutenção (rodada 36, 12/11)
 
