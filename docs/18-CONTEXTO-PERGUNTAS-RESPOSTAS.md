@@ -107,7 +107,7 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 
 ## 5. Estado atual do projeto (11/11/2026)
 
-- **Repositório:** `https://github.com/jcffadev/Shinobibonk.git`, branch `main`, ponta publicada `5eeec9b` (mouse 1:1) + rodada 30 (V-Sync/placa de vídeo/câmera) commitada nesta data. Zip de origem não verificada fora do índice e no .gitignore; ainda no histórico do GitHub — pendente decisão do usuário. `artifacts/sb-swishes-source.zip` deliberadamente fora do Git (gitignored).
+- **Repositório:** `https://github.com/jcffadev/Shinobibonk.git`, branch `main`, último commit `ab87de2` (V-Sync, placa de vídeo e fim da suavização da câmera). Zip de origem não verificada fora do índice e no .gitignore; ainda no histórico do GitHub — pendente decisão do usuário. `artifacts/sb-swishes-source.zip` deliberadamente fora do Git (gitignored).
 - **Build:** React 19 + TS + Three.js 0.187, Vite 8. Últimas validações (11/11): `tsc -b`, build, `verify-rules` (56/97/95) e `verify-runtime` (Edge headless, todos os checks verdes).
 - **Publicação:** Netlify manual funcionando (`*.netlify.app`); desempenho **sem ajuste automático** (removido a pedido do usuário) — o jogador define Qualidade/Limite de FPS/Resolução em Gráficos (simulação ~1,8 ms/frame com 1.200 inimigos).
 - **Conteúdo:** 56 versões jogáveis com caminhada; ~24 versões com folhas completas de ação; 4 mapas (auditoria visual pendente); catálogo de 94 itens; 19 pílulas; árvore permanente; oficina de fusão; roleta; altares por raridade; Final Swarm até 8.000.
