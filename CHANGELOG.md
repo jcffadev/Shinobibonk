@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Rodada 37 · Fase 3 — Caça-Níquel da Tsunade · 12/11/2026
+
+- **EM ANDAMENTO (registro anterior ao código, regra do projeto):** renomear "Roleta da Tsunade" → **Caça-Níquel da Tsunade** + **combos de 3 iguais** (3 Tsunades = "Sorte da Tsunade" +10% dificuldade/+10% monstros · 3 Jirayas = item Raro+ · 3 Hiruzens = 4 escolhas de item · 3 Hidan = −5% HP total +5% dificuldade +5% monstros · 3 Kakuzus = Ryu por sorte/dificuldade) + **emboscada invertida** (armadilhas shinobi explodem ao redor do jogador e **matam os monstros próximos** — jogador seguro durante a interação; horda retoma ao sair) + **custo por giro em escala** (1,35 → **1,70/giro** + **fator de zona 0,25** — escala como o Ryu por zona) + **face da Tsunade** com humor por recompensa (feliz/triste/nervosa; retrato do roster + badge; **arte das 3 expressões = PENDENTE**).
+- **Decisões e validações:** docs/13 (§Decisões de implementação da fase 3) · docs/14 (§Fase 3) · docs/20 (fórmula do custo) · `verify-rules` (boa chance 30,88% · custo giro 4 = 251 · fator zona).
+
 ## Rodada 38 — Animação andar+atacar, HUD ninja, ABRIR_JOGO e proposta de novos shinobis · 12/11/2026
 
 - **Andar atacando com a animação completa** (usuário: "ele tem que andar liso atacando, mas a animação de movimentação dele levantar os braços e usar o hit, tem que continuar fluído"). Causa: desde 4d1e798 o estado ficava `walk` durante o golpe e os quadros da folha de ação nunca apareciam. Agora, parado ou andando, o golpe toca inteiro (preparação → selo/soltura → recuperação); andando, a passada continua nas pernas do quadro de ataque, na mesma fase da caminhada, e a caminhada retoma sem pular quadro. O deslocamento não muda. Exceções preservadas: Ultimate (pose especial), chute de Lee/Guy e Gaara (flutua). Vale para jogador, ajudantes, clones e mega elites. (`src/scene/playerMotion.ts`)
