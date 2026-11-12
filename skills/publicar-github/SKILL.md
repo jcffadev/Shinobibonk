@@ -29,7 +29,7 @@ Use esta skill **sempre que uma tarefa terminar com alterações** em código, c
 
 ## Publicar
 
-1. `git add -A`
+1. Confira o que vai subir com `git status --short` e faça o stage com controle: `git add -u` para os arquivos rastreados modificados/removidos e **novos arquivos por nome** (`git add skills/<nome>/SKILL.md ...`). Nunca `git add -A` em bloco: ele estagia qualquer arquivo não rastreado da pasta, e só entra no repositório o que foi revisado.
 2. Faça um commit em português, com uma linha de resumo no imperativo (até ~72 caracteres) e, se precisar, um corpo com os itens do CHANGELOG. Exemplo: `Adiciona modo debug admin e resumo pós-run`.
 3. `git pull --rebase origin main`. Se houver conflito, pare e mostre ao usuário. Não resolva descartando trabalho dele.
 4. `git push origin main`.

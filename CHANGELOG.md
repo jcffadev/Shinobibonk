@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Contexto, skills e registro completo · 11/11/2026
+
+- Pedido do usuário (CONFIRMADO): "Deixe o changelog atualizado e verifique se a skill de atualizar os log's manda exatamente documentar TUDO que nós fazemos de alteração, inclusive... você consegue também subir para o github as alterações e sempre atualizar lá? Criar uma skill .markdown para SEMPRE ler os contextos e .skills para tomar decisões de alterações, isso serve para quando resetar o contexto, você usar as outras skills já criadas, inclusive a que temos para salvar contexto, para você utiliza-la, assim como todas as outras, ler as documentações... e tomar a melhor decisão sempre. não se esqueça de atualizar o github"
+- **Nova skill `skills/contexto-e-decisao/SKILL.md`**: no início de toda tarefa — e principalmente após reset de contexto ou handoff de outro agente — (1) ler o contexto na ordem (AGENTS.md → docs/18 → docs/14 → docs/13 → CHANGELOG → README/docs/00/doc temático); (2) ler e usar as skills do projeto (`documentar-projeto`, `publicar-github`, `criar-arte-shinobibonk`, `movimentar-shinobi`, `referencia-externa`); (3) decidir pela ordem decisão permanente do usuário > código (fonte da verdade) > documentação, com PROPOSTO para o que o usuário não aprovou; (4) fechar a rodada com registro completo (TUDO) + commit/push + relatório em pt-BR.
+- **`documentar-projeto` agora manda explicitamente "documentar TUDO"** (regra do usuário, 11/11): toda alteração — código, configuração, controles, assets, sistemas, skills, textos, decisões, testes — entra no registro na mesma tarefa, sem exceção; `CHANGELOG.md` em toda mudança (jogo, documentação, skills, processo), sem "mudança pequena demais para registrar"; `docs/14` com o pedido integral + resposta, `docs/18` com resumo/direção, `docs/13` com o que falta.
+- **`publicar-github` endurecida**: stage com `git add -u` + novos arquivos por nome — nunca `git add -A` em bloco (poderia estagiar não rastreado); commit em português + push para `origin main` ao fim de toda tarefa; nunca force push.
+- **AGENTS.md**: nova seção "Antes de qualquer tarefa" aponta a skill `contexto-e-decisao` como primeiro passo; "Documentação contínua" ganhou a regra de documentar TUDO.
+- **GitHub sempre atualizado**: commit + push ao fim de toda tarefa é regra permanente (AGENTS.md + skill); nesta sessão: `ab87de2`/`5aa28c6` (rodada 30) + este commit.
+- **CONFIRMADO**: documentação e skills em sincronia; repositório publicado e worktree limpo (push para `origin main` OK).
+
 ## V-Sync, placa de vídeo e fim da suavização da câmera · 11/11/2026
 
 - Pedido do usuário (CONFIRMADO): "Retirar a suavizaçãao de câmera, colocar opção de v-sync no jogo. Não sei exatamente se da pra utilizar jogando o jogo via navegador, mas quando formos fazer o nosso .exe do jogo/patch do jogo, deverá ter nas configurações também, ligar e desligar e também opção para selecionar a placa de vídeo do jogador ou rodar em openGL."

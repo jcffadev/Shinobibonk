@@ -7,11 +7,20 @@ metadata:
 
 # Documentar projeto
 
-Use esta skill sempre que editar ou revisar código, configuração, controles, assets ou sistemas de jogo do ShinobiBonk.
+Use esta skill sempre que editar ou revisar código, configuração, controles, assets, skills ou sistemas de jogo do ShinobiBonk.
+
+## Regra de ouro (pedido do usuário, 11/11/2026): documentar TUDO
+
+Cada alteração feita — código, configuração, controle, asset, sistema, skill, texto, decisão do usuário, teste ou estado — entra no registro **na mesma tarefa**, sem exceção. Não existe "mudança pequena demais para registrar". Onde vai cada parte:
+
+- `CHANGELOG.md`: **toda** mudança entregue (o que mudou, por quê, limitações e o que foi testado) — jogo, documentação, skills e processo.
+- `docs/14-CONTEXTO-DO-CHAT.md`: o pedido **integral** do usuário + a resposta final, mesmo que a solicitação tenha sido só uma pergunta.
+- `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md`: resumo da rodada (§4), direção/estado (§2/§5), decisão permanente quando for o caso (§3) — sem apagar entradas passadas.
+- `docs/13-PENDENCIAS-PARA-CONTINUAR.md`: o que ainda falta da rodada.
 
 ## Procedimento
 
-Registre cada nova solicitação e a resposta final em `docs/14-CONTEXTO-DO-CHAT.md`, mesmo quando a solicitação for apenas uma pergunta. Reúna pedidos complementares da mesma rodada. Em caso de credenciais ou dados sensíveis, registre só o contexto necessário sem copiar o dado. Atualize o changelog quando houver mudança no jogo e use `docs/13-PENDENCIAS-PARA-CONTINUAR.md` para indicar o que ainda falta.
+Registre cada nova solicitação e a resposta final em `docs/14-CONTEXTO-DO-CHAT.md`, mesmo quando a solicitação for apenas uma pergunta. Reúna pedidos complementares da mesma rodada. Em caso de credenciais ou dados sensíveis, registre só o contexto necessário sem copiar o dado. Atualize o `CHANGELOG.md` em **toda** mudança (jogo, documentação, skills, processo) e use `docs/13-PENDENCIAS-PARA-CONTINUAR.md` para indicar o que ainda falta.
 
 1. Leia `AGENTS.md`, `README.md`, `docs/00-LEIA-PRIMEIRO.md` e os documentos específicos da funcionalidade alterada.
 2. Inspecione o estado atual dos arquivos afetados. Trate o código executável como fonte da verdade para o que existe; requisitos e artes conceituais descrevem intenção, não implementação.
