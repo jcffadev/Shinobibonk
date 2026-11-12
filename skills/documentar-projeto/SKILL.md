@@ -17,6 +17,7 @@ Cada alteração feita — código, configuração, controle, asset, sistema, sk
 - `docs/14-CONTEXTO-DO-CHAT.md`: o pedido **integral** do usuário + a resposta final, mesmo que a solicitação tenha sido só uma pergunta.
 - `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md`: resumo da rodada (§4), direção/estado (§2/§5), decisão permanente quando for o caso (§3) — sem apagar entradas passadas.
 - `docs/13-PENDENCIAS-PARA-CONTINUAR.md`: o que ainda falta da rodada.
+- **Documentos de domínio (regra da rodada 36, 12/11):** se a mudança tocar scaling/fórmulas/economia → atualizar `docs/20-SCALING-EREGULAS.md`; se tocar elenco/versões/personagens → atualizar `docs/21-ELASTAO-DE-HEROIS.md`; se o mapa de "onde vive o quê" mudar → atualizar o índice `docs/19-INDICE-DO-CONHECIMENTO.md`. Se qualquer uma dessas atualizações falhar, registrar a inconsistência em `docs/13` (nunca declarar sincronia sem verificar).
 
 ## Procedimento
 

@@ -12,11 +12,12 @@ Use esta skill no **início de toda tarefa** no ShinobiBonk — e principalmente
 ## 1. Ler o contexto (nesta ordem)
 
 1. `AGENTS.md` — regras permanentes, invariantes de design e colaboração.
-2. `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` — direção atual (§2), **decisões permanentes do usuário (§3, não negociáveis)**, P/R de todas as rodadas (§4), estado do projeto (§5), pendências (§6) e mapa do que está onde (§7).
-3. `docs/14-CONTEXTO-DO-CHAT.md` — o texto **integral** das mensagens do usuário e das respostas (rodadas mais recentes no fim do arquivo).
-4. `docs/13-PENDENCIAS-PARA-CONTINUAR.md` — a fila de trabalho em andamento.
-5. `CHANGELOG.md` — o que já foi entregue (topo = mais recente).
-6. `README.md`, `docs/00-LEIA-PRIMEIRO.md` e o documento temático da funcionalidade que a tarefa toca (docs/01–12).
+2. `docs/19-INDICE-DO-CONHECIMENTO.md` — **índice agregador**: mapa de domínios → onde cada conhecimento vive (docs + código), regras de manutenção e manifesto de organização (rodada 36, 12/11). Use-o para localizar o domínio da tarefa em vez de procurar por todo o repositório.
+3. `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md` — direção atual (§2), **decisões permanentes do usuário (§3, não negociáveis)**, P/R de todas as rodadas (§4), estado do projeto (§5), pendências (§6) e mapa do que está onde (§7).
+4. `docs/14-CONTEXTO-DO-CHAT.md` — o texto **integral** das mensagens do usuário e das respostas (rodadas mais recentes no fim do arquivo).
+5. `docs/13-PENDENCIAS-PARA-CONTINUAR.md` — a fila de trabalho em andamento.
+6. `CHANGELOG.md` — o que já foi entregue (topo = mais recente).
+7. `README.md`, `docs/00-LEIA-PRIMEIRO.md` e o documento temático da funcionalidade que a tarefa toca (docs/01–12), além dos documentos de domínio: `docs/20-SCALING-EREGULAS.md` (fórmulas/valores) e `docs/21-ELASTAO-DE-HEROIS.md` (elenco/versões/fila de personagens).
 
 ## 2. Ler as skills do projeto e usá-las
 
@@ -27,6 +28,7 @@ Use esta skill no **início de toda tarefa** no ShinobiBonk — e principalmente
   - `criar-arte-shinobibonk` / `movimentar-shinobi` — arte e movimento dos shinobis.
   - `referencia-externa` — material do jogo de referência (zero rastro no projeto).
 - Se um procedimento já existe em skill ou doc, **siga-o**; não invente procedimento paralelo nem fonte de verdade extra.
+- **Sem duplicar contexto (regra da rodada 36, 12/11):** cada fato vive num lugar canônico (mapa em `docs/19`); os demais apontam por link. Organizar contexto é **não destrutivo**: nunca apagar/resumir `docs/14`/`docs/18`, e material do jogo de referência fica **sempre fora do projeto** (`arquivo-pokebonk/`, raiz do workspace).
 - Se a tarefa exigir algo sem skill (ex.: novo fluxo de publicação), proponha a skill ao usuário antes de criar.
 
 ## 3. Decidir

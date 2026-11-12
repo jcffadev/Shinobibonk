@@ -1,9 +1,9 @@
 # Instruções para Codex — ShinobiBonk
 
-Leia primeiro README.md, docs/00-LEIA-PRIMEIRO.md e docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md (direção permanente e registro resumido de perguntas/respostas); consulte os demais docs conforme a tarefa. A base atual executável é React + Three.js em src/; game/index.html é a versão Canvas 2D legada. Histórico em history/ não é fonte de verdade do código atual.
+Leia primeiro README.md, docs/00-LEIA-PRIMEIRO.md, **docs/19-INDICE-DO-CONHECIMENTO.md** (índice agregador: mapa de cada domínio → onde vive o conhecimento + 6 regras permanentes + manifesto) e docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md (direção permanente e registro resumido de perguntas/respostas); consulte os demais docs conforme a tarefa (docs/20 fórmulas/valores e docs/21 elenco são os domínios criados na rodada 36). A base atual executável é React + Three.js em src/; game/index.html é a versão Canvas 2D legada. Histórico em history/ não é fonte de verdade do código atual.
 
 ## Antes de qualquer tarefa
-Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs/18, docs/14, docs/13, CHANGELOG e o doc temático da tarefa) e as skills do projeto; use os procedimentos existentes em vez de inventar outros; decida pela ordem decisão do usuário > código (fonte da verdade do que existe) > documentação; feche a rodada com registro completo (TUDO) + commit/push no GitHub. Vale sempre — principalmente após reset de contexto ou troca de agente.
+Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs/19 (índice do conhecimento), docs/18, docs/14, docs/13, CHANGELOG e o doc temático da tarefa) e as skills do projeto; use os procedimentos existentes em vez de inventar outros; decida pela ordem decisão do usuário > código (fonte da verdade do que existe) > documentação; feche a rodada com registro completo (TUDO) + commit/push no GitHub. Vale sempre — principalmente após reset de contexto ou troca de agente.
 
 ## Documentação contínua
 - **Documentar TUDO (regra do usuário, 11/11/2026):** toda alteração — código, configuração, controles, assets, sistemas, skills, textos, decisões, testes — entra no registro na mesma tarefa, sem exceção: `CHANGELOG.md` atualizado em toda mudança, `docs/14` com o pedido integral + resposta, `docs/18` com resumo/direção e `docs/13` com o que falta.

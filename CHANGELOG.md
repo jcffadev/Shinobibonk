@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Rodada 36 — Segurança, backup e segmentação segura de contexto · 12/11/2026
+
+- **Regra reafirmada (pedido do usuário):** material de outros jogos **nunca** fica na pasta do projeto — verificado: `arquivo-pokebonk/` (prints/vídeos/frames/`CONTEXTO-COMPLETO.md`) na raiz do workspace, **fora do repositório**; 0 arquivos rastreados mencionam o jogo de referência. Regra permanente em `docs/19` (regra 6) + skills.
+- **Avaliação de segurança (pergunta do usuário):** o prompt de segmentação é **seguro para executar** — não destrutivo, dentro da pasta autorizada, sem tocar código/assets/Windows, com parada em caso de dúvida. Executado **adaptado ao próprio texto do prompt** (§2 autoriza "manter a estrutura + índice agregador, sem consolidação física" e §3 proíbe duplicados): não se criaram 15+ documentos paralelos — apenas índice + os domínios que **faltavam**.
+- **Backup integral ANTES de qualquer alteração (pedido do usuário):** `backup-ShinobiBonk-2026-11-12.zip` na **raiz do workspace (fora da pasta do projeto)** — 980 MB; **2.882 arquivos** (exatamente a contagem do projeto sem `node_modules`); 0 entradas de `node_modules`; hashes SHA-256 de amostra (CHANGELOG.md, AGENTS.md) extraídos do zip = idênticos ao original. `node_modules` excluído de propósito (regenerável via `npm ci`); `.git` incluído.
+- **FASE A — Inventário + backup:** 14 docs + 6 skills + AGENTS.md + CHANGELOG inventariados; backup criado e validado (contagem, ausência de node_modules, hashes).
+- **FASE C — Documentos novos (aditivos, zero remoção):**
+  - `docs/19-INDICE-DO-CONHECIMENTO.md` — **índice agregador**: mapa de 19 domínios → onde vive (doc + código), fluxo de recuperação seletiva, 6 regras permanentes de manutenção (não destrutivo, sem fonte paralela, atualização contínua, conflitos, referências visuais do próprio jogo, material externo fora do projeto), **manifesto de migração com rastreabilidade** (inclui os 2 domínios do prompt **NÃO APLICÁVEIS**: QWEN.md/ComfyUI) e validação da rodada.
+  - `docs/20-SCALING-EREGULAS.md` — **todas as fórmulas e valores lidos do código em 12/11**: dificuldades (Genin 1/Chunin 1,4/Jonin 1,9/Kage 2,6), escala de inimigos por minuto (com tabela Genin), zonas (×1/1,18/1,38), Final Swarm (×3 + 25%/min, teto 8.000), elite/mega (8%, 30%, 55%), atributos do jogador (dano/HP/EXP/crítico/sorte), crescimento de técnicas (GROWTH_ROLLS + TECHNIQUE_SCALE 1,2), roleta (30 × 1,35^giros, desconto teto 40%), pílulas (10 hoje · 9/13/15 PROPOSTO), drops (Ryu 72% etc.), mundo (raio 76, zona 10 min), painel F9 (41 multiplicadores, base Genin).
+  - `docs/21-ELASTAO-DE-HEROIS.md` — roster completo (24 famílias + 32 versões = 56) com títulos/eras, regras do elenco e **fila de novos** (7 Kages com conceito a aprovar + 17 Tier A) com estados.
+- **FASE F — Skills atualizadas:** `contexto-e-decisao` (docs/19 como 2º passo da leitura + regra sem duplicar + material externo fora do projeto) e `documentar-projeto` (regra de manter `docs/19-21` sincronizados com a alteração; falhou → registrar inconsistência em `docs/13`).
+- **Validação (FASE E):** git da rodada apenas **aditivos** + atualizações de sync; **nenhum código de jogo ou asset alterado**; nenhum contexto original (`docs/14`/`docs/18`) apagado ou resumido; todos os blocos novos com origem (código ou pedido do usuário) e estado; links verificados.
+- **Adaptações registradas:** "QWEN.md" (não existe — equivalente `AGENTS.md` + `skills/`) e "ComfyUI" (não usado — arte via `criar-arte-shinobibonk`) marcados **NÃO APLICÁVEL** no manifesto, sem suposição.
+- **GitHub:** commit + push desta rodada.
+
 ## Rodada 35 — Plano do mega-lote (HUD, personagens, sons, scale, pílulas, mapa) · 12/11/2026
 
 - **Somente plano — nenhum código de jogo alterado** (pedido do usuário: "me dê o retorno do que consegue e não consegue e eu vou autorizar o começo do trabalho").
