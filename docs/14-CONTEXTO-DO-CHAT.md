@@ -788,3 +788,79 @@ Feito. (1) **O personagem não para mais no ataque**: com o ataque normal, se vo
 ### Resposta e providências
 
 Feito, item por item. (1) **Renderizador (preparo do .exe)**: a aba **Tela** agora tem a opção **Renderizador — DirectX ou OpenGL** (padrão DirectX), salva nas configurações junto com a resolução. No navegador a renderização continua sendo sempre WebGL (melhor esforço do motor web); no .exe/patch do jogo a escolha sai direto do motor — a estrutura das configurações já nasce pronta para isso (`src/game/settings.ts`, `src/ui/SettingsScreen.tsx`). (2) **Kankuro**: marcado **RESOLVIDO** na fila — a arte dele (folhas 1/15/30 + caminhada/ação v3) já está no repositório; faltava só o registro. Restam Kushina (1) e a revisão de Neji/Sasuke/Naruto Clássico. (3) **Early game mais difícil em TODAS as dificuldades, em suas devidas proporções**: o Genin tinha um desconto de 66% nos primeiros 2,5 minutos (subindo a 100%) — **removido**; agora cada dificuldade nasce na força plena do seu tier (Genin ×1 · Chūnin ×1,4 · Jōnin ×1,9 · Kage ×2,6) e a base do minuto 0 subiu para **HP ×1,6 e dano ×1,45** em todas, com o efeito extra **decaindo proporcionalmente** (5 min ≈ ×1,20 · 10 min ≈ ×1,13 · 30 min ≈ ×1,05) — o late game já é íngreme (HP ×1,17/min) e não foi inflado de novo. (4) **Dificuldade individual por fase/zona**: nova escala `ZONE_DIFFICULTY` — zona 1 ×1 · zona 2 ×1,18 · zona 3 ×1,38 — aplicada ao HP, dano, spawn e pressão de roleta de cada zona (antes as zonas tinham a mesma dificuldade). (5) **Scale do jogo + scale das habilidades**: o dano e o % de **todas as habilidades** cresceram — base do crescimento por nível **×1,5** em todas as raridades (ex.: Comum de +30–45%/nível para **+45–67%/nível**; Lendário de +250–330% para **+375–485%**) e **escale global de dano das técnicas ×1,2** (jogador e ajudantes; os kits dos chefes já escalam por fase e não mudaram). Personagens fortes (Gaara, Guy, Sakura, Madara…) agora enfrentam hordas ~45% mais fortes no início — os mapas deixam de ser fáceis sem nerfar ninguém. (6) **Números de dano**: o teto na tela subiu de 60 → **300** — podem seguir spammando, sem estourar o pool de sprites. (7) **Tabela de utilidades de volta na ficha**: o bloco **UTILIDADE** voltou para a ficha (P) com 9 linhas — velocidade, coleta, sorte, experiência, Ryu, recarga da Ultimate, vagas de suporte, dano de aliados e cadência de aliados (a mesma lista da versão original, que foi removida em outra rodada). (8) **Gráfico de scale por técnica** (referência do vídeo enviado): cada técnica aprendida agora mostra o bloco **"Crescimento por nível · dano por golpe"** — barras do nível 1 até o nível atual com o dano exato de cada nível (passar o mouse: "Nv. X · Y"). O vídeo serviu de referência visual desse painel de crescimento — anotei tudo (painel da habilidade, barras por nível, upgrades por raridade, bloco UTILITY da pausa) no contexto arquivado **fora do projeto** (pasta arquivada na raiz do workspace, com os frames do vídeo), e nenhum nome ou valor do material de referência entrou em código, docs ou repositório. (9) **Treinamento esgotado = somente Sorte**: quando não resta técnica nem pílula para evoluir, o level-up agora sobe **somente a Sorte (+0,8% extra)** — antes era atributo aleatório; alinhei o código com a sua regra. (10) **Git**: commit + push feitos neste repositório, como pedido, até você trocar o repositório. (11) **Andar livre enquanto ataca: SIM, já implementado** — na rodada 33 (commit `4d1e798`): com o ataque normal você continua andando fazendo os movimentos; a Ultimate mantém a pose especial. **TESTADO**: `tsc -b`, `vite build`, `verify-rules` (56/97/95) e `verify-runtime` (Edge headless, todos os checks verdes, sem exceções JS nem assets 404).
+
+## Rodada 35 — mega-lote: HUD/menu, personagens, sons, scale, caça-níquel, pílulas, mapa, planner · 12/11/2026
+
+> **Pedido (texto integral das linhas novas da rodada; as linhas anteriores da mesma mensagem são reenvios das rodadas 23–34 já registradas acima):**
+>
+> "Outra coisa, você consegue acessar o Youtube, baixar o áudio, apenas áudio dos vídeos para copiar os ataques?"
+>
+> "Exemplo de vídeo YOOOO: https://www.youtube.com/shorts/weeVe4Kpsek
+> Ao clicar no botão 'Jogar' (para jogadores conectados) que seria o mesmo 'Jogar como convidado' (para jogadores guests), esse áudio deveria tocar. Ou apenas a parte do YOOOOOOOOO!
+> efeitos de som para invocar jutsus: https://www.youtube.com/watch?v=xPgMmsJfrgY
+> exemplo efeito kage bunshin: https://www.youtube.com/watch?v=aEQIi0drDhY
+> Outros sons você tem a liberdade para pesquisar no youtube e baixar se CONSEGUIR, se você não conseguir ou precisar de autorizações demais, me avise que eu mesmo faço manualmente os downloads, coloco em uma pasta e você distribui.
+> Sons que você não achar o Jutsu! você coloca https://www.youtube.com/watch?v=xPgMmsJfrgY como padrão.
+> Porém, terá uma regra... para não acontecer sound spam, você vai colocar um delay de só permitir soltar o som, quando terminar o áudio do outro.
+> Não funcionará exatamente como uma fila, porque se não uma hora vai encavalar tantos aúdios que vai acabar a run e ainda vai ter áudio reproduzindo (risos)."
+>
+> "Nós colocamos a questão de não 'travar' o personagem ao atacar, porém acabou 'bugando' a animação de ataque. O personagem 'perdeu' a animação que tinhamos de atacar, isso não é para acontecer. Se não for possível manter essa animação, eu prefiro que deixe como está, mas acredito que tenha sim como."
+>
+> "Além disso, você consegue pelas folhas de caminhar dos personagens, fazer uma posição de movimentação para ele andar na vertical para cima de costas para a câmera e na vertical para baixo frente para a câmera?"
+>
+> "- Crie todos os kages que estão faltando até o arco do Shippuden, use as nossas referências para criar a movimentação, habilidades, folhas do personagem, me envie antes para eu validar se o conceito/escopo está bom, crie as habilidades focadas nas habilidades que eles demonstram no anime."
+>
+> "Você já tem skills e base, contexto suficiente para trabalhar em cima disso."
+>
+> "Crie os personagens que estão faltando do naruto clássico e naruto Shipudden, você sabe que precisa criar com suas respectivas evoluções desde a academia se tem histórico deles nas referências até a era Shippuden. Crie cada um com habilidades únicas, passivas únicas, enfim tudo que você sabe."
+>
+> "- Eu quero o gráfico de upgrade das habilidades level a level que possamos colocar o mouse e ver os dados cada level, o que você fez foi só colocar um gráfico pequeno aumentando os valores, sem mostrar valor."
+>
+> "Colocar na barra de vida, os pontos de HP."
+>
+> "- Escalonamento de monstros, elites, megas, bosses finais e aumento de poder do personagem, vou te enviar todos os vídeos que tenho até então referente ao jogo referência e você tenta fazer o scale." (6 vídeos anexados nesta rodada)
+>
+> "Troque as kunais e shurikens no chão, por pergaminhos, o scale deles funcionará dando ryu por zona pela sorte também."
+>
+> "Também estou enviando referências de mudanças nos huds de menu de todo o jogo, trabalhe neles e crie um para nós." (7 telas anexadas nesta rodada)
+>
+> "Pegue referências também do planejador de itens de missão, referente as fusões, para fazermos preparação, salvarmos as builds."
+>
+> "Há, outra coisa importante... os itens/pílulas não estão mostrando os upgrades que os itens estão dando nas habilidades, deveria aparecer os informativos nos pool de escolha quando aparece no jogo.
+> Também verifique se está aparecendo para as vitaminas."
+>
+> "A Isca Shinobi deveria ser uma Vitamina e não um item.
+> Verifique se tem um item parecido com a White Flaute do nosso jogo referência, que invoca mais monstros e da mais outros atributos de leveling/ryu."
+>
+> "- Veja a foto de uma run, late game do pokebonk... estou enviando... veja e aplique para nosso modelo, use como espelho. (foto do whatsapp)."
+>
+> "- Ter botão glossário com o guia para explicar o que cada coisa faz e como buffar.
+> - Note do lado direito o card da temporada, mostrando informações do ranking, colocação.
+> - Contador de sequência em tempo real
+> - Contador de abates totais
+> - Itens com ícones canto esquerdo
+> - Habilidades e pílulas lado direito
+> - Ajustar bug do Caça-níquel, nome Caça-Níquel da Tsunade, quando clicar, aparecer na tela a Tsunade e um caça-níquel, faça a arte, faça ela feliz, triste ou nervosa, dependendo da recompensa, faça o caça-níquel cobrar mais por rodada, gradualmente... escalando consideravelmente.
+> - Criar item/pílula para permitir % do caça-níquel cobrar menos (verificar se já temos no jogo)
+> - Ao não ter nada para aprimorar habilidades/pílulas, só aprimorar aleatoriamente os atributos em 0,6 por nível...
+> - Personagem ainda muito forte, muito atributo ou dano já inicialmente, precisa ser mais gradual - aqui é a parte do scalling criar um sistema para as dificuldades (eu realizo o teste da gameplay e vamos ajustando).
+> - Monstros ainda muito fracos já estou com 6m de jogo e deletando o mapa sem dificuldade alguma...
+> - colocar os limites de pílulas, padrão 9, com buff da conta 13, buff de item 15
+> - Quando aparecer o pool de opções, poder ser possível escolher com os botões 1,2,3,4 das opções em tela (aparecer abaixo no card da opção do pool para respectiva opção).
+> - Trabalhar melhor no mapa, cenário, abrir mais o mapa, está muito pequeno, monstros estão nascendo em lugares que o personagem principal não consegue ir."
+>
+> "Entendeu tudo que eu disse?
+> Se organize me dê o retorno do que consegue e não consegue e eu vou autorizar o começo do trabalho na sequência."
+>
+> **Regras permanentes reafirmadas na mesma mensagem (já registradas acima, citadas de novo pelo usuário):**
+> "Quero que você trabalhe nessas alterações, vou deixar você com revisão automática, ai você consegue aprovar os acessos necessários para alterar, certo?
+> Porém, você SÓ PODE, SÓ TEM PERMISSÃO, para alterar os arquivos que estão na pasta C:\Shinobibonk projeto - Copia do computador, nada além disso, nada de alteração em windows.
+> Se precisar acessar o navegador para testes, por fazer no edge ou no outro que estava fazendo, mas APENAS isso."
+>
+> "O que não for melhoria, for desenvolvimento novo e já estiver no jogo você desconsidera e no final, você vai me trazer uma lista do que desconsiderou."
+
+### Resposta e providências (rodada 35 — PLANO, aguardando autorização)
+
+Rodada de **plano e organização** — o usuário pediu o retorno **antes** de autorizar a implementação; **nenhum código de jogo foi alterado nesta rodada** (apenas arquivamento do material de referência, fila e documentação). O material novo (7 telas de HUD/menu + 6 vídeos) foi **consumido e arquivado FORA do projeto** (pasta arquivada na raiz do workspace: `CONTEXTO-COMPLETO.md` §9 + `prints/r35-naruto-ui-*.png` + `prints/frames-6-videos/`); zero rastro no repositório (skill `referencia-externa`).
+
+**(1) O que entendi (resumo):** ver o plano completo enviado ao usuário nesta resposta — 28 itens: escopo/permissoes (só `C:\Shinobibonk projeto - Copia`, navegador apenas para testes, aprovação automática); regra de descartar "desenvolvimento novo que já está no jogo" + listar os descartes; Kages ausentes (conceito para aprovação ANTES de criar); elenco clássico/Shippuden com evolução por era; lista de personagens com referência sólida; sons (YOOOO no Jogar, jutsus com default, anti-spam = "só quando o anterior terminar", usuário baixa os áudios e eu distribuo); regressão da animação de ataque ao andar; caminhada vertical frente/costas; HUD/menu no padrão das 7 telas (HP com números, glossário, card de temporada, streak em tempo real, abates totais, itens à esquerda, skills+pílulas à direita); Caça-Níquel da Tsunade (nome, arte feliz/triste/nervosa, custo subindo consideravelmente, desconto que já existe); treinamento esgotado = atributo aleatório +0,6%; balanceamento (jogador inicial menos forte, monstros mais fortes aos 6 min, escala por dificuldade — usuário testa e ajustamos); pergaminhos no chão (Ryu por zona + sorte); planner de fusões/builds com salvar; pool com prévia informativa de itens/pílulas + teclas 1–4; Isca Shinobi → vitamina; White Flute (já existe = Pílula de Incenso); foto do late game (NÃO chegou — reenviar); mapa maior + spawns alcançáveis. **(2) O que JÁ EXISTE (descartado, por regra do usuário):** HP com números (já está); teclas 1–N no pool (já está, 1–9); item que reduz custo da roleta (Dente de Ouro −8% + Carteira Gama-chan −6%, teto −40%); White Flute (Pílula de Incenso: +10% horda, +5% ameaça, +12% Ryu); YOOOO no botão Jogar (sintetizado — o arquivo real entra quando o usuário baixar); caminhada frente/costas (folhas direcionais já têm as duas — validar visualmente). **(3) O que CONSIGO:** tudo de código/animação/HUD/arte/balanceamento/planner + integração dos áudios baixados pelo usuário + build/verificações/commit/push. **(4) O que NÃO consigo:** baixar áudio do YouTube nesta sessão (sem ferramenta autorizada — o usuário baixa e me dá a pasta; eu distribuo/integro); a foto do late game não chegou (pedir reenvio). **(5) Personagens com referência sólida (aprovação pedida antes de criar):** Kages — Hiruzen (3º), Killer B (6º Raikage), A (5º Raikage), Onoki (2º Tsuchikage), Ao (2º Mizukage), Rasa (3º Kazekage), Naruto 7º Hokage (existem: Hashirama, Tobirama, Minato, Tsunade, Kakashi, Gaara). Clássico/Shippuden — Choji, Kiba (+Akamaru), Shino, Ino, Kurenai, Iruka, Sai, Yamato, Shisui, Obito, Hiashi, Hanabi, Kisame, Zabuza, Suigetsu, Mangetsu, Karin (Nagato = nuance: Pain já existe; Ebisu/Sete Espadachins menores = referência fraca, fora). **(6) Perguntas em aberto:** foto do late game; mecanismo do "buff da conta" nas pílulas 9/13/15; confirmação do treinamento 0,6% aleatório; aprovação dos conceitos dos Kages e da lista do elenco; pasta dos áudios; "consideravelmente" do caça-níquel (proposto ×1,7/giro); quanto abrir o mapa (proposto +30%); balanceamento por teste iterativo do usuário. Fila registrada em `docs/13` e direção em `docs/18` §2/§4/§5.
