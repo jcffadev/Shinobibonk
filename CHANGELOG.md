@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Decisão: excluir e recriar o repositório no GitHub · 11/11/2026
+
+- Decisão do usuário (CONFIRMADO): "eu vou excluir o repositório e depois criar outro para utilizarmos, não se preocupe mais com isso" — a pendência do **suporte da GitHub foi encerrada** (não se prepara mais nada).
+- **Efeito:** o zip de origem não verificada (`artifacts/sb-swishes-source.zip`) e os prints/docs antigos saem do GitHub **com a exclusão do repositório** — sem reescrita de histórico, sem force push.
+- **Até a recriação:** commit + push segue no repositório atual (`main`); o `.gitignore` já protege o zip contra nova entrada.
+- **Quando o novo repositório existir:** atualizar o remoto (`git remote set-url origin <novo-url>`) e publicar; a pasta arquivada do jogo de referência segue fora do projeto (raiz do workspace).
+- Registro: decisão permanente em docs/18 §3, estado do repositório em §5, resumo da rodada em §4 (linha 32), mensagem integral + respostas em docs/14.
+
 ## Contexto, skills e registro completo · 11/11/2026
 
 - Pedido do usuário (CONFIRMADO): "Deixe o changelog atualizado e verifique se a skill de atualizar os log's manda exatamente documentar TUDO que nós fazemos de alteração, inclusive... você consegue também subir para o github as alterações e sempre atualizar lá? Criar uma skill .markdown para SEMPRE ler os contextos e .skills para tomar decisões de alterações, isso serve para quando resetar o contexto, você usar as outras skills já criadas, inclusive a que temos para salvar contexto, para você utiliza-la, assim como todas as outras, ler as documentações... e tomar a melhor decisão sempre. não se esqueça de atualizar o github"
