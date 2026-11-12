@@ -84,28 +84,59 @@ function sweep(frequency:number,end:number,length:number,strength:number,noise=f
     source.frequency.exponentialRampToValueAtTime(125,now+length);source.connect(filter);source.start(now);source.stop(now+length);
   }
 }
-export function playYooo(){
+/** Fallback sintetizado do "YOOOO" (se o arquivo real falhar ou o áudio não estiver disponível). */
+function yoooFallback(){
   const settings=currentSettings();
   if(speak('',true))return;
   const strength=settings.volume*settings.voiceVolume*.13;
   sweep(380,520,.65,strength);
   sweep(1450,820,.65,strength*.7);
 }
+let yoooClip:HTMLAudioElement|null=null;
+/** "YOOOO" real do usuário (arquivo baixado por ele) — integra no botão Jogar/Jogar-como-convidado.
+ *  Pedido do usuário (12/11): começa a partir do 1º segundo do áudio (corte). */
+export function playYooo(){
+  const settings=currentSettings();
+  if(settings.muteInBackground&&document.hidden)return;
+  const volume=Math.max(0,settings.volume*settings.voiceVolume);
+  if(volume<=.001)return;
+  try{
+    if(!yoooClip){yoooClip=new Audio('/assets/audio/yooo.mp3');yoooClip.preload='auto';yoooClip.load();}
+    const clip=yoooClip;
+    clip.currentTime=1.0;
+    clip.volume=Math.min(1,volume);
+    const started=clip.play();
+    if(started&&typeof started.catch==='function')started.catch(()=>yoooFallback());
+    return;
+  }catch{ /* áudio indisponível → fallback sintetizado */ }
+  yoooFallback();
+}
 let lastCast=-Infinity;
 /** Intervalos mínimos das falas de técnicas comuns (ms). */
 export const VOICE_RULES={global:15000,perTechnique:60000};
 let lastTechniqueVoice=-Infinity;const lastVoiceByTechnique:Record<string,number>={};
+/** Anti-spam de som (regra do usuário, 12/11): o PRÓXIMO som de jutsu só pode tocar quando o ANTERIOR
+ *  TERMINAR — NÃO é fila (evita pilha de áudios que se acumula até o fim da run). */
+let jutsuSoundEndsAt=-Infinity;
+function jutsuGate(lengthSeconds:number,slackMs=120){
+  const now=performance.now();
+  if(now<jutsuSoundEndsAt)return false;
+  jutsuSoundEndsAt=now+lengthSeconds*1000+slackMs;
+  return true;
+}
 export function playTechniqueSound(t:Technique,ultimate=false){
   const now=performance.now();if(!ultimate&&now-lastCast<90)return;lastCast=now;
   const s=currentSettings(),volume=s.volume*s.sfxVolume;
-  if(/kunai|shuriken|senbon|agulhas/i.test(t.name))sweep(6500,900,.16,.22*volume,true);
-  else if(t.element==='Raio')sweep(2500,580,.2,.18*volume,true);
-  else if(t.element==='Fogo'||t.element==='Areia')sweep(480,170,.28,.23*volume,true);
-  else if(t.element==='Madeira'||t.school==='Taijutsu')sweep(750,160,.13,.20*volume,true);
-  else sweep(870,380,.2,.13*volume,t.shape==='Onda');
+  // Efeito do jutsu: respeita o gate "terminou antes do próximo" (o som anterior precisa acabar).
+  if(/kunai|shuriken|senbon|agulhas/i.test(t.name)){if(jutsuGate(.16))sweep(6500,900,.16,.22*volume,true);}
+  else if(t.element==='Raio'){if(jutsuGate(.2))sweep(2500,580,.2,.18*volume,true);}
+  else if(t.element==='Fogo'||t.element==='Areia'){if(jutsuGate(.28))sweep(480,170,.28,.23*volume,true);}
+  else if(t.element==='Madeira'||t.school==='Taijutsu'){if(jutsuGate(.13))sweep(750,160,.13,.20*volume,true);}
+  else{if(jutsuGate(.2))sweep(870,380,.2,.13*volume,t.shape==='Onda');}
   // Falas: a Ultimate sempre fala; técnicas comuns no máximo 1 vez a cada VOICE_RULES.perTechnique por técnica e
   // VOICE_RULES.global entre falas (antes a técnica inicial, lançada a cada ~1,5 s, repetia a fala a cada 6,5 s).
-  if(ultimate){speak(t.name);return;}
+  // A fala em si já só entra quando a anterior termina (speak() ignora se synth.speaking).
+  if(ultimate){if(speak(t.name))jutsuSoundEndsAt=performance.now()+2400;return;}
   if(!japanese[t.name]||now-lastTechniqueVoice<VOICE_RULES.global||now-(lastVoiceByTechnique[t.name]??-Infinity)<VOICE_RULES.perTechnique)return;
-  if(speak(t.name)){lastTechniqueVoice=now;lastVoiceByTechnique[t.name]=now;}
+  if(speak(t.name)){lastTechniqueVoice=now;lastVoiceByTechnique[t.name]=now;jutsuSoundEndsAt=performance.now()+2400;}
 }
