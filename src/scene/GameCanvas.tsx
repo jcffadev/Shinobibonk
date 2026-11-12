@@ -768,7 +768,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       }
       out.copy(v1).multiplyScalar(vertical).addScaledVector(v2,horizontal);
     }
-    const addRing=(position:THREE.Vector3,color:string,size:number)=>{if(hiddenEffects)return;const ring=new THREE.Mesh(new THREE.TorusGeometry(size,.11,6,24),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9}));ring.rotation.x=Math.PI/2;ring.position.copy(position);ring.position.y=terrainHeight(position.x,position.z)+.18;scene.add(ring);effects.push(ring);};
+    // Cache de geometria dos anéis: mesmo visual (torus .11 por tamanho), sem realocar geometria a cada anel nem
+    // liberar a cache ao terminar o anel — só no unmount, via runCleanups.
+    const ringGeometryCache=new Map<string,THREE.TorusGeometry>();const ringGeometries=new Set<THREE.BufferGeometry>();
+    const ringGeometryFor=(size:number)=>{const k=size.toFixed(2);let g=ringGeometryCache.get(k);if(!g){g=new THREE.TorusGeometry(size,.11,6,24);ringGeometryCache.set(k,g);ringGeometries.add(g);}return g;};
+    runCleanups.push(()=>{for(const g of ringGeometries)g.dispose();});
+    const addRing=(position:THREE.Vector3,color:string,size:number)=>{if(hiddenEffects)return;const ring=new THREE.Mesh(ringGeometryFor(size),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9}));ring.rotation.x=Math.PI/2;ring.position.copy(position);ring.position.y=terrainHeight(position.x,position.z)+.18;scene.add(ring);effects.push(ring);};
     // Chefes (mega elites e guardiões): barra de vida 3D e técnicas do personagem com aviso no chão.
     let playerSlow=0;
     /** Todo dano recebido passa aqui: escudo, evasão, armadura (+Postura de Pedra), espinhos, adrenalina, fumaça, gelo de Haku e ressurreição. */
@@ -1245,7 +1250,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(!choiceData&&!sealing){if(xp>=xpNext||pendingLevels>0){if(pendingLevels>0)pendingLevels--;else xp-=xpNext;const oldForm=formAt(heroId,level).level;level++;refreshStats(true);xpNext=Math.ceil(xpToLevelUp(level)*tune().xpCurve);if(formAt(heroId,level).level!==oldForm){player.material.dispose();player.material=heroMaterial(heroId,level);eventToast=hero.name+' evoluiu: '+formAt(heroId,level).name+' · +25% do HP base';addRing(player.position,'#fff195',3);}choiceLevel=level;const offers=rollLevelOffers();choiceData=offers.length?offers:null;if(!offers.length){const attribute=grantTraining();eventToast='Nível '+level+' · '+POWERLEVEL_ATTRIBUTES[attribute]+' +0,8% extra (crescimento padrão também aplicado)';}invulnerability=3;keys.clear();}else if(pendingItemRewards>0){pendingItemRewards--;choiceLevel=0;choiceData=rollMegaLoot();keys.clear();}}
       } // Vivo
       } // Fora do ritual de selamento
-      for(let i=effects.length-1;i>=0;i--){const fx=effects[i];fx.scale.multiplyScalar(1+dt*2.4);const mat=fx.material as THREE.MeshBasicMaterial;mat.opacity-=dt*1.35;if(mat.opacity<=0){scene.remove(fx);fx.geometry.dispose();mat.dispose();effects.splice(i,1);}}
+      for(let i=effects.length-1;i>=0;i--){const fx=effects[i];fx.scale.multiplyScalar(1+dt*2.4);const mat=fx.material as THREE.MeshBasicMaterial;mat.opacity-=dt*1.35;if(mat.opacity<=0){scene.remove(fx);if(!ringGeometries.has(fx.geometry))fx.geometry.dispose();mat.dispose();effects.splice(i,1);}}
       // Partículas/Susanoo avançam só com o jogo rodando (pausa congela). Aura contínua dos setups ativos.
       if(!hiddenEffects)for(const s of activeSetups){const st=techniques.find(x=>x.name===s.name);if(st)particles.aura(st,player.position,false,dt);}
       particles.update(dt);susanoo.update(dt,camera);

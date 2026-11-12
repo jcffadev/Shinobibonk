@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Andar durante o ataque + economia de geometria dos anéis · 11/11/2026
+
+- Pedido do usuário (CONFIRMADO): "Porque no MEU computador o jogo está lagado, 20 FPS? Mesmo quando eu fecho tudo relacionado a IA?" + "O personagem não deve travar/parar de andar na animação de ataque, se ele tem ataquespeed para atacar e consegue andar, deve continuar andando fazendo os movimentos."
+- **Andar durante o ataque** (`src/scene/playerMotion.ts`): o ataque normal não interrompe mais a caminhada — com input de movimento o estado fica `walk` e o corpo continua o ciclo de caminhada, com o golpe nos braços (balanço `swing` aplicado em `pose.apply`, inclusive por cima dos quadros de folha de caminhada); parado, o ataque é exatamente como antes. A **Ultimate mantém a pose especial** (prioridade de sempre); pulo, dash e dano não mudaram.
+- **Anéis de efeito sem churn de geometria** (`src/scene/GameCanvas.tsx`): os anéis (escudo, espinhos, Chidori Nagashi, Amaterasu, ressurreição etc.) criavam `TorusGeometry` nova a cada uso e a disporiam ao terminar (upload de GPU + GC contínuo); agora há **cache por tamanho** (mesmo visual: torus .11 por size), criada uma vez por size e liberada **só no unmount** (via `runCleanups`); o material segue por anel (dispõe ao terminar, como antes).
+- **Diagnóstico do 20 FPS**: o domínio novo do Netlify é um `localStorage` novo → configurações nascem no padrão `Qualidade Alta` + resolução cheia (o mesmo diagnóstico da rodada 23); o jogo é GPU-heavy por design (hordas de 60+ inimigos em tela, teto 1.600, Final Swarm 8.000; sprites 3D + efeitos + números de dano = centenas de draw calls); fechar apps de IA não muda o custo do jogo na GPU do navegador. **Ação do jogador**: Gráficos → Qualidade `Média`/`Baixa` e/ou Tela → Resolução `900p`/`720p` (fica salvo naquele domínio/navegador); GPU "Alto desempenho (dedicada)" (padrão) e aceleração de hardware do navegador ligada.
+- **Não otimizar o que já está otimizado** (verificado no código): números de dano já com pool + cache LRU de textura (teto de 60 ativos), terreno pré-amostrado em grade, pixel ratio limitado (≤1,5) — o ganho real é das configurações do jogador + esta economia de geometria.
+- **TESTADO**: `tsc -b`, `vite build`, `verify-rules` (56/97/95) e `verify-runtime` (Edge headless — todos os checks verdes, sem exceções JS nem assets 404).
+
 ## Decisão: excluir e recriar o repositório no GitHub · 11/11/2026
 
 - Decisão do usuário (CONFIRMADO): "eu vou excluir o repositório e depois criar outro para utilizarmos, não se preocupe mais com isso" — a pendência do **suporte da GitHub foi encerrada** (não se prepara mais nada).

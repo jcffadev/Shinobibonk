@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-12T00:16:52.838Z",
+  "date": "2026-11-12T00:50:55.591Z",
   "checks": [
     "Bolsa da Missão combina raridade, busca e aba de estado",
     "Selecionar shinobi preserva a cena de fundo",
@@ -64,16 +64,16 @@
   "missing": [],
   "performanceSample": {
     "renderer": "Edge headless · ANGLE/SwiftShader",
-    "enemies": 3330,
-    "seconds": 2.6980999999940396,
-    "fps": 6.300730143448187,
-    "cpuUpdateMs": 5.135294116595212,
-    "cpuRenderMs": 15.211764705093469,
-    "drawCalls": 205,
+    "enemies": 3213,
+    "seconds": 2.5765,
+    "fps": 5.821851348728896,
+    "cpuUpdateMs": 6.059999998907248,
+    "cpuRenderMs": 12.053333334128062,
+    "drawCalls": 224,
     "instances": {
-      "bodies": 3326,
-      "outlines": 272,
-      "markers": 70
+      "bodies": 3207,
+      "outlines": 268,
+      "markers": 69
     }
   }
 }

@@ -111,7 +111,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (sliding || (walkingInput && !attack)) { mirror = leftward; rear = backwardView; }
       // Pulo e dash têm prioridade sobre o dano: no meio da horda o jogador recebe golpes o tempo todo e o estado 'hurt'
       // (0,23 s a cada acerto) escondia os quadros de pulo/dash do Naruto Academia. O dano continua visível pela tinta vermelha.
-      const showAttack = attack > 0 && (actionSheet?.kind === 'full' || hurt === 0);
+      // Pedido do usuário (11/11): ataque normal NÃO interrompe a caminhada — se o personagem anda, ele continua
+      // andando fazendo os movimentos (o balanço fica nos braços, abaixo). A Ultimate mantém o momento especial.
+      const showAttack = attack > 0 && (ultimate || !walkingInput) && (actionSheet?.kind === 'full' || hurt === 0);
       state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : showAttack ? (ultimate ? 'ultimate' : 'attack')
         : hurt > 0 ? 'hurt' : walkingInput ? 'walk' : 'idle';
       const academy = hasWalkAtlas && formAt(heroId, level).level === 1;
@@ -179,12 +181,15 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       sprite.material.alphaTest = usesSheet ? .55 : .18;
       const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.13 : 0;
       const lift = state === 'jump' ? Math.sin(Math.PI*jumpProgress)*.16 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.065 : 0;
-      const reach = state === 'attack' ? Math.sin(Math.PI * attack / (throwingWeapon ? .25 : .22)) * .11
-        : state === 'ultimate' ? .09 : -stride * .55;
+      // Balanço do ataque: parado = mesmo de sempre; andando com ataque normal (pedido do usuário 11/11),
+      // o corpo continua no ciclo de caminhada e o golpe sai dos braços (pose.apply abaixo).
+      const swing = (state === 'attack' || (state === 'walk' && attack > 0 && !ultimate)) ? Math.sin(Math.PI * attack / (throwingWeapon ? .25 : .22)) * .11 : 0;
+      const reach = state === 'ultimate' ? .09 : swing > 0 ? swing
+        : -stride * .55;
       const guard = state === 'ultimate' ? .085 : state === 'attack' ? .045 : state === 'hurt' ? .04 : 0;
       const proceduralMotion=!usesSheet||useDirection&&!useAction&&(state==='jump'||state==='dash');
       pose.apply(sprite.material, proceduralMotion ? stride : 0, proceduralMotion ? lift : 0,
-        usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
+        !usesSheet ? reach : (swing > 0 ? swing : 0), usesSheet ? 0 : guard, !usesSheet && mirror);
       sprite.material.rotation = !proceduralMotion ? 0 : state === 'dash' ? (mirror ? .34 : -.34)
         : state === 'hurt' ? (mirror ? -.1 : .1) : state === 'walk' && backwardView ? (mirror ? .05 : -.05) : 0;
       // Squash/stretch do pulo (estica na decolagem, achata na aterrissagem) e leve alongamento horizontal no dash,
