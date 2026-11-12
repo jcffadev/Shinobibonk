@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Rodada 37 — Autorização do mega-lote + novos specs · 12/11/2026
+
+- **AUTORIZADO pelo usuário** ("Aprovo os Kages · Aprovo o Elenco Tier A · Ok pasta com áudio, já inclua este que enviei no 'Jogar' · Pode colocar esse caça níquel") — a fila inteira da rodada 35 (docs/13) foi liberada para implementação e as 9 perguntas em aberto foram respondidas (docs/18 §4, linha 37 · integral em docs/14).
+- **Novos specs aprovados (12/11):**
+  - **Elenco:** Kages **APROVADOS** + **primeiros Kages de cada vila até o Shippuden** (Hanzo 1º Tsuchikage · Mei Terumi 1ª Mizukage; pesquisa na NarutoWiki) + **correção de canon (A = 3º Raikage · Killer B = 4º Raikage)**; **Tier A (17) APROVADO**; **Tobi ×2** (Akatsuki + outra versão); **Nagato = personagem SEPARADO do Pain** (kit: Tensei + Invocação dos Pain's + caminhos de Pain); **Yahiko = o PAIN** (kit: barras de chakra + Tensei).
+  - **Caça-Níquel da Tsunade:** **combos de 3 iguais** (3 Tsunades = "Sorte da Tsunade" +10% dificuldade/+10% monstros · 3 Jirayas = item raro+ · 3 Hiruzens = 4 escolhas de itens · 3 Hidan = −5% HP +5% dificuldade +5% monstros · 3 Kakuzus = bônus de Ryu por sorte/dificuldade), **emboscada invertida** (armadilhas shinobi/papéis bomba explodem ao redor do jogador e **matam os monstros próximos** — jogador **seguro** durante a interação; a horda retoma ao sair) e **custo por giro subindo gradual e considerável, escalando como o Ryu por zona**.
+  - **Itens/pílulas:** renames com arte/ícone exclusivos — "Pergaminho de Ressurreição" (35%) → **Células de Hashirama** · "Rinne Tensei" (60%) → **Chakra de Hagoromo**; **White Flute = ITEM novo** (horda maior + mais Ryu/leveling) — a **Pílula de Incenso SE MANTÉM**; teto de pílulas **9/13/15** (base 9 · buff de conta = **Passivas Shinobi** por Lamens aplicando no **início da run** → 13 · buff de item Cabaça +2 → 15); **Isca Shinobi → vitamina**.
+  - **HUD/tema:** **barra de HP com números no PÉ DO PERSONAGEM**; **HUDs recriadas no tema Naruto/ninja/japonês**; **glossário** (atributos no estágio, efeito de cada pílula, **% de mega crítico após o crítico 100%**, alfas/ajudantes com buffs + combos de facção/aldeia/família); streak em tempo real; abates totais; card de temporada.
+  - **Áudio:** **YOO MP3** (baixado pelo usuário) no botão Jogar/Jogar-como-convidado com **corte a partir do 1 s**; **ytmp3.yt autorizado** para os demais sons de jutsu (falhou → o usuário baixa e entrega a pasta); anti-spam mantido (o próximo som só toca quando o anterior **termina** — não é fila).
+  - **Folhas:** caminhada **frente (baixo) e costas (cima)** seguindo o modelo de criação do projeto.
+- **Fases de implementação (ordem):** 1) áudio YOO + gate anti-spam → 2) animação de ataque + caminhada (regressão da 33) → 3) Caça-Níquel da Tsunade → 4) itens/pílulas → 5) HUD (tema Naruto) → 6) balance (início fraco/gradual, monstros aos 6 min, treinamento +0,6% aleatório, pergaminhos no chão, mapa maior + spawns alcançáveis) → 7) personagens novos → 8) folhas frente/costas → 9) arte dos menus.
+- **Documentação sincronizada:** docs/13 (fila AUTORIZADO + specs da 37), docs/18 (§2/§3/§4 linha 37/§5/§6), docs/20 (estados APROVADO + fila), docs/21 (roster APROVADO + Hanzo/Mei/Tobi×2/Nagato/Yahiko).
+- **GitHub:** commit + push deste registro.
+
 ## Rodada 36 — Segurança, backup e segmentação segura de contexto · 12/11/2026
 
 - **Regra reafirmada (pedido do usuário):** material de outros jogos **nunca** fica na pasta do projeto — verificado: `arquivo-pokebonk/` (prints/vídeos/frames/`CONTEXTO-COMPLETO.md`) na raiz do workspace, **fora do repositório**; 0 arquivos rastreados mencionam o jogo de referência. Regra permanente em `docs/19` (regra 6) + skills.

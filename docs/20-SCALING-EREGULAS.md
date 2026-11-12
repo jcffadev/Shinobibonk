@@ -82,23 +82,23 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 ## 8. Treinamento / nível esgotado — `GameCanvas.tsx`
 
 - **IMPLEMENTADO (11/11):** pool de técnicas/pílulas esgotado → level-up dá **+0,8% de Sorte**.
-- **PROPOSTO (12/11, aguardando confirmação do usuário):** substituir por **atributo ALEATÓRIO +0,6%/nível** (fila docs/13, fase 1, item 4).
+- **CONFIRMADO (rodada 37, 12/11 — APROVADO):** substituir por **atributo ALEATÓRIO +0,6%/nível** (fila docs/13; **a codificar**).
 
 ## 9. Economia — roleta e Ryu
 
 - **Roleta da Tsunade** (`roulette.ts`, IMPLEMENTADO): custo = `round(30 × 1,35^giros × inflação(min) × (1 − desconto))` → giros 1..5 custam **30 · 41 · 55 · 74 · 100** (sem desconto/inflação). Desconto: Dente de Ouro −8% + Carteira Gama-chan −6%, **teto −40%**. Pressão de casas ruins: `maldição×2,5 + (zona−1)×0,15 + missão (Genin 0 · Chunin 0,1 · Jonin 0,2 · Kage 0,35)`. Sorte: `1 + min(2, luck/100)`.
 - **Spend** (`SPEND_RULES`): +dano a cada **250 Ryu** gastos (o % vem do item), **teto +30%**.
 - **Drops base** (`tuning.ts`, IMPLEMENTADO): Ryu **72%** · Chakra **28%** · Pílula **1,5%** · Lamen ≤**5%** (cura 35% do HP) · item por abate **desativado** (só por kunai/shuriken/evento) · orbe de chakra **9%**.
-- **Chão da run** (`GameCanvas.scatterPickups`, IMPLEMENTADO): 60% Ryu / 20% kunai / 20% shuriken. **PROPOSTO (12/11):** kunai/shuriken viram **pergaminhos** (Ryu por zona + sorte).
-- **Caça-Níquel da Tsunade** (PROPOSTO 12/11): renomear + arte + custo por giro subindo **×1,70/giro** (hoje ×1,35) — aguardando aprovação.
+- **Chão da run** (`GameCanvas.scatterPickups`, IMPLEMENTADO): 60% Ryu / 20% kunai / 20% shuriken. **APROVADO (rodada 37):** kunai/shuriken viram **pergaminhos** (Ryu por zona + sorte; a implementar).
+- **Caça-Níquel da Tsunade** (APROVADO rodada 37 — a implementar): renomear "Roleta da Tsunade" → **"Caça-Níquel da Tsunade"**; **combos de 3 iguais** (3 Tsunades = "Sorte da Tsunade" +10% dificuldade/+10% monstros · 3 Jirayas = item raro+ · 3 Hiruzens = 4 escolhas de itens · 3 Hidan = −5% HP +5% dificuldade +5% monstros · 3 Kakuzus = bônus de Ryu por sorte/dificuldade); **emboscada invertida** (armadilhas/papéis bomba explodem ao redor do jogador e **matam os monstros próximos**; jogador seguro durante a interação; horda retoma ao sair); **custo por giro subindo gradual e considerável, escalando como o Ryu por zona** (hoje ×1,35/giro — subir; calibrar no teste do usuário); arte da Tsunade feliz/triste/nervosa por recompensa.
 
 ## 10. Pílulas — `pills.ts`
 
-`PILL_MAX = 10` (IMPLEMENTADO) + Cabaça de Pílulas +2 = **12** hoje. **PROPOSTO (12/11):** teto **padrão 9 · buff de conta 13 · buff de item 15** (mecanismo de "conta" ainda não existe — pergunta em aberto). 20 pílulas (bônus por nível): Soldado +10% taijutsu · Elemental +10% ninjutsu · Ferro +4 armadura · Vento +6% movimento · Akimichi +18 HP · Clone +0,5 projétil (2 nív = +1) · Relâmpago +8% vel. ataque · Arremesso +10% vel. projétil · Falcão +4% crítico · Névoa +3% evasão (teto 60%) · Genjutsu +12% status (teto 90%) · Expansão +10% área · Persistência +10% duração · Cura +0,6 HP/s · Mercador +12% Ryu · Pergaminho +10% EXP · Fortuna +5 sorte · Magnética +1 ímã · Hiden +8% recarga Ultimate (sem chakra) · **Incenso** +10% horda +5% ameaça +12% Ryu (equivale à "White Flute" da referência — já existe).
+`PILL_MAX = 10` (IMPLEMENTADO) + Cabaça de Pílulas +2 = **12** hoje. **APROVADO (rodada 37, 12/11 — a implementar):** teto **padrão 9 · buff de conta 13 · buff de item 15** — "buff de conta" = **Passivas Shinobi** (desbloqueadas por Lamens; **aplicam no início da run**) · "buff de item" = Cabaça +2 por cima. 20 pílulas (bônus por nível): Soldado +10% taijutsu · Elemental +10% ninjutsu · Ferro +4 armadura · Vento +6% movimento · Akimichi +18 HP · Clone +0,5 projétil (2 nív = +1) · Relâmpago +8% vel. ataque · Arremesso +10% vel. projétil · Falcão +4% crítico · Névoa +3% evasão (teto 60%) · Genjutsu +12% status (teto 90%) · Expansão +10% área · Persistência +10% duração · Cura +0,6 HP/s · Mercador +12% Ryu · Pergaminho +10% EXP · Fortuna +5 sorte · Magnética +1 ímã · Hiden +8% recarga Ultimate (sem chakra) · **Incenso** +10% horda +5% ameaça +12% Ryu (**SE MANTÉM** — rodada 37). **White Flute = ITEM novo** (APROVADO rodada 37: horda maior + mais Ryu/leveling — a implementar).
 
 ## 11. Mundo e mapa — `worldScale.ts`
 
-`MAP_SIZE = 160` · raio jogável `WORLD_LIMIT = 76` · `ZONE_SECONDS = 600` · `ACTOR_SCALE 0,68` · `ATTACK_SCALE 0,7` (IMPLEMENTADO). **PROPOSTO (12/11):** mapa **+30%** + todos os spawns dentro da área alcançável (aguardando aprovação).
+`MAP_SIZE = 160` · raio jogável `WORLD_LIMIT = 76` · `ZONE_SECONDS = 600` · `ACTOR_SCALE 0,68` · `ATTACK_SCALE 0,7` (IMPLEMENTADO). **APROVADO (rodada 37):** mapa **abrir mais** (referência de proposta: +30% do raio) + todos os spawns dentro da área alcançável (a implementar).
 
 ## 12. Debug de balanceamento (F9) — `tuning.ts`
 
@@ -108,6 +108,8 @@ Painel com **41 multiplicadores** (Inimigos · Elites/Mega · Personagem · Ganh
 
 Teto de números simultâneos **300** (era 60; revisão 11/11 — o usuário pode deixar spammando) com pool de sprites + cache LRU de textura.
 
-## 14. O que ainda é PROPOSTO (fila — ver docs/13)
+## 14. APROVADO na rodada 37 (12/11) — fila de implementação (docs/13)
 
-Treinamento aleatório +0,6% · pílulas 9/13/15 · Isca Shinobi → vitamina · Caça-Níquel ×1,70 · pergaminhos no chão · mapa +30% · balanceamento de jogador inicial/monstros aos 6 min · HUD novo (abates/streak/tempos/glossário) · personagens novos (7 Kages + 17 Tier A).
+**Tudo abaixo foi AUTORIZADO pelo usuário na rodada 37** (12/11/2026) — implementar na ordem da fila docs/13:
+
+Treinamento aleatório +0,6% · pílulas 9/13/15 (buff de conta = Passivas Shinobi) · Isca Shinobi → vitamina · **Caça-Níquel da Tsunade** (combos 3-iguais + emboscada invertida + custo em escala por zona + arte) · renames **Células de Hashirama**/**Chakra de Hagoromo** (arte exclusiva) · **White Flute = ITEM** (Incenso mantido) · pergaminhos no chão · mapa maior + spawns alcançáveis · balanceamento de jogador inicial/monstros aos 6 min · HUD novo (tema Naruto · HP no pé do personagem · abates/streak · card de temporada · glossário · alfas com buffs) · **personagens novos: Kages + Hanzo + Mei Terumi + 17 Tier A + Tobi ×2 + Nagato + Yahiko=Pain** · folhas de caminhada frente/costas · arte dos menus · YOO MP3 no Jogar (corte 1 s) + sons de jutsu (anti-spam "terminou antes do próximo") · pool informativo (upgrades de itens/pílulas visíveis).

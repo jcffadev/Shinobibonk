@@ -888,3 +888,73 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 **(3) FASES A–F executadas:** (A) inventário de contextos (14 docs + 6 skills + AGENTS.md + CHANGELOG) + backup validado; (B) estrutura modular proposta = índice + só os domínios ausentes; (C) **3 documentos novos criados (aditivos, zero remoção):** `docs/19-INDICE-DO-CONHECIMENTO.md` (índice agregador: mapa de 19 domínios → doc + código, regras de manutenção, manifesto de migração, validação), `docs/20-SCALING-EREGULAS.md` (TODAS as fórmulas/valores lidos do código em 12/11: dificuldades, escala por tempo com tabela Genin, zonas, Final Swarm, atributos, GROWTH_ROLLS, roleta, pílulas, drops, mundo, F9) e `docs/21-ELASTAO-DE-HEROIS.md` (24 famílias + 32 versões + fila de novos com estados); (D) referências cruzadas + `AGENTS.md`/`docs/18` apontando o índice; (E) validação: git mostra apenas **aditivos** + atualizações de sync; nenhum código/asset alterado; nenhum contexto original apagado; todos os blocos novos com origem e estado; 2 domínios do prompt registrados como **NÃO APLICÁVEL** (QWEN.md/ComfyUI) no manifesto; (F) **skills atualizadas**: `contexto-e-decisao` (índice é o 2º passo da leitura + regra sem duplicar) e `documentar-projeto` (regra de manter docs/19-21 sincronizados + registrar inconsistência se falhar).
 
 **(4) Relatório final (padrão do prompt §13):** originais identificados ✓ (mapa em docs/19); backup localização+integridade ✓ (raiz do workspace, hash validado); estrutura modular ✓ (docs/19-21); manifesto ✓ (tabela em docs/19); não classificados ✓ (nenhum); divergências ✓ (nenhuma nova — as pendentes seguem em docs/13); verificações ✓ (contagens + hashes + git aditivo); regras de atualização ✓ (skills); limitações ✓ (QWEN/ComfyUI inaplicáveis; valores de balance são foto de 12/11 — docs/20 manda atualizar ao mudar). Estados: IMPLEMENTADO (docs/19-21, skills, backup), VALIDADO (backup), PROPOSTO (nada novo nesta rodada). GitHub: commit + push desta rodada.
+
+## Rodada 37 — 12/11/2026 (AUTORIZAÇÃO GERAL + novas specs de HUD, caça-níquel, itens, pílulas, personagens, sons e arte)
+
+### Pedido integral do usuário
+
+> "Pergunta: Consegue criar imagens, animações, modelos, folhas de animação usando referências e copia-las e implementar as particularidades para cada novo personagem?
+> Pergunta: Para eu te deixar trabalhando a noite toda e ir dormir, eu preciso te dar autorização completa, para não aparecer os pop-ups de autorização? Lembrando que não é para você fazer nada descontrutivo, destrutivo, rodar nada que altere windows/registro do windows, enfim... Eu já te enviei prompt's referente a isto...
+>
+> Todas as HUD's do jogo devem ser recriadas e baseadas no tema Naruto/Ninja/Japonês... para manter uma identidade visual/única e relacionada ao tema Naruto, você tem inspirações para isso.
+>
+> Eu já disse para você NÃO me enviar mensagens em inglês, sempre TODAS em português, eu quero saber o que você está fazendo, mas sempre enviar em português pt-br.
+>
+> O scale é influenciado pelos itens/eventos de dificuldade existentes no jogo! Também pelo tempo na RUN do jogo, ou seja quanto mais tempo vivo, mais monstros, mais dificuldade, totalmente progressivo, porém o personagem também terá chance de scalar, mas é um roguelite, o objetivo é ganhar level/atributos ter itens, para sobreviver o máximo possível, não existe run infinita, sempre os monstros vão evoluir, o desafio é sobreviver o máximo de tempo possível.
+>
+> O item que conhecemos no jogo referência como "Max Revive" deverá se chamar "Chakra de Hagoromo" e o outro que seria apenas "Revive" na referência, no nosso jogo deveria ser Células de Hashirama, ter arte/ícone dos itens exclusiva para ambos.
+>
+> Lembrando das regras que colocamos para os contextos segmentados e manter o contexto original atualizado, tudo se manterá atualizado, o que vai acontecer? Ao mexer em scale, ele vai ler o nosso arquivo segmentado e vai pesquisar com palavras chave no contexto total, caso não funcione, ele vai ler todo o contexto segmentado, todo o contexto total para entender TUDO que já foi feito relacionado ao scale e trabalhará em nova tratativa.
+>
+> Pergunta: Quando deu erro, ele conseguiu recuperar tudo que estava planejando/fazendo e seguir com segurança a configuração das orientações e prompt?
+>
+> O que seria o criar-arte-shinobibonk? Se for relacionado a ícones/personagens/hud visual, pode usar de referência, temos que manter a nossa identidade também.
+>
+> Respostas das perguntas que ficaram em aberto:
+> Barra de HP no pé do personagem que quero com o número para fácil visualização.
+> Caça Níquel deve ter: Emboscadas com armadilhas shinobi, papéis bomba, arma ninja utilizada no anime, explodiram ao redor do personagem matando os monstros ao redor do personagem, quando estiver em interação nele você não toma dano dos monstros, mas recebendo os itens e selecionando ao sair, os monstros já começam a "hitar".
+> Buffs/debuffs do caça níquel: Fará um caça níquel tendo que acertar na roleta 3 itens do mesmo, ficaram roletando ao acionado.
+> 3 Tsunades - Sorte da Tsunade - Dificuldade aumentada em 10% + 10% de monstros
+> 3 Jirayas - Item raro ou superior
+> 3 Hiruzen Sarutobi - 4 escolhas de itens aleatórios
+> 3 Hidan - Perde 5% da vida total + 5% dificuldade + 5% monstros
+> 3 Kakuzu - Bônus em dinheiro condicionado pela sorte + dificuldade do jogo
+>
+> A White Flute é um item no caso você colocou como pílua de Incenso, troque. E a pílula que da %Dificuldade, %Ryu, %experencia se mantem.
+>
+> As folhas direcionais não tem as folhas andando pra cima/baixo, só na diagonal, quero que você faça frente e costas, siga os modelos de criação do projeto não vá arruinar o trabalho até aqui...
+>
+> Sons: Você vai conseguir baixar o som dos vídeos do Youtube que eu te enviei? Se não conseguir tudo bem.
+> https://ytmp3.yt — Você pode usar esse site para fazer os downloads, tome cuidado, você precisa desviar das armadilhas do site. Ao colar o link dos sons, você será enviado para uma página diferente com os modelos, você só irá descer a página e achar o botão Download MP3, abaixo o nome do vídeo. Conforme enviado na referência (salvar a print fora do projeto)
+> [print do ytmp3.yt com a lista MP3 79.89 KB Original ... 64 Kbps e o botão verde "Download MP3" — arquivar FORA do projeto]
+> [áudio enviado: "the yoo sound of naruto [weeVe4Kpsek].mp3" — 86 KB — "Exemplo do som que eu baixei lá."]
+> Se possível começar o áudio após o tempo: 01segundo, preciso que corte ele pra mim e já integre ao jogo.
+>
+> Entendeu?
+>
+> As referencias do whatsapp eu criei uma pasta C:\Shinobibonk projeto - Copia\arquivo-pokebonk\fotos lategame — Pode consumir: Acredito que você consiga entender e interpretar tudo, inclusive como aparecer os buffs que as habilidades estão recebendo por itens/pílulas somados, esses efeitos tem que refletir dentro do jogo também!
+> Glossário
+> Atributos no estágio do game
+> Respectivos efeitos do que cada vitamina (jogo referencia) no nosso caso pilula esta fazendo
+> Mostar % de mega crítico após atingir crítico 100%, lembrando a regra do mega-crítico.
+> Alfas de apoio, são os ninjas que selamos... acho que deu pra entender, coloque-s mostrando os buffs, inclusive as nossas particularidades por combar ninjas de facção/aldeia/família.
+> Esses Hokages estão bons, mas pode criar também desde os primeiros Kages de cada vila até o Shippuden, pode pesquisar na NarutoWiki para encontrar e parametrizar suas particularidades/visual e fazer a criação.
+> Buff de conta são aqueles que desbloqueamos por Lamen, temos uma sessão para isso, as "Passivas Shinobi" tem que funcionar ao desbloquearmos no menu de Passivas Shinobi, no começo de jogo temos que receber os buffs.
+> Você criará também o Tobi, tem o Tobi da Akatsuki e a outra versão dele, pesquise em Naruto Wiki.
+> Claro que você vai criar o Nagato, tem fonte para você pesquisar sobre. O Yahiko é o PAIN, o Nagato é outro personagem, reveja.
+> Se possível também criar habilidades únicas para o Nagato, já que ele usa as barras de chakra lá, Yahiko/Pain também deve ter em seu kit, assim como os "Tensei". Fazer o Yahiko ter o kit com as barras e os "Tensei" as habilidades que ele mostra. Já o kit do Nagato, você fará com os Tensei + Invocação dos Pain's que ele tem, os caminhos de Pain.
+> Vai conseguir criar as artes dos Menus e aplicar?
+> Aprovo os Kages
+> Aprovo o Elenco Tier A
+> Ok pasta com áudio, já inclua este que enviei no "Jogar".
+> Pode colocar esse caça níquel, mas ele deve escalar cada vez mais, assim como o ryu dropado pela dificuldade do mapa/zonas."
+
+### Resposta e providências (rodada 37 — AUTORIZAÇÃO concedida; início da implementação)
+
+**(1) Perguntas respondidas:** (a) **Criar imagens/animações/modelos/folhas com referências e particularidades por personagem: SIM** — pela receita do projeto (skill `criar-arte-shinobibonk` + `movimentar-shinobi`), referenciando os 56 sprites já criados (identidade chibi 2.5D, paleta/proporção únicas) e usando a fonte canônica Naruto Wiki/Narutopedia para particularidades de cada personagem; (b) **Autorização total para a noite: SIM, já está concedida** (rodada 35) — trabalho restrito a `C:\Shinobibonk projeto - Copia`, nada destrutivo, nada em Windows/registro; dentro do escopo **não há pop-ups de autorização**; as únicas exceções seriam origem externa no navegador (ytmp3.yt) e escrita fora do workspace — e não preciso das duas (o YOO já chegou); (c) **Fluxo do contexto segmentado ao mexer em scale: EXATAMENTE como o usuário descreveu** — índice (`docs/19`) → doc do domínio (`docs/20`) → busca por palavra-chave no contexto total (`docs/14`/`docs/18`) → se não resolver, leitura integral dos segmentados + contexto total → nova tratativa → atualizar segmento + índice + registro (regras em `docs/19` + skill `contexto-e-decisao`); (d) **O erro anterior (docs/18): SIM, recuperado com segurança** — a edição falhou de forma **atômica** (nada foi aplicado), reli o arquivo, refiz corretamente, validei e publiquei (commit `3611f26`); nada se perdeu; (e) **`criar-arte-shinobibonk` = a skill de arte do projeto** (receita da pixel art chibi 2.5D, atlases, itens/pílulas, animação) — **SIM, será a referência** para ícones/personagens/HUD, mantendo a identidade; (f) **Baixar áudio do YouTube: vou tentar via ytmp3.yt (autorizado)**; se não conseguir, o usuário baixa e entrega a pasta (como fez com o YOO) e eu distribuo/integro — anti-spam: o próximo som só toca quando o anterior TERMINAR (não é fila);
+
+**(2) Aprovações do usuário (valem como decisão):** (a) **Kages APROVADOS** — incluindo "desde os primeiros Kages de cada vila até o Shippuden" (corrigir numeração canônica: A = 3º Raikage, Killer B = 4º Raikage — o plano 35 tinha 5º/6º errado; pesquisar na NarutoWiki para particularidades/visual); (b) **Elenco Tier A APROVADO**; (c) **YOO MP3 APROVADO para o botão "Jogar"** (corte a partir do 1º segundo); (d) **Caça-Níquel APROVADO** com **custo escalando cada vez mais, como o Ryu dropado pela dificuldade da zona**; (e) **HUDs recriadas no tema Naruto/Ninja/Japonês** (identidade visual única); (f) **folhas direcionais frente/costas** (andando pra cima = costas, pra baixo = frente) — seguindo o modelo de criação do projeto;
+
+**(3) Novas specs aprovadas (rodada 37):** (a) **Renomear itens de reviver** (única arte/ícone para cada): "Pergaminho de Ressurreição" (35%) → **Células de Hashirama**; "Rinne Tensei" (60%) → **Chakra de Hagoromo**; (b) **White Flute = ITEM novo** (atrai horda maior + mais Ryu/leveling), **não** é a Pílula de Incenso — e a **Pílula de Incenso MANTIDA** (é a pílula de %dificuldade/%Ryu/%horda); (c) **Teto de pílulas: padrão 9 · buff de conta 13 · buff de item 15** — "buff de conta" = **Passivas Shinobi** (comprada com Lamens no menu Passivas Shinobi) **deve aplicar o buff no começo da run**; (d) **Caça-Níquel da Tsunade**: 3 iguais na roleta — **3 Tsunades = "Sorte da Tsunade" (+10% dificuldade + 10% monstros)** · **3 Jirayas = item Raro ou superior** · **3 Hiruzen Sarutobi = 4 escolhas de itens aleatórios** · **3 Hidan = perde 5% do HP total + 5% dificuldade + 5% monstros** · **3 Kakuzu = bônus de Ryu condicionado por sorte + dificuldade**; **emboscada invertida**: armadilhas shinobi/papéis-bomba explodem ao redor do personagem **matando monstros ao redor** (jogador **seguro durante a interação**; ao sair, monstros voltam a acertar); (e) **Barra de HP no pé do personagem com número**; (f) **Glossário** no jogo (guia: atributos no estágio do game, efeito de cada pílula, **regra do mega-crítico** — mostrar % de mega crítico após atingir 100% de crítico); (g) **Alfas de apoio = ninjas selados** — mostrar no HUD com os **buffs que recebem** + **combinações por facção/aldeia/família**; (h) **Tobi ×2** (Akatsuki + a outra versão — NarutoWiki); **Nagato** (kit: Tensei + **Invocação dos Pain's** + caminhos de Pain) e **Yahiko = PAIN** (kit: **barras de chakra** + Tensei) — **correção do usuário: Yahiko é o Pain; Nagato é personagem separado** (o plano 35 tinha "Pain" como família única — revisar); (i) **treinamento esgotado = atributo aleatório +0,6%/nível** (decisão 12/11, substitui "somente Sorte"); (j) **scale progressivo**: influenciado por itens/eventos de dificuldade + **tempo de RUN** (quanto mais tempo vivo, mais monstros/dificuldade; roguelite: monstros sempre evoluem; não existe run infinita);
+
+**(4) Estado da execução (nesta sessão):** registro completo (docs/14/18/13/20/21) → implementação em fases: som YOO (MP3 real, corte 1 s) + anti-spam de jutsu → regressão da animação de ataque+caminhada → Caça-Níquel (renomear + 3 iguais + armadilha + custo escalado + arte) → itens (renomear reviver + White Flute + teto 9/13/15 + Isca Shinobi → pílula) → HUD tema Naruto (HP no pé com número, streak, abates, itens à esquerda, skills+pílulas à direita, glossário, alfas com buffs) → balance (jogador inicial mais fraco, monstros fortes aos 6 min, pergaminhos no chão, mapa maior + spawns alcançáveis) → personagens novos (Kages + Tier A + Tobi ×2 + Nagato + Yahiko, com kits únicos) → folhas frente/costas → arte de menus. **Kankuro segue RESOLVIDO (não tocar).**

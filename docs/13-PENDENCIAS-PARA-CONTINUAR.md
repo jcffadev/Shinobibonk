@@ -37,9 +37,9 @@ Este é o estado consolidado após os commits 11e0d18 e bee4bba. Substitui as li
 7. **Desempenho.** Medir 1.600 inimigos e Final Swarm com GPU real, em diferentes climas e com efeitos. Teto configurado do Final Swarm é 8.000; desempenho jogável ainda não está validado. Reduzir trabalho visual somente a partir de medidas.
 8. **Sonoplastia.** Selecionar sons com licença verificada, integrar e validar volume/frequência. O pacote sb-swishes-source.zip foi reprovado e continua fora do Git.
 
-## Lote do usuário · 12/11/2026 (rodada 35 — PROPOSTO, aguardando autorização)
+## Lote do usuário · 12/11/2026 (rodada 35 — **AUTORIZADO na rodada 37** · implementação em andamento)
 
-Mega-lote de ~28 itens (pedido integral + resposta em docs/14; resumo em docs/18 §2 e linha 35 de §4; evidências do código em `arquivo-pokebonk/CONTEXTO-COMPLETO.md` §9 — FORA do repositório). **Nenhum código alterado nesta rodada** — o usuário pediu o retorno do que consigo/não consigo **antes** de autorizar a implementação.
+Mega-lote de ~28 itens (pedido integral + resposta em docs/14; resumo em docs/18 §2 e linha 35 de §4; evidências do código em `arquivo-pokebonk/CONTEXTO-COMPLETO.md` §9 — FORA do repositório). **Nenhum código alterado nesta rodada** — o usuário pediu o retorno do que consigo/não consigo **antes** de autorizar a implementação. **Autorizado em 12/11 (rodada 37)** — ver a seção da rodada 37 abaixo.
 
 ### Fase 1 — Fundações e regressão (ordem sugerida)
 
@@ -47,7 +47,7 @@ Mega-lote de ~28 itens (pedido integral + resposta em docs/14; resumo em docs/18
 2. **Infra de som + arquivos do usuário**: (a) "YOOOO" no botão Jogar/Jogar-como-convidado — o **sintetizado já existe** (`playYooo`), integrar o **arquivo real** quando o usuário baixar (link: https://www.youtube.com/shorts/weeVe4Kpsek); (b) efeitos de jutsu: som por técnica quando existir arquivo, senão o **padrão** (link: https://www.youtube.com/watch?v=xPgMmsJfrgY; exemplo Kage Bunshin: https://www.youtube.com/watch?v=aEQIi0drDhY); (c) **anti-spam: o próximo som só toca quando o anterior TERMINAR — NÃO É FILA** (regra permanente em docs/18 §3). O agente **não consegue** baixar do YouTube nesta sessão; o usuário baixa e entrega a pasta (proposta: `assets/sons/` no projeto).
 3. **Caça-Níquel da Tsunade**: renomear a Roleta da Tsunade; arte com a Tsunade + caça-níquel, expressão **feliz/triste/nervosa** conforme a recompensa; custo por giro subindo **gradual e considerável** (proposta: crescimento ×1,35 → **×1,70 por giro**; validar no teste do usuário). O **desconto de custo JÁ EXISTE** (Dente de Ouro −8% · Carteira Gama-chan −6% · teto −40%).
 4. **Treinamento esgotado → atributo ALEATÓRIO +0,6%/nível** (NOVA decisão 12/11 — substitui "somente Sorte +0,8%" de 11/11; `grantTraining()` em `GameCanvas.tsx`). ⚠ O lote traz as duas frases; tratada a de 12/11 como válida — **confirmação pendente** com o usuário.
-5. **Pílulas 9 / 13 / 15**: teto **padrão 9** (hoje `PILL_MAX=10` + Cabaça +2 = 12), "buff de conta" → **13** (mecanismo de conta não existe — interpretação pendente), "buff de item" → **15**. **Isca Shinobi vira vitamina** (hoje é item raro `shinobi-bait` no catálogo). White Flute: **JÁ EXISTE** como Pílula de Incenso (+10% horda · +5% ameaça · +12% Ryu).
+5. **Pílulas 9 / 13 / 15**: teto **padrão 9** (hoje `PILL_MAX=10` + Cabaça +2 = 12), "buff de conta" → **13** (**resolvido na rodada 37: = Passivas Shinobi, desbloqueadas por Lamens no menu Passivas Shinobi — devem aplicar no INÍCIO da run**), "buff de item" → **15** (Cabaça +2 por cima). **Isca Shinobi vira vitamina** (hoje é item raro `shinobi-bait` no catálogo). White Flute: **APROVADO COMO ITEM NOVO na rodada 37** (horda maior + mais Ryu/leveling) — a **Pílula de Incenso SE MANTÉM** (+10% horda · +5% ameaça · +12% Ryu).
 6. **Pool com prévia informativa** dos upgrades que itens/pílulas dão nas habilidades (hoje há `PillStatPreview`/`affectedTechniquesText` na RunSheet — estender para os **cards do pool**; verificar vitaminas). Seleção por teclas 1–N **JÁ EXISTE**.
 
 ### Fase 2 — HUD e menus (padrão das 7 telas de referência arquivadas FORA do projeto)
@@ -62,7 +62,7 @@ Mega-lote de ~28 itens (pedido integral + resposta em docs/14; resumo em docs/18
 11. **Mapa maior + spawns alcançáveis** (proposta: **+30% do raio jogável**; todos os spawns dentro da área alcançável — hoje os monstros nascem em lugares onde o jogador não chega).
 12. **Pergaminhos no chão** no lugar das kunai/shurikens (hoje 60% ryu/20% kunai/20% shuriken em `scatterPickups`): pergaminho dá **Ryu por zona + sorte**.
 13. **Personagens novos** (obra NARUTO/Naruto Shippuden; liberdade de copiar os ataques; respeitar características únicas):
-    - **Kages ausentes até o Shippuden — conceito para APROVAÇÃO ANTES de criar (pedido do usuário):** Hiruzen Sarutobi (3º Hokage) · Killer B (6º Raikage) · A (5º Raikage) · Onoki (2º Tsuchikage) · Ao (2º Mizukage) · Rasa (3º Kazekage) · Naruto 7º Hokage.
+    - **Kages ausentes — APROVADOS na rodada 37**, incluindo os **primeiros Kages de cada vila até o Shippuden** (Hanzo 1º Tsuchikage · Mei Terumi 1ª Mizukage; 1º/2º Kazekage e 1º/2º Raikage sem nome canônico = fora) com pesquisa na **NarutoWiki**: Hiruzen Sarutobi (3º Hokage) · **Killer B (4º Raikage — correção de canon; a lista da 35 tinha 6º)** · **A (3º Raikage — correção; tinha 5º)** · Onoki (2º Tsuchikage) · Ao (2º Mizukage) · Rasa (3º Kazekage) · Naruto (7º Hokage). **Tobi ×2** (Akatsuki + outra versão), **Nagato** (separado do Pain) e **Yahiko = PAIN** entram na fila (rodada 37).
     - **Elenco clássico/Shippuden (Tier A, com evolução por era — Academia → Shippuden → 4ª Guerra quando houver histórico):** Choji · Kiba (+Akamaru) · Shino · Ino · Kurenai · Iruka · Sai · Yamato · Shisui · Obito · Hiashi · Hanabi · Kisame · Zabuza · Suigetsu · Mangetsu · Karin. (Nagato = nuance — Pain já existe; Ebisu, espadas menores e Kages sem nome = referência fraca, fora.)
 14. **Análise dos 6 vídeos de referência** (frames já extraídos em `frames-6-videos/`: v1×3 + v2–v6 em 30/60/90/115 s) → propor números de scale. O frame **v4** é a melhor leitura de late game recebida (Gengar Lv.1252, zona 3/3, 47 min, dano 1,7M–2,2M, streak ×57.868, 2,43M abates).
 
@@ -77,10 +77,12 @@ Mega-lote de ~28 itens (pedido integral + resposta em docs/14; resumo em docs/18
 
 ### Não consigo (limitações declaradas)
 
-- **Baixar áudio do YouTube** nesta sessão — o usuário baixa e entrega a pasta; eu distribuo/integro.
-- **Ver a foto do late game** que o usuário mencionou ("foto do whatsapp") — **não chegou**; o frame v4 dos vídeos é a melhor referência recebida; pedido de reenvio feito.
+- **Baixar áudio do YouTube** nesta sessão — o usuário baixa e entrega a pasta; eu distribuo/integro. **(Atualizado na rodada 37: o usuário já baixou o YOO MP3 e me enviou — integrar no Jogar com corte a partir do 1 s; `ytmp3.yt` foi autorizado para eu tentar os demais sons de jutsu.)**
+- **Ver a foto do late game** que o usuário mencionou ("foto do whatsapp") — **RESOLVIDO NA RODADA 37:** o usuário criou `arquivo-pokebonk/fotos lategame/` (referências WhatsApp, **consumíveis**, fora do projeto); o frame v4 dos vídeos continua como referência de números.
 
-### Perguntas em aberto (9)
+### Perguntas em aberto (9) — **resolvidas na rodada 37 (12/11)**
+
+**Respostas do usuário:** (1) foto do late game → criada a pasta `arquivo-pokebonk/fotos lategame/` (WhatsApp, **consumível**, fora do projeto); (2) buff de conta = **Passivas Shinobi** (Lamens; aplicam no **início da run**); (3) treinamento esgotado → **aleatório +0,6%** (mantido do plano); (4) **Kages APROVADOS** (+ primeiros Kages de cada vila, via NarutoWiki); (5) **Tier A APROVADO**; (6) pasta de áudio OK → **YOO MP3 já recebido do usuário** (integrar no Jogar, corte a partir do 1 s); (7) Caça-Níquel: custo **subindo gradual e considerável, como o Ryu por zona** + **emboscada invertida** (armadilhas/papéis bomba matam monstros ao redor do jogador; jogador seguro durante a interação) + **combos de 3 iguais** (Tsunade/Jiraiya/Hiruzen/Hidan/Kakuzu); (8) mapa: **abrir mais + spawns alcançáveis** (pedido explícito); (9) balance = **iteração com o teste do usuário**. Demais specs aprovadas: White Flute = **ITEM** (Incenso mantido); Isca Shinobi → vitamina; HP com números **no pé do personagem**; folhas de caminhada **frente (baixo) e costas (cima)**; HUDs no **tema Naruto/ninja/japonês**; glossário (atributos no estágio, efeito de cada pílula, **% de mega crítico após 100% de crítico**, alfas com buffs + combos de facção/aldeia/família); **Tobi ×2 · Nagato · Yahiko=PAIN**; **ytmp3.yt autorizado** para os demais sons.
 
 1. Reenviar a foto do late game?
 2. Pílulas 9/13/15: o que é o "buff de conta" (mecanismo)?
@@ -132,7 +134,47 @@ Lista colada pelo usuário em 11/11/2026. Estado por item:
 - Backup de segurança: `backup-ShinobiBonk-2026-11-12.zip` na **raiz do workspace** (fora da pasta do projeto) — usar para restaurar se necessário.
 - Novos documentos de contexto: `docs/19` (índice + manifesto), `docs/20` (fórmulas/valores), `docs/21` (elenco + fila de personagens).
 - Skills `contexto-e-decisao`/`documentar-projeto` atualizadas para o fluxo de índice + docs de domínio.
-- A fila da **rodada 35** abaixo segue **aguardando autorização do usuário** (nenhum código de jogo foi alterado na 35 nem na 36).
+- A fila da **rodada 35** foi **AUTORIZADA na rodada 37** (12/11/2026) — implementação em andamento (ver seção da rodada 37 abaixo).
+
+## Rodada 37 · 12/11/2026 (autorização da rodada 35 + novos specs — IMPLEMENTAÇÃO INICIADA)
+
+O usuário **autorizou** a fila inteira da rodada 35 ("Aprovo os Kages · Aprovo o Elenco Tier A · Ok pasta com áudio, já inclua este que enviei no 'Jogar' · Pode colocar esse caça níquel") e respondeu às 9 perguntas em aberto (docs/18 §4, linha 37).
+
+### Specs aprovadas (novas, 12/11)
+
+1. **Kages — APROVADOS**, incluindo **primeiros Kages de cada vila até o Shippuden** (pesquisa na **NarutoWiki** para stats/visuais): **Hanzo (1º Tsuchikage)** e **Mei Terumi (1ª Mizukage)** entram na fila; 1º/2º Kazekage e 1º/2º Raikage sem nome canônico = fora. **Correção de canon: A = 3º Raikage · Killer B = 4º Raikage** (a lista da 35 tinha 5º/6º).
+2. **Elenco Tier A — APROVADO** (17): Choji · Kiba(+Akamaru) · Shino · Ino · Kurenai · Iruka · Sai · Yamato · Shisui · Obito · Hiashi · Hanabi · Kisame · Zabuza · Suigetsu · Mangetsu · Karin — cada um com **evolução por era** quando houver histórico (Academia → Shippuden → 4ª Guerra).
+3. **Tobi ×2 — APROVADO**: a versão da Akatsuki + a outra versão (pesquisar na NarutoWiki).
+4. **Nagato — APROVADO, personagem SEPARADO do Pain** (correção do usuário: "O Yahiko é o PAIN, o Nagato é outro personagem"): kit com **Tensei + Invocação dos Pain's (os caminhos) + caminhos de Pain**. O **Pain** já no roster = corpo de **Yahiko** → kit com **barras de chakra + Tensei** (as habilidades que ele mostra na obra).
+5. **Caça-Níquel da Tsunade — specs APROVADAS:**
+   - **Combos de 3 iguais** na roleta: **3 Tsunades = "Sorte da Tsunade"** (dificuldade +10% + monstros +10%) · **3 Jirayas = item raro ou superior** · **3 Hiruzens = 4 escolhas de itens aleatórios** · **3 Hidan = −5% do HP total + 5% dificuldade + 5% monstros** · **3 Kakuzus = bônus de Ryu condicionado à sorte + dificuldade do jogo**.
+   - **Emboscada invertida** (usuário: "armadilhas shinobi, papéis bomba... explodiram ao redor do personagem matando os monstros ao redor; quando estiver em interação você não toma dano dos monstros, mas selecionando ao sair, os monstros já começam a hitar"): durante a interação o jogador é **seguro** (a horda não atinge); ao sair, armadilhas/papéis bomba explodem **ao redor do jogador matando os monstros próximos**; a horda retoma o ataque.
+   - **Custo por giro subindo gradual e considerável, escalando como o Ryu por zona** (usuário: "ele deve escalar cada vez mais, assim como o ryu dropado pela dificuldade do mapa/zonas").
+   - Renomear "Roleta da Tsunade" → **"Caça-Níquel da Tsunade"** (UI, toasts, textos).
+   - **Arte da Tsunade** feliz/triste/nervosa conforme a recompensa (rodada 35).
+6. **Itens/pílulas — APROVADO:**
+   - **Células de Hashirama** (era "Pergaminho de Ressurreição", revive 35%) e **Chakra de Hagoromo** (era "Rinne Tensei", revive 60%) — **arte/ícone exclusivos** para cada um.
+   - **White Flute = ITEM novo** (invoca horda maior + mais Ryu/leveling) — **a Pílula de Incenso SE MANTÉM** (%dificuldade/%Ryu/%horda).
+   - **Teto de pílulas: base 9 · 13 com buff de conta · 15 com buff de item** — "buff de conta" = **Passivas Shinobi** (desbloqueadas por Lamens no menu Passivas Shinobi; **devem aplicar no início da run**); "buff de item" = Cabaça (+2 por cima). Hoje: `PILL_MAX=10` + Cabaça +2 = 12.
+   - **Isca Shinobi → vitamina** (não item).
+7. **HUD/tema — APROVADO:** **barra de HP com números no PÉ DO PERSONAGEM** (fácil visualização); **todas as HUDs recriadas no tema Naruto/ninja/japonês** (identidade visual própria); **glossário** (atributos no estágio, efeito de cada pílula, **% de mega crítico após o crítico 100%** com a regra do mega-crítico, **alfas/ajudantes com seus buffs** + combos de facção/aldeia/família); layout itens à esquerda / habilidades+pílulas à direita; **streak em tempo real**; **abates totais**; **card de temporada** (ranking/colocação).
+8. **Folhas de caminhada — frente e costas** (usuário: "não tem as folhas andando pra cima/baixo, só na diagonal, quero que você faça frente e costas, siga os modelos de criação do projeto, não vá arruinar o trabalho até aqui"): andar para **cima = costas** · andar para **baixo = frente**.
+9. **Áudio — APROVADO:** **YOO MP3** (baixado pelo usuário, 86 KB) no botão **Jogar/Jogar-como-convidado**, **corte a partir do 1 s** + integração; **ytmp3.yt autorizado** para os demais sons de jutsu (desviar das armadilhas do site: rolar até o "Download MP3" abaixo do nome do vídeo; se não conseguir, o usuário baixa e entrega a pasta); **anti-spam mantido**: o próximo som de jutsu só toca quando o anterior **termina** (não é fila); quando não houver som específico do jutsu, usar o **padrão** (arquivo a ser fornecido pelo usuário).
+10. **Late game (espelho)**: fotos do WhatsApp em `arquivo-pokebonk/fotos lategame/` (fora do projeto, **consumíveis**) — aplicar o modelo no nosso (buffs somados visíveis, card de temporada, streak/abates, itens/ícones à esquerda, habilidades/pílulas à direita).
+
+### Fases de implementação (ordem aprovada)
+
+1. **Áudio YOO + gate anti-spam de jutsu** (MP3 → `public/assets/audio/`; `sfx.ts`).
+2. **Animação de ataque + caminhada** (regressão da rodada 33 — `playerMotion.ts`).
+3. **Caça-Níquel da Tsunade** (renome + combos + emboscada invertida + custo em escala + arte).
+4. **Itens/pílulas** (renames + ícones · White Flute · teto 9/13/15 · Isca → vitamina · pool informativo).
+5. **HUD** (tema Naruto · HP no pé · streak/abates · card de temporada · glossário · alfas com buffs).
+6. **Balance** (início mais fraco/gradual · monstros fortes aos 6 min · treinamento +0,6% aleatório · pergaminhos no chão · mapa maior + spawns alcançáveis).
+7. **Personagens novos** (Kages + primeiros de cada vila + Tier A + Tobi ×2 + Nagato + Yahiko/Pain — kits fiéis à obra, evolução por era).
+8. **Folhas de caminhada frente/costas** (novas versões; padrão do projeto).
+9. **Arte dos menus** (identidade Naruto).
+
+Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-runtime` quando gameplay/HUD) → documentar (docs/14/18/20/21 + CHANGELOG) → commit + push.
 
 ## Retomar
 
