@@ -1105,3 +1105,50 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 - **Decisões pendentes de aprovação do usuário:** (1) Kuri como companheira permanente do Kankuro; (2) Kuroari como visual da técnica (canon: ele usa a marionete do Sasori na 4ª Guerra); (3) adiantar o herói Sasori (Onda 2) ou manter a ordem K→1→2; (4) aceitar arte Pillow interina com opção de trocar por geração IA (mesmos nomes de arquivo = swap trivial).
 - **Limitação declarada:** sem gerador de imagem nesta sessão — arte programática Pillow, qualidade abaixo das folhas IA; o usuário pode gerar pelas suas ferramentas e trocar os 4 PNGs (mesmos nomes) sem tocar no código.
 
+## Rodada 42 · 12/11/2026 — Trilha sonora do jogo (OST de Naruto, 15 faixas)
+
+**Pedido do usuário:** enviou **15 MP3s da OST de Naruto** (áudios originais que ele mesmo baixou e entregou para o jogo — não é material do jogo de referência) com a regra de uso de cada faixa, na íntegra:
+
+| Música | Regra do usuário (literal) | Uso no jogo |
+|---|---|---|
+| Grief And Sorrow | "Ao morrer e perder a run, tocar essa música." | **DEFEAT** (fixa) |
+| The Raising Fighting Spirit | "Durante as runs desde o inicio da run - ordem aleatória **ou ao iniciar luta contra as bijuus**" | **RUN** (pool) **+** trilha da luta bijū |
+| Konohamaru's Theme | "Trilha Durante os menu's/fora da run ordem aleatória" | **MENU** (pool) |
+| Heavy Violence | "Durante as runs desde o inicio da run - ordem aleatória" | **RUN** (pool) |
+| I'll Do It Right | "Música ao acessar o jogo sempre que abrir/navegador/.exe/.patch/ - primeira música do jogo sempre" | **BOOT** (fixa) |
+| Ultimate Secrets | "Durante as runs desde o inicio da run - ordem aleatória" | **RUN** (pool) |
+| Afternoon of Konoha | "Trilha Durante os menu's/fora da run ordem aleatória" | **MENU** (pool) |
+| Loneliness | "Trilha Durante os menu's/fora da run ordem aleatória" | **MENU** (pool) |
+| Sarutobi | "Durante as runs desde o inicio da run - ordem aleatória" | **RUN** (pool) |
+| Swaying Necklace | "Trilha Durante os menu's/fora da run ordem aleatória" | **MENU** (pool) |
+| Hinata vs Neji | "Quando jogar de 'Hinata/Neji' iniciar a run com essa música, **apenas essa condição**" | **HERO override** (famílias hinata/neji) |
+| Sasuke's Theme | "Quando jogar com **alguma variante de Sasuke** iniciar a run com essa musica, **apenas essa condição**" | **HERO override** (família sasuke) |
+| Bunta | "Durante as runs desde o inicio da run - ordem aleatória" | **RUN** (pool) |
+| Beautiful Green Wild Beast | "Durante as runs desde o inicio da run - ordem aleatória" | **RUN** (pool) |
+| Dance | "Durante as runs desde o inicio da run - ordem aleatória" | **RUN** (pool) |
+
+**Contagem:** BOOT=1 · DEFEAT=1 · MENU=4 · RUN=7 (inclui Raising) · HERO=2 (Hinata/Neji · Sasuke).
+
+### O que foi feito
+
+1. **`public/assets/music/`** — 15 MP3s copiados do scratchpad com nomes limpos (`grief-and-sorrow.mp3`, `raising-fighting-spirit.mp3`, `konohamarus-theme.mp3`, `heavy-violence.mp3`, `ill-do-it-right.mp3`, `ultimate-secrets.mp3`, `afternoon-of-konoha.mp3`, `loneliness.mp3`, `sarutobi.mp3`, `swaying-necklace.mp3`, `hinata-vs-neji.mp3`, `sasukes-theme.mp3`, `bunta.mp3`, `beautiful-green-wild-beast.mp3`, `dance.mp3`). Seguem no build (`dist/assets/music/`).
+2. **`src/audio/music.ts` (novo, ~190 linhas)** — manager singleton com máquina de estados `idle→boot→menu/run/bijuu/defeat`:
+   - **Uma faixa por vez, SEM FILA** (mesma filosofia do anti-spam de som de jutsu da rodada 37): ao terminar, sorteia a próxima do pool atual **sem repetir a anterior**.
+   - **Overrides por família** no início da run: `hinata`/`neji` → `hinata-vs-neji` · `sasuke` → `sasukes-theme` (`familyOf(id)` cobre todas as versões — "alguma variante de Sasuke").
+   - **Bijū:** `playBijuu()` chama `raising-fighting-spirit` (só durante a run); ao terminar a faixa volta ao pool RUN.
+   - **Derrota:** `grief-and-sorrow` em loop enquanto o resumo da run está aberto.
+   - **Robustez no padrão `playYooo`** (sfx.ts): `play()` em promise com `catch` silencioso; autoplay bloqueado → pendência liberada na **primeira interação** (pointerdown/keydown, captura) — o clique nos botões Jogar/Jogar-convidado (que já chama `playYooo()`) é o gesto que destrava; **nunca** `unhandledrejection` (o verify-runtime captura `pageerror`).
+   - **Volume ao vivo:** `settings.volume × settings.musicVolume`; evento `shinobi-settings` + `visibilitychange` atualizam a faixa em reprodução; "Silenciar em segundo plano" também silencia música.
+   - Fade-in ~0,9 s por faixa (sem crossfade).
+3. **Integração:**
+   - `src/main.tsx`: boot no mount (efeito com `musicBooted` ref — primeira renderização toca `startBoot()`; nas trocas de página fora do jogo, `playMenu()` **idempotente**); `startRun(familyOf(hero.id))` em `beginMission` **e** no botão "continuar missão" (que inicia run sem passar por `beginMission`); efeito `runEnded`: `world.defeated → playDefeat()` · `world.victory → playMenu()`.
+   - `src/scene/GameCanvas.tsx`: `playBijuu()` dentro de `spawnBijuu` (cobre arena, retomada de run com arena e debug — ponto único).
+   - `src/game/settings.ts`: `musicVolume` no type (`GameSettings`) + default **0,7** — retrocompatível (`load()` espalha `DEFAULT_SETTINGS` primeiro; save antigo sem a chave recebe o default).
+   - `src/ui/SettingsScreen.tsx`: card **"Música"** (slider 0–100%) no lugar do antigo "O jogo ainda não tem trilha sonora · em breve" + inclusão no "↺ Restaurar" da categoria Som.
+
+### Estado desta rodada
+
+- **IMPLEMENTADO + VALIDADO** (evidências no CHANGELOG e no commit): `tsc -b` limpo · `vite build` OK (15 MP3s no `dist/assets/music/`) · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 95) · `verify-motion-atlases.mjs` (56 versões/560 estados/0 erros) · `verify-runtime.mjs` (Edge headless) **PASSOU** — 58 checks · 0 erros JS · 0 assets 404 · **probe dedicado da máquina de estados (Playwright + Edge headless com autoplay liberado): 5/5 PASS** — (1) boot `ill-do-it-right` ao abrir · (2) pool de menu após o boot · (3) run com **Sasuke Genin** inicia em `sasukes-theme` (override validado) · (4) desistência toca `grief-and-sorrow` · (5) zero pageerror/404.
+- **Decisões pendentes de aprovação do usuário:** (1) Raising Fighting Spirit = pool RUN **e** trilha da luta bijū (leitura do "ou"); (2) Hinata/Neji na **mesma** faixa (regra do usuário num único MP3); (3) após a luta bijū terminar, volta ao pool RUN; (4) **vitória** volta ao pool de MENUS (a faixa de derrota é exclusiva de perder a run); (5) `musicVolume` default **0,7**; (6) sem crossfade (só fade-in).
+- **Nota:** as 4 pendências da rodada 41 (Kuri · Kuroari · adiantar Sasori · arte Pillow) continuam em aberto.
+

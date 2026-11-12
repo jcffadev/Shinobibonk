@@ -27,6 +27,8 @@ import { BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
 import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE } from '../game/worldScale';
 import { playSfx, playTechniqueSound } from '../audio/sfx';
+// Rodada 42 — trilha sonora: "The Raising Fighting Spirit" ao iniciar a luta contra a bijū (também está no pool de run).
+import { playBijuu } from '../audio/music';
 import { choiceCount, choiceUses, weaponPrice, jiraiyaRolls, prioritySlots, PRIORITY_WEIGHT } from '../game/preparation';
 import { merchantPrice, merchantRerollPrice, itemSalePrice } from '../game/itemTrade';
 import { ITEM_BY_NAME, rollItems, type Item, type Rarity, type StatKey } from '../game/catalog';
@@ -968,7 +970,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const threat=tuneThreat(difficultyAt(mission,elapsed,zoneDifficulty*(1+.33*plansUsed),arrivalOvertime),tune());
       const maxHp=saved?.maxHp??Math.max(4600,Math.round(guardianVitality(threat.hp,elapsed,ZONE_SECONDS,arrivalOvertime,3)*2.4));
       const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1,defense:guardianDefense(elapsed,true),uid:++megaUid};
-      enemyList.push(beast);bossCombat.attach(beast,maxHp,true);return beast;
+      enemyList.push(beast);bossCombat.attach(beast,maxHp,true);playBijuu();return beast;
     }
     function enterPortal(){
       if(!portal)return;

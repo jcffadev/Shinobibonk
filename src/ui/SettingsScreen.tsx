@@ -58,7 +58,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
   const restore = () => {
     const d = DEFAULT_SETTINGS;
     const by: Record<Category, Partial<GameSettings>> = {
-      som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
+      som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, musicVolume: d.musicVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
       graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
       tela: { resolution: d.resolution, renderer: d.renderer },
       controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, autoUltimate: d.autoUltimate, sealAnimation: d.sealAnimation },
@@ -80,7 +80,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
           <Card title="Efeitos" hint="Golpes, coleta, Ultimate"><Slider value={settings.sfxVolume} min={0} max={1} step={.05} format={pct} onChange={(v) => set({ sfxVolume: v })} /></Card>
           <Card title="Vozes" hint="Gritos dos shinobis (ex.: Yoooo do Guy)"><Slider value={settings.voiceVolume} min={0} max={1} step={.05} format={pct} onChange={(v) => set({ voiceVolume: v })} /></Card>
           <Card title="Idioma das vozes" hint="Usa as vozes instaladas no dispositivo"><select value={settings.voiceLanguage} onChange={e=>set({voiceLanguage:e.target.value==='ja'?'ja':'pt'})}><option value="pt">Português</option><option value="ja">Japonês</option></select></Card>
-          <Card title="Música" hint="O jogo ainda não tem trilha sonora · em breve" />
+          <Card title="Música" hint="Trilha sonora: menus, run, luta da bijū e derrota (OST de Naruto)"><Slider value={settings.musicVolume} min={0} max={1} step={.05} format={pct} onChange={(v) => set({ musicVolume: v })} /></Card>
           <Card title="Silenciar em segundo plano" hint="Sem som quando a aba não está visível"><Toggle value={settings.muteInBackground} onChange={(v) => set({ muteInBackground: v })} /></Card>
         </>}
         {category === 'graficos' && <>

@@ -19,7 +19,7 @@ export type GameSettings = {
   /** Card/animação de captura (ritual de selamento). Desligado: sela direto com um aviso. */
   sealAnimation: boolean;
   // Som
-  volume: number; sfxVolume: number; voiceVolume: number; voiceLanguage: 'pt' | 'ja'; muteInBackground: boolean;
+  volume: number; sfxVolume: number; voiceVolume: number; musicVolume: number; voiceLanguage: 'pt' | 'ja'; muteInBackground: boolean;
   // Gráficos
   quality: Quality; fpsLimit: number; vsync: boolean; gpu: GpuChoice; hideMyAttacks: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
   // Tela
@@ -35,7 +35,7 @@ export type GameSettings = {
 };
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
-  volume: .7, sfxVolume: 1, voiceVolume: .8, voiceLanguage: 'pt', muteInBackground: true,
+  volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: .7, voiceLanguage: 'pt', muteInBackground: true,
   quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
   resolution: 'auto', renderer: 'directx',
   mouseSensitivity: 1, invertY: false, cameraDistance: 19, autoUltimate: false,

@@ -232,6 +232,19 @@ Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-ru
 
 **Pendências desta rodada:** (a) aprovação do usuário dos 4 pontos do “Estado desta rodada” em docs/14 (Kuri, Kuroari, adiantar Sasori, arte Pillow); (b) conferência visual das 4 folhas pelo usuário (ou geração IA e swap dos PNGs).
 
+## Rodada 42 · 12/11/2026 (trilha sonora do jogo — OST de Naruto, 15 faixas)
+
+**Status (evidências no CHANGELOG):**
+
+1. **15 MP3s no projeto** — IMPLEMENTADO: `public/assets/music/` com nomes limpos (copiados do scratchpad — **áudios originais que o usuário baixou e entregou para o jogo**, não material do jogo de referência): `ill-do-it-right` (BOOT) · `grief-and-sorrow` (DEFEAT) · `konohamarus-theme`/`afternoon-of-konoha`/`loneliness`/`swaying-necklace` (MENU) · `raising-fighting-spirit`/`heavy-violence`/`ultimate-secrets`/`sarutobi`/`bunta`/`beautiful-green-wild-beast`/`dance` (RUN) · `hinata-vs-neji`/`sasukes-theme` (overrides por família).
+2. **`src/audio/music.ts` (novo)** — IMPLEMENTADO: manager singleton com máquina de estados `idle→boot→menu/run/bijuu/defeat`; **uma faixa por vez, sem fila** (ao terminar, sorteia a próxima do pool **sem repetir a anterior**); `playMenu()` idempotente (navegar no hub não troca a faixa no meio); retry de autoplay na primeira interação (padrão `playYooo` do `sfx.ts`, catch silencioso — zero `unhandledrejection`); fade-in ~0,9 s via rAF; volume = `settings.volume × settings.musicVolume` (ao vivo) + mudo em segundo plano.
+3. **Configurações** — IMPLEMENTADO: `musicVolume` (default **0,7**, retrocompatível — `load()` espalha os defaults) em `settings.ts` + card/slider “Música” na tela de configurações + “↺ Restaurar” da categoria som.
+4. **Gatilhos** — IMPLEMENTADO: boot na 1ª renderização (`main.tsx`) · pool de MENUS nas trocas de página fora do jogo · `startRun(familyOf(hero.id))` em `beginMission` **e** no botão “continuar missão” (override: família Hinata/Neji → `hinata-vs-neji`; qualquer Sasuke → `sasukes-theme`) · `playBijuu()` no `spawnBijuu` (`GameCanvas.tsx` — ponto único: arena, retomada de run com arena, debug) · fim de run via efeito `runEnded` (uma vez por run): `world.defeated → playDefeat()` (loop) · `world.victory → playMenu()`.
+
+**Validações (todas passaram):** `tsc -b` limpo · `vite build` OK (15 MP3s no `dist`) · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 95 — sem regressão) · `verify-motion-atlases.mjs` (56 versões · 560 estados · 0 erros) · `verify-runtime.mjs` (Edge headless — 58 checks · 0 erros JS · 0 assets 404) · **probe dedicado da trilha** (Playwright + Edge com autoplay liberado): **5/5 PASS** (boot `ill-do-it-right` → pool de menu → run com **Sasuke Genin** inicia em `sasukes-theme` → evento de desistência → `grief-and-sorrow` → zero pageerror/404).
+
+**Pendências desta rodada:** (a) **aprovação do usuário das 6 decisões de interpretação** (registradas em docs/14 e CHANGELOG): 1. **Raising Fighting Spirit** = pool RUN **e** trilha da luta bijū; 2. **Hinata e Neji na mesma** faixa (`hinata-vs-neji`); 3. após a luta bijū terminar, volta ao **pool RUN** aleatório; 4. **vitória** volta ao pool de **MENUS** (a faixa de derrota é exclusiva de perder a run); 5. `musicVolume` default **0,7**; 6. **sem crossfade** (só fade-in ~0,9 s); (b) as **4 pendências da rodada 41 seguem em aberto** (Kuri · Kuroari · adiantar o herói Sasori · arte Pillow + conferência visual das folhas).
+
 ## Retomar
 
 1. Ler AGENTS.md, **docs/19 (índice do conhecimento)**, README, docs/00, docs/12 e esta fila. Conferir git status e remoto antes de editar.

@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Rodada 42 — Trilha sonora do jogo (OST de Naruto, 15 faixas do usuário) · 12/11/2026
+
+- **IMPLEMENTADO (pedido do usuário, 12/11/2026 — 15 MP3s enviados com regras de uso):** sistema completo de música em `src/audio/music.ts` (novo) + 15 faixas em `public/assets/music/` (nomes limpos, copiadas do scratchpad — **são áudios originais entregues pelo usuário para o jogo**, não material do jogo de referência):
+  - **BOOT** (abrir o jogo, navegador/.exe/.patch → sempre a mesma): `ill-do-it-right.mp3` ("I'll Do It Right"); ao terminar → pool de MENUS.
+  - **MENUS** (fora da run, ordem aleatória): `konohamarus-theme` · `afternoon-of-konoha` · `loneliness` · `swaying-necklace`.
+  - **RUN** (desde o início da run, ordem aleatória): `raising-fighting-spirit` · `heavy-violence` · `ultimate-secrets` · `sarutobi` · `bunta` · `beautiful-green-wild-beast` · `dance`.
+  - **BIJŪ** (luta contra a bijū, gatilho em `spawnBijuu` do `GameCanvas.tsx`): `raising-fighting-spirit` — **também** está no pool de RUN (regra do usuário "ordem aleatória **ou** ao iniciar luta contra as bijuus").
+  - **DEFEAT** (morrer/perder a run): `grief-and-sorrow` — toca em loop enquanto o resumo da run está aberto.
+  - **OVERRIDES POR FAMÍLIA** (início de run, `familyOf(id)` cobre todas as versões): Hinata e Neji → `hinata-vs-neji`; qualquer Sasuke → `sasukes-theme` (regra "apenas essa condição").
+  - **Máquina de estados** (idle→boot→menu/run/bijuu/defeat): UMA faixa por vez, **sem fila** (ao terminar, sorteia a próxima do pool sem repetir a anterior); `playMenu()` idempotente (navegar no hub não troca a faixa no meio); fade-in ~0,9 s; volume = `settings.volume × settings.musicVolume`; "Silenciar em segundo plano" também silencia a música; autoplay bloqueado → pendência liberada na primeira interação (pointerdown/keydown, coincide com o clique "Jogar" que já chama `playYooo()`); `play()` sempre em promise com catch silencioso (mesma robustez do `playYooo` — nunca quebra o jogo).
+  - **Integração:** `src/main.tsx` (boot no mount + pool de menus nas trocas de página + `startRun(familyOf(...))` em `beginMission` e no botão "continuar missão" + `playDefeat()`/`playMenu()` no fim da run via efeito `runEnded`) · `src/scene/GameCanvas.tsx` (`playBijuu()` em `spawnBijuu`) · `src/game/settings.ts` (`musicVolume` no type + default **0,7** — retrocompatível: `load()` espalha os defaults primeiro) · `src/ui/SettingsScreen.tsx` (slider **"Música"** no lugar do card "em breve" + restauração de padrão).
+  - **Decisões desta rodada (registradas, aguardam validação do usuário):** (1) Raising Fighting Spirit = pool RUN **e** trilha da luta bijū; (2) Hinata/Neji compartilham a mesma faixa (regra do usuário num único MP3); (3) após a luta bijū terminar, volta ao pool RUN; (4) **vitória** volta ao pool de MENUS (a faixa de derrota é só para perder a run); (5) `musicVolume` default 0,7; (6) sem crossfade (só fade-in).
+- **Arquivos alterados/criados:** `src/audio/music.ts` (novo) · `public/assets/music/` (15 MP3s) · `src/game/settings.ts` · `src/ui/SettingsScreen.tsx` · `src/main.tsx` · `src/scene/GameCanvas.tsx` · `docs/13` · `docs/14` · `docs/18` · `CHANGELOG.md`.
+- **TESTADO:** `tsc -b` limpo · `vite build` OK (15 MP3s presentes no `dist/assets/music/`) · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 95) · `verify-motion-atlases.mjs` (56/560/0) · `verify-runtime.mjs` (Edge headless) **PASSOU** — 58 checks · 0 erros JS · 0 assets 404 · **probe dedicado da máquina de estados da música (Playwright + Edge, autoplay liberado): 5/5 PASS** — boot `ill-do-it-right` → pool de menu → run com família Sasuke toca `sasukes-theme` (override validado) → desistência toca `grief-and-sorrow` → zero pageerror/404.
+- **PENDENTE (aprovação do usuário):** as 6 decisões acima + o volume/pad de 0,7 do slider "Música".
+
 ## Rodada 41 — Marionetes únicas do Kankuro e do Sasori (Kuri companheira + entidade Kuroari) · 12/11/2026
 
 - **IMPLEMENTADO (pedido do usuário: “Para Kankuro e Sasori, fazer criações de suas marionetes unicas, utilizar os arquivos de criação/arte/movimentação/assets/arte 2.5D para criar”):**
