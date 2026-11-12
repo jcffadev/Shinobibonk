@@ -41,6 +41,9 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 ## Ajudantes, inimigos e prévias
 
 - Ligue o controlador de movimento também ao suporte selado, aos clones e à prévia de técnicas. Um sprite que muda de posição deve alternar quadros de caminhada/corrida. Teste a mudança de forma e a execução da técnica.
+- **Follow dos aliados (rodada 46) — regra permanente:** o acompanhamento dos Ninjas Selados (e da Kuri) é **amortecido**: `posicao.lerp(slot, 1 − e^(−dt·R))` com **R = 8** (R = 16 no dash do jogador) — **nunca** stop-and-go binário (`gap > 0,25` + velocidade cheia parava seco e saía “correndo”, alternando idle↔andar a ~10 Hz: a “caminhada bugada”). Band de assentamento `gap > 0,18`; snap de segurança `gap > 12` (recrutamento) preservado.
+- **Orientação dos aliados (rodada 46):** use o **mesmo dead zone do jogador** (`backwardView = dir.dot(v1) > 0,18` · `leftward = dir.dot(v2) < −0,18`) — sem dead zone, a fileira da folha (frente↔costas) flippa a cada frame ao andar de lado para a tela.
+- Aliados e Kuri **compartilham** o controlador `playerMotion` (suavizações de escala/passa da rodada 45 valem para eles também); o ataque deles vem de `castTechnique(…, motion)` — não toque na cadência (`allyTimer`/`allyInterval`) ao mexer no follow.
 - As ações com arte própria têm prioridade. Para as formas antigas ainda sem folha, registre o fallback e mantenha a revisão na fila. Em lote, selecione quadros e espelhamento por UV para manter o instanciamento da horda.
 - Valide Tab em movimento, pulo parado e andando, dash em diagonal, perda de foco, F9 e retorno de uma escolha com o ponteiro capturado.
 

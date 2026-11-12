@@ -28,7 +28,7 @@
 | **Mapas e eventos** (4 mapas, zonas, clima, construções) | `docs/01` · [20](20-SCALING-E-REGULAS.md) §11 | `maps.ts` · `worldScale.ts` · `terrainArt.ts` |
 | **Selamento e suportes** (ajudantes, sinergias, altares) | `docs/03` | `allies.ts` · `synergy.ts` |
 | **Arte e spritesheets** (atlas, pack, identidade chibi 2.5D) | skill `criar-arte-shinobibonk` · `docs/arte-atlas-2026-11-07.json` | `directionalArt.ts` · `inventoryArt.ts` · `assets/` |
-| **Animações e movimento** (folhas, walk/action; fluidez da caminhada + proporção ao atacar — rodada 45) | skill `movimentar-shinobi` | `src/scene/playerMotion.ts` (propFactor suavizado `propCur` · passada `strideShown` suavizada · `stepTime` contínuo) |
+| **Animações e movimento** (folhas, walk/action; fluidez da caminhada + proporção ao atacar — rodada 45; **follow amortecido dos aliados/Ninjas Selados + dead zone de orientação — rodada 46**) | skill `movimentar-shinobi` · `docs/14` (rodadas 38/39/45/46) | `src/scene/playerMotion.ts` (controlador compartilhado: `propCur` · `strideShown` · `stepTime`) · `src/scene/GameCanvas.tsx` (loop de aliados + Kuri, ~linhas 1249–1285) |
 | **HUD, ficha, ranking** | `docs/02` | `src/main.tsx` · `src/ui/*` |
 | **Performance e configurações** (FPS, GPU, V-Sync, debug F9) | `docs/12` · [20](20-SCALING-E-REGULAS.md) §12 | `settings.ts` · `tuning.ts` |
 | **Arquitetura técnica** | `docs/12` | `src/scene/GameCanvas.tsx` · `README.md` |

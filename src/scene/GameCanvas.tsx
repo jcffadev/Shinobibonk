@@ -1248,10 +1248,14 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         const ally=allyActors[i],angle=i*Math.PI*.8+1,motion=allyMotions.get(ally);
         const goal=new THREE.Vector3(player.position.x+Math.cos(angle)*2.6,0,player.position.z+Math.sin(angle)*2.6);
         dir.copy(goal).sub(ally.position);dir.y=0;
-        const gap=dir.length(),follows=gap>.25,dash=follows&&slideTime>0;
+        const gap=dir.length(),follows=gap>.18,dash=follows&&slideTime>0;
         dir.normalize();
         if(gap>12)ally.position.copy(goal);
-        else if(follows)ally.position.addScaledVector(dir,Math.min((speed+2)*(dash?2:1)*dt,gap));
+        // Rodada 46 — follow amortecido: antes era stop-and-go (parava SECO dentro de 0,25 m do slot e saía
+        // 'correndo' em speed+2; com o jogador andando isso alternava idle<->andar a ~10 Hz — a 'caminhada bugada').
+        // Agora o aliado desacelera suavemente (lerp exponencial, ~0,13 s) e segue o slot em offset constante
+        // (~velocidade/8 m) com passada CONTÍNUA — o mesmo controle de animação do jogador (playerMotion).
+        else if(follows)ally.position.lerp(goal,1-Math.exp(-dt*(dash?16:8)));
         const floor=terrainHeight(ally.position.x,ally.position.z);
         ally.position.y=floor+ally.scale.y*.5+jumpHeight;
         const allyId=allies[i],form=formAt(allyId,level).level;
@@ -1261,16 +1265,19 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
           const index=(ally.userData.nextTechnique??0)%Math.max(1,kit.length);
           if(kit[index]&&castTechnique(kit[index],ally.position,NO_GROWTH,true,false,motion,false,allyId))ally.userData.nextTechnique=index+1;
         }
-        motion?.update(dt,floor,1,1,follows,dir.dot(v1)>0,dir.dot(v2)<0,level,jumpHeight,dash,false,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
+        // Rodada 46 — dead zone de orientação idêntico ao jogador (±0,18): sem ele, a fileira da folha
+        // (frente<->costas) 'flippava' a cada frame quando o aliado andava quase de lado para a tela.
+        motion?.update(dt,floor,1,1,follows,dir.dot(v1)>.18,dir.dot(v2)<-.18,level,jumpHeight,dash,false,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
       }if(allyTimer<=0)allyTimer=allyInterval();
       // Kuri (rodada 41): segue o Kankuro em formação e ataca no timer próprio (não compartilha o allyTimer).
       if(kuriSprite&&kuriMotion&&!defeated){
         const kuriAngle=2.4,goal=new THREE.Vector3(player.position.x+Math.cos(kuriAngle)*2.1,0,player.position.z+Math.sin(kuriAngle)*2.1);
         dir.copy(goal).sub(kuriSprite.position);dir.y=0;
-        const gap=dir.length(),follows=gap>.3;
+        const gap=dir.length(),follows=gap>.18;
         dir.normalize();
         if(gap>12)kuriSprite.position.copy(goal);
-        else if(follows)kuriSprite.position.addScaledVector(dir,Math.min((speed+2)*(slideTime>0?2:1)*dt,gap));
+        // Rodada 46 — mesmo follow amortecido dos aliados (sem stop-and-go e sem flicker de fileira).
+        else if(follows)kuriSprite.position.lerp(goal,1-Math.exp(-dt*(slideTime>0?16:8)));
         const kuriFloor=terrainHeight(kuriSprite.position.x,kuriSprite.position.z);
         kuriSprite.position.y=kuriFloor+kuriSprite.scale.y*.5;
         kuriTimer-=dt;
@@ -1278,7 +1285,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
           if(castTechnique(NPC_ALLIES.kuri.technique,kuriSprite.position,NO_GROWTH,true,false,kuriMotion,false,'kuri'))kuriTimer=allyInterval();
           else kuriTimer=.5; // sem inimigo no alcance: retry leve sem queimar o loop
         }
-        kuriMotion.update(dt,kuriFloor,1,1,follows,dir.dot(v1)>0,dir.dot(v2)<0,1,0,slideTime>0,false,1,1);
+        kuriMotion.update(dt,kuriFloor,1,1,follows,dir.dot(v1)>.18,dir.dot(v2)<-.18,1,0,slideTime>0,false,1,1);
       }
       if(!defeated){
       chakra=Math.min(100,chakra+100*dt/55*stats.ultimateRate*tune().ultimateRate);if(autoUlt&&chakra>=100)castUltimate();

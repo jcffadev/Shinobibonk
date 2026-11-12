@@ -1266,3 +1266,37 @@ A troca de folha (repouso ↔ andar ↔ andar-atacando) tinha **três descontinu
 ### Nota
 
 Aguardando o **teste do usuário no navegador** (fluidez da caminhada + sem “pulo” de tamanho ao atacar). Se aprovado, a regra 39 (proporção idêntica em movimento) volta a valer **sem** a regressão de fluidez.
+
+## Rodada 46 — Caminhada dos Ninjas Selados (aliados) corrigida · 12/11/2026
+
+### Pedido
+
+> Corrigir o caminhar dos Ninjas Selados que entram no time para ajudar, a caminhada deles está bugada, devem caminhar/atacar/normalmente conforme seguem o jogador.
+
+### Diagnóstico (causa raiz — `src/scene/GameCanvas.tsx`, loop de aliados)
+
+1. **Stop-and-go binário do follow:** `follows = gap > .25` + movimento `min((speed+2)·dt, gap)` fazia o aliado **parar seco** dentro de 0,25 m do slot de formação (estado `idle`, textura de repouso) e **sair “correndo”** assim que o slot — ancorado no jogador — se afastava. Com o jogador andando (~5 m/s), o ciclo era ~0,05 s parado + ~0,12 s andando, a ~10 Hz: o sprite **alternava repouso ↔ caminhada** a cada 0,05–0,15 s. É isso que aparece na tela como “caminhada bugada” (tremeliquento, saltitante, com troca de pose a todo momento).
+2. **Orientação sem dead zone:** os aliados passavam `dir.dot(v1) > 0` / `dir.dot(v2) < 0` para `backwardView`/`leftward` do `playerMotion.update`. O jogador usa **threshold ±0,18** (`viewBack`/`viewLeft`) exatamente para evitar que a fileira da folha (frente ↔ costas) troque a cada frame; os aliados, com threshold 0, **flippavam de frente/costas** a cada frame ao andar quase de lado para a tela.
+3. **O que NÃO era o problema** (verificado): o ataque dos aliados já funciona — `castTechnique` chama `motion.attack(...)` com a orientação do alvo; a cadência (`allyTimer`/`allyInterval`) é independente; o controlador (`playerMotion.ts`) é o **mesmo** do jogador (já validado na rodada 45).
+
+### Correção (2 pontos por ator: aliados + Kuri)
+
+1. **Follow amortecido (sem stop-and-go):** `ally.position.lerp(goal, 1 − e^(−dt·R))` — **R = 8** em marcha normal, **R = 16** durante o dash do jogador. O aliado **desacelera suavemente** ao chegar no slot (assenta em ≈0,13 s) em vez de parar seco; com o jogador em movimento ele mantém **offset constante (~velocidade/8 m)** e anda com **passada contínua**. O snap `gap > 12` (recrutamento/teleporte) foi preservado. Band de assentamento: `follows = gap > .18` (era `.25` nos aliados, `.3` na Kuri).
+2. **Dead zone de orientação idêntico ao jogador:** `backwardView = dir.dot(v1) > .18` · `leftward = dir.dot(v2) < −.18` — mesmos parâmetros de `viewBack`/`viewLeft` do jogador.
+
+**Intocado:** ataque/repouso/cadência dos aliados · Kuri mantém `level=1` e o timer próprio · Kankuro (animações corrigidas pelo usuário — regra permanente) · Choji (único que cresce) · âncora nos pés e suavizações da rodada 45 (que agora também beneficiam os aliados, por usarem o mesmo controlador).
+
+### Validação
+
+- `tsc -b` limpo · `vite build` OK · `verify-rules` 56/97/95 · `verify-motion-atlases` 56/560/0 erros · `verify-runtime` **0 erros JS · 0 assets 404** (o cenário recruta Gaara + Kankuro e joga com eles).
+- **Teste visual dedicado (Playwright, Edge headless):** recrutou Gaara + Kankuro, andou com W (frente) e A (esquerda), 7 frames — aliados seguem o jogador em **formação contínua** (offset estável), **atacam** com o efeito em área visível, **assentam em repouso** ao parar, **sem flicker de fileira** e **sem stop-and-go**.
+
+### Decisões desta rodada
+
+1. Follow amortecido (lerp exponencial) em vez do stop-and-go — **mantém** a formação (raio 2,6 m / Kuri 2,1 m) e o snap de segurança; o offset de acompanhamento (~vel/8) é uma consequência natural do amortecimento e ficou visualmente bom nos testes.
+2. Dead zone ±0,18 igual ao jogador — consistência visual entre jogador e aliados.
+3. Kuri recebeu a mesma correção (mesmo padrão de código).
+
+### Nota
+
+Aguardando o **teste do usuário no navegador** (caminhada/ataque/repouso dos aliados). Se aprovado, este item sai da fila; as pendências das rodadas 44 (FPS em GPU real) e 45 (fluidez da caminhada do jogador) seguem aguardando o mesmo teste.

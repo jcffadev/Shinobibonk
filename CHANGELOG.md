@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Rodada 46 — Caminhada dos Ninjas Selados (aliados) corrigida · 12/11/2026
+
+- **IMPLEMENTADO (pedido do usuário, 12/11/2026 — “Corrigir o caminhar dos Ninjas Selados que entram no time para ajudar, a caminhada deles está bugada, devem caminhar/atacar/normalmente conforme seguem o jogador”):**
+  - **Diagnóstico (causa raiz):** o follow dos aliados em `src/scene/GameCanvas.tsx` era **stop-and-go binário**: `follows = gap > .25` fazia o aliado **parar seco** dentro de 0,25 m do slot de formação e **sair “correndo” em `speed+2`** quando o slot (ancorado no jogador) se afastava. Com o jogador andando (~5 m/s), o aliado alternava **idle ↔ andar a ~10 Hz** — o sprite trocava de textura (folha de repouso ↔ folha de caminhada) a cada ~0,05 s: a “caminhada bugada”. **Segundo fator:** a orientação dos aliados usava **sem dead zone** (`dir.dot(v1) > 0` / `dir.dot(v2) < 0`), então, ao andar quase de lado para a tela, a fileira da folha (frente ↔ costas) **flippava a cada frame** — o jogador usa threshold ±0,18 exatamente para evitar isso.
+  - **Correção (loop de aliados + Kuri, em `src/scene/GameCanvas.tsx`):**
+    - **Follow amortecido:** `ally.position.lerp(goal, 1 − e^(−dt·R))` com **R = 8** (R = 16 durante o dash do jogador) — o aliado **desacelera suavemente** ao chegar no slot (≈0,13 s) em vez de parar seco; com o jogador em movimento ele segue em **offset constante (~velocidade/8 m)** com **passada contínua**. Snap `gap > 12` (recrutamento/teleporte) **preservado**.
+    - **Band de assentamento** `follows = gap > .18` (era `.25` nos aliados, `.3` na Kuri) — o aliado para de animar só quando já está no slot.
+    - **Dead zone de orientação idêntico ao jogador:** `backwardView = dir.dot(v1) > .18` · `leftward = dir.dot(v2) < −.18` — fim do flicker de fileira (frente/costas) ao andar de lado. Mesmos parâmetros de `viewBack`/`viewLeft` do jogador (linha do `playerMotion.update`).
+    - **Ataque/repouso sem mudança de regra:** `castTechnique(..., motion)` continua chamando `motion.attack()` (a animação de ataque dos aliados já tocava — o bug era só a caminhada); o cadência `allyTimer`/`allyInterval` é intacta; Kuri (companheira do Kankuro) recebeu o mesmo follow amortecido e dead zone.
+  - **Arquivos:** `src/scene/GameCanvas.tsx` (loop de aliados ~linha 1249 + bloco da Kuri ~linha 1273).
+  - **Testado:** `tsc -b` ✓ · `vite build` ✓ · `verify-rules` 56/97/95 ✓ · `verify-motion-atlases` 56/560/0 erros ✓ · `verify-runtime` 0 erros/0 404 (o cenário recruta Gaara + Kankuro e joga com eles) ✓ · **teste visual dedicado** (Playwright: recrutou Gaara + Kankuro, andou W e A, 7 frames) — aliados seguem em formação contínua, atacam com o efeito visível, assentam em repouso, **sem flicker de fileira e sem stop-and-go** ✓.
+  - **Pendente:** teste do usuário no navegador (junto com os testes pendentes das rodadas 44/45: FPS em GPU real + fluidez da caminhada do jogador).
+
 ## Rodada 45 — Fluidez da caminhada + proporção ao atacar (suavização de escala e passada) · 12/11/2026
 
 - **IMPLEMENTADO (pedido do usuário, 12/11/2026 — “a animação de andar 'livre' ainda está fazendo um 'bug' de movimentação, essa mudança de sheet's/imagem entre animada e não animada deve ser sincrono, não pode aparecer falhas nessa movimentação, tem que ser totalmente fluído, estava fluído antes… mas, parece que ao tentarmos mexer na melhora da movimentação, pioramos isto. TAMBÉM revise a questão dos personagens ficarem mudando de tamanho perdendo proporção ao atacar”):**
