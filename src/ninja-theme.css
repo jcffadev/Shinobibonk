@@ -372,10 +372,13 @@ kbd{font-family:var(--fonte-texto)}
 /* Rodada 47 (item 9) — selo "★ Treinada · +15% de dano" nas técnicas treinadas com Jiraiya (ficha da run). */
 .trained-badge{display:inline-block;margin:3px 0 0;padding:2px 10px;border:2px solid var(--madeira-borda);border-radius:4px;background:linear-gradient(180deg,var(--ouro),#c98f2e);color:var(--tinta);font:400 11px/1.6 var(--fonte-titulo);box-shadow:0 2px 0 rgba(0,0,0,.35)}
 
-/* Rodada 47 (item 7) — ficha da run com moldura de madeira/corda e pinceladas chakra/dourado/roxo nas colunas
-   (Técnicas · Inventário · Ficha técnica). A base vem de run-ui.css (.sheet-banner/.sheet-column/.stripe/.sheet-tile). */
+/* Rodada 47 (item 7) — ficha da run com moldura de madeira/corda e pinceladas chakra/dourado nas colunas
+   (Técnicas · Inventário). A base vem de run-ui.css (.sheet-banner/.sheet-column/.stripe/.sheet-tile).
+   Rodada 48 — "fundo bege não ficou legal para lermos as informações": coluna com fundo mais escuro (papel2→papel3)
+   para as tiles claras (papel-claro) ganharem contraste; a coluna "Ficha técnica" (tabela de porcentagem) foi
+   removida a pedido do usuário — os ganhos subiram para o banner (DANO CAUSADO / DANO POR SEGUNDO). */
 .game-panel.sheet-panel .sheet-banner{border:2px solid var(--madeira-borda);border-radius:10px;background:repeating-linear-gradient(135deg,#ffffff14 0 9px,transparent 9px 18px),linear-gradient(110deg,#915c38,#536c47);box-shadow:0 0 0 2px var(--corda),0 8px 22px rgba(0,0,0,.4)}
-.game-panel.sheet-panel .sheet-column{background:linear-gradient(180deg,var(--papel-claro),var(--papel) 70%);border:2px solid var(--madeira-borda);border-radius:10px;box-shadow:0 0 0 2px var(--corda),0 0 0 4px var(--madeira-borda),0 12px 26px rgba(0,0,0,.45);overflow:hidden}
+.game-panel.sheet-panel .sheet-column{background:linear-gradient(180deg,var(--papel2),var(--papel3) 78%);border:2px solid var(--madeira-borda);border-radius:10px;box-shadow:0 0 0 2px var(--corda),0 0 0 4px var(--madeira-borda),0 12px 26px rgba(0,0,0,.45);overflow:hidden}
 .game-panel.sheet-panel .sheet-column .stripe{border-bottom:2px solid var(--madeira-borda);font-family:var(--fonte-titulo);font-weight:400}
 .game-panel.sheet-panel .sheet-column .stripe.blue{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#2b7fb8,#3aa6ee);color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35)}
 .game-panel.sheet-panel .sheet-column .stripe.gold{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#b3812f,#e8b04a);color:var(--tinta)}

@@ -40,7 +40,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  const focused=visible.find(e=>e.id===selected)??visible[0];
  const preview=tab==='Habilidades'?techniques.find(t=>t.name===focused?.name&&!t.locked):undefined;
  const base=calculateStats(hero.id,1);
- const estado=(e:{unlocked:boolean;archived:boolean})=>!e.unlocked?(tab==='Habilidades'?'Precisa pesquisar/selar':'Precisa desbloquear'):e.archived?(tab==='Habilidades'?'Não aprender':'Em casa'):'No pool';
+ const estado=(e:{unlocked:boolean;archived:boolean})=>!e.unlocked?(tab==='Habilidades'?'Precisa pesquisar/selar':'Precisa desbloquear'):e.archived?(tab==='Habilidades'?'Deixar em casa':'Em casa'):'No pool';
  const inFusion=(name:string)=>fusionPlan.some(p=>p.includes(name));
  // Rodada 39 — Fusões: candidatos seguem a regra da Oficina dos Sapos Sábios (sem setup, sem bloqueio).
  // A execução continua na run (1 uso por zona); aqui apenas planeja o par e marca o pool da run com ⚗.
@@ -49,7 +49,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  const fusePreview=bothSelected?mergedTechnique({kind:'fuse',names:[fusionA,fusionB]},techniques):undefined;
  const combinePreview=bothSelected?mergedTechnique({kind:'combine',names:[fusionA,fusionB]},techniques):undefined;
  return <>
-  <section className="build-plan-overview"><b>Planejado para Missão</b><div>{favorites.map(name=><span key={name}>★ {name}</span>)}{excluded.map(name=><span className="excluded" key={name}>{name} · {archivedSkills.includes(name)?'Não aprender':'Em casa'}</span>)}{!favorites.length&&!excluded.length&&<small>As escolhas aparecem aqui conforme você monta o plano.</small>}</div></section>
+  <section className="build-plan-overview"><b>Planejado para Missão</b><div>{favorites.map(name=><span key={name}>★ {name}</span>)}{excluded.map(name=><span className="excluded" key={name}>{name} · {archivedSkills.includes(name)?'Deixar em casa':'Em casa'}</span>)}{!favorites.length&&!excluded.length&&<small>As escolhas aparecem aqui conforme você monta o plano.</small>}</div></section>
   <div className="build-tabs">{['Habilidades','Pílulas','Itens','Fusões'].map(t=><button className={tab===t?'active':''} key={t} onClick={()=>{setTab(t);setView('all');setSelected('');setFilters({...EMPTY_FILTERS});setRarities([]);}}>{t}</button>)}</div>
   {tab!=='Fusões'&&<PoolFilters value={filters} onChange={setFilters} facets={tab==='Itens'?{school:['Taijutsu','Ninjutsu','Genjutsu'],element:ITEMS.map(itemElement),attribute:ITEMS.map(itemAttribute)}:tab==='Habilidades'?{school:techniques.map(t=>t.school),element:techniques.map(t=>t.element),shape:techniques.map(t=>t.shape)}:{}}/>}
   {tab==='Itens'&&<RarityFilter selected={rarities} onChange={setRarities} counts={rarityCounts(itemsBeforeRarity)}/>}
@@ -67,8 +67,8 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
      <div className="fusion-pairs">{fusionPlan.map((p,i)=><div className="fusion-pair" key={p[0]+'·'+p[1]+'·'+i}><b>{p[0]} <span aria-hidden="true">⚗</span> {p[1]}</b><button type="button" aria-label={`Remover o par ${p[0]} e ${p[1]}`} onClick={()=>removeFusionPair(i)}>✕</button></div>)}{!fusionPlan.length&&<small>Nenhum par planejado ainda — na run, as técnicas de um par aparecem com ⚗ no pool.</small>}</div>
     </section>
    : <>
-    <p className="home-copy">Planejar destaca a oferta. A estrela marca uma técnica para o Treinamento com Jiraiya (+15% de dano). {tab==='Habilidades'?'“Não aprender” remove a técnica do sorteio.':tab==='Pílulas'?'Pílulas continuam disponíveis no level-up.':'Itens marcados ficam no plano da Bolsa Ninja.'} A run começa com uma técnica; os outros espaços são preenchidos pelas suas escolhas.</p>
-    <div className="build-view-filters"><button aria-pressed={view==='all'} onClick={()=>setView('all')}>Todos</button><button aria-pressed={view==='planned'} onClick={()=>setView('planned')}>Planejado para Missão</button>{tab==='Habilidades'&&<><button aria-pressed={view==='archived'} onClick={()=>setView('archived')}>Não aprender</button><small>{trained.length}/{trainingSlots} treinadas · {archivedSkills.length}/{archiveLimit} bloqueadas</small></>}</div>
+    <p className="home-copy">Planejar destaca a oferta. A estrela marca uma técnica para o Treinamento com Jiraiya (+15% de dano). {tab==='Habilidades'?'“Deixar em casa” remove a técnica do sorteio.':tab==='Pílulas'?'Pílulas continuam disponíveis no level-up.':'Itens marcados ficam no plano da Bolsa Ninja.'} A run começa com uma técnica; os outros espaços são preenchidos pelas suas escolhas.</p>
+    <div className="build-view-filters"><button aria-pressed={view==='all'} onClick={()=>setView('all')}>Todos</button><button aria-pressed={view==='planned'} onClick={()=>setView('planned')}>Planejado para Missão</button>{tab==='Habilidades'&&<><button aria-pressed={view==='archived'} onClick={()=>setView('archived')}>Deixar em casa</button><small>{trained.length}/{trainingSlots} treinadas · {archivedSkills.length}/{archiveLimit} bloqueadas</small></>}</div>
     <div className="build-workspace">
      <div className="build-tech-list">
       <table className="build-table">
@@ -84,7 +84,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
               ainda não planejada auto-planeja ela junto (treinamento sem planejamento era no-op). */}
           {tab==='Habilidades'&&<button type="button" className="training-star" aria-label={trained.includes(e.name)?'Remover treinamento de '+e.name:'Treinar '+e.name+' com Jiraiya'} title={trainingSlots===0?'Libere a passiva Treinamento com Jiraiya':'+15% de dano na missão'+(planned.includes(e.name)?'':' · planeja a técnica automaticamente')} aria-pressed={trained.includes(e.name)} disabled={trainingSlots===0||e.archived||!e.unlocked||(!trained.includes(e.name)&&trained.length>=trainingSlots)} onClick={()=>trainTechnique(e.name)}>{trained.includes(e.name)?'★ Treinada':'☆ Treinar'}</button>}
           <button disabled={!e.unlocked||e.archived} onClick={()=>togglePlanned(e.name)}>{tab==='Itens'?(planned.includes(e.name)?'✓ Na bolsa ninja':'Colocar na bolsa ninja'):(planned.includes(e.name)?'Planejado para Missão':'Planejar para Missão')}</button>
-          {e.toggle&&<button className={e.archived?'enable-skill':undefined} title={e.archived?'Devolver esta técnica ao pool da missão':undefined} disabled={e.locked} aria-pressed={e.archived} onClick={e.toggle}>{e.locked?(e.name===hero.skills[0]?'Inicial':'Indisponível'):tab==='Habilidades'?(e.archived?'Permitir aprender':'Não aprender'):(e.archived?'Levar na missão':'Deixar em casa')}</button>}
+          {e.toggle&&<button className={e.archived?'enable-skill':undefined} title={e.archived?'Devolver esta técnica ao pool da missão':undefined} disabled={e.locked} aria-pressed={e.archived} onClick={e.toggle}>{e.locked?(e.name===hero.skills[0]?'Inicial':'Indisponível'):tab==='Habilidades'?(e.archived?'Permitir aprender':'Deixar em casa'):(e.archived?'Levar na missão':'Deixar em casa')}</button>}
          </div></td>
         </tr>)}
        </tbody>

@@ -4,6 +4,61 @@ Registro cronológico dos pedidos do usuário e das respostas do assistente. Com
 
 Para cada nova solicitação, acrescente a mensagem do usuário e a resposta final. Registre também instruções complementares recebidas antes da resposta. Se houver dados sensíveis, resuma a parte necessária sem copiá-los.
 
+## Planner "Deixar em casa", mapa M/ESC/Tab, HUD de métricas, Final Swarm 1.600, ficha escura e Treinamento +0,6%
+
+**Pedidos**
+
+> Ao apertarmos M para abrir o mapa e ESC para fechar, ele sai do mapa abrindo a ficha do personagem, isso esta errado, ajustar agora mesmo. Se eu sair com o ESC ou apertar M novamente deve voltar ao jogo.
+>
+> Tem alguma coisa que faz ao segurar o TAB que é o mini mapa, apertar no ESC, ai estamos com o mesmo problema que já falei acima, também para a tecla tab, mas relacionado ao mapa.
+>
+> aparecer meu dano causado total e os valores, dano causado/s que seria o dano por segundo, remover dano por aliados. Também fazer exemplo 1.1M, seria 1milhão e 100mil de dano... essas nomenclaturas por exemplo e seguir escalando conforme for.
+>
+> Deixar só com as opções que eu te falei para ter tirar a tabela de porcentagem e subir a parte onde registra os ganhos.
+>
+> Não é pro jogo ter névoa o tempo todo é pra acontecer de tempos em tempos e quando acontecer névoa do mapa / visão ficar coberta dando pra ver só nosso personagem no centro da tela é para aparecer o Zabuza Momochi como Mega Elite no mapa.
+>
+> quando eu tiver dinheiro suficiente aparecer o valor + ryu em verde, quando tiver faltando, aparecer vermelho. Revisar que o botão E para interagir as vezes da uma engasgada, o mesmo acontece com selecionando as opções pressionando 1, 2, 3 e 4.
+>
+> Aparecer acima da cabeça do personagem um hudzinho de "Treinamento - <atributo aleatório que upou> +0,6%"
+>
+> me explique essa parte da sorte... a parte dos atributos treinados devem ficar: [screenshot do HUD] nessa região marcada em vermelho, organize o hud para isso e lembre-se ele treina TODOS os atributos aleatoriamente, somente na utilidade que ele treina apenas sorte.
+>
+> Movimentação ainda apresenta travamentos...
+>
+> Não sei se é por conta da dificuldade do jogo, mas parou de dropar novamente experiência ao derrotar os monstros, isso não pode acontecer, ao derrotar sempre tem que dropar experiência.
+>
+> O final swarm sempre vai ter o máximo de 1600 monstros, porém não vai bater final swarm e já chegar esse número, até os +7 mins o aumento vai ser progressivo conforme está acontecendo no jogo considerando calculos de %inimigos e estágios da zona. Após os +7mins, alcançamos a marca total dos 1600 monstros em tela. Lembrando... eles precisam ir evoluindo ao passar do tempo, ganhando vida, defesa/armadura, dano, para forçar o jogador a terminar a run.
+>
+> Olha como ficou esse HUD, antes estava visual... agora está ruim essa palheta mais clara que você colocou... deixe mais visual. Esse fundo bege não ficou legal para lermos as informações.
+>
+> Taxa de experiência muito alta também por mob já no normal... diminuir.
+>
+> Você esta atualizando o arquivo para o codex/claude revisar depois?
+>
+> esse hud ainda falta fundo raro ser azul, incomum verde, comum cinza(como esta), épico roxo, lendário amarelo/alaranjado.
+>
+> Porque o claude aparece na página do meu github como contribuinte?
+
+**Resposta**
+
+- **"Deixar em casa"**: o botão "Não aprender" do planner virou "Deixar em casa" (estado, resumo, texto inicial, filtro e alternância em `BuildPlanner.tsx`) — espelhando o conceito de build da referência com a particularidade por shinobi.
+- **M/ESC/Tab**: fechar o mapa agora volta ao jogo **sem abrir a ficha** (`mapPanel` + `suppressUnlockPause` de 800 ms em `GameCanvas.tsx`) — M, ESC e TAB cobertos.
+- **HUD de métricas (RunSheet)**: o banner mostra TEMPO · ABATES · **Dano causado** (total, formato 1,1M) · **Dano por segundo** · RYU; **removido** "Dano por aliados" e a tabela de porcentagens ("Ficha técnica"), com os ganhos no topo.
+- **Zabuza + névoa intermitente**: **PENDENTE** — Zabuza não existe no roster; anotação completa em `docs/23` para Claude/Codex (personagem + evento de névoa).
+- **Preço verde/vermelho**: OPCIONAL, **não feito** nesta rodada (falta expor `world.interaction` no snapshot).
+- **Isca Shinobi**: **CONFIRMADA como Pílula** (Rodada 47) — o item `shinobi-bait` foi removido do catálogo e a pílula existe em `pills.ts`.
+- **Treinamento esgotado**: agora sobe um **atributo aleatório +0,6% por nível** (`rollPowerlevel`, era Sorte fixa +0,8%) e exibe "Treinamento — <atributo> +0,6%" acima do personagem. A cláusula "somente na utilidade que ele treina apenas sorte" ficou **em aberto** — aguardando confirmação do usuário.
+- **Final Swarm**: teto **1.600** (era 8.000) com **rampa progressiva até +7 min** (não salta para o teto) — pedido explícito; monstros evoluem com o tempo (HP/defesa/armadura/dano via `ENEMY_SCALING`).
+- **XP por mob**: 8 → 5; XP por abate **sempre** dropado (regra existente — o que estava "alto" era a taxa, reduzida).
+- **Ficha mais escura**: fundo das colunas `papel2→papel3` (mais contraste) em `ninja-theme.css`.
+- **Engasgada E/1-4**: `CHOICE_GUARD.armSeconds` 0,5 → 0,2 s.
+- **Raridade**: **JÁ ESTAVA assim** (comum cinza · incomum verde · raro azul · épico roxo · lendário amarelo) — `rarity.css`.
+- **HP com número no centro**: **JÁ EXISTE** (RunSheet + HUD de combate).
+- **Claude no GitHub**: o commit da Rodada 38 (trailer) tem trailer `Co-Authored-By: Claude Opus 5.5` — por isso o GitHub o lista como contribuinte; os 30/30 commits têm author `jcffadev`.
+- **docs/23**: SIM — é atualizado a cada rodada com o inventário + anotações para Claude/Codex (Zabuza, corpo selado, armadilha "corpo ninja", travamentos atacar+andar/minionblock, folha frente/costas).
+- Validado: tsc · vite build · verify-rules 56/97/94 · verify-motion-atlases 56/560/0 · verify-runtime (0 erros · 0 404 · stress com 1.600 inimigos). Teste do usuário pendente.
+
 ## Animações do elenco, prêmios, sinergia e horda
 
 **Pedido**

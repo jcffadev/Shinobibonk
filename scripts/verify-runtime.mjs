@@ -407,7 +407,7 @@ await lockPage.getByRole('button',{name:'Escolher shinobi',exact:false}).click()
 await lockPage.getByRole('button',{name:'Planejar missão →',exact:true}).click();
 await lockPage.getByRole('img',{name:'Prévia da técnica Kage Bunshin'}).locator('canvas[data-clone-pose="walk"]').waitFor();
 const substitution=lockPage.locator('.build-tech-list .pool-card').filter({hasText:'Técnica de Substituição'});
-await substitution.getByRole('button',{name:'Não aprender',exact:true}).click();
+await substitution.getByRole('button',{name:'Deixar em casa',exact:true}).click(); // Rodada 48 — label renomeada de "Não aprender" para "Deixar em casa"
 assert.equal(await substitution.getByRole('button',{name:'Permitir aprender'}).isEnabled(),true);
 await substitution.getByRole('button',{name:'Permitir aprender'}).click();
 const starter=lockPage.locator('.build-tech-list .pool-card').filter({hasText:'Kage Bunshin'});

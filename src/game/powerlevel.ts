@@ -1,7 +1,8 @@
 import type { Stats } from './progression.ts';
 
-/** Recompensa extra por nível sem upgrades elegíveis, separada do crescimento normal. */
-export const POWERLEVEL_RATE = .008;
+/** Recompensa extra por nível sem upgrades elegíveis, separada do crescimento normal.
+ * Rodada 48 (usuário: "Treinamento - <atributo> +0,6%"): taxa fixada em +0,6% por nível treinado. */
+export const POWERLEVEL_RATE = .006;
 export const POWERLEVEL_ATTRIBUTES = {
   maxHp:'HP', damage:'Dano', armor:'Armadura', moveSpeed:'Movimento',
   attackSpeed:'Velocidade de ataque', projectileSpeed:'Velocidade de projétil',
@@ -23,7 +24,7 @@ export function readPowerlevel(value: unknown):Powerlevel {
   return result;
 }
 
-/** +0,8% por sorteio sobre o atributo calculado; acumulação aditiva, não +0,8 ponto percentual. */
+/** +0,6% por sorteio sobre o atributo calculado; acumulação aditiva, não +0,6 ponto percentual. */
 export function applyPowerlevel(stats:Stats,levels:Powerlevel):Stats {
   const result={...stats};
   for(const [key,count] of Object.entries(readPowerlevel(levels)))
