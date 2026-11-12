@@ -44,7 +44,7 @@ O [contexto permanente de perguntas e respostas](docs/18-CONTEXTO-PERGUNTAS-RESP
   - `unlockMissions.ts`: missões de desbloqueio, Lendários e cadeia das versões (`playWith`).
   - `enemyTiers.ts`: inimigo normal, elite amarelo, Mega Elite e Shinobi para selar.
   - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
-  - `roulette.ts`: Roleta da Tsunade.
+  - `roulette.ts`: Caça-Níquel da Tsunade (ex-"Roleta da Tsunade").
   - `settings.ts`: configurações do jogador.
   - `npcs.ts`: eventos do Ebisu e do Iruka, Iruka como ajudante e regras do Naruto Totem.
   - `catalog.ts`: 95 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.

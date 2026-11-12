@@ -40,13 +40,14 @@ As referências vieram de outro jogo; por decisão do usuário, nenhum nome ou t
   - Invoca 4 clones das sombras a cada 0,6 s (teto 48 vivos) a 6–50 m do jogador; os clones vão direto atacar o jogador. Cada clone dá 5 de XP (sem Ryu/itens).
   - Morto: 2 level-ups na fila normal (só técnicas e pílulas). Se não morrer, some às 6:00 sem recompensa; os clones restantes se dissipam.
   - Entra no mapa só depois de visto em tela. Valores provisórios; performance com 48 clones + horda não medida.
-- **Roleta da Tsunade (CONFIRMADO pelo usuário em 06/11/2026; substitui o Caça-níquel e absorve a Bênção de Tsunade)**: evento `slot` com sprite da Tsunade. **IMPLEMENTADO** (`src/game/roulette.ts`, `src/ui/TsunadeRoulette.tsx`):
+- **Caça-Níquel da Tsunade (ex-"Roleta da Tsunade" — CONFIRMADO pelo usuário em 06/11/2026; substitui o Caça-níquel e absorve a Bênção de Tsunade; rodada 37: combos de 3 iguais + emboscada invertida + custo por zona)**: evento `slot` com sprite da Tsunade. **IMPLEMENTADO (fase 3 da rodada 37, commit `ec7c42a`)** (`src/game/roulette.ts`, `src/ui/TsunadeRoulette.tsx`):
   - E abre o overlay da roleta; a run fica pausada enquanto está aberto.
   - Controles: toque em E = 1 giro animado (1,6 s); segurar E = giro rápido contínuo (280 ms/giro) enquanto houver Ryu; E durante a animação = resultado instantâneo; F/botão liga e desliga o giro rápido (`sb_roulette_fast`).
   - Prêmios e penalidades acumulam numa lista e só são entregues ao sair (Esc/X/"Sair e receber").
-  - Custo por giro: (25 + 5 × giros na run) × (1 − desconto, máx. 40%); não reseta por zona.
-  - Casas de recompensa: Kunai, Shuriken, Ryu, Bênção, Item e Sorte Grande. Penalidades: Dívida, Azar e Credores. Há também a casa vazia. Os pesos atuais vêm de `ROULETTE_CASAS`.
-  - Sorte multiplica casas boas por 1 + min(2, sorte/100) (premium ao quadrado); a pressão de dificuldade (maldição, zona, missão) multiplica as ruins; a fatia ruim fica sempre entre 15% e 60%. Ex.: sorte 0 = 63% boas/25% ruins; sorte 100+ = ~81%/15%.
+  - Custo por giro: `round(30 × 1,70^giros × 1,15^minutos × (1+(zona−1)×0,25) × (1 − desconto, teto 40%))`; não reseta por zona. (Rodada 37: crescimento ×1,35 → **×1,70** + **fator de zona 0,25** — escala como o Ryu por zona; descontos Dente de Ouro/Gama-chan mantidos.)
+  - **Emboscada invertida (rodada 37):** durante a interação a run pausa (jogador seguro); ao sair, **armadilhas shinobi explodem em 8 m** matando os monstros próximos (totem/bijuu/guardião excluídos; som `explosion`). A casa "Credores" (emboscada que **spawna** inimigos) se mantém — coexistem os dois sabores.
+  - Casas de recompensa: Kunai, Shuriken, Ryu, Bênção, Item, Sorte Grande e os **5 combos de 3 iguais** (Tsunade, Jiraiya, Hiruzen, Kakuzu — boas; Hidan — ruim). Penalidades: Dívida, Azar e Credores. Há também a casa vazia. Os pesos atuais vêm de `ROULETTE_CASAS`.
+  - Sorte multiplica casas boas por 1 + min(2, sorte/100) (premium ao quadrado); a pressão de dificuldade (maldição, zona, missão) multiplica as ruins; a fatia ruim fica sempre entre 15% e 60%. Com as 5 casas de combo (rodada 37): sorte 0 = **~30,9% boas** (asserção no verify-rules).
   - Buffs e debuffs são temporários e recalculados das fontes. Valores provisórios.
 - **Altar de desafio (CONFIRMADO)**: interagir inicia uma pequena horda; concluir concede uma kunai grátis. **IMPLEMENTADO**: 6 inimigos de desafio surgem a 7 m. Escala e duração estão **PENDENTES**.
 - **Maldição de Orochimaru (CONFIRMADO; substitui a maldição do evento de referência)**: risco/recompensa opcional. **IMPLEMENTADO**: +20% de dificuldade e +25% de XP/saque, uma vez por zona.

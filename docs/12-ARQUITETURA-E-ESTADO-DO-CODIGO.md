@@ -29,7 +29,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/missions.ts` | Três zonas: nome, início, tempo do guardião e guardiões possíveis; `GUARDIAN_RULES` e `guardianHpMultiplier(zoneElapsed)` (0,6× → 1,0× aos 160 s). |
 | `src/game/npcs.ts` | Ebisu e Iruka: `NPC_RULES`, `LEGENDARY_VALUES`, `TOTEM_RULES`, sorteio de trocas, `NPC_ALLIES.iruka`, `NPC_NAMES` e `NPC_PORTRAITS` (sprites pixel art `public/assets/shinobis/iruka-1.svg` e `ebisu-1.svg`, gerados por `node scripts/generate-sprites.mjs --npcs`). Telas de escolha: −3 Ebisu, −4 menu do Iruka, −5 pergaminho lendário. |
 | `src/scene/narutoTotem.ts` | Barra 3D do Naruto Totem (nome, HP, segundos restantes). |
-| `src/game/roulette.ts` + `src/ui/TsunadeRoulette.tsx` + `src/tsunade-roulette.css` | Roleta da Tsunade: casas, pesos por sorte/dificuldade, custo crescente e overlay. |
+| `src/game/roulette.ts` + `src/ui/TsunadeRoulette.tsx` + `src/tsunade-roulette.css` | Caça-Níquel da Tsunade (ex-"Roleta da Tsunade"): casas (incluindo as 5 de combos de 3 iguais), pesos por sorte/dificuldade, custo crescente (giros/tempo/zona), entrega de combos ao sair, armadilhas shinobi ao sair e overlay de 3 rolos. |
 | `src/scene/dropSprites.ts` | Sprites procedurais (canvas) dos drops: essência roxa de XP (3 tamanhos), orbe azul de chakra, moeda 両 de Ryu, tigela de lamen de cura (`RAMEN_DROP` em GameCanvas: até 5%/35%), pílula e pergaminho. Hooks `dropShowcase`/`drops`. |
 | `src/ui/MapOverlay.tsx` + `src/map.css` | Ícones do mapa M/Tab e do minimapa, rota/ping, seta e metros na HUD, "Chegou!". Evento `shinobi-route`. |
 | `src/ui/MissionBag.tsx` + `src/game/missionBag.ts` + `src/mission-bag.css` | Bolsa da Missão: abas, busca, botões de raridade, "em casa", prioridade, sub-aba "Itens em casa" (até 12 listas com nome e descrição, em `sb_bag_presets_v1`) e hudzinho do hub. |
@@ -216,13 +216,13 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - **Maldição de Orochimaru**: +20% de dificuldade, +25% de XP e saque.
   - **Altares por raridade** (`ALTAR_RULES` em `GameCanvas.tsx`, `startAltar`/`tickAltar`, progresso por altar em `altarProgress`): pisar no círculo de 3 m inicia sem E; sobe dentro, cai fora com taxa por raridade; 100% abre escolha de itens com um da raridade do altar.
   - **Mercador de armas**: troca cada kunai/shuriken guardada por 5 Ryu.
-  - **Roleta da Tsunade** (evento `slot`, antigo Caça-níquel): overlay `TsunadeRoulette` pedindo giros via `CustomEvent('shinobi-roulette')`; regras puras em `src/game/roulette.ts` (`ROULETTE_RULES`, `rouletteWeights`, `rollRoulette`, `rouletteCost`, `spendBonuses`). Estado `roulette` pausa o loop; `ryuSpent` soma kunais, roleta e Ichiraku. Hook `__shinobiTest.roulette`.
+  - **Caça-Níquel da Tsunade** (evento `slot`, ex-"Roleta da Tsunade"; rodada 37: combos de 3 iguais + emboscada invertida + custo por zona): overlay `TsunadeRoulette` (3 rolos) pedindo giros via `CustomEvent('shinobi-roulette')`; regras puras em `src/game/roulette.ts` (`ROULETTE_RULES`, `SLOT_COMBOS`, `slotKakuzuRyu`, `rouletteWeights`, `rollRoulette`, `rouletteCost`, `spendBonuses`). Estado `roulette` pausa o loop (jogador seguro); ao sair, armadilhas shinobi (8 m) matam os monstros próximos; `ryuSpent` soma kunais, caça-níquel e Ichiraku. Hook `__shinobiTest.roulette`.
   - **Barraca Ichiraku** (sprite 5 de `environment-v2.png`, em x 13, z 21):
     - `openIchiraku` abre uma escolha (`choiceLevel = −2`) com as técnicas aprendidas, só se houver mais de uma, e as pílulas.
     - `forgetAtIchiraku` cobra `10 + 5 × nível` em Ryu. Na pílula, apaga todos os níveis de `knownPills`; na técnica, apaga `skillLevels`, `growth` e `cooldowns`, liberando o espaço. Depois chama `refreshStats()`.
     - A barraca continua aberta para esquecer mais. Sem Ryu suficiente, mostra um aviso e não muda nada. X fecha.
     - O evento nunca é desativado.
-  - **Bênção de Tsunade**: virou casa da Roleta da Tsunade (buff temporário de 90 s).
+  - **Bênção de Tsunade**: virou casa da Caça-Níquel da Tsunade (buff temporário de 90 s).
   - **Arsenal da Tenten** (id `arsenal`, antes Sharingan de Kakashi; sprite da Tenten em x −21, z −1): uma vez por zona.
     - `openKakashi` abre uma escolha (`choiceLevel = −1`) com os itens da bolsa que ainda estão abaixo do limite, do mais raro ao mais comum.
     - Escolher chama `grantItem`, que dá +1 cópia, e desativa o evento.
@@ -254,7 +254,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 ### UI durante a run
 
 - **Topo** (`game-topbar` em `main.tsx`, layout em `src/hud-layout.css`): grade em três blocos — missão + clima/zona (esquerda), relógio grande ou "FINAL SWARM +m:ss" (centro), Ryu curto e kunai/shuriken (direita) — e uma linha secundária menor com os preços de kunai, shuriken, roletar do mercador e giro da roleta, todos em `compactNumber`. Avisos (`.world-toast`, ex.: emboscada) ficam abaixo da barra, em `top:140px`.
-- **Ryu em formato curto**: `compactNumber` (`src/game/format.ts`) no HUD, nos preços da barra, na Roleta da Tsunade (valor exato no `title`), no diálogo do mercador/prêmio (`ItemTradeDialog`) e nos toasts/interações de `GameCanvas.tsx` que mostram Ryu.
+- **Ryu em formato curto**: `compactNumber` (`src/game/format.ts`) no HUD, nos preços da barra, no Caça-Níquel da Tsunade (valor exato no `title`), no diálogo do mercador/prêmio (`ItemTradeDialog`) e nos toasts/interações de `GameCanvas.tsx` que mostram Ryu.
 - **Faixas e telas**: faixa do guardião com HP, progresso da defesa do altar, interação próxima ("Aperte E").
 - **Cartões de ajudantes** (`src/ui/AllyCards.tsx` + `src/allies.css`, à esquerda em `top:150px`), um por aliado selado:
   - retrato redondo com moldura na cor da 1ª técnica, nome e selo da aldeia (FOLHA/AREIA/SOM/CHUVA) ou "SINERGIA";

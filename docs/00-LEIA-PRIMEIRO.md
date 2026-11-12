@@ -29,11 +29,11 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 - Missões nomeiam a dificuldade como Genin, Chunin, Jonin e Kage.
 - Teclas: M abre o mapa completo; Tab o mapa rápido; P a ficha; G o ping “Aqui”; E interage.
 - Ultimate manual no R. **A tecla Y é obrigatória** e alterna a Ultimate automática; o selo AUTO no botão R faz o mesmo por clique e mostra o estado.
-- Economia da run: Ryu, kunai e shuriken. Kunai/shuriken são recompensas no mapa; o mercador troca armas por Ryu; a Roleta da Tsunade consome Ryu.
+- Economia da run: Ryu, kunai e shuriken. Kunai/shuriken são recompensas no mapa; o mercador troca armas por Ryu; a Caça-Níquel da Tsunade consome Ryu.
 - Lamens é a moeda permanente da conta (árvore e desbloqueios), separada do Ryu da run.
 - O pool de level-up/drop é escolhido pelo jogador.
 - Orochimaru comanda o evento de maldição (substitui o nome da referência). Mega elites derrotados podem ser selados (E) ou recusados (G), e a recusa deixa um drop de item afetado por Sorte.
-- Nada relacionado ao jogo de referência: os eventos foram renomeados no código ("Plano do Shikamaru" e "Roleta da Tsunade").
+- Nada relacionado ao jogo de referência: os eventos foram renomeados no código ("Plano do Shikamaru" e "Caça-Níquel da Tsunade" — ex-"Roleta da Tsunade", rodada 37).
 
 ## Implementado na base atual
 
@@ -82,7 +82,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
   - Maldição de Orochimaru: +20% de dificuldade e +25% de XP/saque.
   - Altares por raridade (Normal → Lendário): pisar no círculo começa a contar (sem E); fora do círculo a porcentagem cai, mais rápido quanto mais raro (`ALTAR_RULES`, ver docs/01).
   - Mercador de armas.
-  - Roleta da Tsunade: overlay animado com casas boas e ruins, giro rápido segurando E, prêmios entregues ao sair, custo 25 +5 por giro; Sorte melhora as chances (nunca 100%) e a dificuldade compensa.
+  - Caça-Níquel da Tsunade: overlay de 3 rolos com casas boas e ruins (incluindo 5 combos de 3 iguais), giro rápido segurando E, prêmios entregues ao sair, custo 30 × 1,70^giros (sobe com o tempo e a zona); ao sair, armadilhas shinobi matam os monstros próximos (jogador seguro durante a interação); Sorte melhora as chances (nunca 100%) e a dificuldade compensa.
   - **Barraca Ichiraku**: o sprite da barraca de lámen.
     - Esquecer uma pílula (todos os níveis) ou uma técnica custa 10 + 5 × nível em Ryu, quantas vezes quiser. A barraca nunca se esgota.
     - A última técnica não pode ser esquecida.

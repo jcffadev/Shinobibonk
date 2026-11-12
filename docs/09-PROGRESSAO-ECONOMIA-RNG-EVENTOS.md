@@ -75,4 +75,4 @@ Versão de especificação: 0.3 (proposta original de design)
 Documento de design elaborado; implementação, arte, servidor, testes e balanceamento NÃO realizados por este documento.
 # Escolha de recompensa
 
-Ao fechar a Roleta da Tsunade, cada item aguarda uma decisão. E pega, V vende, e a próxima recompensa aparece na mesma ordem dos giros. A fila é salva com a run. As recompensas do mapa e da roleta não concedem pílulas nem habilidades. Essas duas categorias só entram nas ofertas de subida de nível. Pílulas pendentes de roleta em saves antigos viram Ryu. A Sorte pode elevar o número de cartas de três para quatro, respeitando o mesmo teto ao banir ou atualizar.
+Ao fechar a Caça-Níquel da Tsunade, cada item aguarda uma decisão. E pega, V vende, e a próxima recompensa aparece na mesma ordem dos giros. A fila é salva com a run. As recompensas do mapa e do caça-níquel não concedem pílulas nem habilidades. Essas duas categorias só entram nas ofertas de subida de nível. Pílulas pendentes do caça-níquel em saves antigos viram Ryu. A Sorte pode elevar o número de cartas de três para quatro, respeitando o mesmo teto ao banir ou atualizar.

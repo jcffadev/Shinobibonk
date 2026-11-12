@@ -68,13 +68,13 @@ Pedido do usuário: velocidade de ataque é um dos atributos mais importantes; v
 ## Economia
 Lamens = moeda permanente, ganha por partidas/conquistas; compra árvore, seus níveis, e desbloqueia itens não comuns para entrar no pool aleatório. Comuns entram sem compra. Desbloquear não concede item imediatamente. Chakra não é concedido diretamente por itens; efeitos podem acelerar recarga da Ultimate. Drops de normais/épicos/lendários escalam por dificuldade para XP, dinheiro e carga da Ultimate.
 
-**Separação financeira confirmada em 05/11/2026:** o Ryu coletado durante a run é temporário (kunais, Roleta da Tsunade); Lamens continuam sendo a moeda permanente da conta para desbloqueios e passivas. Kunais e shurikens são as recompensas de mapa que abrem escolhas de item.
+**Separação financeira confirmada em 05/11/2026:** o Ryu coletado durante a run é temporário (kunais, Caça-Níquel da Tsunade); Lamens continuam sendo a moeda permanente da conta para desbloqueios e passivas. Kunais e shurikens são as recompensas de mapa que abrem escolhas de item.
 
 **Estado do código**:
 - **IMPLEMENTADO**:
   - Ryu da run vem de moedas douradas (両) dos abates e bolsas no mapa. A tigela de lamen (até 5% por abate) cura 35% do HP e não dá Lamens.
   - Kunai/shuriken no chão custam 20 Ryu, +10 por abertura paga; as kunais de recompensa são grátis.
-  - Mercador paga 5 Ryu por arma; Roleta da Tsunade custa 25 Ryu +5 por giro na run (ver docs/01).
+  - Mercador paga 5 Ryu por arma; Caça-Níquel da Tsunade custa 30 Ryu × 1,70 por giro, subindo com o tempo de run e a zona (desconto teto 40%) (ver docs/01 e docs/20).
   - Carteira permanente local de administrador com 999.999 de crédito e Reset que devolve o gasto.
 - **IMPLEMENTADO**: o hub mostra a moeda permanente como Lamens (🍜); o Ryu (🪙) aparece só na run.
 - **IMPLEMENTADO (PROPOSTO nos valores): Lamens por desempenho**, em `src/game/rewards.ts`, creditados uma vez por run em `main.tsx` e mostrados no resumo pós-run.
@@ -108,7 +108,7 @@ Slots 1–4: **somente automáticos**, cada um com recarga própria; o quarto é
   - Itens vêm só de recompensas: kunai, shuriken, eventos, drop de item e recusa de selamento.
   - Sem nada elegível, aparece uma carta de "Powerlevel" (+6 HP, +2% dano, +0,5 crítico, +1% movimento, +1 armadura ou +1% velocidade de ataque).
 - **Atualizar, pular e banir**: teclas F/X/Z ou botões, com 3 usos base cada e até 10 com a árvore. Banir remove a opção pelo resto da run.
-- **Pílulas**: 19 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado da Roleta da Tsunade, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
+- **Pílulas**: 19 pílulas em `src/game/pills.ts`, uma por atributo, com limite de 10 níveis cada. Aparecem como carta de level-up, como drop rosa raro e como resultado da Caça-Níquel da Tsunade, sempre pela função `grantPill`, que respeita o limite. Detalhes na seção abaixo.
 - **Prévia das pílulas**: cartas, ficha (P), plano de build e barra mostram o atributo do personagem com o valor atual e o novo (`src/game/pillPreview.ts`). **Pergaminhos de elemento**: "Melhora:" lista só técnicas do mesmo elemento; o +3% de dano total vale para todas, mas não é listado por técnica.
 
 ## Pílulas (IMPLEMENTADO, valores provisórios)
