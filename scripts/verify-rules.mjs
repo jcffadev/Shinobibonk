@@ -257,6 +257,22 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  assert.deepEqual(portraitRegion('kuri'),{path:'/assets/shinobi-motion/kuri-1-walk-v1.png',cols:4,rows:2,index:0},'retrato da Kuri na célula (0,0)');
  assert.ok(!HEROES.some(h=>h.id==='kuri'||h.id==='kuroari'),'marionetes fora do roster jogável');
 }
+{// Rodada 43: sons reais de jutsu do usuário (Kage Bunshin — só Naruto · Ultimate do Pain — som de Shinra Tensei)
+ // + pose/levitação da Ultimate do Pain no playerMotion.
+ const sfxSrc=fs.readFileSync('src/audio/sfx.ts','utf8');
+ assert.ok(sfxSrc.includes("t.name==='Kage Bunshin'&&f==='naruto'")&&sfxSrc.includes('/assets/audio/kage-bunshin.mp3'),'regra do som Kage Bunshin (só Naruto) presente no sfx');
+ assert.ok(sfxSrc.includes("u&&f==='pain'&&t.name==='Chibaku Tensei'")&&sfxSrc.includes('/assets/audio/shinra-tensei.mp3'),'regra do som da Ultimate do Pain presente no sfx');
+ assert.ok(sfxSrc.includes('activeJutsuClip'),'gate anti-spam do som real (som anterior precisa terminar) presente');
+ for(const p of ['/assets/audio/kage-bunshin.mp3','/assets/audio/shinra-tensei.mp3']){
+   const f='public'+p;assert.ok(fs.existsSync(f)&&fs.statSync(f).size>10000,p+' presente no projeto');
+ }
+ const pmSrc=fs.readFileSync('src/scene/playerMotion.ts','utf8');
+ assert.ok(pmSrc.includes('painUltimate'),'pose/levitação da Ultimate do Pain presente no playerMotion');
+ const gcSrc=fs.readFileSync('src/scene/GameCanvas.tsx','utf8');
+ assert.ok(gcSrc.includes('playTechniqueSound(t,false,heroId)')&&gcSrc.includes('playTechniqueSound(t,true,heroId)'),'call sites passam o herói para o som de jutsu');
+ const pain=HEROES.find(h=>h.id==='pain');
+ assert.ok(pain&&pain.ultimate==='Chibaku Tensei'&&pain.techniques.some(t=>t.name==='Shinra Tensei'),'kit do Pain: Shinra Tensei + Ultimate Chibaku Tensei');
+}
 const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,motionForms,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 
 

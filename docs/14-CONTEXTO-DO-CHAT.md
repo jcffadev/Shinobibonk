@@ -1152,3 +1152,38 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 - **Decisões pendentes de aprovação do usuário:** (1) Raising Fighting Spirit = pool RUN **e** trilha da luta bijū (leitura do "ou"); (2) Hinata/Neji na **mesma** faixa (regra do usuário num único MP3); (3) após a luta bijū terminar, volta ao pool RUN; (4) **vitória** volta ao pool de MENUS (a faixa de derrota é exclusiva de perder a run); (5) `musicVolume` default **0,7**; (6) sem crossfade (só fade-in).
 - **Nota:** as 4 pendências da rodada 41 (Kuri · Kuroari · adiantar Sasori · arte Pillow) continuam em aberto.
 
+## Rodada 43 · 12/11/2026 — Sons reais de jutsu (Kage Bunshin + Shinra Tensei) + pose ultimate do Pain + controle de revisão p/ Claude/Codex
+
+**Pedido do usuário (dois MP3 + uma regra permanente), na íntegra:**
+
+> **MP3 1** — "Activating Kage Bunshin no Jutsu (Naruto Anime) - Sound Effect for editing [aEQIi0drDhY].mp3" · regra: **"Kage Bunshin no Jutsu - Apenas naruto"**
+>
+> **MP3 2** — "Pain Shinra Tensei [IzJoviJjViw].mp3" · regra: **"Apenas Yahiko/Pain, ao utilizar ultimate o jogador deve Levitar com os braços abertos, fazer a arte/movimentos, a habilidade ultimate deve ter este som."**
+>
+> **Regra permanente (controle de revisão):** "Nota: para os personagens ajustes que você não conseguir fazer animação/habilidades deixar uma anotação no contexto/skills para o Claude ou Codex verificar e eles fazem/revisam. Deixar anotado tudo que você Qwen fez que eles podem revisar, como hud's, personagens/movimentação/sheets. Eles vão eles vão me passar a lista e eu continuo com eles o trabalho se for o caso. Por segurança, já prepare esse controle de tudo que você está fazendo/já fez para revisão deles."
+
+### O que foi feito
+
+1. **Sons reais de jutsu (2 MP3 do usuário)** — IMPLEMENTADO:
+   - `public/assets/audio/kage-bunshin.mp3` (copiado do scratchpad — **áudio original que o usuário baixou e entregou para o jogo**, mesmo fluxo do `yooo.mp3` da rodada 37 — **não é** material do jogo de referência) + `public/assets/audio/shinra-tensei.mp3`.
+   - `src/audio/sfx.ts`:
+     - `JUTSU_CLIP_RULES` — regras **técnica + família → MP3**: (a) `t.name==='Kage Bunshin' && family==='naruto'` → `kage-bunshin.mp3`; (b) `ultimate && family==='pain' && t.name==='Chibaku Tensei'` → `shinra-tensei.mp3`.
+     - `jutsuClipFor(t, ultimate, casterId?)` — resolve a regra (usa `familyOf(casterId)` — o lançador, **não** o herói da run; aliados/clones não tocam).
+     - `playJutsuClip(src)` — novo `Audio`, `play()` em promise com `catch` silencioso; `release` em `ended`/`error`/catch (**zero unhandledrejection**); **bloqueado enquanto `activeJutsuClip` existir** = regra anti-spam do usuário (12/11): "para não acontecer sound spam… delay de só permitir soltar o som, quando terminar o áudio do outro. **Não funcionará exatamente como uma fila**".
+     - `playTechniqueSound(t, ultimate=false, casterId?)` — **nova 3ª arg opcional**: se há clip → toca o MP3, marca `lastTechniqueVoice`/`lastVoiceByTechnique` e **retorna SEM o sweep sintetizado e SEM a fala TTS** (anti-spam); se não há clip mas `activeJutsuClip` ativo → **retorna sem som nenhum** (nem o padrão). Resto (sweeps + `speak`) inalterado.
+   - `src/scene/GameCanvas.tsx` — os **3 call sites** passam o `heroId`: `activateSetup` · fim de `castTechnique` (`if(!ally)`) · `castUltimate`. **Verificado:** clones de Kage Bunshin atacam via `hit()` direto (linhas ~1289–1292) — **NÃO** chamam `playTechniqueSound` → sem som duplicado dos clones.
+2. **Pose/levitação da Ultimate do Pain** — IMPLEMENTADO (`src/scene/playerMotion.ts`):
+   - `const painUltimate = family==='pain' && ultimate && state==='ultimate';`
+   - `castFrame = painUltimate ? 0 : …` (segura o **quadro 0** da folha durante o cast todo — receita do Gaara, que já existia).
+   - `row = … (attacking ? (painUltimate ? 2 + Number(rear) : Number(rear)) : …)` — fileira **2** (frente) / **3** (costas).
+   - `const painFloat = painUltimate ? Math.sin(Math.PI * attackProgress) * .38 : 0;` + `sprite.position.y = floor + jumpHeight + sprite.scale.y*.5 + painFloat;` (arco de elevação 0→pico→0).
+   - **Por que funciona sem nova arte:** a folha `public/assets/shinobi-motion/pain-1-action-v3.png` (4×4, `kind:'full'` via `revisedActionForms.pain:[1]` em `directionalArt.ts`) **já tem** a pose de **braços levantados em V** na fileira 2 (frente) e 3 (costas), quadro 0 — confirmada visualmente.
+3. **Controle de revisão para Claude/Codex** — IMPLEMENTADO: `docs/23-REVISAO-OUTROS-AGENTES.md` (novo) — como usar (AGENTS.md → docs/19 → este arquivo → CHANGELOG → `git log`) · **inventário por rodada** (cada commit resume a rodada) · **áreas de revisão** (HUDs · personagens/movimentação/sheets · áudio · caça-níquel · configs · planner · música) com caminhos de arquivos · **notas para Claude/Codex** — o que ficou para eles (pose/armadura da ultimate do Pain pode ganhar folha dedicada — hook `painUltimate` em `playerMotion.ts`; arte Pillow da Kuri/Kuroari aguardando IA/swap; sons de jutsu novos chegam pelo usuário; as pendências das rodadas 41/42) · regras permanentes resumidas (pt-BR · nada do jogo rival no projeto · MP3 do usuário = OK · stage por nome · etc.).
+4. **`verify-rules.mjs`** — bloco "Rodada 43" (antes de `const result=`): +9 asserções (regra Kage Bunshin Naruto · regra ultimate do Pain · `activeJutsuClip` presente · os 2 MP3 existem >10 KB · `painUltimate` no playerMotion · call sites com `heroId` · kit do Pain: Shinra Tensei + ultimate Chibaku Tensei).
+
+### Estado desta rodada
+
+- **IMPLEMENTADO + VALIDADO** (evidências no CHANGELOG e no commit): `tsc -b` limpo · `vite build` OK (aviso de chunk >500 kB já existia antes — inofensivo) · `verify-rules.mjs` (roster **56** · técnicas **97** · itens **95** — sem regressão + asserções da 43) · `verify-motion-atlases.mjs` (56 versões · 560 estados · 0 erros) · `verify-runtime.mjs` (Edge headless) **PASSOU** — **58 checks · 0 erros JS · 0 assets 404**.
+- **Aviso de flakiness (importante):** o harness headless (SwiftShader, lento) tem **checks flaky que trocam a cada execução** — a 1ª execução da rodada 43 falhou no check "Rendan Uzumaki exibe impacto" (lin. 134) e a 2ª no "Teuchi/barraca Ichiraku" (lin. ~318, timeout 30 s), **ambos sem relação com os edits** (caminho Naruto/interação, não Pain/áudio) — a 3ª passou 58/0/0. O handoff da rodada 42 documenta o mesmo padrão (1ª falhou em "portal do guardião", 2ª passou). Se falhar de novo: **reexecutar** antes de investigar; registrar no docs/13.
+- **Decisões pendentes de aprovação do usuário (4):** (1) o som de Shinra Tensei toca na **Ultimate `Chibaku Tensei`** do Pain (o MP3 é "Shinra Tensei", mas o usuário disse "a habilidade ultimate deve ter este som"; no jogo a ultimate do Pain é Chibaku Tensei — Shinra Tensei é técnica comum dele); (2) **Kage Bunshin** → som apenas para a **família naruto** (todas as versões dele); qualquer outra família usando a técnica (pool compartilhado) **não** toca o som (leitura de "Apenas naruto"); (3) enquanto um MP3 de jutsu toca, **nenhum** outro som de técnica (sweep/fala TTS) entra — e a fala TTS daquela técnica é suprimida no cast (anti-spam); (4) levitação do Pain: arco `sin(π·progresso) × 0,38` m + pose de braços levantados **segura** durante o cast (mesma receita do Gaara, que já existia no código).
+- **Nota:** as 4 pendências da rodada 41 (Kuri · Kuroari · adiantar Sasori · arte Pillow + conferência das folhas) e as 6 da rodada 42 (decisões de trilha sonora) continuam em aberto — espelhadas em docs/13 §6 e docs/18 §6.

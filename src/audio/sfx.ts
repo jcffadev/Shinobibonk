@@ -1,4 +1,5 @@
 import type { Technique } from '../game/heroes';
+import { familyOf } from '../game/heroes';
 import { currentSettings } from '../game/settings';
 type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui' | 'explosion';
 let context: AudioContext | null = null;
@@ -127,9 +128,46 @@ function jutsuGate(lengthSeconds:number,slackMs=120){
   jutsuSoundEndsAt=now+lengthSeconds*1000+slackMs;
   return true;
 }
-export function playTechniqueSound(t:Technique,ultimate=false){
+// ---------- Rodada 43 — sons reais de jutsu (MP3 entregues pelo usuário, 12/11) ----------
+// Kage Bunshin no Jutsu → apenas o Naruto (família) · Ultimate do Pain (Yahiko) → som de Shinra Tensei.
+const JUTSU_CLIP_RULES:{test:(t:Technique,ultimate:boolean,family:string)=>boolean;src:string}[]=[
+  {test:(t,_u,f)=>t.name==='Kage Bunshin'&&f==='naruto',src:'/assets/audio/kage-bunshin.mp3'},
+  {test:(t,u,f)=>u&&f==='pain'&&t.name==='Chibaku Tensei',src:'/assets/audio/shinra-tensei.mp3'},
+];
+let activeJutsuClip:HTMLAudioElement|null=null;
+function jutsuClipFor(t:Technique,ultimate:boolean,casterId?:string):string|undefined{
+  if(!casterId)return;
+  const family=familyOf(casterId);
+  return JUTSU_CLIP_RULES.find(r=>r.test(t,ultimate,family))?.src;
+}
+/** Toca o MP3 do jutsu respeitando a regra anti-spam do usuário (12/11): o próximo som só entra quando o
+ *  anterior TERMINAR — NÃO é fila (se o anterior ainda toca, o próximo é ignorado; sem pilha de áudios). */
+function playJutsuClip(src:string){
+  if(activeJutsuClip)return;
+  const s=currentSettings();
+  if(s.muteInBackground&&document.hidden)return;
+  const volume=Math.max(0,s.volume*s.sfxVolume);
+  if(volume<=.001)return;
+  let clip:HTMLAudioElement;
+  try{clip=new Audio(src);}catch{return;}
+  clip.preload='auto';clip.volume=Math.min(1,volume);
+  const release=()=>{if(activeJutsuClip===clip)activeJutsuClip=null;};
+  clip.addEventListener('ended',release);
+  clip.addEventListener('error',release);
+  try{
+    const started=clip.play();
+    if(started&&typeof started.catch==='function')started.catch(release);
+    activeJutsuClip=clip;
+  }catch{release();}
+}
+export function playTechniqueSound(t:Technique,ultimate=false,casterId?:string){
   const now=performance.now();if(!ultimate&&now-lastCast<90)return;lastCast=now;
   const s=currentSettings(),volume=s.volume*s.sfxVolume;
+  // Sons reais do usuário (rodada 43): têm prioridade e sozinhos representam o jutsu — sem efeito sintetizado
+  // e sem fala em cima (regra do usuário: nenhum áudio por cima de outro, só quando o anterior terminar).
+  const clip=jutsuClipFor(t,ultimate,casterId);
+  if(clip){playJutsuClip(clip);lastTechniqueVoice=now;lastVoiceByTechnique[t.name]=now;return;}
+  if(activeJutsuClip)return;
   // Efeito do jutsu: respeita o gate "terminou antes do próximo" (o som anterior precisa acabar).
   if(/kunai|shuriken|senbon|agulhas/i.test(t.name)){if(jutsuGate(.16))sweep(6500,900,.16,.22*volume,true);}
   else if(t.element==='Raio'){if(jutsuGate(.2))sweep(2500,580,.2,.18*volume,true);}

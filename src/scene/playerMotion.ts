@@ -200,6 +200,10 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const directedCast = !!directionSheet?.cast && (state === 'attack' || state === 'ultimate');
       const useDirection = !!directionMap?.image && (state === 'walk' || directedCast || state==='jump' || state==='dash');
       const attacking = state === 'attack' || state === 'ultimate';
+      // Rodada 43 — Ultimate do Pain (Yahiko): levitação com os braços levantados. A folha de ação
+      // (pain-1-action-v3.png) já tem a pose (fileira 2 frente / fileira 3 costas, quadro 0); seguramos
+      // esse quadro durante o cast todo (receita do Gaara) e somamos um arco de elevação (0 → pico → 0).
+      const painUltimate = family === 'pain' && ultimate && state === 'ultimate';
       const useSeal = attacking && handSign && !!sealMap?.image;
       if (useSeal && sealMap && sealSheet) {
         const frame = (rear ? 2 : 0) + Number(attackProgress >= .22);
@@ -214,7 +218,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const useAction = !!poseMap?.image && (fullAction || acrobatics || (attacking && (poseSheet?.kind !== 'taijutsu' || !!strike) && !(academy && poseSheet?.kind==='acrobatics')));
       if (useAction && poseMap && poseSheet) {
         const progress = attackProgress;
-        const castFrame = family === 'gaara' && (ultimate || handSign) && progress >= .35 && progress < .84
+        const castFrame = painUltimate
+          ? 0 : family === 'gaara' && (ultimate || handSign) && progress >= .35 && progress < .84
           ? 2 : Math.min(3, Math.floor(progress * 4));
         const frame = state === 'jump' ? Number(jumpProgress > .22 && jumpProgress < .77)
           : state === 'dash' ? 2 + Number(slideProgress > .7) : castFrame;
@@ -223,7 +228,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         const flip = acrobatics || (fullAction && !attacking) ? leftward : mirror;
         const rows=poseSheet.rows??2;
         const row = fullAction
-          ? (poseSheet.firstRow ?? 0) + (attacking ? Number(rear) : 2 + Number(backwardView))
+          ? (poseSheet.firstRow ?? 0) + (attacking ? (painUltimate ? 2 + Number(rear) : Number(rear)) : 2 + Number(backwardView))
           : (poseSheet.firstRow ?? 0) + Number(secondRow);
         poseMap.repeat.set(flip ? -.25 : .25, 1/rows);
         poseMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
@@ -283,7 +288,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (state === 'idle' && !usesSheet && cellFrac > 0) idleFrac = cellFrac;
       const propFactor = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;
       sprite.scale.set(width * squashX * propFactor, height * squashY * propFactor, 1);
-      sprite.position.y = floor + jumpHeight + sprite.scale.y*.5;
+      const painFloat = painUltimate ? Math.sin(Math.PI * attackProgress) * .38 : 0;
+      sprite.position.y = floor + jumpHeight + sprite.scale.y*.5 + painFloat;
       if (trail) {
         trailHistory.unshift(sprite.position.clone());
         trailHistory.length = Math.min(trailHistory.length, 6);
