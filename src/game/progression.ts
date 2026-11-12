@@ -58,8 +58,17 @@ export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.
  * - Dano= tier × (1 + min × damageLinear) × damagePerMinute^min → 10 min ×5,4 · 30 min ×40
  * - Teto da horda = (capBase + capLinear×min + capQuad×min²) × (0,85 + tier×0,15), até maxEnemies (1600 no Genin aos 10 min)
  * - Spawns por segundo = (spawnBase + spawnPerMinute×min) × √tier, até maxSpawnPerSecond (o jogo repõe em lote, sem 1-por-quadro)
+ * Revisão 11/11/2026 (pedidos do usuário: "dificulte mais o early game de todos os modos de jogo" + "verifique o nível de dificuldade de scale de cada nível de dificuldade"):
+ * - O Genin perdeu o desconto de 66% inicial: TODAS as dificuldades nascem na base cheia do tier, em suas devidas proporções (1 / 1,4 / 1,9 / 2,6).
+ * - Base do minuto 0 subiu: HP × hpBase (1,6) e dano × damageBase (1,45):
+ *   HP   = tier × (hpBase + min×hpLinear) × hpPerMinute^min
+ *   Dano = tier × (damageBase + min×damageLinear) × damagePerMinute^min
+ *   O efeito extra é máximo no início e decai proporcionalmente (5 min: ×1,20 · 10 min: ×1,13 · 30 min: ×1,05) — o late game já é íngreme por si (1,17^min).
+ * - Escala individual por zona (fase): ZONE_DIFFICULTY (zona 1 ×1 · zona 2 ×1,18 · zona 3 ×1,38), aplicada em GameCanvas (zoneDifficulty).
  */
-export const ENEMY_SCALING={hpLinear:.3,hpPerMinute:1.17,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.015,maxArmor:.6};
+export const ENEMY_SCALING={hpBase:1.6,hpLinear:.3,hpPerMinute:1.17,damageBase:1.45,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.015,maxArmor:.6};
+/** Escala individual por zona (fase): cada fase nasce mais forte que a anterior (HP, dano, spawn e pressão de roleta). Pedido do usuário (11/11): "verifique o nível de dificuldade também individual para cada fase do jogo". */
+export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
 /**
  * FINAL SWARM: quando o relógio da zona zera, o jogo NÃO acaba; conta o tempo sobrevivido e a dificuldade triplica na hora
  * (HP, dano, defesa e quantidade/spawn) e cresce growthPerMinute a cada minuto sobrevivido (além da escala normal por tempo).
@@ -76,12 +85,12 @@ export const FINAL_SWARM={multiplier:3,growthPerMinute:.25,maxArmor:.85,maxEnemi
 export function finalSwarmFactor(overtimeSeconds:number){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60):1;}
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
   const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds);
-  const earlyGenin=rank==='Genin'?.66+.34*Math.min(1,minutes/2.5):1;
-  const baseCap=Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*earlyGenin));
+  // Revisão 11/11/2026: sem desconto de early game em nenhum rank — cada dificuldade escala em sua devida proporção (tier).
+  const baseCap=Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)));
   const cap=swarm>1?Math.min(FINAL_SWARM.maxEnemies,Math.floor(baseCap*swarm)):baseCap;
-  const baseSpawn=earlyGenin*Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier))*swarm;
+  const baseSpawn=Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier))*swarm;
   const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):baseSpawn;
-  return {hp:tier*(1+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*curse*swarm,damage:tier*(1+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
+  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*curse*swarm,damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,
     spawnPerSecond,spawnInterval:1/spawnPerSecond,
     cap,

@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## Dificuldade, scale de habilidades, ficha e renderizador (preparo .exe) · 11/11/2026
+
+- **Early game mais difícil em todas as dificuldades** (usuário: "dificulte mais o early game de todos os modos de jogo que temos em suas devidas proporções"): o Genin perdeu o desconto inicial de 66% — todas as dificuldades nascem na força plena do tier (1 / 1,4 / 1,9 / 2,6) e a base do minuto 0 subiu (HP ×1,6 · dano ×1,45), decaindo proporcionalmente com o tempo (5 min ≈ ×1,20 · 10 min ≈ ×1,13 · 30 min ≈ ×1,05). (`src/game/progression.ts`)
+- **Dificuldade individual por zona (fase)** (usuário: "verifique o nível de dificuldade também individual para cada fase do jogo"): nova `ZONE_DIFFICULTY` (zona 1 ×1 · zona 2 ×1,18 · zona 3 ×1,38) aplicada ao HP, dano, spawn e pressão de roleta de cada zona. (`progression.ts`, `src/scene/GameCanvas.tsx`)
+- **Scale de dano e % de todas as habilidades aumentado** (usuário: "aumente o scale de dano e % de todas as habilidades do jogo" + "deixe mais difícil, alguns personagens estão fazendo os mapas muito fáceis"): `GROWTH_ROLLS` com base ×1,5 e spread maior em todas as raridades (Comum +45–67% · Lendário +375–485% por nível) e novo `TECHNIQUE_SCALE` (×1,2) aplicado ao dano das técnicas do jogador e dos ajudantes (kits dos chefes já escalam por fase e não mudaram). (`src/game/combat.ts`, `GameCanvas.tsx`)
+- **Números de dano podem seguir spammando** (usuário: "pode deixar os números spammando na tela"): teto na tela de 60 → 300 (pool de sprites preservado). (`GameCanvas.tsx`)
+- **Tabela de utilidades de volta na ficha** (usuário: "volte a tabela de utilidades para a ficha do personagem, em outra rodada foi retirado"): bloco UTILIDADE com 9 linhas — velocidade, coleta, sorte, experiência, Ryu, recarga da Ultimate, vagas de suporte, dano de aliados, cadência de aliados. (`src/ui/RunSheet.tsx`)
+- **Gráfico de crescimento por nível na ficha** (referência visual: vídeo enviado pelo usuário, arquivado FORA do repositório): cada técnica aprendida mostra barras "Crescimento por nível · dano por golpe" (nível 1 → atual, dano exato por nível). (`RunSheet.tsx`, `src/run-ui.css`)
+- **Treinamento esgotado sobe somente Sorte** (usuário: "quando não temos mais nada para evoluir em habilidades/pílulas aumentar só a 'Sorte'"): pool de técnicas/pílulas esgotado → level-up agora dá +0,8% de Sorte; antes era atributo aleatório. (`GameCanvas.tsx`)
+- **Renderizador DirectX/OpenGL nas configurações** (preparo do .exe/patch, pedido do usuário em rodada anterior e confirmado agora: "também tem que acompanhar uma configuração semelhante para já ficar preparado um executável"): nova opção na aba Tela — no navegador a renderização é sempre WebGL (melhor esforço); no .exe/patch o jogador escolhe o motor. (`src/game/settings.ts`, `src/ui/SettingsScreen.tsx`)
+- **Kankuro RESOLVIDO** (usuário: "kankuro já foi corrigido"): arte das folhas 1/15/30 + walk/action v3 confirmada no repositório; fila atualizada. (docs/13)
+- **TESTADO**: `tsc -b`, `vite build`, `verify-rules` (56/97/95) e `verify-runtime` (Edge headless, todos os checks verdes, sem exceções JS nem assets 404).
+
 ## Andar durante o ataque + economia de geometria dos anéis · 11/11/2026
 
 - Pedido do usuário (CONFIRMADO): "Porque no MEU computador o jogo está lagado, 20 FPS? Mesmo quando eu fecho tudo relacionado a IA?" + "O personagem não deve travar/parar de andar na animação de ataque, se ele tem ataquespeed para atacar e consegue andar, deve continuar andando fazendo os movimentos."

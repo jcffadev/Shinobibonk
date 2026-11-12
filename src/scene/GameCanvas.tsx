@@ -1,4 +1,4 @@
-import { POWERLEVEL_ATTRIBUTES, rollPowerlevel, readPowerlevel, type Powerlevel } from '../game/powerlevel';
+import { POWERLEVEL_ATTRIBUTES, readPowerlevel, type Powerlevel, type PowerlevelAttribute } from '../game/powerlevel';
 import { createGroundMaterial, createSky, groundHeight, trailX, RENDERED_GROUND_SIZE, REGIONAL_PLACES } from './terrainArt';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -35,12 +35,12 @@ import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVita
 import { MAP_BY_ID, type MapId } from '../game/maps';
 import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
-import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, setupNumbers, techniqueDetail, type SkillGrowth } from '../game/combat';
+import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, setupNumbers, techniqueDetail, TECHNIQUE_SCALE, type SkillGrowth } from '../game/combat';
 import type { Bonuses } from '../game/catalog';
 import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSignatureVisual, disposeObject } from './techniqueEffects';
 import { createParticleFx } from './particleFx';
 import { createSusanooFx, susanooStyleFor } from './susanooFx';
-import { calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, ENEMY_SCALING, FINAL_SWARM, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
+import { calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, ENEMY_SCALING, FINAL_SWARM, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
 import { rollRarityTier, RARITY_ORDER } from '../game/combat';
 import { ROULETTE_BY_ID, ROULETTE_RULES, BLESSINGS, BAD_LUCK, rouletteWeights, roulettePressure, rollRoulette, rouletteCost, seededRng, spendBonuses, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
@@ -409,7 +409,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       return techniques.filter(t=>t.unlockLevel<=level&&!config.archivedSkills.includes(t.name)&&!banned.has(t.name)&&!consumedTechniques.has(t.name)&&(skillLevels[t.name]||0)<9+ex('skillCap')&&((skillLevels[t.name]||0)>0||learned<maxSkills));};
     /** Pílulas que ainda podem subir (fora do limite de níveis e de tipos). Pílula no limite NUNCA aparece (cartas, roleta, drops). */
     const eligiblePills=()=>pillNames.filter(name=>!banned.has(name)&&canGrantPill(knownPills,name,ex('pillCap')));
-    const grantTraining=()=>{const attribute=rollPowerlevel(stats);powerlevel[attribute]=(powerlevel[attribute]??0)+1;refreshStats(true);return attribute;};
+    /** Pool de técnicas e pílulas esgotado: o level-up sobe SOMENTE a Sorte (+0,8% extra) — regra do usuário (11/11/2026: "quando não temos mais nada para evoluir em habilidades/pílulas aumentar só a Sorte"). Antes era atributo aleatório. */
+    const grantTraining=():PowerlevelAttribute=>{powerlevel.luck=(powerlevel.luck??0)+1;refreshStats(true);return 'luck';};
     /** A Sorte altera a potência da pílula, que sempre avança um nível. */
     const pillOffer=(pill:string):LevelOffer=>{const rarity=RARITY_ORDER[rollRarityTier(lootLuck())];return {id:'pill-'+pill,kind:'pill',name:pill,rarity,icon:PILL_BY_NAME[pill]?.glyph??'💊',description:pillOfferText(pill,knownPills[pill]||0,ex('pillCap'),rarity)};};
     const rollLevelOffers=():LevelOffer[]=>{
@@ -943,7 +944,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         for(const e of events){e.active=false;e.discovered=false;e.obj.visible=false;}teuchi.visible=false;
         const beast=spawnBijuu(undefined,undefined,arrivalOvertime);eventToast=BIJUU_BY_ID[beast.heroId!].name+' · Fase 1/3';
       }else{
-        zone++;guardianSpawned=false;shikamaruPlans=0;zoneDifficulty=1;xpMultiplier=1;lootMultiplier=1;
+        zone++;guardianSpawned=false;shikamaruPlans=0;zoneDifficulty=ZONE_DIFFICULTY[zone]??1;xpMultiplier=1;lootMultiplier=1;
         spawnTimer=1;ambushTimer=8;megaSchedule=rollMegaSchedule();megaElitesSpawned=0;accountEncounters=0;nextAccountAt=elapsed+20;totemSpawned=false;
         weatherDef=MAP.weathers[Math.floor(Math.random()*MAP.weathers.length)];weather=weatherDef.name;applyWeather();
         scatterEvents();scatterPickups();eventToast='Zona '+zone+' · 10:00 · explore os novos eventos';
@@ -967,7 +968,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       // SEM drop de item por abate (pedido do usuário, 06/11/2026): itens só por kunai/shuriken/eventos com interação.
       // Antes: 1,8% por abate (×Sorte) virava pendingItemRewards ao ser puxado pelo ímã — com emboscadas e horda grande, chovia item sem interação.
       playSfx('impact');}
-    function damageNumber(position:THREE.Vector3,amount:number,tier=0){if(hiddenEffects||!currentSettings().damageNumbers||numbers.length>60||amount<.5)return;/* Textura por rótulo em cache e sprite do pool (damageNumbers.ts). */const sprite=damageNumbers.spawn(amount,tier);sprite.position.set(position.x+(Math.random()-.5)*.5,position.y+1.5,position.z);numbers.push({sprite,life:.8});}
+    function damageNumber(position:THREE.Vector3,amount:number,tier=0){if(hiddenEffects||!currentSettings().damageNumbers||numbers.length>300||amount<.5)return;/* Textura por rótulo em cache e sprite do pool (damageNumbers.ts). */const sprite=damageNumbers.spawn(amount,tier);sprite.position.set(position.x+(Math.random()-.5)*.5,position.y+1.5,position.z);numbers.push({sprite,life:.8});}
     function takeDamage(enemy:Enemy,damage:number,color:string,fromAlly=false,tier=0,name='Status'){if(!enemyList.includes(enemy))return;if(enemy.defense)damage*=1-enemy.defense;if(enemy.account&&damage>=1)damage=Math.max(damage,(enemy.maxHp||1)*.10);const dealt=Math.min(enemy.hp,damage);if(fromAlly)allyDamage+=dealt;else{totalDamage+=dealt;skillDamage[name]=(skillDamage[name]||0)+dealt;if(ex('lifesteal')>0&&!defeated)hp=Math.min(stats.maxHp,hp+dealt*ex('lifesteal'));}enemy.hp-=damage;
       // Lâmina do Carrasco: inimigos comuns abaixo de 8% (+4 pontos por cópia extra) morrem na hora.
       const executeAt=ex('execute')>0?.04*(ex('execute')/.08+1):0;if(executeAt>0&&enemy.hp>0&&!enemy.megaElite&&!enemy.guardian&&!enemy.totem&&enemy.hp<(enemy.maxHp||0)*executeAt)enemy.hp=0;damageNumber(enemy.sprite.position,damage,tier);if(enemy.hp<=0)removeEnemy(enemy);else if(!hiddenEffects){enemy.sprite.material.color.set(color);}}
@@ -991,7 +992,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       return bonus;
     }
     function hit(enemy:Enemy,t:Technique,g:SkillGrowth,origin:THREE.Vector3,ally=false){if(!enemyList.includes(enemy))return;const crit=rollCritical(stats.crit,stats.critDamage),school=t.ultimate?stats.physical*stats.ninjutsu:t.school==='Taijutsu'?stats.physical:t.school==='Ninjutsu'?stats.ninjutsu:1,sage=t.element==='Sábio'||stats.sage>0||(!ally&&sageModeActive()),passive=!ally&&DETERMINATION[heroId]!==undefined?1+DETERMINATION[heroId]*(1-hp/stats.maxHp):!ally&&familyOf(heroId)==='hashirama'&&sage?1.2:!ally&&familyOf(heroId)==='tenten'&&(t.element==='Neutro'||t.shape==='Projétil'||t.shape==='Em V')?1.5:1;
-      const damage=stats.damage*t.power*(1+g.damage)*(!ally&&config.trained?.includes(t.name)?1.15:1)*school*passive*crit.multiplier*(ally?.65*stats.allyDamage:damageMultiplier*tune().playerDamage*itemDamageBonus(enemy,t));
+      const damage=stats.damage*t.power*TECHNIQUE_SCALE*(1+g.damage)*(!ally&&config.trained?.includes(t.name)?1.15:1)*school*passive*crit.multiplier*(ally?.65*stats.allyDamage:damageMultiplier*tune().playerDamage*itemDamageBonus(enemy,t));
       if(enemy.control==='Dormir')enemy.controlTime=0;
       const status=t.status??(stats.status>0?'Lentidão':undefined);if(status&&Math.random()<Math.min(.95,(t.status?t.statusChance:0)+stats.status)){const duration=(status==='Lentidão'?1.8:.65)*stats.duration*(1+g.duration);if(status==='Empurrar'){const away=enemy.sprite.position.clone().sub(origin);away.y=0;enemy.sprite.position.addScaledVector(away.normalize(),1.4);}else{enemy.control=status;enemy.controlTime=duration;if(status==='Lentidão')enemy.slow=duration;}}
       if(t.secondaryStatus&&Math.random()<Math.min(.95,(t.secondaryStatusChance??0)+stats.status)){

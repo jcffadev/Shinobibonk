@@ -7,6 +7,8 @@ export type Quality = 'alta' | 'media' | 'baixa';
 export type Resolution = 'auto' | 'nativa' | '900p' | '720p';
 /** Placa de vídeo escolhida pelo jogador (Gráficos). No .exe vira a seleção direta de GPU. */
 export type GpuChoice = 'auto' | 'desempenho' | 'integrada';
+/** Renderizador escolhido pelo jogador (Tela). No .exe/patch o jogador escolhe DirectX ou OpenGL; na web a renderização é sempre WebGL (melhor esforço do navegador). */
+export type Renderer = 'directx' | 'opengl';
 export type PickupFx = 'completos' | 'simples' | 'nenhum';
 /** Ações remapeáveis. O valor é a tecla (event.key em minúsculas; ' ' = Espaço). Esc não é remapeável. */
 export type KeyAction = 'up' | 'down' | 'left' | 'right' | 'jump' | 'slide' | 'interact' | 'ultimate' | 'autoUlt' | 'bigMap' | 'quickMap' | 'sheet' | 'ping' | 'hideFx' | 'reroll' | 'skip' | 'ban';
@@ -21,7 +23,7 @@ export type GameSettings = {
   // Gráficos
   quality: Quality; fpsLimit: number; vsync: boolean; gpu: GpuChoice; hideMyAttacks: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
   // Tela
-  resolution: Resolution;
+  resolution: Resolution; renderer: Renderer;
   // Controles
   mouseSensitivity: number; invertY: boolean; cameraDistance: number; autoUltimate: boolean;
   // Teclas
@@ -35,7 +37,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
   volume: .7, sfxVolume: 1, voiceVolume: .8, voiceLanguage: 'pt', muteInBackground: true,
   quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
-  resolution: 'auto',
+  resolution: 'auto', renderer: 'directx',
   mouseSensitivity: 1, invertY: false, cameraDistance: 19, autoUltimate: false,
   keys: { ...DEFAULT_KEYS },
   hudScale: 1, hudOpacity: 1, minimap: true, minimapScale: 1, toasts: true,

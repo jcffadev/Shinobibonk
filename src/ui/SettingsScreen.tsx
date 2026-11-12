@@ -60,7 +60,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
     const by: Record<Category, Partial<GameSettings>> = {
       som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
       graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
-      tela: { resolution: d.resolution },
+      tela: { resolution: d.resolution, renderer: d.renderer },
       controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, autoUltimate: d.autoUltimate, sealAnimation: d.sealAnimation },
       teclas: { keys: { ...DEFAULT_KEYS } },
       interface: { hudScale: d.hudScale, hudOpacity: d.hudOpacity, minimap: d.minimap, minimapScale: d.minimapScale, toasts: d.toasts },
@@ -98,7 +98,8 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
         {category === 'tela' && <>
           <Card title="Modo de tela" hint="Também com F11" wide><Choice value={fullscreen ? 'cheia' : 'janela'} options={[{ value: 'cheia', label: 'Tela cheia' }, { value: 'janela', label: 'Janela' }]} onChange={(v) => { void (v === 'cheia' ? document.documentElement.requestFullscreen() : document.fullscreenElement ? document.exitFullscreen() : Promise.resolve()).catch(() => { }); }} /></Card>
           <Card title="Resolução" hint="Automática baixa a resolução em telas grandes para rodar liso; Nativa usa todos os pixels da tela" wide><Choice value={settings.resolution} options={[{ value: 'auto', label: 'Automática' }, { value: 'nativa', label: 'Nativa' }, { value: '900p', label: '900p' }, { value: '720p', label: '720p' }]} onChange={(v) => set({ resolution: v })} /></Card>
-          <Card title="Monitor e motor gráfico" hint="Monitor escolhido pelo navegador; no .exe: renderizador (OpenGL/DirectX) também por sua escolha" wide />
+          <Card title="Monitor e motor gráfico" hint="Monitor escolhido pelo navegador" wide />
+          <Card title="Renderizador" hint="No navegador a renderização é sempre WebGL; no .exe/patch você escolhe DirectX ou OpenGL" wide><Choice value={settings.renderer} options={[{ value: 'directx', label: 'DirectX' }, { value: 'opengl', label: 'OpenGL' }]} onChange={(v) => set({ renderer: v })} /></Card>
         </>}
         {category === 'controles' && <>
           <Card title="Sensibilidade do mouse" hint="Velocidade do giro (1:1, sem aceleração): quanto a câmera gira por movimento do mouse"><Slider value={settings.mouseSensitivity} min={.2} max={3} step={.05} format={(v) => v.toFixed(2)} onChange={(v) => set({ mouseSensitivity: v })} /></Card>

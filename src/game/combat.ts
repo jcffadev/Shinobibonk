@@ -14,8 +14,14 @@ export function rollRarityTier(luck:number,rng=Math.random):number{
  * Afixos por nível de técnica (%), por raridade [Comum, Incomum, Raro, Épico, Lendário]: base + aleatório(0..spread).
  * DANO das técnicas de ataque é a principal fonte de escala do jogador (na referência, a técnica Nv. 10 tinha +300%/nível):
  * sempre vem no level-up de técnica de ataque e cresce muito com a raridade. Área/recarga/duração e buffs (setups) usam a tabela menor.
+ * Revisão 11/11/2026 (pedido do usuário: "aumente o scale de dano e % de todas as habilidades do jogo"): base ×1,5 e spread maior em todas as raridades.
  */
-export const GROWTH_ROLLS={damage:{base:[30,55,90,150,250],spread:[15,20,30,50,80]},other:{base:[10,18,25,30,40],spread:[8,10,10,15,15]}};
+export const GROWTH_ROLLS={damage:{base:[45,80,135,225,375],spread:[22,30,45,70,110]},other:{base:[15,27,38,45,60],spread:[11,14,14,21,21]}};
+/**
+ * Escala global de dano das técnicas do jogador e dos ajudantes (revisão 11/11/2026 — pedido do usuário: "aumente o scale de dano e % de todas as
+t * habilidades do jogo"). Aplicada no cálculo do golpe (GameCanvas, hit()); os kits dos chefes já escalam por fase em bossCombat.ts e não usam este fator.
+ */
+export const TECHNIQUE_SCALE=1.2;
 export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rarity:Rarity;growth:SkillGrowth}{
  const tier=rollRarityTier(luck,rng);
  const keys:(keyof SkillGrowth)[]=technique.setup?['damage','haste','duration']:['area','haste'];if(!technique.setup&&(technique.status||technique.burn))keys.push('duration');
