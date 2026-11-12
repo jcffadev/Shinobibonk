@@ -60,13 +60,18 @@ export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.
  * - Spawns por segundo = (spawnBase + spawnPerMinute×min) × √tier, até maxSpawnPerSecond (o jogo repõe em lote, sem 1-por-quadro)
  * Revisão 11/11/2026 (pedidos do usuário: "dificulte mais o early game de todos os modos de jogo" + "verifique o nível de dificuldade de scale de cada nível de dificuldade"):
  * - O Genin perdeu o desconto de 66% inicial: TODAS as dificuldades nascem na base cheia do tier, em suas devidas proporções (1 / 1,4 / 1,9 / 2,6).
- * - Base do minuto 0 subiu: HP × hpBase (1,6) e dano × damageBase (1,45):
+ * - Base do minuto 0 subiu: HP × hpBase e dano × damageBase (1,45):
+ * Rodada 47 (pedido do usuário: "aumentar cerca de 200% a dificuldade, diminuir dano inicial dos personagens,
+ * aumentar hp/defesa dos mob's" — Genin; se fácil no Genin, fácil em todos, nas devidas proporções do tier):
+ * - hpBase 1,6 → 3,2 (HP inicial dos inimigos ×2) e defesa inicial dobrada (armorPerMinute 0,015→0,03 · maxArmor 0,6→0,72);
+ * - dano base dos heróis ×0,55 → ×0,41 (heroes.ts, −25%);
+ * - dificuldade total ≈ ×2,8–3,1 no minuto 0 (valores PROPOSTOS pela sessão; o usuário testa a gameplay e ajustamos).
  *   HP   = tier × (hpBase + min×hpLinear) × hpPerMinute^min
  *   Dano = tier × (damageBase + min×damageLinear) × damagePerMinute^min
  *   O efeito extra é máximo no início e decai proporcionalmente (5 min: ×1,20 · 10 min: ×1,13 · 30 min: ×1,05) — o late game já é íngreme por si (1,17^min).
  * - Escala individual por zona (fase): ZONE_DIFFICULTY (zona 1 ×1 · zona 2 ×1,18 · zona 3 ×1,38), aplicada em GameCanvas (zoneDifficulty).
  */
-export const ENEMY_SCALING={hpBase:1.6,hpLinear:.3,hpPerMinute:1.17,damageBase:1.45,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.015,maxArmor:.6};
+export const ENEMY_SCALING={hpBase:3.2,hpLinear:.3,hpPerMinute:1.17,damageBase:1.45,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.03,maxArmor:.72};
 /** Escala individual por zona (fase): cada fase nasce mais forte que a anterior (HP, dano, spawn e pressão de roleta). Pedido do usuário (11/11): "verifique o nível de dificuldade também individual para cada fase do jogo". */
 export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
 /**

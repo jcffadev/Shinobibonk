@@ -103,8 +103,8 @@ export const ITEMS:Item[] = [
   item('damage','Selo Amaldiçoado','Raro',3,5,'+30% de dano total e −10% de HP máximo.',{damage:.3,healthPct:-.1}),
   item('training-weights','Pesos de Treinamento','Raro',4,3,'+50% de experiência e −10% de movimento.',{exp:.5,move:-.1}),
   item('banner','Estandarte da Aliança','Raro',11,2,'+40% de força dos buffs dos ajudantes.',{allyBuff:.4}),
-  // PROPOSTO (11/11/2026): efeito provisório até o usuário confirmar o que a Isca deve fazer.
-  item('shinobi-bait','Isca Shinobi','Raro',8,3,'+15% de inimigos no mapa, +12% de Ryu recebido e +8% de experiência.',{enemyCount:.15,gold:.12,exp:.08}),
+  // Rodada 47 (pedido do usuário: "a Isca Shinobi é uma Pílula, não um item") → migrou para pills.ts como
+  // pílula "Isca Shinobi" (mesmos valores por nível: +15% horda · +12% Ryu · +8% experiência).
   item('executioner','Lâmina do Carrasco','Raro',1,4,'Inimigos comuns abaixo de 8% do HP morrem na hora (+4 pontos por cópia extra).',{execute:.08}),
   item('luck','Colar do Primeiro Hokage','Raro',2,ANY,'+20 de Sorte. Melhora a raridade das ofertas de itens.',{luck:20}),
   // Referência: porta-moedas (buff por dinheiro gasto). A carteira de sapo do Naruto.

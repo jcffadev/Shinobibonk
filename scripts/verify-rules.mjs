@@ -106,7 +106,10 @@ assert.ok(heroDamageScale(500)>7000&&heroDamageScale(1000)>90000);
 assert.equal(xpToLevelUp(1),30);assert.ok(xpToLevelUp(1000)>xpToLevelUp(500));
 const overtime=18*60,runSeconds=10*60+overtime;
 const hpLate=guardianVitality(difficultyAt('Genin',runSeconds,1,overtime).hp,runSeconds,runSeconds,overtime,1);
-assert.ok(hpLate>=9e8&&hpLate<1.1e9,`HP tardio do guardião: ${hpLate}`);
+// Rodada 47 — faixa atualizada: o usuário pediu early game +200% (hpBase 1,6→3,2 em ENEMY_SCALING; dano do herói ×0,55→×0,41).
+// O HP tardio do guardião é proporcional a hpBase (1,17^min amplifica ~81× aos 28 min): 1,06e9 → ≈1,23e9. Se o usuário
+// ajustar o scale da dificuldade, atualize esta faixa junto com ENEMY_SCALING (progression.ts) e a nota na docs/14.
+assert.ok(hpLate>=1.1e9&&hpLate<1.35e9,`HP tardio do guardião: ${hpLate}`);
 assert.ok(guardianDefense(runSeconds)>.85&&guardianDefense(runSeconds,true)>guardianDefense(runSeconds));
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);
 assert.equal(megaEliteHp(55,1),20000);assert.ok(megaEliteHp(595,1)>2e6);
@@ -215,7 +218,11 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
 // Horda: teto 1600 aos 10 min (Genin), spawn em lote crescente; FINAL SWARM ×3 imediato e crescendo.
 {const d8=difficultyAt('Genin',480),d10=difficultyAt('Genin',600),sw=difficultyAt('Genin',600,1,1e-3),sw5=difficultyAt('Genin',900,1,300);
  assert.ok(d8.cap>=1100&&d10.cap===1600,'horda ~1600 no fim');assert.ok(d8.spawnPerSecond>40,'spawn em lote');
- assert.ok(Math.abs(sw.hp/d10.hp-3)<.01&&Math.abs(sw.damage/d10.damage-3)<.01,'FINAL SWARM triplica HP e dano');assert.ok(sw.armor>d10.armor*2.9);
+ assert.ok(Math.abs(sw.hp/d10.hp-3)<.01&&Math.abs(sw.damage/d10.damage-3)<.01,'FINAL SWARM triplica HP e dano');
+ // Rodada 47 — era `>d10.armor*2,9`: com a curva de armadura dobrada (armorPerMinute 0,015→0,03, maxArmor 0,6→0,72),
+ // o 10 min tem armadura 0,30 e o swarm fica no teto FINAL_SWARM.maxArmor (0,85) = ×2,83. A defesa do swarm segue bem
+ // acima da base (teto de 85% de redução); a intenção (swarm >> base) mantém-se válida na nova proporção.
+ assert.ok(sw.armor>d10.armor*2.5,'FINAL SWARM eleva a defesa (teto 0,85)');
  assert.ok(sw5.hp/difficultyAt('Genin',900).hp>3.9,'FINAL SWARM cresce com o tempo sobrevivido');assert.ok(d10.hp>15,'HP ×16 aos 10 min');}
 // Sorte: raridade primeiro, depois o item; raridade vazia desce para a mais próxima abaixo (Sorte alta não cai em Comum à toa).
 {const pool=[...ITEMS.filter(i=>i.rarity==='Comum'),...ITEMS.filter(i=>i.rarity==='Incomum').slice(0,3),...ITEMS.filter(i=>i.rarity==='Raro').slice(0,2)];let commons=0;const r3=rng;

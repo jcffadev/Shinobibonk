@@ -21,7 +21,12 @@ const t=(name:string,school:School,element:Element,shape:Shape,power=1):Techniqu
 /** Cria uma técnica de setup. Valores provisórios. */
 const s=(name:string,school:School,element:Element,setup:Setup):Technique=>({name,school,element,shape:'Buff',color:colors[element],power:0,range:9,cooldown:setup.cooldown,statusChance:0,unlockLevel:1,setup});
 const SAGE_MODE:Setup={cooldown:16,duration:7,bonuses:{damage:.15,area:.2},stack:false,sage:true,summary:'Entra no Modo Sábio: +dano e +área; aplica o elemento Sábio, dá Senjutsu ao Ninjutsu e faz o taijutsu corpo a corpo acertar em área ao redor.'};
-function h(id:string,name:string,village:string,color:string,hp:number,damage:number,armor:number,speed:number,passive:string,bonuses:Bonuses,techniques:Technique[],ultimate:string,build:string,atlas?:number):Hero{return {id,name,village:village.startsWith('Clã')?'Vila da Folha':village,color,base:{hp,damage:damage*.55,armor,speed,crit:.05,regen:0},passive,bonuses,techniques:techniques.map((t,i)=>({...t,unlockLevel:[1,5,12,20][i]})),skills:techniques.map(t=>t.name),ultimate,build,atlas};}
+/** Rodada 47 (pedido do usuário: early game +200% de dificuldade) — dano base do herói ×0,41 (era ×0,55);
+ *  o HP base do herói NÃO mudou (o teste fixa 85 de HP do Naruto Academia).
+ *  Constante nomeada e exportada: `version()` divide pelo MESMO fator ao derivar as versões, então o fator
+ *  muda num único lugar (evita o bug do `.55` hardcoded que deixou as versões mais fracas que a base). */
+export const HERO_DAMAGE_FACTOR=.41;
+function h(id:string,name:string,village:string,color:string,hp:number,damage:number,armor:number,speed:number,passive:string,bonuses:Bonuses,techniques:Technique[],ultimate:string,build:string,atlas?:number):Hero{return {id,name,village:village.startsWith('Clã')?'Vila da Folha':village,color,base:{hp,damage:damage*HERO_DAMAGE_FACTOR,armor,speed,crit:.05,regen:0},passive,bonuses,techniques:techniques.map((t,i)=>({...t,unlockLevel:[1,5,12,20][i]})),skills:techniques.map(t=>t.name),ultimate,build,atlas};}
 /**
  * Biblioteca de técnicas COMPARTILHADAS (não pertencem a um shinobi só). Regra do usuário (06/11/2026):
  * cada shinobi tem 1–2 técnicas ÚNICAS; o resto do kit vem desta biblioteca. Duplicatas (vários Shuriken,
@@ -193,7 +198,12 @@ for(const hero of HEROES){hero.family=hero.id;hero.form=1;const title=BASE_TITLE
 /** Cria a versão `step` (1, 2, 3…) da família: HP/dano +12% por passo, +1 armadura e +0,08 de movimento por passo. */
 function version(family:string,id:string,title:string,form:number,step:number,passive:string,bonuses:Bonuses,techniques:Technique[],ultimate:string,build:string):Hero{
   const b=HEROES.find(x=>x.id===family)!,scale=1+.12*step;
-  const hero=h(id,SHORT_NAMES[family]+' '+title,id==='orochimaru-som'?'Vila do Som':b.village,b.color,Math.round(b.base.hp*scale),b.base.damage/.55*scale,b.base.armor+step,+(b.base.speed+.08*step).toFixed(2),passive,bonuses,techniques,ultimate,build,b.atlas);
+  /* Rodada 47 — BUG CORRIGIDO: era `b.base.damage/.55*scale`, divisão pelo multiplicador ANTIGO da fábrica (×0,55).
+     Com a fábrica em ×0,41 (dano inicial menor), as versões seguintes ficavam MAIS FRACAS que a base
+     (naruto-genin 6,16 < naruto 7,38), violando a regra do verify-rules "versões avançadas mais fortes".
+     `b.base.damage` JÁ contém o multiplicador da fábrica e `h()` aplica o fator DE NOVO ao argumento,
+     então o argumento é (dano guardado ÷ HERO_DAMAGE_FACTOR) × scale — o fator agora vem da constante, num lugar só. */
+  const hero=h(id,SHORT_NAMES[family]+' '+title,id==='orochimaru-som'?'Vila do Som':b.village,b.color,Math.round(b.base.hp*scale),b.base.damage/HERO_DAMAGE_FACTOR*scale,b.base.armor+step,+(b.base.speed+.08*step).toFixed(2),passive,bonuses,techniques,ultimate,build,b.atlas);
   return {...hero,family,form,title};
 }
 export const HERO_VERSIONS:Hero[]=[

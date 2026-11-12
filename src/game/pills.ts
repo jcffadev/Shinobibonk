@@ -45,6 +45,9 @@ export const PILLS: PillDef[] = [
   pill('ima', 'Pílula Magnética', '引', '#8fa0bd', { pickupFlat: 1 }, 'Atrai drops de mais longe.'),
   pill('hiden', 'Pílula Hiden', '秘', '#7b5cff', { cool: .08 }, 'Técnica secreta que acelera a recarga da Ultimate. Não concede Chakra.'),
   pill('incenso', 'Pílula de Incenso', '香', '#c28157', { enemyCount: .10, threat: .05, gold: .12 }, 'Atrai uma horda maior e fortalece os inimigos em troca de mais Ryu.'),
+  // Rodada 47 (pedido do usuário: "a Isca Shinobi é uma Pílula, não um item") — migrou do item raro `shinobi-bait`
+  // (catálogo) com os MESMOS valores por nível: +15% horda · +12% Ryu · +8% experiência.
+  pill('isca', 'Isca Shinobi', '餌', '#d97b2f', { enemyCount: .15, gold: .12, exp: .08 }, 'Isca de treino do clã: atrai uma horda maior em troca de mais Ryu e experiência.'),
 ];
 
 export const PILL_BY_NAME: Record<string, PillDef> = Object.fromEntries(PILLS.map(p => [p.name, p]));

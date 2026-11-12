@@ -257,7 +257,10 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const guard = state === 'ultimate' ? .085 : state === 'attack' ? .045 : state === 'hurt' ? .04 : 0;
       const proceduralMotion=!usesSheet||useDirection&&!useAction&&(state==='jump'||state==='dash');
       // Rodada 45 — suaviza a amplitude da passada na troca de folha (andar <-> andar-atacando): antes, a deformação das pernas LIGAVA/DESLIGAVA de uma vez no início/fim do golpe (a 'falha de movimentação' reportada). Agora sobe/desce em ~0,1 s e a passada termina/retoma sem 'pulo'.
-      const strideTarget = (proceduralMotion || walkAttack) ? stride : 0;
+      // Rodada 47 (pedido do usuário: "animação distorcida ainda... bug de distorção ao tentar atacar + andar") — a passada
+      // procedural (deformação de pernas/ braços da pose) NUNCA se sobrepõe a uma folha desenhada: o quadro de ataque fica
+      // 100% íntegro (sem 'distorção'); o andar-livre continua porque o DESLOCAMENTO vem da simulação, não desta deformação.
+      const strideTarget = proceduralMotion ? stride : 0;
       strideShown += (strideTarget - strideShown) * (1 - Math.exp(-dt * 16));
       if (!usesSheet) frameShown = 0;
       pose.apply(sprite.material, strideShown, proceduralMotion ? lift : 0,

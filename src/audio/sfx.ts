@@ -115,6 +115,13 @@ export function playYooo(){
   }catch{ /* áudio indisponível → fallback sintetizado */ }
   yoooFallback();
 }
+/** Rodada 47 (pedido do usuário: "o som de YOOOO! tem que entrar mais rápido ao clicar no botão") —
+ *  pré-carrega o MP3 no boot do app: o 1º clique não espera o download (a lentidão era o fetch no 1º play). */
+export function preloadYooo(){
+  try{
+    if(!yoooClip){yoooClip=new Audio('/assets/audio/yooo.mp3');yoooClip.preload='auto';yoooClip.load();}
+  }catch{ /* sem áudio: playYooo usa o fallback sintetizado */ }
+}
 let lastCast=-Infinity;
 /** Intervalos mínimos das falas de técnicas comuns (ms). */
 export const VOICE_RULES={global:15000,perTechnique:60000};

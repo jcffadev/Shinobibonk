@@ -137,18 +137,23 @@ checks.push('Rendan Uzumaki exibe impacto no inimigo quando H está desativado')
 await debug('setChakra');await page.keyboard.press('r');assert.ok((await state()).chakra<100);await page.locator('.ultimate-auto-mark').click();assert.equal((await state()).autoUlt,true);checks.push('Ultimate R e selo AUTO');
 await page.keyboard.press('y');assert.equal((await state()).autoUlt,false);await page.keyboard.press('y');assert.equal((await state()).autoUlt,true);checks.push('Tecla Y alterna a Ultimate automática');
 await debug('clearEnemies');await debug('dismiss');await wait();await debug('defeatMega','neji');await page.keyboard.press('g');await wait();
-assert.equal((await state()).sealing,null);await page.keyboard.press('e');await wait();assert.equal((await state()).choice.length,3);await page.keyboard.press('1');await wait();checks.push('Recusa G deixa kunai grátis com três escolhas');
+assert.equal((await state()).sealing,null);
+// Rodada 47 — o drop do mega é auto-coletado AO PISAR (sem "E"): o pool abre sozinho no tick seguinte.
+await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.length===3);
+await page.keyboard.press('1');await wait();checks.push('Recusa G deixa kunai grátis com três escolhas · auto-coleta ao pisar, sem E (Rodada 47)');
 for (const [startMoney,paid,cost] of [[100,1,20],[80,2,30]]) {
- await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('pickup','kunai');await wait();
- const payment=await page.evaluate(money=>{
+ await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await wait();
+ // Rodada 47 — a kunai cai na posição do jogador e é comprada no tick de auto-coleta (custo kunaiPrice), sem "E".
+ const payment=await page.evaluate(async money=>{
   const test=window.__shinobiTest;test.setMoney(money);
-  window.dispatchEvent(new KeyboardEvent('keydown',{key:'e',bubbles:true}));
+  test.pickup('kunai');
+  await new Promise(r=>setTimeout(r,600));
   return test.inspect();
  },startMoney);
  assert.equal(payment.paidWeapons,paid);assert.equal(payment.runMoney,startMoney-cost);
  await page.keyboard.press('1');await wait();
 }
-checks.push('Kunais custam 20 e depois 30 Ryu');
+checks.push('Kunais custam 20 e depois 30 Ryu · coletadas ao pisar, sem E (Rodada 47)');
 await debug('grantItem','Pedra da Juventude');await debug('grantItem','Kunai Afiada');await debug('dismiss');await wait();
 await page.keyboard.press('p');await wait();const details=page.locator('.sheet-column').first().locator('details');await details.first().evaluate(el=>el.open=true);await details.first().scrollIntoViewIfNeeded();assert.ok(await page.locator('.pool-icon-row .catalog-icon').count()>0);checks.push('Ícones no pool de itens da ficha');
 await page.screenshot({path:'artifacts/sheet-pool.png'});await page.getByRole('button',{name:'Continuar missão',exact:true}).click();await wait();
@@ -361,8 +366,10 @@ await debug('clearEnemies');await debug('clearDrops');await debug('dismiss');
 await debug('shikamaru');await debug('shikamaru');assert.ok(await debug('summonGuardian'));assert.equal(await debug('defeatGuardian'),3);
 const portalAt=await debug('portalAt');assert.ok(portalAt);
 for(let n=3;n>0;n--){
- const [k]=await debug('freeKunai');await debug('teleport',k.x,k.z);await page.waitForTimeout(150);
- await page.keyboard.press('e');await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.length>0);
+ const [k]=await debug('freeKunai');await debug('teleport',k.x,k.z);
+ // Rodada 47 — teleportar sobre a kunai já dispara a auto-coleta (sem "E"); o "E" perto do portal
+ // poderia entrar na zona seguinte se o pool ainda não tivesse aberto, então só se espera o pool.
+ await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.length>0);
  if(n===2)await page.screenshot({path:'artifacts/guardian-kunai.png'});
  await page.keyboard.press('1');await debug('dismiss');await wait();
  assert.equal((await debug('freeKunai')).length,n-1);assert.equal((await debug('guardian')).zone,1);

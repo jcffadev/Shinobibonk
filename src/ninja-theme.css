@@ -143,7 +143,8 @@ kbd{font-family:var(--fonte-texto)}
 .level-choice-title p{color:var(--tinta2);font-size:12px}
 .level-choice-card{--rarity:var(--rarity-comum);--rarity-strong:var(--rarity-comum-strong);border:3px solid var(--madeira-borda)!important;border-radius:6px;background:var(--bg-pergaminho);color:var(--tinta);box-shadow:0 0 0 3px var(--rarity-strong),0 0 18px color-mix(in srgb,var(--rarity-strong) 55%,transparent),0 6px 0 3px rgba(0,0,0,.35)}
 .level-choice-card:hover{border-color:var(--madeira-borda)!important;box-shadow:0 0 0 4px var(--ouro),0 0 22px color-mix(in srgb,var(--rarity-strong) 70%,transparent),0 6px 0 4px rgba(0,0,0,.35)}
-.level-choice-card .choice-art,.rarity-incomum .choice-art,.rarity-raro .choice-art,.rarity-épico .choice-art,.rarity-lendário .choice-art{margin:0 12px;border-bottom:2px dashed var(--papel3);background:radial-gradient(circle at 50% 55%,color-mix(in srgb,var(--rarity-strong) 55%,#fff) 0 22%,color-mix(in srgb,var(--rarity-strong) 28%,transparent) 48%,transparent 70%)}
+/* Rodada 47 (item 6) — a área do ícone fica PREENCHIDA com a cor da raridade (antes era um brilho suave); as classes rarity-* (rarity.css) expõem --rarity/--rarity-strong. */
+.level-choice-card .choice-art,.rarity-incomum .choice-art,.rarity-raro .choice-art,.rarity-épico .choice-art,.rarity-lendário .choice-art{margin:0 12px;border-bottom:2px dashed var(--papel3);background:linear-gradient(135deg,var(--rarity-strong) 0%,var(--rarity) 45%,color-mix(in srgb,var(--rarity) 55%,#1d1410) 100%);box-shadow:inset 0 0 0 2px var(--rarity-strong)}
 .level-choice-card .choice-art small{left:2px;background:var(--rarity-strong);color:#10141f;border:2px solid rgba(0,0,0,.45);border-radius:3px;font-weight:900}
 .level-choice-card .choice-art b{right:2px;background:var(--bg-selo);color:#fff3df;border:2px solid var(--selo-borda);border-radius:3px;font-family:var(--fonte-titulo);font-weight:400}
 .level-choice-card .choice-art em{background:var(--ouro);color:var(--tinta);border:2px solid var(--madeira-borda)}
@@ -358,3 +359,34 @@ kbd{font-family:var(--fonte-texto)}
 .detail-title h2{font-size:clamp(22px,2vw,28px);line-height:1.1}
 .detail-title .base-stats{min-width:0}
 .detail-title .base-stats small{white-space:normal}
+
+/* ═════════════════════ RODADA 47 — pool por nº de cartas · badge Treinada · ficha tematizada · botões do planner ═════════════════════ */
+
+/* Rodada 47 (item 11) — a largura do pool se ajusta ao número de cartas (classe cards-N aplicada em src/main.tsx):
+   1 escolha → painel estreito; 4 escolhas → largura original. Evita o "buraco" visual com 1-2 cartas. */
+.level-choice.cards-1{width:min(430px,94vw)}
+.level-choice.cards-2{width:min(690px,94vw)}
+.level-choice.cards-3{width:min(930px,95vw)}
+.level-choice.cards-4{width:min(1060px,96vw)}
+
+/* Rodada 47 (item 9) — selo "★ Treinada · +15% de dano" nas técnicas treinadas com Jiraiya (ficha da run). */
+.trained-badge{display:inline-block;margin:3px 0 0;padding:2px 10px;border:2px solid var(--madeira-borda);border-radius:4px;background:linear-gradient(180deg,var(--ouro),#c98f2e);color:var(--tinta);font:400 11px/1.6 var(--fonte-titulo);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+
+/* Rodada 47 (item 7) — ficha da run com moldura de madeira/corda e pinceladas chakra/dourado/roxo nas colunas
+   (Técnicas · Inventário · Ficha técnica). A base vem de run-ui.css (.sheet-banner/.sheet-column/.stripe/.sheet-tile). */
+.game-panel.sheet-panel .sheet-banner{border:2px solid var(--madeira-borda);border-radius:10px;background:repeating-linear-gradient(135deg,#ffffff14 0 9px,transparent 9px 18px),linear-gradient(110deg,#915c38,#536c47);box-shadow:0 0 0 2px var(--corda),0 8px 22px rgba(0,0,0,.4)}
+.game-panel.sheet-panel .sheet-column{background:linear-gradient(180deg,var(--papel-claro),var(--papel) 70%);border:2px solid var(--madeira-borda);border-radius:10px;box-shadow:0 0 0 2px var(--corda),0 0 0 4px var(--madeira-borda),0 12px 26px rgba(0,0,0,.45);overflow:hidden}
+.game-panel.sheet-panel .sheet-column .stripe{border-bottom:2px solid var(--madeira-borda);font-family:var(--fonte-titulo);font-weight:400}
+.game-panel.sheet-panel .sheet-column .stripe.blue{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#2b7fb8,#3aa6ee);color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+.game-panel.sheet-panel .sheet-column .stripe.gold{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#b3812f,#e8b04a);color:var(--tinta)}
+.game-panel.sheet-panel .sheet-column .stripe.purple{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#7a4fc4,#9b6ae0);color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+.game-panel.sheet-panel .sheet-tile{border:2px solid var(--papel3);border-radius:8px;background:var(--papel-claro);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 2px 0 rgba(0,0,0,.18)}
+
+/* Rodada 47 (item 8) — as ações do planejador (Planejar para Missão / Treinar / Não aprender) agora parecem BOTÕES:
+   placa de pergaminho com borda de madeira; ativo = selo vermelho (hanko); "Permitir aprender" mantém verde (base hud-dock.css). */
+.build-cell-actions button{padding:6px 10px;font-size:11px;font-weight:700;color:var(--tinta);background:linear-gradient(180deg,var(--papel-claro),var(--papel2));border:2px solid var(--madeira-borda);border-radius:5px;box-shadow:0 2px 0 rgba(0,0,0,.4);cursor:pointer}
+.build-cell-actions button:hover:not(:disabled){border-color:var(--selo);background:linear-gradient(180deg,var(--papel-claro),var(--papel))}
+.build-cell-actions button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
+.build-cell-actions button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.build-cell-actions button[aria-pressed=true]{background:linear-gradient(180deg,var(--selo),var(--selo2));color:#fff3df;border-color:var(--selo-borda)}
+.build-cell-actions button.enable-skill{background:linear-gradient(180deg,#3f8f63,#2c6b47);color:#eafff2;border-color:#14351f}

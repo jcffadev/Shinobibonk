@@ -1300,3 +1300,71 @@ Aguardando o **teste do usuário no navegador** (fluidez da caminhada + sem “p
 ### Nota
 
 Aguardando o **teste do usuário no navegador** (caminhada/ataque/repouso dos aliados). Se aprovado, este item sai da fila; as pendências das rodadas 44 (FPS em GPU real) e 45 (fluidez da caminhada do jogador) seguem aguardando o mesmo teste.
+
+## Rodada 47 · 12/11/2026 — 13 pedidos: crítico 250/300 · YOOOO rápido · Isca Shinobi → Pílula · Treinar auto-planeja · early game +200% (PROPOSTO) · raridade visual · bordas temáticas · botões do planner · badge Treinada · selamento instantâneo · pool adaptável · auto-coleta · passada sem distorção
+
+**Pedidos do usuário, na íntegra (12/11/2026):**
+
+> "Dano crítico 250% do dano base e Mega Crítico 300% do dano base."
+> "O Som de YOOOO! tem que entrar mais rápido ao clicar no botão, está demorando alguns segundos... tem que ser mais rápido o som."
+> "Você transformou a Isca Shinobi em item, ele é uma Pílula… mude."
+> "ao treinar a passiva Treinamento com Jiraiya, já tem que habilitar o Treinar para selecionar no plano de build."
+> "Early game desde o lv1 muito fácil, extremamente fácil... aumentar cerca de 200% a dificuldade, diminuir dano inicial dos personagens, aumentar hp/defesa dos mob's."
+> "Se está fácil assim na dificuldade genin, também vai estar no restante."
+> "Hud ficou excelente, porém precisamos que na opção de escolha seja mais visual a raridade do item/habilidade/pílula, você já tem as cores, coloque em volta do ícone preenchendo todo o quadradinho a cor da respectiva raridade."
+> "Faça bordas para toda hud que combine com o tema, além disso coloque cores que combinem com o tema japones/naruto/planilha de cores para Técnicas, inventário, ficha técnica."
+> "evidencie como botões essas opções."
+> "E entender no jogo que as habilidades treinadas, irão aparecer e darão o buff da % corretamente."
+> "Ao selar um shinobi se não tiver escolha de substituição por outro do time, continuar a missão instantaneamente, retirar a tela de clicar em 'continuar missão'"
+> "quando tiver só 1 escolha, deixar o tamanho para 1 escolha, quando for 2, para duas e assim por diante. Não deixar a área do hud como se fosse o tamanho normal, pegando na tela como se tivesse 4 escolhas, se não fica feio dessa forma."
+> "pegar itens no chão, precisa sumir a opção de pegar. Assim como em cima de altares, não ter opção de 'iniciar altar' apertando E, só de ficar em cima já ta contando o tempo"
+> "animação distorcida ainda, documentar e tentar corrigir, ainda acontece o 'bug' de distorção ao tentar atacar + andar."
+
+### O que foi feito (por item)
+
+1. **Crítico 250% / Mega Crítico 300% — CONFIRMADO (já estava no código):** `src/game/progression.ts` — `rollCritical(chance, criticalMultiplier=2.5)`: dano crítico = **250%** do dano base; mega crítico (tier 2, chance de crítico ≥ 100%) = `criticalMultiplier + .5` = **300%**. Verificado no código real nesta rodada; nada alterado. (O glossário já documenta a regra do mega-crítico após o crítico 100%.)
+2. **YOOOO mais rápido (item 2):** `src/audio/sfx.ts` — nova `preloadYooo()` (cria o `Audio`, `preload='auto'`, `load()` com fallback silencioso) + `src/main.tsx` — chamada no boot, junto do `startBoot()`. O atraso era o **download no 1º `play()`**: agora o 1º clique **não espera fetch**. Corte a partir do **1 s** (rodada 37) mantido; gate anti-spam inalterado.
+3. **Isca Shinobi volta a ser PÍLULA (item 3):** `src/game/pills.ts` — pílula `isca` com os **mesmos valores** do item antigo (`enemyCount +15% · gold +12% · exp +8%` por nível, ícone 餌); `src/game/catalog.ts` — item `shinobi-bait` **removido** do catálogo (comentário de migração documenta); `src/game/inventoryArt.ts` — ícone avulso não necessário (a cápsula `PillIcon` cobre, como as demais pílulas). Saves antigos degradam graciosamente (sem erro). Reverte a transformação errada registrada em docs/18 §6 (item antigo).
+4. **Treinar habilita direto no planner (item 4):** `src/ui/BuildPlanner.tsx` — o botão **Treinar** agora aparece para **todas** as técnicas do herói (antes: só para as já planejadas) e treinar uma técnica ainda não planejada **auto-planeja** ela junto (antes era no-op, pois `trained` filtra por `planned`). O buff **+15%** em si **já existia desde a rodada 39**: `src/scene/GameCanvas.tsx` `hit()` aplica `config.trained?.includes(t.name) ? 1.15 : 1` nas técnicas do jogador (não dos aliados).
+5. **Early game +200% — IMPLEMENTADO com valores PROPOSTOS, o usuário testa e ajusta (item 5):**
+   - `src/game/progression.ts` — `ENEMY_SCALING`: **hpBase 1,6 → 3,2** (HP inicial dos inimigos ×2) · **armorPerMinute 0,015 → 0,03** (defesa inicial 2× mais rápida) · **maxArmor 0,6 → 0,72**; demais parâmetros mantidos. O efeito extra é **máximo no início** e decai proporcionalmente (5 min: ×1,20 · 10 min: ×1,13 · 30 min: ×1,05) — o late game já é íngreme por si (1,17^min).
+   - `src/game/heroes.ts` — **`export const HERO_DAMAGE_FACTOR=.41`** (era ×0,55 hardcoded): dano base do herói **×0,41**; o **HP base do herói NÃO mudou** (o teste fixa 85 de HP do Naruto Academia).
+   - **Dificuldade total ≈ ×2,8–3,1 no minuto 0** (Genin; vale para **todas** as dificuldades em suas devidas proporções — "se fácil no Genin, fácil em todas").
+   - **BUG CORRIGIDO (mesmo item):** `heroes.ts` `version()` dividia por **`.55` hardcoded** (o multiplicador antigo da fábrica) — com a fábrica em ×0,41, as versões seguintes ficavam **mais fracas que a base** (naruto-genin 6,16 < naruto 7,38), violando a regra "versões avançadas mais fortes". Agora `version()` divide por `HERO_DAMAGE_FACTOR` — **única fonte** do multiplicador (fábrica `h()` e `version()`).
+   - `scripts/verify-rules.mjs` — faixas atualizadas com justificativa "Rodada 47": HP tardio do guardião `>=1.1e9 && <1.35e9` · armadura do FINAL SWARM `> d10.armor*2.5`.
+6. **Raridade mais visual no pool (item 6):** `src/ninja-theme.css` — `.level-choice-card .choice-art` (e as variantes `rarity-*`) agora com a **área do ícone PREENCHIDA com o gradiente da raridade** (`--rarity-strong → --rarity`) + contorno interno de **2 px** (`inset 0 0 0 2px var(--rarity-strong)`) — antes era um brilho suave; o quadradinho inteiro da carta assume a cor da raridade.
+7. **Bordas para toda HUD no tema japonês/naruto (item 7):** `src/ninja-theme.css` — **molduras temáticas** no painel da ficha da run: `.sheet-banner` (madeira/corda + pincelada) · `.sheet-column` · faixas `.stripe.blue` (Técnicas) / `.stripe.gold` (Inventário) / `.stripe.purple` (Ficha técnica) · `.sheet-tile` (pergaminho com borda) — por cima da base de `run-ui.css`, no tema ninja/japonês já estabelecido.
+8. **Opções do planner evidenciadas como BOTÕES (item 8):** `src/ninja-theme.css` — `.build-cell-actions button` (Planejar para Missão · Treinar · Não aprender/Permitir aprender) agora com cara de **botão**: placa de pergaminho com borda de madeira; `aria-pressed` ativo = **selo hanko vermelho** (base em `hud-dock.css`); "Permitir aprender"/"Devolver" mantém o verde (`.enable-skill`).
+9. **Habilidades treinadas visíveis + buff correto (item 9):** o buff +15% **já aplicava na run** (rodada 39 — `hit()` em `GameCanvas.tsx`); a rodada 47 torna isso **visível na ficha**: `src/ui/RunSheet.tsx` recebe a prop `trained` e exibe o **badge "★ Treinada · +15% de dano"** em cada técnica treinada (`.trained-badge` em `ninja-theme.css`; `src/main.tsx` passa `trained={trained}`); o item 4 (Treinar auto-planeja) garante que o buff seja alcançável direto do planner.
+10. **Selamento instantâneo sem "continuar missão" (item 10):** `src/scene/GameCanvas.tsx` — ao terminar o selamento **sem substituto na fila**, `nextSeal(); recaptureAfterChoice()` — a missão **continua na hora** (próximo candidato, ou volta à run); o estado `complete` **nunca mais fica visível** nesse fluxo. Se houver substituto na fila, o pool de escolha segue normal.
+11. **Pool adapta o tamanho ao nº de cartas (item 11):** `src/main.tsx` — o pool ganha a classe `cards-{1..4}` conforme o nº de cartas (`Math.max(1,Math.min(4,…))`); `src/ninja-theme.css` — `.level-choice.cards-1/2/3/4` (430/690/930/1060 px). A **largura da área de escolha se adapta**: 1 carta = estreita, 4 = largura original — sem área vazia "como se tivesse 4 escolhas".
+12. **Auto-coleta ao pisar (item 12):** `src/scene/GameCanvas.tsx` — pickups comuns (Ryu · kunai/shuriken · drop do mega elite) agora são **coletados ao pisar** (raio 1,8 m, tick da simulação) — **sem "E"** e sem prompt de "pegar"; o `interact()` (tecla E) agora cobre **só as emboscadas** (`cursedShuriken`/`ninjaBody`, raio 2 m — gatilhos de risco, mantidos). **Altar**: já começava ao pisar (`tickAltar`) — comportamento pré-existente, sem mudança. Se o Ryu não cobre o preço da kunai, o item **fica no chão** (toast) e a auto-coleta tenta de novo no próximo tick. Rejeição de selamento (tecla G): o drop cai **sobre o jogador** → auto-coleta no tick seguinte.
+13. **Passada sem distorção ao atacar + andar (item 13):** `src/scene/playerMotion.ts` — **`const strideTarget = proceduralMotion ? stride : 0;`** (~linha 263) — a passada procedural (deformação de pernas/braços da pose) **NUNCA** se sobrepõe a uma folha desenhada: o quadro de ataque fica **100% íntegro** (sem "distorção"); o andar-livre continua porque o **deslocamento vem da simulação**, não da deformação da pose. Suavização da passada (lerp `1−e^(−16·dt)` ≈0,1 s, rodada 45) e âncora nos pés mantidas; exceções (Choji cresce · Gaara flutua · Pain levita) intocadas.
+
+### Testes reescritos (apoio ao item 12)
+
+`scripts/verify-runtime.mjs` — os testes de kunai agora seguem o fluxo novo (**auto-coleta ao pisar**): "Recusa G" (`g` → `sealing=null` → pool de 3 cartas → tecla `1`) + loop de preço (auto-coleta → `paidWeapons` 1/2, custo 20/30 Ryu); **hardening** do loop do guardião: **removido o `press('e')`** (o teleport sobre a kunai já dispara a auto-coleta; o "E" perto do portal — raio 2,2 m — podia entrar na zona seguinte). `artifacts/runtime-checks.json` confirma: "Recusa G deixa kunai grátis com três escolhas · auto-coleta ao pisar, sem E (Rodada 47)" · "Kunais custam 20 e depois 30 Ryu · coletadas ao pisar, sem E (Rodada 47)" · "As 3 kunais do guardião (1 + 2 planos do Shikamaru) são coletáveis antes do portal".
+
+### Validação
+
+- `tsc -b --force` **EXIT 0** · `vite build` **EXIT 0** · `verify-motion-atlases.mjs` `{"versions":56,"states":560,"errors":[]}` · `verify-rules.mjs` **EXIT 0** (roster **56** · técnicas **97** · itens **94** — `shinobi-bait` saiu do catálogo) · `verify-runtime.mjs` **EXIT 0 · `errors:[]`** (~202 s, Edge headless).
+
+### Decisões desta rodada
+
+1. **Crítico 250% / mega 300% — CONFIRMADO** (regra já implementada; agora registrada como decisão permanente).
+2. **YOOOO preload no boot** — o 1º clique não espera download; o corte de 1 s e o anti-spam seguem.
+3. **Isca Shinobi = Pílula** (regra da rodada 35 reafirmada; a transformação em item da fase 4 da rodada 37 é revertida).
+4. **Treinar aparece para TODAS as técnicas e auto-planeja** — o +15% (rodada 39) fica alcançável direto do planner e visível na ficha (badge).
+5. **Early game +200% = PROPOSTO** (hpBase 3,2 · armor `.03`/`.72` · `HERO_DAMAGE_FACTOR` .41 → dificuldade ≈ ×2,8–3,1 no minuto 0) — **o usuário testa a gameplay e ajustamos em iteração** (regra das rodadas 34/35: nunca calibrar sem ele).
+6. **`HERO_DAMAGE_FACTOR` é a única fonte do multiplicador** do dano base do herói (fábrica `h()` + `version()`).
+7. **Raridade preenche o ícone da carta** no pool (gradiente + contorno 2 px).
+8. **Ficha com molduras temáticas** (banner/colunas/faixas/tiles no tema ninja/japonês).
+9. **Ações do planner como botões** (pergaminho + selo hanko).
+10. **Selamento sem substituto = missão continua na hora** (sem tela "continuar missão").
+11. **Pool adapta a largura a 1–4 cartas.**
+12. **Coleta comum ao pisar** (sem "E"); **E só para emboscadas**; altar já iniciava ao pisar.
+13. **Passada procedural nunca sobrepõe folha desenhada** (`strideTarget = proceduralMotion ? stride : 0`) — quadro de ataque íntegro; andar-livre via deslocamento da simulação.
+
+### Nota
+
+Aguardando o **teste do usuário no navegador** (13 itens — em especial os visuais: raridade preenchendo o ícone · bordas da ficha · botões do planner · badge Treinada · largura do pool · selamento instantâneo · auto-coleta sem "E" · YOOOO rápido · passada sem distorção). O **item 5 (early game +200%) é PROPOSTO**: o usuário testa e ajustamos os valores em iteração. As pendências das rodadas 41/42/43/44/45/46 seguem em aberto (docs/13 §6 e docs/18 §6).
