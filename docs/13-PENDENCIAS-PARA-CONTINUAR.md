@@ -285,6 +285,21 @@ Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-ru
 
 **Pendente:** aprovação do usuário dos 13 itens no navegador — o **item 5 (early game) é PROPOSTO**: o usuário testa a gameplay e ajustamos os valores em iteração (regra: nunca calibrar sem ele).
 
+## Rodada 49 · 12/11/2026 (4 pedidos)
+
+**Status por item (registro integral em docs/14; evidências no CHANGELOG):**
+
+1. **Altar sem “E” (não reinicia)** — IMPLEMENTADO: branch do altar em `interact()` com toast “…fique dentro do círculo para ativar o altar (sem E)” + guard idempotente `if(defenseAltar===e)return;` no `startAltar` + `WorldSnapshot.interaction.key?` opcional (ausente no altar) + HUD só renderiza o `<kbd>` quando `key` existe. O altar continua ativando **ao pisar** (Rodada 47).
+2. **Kunai/shuriken → PERGAMINHOS coletados com E (sem auto-coleta)** — IMPLEMENTADO: auto-coleta exclui `kunai`/`shuriken` (ryu/sealDrop seguem com auto-coleta); `interact()` aceita E para kunai/shuriken → `collectPickup` (custo Ryu + `rollMegaLoot`); visual de pergaminho (`drawScrollShape` em `dropSprites.ts`), ícone `public/assets/icons/scroll.svg` (novo), labels “Pergaminho”/“Morro de bolinhos de arroz”/“Pergaminho de recompensa grátis” em `spawnPickup`; `MapOverlay.tsx` (PickupIcon + labels).
+3. **Final Swarm 1.600 + rampa 800@+4min → 1.600@+7min** — IMPLEMENTADO: `FINAL_SWARM={maxEnemies:1600, ramp800Cap:800, ramp800Seconds:240, rampSeconds:420, …}` + rampa linear em `difficultyAt` + **clamp por quadro** em `GameCanvas.tsx` (remove excedentes comuns, nunca bosses/guardiões/mega) + cap na emboscada (`startFieldAmbush` por `threatNow().cap - enemyList.length`).
+4. **Moedas → MORROS DE BOLINHOS DE ARROZ** — IMPLEMENTADO: `drawOnigiri` em `dropSprites.ts` (scale ryu .8→1.05); ao coletar: **ímã global 10 s** (puxa xp/lamen/chakra de todo o mapa — `globalMagnetUntil`) + **lamen de cura** (`RAMEN_DROP.heal`) + Ryu `(14+zona×6)×MISSION_TIER[mission]×(1+min(1,sorte×0.01))` (fórmula do agente, não aprovada pelo usuário) + toast descritivo.
+
+**Regressão detectada e corrigida nesta rodada:** a suíte `verify-runtime` falhava porque o aviso do portal contava **todos** os pergaminhos do mapa (o portal se recusava a abrir até E-coletar ~18 pergaminhos espalhados). Correção: aviso só com pergaminho **a ≤6 m** do portal + debug `clearPickups` no API de teste + nova checagem na suíte (pergaminho perto do portal avisa · coleta exige E · zona avança).
+
+**Validações (5/5):** tsc -b · vite build · verify-rules (56/97/94) · verify-motion-atlases (56/560/0) · verify-runtime (0 erros/0 404, 2 execuções completas — a 1ª reexecução falhou flaky em 32 s, a 2ª passou).
+
+**Pendente:** aprovação do usuário dos 4 itens + **re-upload do zip no Netlify** — o `Shinobibonk-netlify.zip` na raiz do workspace (11/11 20:15) é **STALE** (anterior à Rodada 48): o print de 5.468 monstros do usuário vem daquela build (o cap era 8.000 antes da 48). Teste em GPU real pendente.
+
 ## Retomar
 
 1. Ler AGENTS.md, **docs/19 (índice do conhecimento)**, README, docs/00, docs/12 e esta fila. Conferir git status e remoto antes de editar.

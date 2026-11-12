@@ -4,12 +4,15 @@ import * as THREE from 'three';
  * Sprites procedurais dos drops no chão (desenhados em canvas, sem assets de terceiros):
  * - chakra: orbe azul de essência da Ultimate, com espiral;
  * - xp: essência roxa em forma de chama (maior para elites/mega elites/guardiões);
- * - ryu: moeda dourada com o kanji 両 (ryō, a moeda do mundo ninja);
+ * - ryu: morro de bolinhos de arroz (onigiris com nori) — Rodada 49: substituiu a moeda 両;
  * - ramen: tigela de lamen que cura 35% do HP;
- * - pill: cápsula rosa; item: pergaminho laranja.
+ * - pill: cápsula rosa; item: pergaminho laranja;
+ * - kunai/shuriken: PERGAMINHOS (recompensa — Rodada 49 trocou as armas no chão por pergaminhos);
+ *   kunaiFree: pergaminho com brilho verde (recompensa grátis do mega elite/guardião);
+ *   cursed: shuriken roxa (gatilho de emboscada — mantém a identidade de arma maldita).
  * As texturas são criadas uma vez e compartilhadas; ao coletar, só o material do sprite é descartado.
  */
-export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'ramen' | 'pill' | 'item' | 'kunai' | 'kunaiFree' | 'shuriken';
+export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'ramen' | 'pill' | 'item' | 'kunai' | 'kunaiFree' | 'shuriken' | 'cursed';
 
 const SIZE = 128;
 const cache = new Map<DropVisual, THREE.Texture>();
@@ -62,19 +65,20 @@ function drawXp(g: CanvasRenderingContext2D) {
   g.fillStyle = 'rgba(255,255,255,.75)'; g.beginPath(); g.ellipse(52, 64, 4, 9, .3, 0, Math.PI * 2); g.fill();
 }
 
-function drawRyu(g: CanvasRenderingContext2D) {
-  glow(g, 'rgba(255,205,70,.45)', 56);
-  const rim = g.createLinearGradient(30, 30, 98, 98);
-  rim.addColorStop(0, '#fff3b0'); rim.addColorStop(.5, '#f2b81d'); rim.addColorStop(1, '#9a6200');
-  g.fillStyle = rim; g.beginPath(); g.arc(64, 64, 36, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = '#5a3600'; g.lineWidth = 3.5; g.stroke();
-  const face = g.createRadialGradient(56, 54, 4, 64, 64, 28);
-  face.addColorStop(0, '#fff6c8'); face.addColorStop(1, '#e6a514');
-  g.fillStyle = face; g.beginPath(); g.arc(64, 64, 27, 0, Math.PI * 2); g.fill();
-  g.strokeStyle = 'rgba(122,74,0,.65)'; g.lineWidth = 2; g.stroke();
-  g.fillStyle = '#7a4300'; g.font = '900 34px "Noto Sans JP","Yu Gothic","Meiryo","MS Gothic",sans-serif';
-  g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('両', 64, 66);
-  g.fillStyle = 'rgba(255,255,255,.85)'; g.beginPath(); g.ellipse(48, 44, 7, 3.5, -.7, 0, Math.PI * 2); g.fill();
+/** Morro de bolinhos de arroz (Rodada 49 — substituiu a moeda 両): pilha de onigiris com nori. */
+function drawOnigiri(g: CanvasRenderingContext2D) {
+  glow(g, 'rgba(255,240,200,.5)', 60);
+  const rice = (x: number, y: number, s: number, rot = 0) => {
+    g.save(); g.translate(x, y); g.rotate(rot); g.scale(s, s);
+    const body = g.createLinearGradient(0, -18, 0, 18); body.addColorStop(0, '#ffffff'); body.addColorStop(1, '#e9e4d3');
+    g.fillStyle = body; g.beginPath();
+    g.moveTo(0, -18); g.quadraticCurveTo(17, -8, 15, 10); g.quadraticCurveTo(8, 17, 0, 17); g.quadraticCurveTo(-8, 17, -15, 10); g.quadraticCurveTo(-17, -8, 0, -18); g.closePath();
+    g.fill(); g.strokeStyle = '#b3ab93'; g.lineWidth = 2.2; g.stroke();
+    g.fillStyle = '#1d3a2a'; g.fillRect(-9, 3, 18, 11); g.strokeStyle = '#0d1f15'; g.lineWidth = 1.6; g.strokeRect(-9, 3, 18, 11);
+    g.restore();
+  };
+  rice(44, 68, .95, -.16); rice(84, 70, 1, .14); rice(64, 52, .92, 0); rice(64, 82, 1.22, 0);
+  g.fillStyle = 'rgba(255,255,255,.8)'; g.beginPath(); g.ellipse(50, 36, 6, 3.4, -.5, 0, Math.PI * 2); g.fill();
 }
 
 function drawRamen(g: CanvasRenderingContext2D) {
@@ -124,21 +128,19 @@ function drawItem(g: CanvasRenderingContext2D) {
   g.fillStyle = '#c0392b'; g.font = '900 26px "Noto Sans JP","Yu Gothic","Meiryo",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('忍', 64, 65);
 }
 
-function drawKunaiShape(g: CanvasRenderingContext2D) {
-  g.save(); g.translate(64, 64); g.rotate(-Math.PI / 4);
-  const blade = g.createLinearGradient(-12, 0, 12, 0); blade.addColorStop(0, '#5c6773'); blade.addColorStop(.5, '#eef3f8'); blade.addColorStop(1, '#7b8794');
-  g.fillStyle = blade; g.beginPath(); g.moveTo(0, -50); g.lineTo(13, -10); g.lineTo(0, -2); g.lineTo(-13, -10); g.closePath(); g.fill();
-  g.strokeStyle = '#1d232b'; g.lineWidth = 3; g.stroke();
-  g.fillStyle = '#2b2f36'; g.fillRect(-5, -4, 10, 34); g.strokeRect(-5, -4, 10, 34);
-  g.strokeStyle = '#c9a26a'; g.lineWidth = 2; for (let y = 0; y < 30; y += 6) { g.beginPath(); g.moveTo(-5, y); g.lineTo(5, y + 4); g.stroke(); }
-  g.strokeStyle = '#1d232b'; g.lineWidth = 4; g.beginPath(); g.arc(0, 38, 8, 0, Math.PI * 2); g.stroke();
-  g.strokeStyle = '#c9ced6'; g.lineWidth = 2; g.stroke();
-  g.restore();
+/** Pergaminho ninja (Rodada 49 — as kunais/shurikens no chão viraram pergaminhos de recompensa). */
+function drawScrollShape(g: CanvasRenderingContext2D) {
+  const paper = g.createLinearGradient(0, 30, 0, 98); paper.addColorStop(0, '#fff3d8'); paper.addColorStop(1, '#e5c186');
+  g.fillStyle = paper; g.fillRect(40, 32, 48, 62);
+  g.strokeStyle = '#6b3a12'; g.lineWidth = 2.6; g.strokeRect(40, 32, 48, 62);
+  g.strokeStyle = 'rgba(107,58,18,.35)'; g.lineWidth = 1.4;
+  for (const y of [44, 52, 82]) { g.beginPath(); g.moveTo(46, y); g.lineTo(82, y); g.stroke(); }
+  for (const x of [34, 94]) { const rod = g.createLinearGradient(x - 7, 0, x + 7, 0); rod.addColorStop(0, '#7a2d0e'); rod.addColorStop(.5, '#e0703a'); rod.addColorStop(1, '#5a1f08'); g.fillStyle = rod; g.fillRect(x - 7, 26, 14, 74); g.strokeStyle = '#3a1205'; g.lineWidth = 2; g.strokeRect(x - 7, 26, 14, 74); }
+  g.fillStyle = '#c0392b'; g.font = '900 26px "Noto Sans JP","Yu Gothic","Meiryo",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('忍', 64, 64);
 }
-function drawKunai(g: CanvasRenderingContext2D) { glow(g, 'rgba(255,190,90,.45)', 58); drawKunaiShape(g); }
-function drawKunaiFree(g: CanvasRenderingContext2D) { glow(g, 'rgba(90,255,150,.6)', 62); drawKunaiShape(g); g.fillStyle = '#5bff9a'; g.font = '900 22px sans-serif'; g.textAlign = 'center'; g.fillText('✦', 98, 34); }
-function drawShuriken(g: CanvasRenderingContext2D) {
-  glow(g, 'rgba(120,170,255,.45)', 58);
+function drawKunai(g: CanvasRenderingContext2D) { glow(g, 'rgba(255,190,90,.5)', 58); drawScrollShape(g); }
+function drawKunaiFree(g: CanvasRenderingContext2D) { glow(g, 'rgba(90,255,150,.6)', 62); drawScrollShape(g); g.fillStyle = '#5bff9a'; g.font = '900 22px sans-serif'; g.textAlign = 'center'; g.fillText('✦', 98, 34); }
+function drawShurikenShape(g: CanvasRenderingContext2D) {
   g.save(); g.translate(64, 64);
   const steel = g.createRadialGradient(-6, -6, 2, 0, 0, 44); steel.addColorStop(0, '#ffffff'); steel.addColorStop(.6, '#aab6c4'); steel.addColorStop(1, '#4d5866');
   g.fillStyle = steel; g.beginPath();
@@ -148,7 +150,8 @@ function drawShuriken(g: CanvasRenderingContext2D) {
   g.restore();
 }
 
-const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawRyu, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawShuriken };
+function drawCursed(g: CanvasRenderingContext2D) { glow(g, 'rgba(210,110,255,.6)', 60); drawShurikenShape(g); g.fillStyle = '#e8a5ff'; g.font = '900 20px sans-serif'; g.textAlign = 'center'; g.fillText('✦', 98, 34); }
+const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed };
 
 export function dropTexture(kind: DropVisual) {
   let texture = cache.get(kind);
@@ -167,7 +170,7 @@ export function dropTexture(kind: DropVisual) {
 export function dropScale(kind: DropVisual, value: number) {
   if (kind === 'xp') return value >= 90 ? 1.55 : value >= 20 ? 1.15 : .85;
   if (kind === 'ramen') return 1.15;
-  if (kind === 'ryu') return .8;
+  if (kind === 'ryu') return 1.05;
   if (kind === 'chakra') return .8;
   return 1.05;
 }

@@ -4,6 +4,30 @@ Registro cronológico dos pedidos do usuário e das respostas do assistente. Com
 
 Para cada nova solicitação, acrescente a mensagem do usuário e a resposta final. Registre também instruções complementares recebidas antes da resposta. Se houver dados sensíveis, resuma a parte necessária sem copiá-los.
 
+## Altar sem “E”, PERGAMINHOS com E, Final Swarm 800@+4min → 1.600 e morros de bolinhos de arroz
+
+**Pedidos** (Rodada 49 · 12/11/2026)
+
+> Toda vez que aperto E ta reiniciando o Altar, por isso falei que não é pra ter essa opção de E em altares...
+>
+> As KUNAIS que eu já falei que deveriam ter virado pergaminhos no chão, devem aparecer o E para pegarmos, não ser pegado automaticamente. [screenshots do altar e dos kunais no chão]
+>
+> Final swarm não respeitando os 1600 monstros totais. E outra a progressão deve limitar no máximo 800 monstros até chegar no +4minutos em final swarm, para ai sim ir aumentando até chegar a 1600 monstros TOTAIS e o máximo de cap de monstros invocando na tela! [screenshot do HUD com 5.468 monstros — build STALE do Netlify: o zip enviado é de 11/11, anterior à Rodada 48]
+>
+> Moedas no mapa devem virar morros de bolinhos de arroz, efeito magnetismo(puxa todos os drop's (exp/lamen/chakra) espalhados pelo mapa todo por 10S, dropa lamen que cura vida, monte de ryu escalando por zona/dificuldade/sorte. [screenshot das moedas no mapa]
+
+**Resposta / o que foi feito** (Rodada 49 · 12/11/2026)
+
+1. **Altar:** o E **não reinicia mais o altar** — toast “...fique dentro do círculo para ativar o altar (sem E)” + guard idempotente no `startAltar` + o prompt do altar **não exibe a tecla “E”** (o altar continua ativando AO PISAR, Rodada 47).
+2. **PERGAMINHOS:** as kunai/shuriken do chão viraram **pergaminhos** (arte nova + ícone `scroll.svg` + renomes no mapa M); **não são mais auto-coletados ao pisar** — o **E abre** o pergaminho (custo em Ryu + pool de recompensa); a recompensa grátis do guardião é o “Pergaminho de recompensa grátis” (pergaminho + ✦ verde); a Shuriken Amaldiçoada mantém a arte de shuriken.
+   - **Regressão corrigida:** o aviso do portal passou a contar pergaminhos em **todo o mapa** e travava a progressão de zona (a scatter espalha ~18 por zona); agora conta só os pergaminhos a **6 m do portal** — o E avisa antes de entrar e o segundo E ainda entra; pergaminhos distantes somem na troca de zona (como antes da 49).
+3. **FINAL SWARM:** o cap em tela agora cresce **progressivamente** — **800 monstros aos +4 min** → **1.600 aos +7 min** (rampa linear) + clamp por quadro (nunca remove bosses/megas) + a emboscada respeita o cap.
+4. **MORROS DE BOLINHOS DE ARROZ (ex-moedas):** cada morro dá **Ryu escalando por zona × dificuldade × sorte** (`(14+zona·6) × tier × (1+min(1,sorte·1%))`), **ímã de 10 s** que puxa todos os drops de xp/lamen/chakra do mapa e **dropa uma lamen que cura**.
+
+**Validado:** tsc · vite build · verify-rules (56/97/94) · verify-motion-atlases (56/560/0) · verify-runtime (2 execuções verdes — incluindo a checagem nova “Pergaminho perto do portal avisa antes de entrar · coleta exige E”).
+
+**Pendente (usuário):** testar em run real a fórmula de Ryu do morro e a rampa 800 → 1.600; **re-upar o zip do Netlify** (o atual é de 11/11, anterior à Rodada 48 — por isso o print do 5.468).
+
 ## Planner "Deixar em casa", mapa M/ESC/Tab, HUD de métricas, Final Swarm 1.600, ficha escura e Treinamento +0,6%
 
 **Pedidos**

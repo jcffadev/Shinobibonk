@@ -40,7 +40,7 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 
 ## 4. Final Swarm (tempo extra da zona) — `progression.ts`
 
-`FINAL_SWARM` (IMPLEMENTADO): ao zerar o relógio da zona — **×3** na hora (HP, dano, defesa, quantidade/spawn) + **+25%/min** sobrevivido; armadura até 0,85; teto do swarm limitado a **8.000** inimigos (performance); reposição: spawn ≥ teto÷4 s (horda volta em ~4 s); spawns num anel de **14–28 m** do jogador.
+`FINAL_SWARM` (IMPLEMENTADO, atualizado nas rodadas 48/49): ao zerar o relógio da zona — **×3** na hora (HP, dano, defesa, quantidade/spawn) + **+25%/min** sobrevivido; armadura até 0,85; **teto 1.600 inimigos** (era 8.000 — rodada 48) com **rampa progressiva (rodada 49)**: até **+4 min** (240 s) o teto é **min(teto normal, 800)**; depois sobe linearmente até **1.600** em **+7 min** (420 s) — `ramp800Cap:800 · ramp800Seconds:240 · rampSeconds:420`; **clamp por quadro** em `GameCanvas.tsx` (remove excedentes comuns, **nunca** boss/guardião/mega elite) + cap na emboscada (`startFieldAmbush`); reposição: spawn ≥ teto÷4 s (horda volta em ~4 s); spawns num anel de **14–28 m** do jogador.
 
 ## 5. Elite / Mega Elite — `tuning.ts` (valores base do painel F9)
 
@@ -70,7 +70,7 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
   |---|---|---|---|---|---|
   | EXP | 78 | 204 | 473 | 1.173 | 2.024 |
 
-- **Dano salvo do herói**: o valor exibido × 0,55 = base real (`heroes.ts`).
+- **Dano salvo do herói**: base real = valor exibido ÷ `HERO_DAMAGE_FACTOR` (**0,41** — rodada 47 removeu o `.55` hardcoded da `version()`; única fonte em `heroes.ts`).
 - **Versões da família** (passo): HP/dano ×1,12, +1 armadura, +0,08 movimento por passo (`heroes.version`).
 
 ## 7. Crescimento das técnicas (level-up) — `combat.ts`
@@ -82,14 +82,14 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 ## 8. Treinamento / nível esgotado — `GameCanvas.tsx`
 
 - **IMPLEMENTADO (11/11):** pool de técnicas/pílulas esgotado → level-up dá **+0,8% de Sorte**.
-- **CONFIRMADO (rodada 37, 12/11 — APROVADO):** substituir por **atributo ALEATÓRIO +0,6%/nível** (fila docs/13; **a codificar**).
+- **CONFIRMADO (rodada 37, 12/11 — APROVADO) e IMPLEMENTADO (rodada 48):** substituir por **atributo ALEATÓRIO +0,6%/nível** — `grantTraining()` usa `rollPowerlevel` + HUD flutuante acima da cabeça (“Treinamento - <atributo> +0,6%”); a cláusula “somente na utilidade que ele treina apenas sorte” segue **EM ABERTO** (docs/23 §4.2).
 
 ## 9. Economia — roleta e Ryu
 
 - **Caça-Níquel da Tsunade** (ex-"Roleta da Tsunade"; `roulette.ts`, **IMPLEMENTADO — rodada 37 fase 3**, commit `ec7c42a`): custo = `round(30 × 1,70^giros × 1,15^minutos inteiros × (1+(zona−1)×0,25) × (1 − desconto))` → giros 1..5 custam **30 · 51 · 87 · 147 · 251** (sem desconto/inflação; giro 0 na zona 2 = **38** · zona 3 = **45**). Desconto: Dente de Ouro −8% + Carteira Gama-chan −6%, **teto −40%** (mantido). Pressão de casas ruins: `maldição×2,5 + (zona−1)×0,15 + missão (Genin 0 · Chunin 0,1 · Jonin 0,2 · Kage 0,35)`. Sorte: `1 + min(2, luck/100)` (premium ao quadrado). Com as 5 casas de combo, **boa chance sorte 0 = 30,88%** (asserção no verify-rules). **3 Kakuzus** = `round(120 × luckFactor × (1+pressão))` Ryu (`slotKakuzuRyu`: 120/240/480).
 - **Spend** (`SPEND_RULES`): +dano a cada **250 Ryu** gastos (o % vem do item), **teto +30%**.
 - **Drops base** (`tuning.ts`, IMPLEMENTADO): Ryu **72%** · Chakra **28%** · Pílula **1,5%** · Lamen ≤**5%** (cura 35% do HP) · item por abate **desativado** (só por kunai/shuriken/evento) · orbe de chakra **9%**.
-- **Chão da run** (`GameCanvas.scatterPickups`, IMPLEMENTADO): 60% Ryu / 20% kunai / 20% shuriken. **APROVADO (rodada 37):** kunai/shuriken viram **pergaminhos** (Ryu por zona + sorte; a implementar).
+- **Chão da run** (`GameCanvas.scatterPickups`, IMPLEMENTADO): 60% Ryu / 20% kunai / 20% shuriken (+1 shuriken amaldiçoada +1 emboscada de corpo fora de `testRun`). **IMPLEMENTADO (rodada 49):** kunai/shuriken no chão viram **PERGAMINHOS** — coletados com **E** (sem auto-coleta; custo em Ryu + mega-loot), visual `drawScrollShape` + ícone `public/assets/icons/scroll.svg` + labels; **Ryu no chão = MORRO DE BOLINHOS DE ARROZ** (onigiri) — ao coletar: **ímã global 10 s** (xp/lamen/chakra de todo o mapa — `globalMagnetUntil`) + **lamen de cura** (`RAMEN_DROP.heal`) + Ryu `(14+zona×6)×MISSION_TIER[missão]×(1+min(1,sorte×0,01))` (fórmula do agente — **PROPOSTO, aguardando teste do usuário**); ryu/sealDrop seguem com **auto-coleta ao pisar** (rodada 47). **Aviso do portal:** só com pergaminho a **≤6 m** (rodada 49 — a contagem global quebrava a suíte runtime).
 - **Caça-Níquel da Tsunade** (APROVADO rodada 37 — **IMPLEMENTADO na fase 3**, commit `ec7c42a`): renomeado de "Roleta da Tsunade"; **combos de 3 iguais** entregues ao sair — 3 Tsunades = "Sorte da Tsunade" +10% dificuldade/+10% monstros até o fim da run (`runBuffs`) · 3 Jirayas = 1 item Raro/Épico/Lendário (respeita limite do item) · 3 Hiruzens = 4 escolhas de item (E pega · V vende) · 3 Hidan = −5% HP total (**piso 1 HP — não mata**) +5% dificuldade/+5% monstros · 3 Kakuzus = Ryu por sorte/dificuldade (`slotKakuzuRyu`); **emboscada invertida**: durante a interação a run pausa (jogador seguro); ao sair, **armadilhas shinobi explodem em 8 m** matando os monstros próximos (abate/saque contam; totem/bijuu/guardião **excluídos**; som `explosion`) — a casa "Credores" (spawna inimigos) **se mantém**, coexistem os dois sabores; **custo ×1,70/giro + +25%/zona** (acima); **face da Tsunade** feliz/triste/nervosa por recompensa (retrato do roster + badge/glow — **arte das 3 expressões = PENDENTE**); UI = **3 rolos verticais** que param no mesmo símbolo (motor: 1 casa por giro). **Calibração em iteração com o teste do usuário.**
 
 ## 10. Pílulas — `pills.ts`

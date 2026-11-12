@@ -143,17 +143,18 @@ await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.length===3
 await page.keyboard.press('1');await wait();checks.push('Recusa G deixa kunai grátis com três escolhas · auto-coleta ao pisar, sem E (Rodada 47)');
 for (const [startMoney,paid,cost] of [[100,1,20],[80,2,30]]) {
  await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await wait();
- // Rodada 47 — a kunai cai na posição do jogador e é comprada no tick de auto-coleta (custo kunaiPrice), sem "E".
+ // Rodada 49 — a kunai virou PERGAMINHO: exige "E" para abrir a recompensa (custo kunaiPrice) e não é mais auto-coletada ao pisar.
  const payment=await page.evaluate(async money=>{
   const test=window.__shinobiTest;test.setMoney(money);
   test.pickup('kunai');
-  await new Promise(r=>setTimeout(r,600));
+  window.dispatchEvent(new KeyboardEvent('keydown',{key:'e',bubbles:true}));
+  await new Promise(r=>setTimeout(r,400));
   return test.inspect();
  },startMoney);
  assert.equal(payment.paidWeapons,paid);assert.equal(payment.runMoney,startMoney-cost);
  await page.keyboard.press('1');await wait();
 }
-checks.push('Kunais custam 20 e depois 30 Ryu · coletadas ao pisar, sem E (Rodada 47)');
+checks.push('Pergaminhos (ex-kunai) custam 20 e depois 30 Ryu · abertos com E, sem auto-coleta (Rodada 49)');
 await debug('grantItem','Pedra da Juventude');await debug('grantItem','Kunai Afiada');await debug('dismiss');await wait();
 await page.keyboard.press('p');await wait();const details=page.locator('.sheet-column').first().locator('details');await details.first().evaluate(el=>el.open=true);await details.first().scrollIntoViewIfNeeded();assert.ok(await page.locator('.pool-icon-row .catalog-icon').count()>0);checks.push('Ícones no pool de itens da ficha');
 await page.screenshot({path:'artifacts/sheet-pool.png'});await page.getByRole('button',{name:'Continuar missão',exact:true}).click();await wait();
@@ -374,7 +375,14 @@ for(let n=3;n>0;n--){
  await page.keyboard.press('1');await debug('dismiss');await wait();
  assert.equal((await debug('freeKunai')).length,n-1);assert.equal((await debug('guardian')).zone,1);
 }
-await debug('clearEnemies');await debug('clearDrops');await debug('dismiss');await wait();
+await debug('clearEnemies');await debug('clearDrops');await debug('clearPickups');await debug('dismiss');await wait();
+// Rodada 49 — pergaminho perto do portal AVISA antes de entrar (ele seria perdido na troca de zona); a coleta exige E (sem auto-coleta).
+await debug('setMoney',100);await debug('teleport',portalAt.x+3.4,portalAt.z);await debug('pickup','kunai');await debug('teleport',portalAt.x,portalAt.z);await wait();
+await page.keyboard.press('e');await wait();
+assert.equal((await debug('guardian')).zone,1);assert.match(String((await debug('guardian')).toast),/perto do portal/i);
+checks.push('Pergaminho perto do portal avisa antes de entrar · coleta exige E, sem auto-coleta (Rodada 49)');
+await debug('teleport',portalAt.x+3.4,portalAt.z);await page.keyboard.press('e');await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.length>0);
+await page.keyboard.press('1');await debug('dismiss');await wait();
 await debug('teleport',portalAt.x,portalAt.z);await page.keyboard.press('e');await page.waitForFunction(()=>window.__shinobiTest.guardian().zone===2);
 checks.push('As 3 kunais do guardião (1 + 2 planos do Shikamaru) são coletáveis antes do portal');
 await page.keyboard.press('Escape');await page.getByRole('button',{name:'Salvar e sair',exact:true}).click();await page.getByRole('button',{name:'Shinobis',exact:true}).click();
