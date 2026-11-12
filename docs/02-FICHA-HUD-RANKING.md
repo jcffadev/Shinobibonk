@@ -9,8 +9,8 @@ HP, XP, nível, Chakra/recarga da Ultimate, tempo, abates individuais, inimigos 
 ## Configurações (IMPLEMENTADO em 06/11/2026, referência do usuário)
 - `src/ui/SettingsScreen.tsx` + `src/settings.css` + `src/game/settings.ts` (`sb_settings_v1`): menu de categorias e painel colorido; salvas na hora e aplicadas ao vivo na partida (evento `shinobi-settings`). Abre pelo hub (⚙) e pela pausa (Esc → Configurações).
 - **Som**: volume geral, efeitos, vozes, silenciar em segundo plano (música: em breve).
-- **Gráficos**: qualidade (pixel ratio), limite de FPS (30–144), ocultar meus ataques, números de dano, drops discretos, efeitos de coleta, mostrar FPS.
-- **Tela**: tela cheia/janela e resolução (automática, nativa, 900p, 720p).
+- **Gráficos**: qualidade (pixel ratio), limite de FPS (30–144), V-Sync (ligado = um quadro por quadro do monitor; desligado = renderiza acima da taxa do monitor quando o sistema aguentar — no navegador é o melhor esforço, no .exe desliga direto do motor), placa de vídeo (automática/alto desempenho/integrada → `powerPreference` do contexto WebGL; a troca recria o contexto na hora), ocultar meus ataques, números de dano, drops discretos, efeitos de coleta, mostrar FPS.
+- **Tela**: tela cheia/janela, resolução (automática, nativa, 900p, 720p); monitor escolhido pelo navegador (no .exe: renderizador OpenGL/DirectX também por escolha do jogador).
 - **Controles**: sensibilidade do mouse (1:1, sem aceleração — raw input via `unadjustedMovement` no pointer lock), inverter Y, distância da câmera, Ultimate automática ao começar, card de captura.
 - **Teclas**: 15 ações remapeáveis (troca automática se a tecla já era usada; Esc fixo). Pulo/deslize: em breve.
 - **Interface**: tamanho e opacidade do HUD, minimapa on/off e tamanho, avisos on/off.

@@ -59,7 +59,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
     const d = DEFAULT_SETTINGS;
     const by: Record<Category, Partial<GameSettings>> = {
       som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
-      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, hideMyAttacks: d.hideMyAttacks, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
+      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
       tela: { resolution: d.resolution },
       controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, autoUltimate: d.autoUltimate, sealAnimation: d.sealAnimation },
       teclas: { keys: { ...DEFAULT_KEYS } },
@@ -86,6 +86,8 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
         {category === 'graficos' && <>
           <Card title="Qualidade" hint="Baixa dá mais desempenho"><Choice value={settings.quality} options={[{ value: 'alta', label: 'Alta' }, { value: 'media', label: 'Média' }, { value: 'baixa', label: 'Baixa' }]} onChange={(v) => set({ quality: v })} /></Card>
           <Card title="Limite de FPS" hint="Menos FPS = imagem mais estável e menos calor"><Choice value={settings.fpsLimit} options={[{ value: 0, label: 'Sem limite' }, { value: 30, label: '30' }, { value: 60, label: '60' }, { value: 90, label: '90' }, { value: 120, label: '120' }, { value: 144, label: '144' }]} onChange={(v) => set({ fpsLimit: v })} /></Card>
+          <Card title="V-Sync (sincronizar com o monitor)" hint="Ligado: um quadro por quadro do monitor. Desligado: renderiza acima da taxa do monitor quando o sistema aguentar (mais CPU/calor). No navegador é o melhor esforço; no .exe desliga a sincronização direto" wide><Toggle value={settings.vsync} onChange={(v) => set({ vsync: v })} /></Card>
+          <Card title="Placa de vídeo" hint="Escolhe a GPU do jogo; a troca recria o contexto na hora. No .exe: placa e renderizador (OpenGL/DirectX) à sua escolha" wide><Choice value={settings.gpu} options={[{ value: 'auto', label: 'Automática' }, { value: 'desempenho', label: 'Alto desempenho (dedicada)' }, { value: 'integrada', label: 'Integrada (economia)' }]} onChange={(v) => set({ gpu: v })} /></Card>
           <Card title="Ocultar meus ataques" hint="Começa a partida sem desenhar os efeitos dos seus golpes (H alterna). O dano continua igual"><Toggle value={settings.hideMyAttacks} onChange={(v) => set({ hideMyAttacks: v })} /></Card>
           <Card title="Números de dano"><Toggle value={settings.damageNumbers} onChange={(v) => set({ damageNumbers: v })} /></Card>
           <Card title="Drops discretos" hint="EXP, Ryu e Chakra menores; são coletados igual"><Toggle value={settings.discreetDrops} onChange={(v) => set({ discreetDrops: v })} /></Card>
@@ -96,7 +98,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
         {category === 'tela' && <>
           <Card title="Modo de tela" hint="Também com F11" wide><Choice value={fullscreen ? 'cheia' : 'janela'} options={[{ value: 'cheia', label: 'Tela cheia' }, { value: 'janela', label: 'Janela' }]} onChange={(v) => { void (v === 'cheia' ? document.documentElement.requestFullscreen() : document.fullscreenElement ? document.exitFullscreen() : Promise.resolve()).catch(() => { }); }} /></Card>
           <Card title="Resolução" hint="Automática baixa a resolução em telas grandes para rodar liso; Nativa usa todos os pixels da tela" wide><Choice value={settings.resolution} options={[{ value: 'auto', label: 'Automática' }, { value: 'nativa', label: 'Nativa' }, { value: '900p', label: '900p' }, { value: '720p', label: '720p' }]} onChange={(v) => set({ resolution: v })} /></Card>
-          <Card title="Monitor e motor gráfico" hint="Escolhidos pelo navegador na versão web" wide />
+          <Card title="Monitor e motor gráfico" hint="Monitor escolhido pelo navegador; no .exe: renderizador (OpenGL/DirectX) também por sua escolha" wide />
         </>}
         {category === 'controles' && <>
           <Card title="Sensibilidade do mouse" hint="Velocidade do giro (1:1, sem aceleração): quanto a câmera gira por movimento do mouse"><Slider value={settings.mouseSensitivity} min={.2} max={3} step={.05} format={(v) => v.toFixed(2)} onChange={(v) => set({ mouseSensitivity: v })} /></Card>

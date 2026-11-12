@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## V-Sync, placa de vídeo e fim da suavização da câmera · 11/11/2026
+
+- Pedido do usuário (CONFIRMADO): "Retirar a suavizaçãao de câmera, colocar opção de v-sync no jogo. Não sei exatamente se da pra utilizar jogando o jogo via navegador, mas quando formos fazer o nosso .exe do jogo/patch do jogo, deverá ter nas configurações também, ligar e desligar e também opção para selecionar a placa de vídeo do jogador ou rodar em openGL."
+- **Suavização da câmera retirada** (`src/scene/GameCanvas.tsx`): zoom instantâneo (muda direto para o alvo, sem perseguição exponencial) e altura da câmera seguindo o jogador na hora (removidos `damp`/`jumpedZone`). O giro (yaw/pitch) já era direto desde a rodada 29 (mouse 1:1).
+- **V-Sync** (Gráficos; `vsync` em `settings.ts`, padrão LIGADO): ligado = `requestAnimationFrame` (um quadro por quadro do monitor); desligado = loop acima da taxa do monitor (`setTimeout(0)`, pausado em aba oculta) — melhor esforço no navegador (ele ainda pode limitar); no .exe a sincronização sai direto do motor.
+- **Placa de vídeo** (Gráficos; `gpu` em `settings.ts`, padrão "Alto desempenho (dedicada)"): Automática / Alto desempenho (dedicada) / Integrada (economia) → `powerPreference` do contexto WebGL (default / high-performance / low-power); trocar em tempo real recria o contexto (dispose + `forceContextLoss` do antigo) e reinicia o loop; saves antigos sem os campos são migrados pelo espalhamento dos padrões.
+- **"Rodar em openGL"**: a versão web não expõe escolha de API de render (o motor escolhe WebGL2/WebGL1); o card "Monitor e motor gráfico" (Tela) agora registra que no .exe/patch o jogador também escolhe o renderizador (OpenGL/DirectX).
+- **Corrigido flake do `verify-runtime` (re-lock após escolha)**: a isenção de teste do `CHOICE_GUARD` (`guardOff`) só valia quando `testPointer` era `true` — e o teste de lock usa `?test=1&pointer=real`, onde `testPointer` é `false`; com o guard ativo, o clique na carta (chegando em < 0,5 s) era descartado pelo `onChoose` antes do re-acionamento do ponteiro, e o teste morria no `waitForFunction` do re-lock. A isenção agora vale para qualquer página `?test` sem `&guard=1` (só em desenvolvimento), como já documentado em docs/12 e no comentário do código.
+- **TESTADO**: `tsc -b`, `vite build`, `verify-rules` (56 versões, 97 técnicas, 95 itens) e `verify-runtime` (Edge headless — todos os checks verdes, incluindo "P fecha a ficha…", "Esc fecha a pausa…" e "ponteiro volta após escolha"; sem exceções JS nem assets 404).
+
 ## Mouse sem aceleração (raw input) · 11/11/2026
 
 - Pedido do usuário (CONFIRMADO): "rawinputbuffer é em relação a aceleração do mouse, quanto mais mexe o mouse mais rápido fica, eu quero que isso não aconteça... quero que ele fique sempre a mesma velocidade e a sensibilidade funcione exatamente da forma que o jogador configurar nas configurações que temos no jogo".

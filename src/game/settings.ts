@@ -5,6 +5,8 @@
  */
 export type Quality = 'alta' | 'media' | 'baixa';
 export type Resolution = 'auto' | 'nativa' | '900p' | '720p';
+/** Placa de vídeo escolhida pelo jogador (Gráficos). No .exe vira a seleção direta de GPU. */
+export type GpuChoice = 'auto' | 'desempenho' | 'integrada';
 export type PickupFx = 'completos' | 'simples' | 'nenhum';
 /** Ações remapeáveis. O valor é a tecla (event.key em minúsculas; ' ' = Espaço). Esc não é remapeável. */
 export type KeyAction = 'up' | 'down' | 'left' | 'right' | 'jump' | 'slide' | 'interact' | 'ultimate' | 'autoUlt' | 'bigMap' | 'quickMap' | 'sheet' | 'ping' | 'hideFx' | 'reroll' | 'skip' | 'ban';
@@ -17,7 +19,7 @@ export type GameSettings = {
   // Som
   volume: number; sfxVolume: number; voiceVolume: number; voiceLanguage: 'pt' | 'ja'; muteInBackground: boolean;
   // Gráficos
-  quality: Quality; fpsLimit: number; hideMyAttacks: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
+  quality: Quality; fpsLimit: number; vsync: boolean; gpu: GpuChoice; hideMyAttacks: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
   // Tela
   resolution: Resolution;
   // Controles
@@ -32,7 +34,7 @@ export type GameSettings = {
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
   volume: .7, sfxVolume: 1, voiceVolume: .8, voiceLanguage: 'pt', muteInBackground: true,
-  quality: 'alta', fpsLimit: 0, hideMyAttacks: false, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
+  quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
   resolution: 'auto',
   mouseSensitivity: 1, invertY: false, cameraDistance: 19, autoUltimate: false,
   keys: { ...DEFAULT_KEYS },
