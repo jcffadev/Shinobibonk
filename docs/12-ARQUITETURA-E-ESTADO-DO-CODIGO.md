@@ -20,7 +20,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Geometria original por golpe e elemento, orientação na direção do ataque, rotação de efeitos, raios de impacto e descarte de recursos. O limite local de efeitos de impacto evita criar uma malha por inimigo em hordas grandes. |
 | `src/game/heroes.ts` | 24 famílias e 56 versões jogáveis (`HERO_VERSIONS`; `family`, `form`, `title`; `familyOf`, `familyVersions`, `versionStep`, `versionForEncounter`, `DETERMINATION`): aldeia, atributos base, passiva, bônus, 4 técnicas da fase (escola, elemento, forma, status), Ultimate. Bibliotecas `L` (compartilhadas) e `U` (únicas por família). `skillPool` respeita elemento, vila e selamento; versões da mesma família não emprestam técnicas. `sandSynergy` por família. Formas do Naruto. `HERO_CLAN`, `ORGANIZATIONS`, `HERO_NATURES` (naturezas canônicas da Narutopedia) e `heroAffinity`. |
-| `src/game/catalog.ts` | 94 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
+| `src/game/catalog.ts` | 95 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
 | `src/game/progression.ts` (nota) | `Stats.extra` guarda a soma bruta de todos os bônus; `genjutsu` é o multiplicador da escola Genjutsu; `healthPct` e `regenMult` ajustam HP máximo e regeneração. |
 | `src/game/combat.ts` | Afixos de técnica por raridade (`rollGrowth`) e classificação de itens para filtros. |
@@ -181,7 +181,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
   - 10 linhas de atributo com 10 níveis cada; custo = base + 25 × nível comprado.
   - Quarta opção, Atualizar/Pular/Banir (+1 uso por nível, até 10), Suporte adicional e Quarta técnica.
 - **Loja**:
-  - 94 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
+  - 95 itens. Itens comuns já vêm liberados; os demais custam 150, 300, 500 ou 900 conforme a raridade.
   - Desbloquear só adiciona ao pool. Há filtros; deixar em casa fica na Bolsa da Missão.
 - **Missões**: Genin, Chunin, Jonin e Kage alteram a escala de dificuldade.
 - **Reset**: devolve tudo o que foi gasto e limpa árvore, desbloqueios, arquivamentos e plano.
@@ -290,7 +290,9 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 - **Sinergias**: só a da Areia existe.
 - **Mapa**: quatro mapas (Folha, Areia, Pedra, Névoa) com colisão de movimento, pulo e dash; sem mapa procedural.
 - **Descoberta**: sem oclusão.
-- **Inimigos**: teto de 180 vivos; meta de 1.500 não medida.
+- **Inimigos**: teto de 1.600 vivos (Final Swarm até 8.000); FPS em GPU real não medido.
+- **Animação andar+atacar (12/11)**: `playerMotion.ts` toca os quadros de ataque da folha também andando (passada nas pernas do quadro, `CHAIN_AT` = 75% para encadear).
+- **Interface (12/11)**: `src/ninja-theme.css` (tokens + `.pergaminho/.placa/.selo/.pincel`), importado por último em `main.tsx`; fontes OFL locais em `public/assets/fonts/`.
 - **Remoção de pílula/item**: Ichiraku permite esquecer técnicas e pílulas. Sapos Sábios oferecem fusão e combinação.
 - **Mega elites**: não há rotação de mega elite por zona. O aviso das técnicas é desenhado plano no chão e pode ficar parcialmente escondido em relevo forte. A dificuldade dos chefes não foi balanceada; em níveis baixos, 3 a 4 golpes podem derrubar o personagem.
 - **Arte**: As formas usam sprites por quadro. Os efeitos mesclam atlas de pixel art e geometrias estilizadas.

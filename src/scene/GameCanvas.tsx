@@ -1386,7 +1386,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       rangedState:()=>({foes:enemyList.filter(e=>e.ranged!==undefined).length,shots:enemyShots.length}),
       enemyFrames:()=>enemyList.filter(e=>enemyRenderer.isBatched(e.sprite)).map(e=>e.sprite.userData.frame as number),
       supportMotion:()=>[...allyMotions.values()].map(motion=>({pose:motion.state(),atlas:motion.atlas()})),
-      motion:()=>({pose:playerMotion.state(),atlas:playerMotion.atlas(),flipped:(player.material.map?.repeat.x??1)<0,jumpHeight,slideTime,slideRecovery,x:player.position.x,z:player.position.z,cameraHeight:cameraTarget.y,pitch,yaw,zoom}),
+      motion:()=>({pose:playerMotion.state(),atlas:playerMotion.atlas(),anim:playerMotion.debug(),flipped:(player.material.map?.repeat.x??1)<0,jumpHeight,slideTime,slideRecovery,x:player.position.x,z:player.position.z,cameraHeight:cameraTarget.y,pitch,yaw,zoom}),
       campaign:()=>({zone,zoneElapsed:zoneElapsed(),arena,portal:portal?.kind,plansUsed,bijuuReward,beast:enemyList.find(e=>e.bijuu)?.heroId,events:events.map(e=>({id:e.id,x:e.x,z:e.z})),ryu:pickups.filter(p=>p.active&&p.kind==='ryu').length}),
       enterPortal:()=>enterPortal(),
       bossArt:(id:string)=>{

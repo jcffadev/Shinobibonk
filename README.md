@@ -16,7 +16,8 @@ pnpm dev
 Abra o endereço local do Vite. `pnpm build` executa `tsc -b` e `vite build`.
 
 Atalhos locais:
-- `ABRIR_JOGO.bat` usa o Node instalado pelo Codex em `%USERPROFILE%\.cache\codex-runtimes\...` e as dependências já presentes em `node_modules`. Sem esse Node, o script pede para instalar Node.js LTS e pnpm.
+- `ABRIR_JOGO.bat` acha o Node (runtime do Codex em `%USERPROFILE%\.cache\codex-runtimes\...` ou o do PATH) e, se o `node_modules` estiver ausente ou quebrado (ex.: pasta movida), reinstala as dependências sozinho. Opções: `--no-open`, `--port N`.
+- Interface com tema ninja em `src/ninja-theme.css`; fontes Reggae One e Baloo 2 (OFL) locais em `public/assets/fonts/`. Prévias e capturas: `docs/previas/hud-ninja/`. Deploy: `netlify.toml` (build com pnpm, publica `dist`). Sem esse Node, o script pede para instalar Node.js LTS e pnpm.
 - `node scripts/verify-rules.mjs` verifica as regras puras (elenco, técnicas, itens, crítico, raridade, atributos).
 - `scripts/verify-runtime.mjs` e `scripts/smoke-browser.mjs` rodam testes no navegador com Playwright e Microsoft Edge. Os caminhos de ambos estão fixados para este computador.
 
@@ -46,7 +47,7 @@ O [contexto permanente de perguntas e respostas](docs/18-CONTEXTO-PERGUNTAS-RESP
   - `roulette.ts`: Roleta da Tsunade.
   - `settings.ts`: configurações do jogador.
   - `npcs.ts`: eventos do Ebisu e do Iruka, Iruka como ajudante e regras do Naruto Totem.
-  - `catalog.ts`: 94 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
+  - `catalog.ts`: 95 itens no formato da referência (raridade · efeito · gatilho · limite) e sorteio por raridade.
   - `progression.ts`: atributos, dificuldade e crítico.
   - `evolution.ts`: formas de cada família; cada versão usa a sua forma fixa.
   - `combat.ts`: afixos de técnica.

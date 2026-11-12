@@ -1,18 +1,18 @@
 /* Card de missão de desbloqueio. */
-.mc{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--map) 22%,#141a26),#121722);border:1px solid color-mix(in srgb,var(--map) 55%,transparent);color:#eef2fa;text-align:left;box-shadow:0 10px 26px #000a}
+.mc{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--map) 22%,#251b15),#211913);border:1px solid color-mix(in srgb,var(--map) 55%,transparent);color:#faf6ee;text-align:left;box-shadow:0 10px 26px #000a}
 .mc.legendary{border-color:#f5c542;box-shadow:0 0 0 1px #f5c54255,0 10px 26px #000a}
 .mc header{display:flex;align-items:center;gap:10px}
-.mc-symbol{flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--map);color:#10141c;font-weight:900;font-size:18px}
+.mc-symbol{flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--map);color:#1c1510;font-weight:900;font-size:18px}
 .mc header small{display:block;font-size:9px;letter-spacing:.12em;opacity:.75}.mc header b{display:block;font-size:15px;line-height:1.15}
 .mc.legendary header small{color:#f5c542;opacity:1}
-.mc header em{margin-left:auto;font-style:normal;font-size:11px;font-weight:900;padding:2px 8px;border-radius:999px;background:#2a3346}.mc header em.ready{background:#2fbf5f}
+.mc header em{margin-left:auto;font-style:normal;font-size:11px;font-weight:900;padding:2px 8px;border-radius:999px;background:#45352b}.mc header em.ready{background:#2fbf5f}
 .mc-where{display:flex;flex-wrap:wrap;gap:4px}.mc-where i{font-style:normal;font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#ffffff14}
 .mc p{margin:0;font-size:12px;line-height:1.4;opacity:.9}
 .mc ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
 .mc li{display:flex;align-items:center;gap:7px;font-size:11px;padding:4px 6px;border-radius:8px;background:#ffffff0a;opacity:.85}
 .mc li.ok{opacity:1;background:#2fbf5f22}.mc li strong{margin-left:auto;font-size:12px}.mc li.ok strong{color:#7dffb0}
 .mc-dot{width:18px;text-align:center;font-weight:900}.mc li.ok .mc-dot{color:#7dffb0}
-.mc-portrait{width:22px;height:22px;border-radius:50%;overflow:hidden;flex:none;background:#222a3a}
+.mc-portrait{width:22px;height:22px;border-radius:50%;overflow:hidden;flex:none;background:#392c23}
 .mc.compact{padding:8px 10px}.mc.compact header b{font-size:13px}
 /* Popover na seleção: fora do card, sem espremer o texto. */
 .cs-card .cs-mission-pop{display:none;position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);width:270px;z-index:40;pointer-events:none}
@@ -20,7 +20,7 @@
 .cs-grid .cs-card .cs-mission-tip{display:none!important}
 .detail-mission{margin:8px 0}
 .ms-tabs button.locked{opacity:.5;filter:grayscale(.6);cursor:not-allowed}
-.ms-locked-map{position:absolute;inset:0;display:grid;place-items:center;background:#0b0e15b3;z-index:3;text-align:center;font-size:20px;font-weight:900}
+.ms-locked-map{position:absolute;inset:0;display:grid;place-items:center;background:#150f0bb3;z-index:3;text-align:center;font-size:20px;font-weight:900}
 .ms-locked-map small{display:block;font-size:13px;font-weight:600;opacity:.85;margin-top:6px}
 .ms-unlocks .mc{margin-top:6px;width:280px}
 .cs-card{position:relative}.cs-card:hover{z-index:30}

@@ -1,8 +1,8 @@
 /* Seleção de mapa (4 mapas temáticos) e dificuldade bloqueada por progresso. */
 .map-picker{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:0 0 16px}
-.map-card{display:flex;gap:12px;align-items:center;text-align:left;padding:12px;border-radius:14px;border:2px solid #ffffff1a;background:linear-gradient(135deg,color-mix(in srgb,var(--map) 28%,#151b26),#141a24);color:#f1f4fb;cursor:pointer}
+.map-card{display:flex;gap:12px;align-items:center;text-align:left;padding:12px;border-radius:14px;border:2px solid #ffffff1a;background:linear-gradient(135deg,color-mix(in srgb,var(--map) 28%,#251c16),#231b15);color:#fbf7f1;cursor:pointer}
 .map-card.selected{border-color:var(--map);box-shadow:0 0 0 2px color-mix(in srgb,var(--map) 45%,transparent)}
-.map-card .map-symbol{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:900;background:var(--map);color:#10141c}
+.map-card .map-symbol{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:900;background:var(--map);color:#1c1510}
 .map-card b{display:block;font-size:15px}.map-card small{display:block;opacity:.75;font-size:11px;margin:2px 0 4px}.map-card em{font-style:normal;font-size:10px;letter-spacing:.02em;opacity:.9}
 .mission-card.locked{opacity:.45;cursor:not-allowed;filter:grayscale(.6)}
 /* Shinobi bloqueado: silhueta + símbolo da vila; Lendário com borda dourada. */
@@ -10,19 +10,19 @@
 .cs-village-mark{position:absolute;inset:auto 6px 30px auto;font-size:20px;font-weight:900;color:#fff8;text-shadow:0 0 6px #000}
 .cs-card.cs-legendary{border-color:#f5c542!important;box-shadow:0 0 12px #f5c54266}
 .cs-legend-tag{position:absolute;top:6px;right:6px;background:#f5c542;color:#2a1e00;font-size:9px;font-weight:900;padding:2px 6px;border-radius:8px}
-.cs-mission-tip{display:none;position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);width:220px;z-index:20;padding:10px;border-radius:10px;background:#0e131c;border:1px solid #f5c54255;color:#f1f4fb;font-size:11px;text-align:left;box-shadow:0 8px 24px #0009;pointer-events:none}
+.cs-mission-tip{display:none;position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);width:220px;z-index:20;padding:10px;border-radius:10px;background:#1b140f;border:1px solid #f5c54255;color:#fbf7f1;font-size:11px;text-align:left;box-shadow:0 8px 24px #0009;pointer-events:none}
 .cs-card:hover .cs-mission-tip,.cs-card:focus-visible .cs-mission-tip{display:block}
 .cs-mission-tip b{display:block;color:#f5c542;margin-bottom:3px}.detail-title.detail-locked>:first-child{filter:brightness(0) opacity(.7)}
 /* Pausa (Esc): ficha + rodapé com comandos e ações. */
 .pause-footer{margin-top:12px;padding:12px 4px 4px;border-top:1px solid #ffffff1a;display:grid;gap:10px}
-.pause-keys{margin:0;font-size:11px;line-height:1.9;color:#cfd6e4}.pause-keys kbd{background:#2a3242;border-radius:5px;padding:1px 6px;font-weight:800;color:#fff;font-family:inherit}
-.pause-actions{display:flex;flex-wrap:wrap;gap:8px}.pause-actions button{flex:1 1 auto;min-width:96px;padding:10px 14px;border-radius:999px;border:0;background:#2a3242;color:#eef2fa;font-weight:800;cursor:pointer;box-shadow:inset 0 -3px 0 #0005}
-.pause-actions button:hover{background:#36405a}.pause-actions .pause-danger{background:#e2474f;color:#fff}
+.pause-keys{margin:0;font-size:11px;line-height:1.9;color:#e3dcd0}.pause-keys kbd{background:#41342b;border-radius:5px;padding:1px 6px;font-weight:800;color:#fff;font-family:inherit}
+.pause-actions{display:flex;flex-wrap:wrap;gap:8px}.pause-actions button{flex:1 1 auto;min-width:96px;padding:10px 14px;border-radius:999px;border:0;background:#41342b;color:#faf6ee;font-weight:800;cursor:pointer;box-shadow:inset 0 -3px 0 #0005}
+.pause-actions button:hover{background:#594537}.pause-actions .pause-danger{background:#e2474f;color:#fff}
 .pause-continue{justify-self:end;padding:12px 34px;border:0;border-radius:999px;background:linear-gradient(#4fdc7d,#27b25a);color:#fff;font-size:17px;font-weight:900;cursor:pointer;box-shadow:inset 0 -4px 0 #0004}
 .resume-button{border:2px solid #4fdc7d}
 /* Pausa: rodapé fixo na parte de baixo da tela (sempre visível) e ficha encolhida para não cobrir. */
 .game-panel.pause-panel{max-height:calc(100vh - 210px);overflow:auto}
 .pause-panel .sheet-footer{display:none}
-.pause-panel .pause-footer{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(1400px,98vw);box-sizing:border-box;margin:0;padding:10px 14px;border-radius:18px;border:1px solid #49516b;background:#141924f5;box-shadow:0 10px 30px #000b;z-index:80}
+.pause-panel .pause-footer{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:min(1400px,98vw);box-sizing:border-box;margin:0;padding:10px 14px;border-radius:18px;border:1px solid #6a574a;background:#231b15f5;box-shadow:0 10px 30px #000b;z-index:80}
 .game-panel-backdrop:has(.pause-panel){align-items:flex-start;padding-top:10px}
-.skill-chips .kit-level{margin-left:auto;font-size:10px;font-weight:900;padding:1px 6px;border-radius:999px;background:#2a3346;color:#f5c542}
+.skill-chips .kit-level{margin-left:auto;font-size:10px;font-weight:900;padding:1px 6px;border-radius:999px;background:#45352b;color:#f5c542}

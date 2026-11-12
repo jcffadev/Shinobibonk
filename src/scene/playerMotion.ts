@@ -5,6 +5,11 @@ import { actionArt, acrobaticsArt, directionalArt, handSealArt } from '../game/d
 import { familyOf } from '../game/heroes';
 
 export type StrikePose = 'punch' | 'kick';
+type Strike = { weapon: boolean; left?: boolean; special: boolean; pose?: StrikePose; seal: boolean; back?: boolean };
+/** Fração do golpe a partir da qual um novo ataque pode encadear. Antes disso o pedido fica na fila (o mais recente vence)
+ *  e começa assim que a soltura (3º quadro) terminou de aparecer; assim, com velocidade de ataque alta, o golpe nunca
+ *  reinicia no quadro de preparação nem fica piscando. A Ultimate entra na hora. */
+const CHAIN_AT = .75;
 
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true) {
   // Versões usam as folhas da família na forma da versão (ex.: naruto-shippuden → folhas do Naruto no nível 25).
@@ -70,7 +75,19 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     }
     return texture;
   };
-  let attack = 0, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
+  let attack = 0, attackDuration = .22, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
+  let queued: Strike | undefined;
+  let frameShown = 0, strideShown = 0, walkAttack = false;
+  const begin = (next: Strike) => {
+    queued = undefined;
+    attack = attackDuration = next.special ? .55 : next.weapon ? .25 : .22;
+    ultimate = next.special;
+    throwingWeapon = next.weapon;
+    strike = next.pose;
+    handSign = next.seal;
+    if (next.back !== undefined) rear = next.back;
+    if (next.left !== undefined) mirror = next.left;
+  };
   // Rastro do dash (só no jogador): duas cópias translúcidas do quadro atual nas posições anteriores.
   const trail = healthBar ? [0, 1].map(() => {
     const ghost = new THREE.Sprite(new THREE.SpriteMaterial({ map: sprite.material.map, alphaTest: .18, transparent: true, depthWrite: false, color: '#9fd8ff' }));
@@ -80,15 +97,14 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   return {
     attack: (weapon = false, left?: boolean, special = false, pose?: StrikePose, seal = false, back?: boolean) => {
       if (ultimate && attack > 0 && !special) return;
-      attack = special ? .55 : weapon ? .25 : .22;
-      ultimate = special;
-      throwingWeapon = weapon;
-      strike = pose;
-      handSign = seal;
-      if (back !== undefined) rear = back;
-      if (left !== undefined) mirror = left;
+      const next: Strike = { weapon, left, special, pose, seal, back };
+      // Golpe em andamento e ainda antes do ponto de encadeamento: não reinicia, guarda o pedido.
+      if (!special && attack > 0 && 1 - attack / attackDuration < CHAIN_AT) { queued = next; return; }
+      begin(next);
     },
     state: () => state,
+    /** Inspeção de testes: quadro (coluna) em uso, progresso do golpe e se as pernas estão no passo durante o ataque. */
+    debug: () => ({ state, frame: frameShown, progress: attack > 0 ? +(1 - attack / attackDuration).toFixed(3) : 1, walkAttack, stride: +strideShown.toFixed(4), queued: !!queued }),
     atlas: () => posePath,
     hurt: () => { hurt = .23; },
     update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean, jumpProgress: number, slideProgress: number) {
@@ -106,26 +122,34 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         sealMap = sealSheet && sheetTexture(sealSheet.path);
       }
       attack = Math.max(0, attack - dt);
+      if (queued && (attack === 0 || 1 - attack / attackDuration >= CHAIN_AT)) begin(queued);
+      const attackProgress = attack > 0 ? 1 - attack / attackDuration : 1;
       stepTime = walkingInput ? stepTime + dt : 0;
       hurt = Math.max(0, hurt - dt);
       if (sliding || (walkingInput && !attack)) { mirror = leftward; rear = backwardView; }
       // Pulo e dash têm prioridade sobre o dano: no meio da horda o jogador recebe golpes o tempo todo e o estado 'hurt'
       // (0,23 s a cada acerto) escondia os quadros de pulo/dash do Naruto Academia. O dano continua visível pela tinta vermelha.
-      // Pedido do usuário (11/11): ataque normal NÃO interrompe a caminhada — se o personagem anda, ele continua
-      // andando fazendo os movimentos (o balanço fica nos braços, abaixo). A Ultimate mantém o momento especial.
-      const showAttack = attack > 0 && (ultimate || !walkingInput) && (actionSheet?.kind === 'full' || hurt === 0);
+      // Andar atacando (pedido do usuário 11/11): o deslocamento nunca para (ele é da simulação, não daqui) e o golpe
+      // toca INTEIRO pelos quadros de ataque da folha de ação; a passada continua nas pernas do próprio quadro
+      // (deformação do playerPose, na mesma fase da caminhada), então ao terminar o golpe a caminhada segue sem pulo.
+      const showAttack = attack > 0 && (actionSheet?.kind === 'full' || hurt === 0);
       state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : showAttack ? (ultimate ? 'ultimate' : 'attack')
         : hurt > 0 ? 'hurt' : walkingInput ? 'walk' : 'idle';
+      // Pernas no passo durante o golpe: fora a Ultimate (pose especial), o chute de Lee/Guy (a perna é o golpe)
+      // e o Gaara (flutua na areia).
+      walkAttack = state === 'attack' && walkingInput && strike !== 'kick' && family !== 'gaara';
       const academy = hasWalkAtlas && formAt(heroId, level).level === 1;
       const casting = academy && state === 'attack' && throwing?.image;
       const walkAtlas = diagonalInput && diagonal?.image ? diagonal : walk;
       const walking = academy && state === 'walk' && walkAtlas?.image;
       if (casting && throwing) {
         const frame = throwingWeapon ? Math.min(3, Math.floor((.25 - attack) / .06)) : attack > .08 ? 2 : 3;
+        frameShown = frame;
         throwing.repeat.x = mirror ? -.25 : .25;
         throwing.offset.x = (frame + Number(mirror)) / 4;
       } else if (walking && walkAtlas) {
         const frame = Math.floor(stepTime * 10) % 4;
+        frameShown = frame;
         walkAtlas.repeat.x = leftward ? -.25 : .25;
         walkAtlas.offset.set((frame + Number(leftward)) / 4, backwardView ? 0 : .5);
       }
@@ -134,6 +158,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         const frame = state === 'walk' ? (rear ? 4 : 0) + Math.floor(stepTime * 11) % 4
           : state === 'jump' ? 8 : state === 'dash' ? 9 : state === 'hurt' ? 10
           : state === 'ultimate' ? 15 : throwingWeapon ? Math.min(14, 12 + Math.floor((.25 - attack) / .08)) : 11;
+        frameShown = frame % 4;
         asuma.repeat.set(mirror ? -.25 : .25, .25);
         asuma.offset.set((frame % 4 + Number(mirror)) / 4, (3 - Math.floor(frame / 4)) / 4);
       }
@@ -142,8 +167,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const attacking = state === 'attack' || state === 'ultimate';
       const useSeal = attacking && handSign && !!sealMap?.image;
       if (useSeal && sealMap && sealSheet) {
-        const progress = 1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22);
-        const frame = (rear ? 2 : 0) + Number(progress >= .22);
+        const frame = (rear ? 2 : 0) + Number(attackProgress >= .22);
+        frameShown = frame;
         sealMap.repeat.set(mirror ? -.25 : .25, .25);
         sealMap.offset.set((frame + Number(mirror)) / 4, (3 - sealSheet.row) / 4);
       }
@@ -153,11 +178,12 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const fullAction = poseSheet?.kind === 'full' && (attacking || state === 'jump' || state === 'dash');
       const useAction = !!poseMap?.image && (fullAction || acrobatics || (attacking && (poseSheet?.kind !== 'taijutsu' || !!strike) && !(academy && poseSheet?.kind==='acrobatics')));
       if (useAction && poseMap && poseSheet) {
-        const progress = 1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22);
+        const progress = attackProgress;
         const castFrame = family === 'gaara' && (ultimate || handSign) && progress >= .35 && progress < .84
           ? 2 : Math.min(3, Math.floor(progress * 4));
         const frame = state === 'jump' ? Number(jumpProgress > .22 && jumpProgress < .77)
           : state === 'dash' ? 2 + Number(slideProgress > .7) : castFrame;
+        frameShown = frame;
         const secondRow = (acrobatics && ('directional' in poseSheet ? backwardView : true)) || (poseSheet.kind === 'cast' && rear) || (poseSheet.kind === 'taijutsu' && strike === 'kick');
         const flip = acrobatics || (fullAction && !attacking) ? leftward : mirror;
         const rows=poseSheet.rows??2;
@@ -168,8 +194,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         poseMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
       }
       if (useDirection && directionMap && directionSheet) {
-        const frame = directedCast ? Math.min(3, Math.floor((1 - attack / (ultimate ? .55 : throwingWeapon ? .25 : .22)) * 4))
+        const frame = directedCast ? Math.min(3, Math.floor(attackProgress * 4))
           : state==='jump' ? (jumpProgress<.24||jumpProgress>.76?0:2) : state==='dash' ? (slideProgress<.72?2:1) : Math.floor(stepTime * 10) % 4;
+        if (!useSeal && !useAction) frameShown = frame;
         const row = directedCast ? 2 : (directionSheet.firstRow ?? 0) + Number(backwardView);
         const flip = directedCast ? mirror : leftward;
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
@@ -179,17 +206,18 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       posePath = useSeal ? sealSheet!.path : useAction ? poseSheet!.path : useDirection ? directionSheet!.path : '';
       sprite.material.map = useSeal ? sealMap! : useAsuma ? asuma : useAction ? poseMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
       sprite.material.alphaTest = usesSheet ? .55 : .18;
-      const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.13 : 0;
+      // A passada do golpe em movimento usa a mesma frequência dos quadros de caminhada (10 quadros/s, ciclo de 4).
+      const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : walkAttack ? Math.sin(stepTime * Math.PI * 5) * (usesSheet ? .06 : .075)
+        : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.13 : 0;
       const lift = state === 'jump' ? Math.sin(Math.PI*jumpProgress)*.16 : state === 'dash' ? Math.sin(Math.PI*slideProgress)*.065 : 0;
-      // Balanço do ataque: parado = mesmo de sempre; andando com ataque normal (pedido do usuário 11/11),
-      // o corpo continua no ciclo de caminhada e o golpe sai dos braços (pose.apply abaixo).
-      const swing = (state === 'attack' || (state === 'walk' && attack > 0 && !ultimate)) ? Math.sin(Math.PI * attack / (throwingWeapon ? .25 : .22)) * .11 : 0;
-      const reach = state === 'ultimate' ? .09 : swing > 0 ? swing
-        : -stride * .55;
+      const reach = state === 'attack' ? Math.sin(Math.PI * attack / attackDuration) * .11
+        : state === 'ultimate' ? .09 : -stride * .55;
       const guard = state === 'ultimate' ? .085 : state === 'attack' ? .045 : state === 'hurt' ? .04 : 0;
       const proceduralMotion=!usesSheet||useDirection&&!useAction&&(state==='jump'||state==='dash');
-      pose.apply(sprite.material, proceduralMotion ? stride : 0, proceduralMotion ? lift : 0,
-        !usesSheet ? reach : (swing > 0 ? swing : 0), usesSheet ? 0 : guard, !usesSheet && mirror);
+      strideShown = proceduralMotion || walkAttack ? stride : 0;
+      if (!usesSheet) frameShown = 0;
+      pose.apply(sprite.material, strideShown, proceduralMotion ? lift : 0,
+        usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
       sprite.material.rotation = !proceduralMotion ? 0 : state === 'dash' ? (mirror ? .34 : -.34)
         : state === 'hurt' ? (mirror ? -.1 : .1) : state === 'walk' && backwardView ? (mirror ? .05 : -.05) : 0;
       // Squash/stretch do pulo (estica na decolagem, achata na aterrissagem) e leve alongamento horizontal no dash,

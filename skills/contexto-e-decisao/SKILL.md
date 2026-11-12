@@ -28,7 +28,7 @@ Use esta skill no **início de toda tarefa** no ShinobiBonk — e principalmente
   - `criar-arte-shinobibonk` / `movimentar-shinobi` — arte e movimento dos shinobis.
   - `referencia-externa` — material do jogo de referência (zero rastro no projeto).
 - Se um procedimento já existe em skill ou doc, **siga-o**; não invente procedimento paralelo nem fonte de verdade extra.
-- **Sem duplicar contexto (regra da rodada 36, 12/11):** cada fato vive num lugar canônico (mapa em `docs/19`); os demais apontam por link. Organizar contexto é **não destrutivo**: nunca apagar/resumir `docs/14`/`docs/18`, e material do jogo de referência fica **sempre fora do projeto** (`arquivo-pokebonk/`, raiz do workspace).
+- **Sem duplicar contexto (regra da rodada 36, 12/11):** cada fato vive num lugar canônico (mapa em `docs/19`); os demais apontam por link. Organizar contexto é **não destrutivo**: nunca apagar/resumir `docs/14`/`docs/18`, e material do jogo de referência fica **sempre fora do projeto** (`<pasta arquivada>/`, raiz do workspace).
 - Se a tarefa exigir algo sem skill (ex.: novo fluxo de publicação), proponha a skill ao usuário antes de criar.
 
 ## 3. Decidir

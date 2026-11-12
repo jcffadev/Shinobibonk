@@ -832,7 +832,7 @@ Feito, item por item. (1) **Renderizador (preparo do .exe)**: a aba **Tela** ago
 > "A Isca Shinobi deveria ser uma Vitamina e não um item.
 > Verifique se tem um item parecido com a White Flaute do nosso jogo referência, que invoca mais monstros e da mais outros atributos de leveling/ryu."
 >
-> "- Veja a foto de uma run, late game do pokebonk... estou enviando... veja e aplique para nosso modelo, use como espelho. (foto do whatsapp)."
+> "- Veja a foto de uma run, late game do [jogo de referência]... estou enviando... veja e aplique para nosso modelo, use como espelho. (foto do whatsapp)."
 >
 > "- Ter botão glossário com o guia para explicar o que cada coisa faz e como buffar.
 > - Note do lado direito o card da temporada, mostrando informações do ranking, colocação.
@@ -879,7 +879,7 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 
 ### Resposta e providências (rodada 36 — segmentação executada de forma adaptada e não destrutiva)
 
-**(0) Regra de referências reafirmada (pedido do usuário):** material de outros jogos **nunca** fica na pasta do projeto — verificado: `arquivo-pokebonk/` (prints, vídeos, frames, `CONTEXTO-COMPLETO.md`) está na **raiz do workspace, fora do repositório**; 0 arquivos rastreados mencionam o jogo de referência; regra agora permanente em `docs/19` (regra 6) + skills `referencia-externa`/`contexto-e-decisao`.
+**(0) Regra de referências reafirmada (pedido do usuário):** material de outros jogos **nunca** fica na pasta do projeto — verificado: `<pasta arquivada>/` (prints, vídeos, frames, `CONTEXTO-COMPLETO.md`) está na **raiz do workspace, fora do repositório**; 0 arquivos rastreados mencionam o jogo de referência; regra agora permanente em `docs/19` (regra 6) + skills `referencia-externa`/`contexto-e-decisao`.
 
 **(1) Segurança do prompt (pergunta do usuário):** SIM, é possível executar de forma segura — o prompt é **não destrutivo** (leitura + criação de documentos novos, dentro da pasta autorizada, sem tocar código/assets/Windows, com parada em caso de dúvida). **Adaptações fiéis ao próprio texto do prompt:** (a) §2 do prompt autoriza manter a estrutura existente + **índice agregador** → não recriamos 15+ documentos duplicados (evita fonte de verdade paralela — risco que o próprio prompt quer evitar); (b) "QWEN.md" e "ComfyUI" **não existem neste projeto** — equivalentes: `AGENTS.md` + `skills/` e skill `criar-arte-shinobibonk` (registrado no manifesto);
 
@@ -932,7 +932,7 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 >
 > Entendeu?
 >
-> As referencias do whatsapp eu criei uma pasta C:\Shinobibonk projeto - Copia\arquivo-pokebonk\fotos lategame — Pode consumir: Acredito que você consiga entender e interpretar tudo, inclusive como aparecer os buffs que as habilidades estão recebendo por itens/pílulas somados, esses efeitos tem que refletir dentro do jogo também!
+> As referencias do whatsapp eu criei uma pasta C:\Shinobibonk projeto - Copia\<pasta arquivada>\fotos lategame — Pode consumir: Acredito que você consiga entender e interpretar tudo, inclusive como aparecer os buffs que as habilidades estão recebendo por itens/pílulas somados, esses efeitos tem que refletir dentro do jogo também!
 > Glossário
 > Atributos no estágio do game
 > Respectivos efeitos do que cada vitamina (jogo referencia) no nosso caso pilula esta fazendo
@@ -968,3 +968,34 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 - **Validações (re-executadas nesta sessão, pós-compaction):** `tsc -b` ✓ · `vite build` ✓ (425 ms, rolldown) · `verify-rules` ✓ (roster 56 · motionForms 56 · techniques 97 · items 95).
 - **Commit:** `d05f168` "Rodada 37 fase 1: YOO MP3 real no Jogar (corte 1s) + gate anti-spam de sons de jutsu" → `git push origin main` ✓.
 - **Próxima:** Fase 2 — regressão da animação de ataque + caminhada (`src/game/playerMotion.ts`).
+
+
+## Rodada 38 · 12/11/2026 — Subagentes 1/2/3: animação, ABRIR_JOGO + HUD ninja, novos shinobis
+
+> Subagente 1
+> Verificar toda a documentação/skills/github.
+>
+> * Corrigir a animação dos personagens, eu coloquei nas ultimas alterações o personagem continuar andando enquanto ele está se movendo, porém isso "bugou" a animação do personagem bater. Resolva este problema, ele tem que andar liso atacando, mas a animação de movimentação dele levantar os braços e usar o hit, tem que continuar fluído.
+>
+> Subagente 2
+>
+> * Corrigir a questão do ABRIR_JOGO não estar abrindo o jogo, aparentemente porque mudei a pasta de lugar/nome.
+>
+> Aplicar as alterações de huds que você fez, mas colocar mais imagens de fundo no menu inicial.
+>
+> Subagente 3
+>
+> Crie todos os kages que estão faltando até o arco do Shippuden, use as nossas referências para criar a movimentação, habilidades, folhas do personagem, me envie antes para eu validar se o conceito/escopo está bom, crie as habilidades focadas nas habilidades que eles demonstram no anime.
+> Você já tem skills e base, contexto suficiente para trabalhar em cima disso.
+> Crie os personagens que estão faltando do naruto clássico e naruto Shipudden, você sabe que precisa criar com suas respectivas evoluções desde a academia se tem histórico deles nas referências até a era Shippuden.
+> Crie cada um com habilidades únicas, passivas únicas, enfim tudo que você sabe.
+> Me liste os personagens que vai criar.
+
+(Complemento da mesma rodada: o limite de uso interrompeu os três subagentes; retomados após o reset.)
+
+### Resposta e providências (Claude Code)
+
+- **Subagente 1 — animação (IMPLEMENTADO/TESTADO headless):** causa = `showAttack` desligado com input de movimento desde 4d1e798; agora o golpe toca os quadros da folha também andando, com passada nas pernas do quadro de ataque e retorno sem pulo; encadeamento a partir de 75% (`CHAIN_AT`). Verificado em fixture e no jogo (Naruto Academia, Sasuke Genin, Rock Lee, Naruto Shippuden). Auditoria: 0 ocorrências do nome do jogo de referência nos arquivos rastreados, nada sensível rastreado; ponteiros `.claude/skills` criados; divergências de docs corrigidas nesta rodada (docs/00, docs/12, README).
+- **Subagente 2 — ABRIR_JOGO + HUD (IMPLEMENTADO/TESTADO headless):** `node_modules` reinstalado (a mudança de pasta quebrou os atalhos do pnpm); .bat refeito com detecção e reinstalação automática. HUD ninja aplicada ao jogo; menu com as 4 vilas alternando no fundo e marcos em camadas; fontes OFL locais. Capturas: `docs/previas/hud-ninja/jogo-*.png`.
+- **Subagente 3 — proposta (PROPOSTO, nada implementado):** `docs/22-PROPOSTA-NOVOS-SHINOBIS.md` (renomeado de 19 para não colidir com `docs/19-INDICE`). Lista: Hiruzen, Rasa, Mei, Ōnoki, A (4º Raikage), A (3º Raikage), Mū, Gengetsu, Yagura, Killer B, Danzō (Onda K); Kiba+Akamaru, Shino, Ino, Chōji, Sai, Yamato, Zabuza, Haku (Onda 1); Akatsuki/Som (Onda 2); Taka e apoio (Onda 3); Kages sem nome/sem combate como NPC (Onda 4). Totais K–3: 40 famílias, 59 versões, ~93 técnicas únicas, 118 folhas. **Divergência canônica** com a lista aprovada na rodada 37 (Narutopedia): Killer B não foi Raikage (o 4º Raikage é A; o 3º também se chama A); Hanzō não foi Tsuchikage (líder da Chuva; 1º Tsuchikage = Ishikawa); Mei é a 5ª Mizukage (1º = Byakuren); Ōnoki é o 3º Tsuchikage (2º = Mū); Rasa é o 4º Kazekage; Ao não foi Mizukage (2º = Gengetsu). Aguardando o usuário revisar antes de alterar personagens.
+- **Testes:** `tsc -b`, build, `verify-rules` (56/97/95), `verify-motion-atlases` (56/560/0 erros), `verify-runtime` (58 verificações, 0 erros, 0 404).

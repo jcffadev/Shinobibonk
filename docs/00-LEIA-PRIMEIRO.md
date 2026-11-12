@@ -18,7 +18,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 - **IMPLEMENTADO** — cinco folhas novas de ação para Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. As 56 versões têm caminhada direcional. Veja a cobertura de ataque, pulo e dash na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
 - React 19, TypeScript 7, Three.js 0.187 e Vite 8; iniciada com `pnpm dev`.
-- `src/main.tsx`: hub local com elenco de **22 shinobis**, biblioteca de ataques, plano de build, árvore permanente, loja de itens e seleção de missão.
+- `src/main.tsx`: hub local com elenco de **24 famílias / 56 versões**, biblioteca de ataques, plano de build, árvore permanente, loja de itens e seleção de missão.
 - `src/scene/GameCanvas.tsx`: cena 3D isométrica e simulação local da run.
 - `src/game/`: dados e regras (heróis, técnicas, itens, atributos, dificuldade, evoluções, zonas, árvore).
 - `game/index.html` é a versão Canvas 2D anterior, só legado.
@@ -48,9 +48,9 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 - **Hub**:
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
-  - Elenco de 22 shinobis em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
+  - Elenco de 56 versões (24 famílias) em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
   - Kit de 4 técnicas por shinobi (1–2 únicas, o resto compartilhado) e plano de build (planejar ou deixar em casa técnicas, pílulas e itens).
-  - Árvore permanente com 16 nós e loja de 94 itens com filtros e arquivamento.
+  - Árvore permanente com 16 nós e loja de 95 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
 - **Run**:
   - Contagem regressiva de 10:00 e vitória ao chegar a 0:00. Derrota ao zerar o HP.
@@ -131,8 +131,10 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Ainda parcial ou pendente
 
-- **Mapa**: arena única de 100×100 com relevo procedural simples. Não há colisão com cenário, biomas nem mapa procedural.
-- **Limite de inimigos**: está fixado em **no máximo 180 vivos**. A meta de 1.500 não foi implementada nem medida.
+- **Mapa**: 4 mapas (Folha/Areia/Pedra/Névoa) de 160×160 com colisão de movimento (`src/scene/collision.ts`); inspeção visual pendente; sem mapa procedural.
+- **Limite de inimigos**: `ENEMY_SCALING.maxEnemies` = 1.600 e Final Swarm até 8.000 (`progression.ts`); FPS em GPU real não medido.
+- **Elenco liberado para teste**: `TEST_UNLOCK_ALL = true` em `src/game/account.ts` — voltar a `false` antes da versão pública.
+- **Interface**: tema ninja (`src/ninja-theme.css`, fontes OFL locais); ficha P, Bolsa, Plano e configurações ainda só com os tokens.
 - **Descoberta**: não considera oclusão por terreno ou árvores.
 - **Selamento**: não tem tentativas nem chance de falha (a regra das 3 tentativas não está implementada). Também não existe selamento permanente para desbloquear personagens.
 - **Aliados**: os valores dos buffs únicos são provisórios. Combos de vila/organização e afinidade são provisórios; não há aviso na tela ao ativar uma sinergia.

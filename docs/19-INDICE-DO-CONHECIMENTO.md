@@ -42,7 +42,7 @@
 3. **Atualização contínua:** toda alteração aprovada atualiza (a) o documento do domínio, (b) `docs/18`/`docs/14`/`CHANGELOG` (skill `documentar-projeto`) e (c) **este índice** se o mapa mudou. Se qualquer parte falhar, registre a inconsistência em `docs/13` — nunca declare sincronia sem verificar.
 4. **Conflitos:** não escolha arbitrariamente; diferencie decisão antiga/atual/PROPOSTO; o **código** define o que existe; a documentação aprovada define a intenção; sem evidência, pergunte ao usuário. Decisão nova **substitui** a anterior **registrando a substituição** (nunca apagando).
 5. **Referências visuais:** para personagens/sprites/animações, use **prioritariamente** as folhas e o atlas do ShinobiBonk já criados (identidade chibi 2.5D) + skills `criar-arte-shinobibonk`/`movimentar-shinobi`.
-6. **Material externo (jogo de referência):** vive **fora do projeto** em `arquivo-pokebonk/` (raiz do workspace) — prints, vídeos, frames e `CONTEXTO-COMPLETO.md`. **Nunca** entrar no repositório (skill `referencia-externa`). Zero menção ao nome do jogo de referência em qualquer arquivo rastreado.
+6. **Material externo (jogo de referência):** vive **fora do projeto** em `<pasta arquivada>/` (raiz do workspace) — prints, vídeos, frames e `CONTEXTO-COMPLETO.md`. **Nunca** entrar no repositório (skill `referencia-externa`). Zero menção ao nome do jogo de referência em qualquer arquivo rastreado.
 
 ## Manifesto da organização (rastreabilidade — rodada 36)
 

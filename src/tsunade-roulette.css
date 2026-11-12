@@ -1,6 +1,6 @@
 /* Roleta da Tsunade (src/ui/TsunadeRoulette.tsx) */
-.tr-backdrop{position:fixed;inset:0;z-index:60;display:grid;align-items:safe center;justify-items:center;background:radial-gradient(circle at 50% 40%,#2a1a0ccc,#0b0710ee);padding:16px;overflow:auto}
-.tr-modal{position:relative;width:min(1040px,100%);background:linear-gradient(160deg,#2b1d14,#1a1220 70%);border:2px solid #d9a441;border-radius:18px;box-shadow:0 20px 60px #000a,inset 0 0 0 1px #ffffff14;color:#f6ead2;padding:20px 22px}
+.tr-backdrop{position:fixed;inset:0;z-index:60;display:grid;align-items:safe center;justify-items:center;background:radial-gradient(circle at 50% 40%,#2a1a0ccc,#100b07ee);padding:16px;overflow:auto}
+.tr-modal{position:relative;width:min(1040px,100%);background:linear-gradient(160deg,#2b1d14,#1f1813 70%);border:2px solid #d9a441;border-radius:18px;box-shadow:0 20px 60px #000a,inset 0 0 0 1px #ffffff14;color:#f6ead2;padding:20px 22px}
 .tr-close{position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid #d9a44188;background:#0006;color:#f6ead2;font-size:22px;cursor:pointer}
 .tr-head small{letter-spacing:.18em;color:#e6b85a;font-size:11px}
 .tr-head h1{margin:2px 0 4px;font-size:30px;color:#ffd77a;text-shadow:0 2px 0 #6b3b0f}
@@ -33,12 +33,12 @@
 .tr-odds ul{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 10px}
 .tr-odds li{display:flex;gap:6px;align-items:center}.tr-odds li span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tr-odds li em{font-style:normal;font-variant-numeric:tabular-nums}
-li.kind-bom i,li.kind-bom em{color:#7fe0a5}li.kind-ruim i,li.kind-ruim em{color:#ff9aa3}li.kind-neutro{color:#bfbfcf}
+li.kind-bom i,li.kind-bom em{color:#7fe0a5}li.kind-ruim i,li.kind-ruim em{color:#ff9aa3}li.kind-neutro{color:#cfc9bf}
 .tr-pending small{color:#bfae8e;margin-left:6px}
 .tr-pending ol{list-style:none;margin:6px 0 0;padding:0;max-height:210px;overflow:auto;display:flex;flex-direction:column;gap:4px}
 .tr-pending li{display:flex;gap:8px;align-items:flex-start;padding:4px 6px;border-radius:6px;background:#ffffff0d}
 .tr-pending li span{display:flex;flex-direction:column}.tr-pending li span small{margin:0}
-.tr-pending li.kind-bom{border-left:3px solid #3aa86b}.tr-pending li.kind-ruim{border-left:3px solid #c2414d}.tr-pending li.kind-neutro{border-left:3px solid #666a80}
+.tr-pending li.kind-bom{border-left:3px solid #3aa86b}.tr-pending li.kind-ruim{border-left:3px solid #c2414d}.tr-pending li.kind-neutro{border-left:3px solid #7f7367}
 .tr-empty{margin:6px 0 0;color:#bfae8e}
 @media (max-width:760px){.tr-body{grid-template-columns:1fr}.tr-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tr-head h1{font-size:24px}}
 .tr-result .catalog-icon,.tr-pending .catalog-icon{width:28px;height:28px;vertical-align:middle}

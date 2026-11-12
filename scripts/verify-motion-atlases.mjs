@@ -51,7 +51,14 @@ try{
      put(col*132+3,row*180+160,names[col]);
      samples.push({action:expected,atlas:motion.atlas(),uv:[map.offset.x,map.offset.y,map.repeat.x,map.repeat.y]});
     }
-    results.push({hero:hero.id,samples});motion.dispose();idle.dispose();sprite.material.dispose();
+    // Andar atacando: o golpe toca inteiro pelos quadros de ataque (sem virar caminhada no meio) e volta à caminhada ao fim.
+    update(1);update(.2,true);motion.attack(false,false);const walkFrames=[];
+    for(let k=0;k<7;k++){update(.03,true);if(motion.state()!=='attack')throw Error(hero.id+' andando: golpe cortado em '+motion.state());walkFrames.push(motion.debug().frame);}
+    update(.05,true);if(motion.state()!=='walk')throw Error(hero.id+' andando: não voltou à caminhada');
+    // Velocidade de ataque alta: pedidos a cada 0,05 s não reiniciam o golpe antes de 75%.
+    motion.attack(false,false);let last=0;
+    for(let k=0;k<12;k++){update(.02,true);motion.attack(false,false);const p=motion.debug().progress;if(p<last&&last+.02/.22<.75)throw Error(hero.id+' golpe reiniciado em '+last);last=p;}
+    results.push({hero:hero.id,samples,walkAttackFrames:walkFrames});motion.dispose();idle.dispose();sprite.material.dispose();
    }
    return results;
   };

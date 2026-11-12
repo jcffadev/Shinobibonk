@@ -33,7 +33,10 @@
 
 Regras do elenco (CONFIRMADO, 06/11): cada shinobi tem **1–2 técnicas únicas**; o resto do kit vem da biblioteca compartilhada (`L`); versões só usam técnicas da **própria fase** (Narutopedia conferida); a versão seguinte se libera pela missão de selamento jogando com a anterior; Mega Elite/ajudante usa a versão do rank (Genin→inicial … Kage→última).
 
-## Fila de personagens novos (rodada 35, 12/11 — **APROVADO na rodada 37, 12/11/2026**)
+## Fila de personagens novos
+
+> **Rodada 38 (12/11):** fichas completas (versões, técnicas únicas, passivas, arte, efeitos) e a **revisão canônica** desta lista pela Narutopedia estão em [22-PROPOSTA-NOVOS-SHINOBIS.md](22-PROPOSTA-NOVOS-SHINOBIS.md) — divergências aguardando o usuário.
+ (rodada 35, 12/11 — **APROVADO na rodada 37, 12/11/2026**)
 
 ### Kages ausentes até o Shippuden — **APROVADOS na rodada 37** (incluindo os primeiros Kages de cada vila)
 
