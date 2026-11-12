@@ -31,9 +31,10 @@ export function lootScale(tier: EnemyTier, maxHp: number, normalHp: number, miss
   return ENEMY_TIERS[tier].loot * hpWeight * missionLootFactor(missionTier);
 }
 
-/** O primeiro mega Genin tem ~20 mil HP. O tempo total continua contando entre zonas. */
-export function megaEliteHp(seconds:number, threatMultiplier:number) {
-  return Math.round(20000*2**(Math.max(0,seconds-55)/80)*threatMultiplier);
+/** Rodada 50 (pedido do usuário: "o primeiro mega-elite nascer com 20K de vida é elevado, deveria ser cerca de 9 a 10 meio aleatório") —
+ * base 9.500 com variação aleatória ±5% (9.025–9.975) por nascimento. O tempo total continua contando entre zonas. */
+export function megaEliteHp(seconds:number, threatMultiplier:number, rng=Math.random) {
+  return Math.round(9500*(1+(rng()-.5)*.1)*2**(Math.max(0,seconds-55)/80)*threatMultiplier);
 }
 
 /** 4 a 6 encontros distribuídos ao longo da zona, com variação dentro de cada janela. */

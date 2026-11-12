@@ -4,6 +4,30 @@ Registro cronológico dos pedidos do usuário e das respostas do assistente. Com
 
 Para cada nova solicitação, acrescente a mensagem do usuário e a resposta final. Registre também instruções complementares recebidas antes da resposta. Se houver dados sensíveis, resuma a parte necessária sem copiá-los.
 
+## Morros de arroz com E (sem auto-coleta) · escada de monstros vivos ~−40% no early game (progressiva + %inimigos) · 1º mega elite ~9,5 mil HP ±5% · ficha de status de volta na pausa
+
+**Pedidos** (Rodada 50 · 12/11/2026)
+
+> Os bolinhos de arroz dentro da run, estão funcionando da mesma forma que eram os lamens? estão curando a vida em % do personagem? E eu falei que eu não queria os pergaminhos pegando automático, mas os bolinhos de arroz você colocou para passar em cima e pegar automático, retire isso.
+>
+> Ainda temos muito monstros com 1m de partida apenas, 114 é um número bem expressivo, o primeiro mega-elite nascer com 20K de vida também é um número elevado, deveria ser cerca de 9 a 10 meio aleatório... Diminua um pouco a escada de progressão de quantidade de monstros vivos no início da partida, mas faça ser progressivo tempo+%inimigos por itens/debuffs [screenshot do HUD aos 1 min: 114 monstros]
+>
+> [screenshot da pausa — Técnicas/Inventário/Plano de build/Crescimento por nível] cade a ficha com os status do personagem?
+>
+> Caiu minha energia, consegue continuar de onde parou? Me mostre a lista
+
+**Resposta / o que foi feito** (Rodada 50 · 12/11/2026)
+
+1. **Morros de arroz (Ryu) — sem auto-coleta, coletados com E** (pedido do usuário; **substitui** a auto-coleta da Rodada 49 — a mais recente prevalece): o morro **não é mais coletado ao pisar** (o filtro de auto-coleta agora exclui `ryu`; o único pickup que segue auto-coletado é o **drop do mega elite derrotado** — `sealDrop`); o **E coleta** o morro (→ `collectPickup`: Ryu + ímã global 10 s + lamen de cura); o hint de interação mostra **“E · colher morro de arroz · Ryu por zona/missão/sorte + ímã 10 s + lamen de cura”**. **Resposta à pergunta do usuário:** o morro **NÃO cura a vida diretamente** — ele dá **Ryu** (`(14+zona×6)×MISSION_TIER[missão]×(1+min(1,sorte×0,01))`), **ímã de 10 s** (puxa xp/lamen/chakra de todo o mapa) e **dropa uma LAMEN que cura 35% do HP** (`RAMEN_DROP.heal`) — a cura é da lamen (igual aos lamens, em % do HP), não do morro.
+2. **Escada de monstros vivos (early game) — reduzida ~40%, progressiva + %inimigos de itens/debuffs** (**PROPOSTO** — o usuário testa e ajusta): `ENEMY_SCALING` em `src/game/progression.ts` — **capBase 60→36 · capLinear 90→52 · capQuad 6,4→3,8**. Nova escada (Genin): **1 min = 91 vivos (era 156) · 5 min = 391 (era 670) · 8 min = 695 (era 1.189) · 10 min = 936 (era 1.600) · teto 1.600 atingido aos ~15 min (era ~10 min)**. O **%inimigos de itens/pílulas/debuffs** (`enemyCount`: Incenso Repelente −8% · Flauta Provocadora +12% · Pílula de Incenso +10% · Isca Shinobi +15%) **JÁ multiplica o cap** via densidade em `GameCanvas.tsx` (`threatNow`) — a progressão por buffs **se mantém**; só a escada-base ficou mais suave. Asserções ajustadas em `verify-rules.mjs` (695@8 min · 936@10 min · 1.600@15 min).
+3. **1º mega elite — 20 mil → 9,5 mil HP com variação aleatória ±5% por nascimento** (**PROPOSTO** — “cerca de 9 a 10 meio aleatório”): `megaEliteHp` em `src/game/enemyTiers.ts` — base **9.500** × (0,95–1,05 aleatório por spawn) + rampa `2^((seconds−55)/80)` × ameaça da missão (rampa e multiplicador se mantêm). Asserção determinística em `verify-rules.mjs` (`megaEliteHp(55,1,()=>.5)=9500`).
+4. **Ficha de status do personagem — de volta, agora como 1ª coluna da pausa**: nova coluna **“Ficha do personagem · Status da run”** em `src/ui/RunSheet.tsx` (faixa roxa `.stripe.purple`) — todos os status da run em **TOTAIS** (base do shinobi + nível + itens + pílulas + passivas + sinergias + bônus por nível) agrupados **ATAQUE/DEFESA/UTILIDADE** + nota (crítico 250% · mega crítico 300%) + tile **“Ameaça da missão ×{difficultyScale}”**. **Conflito Rodada 48 × 50 resolvido:** o usuário quer os **STATUS do personagem** (sim — restaurados como totais); a **tabela de % de itens** (removida na Rodada 48) **continua fora**. `src/run-ui.css` — nova classe `.stat-line.total` (2 colunas: rótulo + valor).
+5. **Regressão na suíte (corrigida na validação):** `verify-runtime.mjs` assumia que a **1ª** `.sheet-column` era “Técnicas” (a que tem o `<details>` do pool) — com a nova coluna “Ficha” à frente, o teste dava timeout. O seletor agora mira **`.run-sheet details`** (independente da ordem das colunas) + comentário de Rodada 50.
+
+**Validado (5/5):** `tsc -b` (exit 0) · `vite build` (exit 0) · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 94 + asserções da Rodada 50) · `verify-motion-atlases.mjs` (56 versões · 560 estados · 0 erros) · `verify-runtime.mjs` (passou completa após a correção do seletor: 183 drawCalls · 1.600 bodies · 138 outlines · 65 markers).
+
+**Pendente (usuário):** (a) testar em run real a escada de vivos (91@1 min · 695@8 min · 936@10 min) e o 1º mega elite (9,5 mil HP ±5%) — **são PROPOSTOS, o usuário ajusta em iteração** (regra: nunca calibrar sem ele); (b) confirmar a leitura da ficha na pausa; (c) **re-upar o zip do Netlify** (o atual é de 11/11 — STALE, anterior à Rodada 48).
+
 ## Altar sem “E”, PERGAMINHOS com E, Final Swarm 800@+4min → 1.600 e morros de bolinhos de arroz
 
 **Pedidos** (Rodada 49 · 12/11/2026)

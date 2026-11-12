@@ -112,7 +112,8 @@ const hpLate=guardianVitality(difficultyAt('Genin',runSeconds,1,overtime).hp,run
 assert.ok(hpLate>=1.1e9&&hpLate<1.35e9,`HP tardio do guardião: ${hpLate}`);
 assert.ok(guardianDefense(runSeconds)>.85&&guardianDefense(runSeconds,true)>guardianDefense(runSeconds));
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);
-assert.equal(megaEliteHp(55,1),20000);assert.ok(megaEliteHp(595,1)>2e6);
+// Rodada 50 — base 9.500 ±5% por nascimento (rng fixo 0,5 = variação neutra = 9.500).
+assert.equal(megaEliteHp(55,1,()=>.5),9500);assert.ok(megaEliteHp(595,1,()=>.5)>8e5);
 for(const rng of [()=>0,()=>.5,()=>.99]){const schedule=rollMegaSchedule(rng);assert.ok(schedule.length>=4&&schedule.length<=6);assert.ok(schedule.every((t,i)=>t>0&&t<600&&(i===0||t>schedule[i-1])));}
 assert.ok(calculateStats('pain',1).maxHp>n1.maxHp);assert.ok(calculateStats('naruto-genin',1).maxHp>calculateStats('naruto',1).maxHp*1.3,'versão seguinte herda o bônus de forma (+25% HP) e +12% de base');
 const gaara=calculateStats('gaara',1),armored=calculateStats('gaara',1,{'Bandana Reforçada':1});
@@ -215,9 +216,10 @@ assert.ok(!availableItems(['critical'],['critical'],false).some(i=>i.id==='criti
  for(let i=0;i<20000;i++){base+=Number(rollItems(commons,{},0,1)[0].id===fav.id);prio+=Number(rollItems(commons,{},0,1,Math.random,[fav.id],P.PRIORITY_WEIGHT)[0].id===fav.id);}
  assert.ok(prio/base>1.9&&prio/base<2.4,'prioridade ×3 de peso: 20% → 3/7 entre 5 itens da mesma raridade');}
 assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attackRate);
-// Horda: teto 1600 aos 10 min (Genin), spawn em lote crescente; FINAL SWARM ×3 imediato e crescendo.
+// Horda — Rodada 50: escada de vivos reduzida ~40% no início (capBase 36 · capLinear 52 · capQuad 3,8): 1 min = 91 (era 156),
+// 8 min = 695 (era 1189), 10 min = 936 (era 1.600), teto 1600 aos ~15 min (era ~10 min). Spawn em lote crescente; FINAL SWARM ×3 imediato e crescendo.
 {const d8=difficultyAt('Genin',480),d10=difficultyAt('Genin',600),sw=difficultyAt('Genin',600,1,1e-3),sw5=difficultyAt('Genin',900,1,300);
- assert.ok(d8.cap>=1100&&d10.cap===1600,'horda ~1600 no fim');assert.ok(d8.spawnPerSecond>40,'spawn em lote');
+ assert.ok(d8.cap>=650&&d8.cap<750,'escada de vivos reduzida ~695 aos 8 min');assert.ok(d10.cap===936,'~936 aos 10 min');assert.equal(difficultyAt('Genin',900).cap,1600,'teto 1600 aos 15 min');assert.ok(d8.spawnPerSecond>40,'spawn em lote');
  assert.ok(Math.abs(sw.hp/d10.hp-3)<.01&&Math.abs(sw.damage/d10.damage-3)<.01,'FINAL SWARM triplica HP e dano');
  // Rodada 47 — era `>d10.armor*2,9`: com a curva de armadura dobrada (armorPerMinute 0,015→0,03, maxArmor 0,6→0,72),
  // o 10 min tem armadura 0,30 e o swarm fica no teto FINAL_SWARM.maxArmor (0,85) = ×2,83. A defesa do swarm segue bem

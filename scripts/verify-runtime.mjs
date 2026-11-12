@@ -156,7 +156,8 @@ for (const [startMoney,paid,cost] of [[100,1,20],[80,2,30]]) {
 }
 checks.push('Pergaminhos (ex-kunai) custam 20 e depois 30 Ryu · abertos com E, sem auto-coleta (Rodada 49)');
 await debug('grantItem','Pedra da Juventude');await debug('grantItem','Kunai Afiada');await debug('dismiss');await wait();
-await page.keyboard.press('p');await wait();const details=page.locator('.sheet-column').first().locator('details');await details.first().evaluate(el=>el.open=true);await details.first().scrollIntoViewIfNeeded();assert.ok(await page.locator('.pool-icon-row .catalog-icon').count()>0);checks.push('Ícones no pool de itens da ficha');
+await page.keyboard.press('p');await wait();// Rodada 50 — a 1ª .sheet-column agora é a "Ficha do personagem" (sem <details>); mirar o <details> da run direto, independentemente da ordem das colunas.
+const details=page.locator('.run-sheet details');await details.first().evaluate(el=>el.open=true);await details.first().scrollIntoViewIfNeeded();assert.ok(await page.locator('.pool-icon-row .catalog-icon').count()>0);checks.push('Ícones no pool de itens da ficha');
 await page.screenshot({path:'artifacts/sheet-pool.png'});await page.getByRole('button',{name:'Continuar missão',exact:true}).click();await wait();
 await page.keyboard.press('m');await page.locator('.world-map').click({position:{x:120,y:120}});await wait();assert.ok(await page.locator('.known-map-event').count()>0);await page.getByRole('button',{name:'Fechar · Esc'}).click();checks.push('Mapa M recebe marcação por clique');
 await debug('dismiss');await debug('finishMission');await wait();await page.getByRole('heading',{name:'Missão concluída!'}).waitFor({state:'visible',timeout:8000});checks.push('Portal de saída conclui a missão com vitória');

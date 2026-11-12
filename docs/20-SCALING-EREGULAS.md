@@ -8,31 +8,32 @@
 
 ## 2. Escala de inimigos por tempo de run (minutos) — `progression.ts`
 
-`ENEMY_SCALING` (IMPLEMENTADO): `hpBase 1,6 · hpLinear 0,3 · hpPerMinute 1,17 · damageBase 1,45 · damageLinear 0,2 · damagePerMinute 1,06 · maxEnemies 1600 · capBase 60 · capLinear 90 · capQuad 6,4 · spawnBase 2 · spawnPerMinute 6 · maxSpawnPerSecond 90 · armorPerMinute 0,015 · maxArmor 0,6`.
+`ENEMY_SCALING` (IMPLEMENTADO, atualizado nas rodadas 47 e **50**): `hpBase 3,2 · hpLinear 0,3 · hpPerMinute 1,17 · damageBase 1,45 · damageLinear 0,2 · damagePerMinute 1,06 · maxEnemies 1600 · capBase 36 · capLinear 52 · capQuad 3,8 · spawnBase 2 · spawnPerMinute 6 · maxSpawnPerSecond 90 · armorPerMinute 0,03 · maxArmor 0,72`. (Era `hpBase 1,6 · capBase 60 · capLinear 90 · capQuad 6,4 · armorPerMinute 0,015 · maxArmor 0,6` — a tabela abaixo foi recalculada com os valores atuais.)
 
 Fórmulas (com `tier = MISSION_TIER`, `min` = minutos totais da run, `curse` = maldição):
 
 ```
-HP inimigo    = tier × (1,6 + 0,3×min) × 1,17^min × curse × swarm
+HP inimigo    = tier × (3,2 + 0,3×min) × 1,17^min × curse × swarm
 Dano inimigo  = tier × (1,45 + 0,2×min) × 1,06^min × curse × swarm
-Teto da horda = min(1600, (60 + 90×min + 6,4×min²) × (0,85 + 0,15×tier))
+Teto da horda = min(1600, floor((36 + 52×min + 3,8×min²) × (0,85 + 0,15×tier)))
 Spawn/s       = min(90, (2 + 6×min) × √tier)
-Armadura      = min(0,6, 0,015×min)   (velocidade e cadência também escalam com tier/min)
+Armadura      = min(0,72, 0,03×min)   (velocidade e cadência também escalam com tier/min)
 ```
 
-**Tabela Genin (tier 1)** — referência do usuário para teste de gameplay:
+**Tabela Genin (tier 1)** — referência do usuário para teste de gameplay (recalculada na **Rodada 50**, 12/11 — a coluna TETO é ~−40% no early game, **PROPOSTO**: o usuário testa e ajusta):
 
-| Minuto | HP do inimigo | Dano | Teto da horda |
+| Minuto | HP do inimigo | Dano | Teto da horda (era) |
 |---|---|---|---|
-| 1 | ×2,2 | ×1,7 | 156 |
-| 2 | ×3,0 | ×2,1 | 265 |
-| 5 | ×6,8 | ×3,3 | 670 |
-| **6** | **×8,7** | **×3,8** | **830** |
-| 10 | ×22,1 | ×6,2 | 1.600 |
-| 15 | ×64,3 | ×10,7 | 1.600 |
-| 30 | ×1.177 | ×42,8 | 1.600 |
+| 1 | ×4,1 (era ×2,2) | ×1,7 | 91 (era 156) |
+| 2 | ×5,2 (era ×3,0) | ×2,1 | 155 (era 265) |
+| 5 | ×10,3 (era ×6,8) | ×3,3 | 391 (era 670) |
+| **6** | **×12,8 (era ×8,7)** | **×3,8** | **484 (era 830)** |
+| 8 | ×19,7 (era ×14,0) | ×4,9 | 695 (era 1.189) |
+| 10 | ×29,8 (era ×22,1) | ×6,2 | 936 (era 1.600) |
+| 15 | ×81,1 (era ×64,3) | ×10,7 | 1.600 (teto, era aos ~10 min) |
+| 30 | ×1.355 (era ×1.177) | ×42,8 | 1.600 |
 
-Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600; ex.: 5 min ≈ 830). **PROPOSTO (rodada 35, 12/11):** monstros ainda mais fortes aos ~6 min e jogador inicial mais fraco/gradual — em iteração com o teste do usuário (fila docs/13).
+Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600; ex.: 5 min = **484** · 10 min = 1.160). O **%inimigos de itens/pílulas/debuffs** (`enemyCount`) **multiplica o cap por cima** via densidade em `GameCanvas.tsx` (`threatNow`) — a progressão por buffs se mantém (rodadas 49/50). **PROPOSTO (rodada 35, 12/11):** monstros ainda mais fortes aos ~6 min e jogador inicial mais fraco/gradual — em iteração com o teste do usuário (fila docs/13).
 
 ## 3. Dificuldade individual por zona (fase) — `progression.ts`
 
@@ -45,7 +46,7 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 ## 5. Elite / Mega Elite — `tuning.ts` (valores base do painel F9)
 
 - Elite amarelo: chance base **8%**, defesa base **30%** (IMPLEMENTADO; o painel F9 multiplica por cima).
-- Mega Elite: defesa base **55%** (IMPLEMENTADO).
+- Mega Elite: defesa base **55%** (IMPLEMENTADO) · **HP base 9.500** (Rodada 50; era 20.000) com **variação aleatória ±5% por nascimento** (9.025–9.975) + rampa `2^((seconds−55)/80)` × ameaça da missão — `megaEliteHp` em `enemyTiers.ts` (**PROPOSTO — o usuário testa e ajusta**).
 - Shinobi para selar: HP próprio (campo `accountHp` do F9).
 - Versão da família que vira Mega Elite/ajudante por dificuldade: Genin → inicial, Chunin → v.1, Jonin → v.2, Kage → última (`heroes.ts`).
 

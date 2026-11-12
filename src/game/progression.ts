@@ -70,8 +70,13 @@ export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.
  *   Dano = tier × (damageBase + min×damageLinear) × damagePerMinute^min
  *   O efeito extra é máximo no início e decai proporcionalmente (5 min: ×1,20 · 10 min: ×1,13 · 30 min: ×1,05) — o late game já é íngreme por si (1,17^min).
  * - Escala individual por zona (fase): ZONE_DIFFICULTY (zona 1 ×1 · zona 2 ×1,18 · zona 3 ×1,38), aplicada em GameCanvas (zoneDifficulty).
+ * Rodada 50 (pedido do usuário: "114 monstros aos 1 min é bem expressivo · diminua um pouco a escada de monstros vivos no início,
+ * mas progressivo tempo + %inimigos por itens/debuffs") — escada de monstros VIVOS reduzida ~40% no early game (PROPOSTO, o usuário testa e ajustamos):
+ * - capBase 60→36 · capLinear 90→52 · capQuad 6,4→3,8 → 1 min = 91 vivos (era 156) · 5 min = 391 (era 670) · 8 min = 695 (era 1189) · 10 min = 936 (era 1.600) · teto 1600 atingido ~15 min (era ~10 min).
+ * - O %inimigos de itens/pílulas/debuffs (enemyCount: Incenso Repelente −8% · Flauta Provocadora +12% · Pílula de Incenso +10% · Isca Shinobi +15%)
+ *   JÁ multiplica o cap (densidade em GameCanvas.threatNow) e continua progressivo com o tempo — apenas a escada-base ficou mais suave.
  */
-export const ENEMY_SCALING={hpBase:3.2,hpLinear:.3,hpPerMinute:1.17,damageBase:1.45,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:60,capLinear:90,capQuad:6.4,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.03,maxArmor:.72};
+export const ENEMY_SCALING={hpBase:3.2,hpLinear:.3,hpPerMinute:1.17,damageBase:1.45,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:36,capLinear:52,capQuad:3.8,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.03,maxArmor:.72};
 /** Escala individual por zona (fase): cada fase nasce mais forte que a anterior (HP, dano, spawn e pressão de roleta). Pedido do usuário (11/11): "verifique o nível de dificuldade também individual para cada fase do jogo". */
 export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
 /**
