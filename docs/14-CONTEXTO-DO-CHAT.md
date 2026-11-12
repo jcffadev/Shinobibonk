@@ -1075,3 +1075,33 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 - **Fila completa** (resposta ao pedido "faça uma lista da fila completa"): ver **docs/13** (rodadas 35–39 com estados) — resumo no retorno final ao usuário.
 - **Descartado nesta rodada (JÁ EXISTE — regra do usuário):** seleção do pool por teclas 1–N (já existe nos cards, `kbd [1..9]`); buffs de itens/pílulas visíveis na RunSheet (já existe — `PillStatPreview`/`affectedTechniquesText`); "★ Planejado para Missão" + "Treinada" no pool (já existiam — o novo é o badge de fusão); treino com Jiraiya +15% (já existe — agora individual por herói); limite de "Não aprender" por herói (já existe) · Kankuro (resolvido — não tocar).
 
+## Rodada 41 · 12/11/2026 — Marionetes únicas do Kankuro e do Sasori (Kuri + Kuroari)
+
+**Pedido do usuário:** "Para Kankuro e Sasori, fazer criações de suas marionetes unicas, utilizar os arquivos de criação/arte/movimentação/assets/arte 2.5D para criar."
+
+**Escopo (interpretação consolidada):** criar as marionetes **como entidades visuais no jogo** (folhas 2.5D chibi + movimentação + integração de gameplay), seguindo o pipeline do projeto. **Kankuro já está CORREGIDO** (usuário confirmou repetidamente) — a rodada 41 é **adicionar** marionetes, não refazê-lo.
+
+### O que foi feito
+
+1. **Arte — 4 folhas geradas com Pillow** (`scripts/generate-puppets.py`, ~551 linhas; arte programática na tradição do projeto — precedente `scripts/generate-sprites.mjs`):
+   - `kuri-1-walk-v1.png` (1280×640) + `kuri-1-action-v3.png` (1280×1280) — **Kuri**, marionete de máscara de raposa do Kankuro (canon: o Kankuro usa marionetes de areia; a raposa é a mais icônica).
+   - `kuroari-1-walk-v1.png` (1280×640) + `kuroari-1-action-v3.png` (1280×1280) — **Kuroari**, o escorpião vermelho (canon: marionete-assinatura do **Sasori**, usada pelo Kankuro no arco da 4ª Guerra Ninja).
+   - Âncora de pés pela convenção do pack (`pack-sprite-atlas.ps1`, 305–310/320 — Kankuro referência ~319/320); fileiras frente/costas (walk) e 4 fileiras (action: ataque frente · ataque costas · pulo frente · pulo costas — mapa confirmado no `playerMotion.ts`).
+2. **Kuri = companheira PERMANENTE do Kankuro (estilo Kiba+Akamaru)** — `GameCanvas.tsx`:
+   - Spawn automático para qualquer versão da família (`familyOf(heroId)==='kankuro'` cobre kankuro / kankuro-shippuden / kankuro-alianca), escala ×0,85, segue em formação (ângulo 2,4 rad · raio 2,1) com **timer de ataque próprio** (não compartilha o `allyTimer` dos ajudantes).
+   - Ataca com **"Agulhas de Kuri"** (`NPC_ALLIES.kuri` — Projétil · alcance 8 · recarga 1,5 s) via `castTechnique(ally=true)` — o veneno do Kankuro (`stats.poison`) é aplicado automaticamente no `hit()`.
+   - **NÃO consome `supportSlots`**, **NÃO entra em `allies`** (não é substituível, não conta em afinidade/sinergia), sem barra de vida, silenciosa (regra: ataques de aliado não tocam som).
+   - Sem alvo no alcance → retry leve (0,5 s) sem queimar o loop.
+3. **Kuroari = entidade visual da técnica EXISTENTE "Kuroari"** (nos kits de Kankuro e Kankuro-Aliança) — `src/scene/kuroari.ts` (mesma receita do Gamabunta):
+   - 4 quadros (preparo → ferrão erguido → estouro do ferrão → recuperação), fade in/out, avanço da marionete até o ponto de impacto (easing cúbico), sprite 1,7 world units, ciclo de vida no `visuals` (respeita a tecla H de esconder efeitos; `group.addEventListener('removed', …)` descarta a textura).
+   - **Dano IDÊNTICO** ao golpe em área atual (mesma fórmula `ATTACK_SCALE×1,2×√(área×(1+g.área))`), resolvido em `pendingHits` no instante `KUROARI_STRIKE` (0,55 s) — **zero mudança de balanceamento**.
+4. **Registros:** `directionalArt.ts` (folha `kuri-1` + `revisedActionForms kuri:[1]`) · `evolution.ts` (`portraitRegion('kuri')` = célula (0,0) da folha de caminhada) · `npcs.ts` (`NPC_ALLIES.kuri` + `NPC_NAMES.kuri`).
+5. **Sasori (herói) NÃO foi criado nesta rodada** — segue a fila aprovada **Onda 2** (docs/13/22; spec "Hiruko (1) · Escorpião Vermelho (15)"); a **Kuroari já fica pronta para o kit dele** (a entidade aparece quando ele castar).
+6. **`verify-rules.mjs`:** bloco novo com **10 asserções** (Kuri em `NPC_ALLIES`/`NPC_NAMES`, existência + dimensões 1280×640/1280×1280 das 4 folhas, folha de ação `kind:'full'`, retrato na célula (0,0), marionetes fora do roster jogável).
+
+### Estado desta rodada
+
+- **IMPLEMENTADO + VALIDADO** (evidências no CHANGELOG e no commit): `tsc -b` limpo · `vite build` OK · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 95 · +10 asserções) · `verify-motion-atlases.mjs` (56 versões/560 estados/0 erros) · `verify-runtime.mjs` (Edge headless) **PASSOU** — 58 checks · 0 erros JS · 0 assets 404 (a 1ª execução estourou timeout num check flaky do headless — portal do guardião — e a 2ª passou).
+- **Decisões pendentes de aprovação do usuário:** (1) Kuri como companheira permanente do Kankuro; (2) Kuroari como visual da técnica (canon: ele usa a marionete do Sasori na 4ª Guerra); (3) adiantar o herói Sasori (Onda 2) ou manter a ordem K→1→2; (4) aceitar arte Pillow interina com opção de trocar por geração IA (mesmos nomes de arquivo = swap trivial).
+- **Limitação declarada:** sem gerador de imagem nesta sessão — arte programática Pillow, qualidade abaixo das folhas IA; o usuário pode gerar pelas suas ferramentas e trocar os 4 PNGs (mesmos nomes) sem tocar no código.
+

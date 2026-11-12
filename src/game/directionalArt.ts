@@ -11,6 +11,7 @@ const revisedActionForms:Record<string,readonly number[]>={
   hinata:[1,15,30],pain:[1],shikamaru:[1,15,30],tobirama:[1],
   temari:[1,15],tenten:[1,15],
   kankuro:[1,15,30],kushina:[1],
+  kuri:[1],
 };
 export function acrobaticsArt(family:string,form:number){
   if((family==='naruto'&&form>1)||family==='lee'||family==='guy')
@@ -57,6 +58,7 @@ const sheets: Record<string, DirectionalSheet> = {
   'kankuro-1': { path: '/assets/shinobi-motion/kankuro-1-walk-v1.png', rows: 2 },
   'kankuro-15': { path: '/assets/shinobi-motion/kankuro-15-walk-v1.png', rows: 2 },
   'kankuro-30': { path: '/assets/shinobi-motion/kankuro-30-walk-v1.png', rows: 2 },
+  'kuri-1': { path: '/assets/shinobi-motion/kuri-1-walk-v1.png', rows: 2 },
 };
 
 // Cada par é frente/costas para uma forma. A ordem é a mesma das fileiras no PNG.

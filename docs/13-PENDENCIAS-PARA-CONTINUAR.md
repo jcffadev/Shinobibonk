@@ -9,6 +9,7 @@ Este é o estado consolidado após os commits 11e0d18 e bee4bba. Substitui as li
 - Integração dos rascunhos do Claude com a main do Codex concluída em 11e0d18.
 - Nove folhas novas de pulo/dash para Naruto 10/25/50, Lee 1/15/30 e Guy 1/15/30.
 - 27 folhas completas action-v3: Sasuke 15; Hashirama 1/20; Kakashi 1/25; Itachi 1; Minato 1/15; Tsunade 1/15/30; Jiraiya 1/20; Orochimaru 1/15; Hinata 1/15/30; Pain 1; Shikamaru 1/15/30; Tobirama 1; Temari 1/15; Tenten 1/15.
+- **Rodada 41 (12/11/2026):** **marionetes únicas do Kankuro e do Sasori** — **Kuri** (máscara de raposa) como **companheira PERMANENTE** da família Kankuro (estilo Kiba+Akamaru: segue em formação, ataca com “Agulhas de Kuri”, **não** ocupa slot de ajudante, **não** entra em `allies`) + **Kuroari** (escorpião vermelho) como **entidade visual** da técnica “Kuroari” (dano **idêntico** ao golpe em área atual — zero mudança de balanceamento) · 4 folhas programáticas (Pillow, `scripts/generate-puppets.py`) · +10 asserções no `verify-rules`. Validado: tsc · build · verify-rules (56/97/95) · verify-motion-atlases (56/560) · verify-runtime (58 · 0 · 0). Pendente de aprovação do usuário: design da Kuri, visual da Kuroari, adiantar o herói Sasori (Onda 2), arte Pillow interina.
 - **Rodada 40 (12/11/2026):** passiva **“Couraça” → “Colete Shinobi”** (pedido do usuário: “Deveria ser um colete Shinobi”) — buff inalterado (+2 armadura por nível), ícone do **colete** (sprite `jonin-vest` do atlas, mesma arte do item Colete Jonin) e **migração não destrutiva** do save `sb_permanent_levels` (a chave antiga é copiada para a nova e nunca apagada — quem já comprou os níveis mantém o buff; a conversão armadura→dano do Gaara também foi atualizada). Validado: tsc · build · verify-rules (56/97/95) · verify-runtime (58 checks · 0 erros · 0 404).
 - Folhas anteriores: Naruto Academia, Sasuke Genin/Rinnegan, Neji Genin/Jonin, Asuma, três Sakuras, três Gaaras, três Madaras e Itachi Akatsuki. A existência da folha não equivale a aprovação visual.
 - Retomada após Esc sem clique extra, Tab rápido sem pausa e ficha por P; mercador mantém preços do estoque atual; oficina tem Fundir/Combinar e um uso compartilhado por zona.
@@ -218,6 +219,18 @@ Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-ru
 **Pendências desta rodada:** (a) **PERGUNTA EM ABERTA** — "buff de conta que aumenta a % de dano de habilidades, isso é por NINJA!": implementado como **consequência** do plano individual (cada herói tem o +15% do próprio treino); se for um **buff NOVO** de conta (Passiva Shinobi por Lamens, por ninja), aguarda a resposta do usuário (PROPOSTO); (b) teste do usuário do planner em tabela + Fusões + Táticas.
 
 **Descartado nesta rodada (JÁ EXISTE — regra do usuário 12/11):** teclas 1–N no pool · buffs de itens/pílulas visíveis na RunSheet (`PillStatPreview`/`affectedTechniquesText`) · badges "★ Planejado para Missão"/"· Treinada" no pool (o novo é o de fusão) · Treinamento com Jiraiya +15% (agora individual por herói) · limite de "Não aprender" por herói · Kankuro (resolvido — não tocar).
+
+## Rodada 41 · 12/11/2026 (marionetes únicas — Kuri + Kuroari)
+
+**Status (evidências no CHANGELOG):**
+
+1. **Kuri (companheira do Kankuro)** — IMPLEMENTADO: spawn para qualquer versão da família Kankuro, segue em formação (ângulo 2,4 rad · raio 2,1), timer de ataque próprio (independente do `allyTimer`), técnica “Agulhas de Kuri” (Projétil · alcance 8 · recarga 1,5 s) com o veneno do Kankuro via `hit()`. **Fora de `allies`/slots/afinidade/sinergia** (decisão registrada; aguarda aprovação do usuário).
+2. **Kuroari (entidade da técnica)** — IMPLEMENTADO: `src/scene/kuroari.ts` (receita do Gamabunta), 4 quadros + avanço + fades, respeita a tecla H; **dano idêntico** (mesma fórmula de área), acerto em 0,55 s via `pendingHits`.
+3. **Arte** — 4 folhas Pillow (1280×640 walk / 1280×1280 action), âncora de pés pela convenção do pack; `scripts/generate-puppets.py` versionado no repositório. **Limitação declarada:** sem gerador de imagem na sessão — qualidade abaixo das folhas IA (swap trivial mantendo os nomes).
+4. **Registros** — `directionalArt.ts` (`kuri-1` + `kuri:[1]`) · `evolution.ts` (`portraitRegion('kuri')`) · `npcs.ts` (`NPC_ALLIES.kuri` + `NPC_NAMES`) · `verify-rules.mjs` (10 asserções).
+5. **Sasori (herói)** — NÃO criado nesta rodada (fila **Onda 2**); a Kuroari já fica pronta para o kit dele.
+
+**Pendências desta rodada:** (a) aprovação do usuário dos 4 pontos do “Estado desta rodada” em docs/14 (Kuri, Kuroari, adiantar Sasori, arte Pillow); (b) conferência visual das 4 folhas pelo usuário (ou geração IA e swap dos PNGs).
 
 ## Retomar
 

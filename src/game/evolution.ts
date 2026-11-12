@@ -43,6 +43,8 @@ export function portraitRegion(versionId:string,level=1){
  if(id==='sapos-sabios')return {path:'/assets/shinobis/sapos-sabios-v1.png',cols:1,rows:1,index:0};
  if(id==='teuchi')return {path:'/assets/shinobis/teuchi-v1.png',cols:1,rows:1,index:0};
  if(id==='asuma')return {path:ASUMA_ATLAS,cols:4,rows:4,index:0};
+ // Kuri (rodada 41): marionete do Kankuro — retrato na célula (0,0) da própria folha de caminhada.
+ if(id==='kuri')return {path:'/assets/shinobi-motion/kuri-1-walk-v1.png',cols:4,rows:2,index:0};
  const leafIndex = leafPortraits.indexOf(id);
  if(leafIndex >= 0) return {path:'/assets/shinobi-folha-v3.png',cols:3,rows:1,index:leafIndex};
  if(id==='sakura'){

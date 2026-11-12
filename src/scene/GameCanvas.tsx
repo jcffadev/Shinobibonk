@@ -19,6 +19,7 @@ import { createPerfMonitor } from './perfMonitor';
 import { mergedTechnique, type TechniqueMerge } from '../game/techniqueMerge';
 import { createAtlasEffect } from './atlasEffects';
 import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from './gamabunta';
+import { createKuroari, KUROARI_STRIKE, KUROARI_TIME } from './kuroari';
 import { createEnemyRenderer, ENEMY_FRAME } from './enemyRenderer';
 import { createHeightField } from './heightField';
 import { createDamageNumbers } from './damageNumbers';
@@ -286,6 +287,15 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const allyActors:THREE.Sprite[]=[];
     const sageAura=createAtlasEffect('sage');sageAura.sprite.visible=false;scene.add(sageAura.sprite);runCleanups.push(sageAura.dispose);
     const allyMotions=new Map<THREE.Sprite,ReturnType<typeof createPlayerMotion>>();
+    // Kuri (rodada 41): marionete de máscara de raposa do Kankuro — companheira PERMANENTE (estilo Kiba+Akamaru).
+    // Não consome vaga de suporte e NÃO entra em `allies` (sem afinidade, não é dispensável, não vaza para a
+    // UI de equipe); ataca em silêncio (ally=true) com timer próprio, fora de fase dos ajudantes.
+    // Caminha/ataca com o mesmo controlador do jogador (família 'kuri', folhas registradas em directionalArt).
+    const kuriActive=familyOf(heroId)==='kankuro';
+    const kuriSprite=kuriActive?makeHero('kuri'):null;
+    if(kuriSprite){kuriSprite.scale.multiplyScalar(.85);kuriSprite.position.copy(player.position).add(new THREE.Vector3(2,0,1));scene.add(kuriSprite);}
+    const kuriMotion=kuriSprite?createPlayerMotion(scene,kuriSprite,'kuri',false):null;
+    let kuriTimer=0;
     const activeSetups:ActiveSetup[]=[],pendingHits:{time:number;run:()=>void}[]=[];
     /** Teste: força a chance da linha Senjutsu (null = valor normal). */
     let senjutsuOverride:number|null=null,senjutsuProcs=0;
@@ -846,6 +856,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     gamabuntaSheet.minFilter=gamabuntaSheet.magFilter=THREE.NearestFilter;
     gamabuntaSheet.generateMipmaps=false;
     runCleanups.push(()=>gamabuntaSheet.dispose());
+    // Kuroari (rodada 41): entidade da técnica 'Kuroari' do Kankuro — usa a fileira 0 da folha de ação (4 quadros).
+    const kuroariSheet=new THREE.TextureLoader().load('/assets/shinobi-motion/kuroari-1-action-v3.png');
+    kuroariSheet.colorSpace=THREE.SRGBColorSpace;
+    kuroariSheet.minFilter=kuroariSheet.magFilter=THREE.NearestFilter;
+    kuroariSheet.generateMipmaps=false;
+    runCleanups.push(()=>kuroariSheet.dispose());
     const totemHands=new THREE.TextureLoader().load('/assets/shinobi-motion/naruto-hand-seal-v1.png');
     totemHands.colorSpace=THREE.SRGBColorSpace;
     totemHands.minFilter=totemHands.magFilter=THREE.NearestFilter;
@@ -1054,6 +1070,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       let age=0;
       visuals.push({object:effect.group,life:GAMABUNTA_TIME,tick:dt=>effect.tick(age+=dt)});
     }
+    function showKuroari(origin:THREE.Vector3,target:THREE.Vector3){
+      const effect=createKuroari(kuroariSheet,origin,target,v2);
+      scene.add(effect.group);effect.group.visible=!hiddenEffects;
+      let age=0;
+      visuals.push({object:effect.group,life:KUROARI_TIME,tick:dt=>effect.tick(age+=dt)});
+    }
     function castTechnique(t:Technique,origin:THREE.Vector3,g:SkillGrowth,ally=false,instant=false,allyMotion?:ReturnType<typeof createPlayerMotion>,part=false,casterId=heroId):boolean{
       const merge=!part&&merges.get(t.name);
       if(merge&&merge.kind==='combine'){
@@ -1075,6 +1097,13 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         const impact=target.sprite.position.clone(),fire={...t,element:'Fogo' as const,burn:true};
         if(!hiddenEffects)showGamabunta(origin,impact);
         pendingHits.push({time:GAMABUNTA_IGNITION,run:()=>{const radius=1.65*Math.sqrt(stats.area*(1+g.area));for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-impact.x,enemy.sprite.position.z-impact.z)<radius)hit(enemy,fire,g,impact);}});
+      }else if(t.name==='Kuroari'&&!ally){
+        // Kuroari (rodada 41): a marionete escorpião surge e atinge o ponto de impacto — o dano é IDÊNTICO ao
+        // golpe em área atual (mesma fórmula ATTACK_SCALE×1,2×área), só ganha a entidade visual; o veneno do
+        // Kankuro continua sendo aplicado via hit() (stats.poison), como já acontecia.
+        const impact=target.sprite.position.clone();
+        if(!hiddenEffects)showKuroari(origin,impact);
+        pendingHits.push({time:KUROARI_STRIKE,run:()=>{const radius=ATTACK_SCALE*1.2*Math.sqrt(stats.area*(1+g.area));for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-impact.x,enemy.sprite.position.z-impact.z)<radius)hit(enemy,t,g,impact);}});
       }else if(projectile){const launch=()=>{const count=t.shape==='Em V'?2:1;/* Projétil fracionário (sinergia da Folha, afinidade): chance por disparo de +1. */const chance=stats.projectileChance,projectiles=Math.floor(stats.projectiles)+Math.floor(chance)+(Math.random()<chance%1?1:0);for(let i=0;i<Math.min(12,count+projectiles-1);i++){const spread=t.shape==='Em V'?(i%2?.2:-.2):(i-(projectiles-1)/2)*.1,aim=direction.clone().applyAxisAngle(new THREE.Vector3(0,1,0),spread),object=hasSignatureVisual(t,true)?cachedTechniqueVisual(t,()=>makeHero(ally?'naruto':heroId,ally?1:level)):new THREE.Object3D();if(!hasSignatureVisual(t,true))object.userData.particleHead=true;object.position.copy(origin);animateTechniqueVisual(object,0,aim);object.scale.multiplyScalar(ATTACK_SCALE);object.visible=!hiddenEffects;scene.add(object);shots.push({mesh:object,direction:aim,remaining:range,range,speed:(t.name.includes('Bunshin')?6:10)*stats.projectileSpeed,radius:ATTACK_SCALE*(t.shape==='Onda'?.85:.4)*Math.sqrt(stats.area*(1+g.area)),technique:t,origin:origin.clone(),hit:new Set(),growth:g,ally,bounces:!ally&&(t.shape==='Projétil'||t.shape==='Em V')?stats.bounce:0});}};
         if(academyThrow&&!instant)pendingHits.push({time:.12,run:launch});
         else launch();
@@ -1228,6 +1257,23 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         }
         motion?.update(dt,floor,1,1,follows,dir.dot(v1)>0,dir.dot(v2)<0,level,jumpHeight,dash,false,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
       }if(allyTimer<=0)allyTimer=allyInterval();
+      // Kuri (rodada 41): segue o Kankuro em formação e ataca no timer próprio (não compartilha o allyTimer).
+      if(kuriSprite&&kuriMotion&&!defeated){
+        const kuriAngle=2.4,goal=new THREE.Vector3(player.position.x+Math.cos(kuriAngle)*2.1,0,player.position.z+Math.sin(kuriAngle)*2.1);
+        dir.copy(goal).sub(kuriSprite.position);dir.y=0;
+        const gap=dir.length(),follows=gap>.3;
+        dir.normalize();
+        if(gap>12)kuriSprite.position.copy(goal);
+        else if(follows)kuriSprite.position.addScaledVector(dir,Math.min((speed+2)*(slideTime>0?2:1)*dt,gap));
+        const kuriFloor=terrainHeight(kuriSprite.position.x,kuriSprite.position.z);
+        kuriSprite.position.y=kuriFloor+kuriSprite.scale.y*.5;
+        kuriTimer-=dt;
+        if(kuriTimer<=0){
+          if(castTechnique(NPC_ALLIES.kuri.technique,kuriSprite.position,NO_GROWTH,true,false,kuriMotion,false,'kuri'))kuriTimer=allyInterval();
+          else kuriTimer=.5; // sem inimigo no alcance: retry leve sem queimar o loop
+        }
+        kuriMotion.update(dt,kuriFloor,1,1,follows,dir.dot(v1)>0,dir.dot(v2)<0,1,0,slideTime>0,false,1,1);
+      }
       if(!defeated){
       chakra=Math.min(100,chakra+100*dt/55*stats.ultimateRate*tune().ultimateRate);if(autoUlt&&chakra>=100)castUltimate();
       for(const t of techniques){if(!skillLevels[t.name])continue;cooldowns[t.name]=(cooldowns[t.name]||0)-dt;if(cooldowns[t.name]<=0){const g=growth[t.name]??NO_GROWTH;if(castTechnique(t,player.position,g))cooldowns[t.name]=t.setup?setupNumbers(t,g).cooldown:t.cooldown/Math.max(.1,stats.attackSpeed*(1+g.haste)*tempAttackSpeed());}}
@@ -1472,7 +1518,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       setFrozen:(on:boolean)=>{debugState.frozen=on;},
     };
     onSnapshotRef.current({...emptySnapshot,hp:stats.maxHp,maxHp:stats.maxHp,stats,permanent,skillLevels:{...skillLevels},choices:{...uses,banning:false}});
-    return()=>{shadowClones.forEach(disposeShadowClone);playerMotion.dispose();allyMotions.forEach(motion=>motion.dispose());enemyList.forEach(enemy=>enemy.motion?.dispose());runCleanups.forEach(fn=>fn());debugApiRef.current=null;delete debugWindow.__shinobiTest;environmentMaps.forEach(t=>t.dispose());heroTextures.forEach(t=>t.dispose());pickupTextures.forEach(t=>t.dispose());damageNumbers.dispose();enemyRenderer.dispose();observer.disconnect();stopLoop();renderer.setAnimationLoop(null);renderer.dispose();window.removeEventListener('shinobi-ping',onPing);window.removeEventListener('shinobi-route',onRoute);window.removeEventListener('shinobi-choose',onChoose);window.removeEventListener('shinobi-roulette',onRoulette);window.removeEventListener('shinobi-toggle-auto-ult',onToggleAuto);window.removeEventListener('keydown',onKeyDown);window.removeEventListener('keyup',onKeyUp);window.removeEventListener('blur',onBlur);container.removeEventListener('pointerdown',onDown);container.removeEventListener('pointermove',onMove);container.removeEventListener('pointerup',onUp);container.removeEventListener('pointercancel',resetPointer);container.removeEventListener('pointerleave',resetPointer);container.removeEventListener('contextmenu',onContext);container.removeEventListener('wheel',onWheel);scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>m.dispose());}if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});groundLook.dispose();sky.texture.dispose();texture.dispose();orochimaruTexture.dispose();container.removeChild(renderer.domElement);};
+    return()=>{shadowClones.forEach(disposeShadowClone);playerMotion.dispose();allyMotions.forEach(motion=>motion.dispose());kuriSprite?.removeFromParent();kuriSprite?.material.dispose();kuriMotion?.dispose();enemyList.forEach(enemy=>enemy.motion?.dispose());runCleanups.forEach(fn=>fn());debugApiRef.current=null;delete debugWindow.__shinobiTest;environmentMaps.forEach(t=>t.dispose());heroTextures.forEach(t=>t.dispose());pickupTextures.forEach(t=>t.dispose());damageNumbers.dispose();enemyRenderer.dispose();observer.disconnect();stopLoop();renderer.setAnimationLoop(null);renderer.dispose();window.removeEventListener('shinobi-ping',onPing);window.removeEventListener('shinobi-route',onRoute);window.removeEventListener('shinobi-choose',onChoose);window.removeEventListener('shinobi-roulette',onRoulette);window.removeEventListener('shinobi-toggle-auto-ult',onToggleAuto);window.removeEventListener('keydown',onKeyDown);window.removeEventListener('keyup',onKeyUp);window.removeEventListener('blur',onBlur);container.removeEventListener('pointerdown',onDown);container.removeEventListener('pointermove',onMove);container.removeEventListener('pointerup',onUp);container.removeEventListener('pointercancel',resetPointer);container.removeEventListener('pointerleave',resetPointer);container.removeEventListener('contextmenu',onContext);container.removeEventListener('wheel',onWheel);scene.traverse(o=>{if(o instanceof THREE.Mesh){o.geometry.dispose();const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>m.dispose());}if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});groundLook.dispose();sky.texture.dispose();texture.dispose();orochimaruTexture.dispose();container.removeChild(renderer.domElement);};
   }, [heroId,mission,mapId]);
   return <><div className={`scene${enabled&&!paused&&!debugOpen?' scene-live':''}`} ref={host} aria-label="Cena 3D isométrica do ShinobiBonk" />{debug&&enabled&&<DebugPanel getApi={getDebugApi} open={debugOpen} setOpen={setDebugOpen}/>}</>;
 }

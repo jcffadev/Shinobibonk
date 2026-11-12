@@ -103,6 +103,14 @@ export const NPC_ALLIES: Record<string, NpcAlly> = {
     // Kunai (ferramenta ninja), não jutsu do kit canônico. Valores provisórios.
     technique: { name: 'Kunai da Academia', school: 'Taijutsu', element: 'Neutro', shape: 'Projétil', color: '#c9d3df', power: 1, range: 8, cooldown: 1.5, statusChance: 0, unlockLevel: 1 },
   },
+  // Kuri (rodada 41): marionete de máscara de raposa do Kankuro — companheira PERMANENTE (estilo Kiba+Akamaru):
+  // segue o jogador, ataca no timer próprio e NÃO ocupa slot de ajudante (fora de `allies`, sem afinidade/sinergia).
+  // Fonte canônica: Narutopedia (página do Kankuro — marionetes de areia e máscara de raposa).
+  kuri: {
+    id: 'kuri', name: 'Kuri', village: 'Vila da Areia',
+    // Agulhas de costura de marionete (canon: Kankuro controla marionetes por fios e agulhas). Valores provisórios.
+    technique: { name: 'Agulhas de Kuri', school: 'Ninjutsu', element: 'Neutro', shape: 'Projétil', color: '#d7e6ff', power: 1, range: 8, cooldown: 1.5, statusChance: 0, unlockLevel: 1 },
+  },
 };
 export const isNpcAlly = (id: string) => id in NPC_ALLIES;
 
@@ -111,7 +119,7 @@ export const isNpcAlly = (id: string) => id in NPC_ALLIES;
  * shinobi-roster-v2.png (quadrado, imagem inteira). Gerados por `node scripts/generate-sprites.mjs --npcs`.
  * Usados pelo sprite 3D no mapa, pelo cartão de ajudante (Iruka) e pela ficha (via portraitRegion).
  */
-export const NPC_NAMES: Record<string, string> = { iruka: 'Iruka Umino', ebisu: 'Ebisu', teuchi:'Teuchi', 'sapos-sabios':'Fukasaku e Shima' };
+export const NPC_NAMES: Record<string, string> = { iruka: 'Iruka Umino', ebisu: 'Ebisu', teuchi:'Teuchi', 'sapos-sabios':'Fukasaku e Shima', kuri:'Kuri' };
 
 /** Naruto Totem: evento fixo do minuto 7 (relógio regressivo 7:00 → 6:00). Valores provisórios. */
 export const TOTEM_RULES = {

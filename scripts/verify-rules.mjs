@@ -243,6 +243,20 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  for(const h of HEROES)assert.ok(ALLY_BUFFS[h.id],h.id+' sem buff de ajudante');
  assert.ok(sandSynergy(['gaara-kazekage','temari-shippuden','kankuro']),'Irmãos da Areia por família');
  const team=activeSynergies('naruto',['itachi-akatsuki','pain']);assert.ok(team.some(s=>s.id==='org:akatsuki'&&s.members.includes('itachi-akatsuki')),'organização por família com id real da versão');}
+{// Rodada 41: marionetes — Kuri (companheira do Kankuro) + Kuroari (entidade da técnica 'Kuroari').
+ const {NPC_ALLIES,NPC_NAMES}=await import('../src/game/npcs.ts');
+ const pngSize=(p)=>{const b=fs.readFileSync('public'+p);return [b.readUInt32BE(16),b.readUInt32BE(20)];};
+ assert.ok(NPC_ALLIES.kuri&&NPC_ALLIES.kuri.technique.name==='Agulhas de Kuri','Kuri registrada em NPC_ALLIES');
+ assert.equal(NPC_NAMES.kuri,'Kuri','Kuri em NPC_NAMES');
+ assert.deepEqual([...pngSize('/assets/shinobi-motion/kuri-1-walk-v1.png')],[1280,640],'kuri-1-walk 1280×640');
+ assert.deepEqual([...pngSize('/assets/shinobi-motion/kuri-1-action-v3.png')],[1280,1280],'kuri-1-action 1280×1280');
+ assert.deepEqual([...pngSize('/assets/shinobi-motion/kuroari-1-walk-v1.png')],[1280,640],'kuroari-1-walk 1280×640');
+ assert.deepEqual([...pngSize('/assets/shinobi-motion/kuroari-1-action-v3.png')],[1280,1280],'kuroari-1-action 1280×1280');
+ const kSheet=directionalArt('kuri',1);assert.ok(kSheet&&fs.existsSync('public'+kSheet.path),'folha de caminhada da Kuri registrada');
+ const kAction=actionArt('kuri',1);assert.ok(kAction&&kAction.kind==='full'&&fs.existsSync('public'+kAction.path),'folha de ação da Kuri registrada');
+ assert.deepEqual(portraitRegion('kuri'),{path:'/assets/shinobi-motion/kuri-1-walk-v1.png',cols:4,rows:2,index:0},'retrato da Kuri na célula (0,0)');
+ assert.ok(!HEROES.some(h=>h.id==='kuri'||h.id==='kuroari'),'marionetes fora do roster jogável');
+}
 const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,motionForms,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 
 
