@@ -138,7 +138,19 @@ Lista colada pelo usuário em 11/11/2026. Estado por item:
 - Skills `contexto-e-decisao`/`documentar-projeto` atualizadas para o fluxo de índice + docs de domínio.
 - A fila da **rodada 35** foi **AUTORIZADA na rodada 37** (12/11/2026) — implementação em andamento (ver seção da rodada 37 abaixo).
 
-## Rodada 37 · 12/11/2026 (autorização da rodada 35 + novos specs — IMPLEMENTAÇÃO INICIADA)
+## Rodada 37 · 12/11/2026 (autorização da rodada 35 + novos specs — IMPLEMENTAÇÃO EM ANDAMENTO)
+
+**Status das fases (sincronizado em 12/11 após o commit `fd79ced` da sessão paralela do usuário):**
+
+1. **Áudio YOO + gate anti-spam** — **CONCLUÍDA** (commits `d05f168` + `7f8e564`).
+2. **Animação de ataque + caminhada** — **CONCLUÍDA** na rodada 38 (commit `fd79ced`): o golpe toca a animação completa também andando (passada nas pernas do quadro de ataque) + **encadeamento** a partir de 75% (`CHAIN_AT`) + `verify-motion-atlases` (56 versões/560 estados/0 erros). A implementação alternativa criada em paralelo no Bionic (camada sobreposta, commit `841f5bd`) foi **descartada por ser menos completa** — preservada na branch `backup-r37-fase2-overlay` para comparação.
+3. **Caça-Níquel da Tsunade** — **PRÓXIMA** (renome + 5 combos de 3 iguais + emboscada invertida que mata monstros + custo em escala por zona + arte da Tsunade).
+4. **Itens/pílulas** — pendente (Células de Hashirama / Chakra de Hagoromo + ícones · White Flute novo · teto 9/13/15 · Isca → vitamina · pool informativo).
+5. **HUD** — **PARCIALMENTE CONCLUÍDA** (`fd79ced`: tema ninja em hub/seleção/mapa + menu com as 4 vilas + fontes OFL locais; **restante**: streak/abates, card de temporada, glossário, alfas com buffs + combos facção/aldeia/família, buffs somados por itens/pílulas visíveis no pool).
+6. **Balance** — pendente (início fraco/gradual · monstros fortes aos 6 min · treinamento +0,6% aleatório · pergaminhos no chão · mapa maior + spawns alcançáveis).
+7. **Personagens novos** — **PROPOSTA em `docs/22`** (PROPOSTO, aguardando o usuário): 11 Kages/líderes + 3 ondas + NPCs; **divergências canônicas apontadas** (Killer B não foi Raikage · Hanzō não foi Tsuchikage · Mei = 5ª Mizukage · Ōnoki = 3º Tsuchikage · Ao não foi Mizukage).
+8. **Folhas de caminhada frente/costas** — pendente (atlas: hoje só diagonal).
+9. **Arte dos menus** — **PARCIALMENTE CONCLUÍDA** (`fd79ced`: fundos ilustrados do menu inicial + marcos em camadas).
 
 O usuário **autorizou** a fila inteira da rodada 35 ("Aprovo os Kages · Aprovo o Elenco Tier A · Ok pasta com áudio, já inclua este que enviei no 'Jogar' · Pode colocar esse caça níquel") e respondeu às 9 perguntas em aberto (docs/18 §4, linha 37).
 
