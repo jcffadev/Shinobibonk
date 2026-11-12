@@ -314,6 +314,24 @@ Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-ru
 
 **Pendente:** (a) **aprovação do usuário** dos itens 2/3 (PROPOSTOS — “o usuário testa a gameplay e ajustamos em iteração — nunca calibrar sem ele”) + leitura da ficha na pausa; (b) **re-upload do zip no Netlify** — o `Shinobibonk-netlify.zip` (11/11) é **STALE** (anterior à Rodada 48); (c) teste em GPU real.
 
+## Rodada 51 · 12/11/2026 (7 pedidos)
+
+**Status por item (registro integral em docs/14; evidências no CHANGELOG):**
+
+1. **Ataques inimigos voltam a Kunai/Shuriken** — IMPLEMENTADO (pedido do usuário): tipos `enemyKunai`/`enemyShuriken`/`enemyShurikenFuma` em `dropSprites.ts` (kunai de aço em pé · shuriken reaproveita a forma) + projétil em `GameCanvas.tsx`; **os pergaminhos do chão PERMANECEM** como recompensa (rodada 49 — o usuário só reclamou dos ataques); bônus: `userData.shared=true` impede o `disposeObject` de descartar o material compartilhado do cache na limpeza dos projéteis.
+2. **Ficha de personagem no P/ESC** — **JÁ EXISTE** no código (rodada 50, `RunSheet.tsx`); o print do usuário é da build STALE do Netlify (zip de 11/11).
+3. **PARSE_ERROR `RunSheet.tsx:5308`** — não existe no código atual (tsc ✓ · vite build ✓); artefato do bundle antigo.
+4. **Index para o Netlify** — VERIFICADO: `index.html` na raiz do projeto e do `dist/` + `netlify.toml` válido; o zip do workspace foi **rebuildado e reempacotado** (`index.html` + `assets/` na raiz, 371 arquivos, 235 MB).
+5. **.exe seguro** — PROPOSTO (Electron/electron-builder → .exe, ou Tauri); **não implementar sem aprovação do usuário** (o jogo é 100% web; o wrapper embute o `dist/`).
+6. **Tiles da ficha em marrom** — IMPLEMENTADO (`.sheet-tile` em `ninja-theme.css`: gradiente marrom-tan + borda de madeira + texto escuro; `.positive` verde sobrevive).
+7. **Altares = bênção (buffs aleatórios por sorte/qualidade)** — IMPLEMENTADO (mecânica) — `ALTAR_BUFF_BASE` (Comum 5% → Lendário 25%) + `ALTAR_BUFF_POOL` (14 atributos), 2 atributos sorteados (3 no Raro+), magnitude × sorte, direto em `runBuffs`, **sem tela de escolha**, toast com a bênção — **valores PROPOSTOS (o usuário testa e ajusta)**; **substitui** a regra da Rodada 12 “altar 100% abre escolha de itens”.
+
+**Redação (regra zero rastro do jogo de referência):** o nome do jogo de referência aparecia em `docs/14` (pedido da rodada 51) e em `docs/23` (regras de git) — substituído por “jogo de referência”.
+
+**Validações (5/5):** `tsc -b` (exit 0) · `vite build` (exit 0) · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 94) · `verify-motion-atlases.mjs` (56 versões · 560 estados · 0 erros) · `verify-runtime.mjs` (0 erros · 0 assets faltando · 1.600 inimigos instanciados).
+
+**Pendente:** (a) **aprovação do usuário** da bênção dos altares (PROPOSTO) e conferência do marrom das tiles; (b) **RE-UPAR o zip novo `Shinobibonk-netlify.zip` no Netlify** (o anterior era STALE — causa do PARSE_ERROR e do print da pausa sem a ficha); (c) .exe — Electron/Tauri aguardando aprovação; (d) teste em GPU real.
+
 ## Retomar
 
 1. Ler AGENTS.md, **docs/19 (índice do conhecimento)**, README, docs/00, docs/12 e esta fila. Conferir git status e remoto antes de editar.

@@ -150,7 +150,7 @@ Cada linha é um commit publicado. Destaques de revisão marcados com ⭐.
 - **Sempre pt-BR** em toda comunicação (o usuário já repreendeu por inglês).
 - Alterar **SÓ** `C:\Shinobibonk projeto - Copia`; nada em Windows/registro; Edge só para testes.
 - Material de referência do jogo rival **NUNCA** no projeto (skill `referencia-externa`). **Exceção:** os MP3 de jutsu/OST são áudios que o usuário baixou **para o jogo** → podem ir para `public/assets/audio/` e `public/assets/music/`.
-- **Nunca `git add -A`** (stage por nome); nunca force push; nunca commitar `artifacts/`, `node_modules`, `dist`, `arquivo-pokebonk/`, `sb-swishes-source.zip`, `Feedback da versão.txt`.
+- **Nunca `git add -A`** (stage por nome); nunca force push; nunca commitar `artifacts/`, `node_modules`, `dist`, a pasta do material do jogo de referência (fora do repositório), `sb-swishes-source.zip`, `Feedback da versão.txt`.
 - **Kankuro já foi corrigido** (usuário confirmou repetidamente) — **não tocar** nas animações dele a não ser para balanceamento.
 - **Choji é o único que cresce** (Jutsu de Expansão, fase 7) — regra de proporção idêntica em qualquer movimento.
 - **Usuário testa a gameplay e ajustamos em iteração** — não calibrar balanceamento sem ele.

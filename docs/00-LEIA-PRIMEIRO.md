@@ -80,7 +80,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
   - Plano do Shikamaru: até 3 vezes por zona; cada vez dá +1 kunai grátis quando o guardião é derrotado, sem penalidade.
   - Altar de desafio: horda de 6.
   - Maldição de Orochimaru: +20% de dificuldade e +25% de XP/saque.
-  - Altares por raridade (Normal → Lendário): pisar no círculo começa a contar (sem E); fora do círculo a porcentagem cai, mais rápido quanto mais raro (`ALTAR_RULES`, ver docs/01).
+  - Altares por raridade (Normal → Lendário): pisar no círculo começa a contar (sem E; o E não reinicia — Rodada 49); fora do círculo a porcentagem cai, mais rápido quanto mais raro; ao completar, concede uma **bênção** (2–3 atributos aleatórios, raridade do altar × sorte — não é mais itens, Rodada 51) (`ALTAR_RULES` + `ALTAR_BUFF_POOL`, ver docs/01).
   - Mercador de armas.
   - Caça-Níquel da Tsunade: overlay de 3 rolos com casas boas e ruins (incluindo 5 combos de 3 iguais), giro rápido segurando E, prêmios entregues ao sair, custo 30 × 1,70^giros (sobe com o tempo e a zona); ao sair, armadilhas shinobi matam os monstros próximos (jogador seguro durante a interação); Sorte melhora as chances (nunca 100%) e a dificuldade compensa.
   - **Barraca Ichiraku**: o sprite da barraca de lámen.

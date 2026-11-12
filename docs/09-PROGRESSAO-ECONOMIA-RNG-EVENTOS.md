@@ -51,7 +51,7 @@ Versão de especificação: 0.3 (proposta original de design)
 ## Eventos
 - Treino de Guy: fácil 500 abates, difícil 2.000, lendário 5.000; objetivos configuráveis e proteção de área opcional.
 - Ao concluir, escolher exatamente 1 buff entre atributos elegíveis; dificuldade altera magnitude.
-- Altar: defender zona por duração, com ondas e penalidades ao sair da área.
+- Altar: defender zona por duração, com ondas e penalidades ao sair da área. Recompensa (Rodada 51, pedido do usuário): **bênção aleatória** — 2–3 atributos conforme a raridade do altar × sorte (antes: itens da raridade; **PROPOSTO**).
 - Encontro de ninja: duelo com modificadores e recompensa temática.
 - Chefes/Bijuu: eventos de combate e selamento; condições de desbloqueio de personagens definidas separadamente.
 - Sistema de eventos orientado a dados: id, trigger, objetivo, dificuldade, timer, recompensa, estado e telemetria.

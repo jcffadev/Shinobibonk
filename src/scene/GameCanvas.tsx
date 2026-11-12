@@ -84,6 +84,30 @@ export const CHOICE_GUARD = { armSeconds: .2 }; // Rodada 48 — engasgada ao in
  * barra por segundo): Normal 4%/s (~25 s para zerar) … Lendário 18%/s (~5,5 s). Cada altar guarda o próprio progresso.
  */
 export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerSecond: [.04, .06, .09, .13, .18] };
+/**
+ * Bênção do altar protegido (Rodada 51 — pedido do usuário: "Os altares não são para dar itens, mas buffs aleatórios
+ * de acordo com sua sorte/qualidade do altar"): 2 atributos sorteados (3 no Raro/Épico/Lendário), sem tela de escolha.
+ * Magnitude = ALTAR_BUFF_BASE[tier] × escala do atributo × (1 + sorte além de 10, +2% por ponto, teto +120%).
+ * Valores PROPOSTOS (sessão de 12/11) — o usuário testa a gameplay e ajustamos. Como os buffs de roleta/NPC, ficam em
+ * runBuffs (não entram no SavedRun): refreshStats recalcula sempre das fontes.
+ */
+export const ALTAR_BUFF_BASE=[.05,.08,.12,.18,.25]; // Comum→Lendário
+export const ALTAR_BUFF_POOL:[StatKey,number,(v:number)=>string][]=[
+  ['damage',1,v=>`+${Math.round(v*100)}% de dano`],
+  ['crit',1,v=>`+${Math.round(v*100)}% de chance crítica`],
+  ['critDamage',1,v=>`+${Math.round(v*100)}% de dano crítico`],
+  ['attackSpeed',1,v=>`+${Math.round(v*100)}% de velocidade de ataque`],
+  ['move',1,v=>`+${Math.round(v*100)}% de velocidade de movimento`],
+  ['area',1,v=>`+${Math.round(v*100)}% de raio de área`],
+  ['cool',1,v=>`+${Math.round(v*100)}% de recarga da Ultimate`],
+  ['exp',1.2,v=>`+${Math.round(v*100)}% de experiência`],
+  ['gold',1.2,v=>`+${Math.round(v*100)}% de Ryu`],
+  ['dodge',1,v=>`+${Math.round(v*100)}% de esquiva`],
+  ['defense',40,v=>`+${Math.max(1,Math.round(v))} de armadura`],
+  ['regen',4,v=>`+${v.toFixed(1)} HP/s de regeneração`],
+  ['health',200,v=>`+${Math.round(v)} de HP máximo`],
+  ['luck',40,v=>`+${Math.max(1,Math.round(v))} de Sorte`],
+];
 /** Tigela de lamen de cura: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .05, heal: .35 };
 type Enemy = { bodyAmbush?: MapPickup; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
@@ -266,11 +290,14 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(defenseTime<altarTimes[tier])return;
       altarProgress.delete(e);
       defenseActive=false;defenseDone=true;e.active=false;altarCircle.visible=false;
-      const favored=eligibleItemPool().filter(i=>i.rarity===altarRarities[tier]);
-      const count=offerCount(),prize=drawStock(1,knownItems,Math.random,favored);
-      prize.push(...drawStock(count-prize.length,knownItems,Math.random,eligibleItemPool().filter(i=>!prize.includes(i))));
-      choiceLevel=0;banning=false;choiceData=prize.length?prize.map(toOffer):null;
-      keys.clear();eventToast=e.name+' · 100% · escolha sua recompensa';snapshotTimer=0;
+      // Rodada 51 — "Os altares não são para dar itens, mas buffs aleatórios de acordo com sua sorte/qualidade do altar":
+      // 2-3 atributos sorteados (3 em altares Raro+), magnitude = qualidade × sorte. Aplica direto na run, sem tela de escolha.
+      const altarBase=ALTAR_BUFF_BASE[tier]??ALTAR_BUFF_BASE[0],luckMult=1+Math.min(1.2,Math.max(0,stats.luck-10)*.02);
+      const altarPool=[...ALTAR_BUFF_POOL],altarPicked:(typeof ALTAR_BUFF_POOL)[number][]=[];
+      for(let n=0;n<(tier>=2?3:2)&&altarPool.length;n++)altarPicked.push(altarPool.splice(Math.floor(Math.random()*altarPool.length),1)[0]);
+      const altarParts=altarPicked.map(([key,scale,label])=>{const value=Math.round(altarBase*scale*luckMult*100)/100;runBuffs[key]=(runBuffs[key]||0)+value;return label(value);});
+      refreshStats(true);playSfx('pickup');
+      keys.clear();eventToast=`${e.name} · bênção: ${altarParts.join(' · ')}`;snapshotTimer=0;
     }
     // Arsenal da Tenten (NPC, antes Kakashi): forja uma cópia de 1 item que o jogador já carrega. A escolha usa choiceLevel=-1; o evento só é gasto ao copiar.
     let kakashiEvent:(typeof events)[number]|null=null;
@@ -1246,7 +1273,8 @@ function interact(){let bestPickup:MapPickup|undefined,bestDistance=2;for(const 
           if(enemy.windup<=0){const radius=enemy.megaElite?1.7:1;if(ranged&&enemy.attackPoint&&enemyShots.length<80){
             const weapon=enemy.ranged!,fuma=weapon===2,direction=enemy.attackPoint.clone().sub(sprite.position).setY(0).normalize();
 
-            const object=makeDropSprite(weapon===0?'kunai':'shuriken',0);object.scale.setScalar(fuma?1.1:.69);object.material.color.set(fuma?'#ff8f65':'#ffccd1');object.material.rotation=Math.atan2(direction.dot(v1),direction.dot(v2));object.position.copy(sprite.position).addScaledVector(direction,.45);scene.add(object);
+            // Rodada 51 — pedido do usuário: os ATAQUES inimigos voltam a ser Kunai/Shuriken (visuais separadas dos pickups, que seguem como pergaminho).
+            const object=makeDropSprite(weapon===0?'enemyKunai':weapon===2?'enemyShurikenFuma':'enemyShuriken',0);object.scale.setScalar(fuma?1.1:.69);object.material.color.set(fuma?'#ff8f65':'#ffccd1');object.material.rotation=Math.atan2(direction.dot(v1),direction.dot(v2));object.position.copy(sprite.position).addScaledVector(direction,.45);scene.add(object);
             enemyShots.push({object,direction,life:1.25,speed:fuma?8:12,damage:(fuma?11:7)*threat.damage,radius:fuma?.72:.42});
           }else if(!ranged&&enemy.attackPoint&&Math.hypot(player.position.x-enemy.attackPoint.x,player.position.z-enemy.attackPoint.z)<radius&&invulnerability<=0){
             damagePlayer(10*(enemy.dmgMult??1)*threat.damage,enemy);

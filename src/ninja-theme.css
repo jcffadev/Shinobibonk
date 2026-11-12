@@ -383,7 +383,12 @@ kbd{font-family:var(--fonte-texto)}
 .game-panel.sheet-panel .sheet-column .stripe.blue{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#2b7fb8,#3aa6ee);color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35)}
 .game-panel.sheet-panel .sheet-column .stripe.gold{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#b3812f,#e8b04a);color:var(--tinta)}
 .game-panel.sheet-panel .sheet-column .stripe.purple{background-image:repeating-linear-gradient(135deg,#ffffff2e 0 10px,transparent 10px 20px),linear-gradient(90deg,#7a4fc4,#9b6ae0);color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.35)}
-.game-panel.sheet-panel .sheet-tile{border:2px solid var(--papel3);border-radius:8px;background:var(--papel-claro);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 2px 0 rgba(0,0,0,.18)}
+/* Rodada 51 (pedido do usuário: "Esses lugares mais claros, você tem que colocar marrom igual a ficha do personagem") —
+   as tiles claras (papel-claro) viram marrom-tan da mesma família da coluna "Ficha do personagem" (papel2→papel3),
+   um pouco mais escuras para destacar; a tinta fica escura (var(--tinta)) para legibilidade sobre o fundo marrom. */
+.game-panel.sheet-panel .sheet-tile{border:2px solid var(--madeira-borda);border-radius:8px;background:linear-gradient(180deg,#c8a76a,#a07f42);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18),0 2px 0 rgba(0,0,0,.25);color:var(--tinta)}
+.game-panel.sheet-panel .sheet-tile h3,.game-panel.sheet-panel .sheet-tile p,.game-panel.sheet-panel .sheet-tile>small{color:var(--tinta)}
+.game-panel.sheet-panel .sheet-tile h3 small{color:#245e8f}
 
 /* Rodada 47 (item 8) — as ações do planejador (Planejar para Missão / Treinar / Não aprender) agora parecem BOTÕES:
    placa de pergaminho com borda de madeira; ativo = selo vermelho (hanko); "Permitir aprender" mantém verde (base hud-dock.css). */

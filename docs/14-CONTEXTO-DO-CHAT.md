@@ -4,6 +4,38 @@ Registro cronológico dos pedidos do usuário e das respostas do assistente. Com
 
 Para cada nova solicitação, acrescente a mensagem do usuário e a resposta final. Registre também instruções complementares recebidas antes da resposta. Se houver dados sensíveis, resuma a parte necessária sem copiá-los.
 
+## Ataques inimigos de volta a Kunai/Shuriken · altares dão bênção (buffs aleatórios por sorte/qualidade) · tiles da ficha em marrom · Netlify ok · .exe (proposta)
+
+**Pedidos** (Rodada 51 · 12/11/2026)
+
+> Houve uma alteração do Qwen seu novo parceiro de desenvolvimento que alterou os ataques dos monstros que eram Kunais/Shurikens para Pergaminhos, não é pra você fazer isso cara. [screenshot dos projéteis-pergaminho dos monstros]
+>
+> Cadê a ficha de personagem no P/ESC durante a partida? [screenshot da pausa com 2 colunas — build STALE do Netlify]
+>
+> Erro ao tentar iniciar o jogo. [screenshot: PARSE_ERROR em RunSheet.tsx:5308 — build STALE]
+>
+> Verifique se temos index para quando formos subir a pasta no netilify ele consiga criar o index.html do jogo para rodar em navegador.
+>
+> Depois me diga se você já consegue criar um executável seguro do nosso game, mesmo que ele abra pelo brownser dentro do aplicativo, sabe? O jogo de referência faz a mesma coisa, ele não abre um brownser em si, mas é como se fosse. (nome do jogo de referência omitido na citação — regra zero rastro, docs/18 §3)
+>
+> Esses lugares mais claros, você tem que colocar marrom igual a ficha do personagem [screenshot da ficha da run com as tiles creme assinaladas]
+>
+> Os altares não são para dar itens, mas buffs aleatórios de acordo com sua sorte/qualidade do altar.
+
+**Resposta / o que foi feito** (Rodada 51 · 12/11/2026)
+
+1. **Ataques inimigos = Kunai/Shuriken de novo** (pedido do usuário — corrige a visual trocada na Rodada 49): `src/scene/dropSprites.ts` ganhou os tipos **`enemyKunai`/`enemyShuriken`/`enemyShurikenFuma`** com arte de kunai de aço em pé (ponta para a direção do voo, sulco central, cabo com furo) — shuriken reaproveita a forma existente. `GameCanvas.tsx` (projétil) agora usa esses tipos. **Os PERGAMINHOS DO CHÃO PERMANECEM** (pedido do próprio usuário na Rodada 49 — só os ATAQUES voltaram a arma). Bônus: o sprite do drop passou a marcar `userData.shared=true` — a limpeza dos projéteis inimigos **não descarta mais o material compartilhado** do cache (evita re-link de programa GL a cada tiro).
+2. **Ficha no P/ESC — já existe no código**: `src/ui/RunSheet.tsx` tem a coluna **“Ficha do personagem · Status da run”** (1ª das 3 colunas, Rodada 50). O print com 2 colunas + o PARSE_ERROR são da **build STALE do Netlify** (zip de 11/11, anterior à Rodada 48). → **re-upar o zip** (feito nesta rodada).
+3. **PARSE_ERROR `RunSheet.tsx:5308`** — não existe no código atual (`tsc -b` ✓ · `vite build` ✓); é artefato do bundle antigo. O novo zip resolve.
+4. **Netlify — verificado e corrigido**: `index.html` existe na raiz do projeto e do `dist/`; `netlify.toml` válido (build `pnpm install --frozen-lockfile && pnpm exec vite build` · publish `dist` · redirect SPA). O `Shinobibonk-netlify.zip` da raiz do workspace era **STALE** (JS de 11/11) — foi **rebuildado e reempacotado** com o build atual (`index.html` + `assets/` na raiz do zip, 371 arquivos). **O usuário precisa RE-UPAR no Netlify.**
+5. **Executável seguro (pergunta → PROPOSTA, não implementado)**: sim, é viável — o jogo é 100% web (React + Three.js), então o caminho natural é um wrapper de navegador embutido: **Electron** (+ electron-builder → .exe Windows; mais maduro, abre pelo Chromium interno — o mesmo padrão do jogo de referência) ou **Tauri** (binário menor, WebView do sistema). Os controles atuais (pointer lock, teclas, WebGL, áudio) já funcionam nesse contexto; V-Sync/placa de vídeo/renderizador (rodadas 42–44) já estão preparados para o .exe. **Aguarda aprovação do usuário para implementar.**
+6. **Tiles da ficha em marrom** (pedido do usuário: “colocar marrom igual a ficha do personagem”): `src/ninja-theme.css` — `.sheet-tile` saiu do creme (`--papel-claro`) para **marrom-tan** (`linear-gradient(180deg,#c8a76a,#a07f42)`, mesma família da coluna “Ficha do personagem” papel2→papel3, um pouco mais escura para destacar) + borda de madeira escura + **texto escuro** (`var(--tinta)` em h3/p/small; `h3 small` azul-escuro) para legibilidade sobre o fundo marrom. `.positive` (verde, `!important`) sobrevive.
+7. **Altares → bênção (buffs aleatórios)** (pedido do usuário: “Os altares não são para dar itens, mas buffs aleatórios de acordo com sua sorte/qualidade do altar”): `GameCanvas.tsx` — novas constantes `ALTAR_BUFF_BASE` (Comum 5% → Lendário 25%) + `ALTAR_BUFF_POOL` (14 atributos: dano, crítico, dano crítico, velocidade de ataque, movimento, área, recarga da Ultimate, XP, Ryu, esquiva, armadura, regeneração, HP máximo, sorte). Ao completar o altar: **2 atributos sorteados (3 em Raro+)**, magnitude = base × escala × **(1 + sorte além de 10, +2%/ponto, teto +120%)**, aplicada direto em `runBuffs` + `refreshStats(true)` (mesmo padrão dos buffs de roleta/NPC — não entra no SavedRun) + SFX de pickup + toast “…bênção: +X% de dano · …”. **Sem tela de escolha.** Valores **PROPOSTOS** — o usuário testa a gameplay e ajusta (regra: nunca calibrar sem ele).
+
+**Validado (5/5):** `tsc -b` (exit 0) · `vite build` (exit 0) · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 94) · `verify-motion-atlases.mjs` (56 versões · 560 estados · 0 erros) · `verify-runtime.mjs` (0 erros · 0 assets faltando · 1.600 inimigos instanciados).
+
+**Pendente (usuário):** (a) testar a **bênção dos altares** em run real (valores PROPOSTOS); (b) conferir o marrom das tiles na pausa; (c) **RE-UPAR o novo zip** `Shinobibonk-netlify.zip` no Netlify; (d) aprovar a proposta de **executável** (Electron vs Tauri) para implementarmos.
+
 ## Morros de arroz com E (sem auto-coleta) · escada de monstros vivos ~−40% no early game (progressiva + %inimigos) · 1º mega elite ~9,5 mil HP ±5% · ficha de status de volta na pausa
 
 **Pedidos** (Rodada 50 · 12/11/2026)

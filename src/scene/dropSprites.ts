@@ -7,12 +7,16 @@ import * as THREE from 'three';
  * - ryu: morro de bolinhos de arroz (onigiris com nori) — Rodada 49: substituiu a moeda 両;
  * - ramen: tigela de lamen que cura 35% do HP;
  * - pill: cápsula rosa; item: pergaminho laranja;
- * - kunai/shuriken: PERGAMINHOS (recompensa — Rodada 49 trocou as armas no chão por pergaminhos);
+ * - kunai/shuriken: PERGAMINHOS no chão (recompensa — Rodada 49 trocou as armas no chão por pergaminhos);
  *   kunaiFree: pergaminho com brilho verde (recompensa grátis do mega elite/guardião);
- *   cursed: shuriken roxa (gatilho de emboscada — mantém a identidade de arma maldita).
+ *   cursed: shuriken roxa (gatilho de emboscada — mantém a identidade de arma maldita);
+ * - enemyKunai/enemyShuriken/enemyShurikenFuma: ARMAS INIMIGAS (projéteis de Kunai/Shuriken/Shuriken Fūma).
+ *   Rodada 51 (pedido do usuário): os ataques inimigos voltam a ser kunai/shuriken — visuais separadas dos
+ *   pickups do chão, que PERMANECEM pergaminhos. Cada tipo tem material próprio (dropMaterial é por tipo),
+ *   então o tint do GameCanvas não vaza para outros sprites.
  * As texturas são criadas uma vez e compartilhadas; ao coletar, só o material do sprite é descartado.
  */
-export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'ramen' | 'pill' | 'item' | 'kunai' | 'kunaiFree' | 'shuriken' | 'cursed';
+export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'ramen' | 'pill' | 'item' | 'kunai' | 'kunaiFree' | 'shuriken' | 'cursed' | 'enemyKunai' | 'enemyShuriken' | 'enemyShurikenFuma';
 
 const SIZE = 128;
 const cache = new Map<DropVisual, THREE.Texture>();
@@ -151,7 +155,28 @@ function drawShurikenShape(g: CanvasRenderingContext2D) {
 }
 
 function drawCursed(g: CanvasRenderingContext2D) { glow(g, 'rgba(210,110,255,.6)', 60); drawShurikenShape(g); g.fillStyle = '#e8a5ff'; g.font = '900 20px sans-serif'; g.textAlign = 'center'; g.fillText('✦', 98, 34); }
-const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed };
+
+/** Kunai inimiga (Rodada 51): lâmina de aço em pé, ponta para cima (a direção do voo), sulco central e cabo escuro com furo.
+ *  Desenhada em aço neutro: o tint rosa/laranja aplicado em GameCanvas (mesmo que existia antes) dá o tom final. */
+function drawEnemyKunai(g: CanvasRenderingContext2D) {
+  glow(g, 'rgba(150,180,220,.4)', 54);
+  const blade = g.createLinearGradient(48, 0, 80, 0);
+  blade.addColorStop(0, '#f4f8fc'); blade.addColorStop(.55, '#c3ceda'); blade.addColorStop(1, '#77828f');
+  g.fillStyle = blade;
+  g.beginPath();
+  g.moveTo(64, 12); g.quadraticCurveTo(80, 40, 78, 84); g.lineTo(50, 84); g.quadraticCurveTo(48, 40, 64, 12); g.closePath();
+  g.fill(); g.strokeStyle = '#1d232b'; g.lineWidth = 3; g.stroke();
+  // Sulco central da lâmina.
+  g.strokeStyle = 'rgba(29,35,43,.55)'; g.lineWidth = 2; g.beginPath(); g.moveTo(64, 20); g.lineTo(64, 80); g.stroke();
+  // Guardas e cabo (furo para corda, como as kunais do anime).
+  g.fillStyle = '#1d232b'; g.fillRect(52, 82, 24, 5);
+  const grip = g.createLinearGradient(58, 0, 70, 0);
+  grip.addColorStop(0, '#2a2f38'); grip.addColorStop(.5, '#4a5260'); grip.addColorStop(1, '#20242c');
+  g.fillStyle = grip; g.fillRect(58, 87, 12, 25); g.strokeStyle = '#12151a'; g.lineWidth = 2; g.strokeRect(58, 87, 12, 25);
+  g.fillStyle = '#0c0e12'; g.beginPath(); g.arc(64, 107, 3, 0, Math.PI * 2); g.fill();
+}
+
+const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed, enemyKunai: drawEnemyKunai, enemyShuriken: drawShurikenShape, enemyShurikenFuma: drawShurikenShape };
 
 export function dropTexture(kind: DropVisual) {
   let texture = cache.get(kind);
@@ -188,5 +213,8 @@ export function makeDropSprite(kind: DropVisual, value: number) {
   const s = dropScale(kind, value);
   sprite.scale.set(s, s, 1);
   sprite.userData.baseScale = s;
+  // O material é COMPARTILHADO por tipo (ver dropMaterial): marca como shared para disposeObject (techniqueEffects.ts)
+  // pular o descarte — senão a limpeza dos projéteis inimigos descarta o material do cache e ele é re-linkado a cada tiro.
+  sprite.userData.shared = true;
   return sprite;
 }
