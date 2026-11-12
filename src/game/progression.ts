@@ -39,8 +39,8 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
   const armorByLevel=base.armor*(1+n*.01)+n*.25;
   return applyPowerlevel({
     sage:add('sage'),maxHp:Math.round((baseHp*(1+n*.03+evolutions*.25)+add('health')+bonusHp+p('Resistência')*8)*Math.max(.1,1+add('healthPct'))),
-    damage:base.damage*heroDamageScale(level)*(1+add('damage')+p('Treinamento')*.04)*(familyOf(heroId)==='gaara'?1+(armorByLevel+add('defense')+p('Couraça')*2)*.01:1),
-    armor:armorByLevel+add('defense')+p('Couraça')*2,
+    damage:base.damage*heroDamageScale(level)*(1+add('damage')+p('Treinamento')*.04)*(familyOf(heroId)==='gaara'?1+(armorByLevel+add('defense')+p('Colete Shinobi')*2)*.01:1),
+    armor:armorByLevel+add('defense')+p('Colete Shinobi')*2,
     crit:Math.max(0,base.crit+n*.0015+add('crit')+p('Precisão')*.01),critDamage:2.5+add('critDamage'),
     evasion:Math.min(.6,add('dodge')),regen:(base.regen+n*.04+add('regen'))*Math.max(0,1+add('regenMult')),luck:Math.floor(n/3)+add('luck')+p('Fortuna')*2,
     pickup:2.5*(1+add('pickup'))+add('pickupFlat')+p('Magnetismo')*.6,xpGain:1+add('exp')+p('Estudo')*.05,moneyGain:1+add('gold')+p('Comércio')*.05,

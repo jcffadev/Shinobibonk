@@ -19,7 +19,7 @@ export const PASSIVES:PassiveDef[] = [
   {name:'Fortuna',buff:'+2 Sorte por nível',base:130,max:10,icon:'luck',section:'Treinamento'},
   {name:'Magnetismo',buff:'+0,6 m de coleta por nível',base:75,max:10,icon:'pickup',section:'Treinamento'},
   {name:'Chakra Curativo',buff:'+0,2 HP/s de regeneração por nível',base:90,max:5,icon:'balm',section:'Treinamento'},
-  {name:'Couraça',buff:'+2 armadura por nível',base:100,max:10,icon:'bandana',section:'Treinamento'},
+  {name:'Colete Shinobi',buff:'+2 armadura por nível',base:100,max:10,icon:'jonin-vest',section:'Treinamento'},
   {name:'Precisão',buff:'+1 ponto percentual de crítico por nível',base:140,max:10,icon:'critical',section:'Treinamento'},
   {name:'Celeridade',buff:'+2% velocidade de ataque por nível',base:120,max:10,icon:'speed',section:'Treinamento'},
   {name:'Expansão',buff:'+3% de área por nível',base:110,max:5,icon:'area-seal',section:'Treinamento'},
@@ -37,6 +37,20 @@ export const PASSIVES:PassiveDef[] = [
   {name:'Pesquisa',buff:'+25% de progresso de pesquisa por nível: técnicas de outros shinobis precisam de 100% de pesquisa para entrar no Plano de build',base:140,max:4,icon:'experience',section:'Equipe da partida'},
   {name:'Treinamento com Jiraiya',buff:'Até quatro técnicas treinadas (★) causam +15% de dano. Os espaços de maior raridade aumentam a chance de oferta.',base:200,max:8,icon:'el-sage',section:'Equipe da partida'},
 ];
+/**
+ * Renomeações de passivas já existentes: a chave antiga do save é copiada para a nova e NUNCA apagada
+ * (padrão do projeto: migração não destrutiva). Rodada 40 (12/11/2026): "Couraça" → "Colete Shinobi"
+ * (renome + ícone do colete; quem comprou o nível antigo mantém o buff).
+ */
+const RENAMED_PASSIVES:Record<string,string>={Couraça:'Colete Shinobi'};
+export function migratePermanentLevels(levels:Record<string,number>):Record<string,number>{
+  let changed=false;
+  const next={...levels};
+  for(const [oldName,newName] of Object.entries(RENAMED_PASSIVES)){
+    if(next[oldName]&&!next[newName]){next[newName]=next[oldName];changed=true;}
+  }
+  return changed?next:levels;
+}
 export const passiveCost=(def:PassiveDef,level:number)=>def.base+level*25;
 export function choiceCount(levels: Record<string,number>, luck = 0, rng = Math.random) {
   if (levels['Quarta opção']) return 4;

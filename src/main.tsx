@@ -30,7 +30,7 @@ import { MAP_BY_ID, type MapId } from './game/maps';
 import './maps.css';
 import { formAt } from './game/evolution';
 import { affectedTechniquesText, itemSchools, itemElement, itemAttribute, techniqueDetail, NO_GROWTH } from './game/combat';
-import { PASSIVES, PASSIVE_SECTIONS, passiveCost, homeCapacity, prioritySlots, jiraiyaSlots, NEW_ADMIN, purchase, type AdminWallet } from './game/preparation';
+import { PASSIVES, PASSIVE_SECTIONS, passiveCost, homeCapacity, prioritySlots, jiraiyaSlots, NEW_ADMIN, purchase, migratePermanentLevels, type AdminWallet } from './game/preparation';
 import { readPresets, savePresets, syncActive, PRIORITY_KEY, type BagPresets } from './game/missionBag';
 import { BuildPlanner, type MissionTactic } from './ui/BuildPlanner';
 import { MissionBag, HubHud, CompactItemCard } from './ui/MissionBag';
@@ -115,7 +115,8 @@ function App() {
   const archivable=new Set(learnable.filter(t=>t.name!==HERO_BY_ID[heroId]?.skills[0]).map(t=>t.name));
   const archivedSkills=[...new Set(archivesByHero[heroId]??[])].filter(name=>archivable.has(name)).slice(0,archiveLimit);
 
-  const [levels, setLevels] = useState<Record<string, number>>(() => readJson('sb_permanent_levels', {}));
+  // Rodada 40 — migração não destrutiva do rename "Couraça" → "Colete Shinobi" (a chave antiga do save nunca é apagada).
+  const [levels, setLevels] = useState<Record<string, number>>(() => migratePermanentLevels(readJson('sb_permanent_levels', {})));
   const [unlocked, setUnlocked] = useState<string[]>(() => readJson('sb_unlocked_items', ['damage']));
   const [archived, setArchived] = useState<string[]>(() => readByHero('sb_home_by_hero_v1', 'sb_archived_items', heroId, []));
   const [planned, setPlanned] = useState<string[]>(() => readByHero('sb_planned_by_hero_v1', 'sb_planned_attacks', heroId, []));

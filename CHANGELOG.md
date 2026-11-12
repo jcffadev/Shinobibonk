@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Rodada 40 — Passiva “Couraça” → “Colete Shinobi” (renome + ícone do colete + migração de save não destrutiva) · 12/11/2026
+
+- **IMPLEMENTADO (pedido do usuário: “Deveria ser um colete Shinobi” — print da passiva com ícone de bandana):**
+  - Passiva **Couraça** renomeada para **Colete Shinobi** (buff inalterado: **+2 armadura por nível** · base 100 · máx 10 · seção Treinamento).
+  - Ícone: bandana (`bandana`) → **colete shinobi** — sprite do atlas `jonin-vest` (mesma arte do item “Colete Jonin”).
+  - **Migração de save não destrutiva** (`migratePermanentLevels` em `preparation.ts`): a chave antiga `Couraça` de `sb_permanent_levels` é **copiada** para `Colete Shinobi` no load e **nunca apagada** — quem já comprou os níveis mantém o buff; a conversão armadura→dano do Gaara em `progression.ts` também atualizada para o novo nome.
+- **Arquivos alterados:** `src/game/preparation.ts` · `src/game/progression.ts` · `src/main.tsx` · `docs/11` · `docs/13` · `docs/18` · `CHANGELOG.md`.
+- **TESTADO:** `tsc -b --force` limpo · `vite build` OK · `verify-rules.mjs` (roster 56 · técnicas 97 · itens 95) · `verify-runtime.mjs` (Edge headless) **PASSOU** — 58 checks · 0 erros JS · 0 assets 404.
+- **PENDENTE:** conferência visual do ícone da passiva (colete) pelo usuário.
+
 ## Rodada 39 — Planner individual por personagem, tabela, Fusões, Táticas, buff verde/vermelho, badge de fusão, proporção idêntica · 12/11/2026
 
 - **IMPLEMENTADO (código nesta rodada; docs/13 e docs/14 registraram o estado final antes do código):**

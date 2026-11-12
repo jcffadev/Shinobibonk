@@ -9,6 +9,7 @@ Este é o estado consolidado após os commits 11e0d18 e bee4bba. Substitui as li
 - Integração dos rascunhos do Claude com a main do Codex concluída em 11e0d18.
 - Nove folhas novas de pulo/dash para Naruto 10/25/50, Lee 1/15/30 e Guy 1/15/30.
 - 27 folhas completas action-v3: Sasuke 15; Hashirama 1/20; Kakashi 1/25; Itachi 1; Minato 1/15; Tsunade 1/15/30; Jiraiya 1/20; Orochimaru 1/15; Hinata 1/15/30; Pain 1; Shikamaru 1/15/30; Tobirama 1; Temari 1/15; Tenten 1/15.
+- **Rodada 40 (12/11/2026):** passiva **“Couraça” → “Colete Shinobi”** (pedido do usuário: “Deveria ser um colete Shinobi”) — buff inalterado (+2 armadura por nível), ícone do **colete** (sprite `jonin-vest` do atlas, mesma arte do item Colete Jonin) e **migração não destrutiva** do save `sb_permanent_levels` (a chave antiga é copiada para a nova e nunca apagada — quem já comprou os níveis mantém o buff; a conversão armadura→dano do Gaara também foi atualizada). Validado: tsc · build · verify-rules (56/97/95) · verify-runtime (58 checks · 0 erros · 0 404).
 - Folhas anteriores: Naruto Academia, Sasuke Genin/Rinnegan, Neji Genin/Jonin, Asuma, três Sakuras, três Gaaras, três Madaras e Itachi Akatsuki. A existência da folha não equivale a aprovação visual.
 - Retomada após Esc sem clique extra, Tab rápido sem pausa e ficha por P; mercador mantém preços do estoque atual; oficina tem Fundir/Combinar e um uso compartilhado por zona.
 - Afiliações por versão e bônus de suporte; shuriken amaldiçoada e corpo de ninja com emboscadas.

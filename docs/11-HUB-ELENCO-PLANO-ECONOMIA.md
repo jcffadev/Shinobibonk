@@ -65,7 +65,7 @@ Cada passiva tem 10 níveis. O preço do próximo nível é `preço_base + 25 ×
 
 Para as dez linhas iniciais (bases: 80, 85, 90, 75, 110, 130, 75, 100, 140 e 120), completar todas custa **21.300 Lamens**. Uma hipótese de 500 Lamens por missão daria aproximadamente **43 missões** para concluir a árvore toda, sem considerar descontos ou bônus de dificuldade. A recompensa por missão precisa ser definida e simulada antes de aprovar o balanceamento.
 
-Buffs propostos por nível: Treinamento +4% dano; Resistência +8 HP; Agilidade +2,5% movimento; Estudo +5% XP; Comércio +5% Lamens; Fortuna +2 Sorte; Magnetismo +0,6 coleta; Couraça +2 armadura; Precisão +1 ponto percentual crítico; Celeridade +2% velocidade de ataque. Acúmulos finais e caps precisam de balanceamento.
+Buffs propostos por nível: Treinamento +4% dano; Resistência +8 HP; Agilidade +2,5% movimento; Estudo +5% XP; Comércio +5% Lamens; Fortuna +2 Sorte; Magnetismo +0,6 coleta; Colete Shinobi +2 armadura; Precisão +1 ponto percentual crítico; Celeridade +2% velocidade de ataque. Acúmulos finais e caps precisam de balanceamento.
 
 ## Referência visual e limites
 
