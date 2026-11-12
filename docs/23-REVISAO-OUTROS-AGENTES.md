@@ -21,6 +21,7 @@ Cada linha é um commit publicado. Destaques de revisão marcados com ⭐.
 
 | Commit | Rodada | O que foi feito (resumo) |
 |---|---|---|
+| `3e3c99c` | **43** ⭐ | **Sons reais de jutsu** (Kage Bunshin — só família naruto · Shinra Tensei — ultimate do Pain) + **gate anti-spam** (não é fila) + **pose/levitação da Ultimate do Pain** (`painUltimate`, arco 0,38 m) + criação deste **`docs/23`** (controle de revisão p/ Claude-Codex). MP3s do usuário em `public/assets/audio/`. |
 | `d140ade` | **42** ⭐ | Trilha sonora (OST Naruto, 15 faixas do usuário): `src/audio/music.ts` (máquina de estados boot→menu/run/bijuu/defeat, uma faixa por vez sem fila), `musicVolume` default 0,7, slider "Música", gatilhos em `main.tsx`/`GameCanvas.tsx`. Validações completas (58/0/0 + probe 5/5). |
 | `cbfc968` | **41** ⭐ | Marionetes: **Kuri** (companheira permanente do Kankuro, `GameCanvas.tsx`) + **Kuroari** (entidade visual da técnica, `src/scene/kuroari.ts`) + 4 folhas Pillow (`scripts/generate-puppets.py`) + registros em `directionalArt`/`evolution`/`npcs` + 10 asserções. Dano idêntico (zero balanceamento). **Arte Pillow interina — pendente de conferência/swap IA.** |
 | `e36d58a` | 40 | Passiva "Couraça" → **"Colete Shinobi"** (renome + ícone `jonin-vest` + migração não destrutiva de `sb_permanent_levels`). |
@@ -98,6 +99,7 @@ Cada linha é um commit publicado. Destaques de revisão marcados com ⭐.
 ### 3.7 Configurações (preparo .exe/patch)
 - **Rodada 29/30** (`5eeec9b`/`ab87de2`): mouse 1:1 (raw input) + V-Sync on/off + placa de vídeo + câmera sem suavização + renderizador DirectX/OpenGL na aba Tela (na web = sempre WebGL; no .exe o jogador escolhe).
 - **Rodada 27** (`bd926e7`): remoção do ajuste automático de FPS (pedido do usuário) — a imagem fica 100% nas configurações de Gráficos.
+- **Rodada 44** (working tree): câmera **mais deitada** (início **0,55 rad**, piso **0,05 rad ~3°** — era 0,12) + sensibilidade do mouse em **taxa única e simétrica 0,0025 rad/px** (yaw+pitch; era 0,006/0,004) + **câmera centraliza o JOGADOR** (verificado) + dica **Windows: ponteiro 6/11** no slider. `GameCanvas.tsx` (pitch inicial + `turnCamera`) + `SettingsScreen.tsx` (hint).
 
 ## 4. Notas para Claude/Codex — o que ficou para vocês
 
@@ -114,6 +116,7 @@ Cada linha é um commit publicado. Destaques de revisão marcados com ⭐.
 - **Rodada 41 (4 pontos):** (a) Kuri como companheira permanente do Kankuro; (b) Kuroari como visual da técnica; (c) adiantar o herói Sasori (Onda 2) ou manter a ordem; (d) aceitar arte Pillow interina + conferência visual das 4 folhas.
 - **Rodada 42 (6 pontos):** (a) Raising Fighting Spirit = pool RUN **e** luta bijū; (b) Hinata/Neji na mesma faixa; (c) pós-bijū volta ao pool RUN; (d) vitória → pool de MENUS; (e) `musicVolume` default 0,7; (f) sem crossfade (só fade-in ~0,9 s).
 - **Rodada 43 (4 pontos — este commit):** (a) som de Shinra Tensei toca na **Ultimate `Chibaku Tensei`** do Pain (o MP3 é "Shinra Tensei", mas a ultimate do Pain é Chibaku Tensei — a técnica comum Shinra Tensei do kit dele **não** toca o som); (b) **Kage Bunshin** → som apenas para a **família naruto** (qualquer outra família com a técnica no pool compartilhado **não** toca o som); (c) enquanto um MP3 de jutsu toca, **nenhum** outro som de técnica (sweep/fala TTS) entra — e a fala TTS daquela técnica é suprimida no cast; (d) levitação do Pain: arco `sin(π·progresso) × 0,38` m + pose de braços levantados **segura** durante o cast (mesma receita do Gaara).
+- **Rodada 44 (4 pontos):** (a) **taxa única e simétrica 0,0025 rad/px** em yaw e pitch (era 0,006/0,004 — a assimetria 1,5:1 era o “esquisito”; velocidade −53–58%); (b) **piso do pitch 0,05 rad (~3°)** (era 0,12) para “deitar mais a câmera” como no jogo de referência; (c) **início 0,55 rad (~31,5°)** (era 0,74); (d) **dica do Windows: velocidade do ponteiro 6/11** na hint do slider (o multiplicador do sistema pode somar ao raw input — possível causa de “ainda parecer rápido” no PC do usuário). Câmera centraliza o JOGADOR (verificado: já era assim); zoom/wheel/frustum **NÃO** alterados (usuário não pediu).
 - **Pose/armadura da Ultimate do Pain pode ganhar uma folha dedicada nova** — o hook é `painUltimate` em `src/scene/playerMotion.ts`; hoje usa o quadro 0 da folha existente (fileira 2/3). Se o Claude/Codex gerarem uma folha de "levitação com braços abertos" específica, basta trocar o `castFrame` para o quadro desejado.
 
 ### 4.3 Decisões do usuário que o Claude/Codex DEVEM respeitar (resumo)
@@ -152,7 +155,7 @@ node.exe scripts/verify-motion-atlases.mjs
 node.exe scripts/verify-runtime.mjs
 ```
 
-## 6. Estado atual (12/11/2026, ponta `d140ade` + rodada 43)
+## 6. Estado atual (12/11/2026, ponta `3e3c99c` + rodada 44)
 
 - **Repositório:** `https://github.com/jcffadev/Shinobibonk.git`, branch `main`. O usuário decidiu **excluir e recriar o repositório** (11/11) para remover do histórico o zip de origem não verificada; até ele dizer que trocou, commit/push segue neste repositório; depois, `git remote set-url origin <novo-url>` + push.
 - **Conteúdo:** 56 versões jogáveis · 97 técnicas · 95 itens · 4 mapas · 19 pílulas · árvore permanente · oficina de fusão · Caça-Níquel da Tsunade · trilha sonora (15 faixas) · sons de jutsu reais (YOO + Kage Bunshin + Shinra Tensei) · HUD ninja · planner em tabela · Fusões · Táticas de Missão.

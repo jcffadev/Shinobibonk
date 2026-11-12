@@ -34,7 +34,7 @@
 | **Arquitetura técnica** | `docs/12` | `src/scene/GameCanvas.tsx` · `README.md` |
 | **Histórico e decisões** (todas as rodadas) | `docs/18` (resumo) · `docs/14` (integral) · `CHANGELOG.md` | — |
 | **Fila de trabalho** | `docs/13-PENDENCIAS-PARA-CONTINUAR.md` | — |
-| **Revisão para outros agentes** (o que o Qwen/Bionic fez + o que ficou p/ Claude-Codex — rodadas 41/42/43) | **[23-REVISAO-OUTROS-AGENTES.md](23-REVISAO-OUTROS-AGENTES.md)** (inventário por rodada · áreas de revisão com caminhos · notas p/ Claude-Codex · validações · push seguro) | `git log --oneline` (fonte da verdade do que entrou em cada commit) |
+| **Revisão para outros agentes** (o que o Qwen/Bionic fez + o que ficou p/ Claude-Codex — rodadas 41/42/43/44) | **[23-REVISAO-OUTROS-AGENTES.md](23-REVISAO-OUTROS-AGENTES.md)** (inventário por rodada · áreas de revisão com caminhos · notas p/ Claude-Codex · validações · push seguro) | `git log --oneline` (fonte da verdade do que entrou em cada commit) |
 
 ## Regras permanentes de manutenção (rodada 36, 12/11)
 

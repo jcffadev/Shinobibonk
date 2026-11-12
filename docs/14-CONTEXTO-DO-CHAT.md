@@ -1187,3 +1187,43 @@ Rodada de **plano e organização** — o usuário pediu o retorno **antes** de 
 - **Aviso de flakiness (importante):** o harness headless (SwiftShader, lento) tem **checks flaky que trocam a cada execução** — a 1ª execução da rodada 43 falhou no check "Rendan Uzumaki exibe impacto" (lin. 134) e a 2ª no "Teuchi/barraca Ichiraku" (lin. ~318, timeout 30 s), **ambos sem relação com os edits** (caminho Naruto/interação, não Pain/áudio) — a 3ª passou 58/0/0. O handoff da rodada 42 documenta o mesmo padrão (1ª falhou em "portal do guardião", 2ª passou). Se falhar de novo: **reexecutar** antes de investigar; registrar no docs/13.
 - **Decisões pendentes de aprovação do usuário (4):** (1) o som de Shinra Tensei toca na **Ultimate `Chibaku Tensei`** do Pain (o MP3 é "Shinra Tensei", mas o usuário disse "a habilidade ultimate deve ter este som"; no jogo a ultimate do Pain é Chibaku Tensei — Shinra Tensei é técnica comum dele); (2) **Kage Bunshin** → som apenas para a **família naruto** (todas as versões dele); qualquer outra família usando a técnica (pool compartilhado) **não** toca o som (leitura de "Apenas naruto"); (3) enquanto um MP3 de jutsu toca, **nenhum** outro som de técnica (sweep/fala TTS) entra — e a fala TTS daquela técnica é suprimida no cast (anti-spam); (4) levitação do Pain: arco `sin(π·progresso) × 0,38` m + pose de braços levantados **segura** durante o cast (mesma receita do Gaara, que já existia no código).
 - **Nota:** as 4 pendências da rodada 41 (Kuri · Kuroari · adiantar Sasori · arte Pillow + conferência das folhas) e as 6 da rodada 42 (decisões de trilha sonora) continuam em aberto — espelhadas em docs/13 §6 e docs/18 §6.
+
+## Rodada 44 · 12/11/2026 — Câmera e mouse: giro mais calmo e simétrico, câmera mais deitada, centralizada no jogador
+
+**Pedido do usuário, na íntegra:**
+
+> "o rawinputmouse ainda está esquisito
+> a câmera ainda parece muito rápida
+> é possível deitar mais a câmera no nosso jogo referência, mas tome cuidado, faça testes para não dar bug's gráficos
+> Lembre-se da câmera centralizar o jogador e não a paisagem/mapa ao redor/nosso foco é sempre ter visão limpa do personagem que estamos jogando"
+
+### O que foi feito
+
+1. **Giro mais calmo e simétrico (`src/scene/GameCanvas.tsx` — `turnCamera`)** — IMPLEMENTADO:
+   - Taxa do yaw: `0.006` → **`0.0025` rad/px** (−58%) e taxa do pitch: `0.004` → **`0.0025` rad/px** (−53%) — **mesma taxa nos dois eixos** (a assimetria 1.5:1 antiga fazia o giro diagonal “pesar” para o yaw — parte do “esquisito” reportado).
+   - 1:1 sem aceleração (rodada 29) **mantido**: `unadjustedMovement` + giro direto; a sensibilidade continua sendo multiplicador puro (slider 0.2–3×, inalterado).
+2. **Câmera mais deitada (`src/scene/GameCanvas.tsx`)** — IMPLEMENTADO:
+   - Piso do pitch: `0.12` → **`0.05 rad` (≈3°)** — o ângulo baixo do jogo de referência (teto `1.48` mantido).
+   - Início da partida: `0.74` → **`0.55 rad` (≈31.5°)** — começa mais deitado.
+   - Proteções de ângulo baixo **já existiam** (e foram mantidas): scan de terreno que auto-sobe em encostas (jogador nunca fica escondido), câmera nunca abaixo do chão (`terrainHeight+1.2`) e near ≤ −70 m (ortográfica, sem corte de primeiro plano).
+3. **Câmera centraliza o JOGADOR** (pedido reconfirmado) — **já era assim**: `cameraTarget.set(player.position.x, terrainHeight+1.15, player.position.z)` + `camera.lookAt(cameraTarget)`. Verificado no código e documentado; nada mudou nesse ponto.
+4. **Dica do Windows (`src/ui/SettingsScreen.tsx`)** — a hint do slider “Sensibilidade do mouse” agora avisa: padrão mais calmo e simétrico desde a rodada 44 + **deixar a velocidade do ponteiro do Windows em 6/11** (o multiplicador do sistema pode somar ao movimento do mouse mesmo com raw input — possível causa de “ainda parecer rápido/esquisito” no PC do usuário).
+5. **Testes atualizados:**
+   - `scripts/verify-runtime.mjs`: o teste de câmera agora **deita a câmera até o piso (0.05 rad)** e assera `pitch ≤ 0.055` + yaw gira (antes: `pitch < 0.3`); mantém o screenshot `artifacts/camera-horizonte.png`.
+   - `scripts/verify-rules.mjs`: +6 asserções (taxas 0.0025 yaw/pitch · piso 0.05 · início 0.55 · dica “6/11”).
+6. **Teste visual (pedido do usuário: “faça testes para não dar bug's gráficos”)** — `artifacts/camera-horizonte.png` no piso 0.05 rad inspecionado em alta qualidade: cena renderiza sem corte no horizonte, sem Z-fighting, jogador visível e centralizado, HUD/minimapa íntegros — **sem bug gráfico** no ângulo deitado.
+
+### Validação
+
+- **IMPLEMENTADO + VALIDADO**: `tsc -b` limpo · `vite build` OK (aviso de chunk >500 kB já existia antes — inofensivo) · `verify-rules.mjs` (roster **56** · técnicas **97** · itens **95** + asserções da 44) · `verify-motion-atlases.mjs` (56 versões · 560 estados · 0 erros) · `verify-runtime.mjs` (Edge headless) **PASSOU** — **58 checks · 0 erros JS · 0 assets 404** (1ª execução, sem flake).
+
+### Decisões desta rodada (registradas, aguardando validação do usuário)
+
+1. Taxa única **0.0025 rad/px** para yaw **e** pitch (simetria 1:1; antes 0.006/0.004).
+2. Piso do pitch **0.05 rad** (antes 0.12) — “deitar mais a câmera” como no jogo de referência.
+3. Início da partida em **0.55 rad** (antes 0.74).
+4. Se ainda parecer rápido no Windows: velocidade do ponteiro do sistema em **6/11** e/ou slider de sensibilidade para baixo.
+
+### Nota
+
+As pendências das rodadas 41/42/43 (Kuri/Kuroari/Sasori/arte Pillow · trilha sonora · sons de jutsu + levitação do Pain) seguem em aberto — espelhadas em docs/13 e docs/18 §6.

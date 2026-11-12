@@ -643,7 +643,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(choiceLevel===-2){forgetAtIchiraku(offer);return;}
       if(choiceLevel===-1){grantItem(offer.name);if(kakashiEvent)kakashiEvent.active=false;kakashiEvent=null;choiceData=null;keys.clear();eventToast='Tenten forjou uma cópia de '+offer.name+' (agora '+(knownItems[offer.name]||0)+'/'+(ITEM_BY_NAME[offer.name]?.max??'?')+').';playSfx('pickup');return;}
       if(banning){if(offer.kind==='stat'){eventToast='Vitalidade é a opção de reserva e não pode ser banida.';return;}banned.add(offer.name);uses.ban--;banning=false;eventToast=offer.name+' banido da run em todos os níveis e raridades';const cards=choiceLevel===0?rollMegaLoot():rollLevelOffers();choiceData=cards?.length?cards:null;snapshotTimer=0;return;}if(offer.kind==='skill'){if(familyOf(heroId)==='naruto'&&offer.name==='Invocação do Sapo'&&!skillLevels[offer.name]&&!hiddenEffects)showGamabunta(player.position,player.position.clone().add(heading),true);if(!hero.skills.includes(offer.name))addResearch(offer.name,researchGain(skillLevels[offer.name]?RESEARCH_RULES.perLevel:RESEARCH_RULES.perLearn,permanent['Pesquisa']||0));skillLevels[offer.name]=Math.min(9+ex('skillCap'),(skillLevels[offer.name]||0)+1);const previous=growth[offer.name]??{...NO_GROWTH};for(const key of Object.keys(NO_GROWTH) as (keyof SkillGrowth)[])previous[key]+=offer.growth?.[key]||0;growth[offer.name]=previous;}if(offer.kind==='pill'&&grantPill(knownPills,offer.name,ex('pillCap')))pillQuality[offer.name]=(pillQuality[offer.name]||0)+PILL_RARITY_POWER[offer.rarity]-1;if(offer.kind==='item')grantItem(offer.name);if(offer.kind==='stat'&&offer.bonus){for(const key of Object.keys(offer.bonus) as (keyof Bonuses)[])runBuffs[key]=(runBuffs[key]||0)+(offer.bonus[key]||0);}refreshStats(true);choiceData=null;keys.clear();}
-    let yaw=Math.PI/4, pitch=.74, zoom=currentSettings().cameraDistance, spawnTimer=1,megaSchedule=rollMegaSchedule(),megaElitesSpawned=0,accountEncounters=0,snapshotTimer=0,chakra=0,hp=stats.maxHp,level=1,xp=0,xpNext=30,kills=0,runMoney=0,frames=0,fps=0,fpsTimer=0,autoUlt=currentSettings().autoUltimate,last=performance.now(),elapsed=0,eventToast='',zoneDifficulty=1,xpMultiplier=1,lootMultiplier=1;
+    let yaw=Math.PI/4, pitch=.55, zoom=currentSettings().cameraDistance, spawnTimer=1,megaSchedule=rollMegaSchedule(),megaElitesSpawned=0,accountEncounters=0,snapshotTimer=0,chakra=0,hp=stats.maxHp,level=1,xp=0,xpNext=30,kills=0,runMoney=0,frames=0,fps=0,fpsTimer=0,autoUlt=currentSettings().autoUltimate,last=performance.now(),elapsed=0,eventToast='',zoneDifficulty=1,xpMultiplier=1,lootMultiplier=1;
     const enemyWeapons=['Kunai','Shuriken','Shuriken Fūma'] as const;
     const enemyShots:{object:THREE.Object3D;direction:THREE.Vector3;life:number;speed:number;damage:number;radius:number}[]=[];
     const shadowClones:{sprite:THREE.Sprite;motion:ReturnType<typeof createPlayerMotion>;target:Enemy;life:number;technique:Technique;growth:SkillGrowth;ally:boolean;level:number}[]=[];
@@ -735,9 +735,13 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const cameraCanMove=()=>enabledRef.current&&!debugOpenRef.current&&!pausedRef.current&&!choiceData&&!roulette&&!sealing&&!defeated&&!victory;
     const turnCamera=(dx:number,dy:number)=>{
       const settings=currentSettings();
-      // 1:1 direto, sem amortecimento: giro constante = movimento × sensibilidade configurada (sem aceleração).
-      yaw-=dx*.006*settings.mouseSensitivity;
-      pitch=THREE.MathUtils.clamp(pitch+dy*.004*settings.mouseSensitivity*(settings.invertY?-1:1),.12,1.48);
+      // 1:1 direto, sem amortecimento: giro constante = movimento × sensibilidade configurada (sem aceleração, rodada 29).
+      // Rodada 44 (pedido do usuário: "rawinputmouse ainda está esquisito" + "câmera muito rápida" + "deitar mais a câmera"):
+      // taxa única e simétrica yaw/pitch (antes 0.006/0.004 = assimetria 1.5:1) e ~58% mais calma; piso do pitch deitado
+      // (0.05 rad ≈ 3°, antes 0.12 ≈ 7°) para o ângulo baixo do jogo de referência. Proteções de ângulo baixo já existentes:
+      // scan de terreno que auto-sobe em encostas, câmera nunca abaixo do chão (terrainHeight+1.2) e near ≤ −70 m.
+      yaw-=dx*.0025*settings.mouseSensitivity;
+      pitch=THREE.MathUtils.clamp(pitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),.05,1.48);
     };
     const onLockedMove=(e:MouseEvent)=>{if(pointerLocked()&&cameraCanMove())turnCamera(e.movementX,e.movementY);};
     const onLockedRight=(e:MouseEvent)=>{if(pointerLocked()&&e.button===2&&cameraCanMove())toggleTargetLock();};

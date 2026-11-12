@@ -206,12 +206,13 @@ await page.waitForFunction(()=>window.__shinobiTest.motion().pose==='dash');
 checks.push('Asuma carrega seu atlas e usa caminhada, pulo e dash');
 await page.mouse.move(720,510);
 const cameraBefore=await debug('motion');
-await page.mouse.move(770,285,{steps:10});
+await page.mouse.move(770,110,{steps:12});
 await page.waitForTimeout(350);
 const cameraAfter=await debug('motion');
-assert.ok(cameraAfter.yaw!==cameraBefore.yaw&&cameraAfter.pitch<.3);
+assert.ok(cameraAfter.yaw!==cameraBefore.yaw,'yaw gira com o mouse (rodada 44)');
+assert.ok(cameraAfter.pitch<=.055,'pitch deita até o piso de 0.05 rad (rodada 44)');
 await page.screenshot({path:'artifacts/camera-horizonte.png'});
-checks.push('Movimento do mouse inclina a câmera sem botão até perto do horizonte');
+checks.push('Movimento do mouse deita a câmera até o piso (0.05 rad) sem botão — rodada 44');
 
 await debug('setMoney',10000);
 await page.evaluate(()=>{
