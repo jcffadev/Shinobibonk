@@ -1503,3 +1503,68 @@ Aguardando o **teste do usuário no navegador** (caminhada/ataque/repouso dos al
 ### Nota
 
 Aguardando o **teste do usuário no navegador** (13 itens — em especial os visuais: raridade preenchendo o ícone · bordas da ficha · botões do planner · badge Treinada · largura do pool · selamento instantâneo · auto-coleta sem "E" · YOOOO rápido · passada sem distorção). O **item 5 (early game +200%) é PROPOSTO**: o usuário testa e ajustamos os valores em iteração. As pendências das rodadas 41/42/43/44/45/46 seguem em aberto (docs/13 §6 e docs/18 §6).
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+**Pedido integral**
+
+Temos um novo agente nos ajudando, é o Qwen, ele fez anotações para você trabalhar, leia toda a documentação dele e consulte o que está documentado para você trabalhar.
+
+Verificar porque os áudios de musicas não estão tocando assim que abrimos o jogo, sempre que abrir/carregar o HOME do jogo já tem que começar a toca a musica junto.
+
+Criar um iconezinho de drop de moedas ryu para dropar no chão junto com os outros itens, verificar se o bolinho de arroz que dropa dos monstros está curando o personagem na porcentagem que era o Lamen.
+Diminuir o tamanho de todos os drops dos monstros que vão até o personagem para não poluir a tela, diminuir relativamente bem.
+
+Imagem referência: Nosso planejador de habilidades - pilulas - itens - fusões tem que ser parecido em formato ao da referência.
+
+Criar animações/estilo visual fiéis as habilidades para TODOS os personagens, seguir o modelo de qualidade que temos.
+Algumas habilidades já tem criado, verificar quais faltam, quais estão genéricos, cuidado para não alterar o que já está bom.
+
+Parte "Táticas de Missão" Deverá ser uma opção no topo da tela igual a Shinobis, Passivas, Itens, Bolsa da Missão, Bolsa da Missão pode ser possível alterar o arsenal de itens, Arsenal de Missão deverá ser o novo nome.
+Ao selecionar o personagem para a missão, na parte do mapa, deve ter opção de selecionar o Arsenal e ter todos os arsenais salvos por personagem.
+
+Botão de "Configurações" fica na tela inicial na página HOME e no ESC dentro das run's.
+
+Botão de Reset de conta, ficará dentro das configurações em "Conta"
+
+Parte de item's no planejamento para missão, deverá ser possível mexer no que temos já salvo em um build
+
+Faça os altares pelas cores da raridade dele, hoje só temos uma cor no jogo. Além disso os altares devem dar recompensa de atributos, ele randomiza as opções, sendo uma de utilidade, armadura/hp/chancestatus/velocidade e a outra relacionado a dano/projétil/velocidade de ataque enfim... tem muito status para randomizar ai, faça uma mecânica legal.
+
+Mostrar a raridade da recompensa no pool de escolha ao fundo do ícone preenchendo todo o "quadrado" você sabe as cores.
+
+Além disso crie uma arte seguindo nossos modelos/skills para fazer um Susano'o, já temos uma base pronta, mas precisamos transformar com a qualidade das habilidades que temos.
+
+O HP na parte esquerda, deixe o valor por inteiro ou melhor coloque na barra de HP no pé do personagem.
+
+Além disso, você precisa para TODOS os personagens fazer a animação dele andando para cima e para baixo.
+
+Fazer a animação do Shinra Tensei e colocar na ultimate do pain/Yahiko.
+
+Pegue a referência dos corpos shinobi que estão deitados no chão e coloque o sprite.
+
+Coloque para apertarmos E quando derrotarmos um mega-elite, chegarmos perto dele cerca de 10m e apertarmos E, para então selarmos, manter a prioridade em questão da configuração do selamento/animação.
+
+Atualize os sprites das habilidades de invocação das marionetes de Kankuro e Sasori.
+
+Criar as folhas de todos os personagens com todas as animações/ícones e implementar disponível para jogar sem bug's de animação no jogo.
+
+Lembrar de atualizar a documentação e mostrar tudo que está sendo feito e atualizar o github, só seguir as documentações e os contextos, ler todas as skills para seguir desenvolvendo e as regras do desenvolvimento.
+Bigbrain
+
+**Complemento do usuário**
+
+> A cópia é a nova pasta core do projeto
+
+**Resposta registrada**
+
+- **Áudio:** a Home tenta iniciar a faixa de abertura no carregamento. A faixa continua enquanto o jogador navega pelo hub. Se o navegador bloquear a reprodução automática, a primeira interação libera a mesma faixa e a Home exibe **Ativar música** enquanto ela estiver bloqueada.
+- **Drops e HUD:** o Ryu de abates tem moeda dourada com 両. O bolinho de arroz recupera **35% do HP máximo** por padrão, com chance de até **5% por abate**. O morro continua sendo um ponto interativo separado. Os drops atraídos têm 55% do tamanho anterior no chão e cerca de 40% ao voar até o jogador. O HP aparece por inteiro no HUD e na barra sob os pés.
+- **Planejamento:** quatro seções com ícones e contagem. **Táticas de Missão** abre pelo topo. Aplique uma tática, edite o plano e clique em **Atualizar** nela para salvar a edição. O antigo menu da bolsa agora se chama **Arsenal de Missão** e as listas por shinobi ficam selecionáveis no mapa. O seletor de tática também está na preparação.
+- **Configurações:** acesso pela Home e pelo Esc da run. **Reset de conta** fica em **Configurações → Conta**, com confirmação dentro do jogo.
+- **Altares:** estrutura e círculo seguem a cor de raridade. A bênção sorteia um atributo ofensivo e um de utilidade/defesa. A partir de Raro, sorteia um terceiro sem repetição. Os atributos entram diretamente ao completar o círculo e continuam na run salva. Os cartões de recompensa usam a cor da raridade em toda a área do ícone.
+- **Selamento:** o Mega Elite derrotado fica no chão. Aproxime-se até 10 m e use **E**. A configuração atual decide se abre o ritual ou sela diretamente. A troca com equipe cheia e a recusa dentro do ritual continuam disponíveis. O corpo da armadilha tem uma arte própria.
+- **Combate e artes:** Shinra Tensei é a Ultimate do Pain, com levitação, ondas radiais, destroços e repulsão. Chibaku Tensei ocupa o antigo lugar na lista de técnicas e ganha rochas convergentes. O Susano’o azul do Madara usa um atlas de quatro fases em cima da base 3D. Kuroari e a marionete do Terceiro Kazekage têm folhas próprias no campo e na prévia. Kaiten, Palmas Protetoras, Oito Trigramas, Leões Gêmeos, técnicas de sepultamento e Kamui ganharam efeitos reconhecíveis. Sasori ainda está fora do elenco jogável e a marionete aparece em Mil Braços do Escorpião, no kit de Kankuro.
+- **Movimento:** três novas folhas de ataque, pulo e dash em frente e costas, para Sasuke Genin, Neji e Neji Shippuden. A verificação de atlas passou em **56 versões e 560 estados**, incluindo fileiras distintas de caminhada em frente e costas. A revisão manual de qualidade de cada ataque, Ultimate, ícone e ajudante continua na fila.
+
+Pasta principal confirmada. Suíte completa no Edge: 62 verificações, 0 exceções JavaScript e 0 respostas 404. Testes dirigidos também confirmaram Shinra Tensei por R com dano e altar comum com um atributo ofensivo e um de utilidade/defesa. O navegador inicia a trilha sem clique quando a política de reprodução automática permite. A fila restante está no [docs/13](13-PENDENCIAS-PARA-CONTINUAR.md).

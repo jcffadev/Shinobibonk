@@ -65,3 +65,9 @@
 - [x] Todo bloco novo tem origem (código ou pedido do usuário) e estado.
 - [ ] Trechos sem categoria segura: **nenhum** (todos os domínios do prompt mapeados; os 2 inaplicáveis registrados no manifesto).
 - [x] Links relativos verificados ao finalizar.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+Preparação e táticas em [docs/11](11-HUB-ELENCO-PLANO-ECONOMIA.md). Selamento no campo em [docs/03](03-ALIADOS-E-SELAMENTO.md). As novas folhas e seus prompts estão no [manifesto de arte](arte-atlas-2026-11-07.json).
+
+A [auditoria dos efeitos](24-AUDITORIA-DE-EFEITOS.md) inventaria o caminho visual das técnicas e Ultimates.

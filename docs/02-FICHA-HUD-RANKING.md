@@ -59,3 +59,7 @@ Atualizar a posição e distância até o Top 1 após cada abate. Guardar partid
   - build final e atributos finais.
   - Ainda não mostra dano por item ou DoT, dano recebido nem curas.
   - Menu de configurações gráficas.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+O HUD exibe o HP inteiro atual e máximo. Os mesmos valores aparecem no sprite da barra sob o jogador. A cor da raridade cobre toda a área do ícone nos cartões de escolha.

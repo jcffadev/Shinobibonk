@@ -139,7 +139,7 @@ function jutsuGate(lengthSeconds:number,slackMs=120){
 // Kage Bunshin no Jutsu → apenas o Naruto (família) · Ultimate do Pain (Yahiko) → som de Shinra Tensei.
 const JUTSU_CLIP_RULES:{test:(t:Technique,ultimate:boolean,family:string)=>boolean;src:string}[]=[
   {test:(t,_u,f)=>t.name==='Kage Bunshin'&&f==='naruto',src:'/assets/audio/kage-bunshin.mp3'},
-  {test:(t,u,f)=>u&&f==='pain'&&t.name==='Chibaku Tensei',src:'/assets/audio/shinra-tensei.mp3'},
+  {test:(t,u,f)=>u&&f==='pain'&&t.name==='Shinra Tensei',src:'/assets/audio/shinra-tensei.mp3'},
 ];
 let activeJutsuClip:HTMLAudioElement|null=null;
 function jutsuClipFor(t:Technique,ultimate:boolean,casterId?:string):string|undefined{

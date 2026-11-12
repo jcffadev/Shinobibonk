@@ -10,6 +10,14 @@ const page=await browser.newPage({viewport:{width:1440,height:900}});
 // Sem falas nos alto-falantes durante os testes.
 const muteSpeech=()=>{try{Object.defineProperty(window,'speechSynthesis',{value:undefined})}catch{}};
 await page.addInitScript(muteSpeech);
+await page.addInitScript(()=>{
+ const NativeAudio=window.Audio;
+ window.Audio=new Proxy(NativeAudio,{construct(target,args){
+  const clip=Reflect.construct(target,args);
+  if(String(args[0]).endsWith('/ill-do-it-right.mp3'))window.__bootTrack=clip;
+  return clip;
+ }});
+});
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',m=>{if(m.type()==='error'&&/shader error|VALIDATE_STATUS/i.test(m.text()))errors.push(m.text());});
 page.on('response',r=>{if(r.status()===404&&!r.url().endsWith('favicon.ico'))missing.push(r.url());});
@@ -25,7 +33,9 @@ const start=async()=>{
  await page.getByRole('button',{name:/Começar!/}).click();await wait();
 };
 await page.goto('http://127.0.0.1:5176/?test=1');
-await page.getByRole('button',{name:'Bolsa da Missão',exact:true}).click();
+await page.getByRole('button',{name:'Arsenal de Missão',exact:true}).click();
+await page.waitForFunction(()=>window.__bootTrack?.currentTime>.05);
+checks.push('A faixa fixa da Home toca e atravessa o primeiro clique no hub');
 const rarityGroup=page.getByRole('group',{name:'Filtrar itens por raridade'});
 await rarityGroup.getByRole('button',{name:'Raro',exact:true}).click();
 const bagCards=page.locator('.bag-card');
@@ -119,7 +129,11 @@ const offer=(await state()).choice[selected];await page.keyboard.press(String(se
 for(const lv of [25,50]){await debug('setLevel',lv);assert.equal((await state()).form,'Academia');}
 checks.push('Versões não trocam de forma nos níveis 10 / 25 / 50');
 await debug('setLevel',10);await debug('dismiss');await wait();await debug('clearEnemies');
-await debug('defeatMega','temari');await wait();assert.match(await page.locator('.sealing-modal').innerText(),/Temari/);
+const sealOrigin=(await state()).player;
+await debug('defeatMega','temari',11);await page.keyboard.press('e');await wait();
+assert.equal(await page.locator('.sealing-modal').count(),0);
+await debug('teleport',sealOrigin.x+6,sealOrigin.z);
+await page.keyboard.press('e');await wait();assert.match(await page.locator('.sealing-modal').innerText(),/Temari/);
 await page.screenshot({path:'artifacts/sealing.png'});
 await page.keyboard.press('p');await page.getByRole('button',{name:'Voltar à escolha'}).click();
 assert.equal((await state()).sealing.phase,'ready');
@@ -136,7 +150,7 @@ await page.screenshot({path:'artifacts/rasengan.png'});
 checks.push('Rendan Uzumaki exibe impacto no inimigo quando H está desativado');
 await debug('setChakra');await page.keyboard.press('r');assert.ok((await state()).chakra<100);await page.locator('.ultimate-auto-mark').click();assert.equal((await state()).autoUlt,true);checks.push('Ultimate R e selo AUTO');
 await page.keyboard.press('y');assert.equal((await state()).autoUlt,false);await page.keyboard.press('y');assert.equal((await state()).autoUlt,true);checks.push('Tecla Y alterna a Ultimate automática');
-await debug('clearEnemies');await debug('dismiss');await wait();await debug('defeatMega','neji');await page.keyboard.press('g');await wait();
+await debug('clearEnemies');await debug('dismiss');await wait();await debug('defeatMega','neji');await page.keyboard.press('e');await wait();await page.keyboard.press('g');await wait();
 assert.equal((await state()).sealing,null);
 // Rodada 47 — o drop do mega é auto-coletado AO PISAR (sem "E"): o pool abre sozinho no tick seguinte.
 await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.length===3);
@@ -144,15 +158,14 @@ await page.keyboard.press('1');await wait();checks.push('Recusa G deixa kunai gr
 for (const [startMoney,paid,cost] of [[100,1,20],[80,2,30]]) {
  await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await wait();
  // Rodada 49 — a kunai virou PERGAMINHO: exige "E" para abrir a recompensa (custo kunaiPrice) e não é mais auto-coletada ao pisar.
- const payment=await page.evaluate(async money=>{
-  const test=window.__shinobiTest;test.setMoney(money);
+ const payment=await page.evaluate(money=>{
+  const test=window.__shinobiTest;test.clearEnemies();test.clearDrops();test.setMoney(money);
   test.pickup('kunai');
   window.dispatchEvent(new KeyboardEvent('keydown',{key:'e',bubbles:true}));
-  await new Promise(r=>setTimeout(r,400));
   return test.inspect();
  },startMoney);
  assert.equal(payment.paidWeapons,paid);assert.equal(payment.runMoney,startMoney-cost);
- await page.keyboard.press('1');await wait();
+ await wait();await page.keyboard.press('1');await wait();
 }
 checks.push('Pergaminhos (ex-kunai) custam 20 e depois 30 Ryu · abertos com E, sem auto-coleta (Rodada 49)');
 await debug('grantItem','Pedra da Juventude');await debug('grantItem','Kunai Afiada');await debug('dismiss');await wait();
@@ -171,7 +184,11 @@ assert.equal(await page.locator('.shop-card').count(),1);
 const beforeBuy=(await walletNow()).balance;
 await page.locator('.shop-card').getByRole('button',{name:'Desbloquear',exact:false}).click();
 assert.equal((await walletNow()).balance,beforeBuy-300);
+await page.getByRole('button',{name:'SHINOBIBONK'}).click();
+await page.getByRole('button',{name:/Configurações/}).click();
+await page.locator('.st-nav').getByRole('button',{name:/Conta/}).click();
 await page.getByRole('button',{name:'Reset de conta',exact:true}).click();await page.getByRole('alertdialog',{name:'Confirmar reset de conta'}).waitFor();await page.getByRole('button',{name:'Cancelar',exact:true}).click();assert.equal((await walletNow()).balance,beforeBuy-300);checks.push('Compra administrativa, filtros de crítico e confirmação do reset de conta');
+await page.locator('.st-backdrop').getByRole('button',{name:/Voltar/}).click();
 await page.getByRole('button',{name:'Shinobis',exact:true}).click();await page.locator('.character-card').filter({hasText:'Hashirama Hokage'}).click();await start();
 await debug('clearEnemies');await debug('clearDrops');
 for(const [level,atlas,key] of [[1,'hashirama-walk-v1.png','w'],[20,'hashirama-walk-v1.png','s']]){
@@ -292,13 +309,13 @@ assert.equal(await page.locator('.scene').evaluate(el=>getComputedStyle(el).curs
 assert.equal(await page.locator('.vitamin-row').evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
 await debug('clearEnemies');await debug('clearDrops');
 await page.keyboard.press('Space');
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/sasuke-classico-action-v1.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/sasuke-1-action-v3.png');});
 await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
 await page.keyboard.press('Shift');
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/sasuke-classico-action-v1.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/sasuke-1-action-v3.png');});
 await page.waitForFunction(()=>window.__shinobiTest.motion().slideTime===0);
 await debug('target',1);assert.equal(await debug('cast','Kunai Tática'),true);
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='attack'&&m.atlas.endsWith('/sasuke-classico-action-v1.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='attack'&&m.atlas.endsWith('/sasuke-1-action-v3.png');});
 checks.push('Sasuke inicial usa quadros de ataque, pulo e dash; cursor e fundo do dock estão ocultos');
 
 for(const id of ['chomei','gyuki']){
@@ -320,6 +337,7 @@ await page.waitForFunction(()=>!document.pointerLockElement);
 assert.notEqual(await page.locator('.scene').evaluate(el=>getComputedStyle(el).cursor),'none');
 await page.keyboard.press('F9');await page.locator('.debug-panel').waitFor({state:'hidden'});
 checks.push('O ponteiro fica travado e F9 libera a kunai');
+await debug('clearPickups');
 const teuchi=await debug('teuchi');await debug('teleport',teuchi.x,teuchi.z);
 await page.evaluate(()=>window.__shinobiTest.mapRoute.discover('ichiraku'));
 assert.ok((await debug('teuchi')).visible&&(await debug('teuchi')).offset>1);
@@ -402,7 +420,7 @@ await page.getByRole('button',{name:'Planejar missão →',exact:true}).click();
 await page.locator('.ms-diffs button').filter({hasText:'Kage'}).click();await page.getByRole('button',{name:/Começar!/}).click();await wait();
 await debug('clearEnemies');await debug('dismiss');
 await debug('spawnMega','sasuke');assert.ok((await state()).enemies.some(e=>e.heroId==='sasuke-shippuden'),'Kage · zona 1: Mega Elite como Sasuke Shippuden');
-await debug('clearEnemies');await debug('defeatMega','gaara');await page.locator('.sealing-modal').waitFor();assert.match(await page.locator('.sealing-modal').innerText(),/Gaara Kazekage/);
+await debug('clearEnemies');await debug('defeatMega','gaara');await page.keyboard.press('e');await page.locator('.sealing-modal').waitFor();assert.match(await page.locator('.sealing-modal').innerText(),/Gaara Kazekage/);
 await page.keyboard.press('e');for(let n=0;n<40&&!(await state()).allies.includes('gaara-kazekage');n++)await page.waitForTimeout(250);
 assert.ok((await state()).allies.includes('gaara-kazekage'));await page.keyboard.press('Enter');await debug('dismiss');await wait();
 assert.equal(await debug('recruitAlly','gaara'),false,'mesma família não entra duas vezes');
@@ -482,9 +500,20 @@ await accountPage.close();
 const fieldPage=await browser.newPage({viewport:{width:1280,height:800}});
 await fieldPage.addInitScript(muteSpeech);
 await fieldPage.goto('http://127.0.0.1:5176/?test=1');
+await fieldPage.getByRole('button',{name:'Táticas de Missão',exact:true}).click();
+await fieldPage.getByRole('textbox',{name:'Nome da tática de missão'}).fill('Tática de teste');
+await fieldPage.getByRole('button',{name:/Salvar Tática de Missão/}).click();
+await fieldPage.getByRole('button',{name:'Arsenal de Missão',exact:true}).click();
+await fieldPage.getByRole('tab',{name:/Itens em casa/}).click();
+await fieldPage.getByRole('button',{name:/Nova lista com a bolsa/}).click();
+await fieldPage.getByRole('button',{name:'SHINOBIBONK'}).click();
 await fieldPage.getByRole('button',{name:/Jogar como convidado/}).click();
 await fieldPage.getByRole('button',{name:'Planejar missão →',exact:true}).click();
 await fieldPage.getByRole('button',{name:'Escolher missão →',exact:true}).click();
+await fieldPage.getByLabel('Tática de Missão',{exact:true}).selectOption('0');
+await fieldPage.getByLabel('Arsenal de Missão',{exact:true}).selectOption('0');
+assert.equal(await fieldPage.getByLabel('Arsenal de Missão',{exact:true}).inputValue(),'0');
+checks.push('Táticas e arsenais salvos podem ser aplicados na seleção do mapa');
 await fieldPage.getByRole('button',{name:/Começar!/}).click();
 await fieldPage.waitForFunction(()=>window.__shinobiTest?.inspect().atlasReady);
 const merchantCheck=await fieldPage.evaluate(()=>{
@@ -521,6 +550,11 @@ assert.ok(ambush.after>ambush.before);assert.ok(Math.abs(ambush.buffAfter-ambush
 assert.equal(ambush.curseCount,4);assert.equal(ambush.bodyCount,5);assert.equal(ambush.afterBody,0);
 await fieldPage.waitForFunction(()=>window.__shinobiTest.inspect().level===2&&window.__shinobiTest.inspect().choice?.length>0);
 checks.push('Shuriken Amaldiçoada fortalece o jogador e invoca ninjas; concluir o corpo concede um nível');
+await fieldPage.evaluate(()=>{const api=window.__shinobiTest;api.dismiss();api.clearEnemies();api.clearDrops();api.setLevel(1);api.setHp(10);api.healingDrop();});
+await fieldPage.waitForFunction(()=>!window.__shinobiTest.drops().some(drop=>drop.type==='onigiri'));
+const healed=await fieldPage.evaluate(()=>window.__shinobiTest.inspect());
+assert.ok(Math.abs(healed.hp-10-healed.stats.maxHp*.35)<.05);
+checks.push('Bolinho de arroz recupera 35% do HP máximo');
 await fieldPage.close();
 assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);checks.push('Sem exceções JavaScript ou assets 404');
 console.log(JSON.stringify({checks,errors,missing,performanceSample},null,2));fs.writeFileSync('artifacts/runtime-checks.json',JSON.stringify({date:new Date().toISOString(),checks,errors,missing,performanceSample},null,2));

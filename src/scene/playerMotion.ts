@@ -245,7 +245,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
       }
       const usesSheet = useSeal || useAsuma || useAction || useDirection || !!casting || !!walking;
-      posePath = useSeal ? sealSheet!.path : useAction ? poseSheet!.path : useDirection ? directionSheet!.path : '';
+      posePath = useSeal ? sealSheet!.path : useAsuma ? ASUMA_ATLAS : useAction ? poseSheet!.path : useDirection ? directionSheet!.path
+        : casting ? '/assets/naruto-academia-throw-v1.png' : walking ? (walkAtlas === diagonal ? '/assets/naruto-academia-diagonal-v1.png' : '/assets/naruto-academia-walk-v1.png') : '';
       sprite.material.map = useSeal ? sealMap! : useAsuma ? asuma : useAction ? poseMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
       sprite.material.alphaTest = usesSheet ? .55 : .18;
       // A passada do golpe em movimento usa a mesma frequência dos quadros de caminhada (10 quadros/s, ciclo de 4).
@@ -317,14 +318,24 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if(!health)return;
       const {bar,paint,map}=health;
       bar.position.set(sprite.position.x,floor+jumpHeight-.09,sprite.position.z);
-      if(lastHp===hp&&lastMax===maxHp)return;
-      lastHp=hp;lastMax=maxHp;
+      const shownHp=Math.ceil(hp),shownMax=Math.ceil(maxHp);
+      if(lastHp===shownHp&&lastMax===shownMax)return;
+      lastHp=shownHp;lastMax=shownMax;
       const ratio = Math.max(0,Math.min(1,hp/Math.max(1,maxHp)));
-      paint.clearRect(0,0,128,24);
-      paint.fillStyle='#131726';paint.fillRect(0,4,128,16);
-      paint.fillStyle='#3c2533';paint.fillRect(3,7,122,10);
-      paint.fillStyle=ratio>.35?'#50df91':'#ff656c';paint.fillRect(3,7,Math.round(122*ratio),10);
-      paint.fillStyle='#ffffff66';paint.fillRect(3,7,Math.round(122*ratio),2);
+      paint.clearRect(0,0,256,38);
+      paint.fillStyle='#131726';paint.fillRect(0,3,256,32);
+      paint.fillStyle='#3c2533';paint.fillRect(4,7,248,24);
+      paint.fillStyle=ratio>.35?'#50df91':'#ff656c';paint.fillRect(4,7,Math.round(248*ratio),24);
+      paint.fillStyle='#ffffff66';paint.fillRect(4,7,Math.round(248*ratio),2);
+      const label=shownHp.toLocaleString('pt-BR')+' / '+shownMax.toLocaleString('pt-BR');
+      paint.font='bold 22px sans-serif';
+      paint.textAlign='center';
+      paint.textBaseline='middle';
+      paint.strokeStyle='#152019';
+      paint.lineWidth=4;
+      paint.strokeText(label,128,19,244);
+      paint.fillStyle='#fff';
+      paint.fillText(label,128,19,244);
       map.needsUpdate=true;
     },
     dispose(){trail?.forEach(ghost=>{scene.remove(ghost);ghost.material.dispose();});if(health){scene.remove(health.bar);health.map.dispose();health.bar.material.dispose();}walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());},
@@ -333,12 +344,12 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
 
 function createHealthBar(scene:THREE.Scene) {
   const canvas=document.createElement('canvas');
-  canvas.width=128;canvas.height=24;
+  canvas.width=256;canvas.height=38;
   const paint=canvas.getContext('2d')!;
   const map=new THREE.CanvasTexture(canvas);
   map.magFilter=THREE.NearestFilter;
   const bar=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthTest:false,depthWrite:false}));
-  bar.scale.set(1.45,.21,1);
+  bar.scale.set(2.05,.31,1);
   bar.center.set(.5,1);
   bar.renderOrder=30;
   scene.add(bar);

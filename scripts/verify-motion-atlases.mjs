@@ -37,7 +37,7 @@ try{
     for(let col=0;col<10;col++){
      update(1);
      if(col===1||col===2)update(.17,true,col===2);
-     else if(col===3||col===4){update(.01,true,col===4);motion.attack(false,false,false,undefined,false,col===4);update(.08);}
+     else if(col===3||col===4){update(.01,true,col===4);motion.attack(false,false,false,hero.family==='lee'?'kick':hero.family==='guy'?'punch':undefined,false,col===4);update(.08);}
      else if(col===5||col===6)update(.01,false,col===6,false,.15,false,.5);
      else if(col>=7)update(.01,false,col===9,col===8,0,true,0,.4);
      else update(.01);
@@ -51,6 +51,8 @@ try{
      put(col*132+3,row*180+160,names[col]);
      samples.push({action:expected,atlas:motion.atlas(),uv:[map.offset.x,map.offset.y,map.repeat.x,map.repeat.y]});
     }
+    if(samples.slice(1).some(sample=>!sample.atlas))throw Error(hero.id+' tem movimento sem folha de animação');
+    if(samples[1].uv[1]===samples[2].uv[1])throw Error(hero.id+' usa a mesma fileira ao andar de frente e de costas');
     // Andar atacando: o golpe toca inteiro pelos quadros de ataque (sem virar caminhada no meio) e volta à caminhada ao fim.
     update(1);update(.2,true);motion.attack(false,false);const walkFrames=[];
     for(let k=0;k<7;k++){update(.03,true);if(motion.state()!=='attack')throw Error(hero.id+' andando: golpe cortado em '+motion.state());walkFrames.push(motion.debug().frame);}

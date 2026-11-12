@@ -205,3 +205,7 @@ git fetch origin main
 git rev-list --left-right --count main...origin/main
 ```
 Se o remoto avançou (`0 N` com N>0): `git pull --rebase origin main` + push de novo. **Nunca force push.**
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+Rodada do Codex sobre a main do Qwen em `28bf41e`. Mudanças em áudio, drops, preparo, selamento, altares e arte estão no [CHANGELOG](../CHANGELOG.md). A cópia em C: é a pasta principal. A verificação de movimento passou em 56 versões. Continue pelas pendências atuais do [docs/13](13-PENDENCIAS-PARA-CONTINUAR.md).

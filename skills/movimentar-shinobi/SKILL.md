@@ -52,3 +52,7 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 ## Folhas separadas por ação · atualização 07/11/2026
 
 Use `acrobaticsArt` quando a versão já tiver ataque aprovado e precisar somente de pulo/dash. Folha 4×2: frente/costas; colunas impulso, joelhos recolhidos, dash baixo, frenagem. Folha completa 4×4: duas linhas de ataque frente/costas e duas linhas de pulo/dash. Normalize com `scripts/pack-sprite-atlas.ps1`, preservando uma escala por folha e alinhamento dos pés. Mirar à esquerda deve espelhar a orientação. Arte integrada não equivale a revisão visual concluída; registre a cobertura real por versão e confira também como ajudante.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+Ao verificar o atlas, exija uma folha em todos os estados animados e fileiras de caminhada distintas para frente e costas. Na matriz de teste, use o chute de Lee e o soco de Guy como no controlador em jogo. Para uma folha 4×4, ataque de costas usa a segunda fileira e pulo/dash de costas usam a quarta. A inspeção de recorte e semelhança com o repouso continua separada da suíte.

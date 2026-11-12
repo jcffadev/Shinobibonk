@@ -16,7 +16,7 @@ import * as THREE from 'three';
  *   então o tint do GameCanvas não vaza para outros sprites.
  * As texturas são criadas uma vez e compartilhadas; ao coletar, só o material do sprite é descartado.
  */
-export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'ramen' | 'pill' | 'item' | 'kunai' | 'kunaiFree' | 'shuriken' | 'cursed' | 'enemyKunai' | 'enemyShuriken' | 'enemyShurikenFuma';
+export type DropVisual = 'xp' | 'chakra' | 'ryu' | 'coin' | 'onigiri' | 'ramen' | 'pill' | 'item' | 'kunai' | 'kunaiFree' | 'shuriken' | 'cursed' | 'enemyKunai' | 'enemyShuriken' | 'enemyShurikenFuma';
 
 const SIZE = 128;
 const cache = new Map<DropVisual, THREE.Texture>();
@@ -83,6 +83,32 @@ function drawOnigiri(g: CanvasRenderingContext2D) {
   };
   rice(44, 68, .95, -.16); rice(84, 70, 1, .14); rice(64, 52, .92, 0); rice(64, 82, 1.22, 0);
   g.fillStyle = 'rgba(255,255,255,.8)'; g.beginPath(); g.ellipse(50, 36, 6, 3.4, -.5, 0, Math.PI * 2); g.fill();
+}
+
+function drawCoin(g: CanvasRenderingContext2D) {
+  g.fillStyle = '#523112';
+  g.beginPath(); g.ellipse(64, 64, 43, 50, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#e6a333';
+  g.beginPath(); g.ellipse(62, 61, 39, 45, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#ffe29a'; g.lineWidth = 4;
+  g.beginPath(); g.ellipse(62, 61, 32, 37, 0, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = '#694411'; g.textAlign = 'center';
+  g.font = '900 44px "Yu Gothic","Meiryo",sans-serif';
+  g.fillText('両', 62, 77);
+}
+
+function drawOnigiriDrop(g: CanvasRenderingContext2D) {
+  g.fillStyle = '#fff3d8';
+  g.strokeStyle = '#635342';
+  g.lineWidth = 4;
+  g.beginPath(); g.moveTo(55, 25); g.quadraticCurveTo(64, 13, 73, 25);
+  g.lineTo(101, 76); g.quadraticCurveTo(111, 101, 86, 104);
+  g.lineTo(42, 104); g.quadraticCurveTo(17, 101, 27, 76);
+  g.closePath(); g.fill(); g.stroke();
+  g.fillStyle = '#d8c9a9';
+  for (const [x,y] of [[58,41],[69,47],[47,62],[77,60],[40,78],[86,81]]) g.fillRect(x,y,5,3);
+  g.fillStyle = '#203d32'; g.fillRect(46, 72, 36, 32);
+  g.fillStyle = '#46614a'; g.fillRect(49, 76, 4, 23);
 }
 
 function drawRamen(g: CanvasRenderingContext2D) {
@@ -176,7 +202,7 @@ function drawEnemyKunai(g: CanvasRenderingContext2D) {
   g.fillStyle = '#0c0e12'; g.beginPath(); g.arc(64, 107, 3, 0, Math.PI * 2); g.fill();
 }
 
-const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed, enemyKunai: drawEnemyKunai, enemyShuriken: drawShurikenShape, enemyShurikenFuma: drawShurikenShape };
+const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, coin: drawCoin, onigiri: drawOnigiriDrop, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed, enemyKunai: drawEnemyKunai, enemyShuriken: drawShurikenShape, enemyShurikenFuma: drawShurikenShape };
 
 export function dropTexture(kind: DropVisual) {
   let texture = cache.get(kind);

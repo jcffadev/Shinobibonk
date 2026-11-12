@@ -2,23 +2,15 @@ import * as THREE from 'three';
 
 export const KUROARI_TIME = 1.1;
 export const KUROARI_STRIKE = .55;
+export const KUROARI_ART='/assets/shinobi-motion/kuroari-cast-v4.png';
+export const KAZEKAGE_PUPPET_ART='/assets/shinobi-motion/kazekage-puppet-cast-v1.png';
+export function puppetArt(name:string){return name==='Kuroari'||name==='Prisão de Kuroari'?KUROARI_ART:name==='Mil Braços do Escorpião'?KAZEKAGE_PUPPET_ART:undefined;}
 
-/**
- * Kuroari — a marionete escorpião (kit do Kankuro; na obra é a marionete-assinatura do Sasori,
- * herdada pelo Kankuro no arco da 4ª Guerra Ninja). Mesma receita de entidade do Gamabunta:
- * - o visual entra em `visuals` (respeita a tecla H de esconder efeitos);
- * - o dano é resolvido no GameCanvas via `pendingHits` no instante KUROARI_STRIKE,
- *   com a MESMA fórmula de área do golpe corpo a corpo (não altera o balanceamento).
- *
- * Folha `kuroari-1-action-v3.png`, fileira 0 (ataque frente), 4 quadros:
- * 0 = preparo (pinças fecham), 1 = ferrão erguido, 2 = estouro do ferrão (veneno), 3 = recuperação.
- * Arte: scripts/generate-puppets.py (rodada 41), mesma receita das folhas programáticas do projeto.
- */
-export function createKuroari(map:THREE.Texture, origin:THREE.Vector3, target:THREE.Vector3, right:THREE.Vector3, preview=false){
+/** Kuroari, a Formiga Negra de Kankuro. Quatro quadros da invocação em kuroari-cast-v4.png. */
+export function createKuroari(map:THREE.Texture, origin:THREE.Vector3, target:THREE.Vector3, right:THREE.Vector3){
   const group=new THREE.Group();
   const sheet=map.clone();
-  sheet.repeat.set(.25,.25);
-  sheet.offset.y=.75; // fileira 0 = topo da imagem (flipY padrão, mesmo padrão do playerMotion)
+  sheet.repeat.set(.25,1);
   const pup=new THREE.Sprite(new THREE.SpriteMaterial({map:sheet,transparent:true,alphaTest:.18,depthWrite:false}));
   const BASE=1.7;
   pup.scale.set(BASE,BASE,1);
@@ -46,7 +38,6 @@ export function createKuroari(map:THREE.Texture, origin:THREE.Vector3, target:TH
     pup.position.copy(start).lerp(stand,eased);
     pup.scale.y=BASE*(1+.03*Math.sin(age*18));
     group.userData.kuroariPhase=age<.2?'invocacao':age<KUROARI_STRIKE?'preparo':'estouro';
-    if(preview)return;
   }
   group.addEventListener('removed',()=>sheet.dispose());
   return {group,tick};

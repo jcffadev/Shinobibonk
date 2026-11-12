@@ -19,7 +19,7 @@
  *  - Volume = settings.volume × settings.musicVolume (novo slider "Música" em Configurações › Som);
  *    "Silenciar em segundo plano" também silencia a música quando a aba fica invisível.
  *  - Autoplay: o browser pode bloquear a faixa do boot; a pendência é liberada na primeira interação
- *    (pointerdown/keydown), o que coincide com os cliques "Jogar" que já chamam playYooo().
+ *    (click/keydown), o que coincide com os cliques "Jogar" que já chamam playYooo().
  *
  * Padrão de robustez copiado de sfx.ts (playYooo): play() em promise com catch silencioso —
  * falha de autoplay/arquivo NUNCA quebra o jogo nem gera unhandledrejection (o verify-runtime captura pageerror).
@@ -43,7 +43,7 @@ type MusicState = 'idle' | 'boot' | 'menu' | 'run' | 'bijuu' | 'defeat';
 let state: MusicState = 'idle';
 let lastTrack = '';
 let activeClip: HTMLAudioElement | null = null;
-let audioUnlocked = false;
+let playRequest = 0;
 let desired: { file: string; state: MusicState } | null = null;
 let unlockArmed = false;
 const clips = new Map<string, HTMLAudioElement>();
@@ -98,14 +98,14 @@ function armUnlock(): void {
   unlockArmed = true;
   const flush = () => {
     unlockArmed = false;
-    window.removeEventListener('pointerdown', flush, true);
+    window.removeEventListener('click', flush, true);
     window.removeEventListener('keydown', flush, true);
     if (!desired) return;
     const pending = desired;
     desired = null;
     requestPlay(pending.file, pending.state);
   };
-  window.addEventListener('pointerdown', flush, true);
+  window.addEventListener('click', flush, true);
   window.addEventListener('keydown', flush, true);
 }
 
@@ -120,20 +120,17 @@ function requestPlay(file: string, newState: MusicState): void {
   try { clip.currentTime = 0; } catch { /* ainda carregando */ }
   clip.onended = () => onEnded();
   clip.volume = 0;
-  let started: Promise<void> | null = null;
-  try { started = clip.play(); } catch { started = null; }
-  if (started) {
-    started
-      .then(() => { audioUnlocked = true; unlockArmed = false; fadeIn(clip); })
-      .catch(() => {
-        if (audioUnlocked) return; // falha transitória de rede/decodificação: segue em silêncio
-        desired = { file, state: newState };
-        armUnlock();
-      });
-  } else {
+  const request = ++playRequest;
+  void clip.play().then(() => {
+    if (request !== playRequest) return;
+    window.dispatchEvent(new CustomEvent('shinobi-music-blocked', { detail: false }));
+    fadeIn(clip);
+  }).catch((error: unknown) => {
+    if (request !== playRequest || !(error instanceof DOMException) || error.name !== 'NotAllowedError') return;
     desired = { file, state: newState };
     armUnlock();
-  }
+    window.dispatchEvent(new CustomEvent('shinobi-music-blocked', { detail: true }));
+  });
 }
 
 function onEnded(): void {
@@ -152,7 +149,7 @@ export function startBoot(): void {
 
 /** Menus / fora da run: pool aleatório. Idempotente — se já toca menu, continua a mesma faixa. */
 export function playMenu(): void {
-  if (state === 'menu') return;
+  if (state === 'menu' || state === 'boot') return;
   requestPlay(pick(MENU_POOL), 'menu');
 }
 

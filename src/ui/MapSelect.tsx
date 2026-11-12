@@ -1,3 +1,4 @@
+import type { MissionTactic } from './BuildPlanner';
 import { VillageEmblem, villageName } from './VillageEmblem';
 import { useEffect } from 'react';
 import { MAPS, MAP_BY_ID, DIFFICULTY_ORDER, type MapId } from '../game/maps';
@@ -18,9 +19,9 @@ const DIFF_TEXT: Record<Difficulty, string> = { Genin: 'Treinamento de novato', 
  * "Escolha o mapa" (referência do usuário): abas dos mapas no topo, prévia grande da região com guardiões por zona e
  * painel "Preparar partida" (modo, dificuldade, progresso, build, mochila e predefinições da Bolsa). Enter começa.
  */
-export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, homeCount, presets, onApplyPreset, onStart, onBack, onChangeHero, onEditPlan, onBag }: {
+export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, homeCount, tactics, onApplyTactic, presets, onApplyPreset, onStart, onBack, onChangeHero, onEditPlan, onBag }: {
   heroId: string; mapId: MapId; onMap: (id: MapId) => void; mission: Difficulty; onMission: (d: Difficulty) => void;
-  planned: string[]; homeCount: number; presets: BagPresets; onApplyPreset: (index: number) => void;
+  planned: string[]; homeCount: number; tactics: MissionTactic[]; onApplyTactic: (index: number) => void; presets: BagPresets; onApplyPreset: (index: number) => void;
   onStart: () => void; onBack: () => void; onChangeHero: () => void; onEditPlan: () => void; onBag: () => void;
 }) {
   const map = MAP_BY_ID[mapId], hero = HERO_BY_ID[heroId], progress = mapProgress()[mapId] ?? [];
@@ -61,11 +62,20 @@ export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, h
         })}</div>
         <h3>BUILD SELECIONADA <button type="button" className="ms-link" onClick={onEditPlan}>Editar plano</button></h3>
         <div className="ms-box">{planned.length ? planned.map((n) => <i key={n} className="ms-chip">★ {n}</i>) : <small>Nenhuma técnica ou pílula planejada.</small>}</div>
+        {tactics.length>0&&<div className="ms-box">
+          <label>Tática de Missão <select aria-label="Tática de Missão" value="" onChange={event=>{if(event.target.value!=='')onApplyTactic(Number(event.target.value));}}>
+            <option value="">Aplicar tática salva…</option>
+            {tactics.map((tactic,index)=><option key={index} value={index}>{tactic.name}</option>)}
+          </select></label>
+        </div>}
         <h3>MOCHILA <small>itens para levar antes de começar · em breve</small></h3>
         <div className="ms-box ms-soon"><small>O sistema de itens levados para a partida ainda será definido. Por enquanto as recompensas vêm só de kunais, shurikens e eventos.</small></div>
-        <h3>BOLSA DA MISSÃO <button type="button" className="ms-link" onClick={onBag}>Abrir</button></h3>
+        <h3>ARSENAL DE MISSÃO <button type="button" className="ms-link" onClick={onBag}>Abrir</button></h3>
         <div className="ms-box"><small>{homeCount} item(ns) em casa (fora do pool).</small>
-          {presets.slots.map((slot, i) => slot && <div className={`ms-preset ${presets.active === i ? 'active' : ''}`} key={i}><b>{i + 1} · {slot.name}</b><small>{slot.items.length} itens em casa</small><button type="button" disabled={presets.active === i} onClick={() => onApplyPreset(i)}>{presets.active === i ? 'Em uso' : 'Aplicar'}</button></div>)}
+          {presets.slots.length>0&&<select aria-label="Arsenal de Missão" value={presets.active??''} onChange={event=>{if(event.target.value!=='')onApplyPreset(Number(event.target.value));}}>
+            <option value="" disabled>Escolher arsenal salvo…</option>
+            {presets.slots.map((slot,index)=><option key={index} value={index}>{slot.name} · {slot.items.length} em casa</option>)}
+          </select>}
           {!presets.slots.some(Boolean) && <small> Sem predefinições salvas.</small>}
         </div>
       </div>

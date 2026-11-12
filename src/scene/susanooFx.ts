@@ -55,6 +55,7 @@ type Rig = {
   foreL: THREE.Group; foreR: THREE.Group; weaponL: THREE.Object3D; weaponR: THREE.Object3D;
   owner: THREE.Vector3; dir: THREE.Vector3; target: THREE.Vector3; radius: number; ultimate: boolean; fired: boolean; flameAcc: number;
   samples: THREE.Object3D[];
+  painted?: THREE.Sprite;
 };
 
 function buildRig(style: SusanooStyle): Rig {
@@ -118,7 +119,22 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
   function trigger(style: SusanooStyle, owner: THREE.Vector3, dir: THREE.Vector3, target: THREE.Vector3, radius: number, ultimate = false) {
     if (hidden) return;
     let rig = rigs.get(style);
-    if (!rig) { rig = buildRig(style); rigs.set(style, rig); scene.add(rig.root); }
+    if (!rig) {
+      rig = buildRig(style);
+      rigs.set(style, rig);
+      scene.add(rig.root);
+      if (style === 'madara') {
+        const map = new THREE.TextureLoader().load('/assets/shinobi-motion/susanoo-madara-v1.png');
+        map.colorSpace = THREE.SRGBColorSpace;
+        map.magFilter = THREE.NearestFilter;
+        map.minFilter = THREE.LinearFilter;
+        map.generateMipmaps = false;
+        map.repeat.set(.5,.5);
+        rig.painted = new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthWrite:false}));
+        rig.painted.center.set(.5,.07);
+        rig.root.add(rig.painted);
+      }
+    }
     rig.owner = owner; rig.dir.set(dir.x, 0, dir.z).normalize(); rig.target.copy(target); rig.radius = radius; rig.ultimate = ultimate;
     rig.age = 0; rig.life = ultimate ? 1.35 : .95; rig.active = true; rig.fired = false; rig.root.visible = true;
     rig.scale = Math.min(1.9, .85 + radius * .32) * (ultimate ? 1.25 : 1);
@@ -187,7 +203,20 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       }
       if (!rig.fired && a >= .22) { rig.fired = true; attack(rig); }
       const fade = a < .05 ? a / .05 : a > T - .25 ? Math.max(0, (T - a) / .25) : 1;
-      for (const m of rig.mats) { m.uniforms.opacity.value = fade; m.uniforms.time.value = time; }
+      const painted = rig.painted;
+      const paintedReady = Boolean((painted?.material.map?.image as HTMLImageElement|undefined)?.width);
+      if (painted) {
+        const frame = a < .085 ? 0 : a < .155 ? 1 : a < .23 ? 2 : 3;
+        painted.visible = paintedReady;
+        painted.material.map!.offset.set((frame%2)*.5,frame<2?.5:0);
+        painted.material.opacity = fade*.92;
+        painted.position.set(0,.28,-.25);
+        painted.scale.setScalar(5.6);
+      }
+      for (const m of rig.mats) {
+        m.uniforms.opacity.value = fade*(paintedReady?.22:1);
+        m.uniforms.time.value = time;
+      }
       // Chamas de chakra nas bordas da silhueta.
       rig.root.updateMatrixWorld(true);
       const [core, mid, edge] = colsOf(rig.style);
@@ -204,7 +233,7 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
   }
   function setHidden(v: boolean) { hidden = v; if (v) for (const rig of rigs.values()) { rig.active = false; rig.root.visible = false; } }
   function clear() { for (const rig of rigs.values()) { rig.active = false; rig.root.visible = false; } }
-  function dispose() { for (const rig of rigs.values()) { scene.remove(rig.root); rig.mats.forEach(m => m.dispose()); } rigs.clear(); }
+  function dispose() { for (const rig of rigs.values()) { scene.remove(rig.root); rig.mats.forEach(m => m.dispose()); rig.painted?.material.map?.dispose(); rig.painted?.material.dispose(); } rigs.clear(); }
   const active = () => [...rigs.values()].filter(r => r.active).map(r => ({ style: r.style, age: +r.age.toFixed(2), scale: +r.scale.toFixed(2) }));
   return { trigger, update, setHidden, clear, dispose, active };
 }

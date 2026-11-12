@@ -142,3 +142,7 @@ PENDENTE: criar folhas completas de Kankuro 1/15/30 e Kushina 1 (quatro versões
 O script scripts/verify-motion-atlases.mjs exercita o controlador em fixture isolada e produz artifacts/motion-review.json e quatro folhas de contato. A primeira execução tinha duas instâncias de Three.js; corrigido o import por scripts/motion-review-entry.ts. Conferir o resultado final antes de considerar a auditoria completa.
 
 Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em combate de todos os lançadores, sons com licença verificada e uma run prolongada de três zonas até bijuu/saída/ranking. Preservar o balanceamento existente conforme instrução do usuário. Não publicar artifacts/sb-swishes-source.zip: é um arquivo preexistente de origem/licença não verificada.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+A Home tenta iniciar a trilha ao carregar. Táticas de Missão e Arsenal de Missão guardam planos e listas por shinobi. Na missão, o Mega Elite derrotado espera interação com E a até 10 m. Veja [os controles atuais](docs/00-LEIA-PRIMEIRO.md) e [o registro da rodada](CHANGELOG.md).

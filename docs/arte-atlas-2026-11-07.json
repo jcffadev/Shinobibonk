@@ -312,6 +312,83 @@
       "prompt": "Create an ORIGINAL game environment sprite atlas in EXACT 3 columns by 3 rows, NINE fully separate isolated buildings/landmarks. Match the polished pixel-art chibi RPG environment references, elevated 3/4 camera, dark clean outlines, rich small pixel shading, authentic Naruto-inspired architecture, no copyrighted game assets. Transparent background, wide transparent padding inside every equal cell, no overlap, no words except single emblem where specified. ROW1 SUNAGAKURE warm sandstone: col1 large round Kazekage office with flat roof, water tank, rows of windows and circular WIND 風 emblem; col2 enormous twin eroded sandstone cliffs framing the narrow entrance to desert village, stone platform base; col3 cluster of two rounded sand adobe houses with small blue sunshades, puppet workshop props. ROW2 IWAGAKURE grey/brown mountain stone: col1 tall round stone Tsuchikage residence with conical roof, 土 earth emblem, balcony; col2 broad stone arch bridge connecting two rocky pillars, solid ramped walkable stone base; col3 compact two stone towers joined by a short elevated bridge, mountain rock foundations. ROW3 KIRIGAKURE blue-grey damp coastal: col1 tall cylindrical Mizukage tower with blue-grey curved roof and water emblem, weathered masonry; col2 sturdy low arched stone bridge with reeds and wet rocks at footings; col3 two round plaster houses with blue-grey conical roofs and a wooden coastal walkway. EACH sprite entirely within its equal cell, fully visible roofs and complete ground foundation. No sky, no background fog, no ground plane beyond small integral foundation. All nine roughly equally sized within cells. Make craftsmanship exactly consistent with reference architecture.",
       "tool": "image_gen.imagegen",
       "generated": true
+    },
+    {
+      "name": "susanoo-madara-v1",
+      "path": "public/assets/shinobi-motion/susanoo-madara-v1.png",
+      "ref": null,
+      "columns": 2,
+      "rows": 2,
+      "prompt": "Create one transparent pixel art game animation sprite sheet for Madara's blue Susano'o from Naruto, original chibi 2.5D artwork viewed at slight overhead 3/4 camera, dark crisp contour clusters, luminous cobalt chakra, highlights in cold blue and violet, detailed armor. EXACT 2 columns by 2 rows, equal square cells with large transparent gutters and same centered foot anchor. Top left ribcage and rising chakra, top right summoned horned skeletal torso and two hands with wavy kris swords, bottom left armored tengu torso crossing both swords to attack, bottom right decisive wide slash with two swords, fading spirit edges. Each panel alone, completely inside cell, clear silhouette, no bleed, no text, no UI, no ground, transparent background. Preserve the same Susano'o design through the four frames.",
+      "tool": "image_gen.imagegen",
+      "generated": true,
+      "date": "2026-11-12"
+    },
+    {
+      "name": "fallen-scout-v1",
+      "path": "public/assets/shinobi-motion/fallen-scout-v1.png",
+      "ref": null,
+      "columns": 1,
+      "rows": 1,
+      "prompt": "Create one original transparent PNG video-game sprite, not an atlas: a defeated anonymous shinobi scout lying down horizontally on his side on the ground, body diagonal lower left feet to upper right head, as seen from elevated isometric camera (approximately 40 degrees down). Pixel art chibi adult with oversized head and compact body matching a polished Naruto-inspired 2.5D action game. Dark indigo long sleeves and trousers, muted plum flak vest, steel forehead protector, black open-toe sandals, one bent knee, arms at rest. Readable at 80 pixels, deliberate crisp outline and clustered pixels, no background, no frame, no text, no blood, no weapon, all limbs inside canvas, single isolated figure with full real alpha transparency.",
+      "tool": "image_gen.imagegen",
+      "generated": true,
+      "date": "2026-11-12"
+    },
+    {
+      "name": "kuroari-cast-v4",
+      "path": "public/assets/shinobi-motion/kuroari-cast-v4.png",
+      "ref": null,
+      "columns": 4,
+      "rows": 1,
+      "prompt": "Original Naruto-inspired 2.5D chibi pixel art transparent animation sprite strip. EXACT four cells, 4 columns and one row, even width with transparent gutters, same scale and ground anchor each. Kankuro's Kuroari Black Ant combat puppet, faithfully depict long round black wooden abdomen, pale face with spiky black hair and red horns, six jointed wooden arms with red wraps, hollow dark central body like a trap coffin, wood grain and visible joints. Frame 1 closed crouched folded, frame 2 rises arms unfolding, frame 3 belly panels open as six arms reach in a snare, frame 4 clamps shut. Straight front three-quarter elevated camera, clear silhouettes and compact head-body, restrained black plum palette plus dark red and tan wood, crisp dark contour clusters, no character pilot, no floor, no text, no grid, full transparency.",
+      "tool": "image_gen.imagegen",
+      "generated": true,
+      "date": "2026-11-12"
+    },
+    {
+      "name": "kazekage-puppet-cast-v1",
+      "path": "public/assets/shinobi-motion/kazekage-puppet-cast-v1.png",
+      "ref": null,
+      "columns": 4,
+      "rows": 1,
+      "prompt": "Transparent original pixel art animation strip for a chibi 2.5D Naruto game, four evenly spaced square cells in ONE row, full figure unobstructed. Sasori's Third Kazekage human puppet from Naruto Shippuden: pale face, messy dark blue hair, ochre brown puppet coat over dark clothes, visible segmented wooden joints, left arm opens into a fan of pale mechanized puppet arms. No red-haired Sasori pilot. Frame 1 levitates with arms tucked, frame 2 wooden left arm panels open, frame 3 pale puppet arms fan out to the right in Thousand Arms Manipulation, frame 4 retracts. Same scale and stance, elevated three-quarter view, crisp dark pixel clusters, medium contrast, transparent full alpha gutters, no text, no frame, no ground, no extra figures. Recognizable Third Kazekage puppet silhouette even at small sizes.",
+      "tool": "image_gen.imagegen",
+      "generated": true,
+      "date": "2026-11-12"
+    },
+    {
+      "name": "neji-1-action-v3",
+      "path": "public/assets/shinobi-motion/neji-1-action-v3.png",
+      "ref": "public/assets/shinobi-motion/neji-action-v1.png",
+      "columns": 4,
+      "rows": 4,
+      "prompt": "Build one production pixel-art animation sheet from the reference for an isometric action game. Use only the top two rows of the reference for the character outfit: young Neji with beige high-neck jacket, dark knee shorts, bandaged arms and sandals, long brown hair. Hands perform Gentle Fist open palm, no weapons. EXACT 4 columns and 4 rows, sixteen full figure poses, same constant size and foot anchor, equal square cells with broad transparent margins and gutters. Row 1 front-three-quarter: windup, preparation, strike release, recovery. Row 2 true rear-three-quarter: same attack sequence, shoulder blades and back of head visible, no face. Row 3 front-three-quarter: jump takeoff, airborne tuck, forward dash, slide brake. Row 4 true rear-three-quarter: same four acrobatics from back, no face. Chibi proportions, crisp outlined pixel clusters, same colors and scale as reference, no motion trails, no scene, no text, transparent background. Do not clip hands or feet.",
+      "tool": "image_gen.imagegen",
+      "generated": true,
+      "date": "2026-11-12"
+    },
+    {
+      "name": "neji-15-action-v3",
+      "path": "public/assets/shinobi-motion/neji-15-action-v3.png",
+      "ref": "public/assets/shinobi-motion/neji-action-v1.png",
+      "columns": 4,
+      "rows": 4,
+      "prompt": "Build one production pixel-art animation sheet from the reference for an isometric action game. Use only the bottom two rows of the reference for the character outfit: older Neji with off-white wrap tunic, dark pants, bandaged arms and long dark brown hair. Hands perform Gentle Fist open palm, no weapons. EXACT 4 columns and 4 rows, sixteen full figure poses, same constant size and foot anchor, equal square cells with broad transparent margins and gutters. Row 1 front-three-quarter: windup, preparation, strike release, recovery. Row 2 true rear-three-quarter: same attack sequence, shoulder blades and back of head visible, no face. Row 3 front-three-quarter: jump takeoff, airborne tuck, forward dash, slide brake. Row 4 true rear-three-quarter: same four acrobatics from back, no face. Chibi proportions, crisp outlined pixel clusters, same colors and scale as reference, no motion trails, no scene, no text, transparent background. Do not clip hands or feet.",
+      "tool": "image_gen.imagegen",
+      "generated": true,
+      "date": "2026-11-12"
+    },
+    {
+      "name": "sasuke-1-action-v3",
+      "path": "public/assets/shinobi-motion/sasuke-1-action-v3.png",
+      "ref": "public/assets/sasuke-classico-action-v1.png",
+      "columns": 4,
+      "rows": 4,
+      "prompt": "Build one production pixel-art animation sheet from the reference for an isometric action game. Keep Sasuke Genin in the supplied reference: navy high collar and black hair, white knee shorts and blue sandals, Uchiha fan on the back. The attack poses show a compact kunai throw, then recovery. EXACT 4 columns and 4 rows, sixteen full figure poses, same constant size and foot anchor, equal square cells with broad transparent margins and gutters. Row 1 front-three-quarter: windup, preparation, strike release, recovery. Row 2 true rear-three-quarter: same attack sequence, shoulder blades and back of head visible, no face. Row 3 front-three-quarter: jump takeoff, airborne tuck, forward dash, slide brake. Row 4 true rear-three-quarter: same four acrobatics from back, no face. Chibi proportions, crisp outlined pixel clusters, same colors and scale as reference, no motion trails, no scene, no text, transparent background. Do not clip hands or feet.",
+      "tool": "image_gen.imagegen",
+      "generated": true,
+      "date": "2026-11-12"
     }
   ]
 }

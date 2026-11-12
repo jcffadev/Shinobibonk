@@ -33,7 +33,7 @@ function Choice<T extends string | number>({ value, options, onChange }: { value
 }
 const pct = (v: number) => Math.round(v * 100) + '%';
 
-export function SettingsScreen({ settings, onChange, onClose }: { settings: GameSettings; onChange: (next: GameSettings) => void; onClose: () => void }) {
+export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: { onResetAccount: () => void; settings: GameSettings; onChange: (next: GameSettings) => void; onClose: () => void }) {
   const [category, setCategory] = useState<Category>('som');
   const [listening, setListening] = useState<KeyAction | null>(null);
   const [fullscreen, setFullscreen] = useState(Boolean(document.fullscreenElement));
@@ -126,7 +126,7 @@ export function SettingsScreen({ settings, onChange, onClose }: { settings: Game
         {category === 'conta' && <>
           <Card title="Nome do jogador" hint="Apelido exibido ao passar sobre o cartão do perfil" wide><input className="st-input" maxLength={20} value={settings.playerName} onChange={(e) => set({ playerName: e.target.value })} /></Card>
           <Card title="Começar do zero" hint="Volta aos 3 shinobis iniciais, apaga selados, pesquisa e progresso dos mapas. Lamens e Passivas ficam" wide><button type="button" className="st-danger" onClick={() => { if (window.confirm('Começar do zero? Shinobis desbloqueados, pesquisa e progresso dos mapas serão apagados.')) resetAccount(); }}>Reiniciar progresso</button></Card>
-          <Card title="Apagar todos os dados locais" hint="Apaga tudo do ShinobiBonk neste navegador (conta, Lamens, passivas, configurações, run salva)" wide><button type="button" className="st-danger" onClick={() => { if (window.confirm('Apagar TODOS os dados do jogo neste navegador?')) { try { Object.keys(localStorage).filter((k) => k.startsWith('sb_')).forEach((k) => localStorage.removeItem(k)); } catch { /* sem armazenamento */ } location.reload(); } }}>Apagar dados</button></Card>
+          <Card title="Reset de conta" hint="Recomece do zero com uma conta nova neste navegador." wide><button type="button" className="st-danger" onClick={onResetAccount}>Reset de conta</button></Card>
         </>}
       </div>
     </section>

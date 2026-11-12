@@ -338,3 +338,10 @@ Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-ru
 2. Consultar skills/criar-arte-shinobibonk e skills/movimentar-shinobi. Prompts anteriores: docs/arte-atlas-2026-11-07.json. Empacotador: scripts/pack-sprite-atlas.ps1.
 3. Verificações: node node_modules/typescript/bin/tsc -b; node node_modules/vite/bin/vite.js build; node scripts/verify-rules.mjs; node scripts/verify-runtime.mjs para gameplay/HUD; node scripts/verify-motion-atlases.mjs para atlas.
 4. Atualizar contexto, documentos temáticos e changelog na mesma entrega. Publicar somente os arquivos do projeto autorizados, sem incluir executáveis ou pesquisa privada.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+1. Conferir as técnicas restantes e as Ultimates por shinobi usando a [auditoria de efeitos](24-AUDITORIA-DE-EFEITOS.md). Parte do catálogo usa efeitos por natureza e forma. Revisar em partida e na prévia, preservando as assinaturas já boas. Priorizar técnicas dos Nara, jutsus médicos, projéteis específicos da Tenten e invocações que ainda usam geometria compartilhada.
+2. Revisar os 56 shinobis e seus ajudantes em jogo para verificar qualidade de poses, ícones, transições e proporções. O teste de atlas cobre estados e folhas, e a aprovação visual é uma etapa separada.
+3. Comparar as formas roxa do Sasuke e vermelha do Itachi com o novo Susano’o do Madara e criar seus próprios quadros se a direção visual for aprovada. Os rigs atuais já têm as armas por personagem.
+4. Validar a jogabilidade no PC do usuário, inclusive a política de áudio do navegador, a legibilidade do HP, as cores dos altares e a escala dos drops. Deploy externo segue a fila existente.

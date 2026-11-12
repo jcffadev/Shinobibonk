@@ -73,3 +73,7 @@ As capturas enviadas servem de referência de organização: cartão de personag
 
 O contexto geral exige quatro habilidades comuns automáticas; a tela de plano deve preservar essa regra, mesmo que as imagens de referência mostrem oito ou mais ataques planejados. A tela de planejamento é pré-run; desbloqueios e arquivamento devem permanecer conceitos distintos.
 Na Bolsa da Missão, os botões Comum, Incomum, Raro, Épico e Lendário combinam com a busca e com as abas de estado do item. **Todas as raridades** limpa apenas esse filtro.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+**Arsenal de Missão** é o nome atual da antiga Bolsa da Missão. As listas já existentes continuam salvas por shinobi. A tela de mapa permite aplicar uma lista ou uma tática. Táticas salvam técnicas e pílulas planejadas, itens planejados, treinamentos, técnicas arquivadas, itens em casa, prioridades e fusões. **Atualizar** grava o plano atual no lugar da tática escolhida. Aplicar tática deixa o arsenal nomeado sem seleção, preservando suas listas.

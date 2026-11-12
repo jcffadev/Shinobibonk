@@ -39,7 +39,108 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
     return part;
   };
   const name = t.name;
-  if (name.includes('Bunshin') && clone) {
+  if (name==='Shinra Tensei') {
+    const rings=['#ffffff','#dbe9ff','#c4aeff'].map((color,index)=>{
+      const wave=ring(1,color);
+      wave.rotation.x=Math.PI/2;
+      wave.position.y=-.24+index*.19;
+      return wave;
+    });
+    const core=mesh(new THREE.SphereGeometry(.36,16,10),'#e1e6ff');
+    const debris=Array.from({length:16},(_,i)=>mesh(round(i%2?.043:.065),i%2?'#9d7966':'#574851'));
+    group.userData.atlasFrame=(age:number)=>{
+      rings.forEach((wave,i)=>{
+        const p=THREE.MathUtils.clamp((age-.05-i*.055)/.43,0,1);
+        wave.visible=p>0&&p<1;
+        const radius=.06+(.94*(1-(1-p)**3));
+        wave.scale.set(radius,radius,Math.max(.4,1-p));
+        wave.material.opacity=(1-p)*.84;
+      });
+      core.scale.setScalar(Math.max(.01,1-age/.25));
+      core.material.opacity=Math.max(0,.8-age*3);
+      debris.forEach((piece,i)=>{
+        const p=THREE.MathUtils.clamp((age-.1-i%4*.024)/.48,0,1);
+        const theta=i*2.39996;
+        piece.visible=p>0&&p<1;
+        piece.position.set(Math.cos(theta)*p,-.25+Math.sin(Math.PI*p)*.4,Math.sin(theta)*p);
+        piece.rotation.set(p*4+i,p*7,0);
+        piece.scale.setScalar(1-p);
+      });
+    };
+    group.userData.atlasFrame(0);
+  } else if (name==='Chibaku Tensei') {
+    const core=mesh(round(.25),'#423945',0,.42,0);
+    const fragments=Array.from({length:9},(_,i)=>mesh(round(.05+i%3*.022),i%2?'#9b6e58':'#6e514c'));
+    group.userData.atlasFrame=(age:number)=>{
+      const p=Math.min(1,age/.55);
+      core.scale.setScalar(.3+.85*p);
+      core.rotation.y=age*3;
+      fragments.forEach((rock,i)=>{
+        const angle=i*2.39996+age*9;
+        const radius=.94*(1-p);
+        rock.position.set(Math.cos(angle)*radius,.03+(.42+i%3*.035)*p,Math.sin(angle)*radius);
+        rock.rotation.set(age*3+i,age*4,0);
+      });
+    };
+    group.userData.atlasFrame(0);
+  } else if (name==='Kaiten'||name==='Palmas Protetoras'||name==='Oito Trigramas') {
+    const dome=mesh(new THREE.SphereGeometry(.87,24,10,0,TAU,0,Math.PI*.5),'#7bdcff');
+    dome.material.opacity=.19;
+    for(let i=0;i<5;i++){
+      const spiral=ring(.62+i*.045,i%2?'#dbfeff':'#80d8ff',Math.PI*1.12);
+      spiral.position.y=i*.14;
+      spiral.rotation.set(Math.PI*.5,i*.15,i*1.7);
+    }
+    group.userData.spin=11;
+  } else if (name==='Punhos dos Leões Gêmeos') {
+    for(const side of [-1,1]){
+      const x=side*.36;
+      mesh(round(.24),'#65c4ff',x,.15,.49).scale.set(1,1,1.4);
+      mesh(round(.15),'#dafbff',x,.08,.69).scale.set(1,.59,1.35);
+      for(const jaw of [-1,1]){
+        const fang=mesh(new THREE.ConeGeometry(.035,.13,4),'#effbff',x+jaw*.07,.13,.77);
+        fang.rotation.z=Math.PI;
+        mesh(round(.036),'#faffff',x+jaw*.1,.23,.67);
+      }
+      for(let i=0;i<5;i++){
+        const theta=i*TAU/5;
+        trace([forward(x,.18,.54),forward(x+Math.cos(theta)*.24,.18+Math.sin(theta)*.24,.34),forward(x+Math.cos(theta)*.16,.18+Math.sin(theta)*.16,.04)],.029,'#bdf5ff');
+      }
+    }
+    group.userData.directed=true;
+  } else if (name==='Caixão de Areia'||name==='Sepultamento'||name==='Grande Sepultamento Imperial') {
+    const streams=Array.from({length:7},(_,i)=>{
+      const strip=ring(.45+i*.031,i%2?'#edcb86':'#bc8c51',Math.PI*1.43);
+      strip.rotation.set(Math.PI*.5,.12,i*1.13);
+      return strip;
+    });
+    const shell=mesh(new THREE.IcosahedronGeometry(.39,1),'#ba8d55',0,.44,0);
+    const grains=Array.from({length:12},(_,i)=>mesh(round(.055),i%2?'#e8c485':'#d29c63'));
+    group.userData.atlasFrame=(age:number)=>{
+      const grip=THREE.MathUtils.clamp(age/.18,0,1);
+      shell.scale.set(.45+grip*.55,1.6+grip*.43,.45+grip*.55);
+      shell.material.opacity=grip*.9;
+      streams.forEach((strip,i)=>{
+        strip.scale.setScalar(1.48-grip*.42);
+        strip.rotation.z=i*1.13+age*7;
+        strip.position.y=.12+i*.12;
+      });
+      grains.forEach((grain,i)=>{
+        const angle=i*2.39996+age*3;
+        const radius=.74-grip*.32+Math.max(0,age-.2)*3;
+        grain.position.set(Math.cos(angle)*radius,(i%4)*.19,Math.sin(angle)*radius);
+      });
+    };
+    group.userData.atlasFrame(0);
+  } else if (name==='Kamui') {
+    for(let i=0;i<6;i++){
+      const spiral=ring(.15+i*.084,i%2?'#bda8f0':'#483258',Math.PI*(1.15+i*.1));
+      spiral.rotation.set(Math.PI/2,.12*i,i*.95);
+      spiral.position.y=.16+i*.07;
+    }
+    mesh(round(.28),'#120f24',0,.22,0).scale.set(1,.28,1);
+    group.userData.spin=-15;
+  } else if (name.includes('Bunshin') && clone) {
     group.add(clone());
     grains('#e8eef6', 6, .17, .09);
   } else if (/^Rasengan|Rasenshuriken|Bijūdama/.test(name)) {
@@ -186,7 +287,7 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
 }
 
 /** Técnicas com malha própria reconhecível (invocações, Rasengan, dragões…). As demais usam só partículas (particleFx.ts). */
-const SIGNATURE_AREA = /^Rasengan|Rasenshuriken|Bijūdama|Dragão de Água|Dragão de Madeira|Kirin|Técnica de Substituição|Invocação do Sapo|Gamabunta|Katsuyu|Invocação de Manda|Turbilhão de Tentáculos|Nuvem de Escamas|Rasante Alada|Nuvem de Tinta/;
+const SIGNATURE_AREA = /^Rasengan|Rasenshuriken|Bijūdama|Dragão de Água|Dragão de Madeira|Kirin|Técnica de Substituição|Invocação do Sapo|Gamabunta|Katsuyu|Invocação de Manda|Turbilhão de Tentáculos|Nuvem de Escamas|Rasante Alada|Nuvem de Tinta|Shinra Tensei|Chibaku Tensei|Kaiten|Palmas Protetoras|Oito Trigramas|Punhos dos Leões Gêmeos|Caixão de Areia|Sepultamento|Kamui/;
 const SIGNATURE_SHOT = /Bunshin|Kunai|Shuriken|Senbon/;
 export const hasSignatureVisual = (t: Technique, projectile: boolean) => SIGNATURE_AREA.test(t.name) || (projectile && SIGNATURE_SHOT.test(t.name));
 

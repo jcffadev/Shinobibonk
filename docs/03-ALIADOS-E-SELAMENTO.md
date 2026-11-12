@@ -124,3 +124,7 @@ Cada zona sorteia 4–6 horários de Mega Elite ao longo de seus 10 minutos. Ava
 As 56 versões têm bônus próprios derivados da família, com escala de 25% por etapa representada. Sakura Genin tem +10% de dano de Taijutsu. As versões médicas da Sakura e todas as Tsunades incluem regeneração e coleta (+1 m antes da escala da etapa). Asuma inclui +10% Taijutsu e +6% área. Ofensivos incluem pelo menos +8% na escola principal quando ainda não tinham esse bônus. Itachi e Shikamaru priorizam Genjutsu. São valores provisórios originais do jogo.
 
 Mega elites naturais escolhem uma versão da família conforme zona e rank da missão. Uma família já recrutada fica excluída de novos recrutamentos. As sinergias eliminam duplicações de família e consultam as organizações da versão efetivamente presente. As sinergias contam os ajudantes recrutados, independentemente da versão do herói. A sinergia dos três irmãos da Areia continua exigindo os três ajudantes. A auditoria visual de todos os ajudantes permanece na fila.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+A derrota de um Mega Elite deixa seu corpo no terreno. Até 10 m, E inicia o selamento. Uma interação mais próxima tem prioridade. Com animação habilitada, E/G no ritual confirmam ou recusam. Com a opção desabilitada, E sela diretamente, com escolha de troca caso a equipe esteja cheia. Os candidatos no terreno são preservados na missão salva. A armadilha de corpo caído usa `fallen-scout-v1.png`.

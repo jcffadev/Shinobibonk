@@ -6,7 +6,7 @@ const fullActionForms: Record<string, readonly number[]> = {
   madara: [1, 15, 30],
 };
 const revisedActionForms:Record<string,readonly number[]>={
-  sasuke:[15],hashirama:[1,20],kakashi:[1,25],itachi:[1],
+  sasuke:[1,15],neji:[1,15],hashirama:[1,20],kakashi:[1,25],itachi:[1],
   minato:[1,15],tsunade:[1,15,30],jiraiya:[1,20],orochimaru:[1,15],
   hinata:[1,15,30],pain:[1],shikamaru:[1,15,30],tobirama:[1],
   temari:[1,15],tenten:[1,15],
@@ -32,10 +32,8 @@ export function actionArt(hero: string, formLevel: number) {
   if (fullActionForms[hero]?.includes(formLevel)) {
     return { path: `/assets/shinobi-motion/${hero}-${formLevel}-action-v2.png`, kind: 'full' as const, rows: 4 };
   }
-  if (hero === 'neji') return { path:'/assets/shinobi-motion/neji-action-v1.png', kind:'acrobatics' as const, rows:4, firstRow:formLevel>=15?2:0 };
   if (hero === 'naruto' && formLevel === 1) return { path: '/assets/naruto-academia-acrobatics-v1.png', kind: 'acrobatics' as const, directional: true };
   if (hero === 'naruto' && formLevel === 10) return { path: '/assets/naruto-classico-action-v1.png', kind: 'cast' as const };
-  if (hero === 'sasuke' && formLevel === 1) return { path: '/assets/sasuke-classico-action-v1.png', kind: 'acrobatics' as const };
   if (hero === 'lee' || hero === 'guy') return { path: `/assets/shinobi-motion/${hero}-${formLevel}-action-v1.png`, kind: 'taijutsu' as const };
 }
 const sheets: Record<string, DirectionalSheet> = {

@@ -18,7 +18,7 @@ export function HubHud({lamens,levels,poolCount,home,capacity}:{lamens:number;le
   </div>;
 }
 
-/** Card compacto de item (Bolsa da Missão e Arsenal): ícone, nome, raridade, efeito e ações no rodapé. */
+/** Card compacto de item (Arsenal de Missão e Arsenal): ícone, nome, raridade, efeito e ações no rodapé. */
 export function CompactItemCard({item,status,className='',children,star}:{item:Item;status:string;className?:string;children?:ReactNode;star?:ReactNode}){
   return <article className={`compact-item rarity-${item.rarity.toLowerCase()} ${className}`}>
     <header><ItemIcon name={item.name}/><div><b>{item.name}</b><small className="compact-rarity"><i/>{item.rarity} · máx. {item.max}</small></div>{star}</header>
@@ -40,7 +40,7 @@ export function MissionBag({unlocked,home,capacity,fromUnlocks,priority,priority
   const full=home.length>=capacity;
   const beforeRarity=ITEMS.filter(i=>(tab==='Todos'||stateOf(i)===tab)&&matchesSearch(i.name+' '+i.description,search));
   const list=beforeRarity.filter(i=>!rarities.length||rarities.includes(i.rarity));
-  const switcher=<div className="bag-views" role="tablist" aria-label="Seções da Bolsa da Missão">
+  const switcher=<div className="bag-views" role="tablist" aria-label="Seções da Arsenal de Missão">
     <button role="tab" aria-selected={view==='catalogo'} className={view==='catalogo'?'active':''} onClick={()=>setView('catalogo')}>Itens da bolsa</button>
     <button role="tab" aria-selected={view==='listas'} className={view==='listas'?'active':''} onClick={()=>setView('listas')}>Itens em casa <b>{presets.slots.length}/{PRESET_LIMIT} listas</b></button>
   </div>;

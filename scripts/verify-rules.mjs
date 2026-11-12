@@ -260,7 +260,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  assert.deepEqual([...pngSize('/assets/shinobi-motion/kuri-1-walk-v1.png')],[1280,640],'kuri-1-walk 1280×640');
  assert.deepEqual([...pngSize('/assets/shinobi-motion/kuri-1-action-v3.png')],[1280,1280],'kuri-1-action 1280×1280');
  assert.deepEqual([...pngSize('/assets/shinobi-motion/kuroari-1-walk-v1.png')],[1280,640],'kuroari-1-walk 1280×640');
- assert.deepEqual([...pngSize('/assets/shinobi-motion/kuroari-1-action-v3.png')],[1280,1280],'kuroari-1-action 1280×1280');
+ assert.deepEqual([...pngSize('/assets/shinobi-motion/kuroari-cast-v4.png')],[1280,320],'Kuroari: quatro quadros do golpe');
  const kSheet=directionalArt('kuri',1);assert.ok(kSheet&&fs.existsSync('public'+kSheet.path),'folha de caminhada da Kuri registrada');
  const kAction=actionArt('kuri',1);assert.ok(kAction&&kAction.kind==='full'&&fs.existsSync('public'+kAction.path),'folha de ação da Kuri registrada');
  assert.deepEqual(portraitRegion('kuri'),{path:'/assets/shinobi-motion/kuri-1-walk-v1.png',cols:4,rows:2,index:0},'retrato da Kuri na célula (0,0)');
@@ -270,7 +270,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  // + pose/levitação da Ultimate do Pain no playerMotion.
  const sfxSrc=fs.readFileSync('src/audio/sfx.ts','utf8');
  assert.ok(sfxSrc.includes("t.name==='Kage Bunshin'&&f==='naruto'")&&sfxSrc.includes('/assets/audio/kage-bunshin.mp3'),'regra do som Kage Bunshin (só Naruto) presente no sfx');
- assert.ok(sfxSrc.includes("u&&f==='pain'&&t.name==='Chibaku Tensei'")&&sfxSrc.includes('/assets/audio/shinra-tensei.mp3'),'regra do som da Ultimate do Pain presente no sfx');
+ assert.ok(sfxSrc.includes("u&&f==='pain'&&t.name==='Shinra Tensei'")&&sfxSrc.includes('/assets/audio/shinra-tensei.mp3'),'regra do som da Ultimate do Pain presente no sfx');
  assert.ok(sfxSrc.includes('activeJutsuClip'),'gate anti-spam do som real (som anterior precisa terminar) presente');
  for(const p of ['/assets/audio/kage-bunshin.mp3','/assets/audio/shinra-tensei.mp3']){
    const f='public'+p;assert.ok(fs.existsSync(f)&&fs.statSync(f).size>10000,p+' presente no projeto');
@@ -280,7 +280,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  const gcSrc=fs.readFileSync('src/scene/GameCanvas.tsx','utf8');
  assert.ok(gcSrc.includes('playTechniqueSound(t,false,heroId)')&&gcSrc.includes('playTechniqueSound(t,true,heroId)'),'call sites passam o herói para o som de jutsu');
  const pain=HEROES.find(h=>h.id==='pain');
- assert.ok(pain&&pain.ultimate==='Chibaku Tensei'&&pain.techniques.some(t=>t.name==='Shinra Tensei'),'kit do Pain: Shinra Tensei + Ultimate Chibaku Tensei');
+ assert.ok(pain&&pain.ultimate==='Shinra Tensei'&&pain.techniques.some(t=>t.name==='Chibaku Tensei'),'kit do Pain: Chibaku Tensei + Ultimate Shinra Tensei');
 }
 { // Rodada 44: mouse calmo e simétrico (1:1, sem aceleração — rodada 29 mantida) + câmera mais deitada (piso 0.05 rad) + início 0.55 rad
   const gcSrc=fs.readFileSync('src/scene/GameCanvas.tsx','utf8');

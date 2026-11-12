@@ -63,3 +63,7 @@ Fora do Tier A: **Ebisu** e espadas menores (referência fraca na obra); Kages s
 ### Impacto da implementação (fila APROVADA na rodada 37)
 
 **≈ 29 novas versões** (7 Kages + Hanzo + Mei Terumi + 17 Tier A + 2 Tobi + 1 Nagato; Yahiko/Pain reusa o Pain existente no roster com kit atualizado — barras de chakra + Tensei) + evoluções por era quando houver histórico. `verify-rules` hoje espera **56 versões · 97 técnicas · 95 itens** — novos personagens mudam essas contagens (ajustar `scripts/verify-rules.mjs` a cada entrega). Arte: skill `criar-arte-shinobibonk` (identidade chibi 2.5D) + folhas de caminhada frente/costas via `movimentar-shinobi`.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+Pain (Yahiko como Caminho Deva) usa Shinra Tensei na Ultimate. Chibaku Tensei fica no kit comum. Sasuke Genin e as duas versões do Neji receberam novas folhas 4×4. A marionete de Sasori aparece na técnica Mil Braços do Escorpião, usada por versões de Kankuro. Referências consultadas: [site oficial Naruto](https://naruto-official.com/en/news/01_1321) e [Narutopedia, marionete do Terceiro Kazekage](https://naruto.fandom.com/wiki/Third_Kazekage_(puppet)).

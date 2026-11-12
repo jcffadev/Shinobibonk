@@ -231,3 +231,7 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 O estoque de quatro ofertas guarda seus preços. Comprar remove somente a oferta comprada. Reabrir conserva estoque e preços.
 
 A cotação de um novo estoque usa base por raridade (45/65/95/145/220 Ryu) × 1,35^compras × 1,12^atualizações × 1,15^minutos inteiros. O preço final de cada oferta fica salvo. Atualizar custa arredondado(20 × 1,5^atualizações × (1 − desconto)), com desconto máximo de 40%. O custo da atualização cresce ao usá-la. Novas ofertas são sorteadas apenas nessa atualização. Essas regras substituem a descrição antiga de venda de armas neste documento.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+Abates podem largar moedas douradas de Ryu e bolinhos de arroz. O bolinho usa o antigo valor de cura de 35% do HP máximo, até 5% de chance de drop por abate. O núcleo da Ultimate de Pain usa ondas radiais de pressão. As folhas de Kuroari e Mil Braços do Escorpião servem para ícone, prévia e combate. Consulte [a fila de efeitos](13-PENDENCIAS-PARA-CONTINUAR.md).

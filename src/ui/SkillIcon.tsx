@@ -1,3 +1,4 @@
+import { puppetArt } from '../scene/kuroari';
 import { HEROES, familyOf } from '../game/heroes';
 const techniques = new Map(HEROES.flatMap(h=>h.techniques).map(t=>[t.name,t]));
 const sageFaces:Record<string,number>={naruto:0,hashirama:1,jiraiya:2,minato:3,kabuto:4,orochimaru:5};
@@ -23,6 +24,8 @@ export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:
   const sage=sageFaces[heroId];
   if(sage!==undefined&&(name==='Modo Sábio'||name==='Mil Mãos de Madeira'&&heroId==='hashirama'||name.includes('Senjutsu')&&heroId==='orochimaru'))return <span className="skill-art sage-skill-art" role="img" aria-label={name} style={{backgroundPosition:(sage%3)*50+'% '+Math.floor(sage/3)*100+'%'}}/>;
   if(name.includes('Gamabunta')||heroId==='naruto'&&name==='Invocação do Sapo')return <span className="skill-art gamabunta-skill-art" role="img" aria-label={name}/>;
+  const puppet=puppetArt(name);
+  if(puppet)return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:'url('+puppet+')',backgroundSize:'400% 100%',backgroundPosition:'66.6667% 50%',backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;
   const technique=techniques.get(name);
   if(name.startsWith('Espaço ')) return <span className="skill-art empty-skill-art" aria-label={name}>+</span>;
   const cell=namedIcons[name]??(name.includes('Sapo')||name.includes('Gamabunta')?undefined:technique?elementIcon[technique.element]

@@ -114,3 +114,7 @@ Teto de números simultâneos **300** (era 60; revisão 11/11 — o usuário pod
 **Tudo abaixo foi AUTORIZADO pelo usuário na rodada 37** (12/11/2026) — implementar na ordem da fila docs/13:
 
 Treinamento aleatório +0,6% · pílulas 9/13/15 (buff de conta = Passivas Shinobi) · Isca Shinobi → vitamina · **Caça-Níquel da Tsunade — CONCLUÍDA na fase 3** (combos 3-iguais + emboscada invertida + custo em escala por zona; **arte das 3 expressões = PENDENTE**) · renames **Células de Hashirama**/**Chakra de Hagoromo** (arte exclusiva) · **White Flute = ITEM** (Incenso mantido) · pergaminhos no chão · mapa maior + spawns alcançáveis · balanceamento de jogador inicial/monstros aos 6 min · HUD novo (tema Naruto · HP no pé do personagem · abates/streak · card de temporada · glossário · alfas com buffs) · **personagens novos: Kages + Hanzo + Mei Terumi + 17 Tier A + Tobi ×2 + Nagato + Yahiko=Pain** · folhas de caminhada frente/costas · arte dos menus · YOO MP3 no Jogar (corte 1 s) + sons de jutsu (anti-spam "terminou antes do próximo") · pool informativo (upgrades de itens/pílulas visíveis).
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+Bênção do altar: valores base da Rodada 51 de 5/8/12/18/25% por raridade e multiplicador de Sorte preservados. Cada altar escolhe um atributo de cada grupo. Raro, Épico e Lendário adicionam um terceiro distinto. A chance de projétil adicional usa escala 2 sobre a magnitude base e o status usa escala 1. Cura do bolinho é 35% do HP máximo antes de modificadores de debug.

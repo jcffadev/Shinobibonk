@@ -1,3 +1,4 @@
+import { createKuroari, puppetArt, KUROARI_TIME, KUROARI_STRIKE } from '../scene/kuroari';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { portraitRegion } from '../game/evolution';
@@ -53,7 +54,9 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
     const clone=movingClone?actor(character,-2.6,0):null;
     const cloneMotion=clone?createPlayerMotion(scene,clone,heroId,false):null;
     const sage=technique.setup?.sage?createAtlasEffect('sage'):null;
-    const effect=frog?.group??sage?.sprite??techniqueVisual(technique);
+    const puppetPath=puppetArt(technique.name);
+    const puppet=puppetPath?createKuroari(texture(puppetPath),player.position,dummies[0].position,forward):null;
+    const effect=frog?.group??puppet?.group??sage?.sprite??techniqueVisual(technique);
     scene.add(effect);
     const travel=movingClone||['Projétil','Em V','Onda'].includes(technique.shape);
     const anchored=technique.setup||['Órbita','Cone','Linha','Corpo a corpo'].includes(technique.shape);
@@ -77,7 +80,7 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
       lastAge=age;
       playerMotion.update(dt,0,1,1,false,false,false,1,0,false,false,0,0);
       const p=Math.max(0,Math.min(1,(age-.33)/.54));
-      const hitAt=frog?GAMABUNTA_IGNITION+.23:susanoo?.47:.88;
+      const hitAt=frog?GAMABUNTA_IGNITION+.23:puppet?KUROARI_STRIKE+.23:susanoo?.47:.88;
       const hit=!technique.setup&&age>=hitAt&&age<hitAt+.23;
       for(const [i,dummy] of dummies.entries()){
         const contacted=i===0||['Área','Cone','Onda','Órbita','Em V'].includes(technique.shape);
@@ -98,6 +101,9 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
         guardian.update(dt,camera);
         particles?.update(dt);
         if(import.meta.env.DEV)renderer.domElement.dataset.susanoo=JSON.stringify(guardian.active());
+      }else if(puppet){
+        effect.visible=age>=.23&&age<.23+KUROARI_TIME;
+        if(effect.visible)puppet.tick(age-.23);
       }else if(frog){
         effect.visible=age>=.23&&age<.23+GAMABUNTA_TIME;
         if(effect.visible)frog.tick(age-.23);

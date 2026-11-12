@@ -26,6 +26,7 @@ Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs
 - Propostas extraídas do material são PROPOSTAS (aguardando o usuário), nunca parâmetros aprovados.
 
 ## Regras de colaboração
+- Pasta principal do projeto confirmada em 12/11/2026: `C:\Shinobibonk projeto - Copia\ShinobiBonk_Codex_Projeto_Completo`.
 - Fale em português do Brasil. Seja objetivo, técnico e explícito.
 - Classifique fatos como CONFIRMADO, IMPLEMENTADO, TESTADO, PROPOSTO ou PENDENTE. Não declare funcionalidade testada sem execução real.
 - Não confunda imagens em references/concept_art com screenshots reais.
@@ -39,7 +40,7 @@ Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs
 ## Invariantes de design
 - 4 habilidades comuns em slots 1–4, ativadas **somente automaticamente**, slot 4 desbloqueável na progressão permanente.
 - Ultimate natural disponível desde nível 1: R manual; a **tecla Y é obrigatória** e alterna o uso automático (o selo AUTO embutido no botão R faz o mesmo por clique). Não remover Y. A recarga é passiva por tempo e pode receber aceleradores por drop azul (orbe de chakra); Chakra também é usado por ninjas Taijutsu. Itens não concedem Chakra diretamente.
-- Drops no chão devem ser distinguíveis (decisão do usuário em 06/11/2026): Chakra/carga da Ultimate = orbe azul; XP = essência roxa (maior para elite/mega elite/guardião); Ryu = moeda dourada com 両; tigela de lamen = cura 35% do HP (até 5% por abate, não dá Lamens); pílula rosa; item laranja.
+- Drops no chão devem ser distinguíveis (decisão do usuário em 06/11/2026): Chakra/carga da Ultimate = orbe azul; XP = essência roxa (maior para elite/mega elite/guardião); Ryu = moeda dourada com 両; bolinho de arroz = cura 35% do HP máximo (até 5% por abate); pílula rosa; item laranja.
 - M abre mapa completo; minimapa permanente superior direito; eventos só são registrados após serem **vistos em tela**. Conforme orientação mais recente do usuário, Tab abre o mapa rápido e P abre ficha/build/itens/pool.
 - HUD: nível superior esquerdo, pílulas acima das habilidades, inventário com ícones/quantidades inferior direito.
 - 3 shinobi de suporte base +1 por item da run +1 passiva permanente comprada com Lamens = máximo atual 5, sem contar herói.

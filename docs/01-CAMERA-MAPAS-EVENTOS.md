@@ -129,3 +129,7 @@ Tab mostra o mapa rápido e permite continuar andando. P fecha a ficha pela mesm
 IMPLEMENTADO: Areia, Pedra e Névoa têm atlas de chão próprios e construções/marcos regionais no atlas `regional-landmarks-v1.png`. Areia inclui residência circular e entrada entre rochedos; Pedra inclui torres e ponte de pedra; Névoa inclui residência cilíndrica e passagem úmida. Referências de arquitetura: https://naruto.fandom.com/wiki/Sunagakure , https://naruto.fandom.com/wiki/Kazekage%27s_Office , https://naruto.fandom.com/wiki/Iwagakure e https://naruto.fandom.com/wiki/Kirigakure . As construções são interpretações originais para o atlas. Validação visual ingame dos quatro mapas: PENDENTE.
 
 Esc fecha a pausa e permite continuar a simulação sem clique extra; a captura do ponteiro é solicitada na interação seguinte com WASD quando o navegador a adia.
+
+## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
+
+Os cinco graus de altar usam cinza, verde, azul, roxo e dourado na estrutura e no círculo. A bênção entra ao concluir a defesa e sorteia atributos da ficha. O morro de bolinhos continua coletável com E e gera o bolinho de cura além do Ryu e do ímã.
