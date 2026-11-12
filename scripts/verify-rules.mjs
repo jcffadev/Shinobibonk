@@ -167,7 +167,7 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID['hashirama-sabio'].techniques[3],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
  const lens=ITEMS.find(i=>i.id==='sniper-lens'),pebble=ITEMS.find(i=>i.id==='river-pebble');assert.ok(lens&&pebble);assert.equal(attr(pebble),'Velocidade');
  assert.ok(!affectedTechniques(lens,HERO_BY_ID.lee.techniques).includes('Portões do Inferno'),'itens de ataque não afetam setups');assert.equal(affectedTechniques(lens,HERO_BY_ID.lee.techniques).length,3);}
-{// Roleta da Tsunade: casas boas/ruins, sorte com teto, dificuldade compensando, custo crescente e buff por Ryu gasto.
+{// Caça-Níquel da Tsunade (ex-"Roleta da Tsunade"): casas + 5 combos de 3 iguais, sorte com teto, custo crescente por giro/minuto/zona e buff por Ryu gasto.
  const R=await import('../src/game/roulette.ts');const sum=w=>Object.values(w).reduce((a,b)=>a+b,0);
  const w0=R.rouletteWeights(0,0),wLuck=R.rouletteWeights(200,0),wMax=R.rouletteWeights(100000,0),wCurse=R.rouletteWeights(200,R.roulettePressure(1.2,3,'Kage'));
  for(const w of [w0,wLuck,wMax,wCurse])assert.ok(Math.abs(sum(w)-1)<1e-9);
@@ -175,11 +175,14 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  assert.ok(R.badChance(wMax)>=R.ROULETTE_RULES.minBad-1e-9,'nunca 100% bom');assert.ok(R.goodChance(wMax)<.9);
  assert.ok(R.badChance(wCurse)>R.badChance(wLuck),'dificuldade/Maldição compensa a sorte');assert.ok(R.badChance(R.rouletteWeights(0,50))<=R.ROULETTE_RULES.maxBad+1e-9);
  const rr=R.seededRng(77);let bad=0;for(let i=0;i<40000;i++)bad+=Number(R.ROULETTE_BY_ID[R.rollRoulette(wMax,rr)].kind==='ruim');assert.ok(Math.abs(bad/40000-R.badChance(wMax))<.01,'amostragem bate com a chance exibida de casas ruins');
- assert.ok(Math.abs(R.goodChance(w0)-.30)<.005,'nerf 2: Sorte 0 → ~30% de casas boas sem pílulas');
+ assert.ok(Math.abs(R.goodChance(w0)-.3088)<.002,'rodada 37 (5 combos): Sorte 0 → ~30,9% de casas boas');
+ for(const [id,kind] of [['tsunade','bom'],['jiraiya','bom'],['hiruzen','bom'],['hidan','ruim'],['kakuzu','bom']])assert.equal(R.ROULETTE_BY_ID[id].kind,kind,'combo de 3 iguais existe com a classe certa');
+ assert.equal(R.slotKakuzuRyu(0,0),120,'3 Kakuzus: base 120 Ryu sem sorte/pressão');assert.equal(R.slotKakuzuRyu(100,0),240,'Sorte 100 dobra o tesouro');assert.equal(R.slotKakuzuRyu(100,1),480,'pressão do jogo multiplica o tesouro');
  {const wNoPill=R.rouletteWeights(0,0);assert.equal(wNoPill.pill,0);assert.ok(Math.abs(sum(wNoPill)-1)<1e-9);const r2=R.seededRng(5);for(let i=0;i<20000;i++)assert.notEqual(R.rollRoulette(wNoPill,r2),'pill','casa excluída nunca é sorteada');}
- // Economia expansiva: ×1,35 por giro e ×1,15 por minuto inteiro de run.
- assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),100);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
+ // Economia expansiva (rodada 37): ×1,70 por giro, ×1,15 por minuto inteiro de run, +25% por zona acima da 1.
+ assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),251);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
  assert.equal(R.rouletteCost(0,0,59),30,'inflação só por minuto inteiro');assert.equal(R.rouletteCost(0,0,600),121);assert.ok(R.rouletteCost(40,0,1800)>1e6,'fim de run: milhões');
+ assert.equal(R.rouletteCost(0,0,0,2),38,'zona 2: custo +25%');assert.equal(R.rouletteCost(0,0,0,3),45,'zona 3: custo +50%');
  {const P=await import('../src/game/preparation.ts'),T=await import('../src/game/itemTrade.ts');
   assert.deepEqual([0,1,2,3].map(n=>P.weaponPrice(n)),[20,30,45,68]);assert.equal(P.weaponPrice(0,600),81);assert.ok(P.weaponPrice(25,1200)>2e6,'kunai no fim custa milhões');
   assert.equal(T.merchantPrice('Comum',0),45);assert.ok(T.merchantPrice('Comum',1,0,1)>T.merchantPrice('Comum',0));assert.equal(T.merchantPrice('Comum',2),82);assert.equal(T.merchantRerollPrice(0,0),20);assert.equal(T.merchantRerollPrice(2,0),45);assert.equal(T.merchantRerollPrice(0,.9),12);}

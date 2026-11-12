@@ -43,7 +43,7 @@ import { createSusanooFx, susanooStyleFor } from './susanooFx';
 import { calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, ENEMY_SCALING, FINAL_SWARM, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
 import { rollRarityTier, RARITY_ORDER } from '../game/combat';
-import { ROULETTE_BY_ID, ROULETTE_RULES, BLESSINGS, BAD_LUCK, rouletteWeights, roulettePressure, rollRoulette, rouletteCost, seededRng, spendBonuses, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
+import { ROULETTE_BY_ID, ROULETTE_RULES, BLESSINGS, BAD_LUCK, SLOT_COMBOS, slotKakuzuRyu, rouletteWeights, roulettePressure, rollRoulette, rouletteCost, seededRng, spendBonuses, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
 
 export type LevelOffer = { merge?:TechniqueMerge; id: string; kind: 'skill'|'pill'|'item'|'stat'; name: string; rarity: Rarity; icon: string; description: string; planned?: boolean; price?:number; growth?:SkillGrowth; bonus?:Bonuses; deal?:StatDeal; disabled?:string; /** Tela de substituição de ajudantes (choiceLevel −7): id do ajudante e se é o recém-derrotado. */ allyId?:string; allyNew?:boolean };
 export type WorldSnapshot = { sagesUsed?:boolean; enemyCount?:number; powerlevel?:Powerlevel; allyCharge:number; victory:boolean; remaining:number; /** FINAL SWARM: segundos sobrevividos após o relógio da zona zerar (0/ausente = relógio normal). */ overtime?:number; hiddenEffects:boolean; totalDamage:number; skillDamage:Record<string,number>; skillGrowth:Record<string,SkillGrowth>; techniques:Technique[]; synergy:boolean; synergies:ActiveSynergy[]; setups:{name:string;remaining:number;duration:number}[]; zone:number; phase?:'zone'|'arena'|'exit'; bijuu?:string; bijuuReward?:number; plansUsed?:number; skillTimers?:Record<string,{remaining:number;total:number;duration:number}>; boss:string; defenseProgress:number; banned:string[]; hp: number; maxHp:number; stats:Stats; defeated:boolean; allyDamage:number; difficultyScale:number; level: number; xp: number; xpNext: number; chakra: number; kills: number; runMoney: number; elapsed: number; fps: number; kunai: number; shuriken: number; luck:number; autoUlt:boolean; allies:string[]; /** Pontos de afinidade por ajudante (src/game/allies.ts). */ affinity:Record<string,number>; weather:string; toast:string; interaction:{name:string;description:string}|null; items: Record<string, number>; pills: Record<string, number>; pillQuality?:Record<string,number>; skillLevels: Record<string,number>; choice: { level: number; cards: LevelOffer[]; sale?:number; rerollCost?:number }|null; sealing:{heroId:string;target:string;phase:'ready'|'sealing'|'complete';account?:boolean}|null; pickups:{kind:string;x:number;z:number;id?:string;name?:string}[];enemies: { x: number; z: number }[]; /** Marcadores VISTOS em tela (eventos/NPCs, Naruto Totem, mega elites/guardião) para mapa e minimapa. */ events: { id: string; name: string; x: number; z: number; icon: string; kind?:'event'|'enemy'; portrait?:string; guardian?:boolean; active?:boolean }[]; explored: { x: number; z: number }[]; player: { x: number; z: number; heading?:number }; ping: {x:number;z:number}|null; /** Rota do mapa (um alvo por vez): distância em metros e posição do alvo na tela (NDC −1..1). */ route?:RouteView|null; routeNotice?:{text:string;kind:'arrived'|'lost'|'set'}|null; effects: number; choices:{reroll:number;skip:number;ban:number;banning:boolean}; weaponCost:number; merchantRerollCost?:number; tsunadeSpinCost?:number; permanent:Record<string,number>; totem?:{hp:number;maxHp:number;remaining:number}|null; roulette?:RouletteView|null };
@@ -207,7 +207,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         structure.position.set(x,terrainHeight(x,z)-.1,z);scene.add(structure);decor.push(structure);solids.add(x,z,w*COLLISION_RULES.building,true);
       }
     }
-    const eventDefs=[{id:'shikamaru',name:'Plano do Shikamaru',x:14,z:8,icon:'♟️',sprite:8},{id:'guardian-seal',name:'Portal do Guardião · Myōjinmon',x:2,z:-12,icon:'⛩️',sprite:4},{id:'challenge',name:'Altar de desafio',x:-14,z:9,icon:'⛩️',sprite:9},{id:'orochimaru',name:'Maldição de Orochimaru',x:9,z:-18,icon:'🐍',sprite:10},{id:'altar',name:'Altar para proteger',x:-17,z:-13,icon:'🛕',sprite:11},{id:'trader',name:'Mercador de itens',x:-3,z:18,icon:'🥷',sprite:8},{id:'slot',name:'Roleta da Tsunade',x:5,z:18,icon:'🎰',sprite:8},{id:'arsenal',name:'Arsenal da Tenten',x:-21,z:-1,icon:'🗡️',sprite:8},{id:'sapos-sabios',name:'Sapos Sábios · Monte Myōboku',x:-25,z:18,icon:'🐸',sprite:8},{id:'ichiraku',name:'Barraca Ichiraku',x:13,z:21,icon:'🍜',sprite:8},{id:'ebisu',name:'Treino de Elite do Ebisu',x:25,z:5,icon:'🕶',sprite:8},{id:'iruka',name:'Aula do Iruka',x:-24,z:14,icon:'📚',sprite:8}];
+    const eventDefs=[{id:'shikamaru',name:'Plano do Shikamaru',x:14,z:8,icon:'♟️',sprite:8},{id:'guardian-seal',name:'Portal do Guardião · Myōjinmon',x:2,z:-12,icon:'⛩️',sprite:4},{id:'challenge',name:'Altar de desafio',x:-14,z:9,icon:'⛩️',sprite:9},{id:'orochimaru',name:'Maldição de Orochimaru',x:9,z:-18,icon:'🐍',sprite:10},{id:'altar',name:'Altar para proteger',x:-17,z:-13,icon:'🛕',sprite:11},{id:'trader',name:'Mercador de itens',x:-3,z:18,icon:'🥷',sprite:8},{id:'slot',name:'Caça-Níquel da Tsunade',x:5,z:18,icon:'🎰',sprite:8},{id:'arsenal',name:'Arsenal da Tenten',x:-21,z:-1,icon:'🗡️',sprite:8},{id:'sapos-sabios',name:'Sapos Sábios · Monte Myōboku',x:-25,z:18,icon:'🐸',sprite:8},{id:'ichiraku',name:'Barraca Ichiraku',x:13,z:21,icon:'🍜',sprite:8},{id:'ebisu',name:'Treino de Elite do Ebisu',x:25,z:5,icon:'🕶',sprite:8},{id:'iruka',name:'Aula do Iruka',x:-24,z:14,icon:'📚',sprite:8}];
     const altarRarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
     const allEvents=[...eventDefs.filter(e=>e.id!=='altar').map(e=>({...e,altarTier:undefined as number|undefined})),...Array.from({length:8},(_,i)=>{const tier=i<5?i:Math.floor(Math.random()*5);return {id:'altar-'+i,name:'Altar · '+(tier===0?'Normal':altarRarities[tier]),x:0,z:0,icon:'🛕',sprite:11,altarTier:tier};})];
     const events=allEvents.map(def=>{const gate=def.id==='guardian-seal';const obj=environmentSprite(gate?4:def.id==='ichiraku'?5:def.id==='trader'?7:6,gate?5.6:def.id==='ichiraku'?4:3.2,gate?5:def.id==='ichiraku'?3.4:3.2);if(def.id==='slot'||def.id==='arsenal'||def.id==='shikamaru'||def.id==='ebisu'||def.id==='iruka'||def.id==='sapos-sabios'){obj.material.dispose();obj.material=heroMaterial(def.id==='slot'?'tsunade':def.id==='arsenal'?'tenten':def.id);}if(def.id==='orochimaru'){obj.material.dispose();obj.material=heroMaterial('orochimaru');obj.scale.set(2.2,3.1,1);}obj.scale.multiplyScalar(ACTOR_SCALE);obj.position.set(def.x,terrainHeight(def.x,def.z)+obj.scale.y*.45,def.z);obj.visible=false;scene.add(obj);return { ...def, obj, discovered:false, uses:0, active:true };});
@@ -274,8 +274,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const pendingSeals:{heroId:string;target:string;phase:'ready';account?:boolean}[]=[];
     /** Afinidade por ajudante (pontos; src/game/allies.ts) e candidato da tela de substituição (choiceLevel −7). */
     const allyAffinity:Record<string,number>={};let replaceCandidate:{heroId:string;target:string}|null=null;
-    // Roleta da Tsunade (src/game/roulette.ts): overlay aberto pausa a run como as telas de escolha. Prêmios/penalidades ficam pendentes
-    // e só são entregues ao sair. ryuSpent = total de Ryu gasto na run (kunais, roleta, Ichiraku) → buff de dano da Carteira Gama-chan.
+    // Caça-Níquel da Tsunade (src/game/roulette.ts, ex-"Roleta da Tsunade"): overlay aberto pausa a run como as telas de escolha.
+    // Prêmios/penalidades ficam pendentes e só são entregues ao sair (ao sair, armadilhas shinobi explodem matando monstros próximos).
+    // ryuSpent = total de Ryu gasto na run (kunais, caça-níquel, Ichiraku) → buff de dano da Carteira Gama-chan.
     let roulette:{pending:RoulettePrize[];sessionSpins:number;sessionSpent:number}|null=null,rouletteSpins=0,rouletteSeq=0,ryuSpent=0,rouletteRng:()=>number=Math.random;
     const rouletteItems:PendingPrize[]=[];
     const merchant={purchases:0,rerolls:0,stock:[] as (string|null)[],prices:[] as number[]};
@@ -305,7 +306,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const ex=(key:StatKey)=>stats.extra[key]||0;
     // Economia expansiva: preços crescem por uso e por minuto de run (itemTrade.ts/preparation.ts/roulette.ts).
     const kunaiPrice=()=>Math.round(weaponPrice(paidWeapons,elapsed)*(1-Math.min(.4,ex('kunaiDiscount')))*tune().kunaiPrice);
-    const slotPrice=()=>rouletteCost(rouletteSpins,ex('slotDiscount'),elapsed);
+    const slotPrice=()=>rouletteCost(rouletteSpins,ex('slotDiscount'),elapsed,zone);
     let timeSinceHit=99,rushTimer=0,shieldReady=true,shieldTimer=0,emergencyCd=0,periodicTimer=30,boltTimer=2.5,beamTimer=6,freezeCd=0,ultBuffTimer=0,stillTime=0,revives35=0,revives60=0;
     const lastPos=new THREE.Vector3();
     /** Multiplicador temporário de velocidade de ataque: Selo de Adrenalina, Postura de Pedra parado e Pergaminho do Hokage após a Ultimate. */
@@ -486,14 +487,15 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       eventToast=`Ichiraku: ${offer.name} esquecida por ${compactNumber(price)} Ryu.`;
       openIchiraku();
     }
-    // ───── Roleta da Tsunade (evento 'slot'; regras em src/game/roulette.ts) ─────
-    // E abre o overlay (TsunadeRoulette.tsx). Cada giro cobra na hora (custo cresce por giro na run) e guarda o resultado;
-    // tudo (prêmios E penalidades) só é aplicado ao sair. Buff/debuff entram como bônus temporários em activeSetups
-    // (somados do zero em refreshStats e removidos ao expirar → sem resíduo).
+    // ───── Caça-Níquel da Tsunade (evento 'slot'; regras em src/game/roulette.ts) ─────
+    // E abre o overlay (TsunadeRoulette.tsx). Cada giro cobra na hora (custo cresce por giro na run, por minuto de run e por zona)
+    // e guarda o resultado; tudo (prêmios E penalidades) só é aplicado ao sair. Buff/debuff entram como bônus temporários em activeSetups
+    // (somados do zero em refreshStats e removidos ao expirar → sem resíduo). Os 5 combos de 3 iguais (Tsunade/Jiraiya/Hiruzen/Hidan/
+    // Kakuzu) entregam bônus permanentes da run (runBuffs) ou itens/Ryu na saída; o jogador fica seguro durante a interação.
     const roulettePressureNow=()=>roulettePressure(zoneDifficulty,zone,mission);
     const rouletteWeightsNow=()=>rouletteWeights(stats.luck,roulettePressureNow());
     function rouletteView():RouletteView|null{if(!roulette)return null;return{cost:slotPrice(),spins:rouletteSpins,sessionSpins:roulette.sessionSpins,sessionSpent:roulette.sessionSpent,ryuSpent,discount:Math.min(ROULETTE_RULES.maxDiscount,ex('slotDiscount')),money:runMoney,luck:stats.luck,pressure:roulettePressureNow(),weights:rouletteWeightsNow(),pending:roulette.pending.map(p=>({...p}))};}
-    function openRoulette(){if(!roulette){roulette={pending:[],sessionSpins:0,sessionSpent:0};keys.clear();snapshotTimer=0;eventToast='Roleta da Tsunade: E gira · segure E para giro rápido · Esc sai e recebe.';}return rouletteView();}
+    function openRoulette(){if(!roulette){roulette={pending:[],sessionSpins:0,sessionSpent:0};keys.clear();snapshotTimer=0;eventToast='Caça-Níquel da Tsunade: E gira · segure E para giro rápido · Esc sai e recebe (você fica seguro até sair).';}return rouletteView();}
     function spinRoulette(forced?:RouletteCasaId):{ok:boolean;reason?:string;prize?:RoulettePrize;view:RouletteView|null}{
       if(!roulette)return{ok:false,reason:'A roleta está fechada.',view:null};
       const cost=slotPrice();if(runMoney<cost)return{ok:false,reason:`Faltam ${compactNumber(cost-runMoney)} Ryu para girar (${compactNumber(cost)} Ryu).`,view:rouletteView()};
@@ -513,12 +515,22 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       else if(id==='buff'){prize.blessing=Math.floor(rouletteRng()*BLESSINGS.length)%BLESSINGS.length;prize.label=BLESSINGS[prize.blessing].name;prize.detail=`${BLESSINGS[prize.blessing].text} por ${ROULETTE_RULES.buffDuration} s`;}
       else if(id==='debuff')prize.detail=`${BAD_LUCK.text} por ${ROULETTE_RULES.debuffDuration} s`;
       else if(id==='ambush'){prize.amount=ROULETTE_RULES.ambushBase+2*zone;prize.detail=`${prize.amount} inimigos ao sair`;}
+      // ───── Combos de 3 iguais (rodada 37, specs do usuário) — entregues em closeRoulette() ─────
+      else if(id==='tsunade'){prize.label=`3 Tsunades · ${SLOT_COMBOS.tsunade.name}`;prize.detail=`+${Math.round(SLOT_COMBOS.tsunade.threat*100)}% de dificuldade e +${Math.round(SLOT_COMBOS.tsunade.enemyCount*100)}% de monstros até o fim da run (mais XP e Ryu).`;}
+      else if(id==='jiraiya'){prize.label=`3 Jirayas · ${SLOT_COMBOS.jiraiya.name}`;prize.detail='1 item Raro ou superior ao sair (E pega · V vende).';}
+      else if(id==='hiruzen'){prize.label=`3 Hiruzens · ${SLOT_COMBOS.hiruzen.name}`;prize.detail=`${SLOT_COMBOS.hiruzen.choices} escolhas de item ao sair (E pega · V vende).`;}
+      else if(id==='hidan'){prize.label=`3 Hidan · ${SLOT_COMBOS.hidan.name}`;prize.detail=`−${Math.round(SLOT_COMBOS.hidan.hpLoss*100)}% do HP total (não mata) e +${Math.round(SLOT_COMBOS.hidan.threat*100)}% de dificuldade/monstros até o fim da run.`;}
+      else if(id==='kakuzu'){prize.label=`3 Kakuzus · ${SLOT_COMBOS.kakuzu.name}`;prize.detail=`+${compactNumber(slotKakuzuRyu(stats.luck,roulettePressureNow()))} Ryu ao sair (sobe com sua Sorte e com a dificuldade do jogo).`;}
       roulette.pending.push(prize);snapshotTimer=0;
       return{ok:true,prize:{...prize},view:rouletteView()};
     }
     function applyTimedBuff(name:string,bonuses:Bonuses,duration:number){const cur=activeSetups.find(a=>a.name===name);if(cur){cur.remaining=duration;cur.duration=duration;cur.bonuses={...bonuses};}else activeSetups.push({name,remaining:duration,duration,bonuses:{...bonuses},sage:false});}
     function closeRoulette(){if(!roulette)return null;const delivered=roulette.pending;roulette=null;keys.clear();
       let gained=0,lost=0,ambush=0,itemChoices=0;const blessingCount:Record<number,number>={};
+      // Itens dos combos (Jiraiya/Hiruzen) reservam as cópias já entregues nesta saída para não passar do máximo do item.
+      const comboReserved:Record<string,number>={...knownItems};
+      for(const p of delivered)if(p.item)comboReserved[p.item]=(comboReserved[p.item]||0)+1;
+      const drawComboItem=(pool:Item[]=eligibleItemPool())=>{const it=drawStock(1,comboReserved,rouletteRng,pool)[0];if(!it)return null;comboReserved[it.name]=(comboReserved[it.name]||0)+1;rouletteItems.push(it.name);itemChoices++;return it;};
       for(const p of delivered){
         if(p.id==='kunai')kunai++;else if(p.id==='shuriken')shuriken++;
         else if(p.id==='pill')gained+=itemSalePrice((p.rarity as Rarity)??'Comum'); // prêmio de save anterior
@@ -528,13 +540,23 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         else if(p.id==='debuff')applyTimedBuff(BAD_LUCK.name,BAD_LUCK.bonuses,ROULETTE_RULES.debuffDuration);
         else if(p.id==='lose')lost+=p.amount||0;
         else if(p.id==='ambush')ambush+=p.amount||0;
+        // ───── Combos de 3 iguais (rodada 37) ─────
+        else if(p.id==='tsunade'){runBuffs.threat=(runBuffs.threat||0)+SLOT_COMBOS.tsunade.threat;runBuffs.enemyCount=(runBuffs.enemyCount||0)+SLOT_COMBOS.tsunade.enemyCount;}
+        else if(p.id==='hidan'){hp=Math.max(1,hp-Math.round(stats.maxHp*SLOT_COMBOS.hidan.hpLoss));runBuffs.threat=(runBuffs.threat||0)+SLOT_COMBOS.hidan.threat;runBuffs.enemyCount=(runBuffs.enemyCount||0)+SLOT_COMBOS.hidan.enemyCount;}
+        else if(p.id==='jiraiya')drawComboItem(eligibleItemPool().filter(i=>['Raro','Épico','Lendário'].includes(i.rarity)));
+        else if(p.id==='hiruzen'){for(let n=0;n<SLOT_COMBOS.hiruzen.choices;n++)drawComboItem();}
+        else if(p.id==='kakuzu')gained+=slotKakuzuRyu(stats.luck,roulettePressureNow());
       }
       // Bênçãos iguais acumulam (até 3×) em vez de se sobrescrever; cada uma entregue de verdade.
       for(const [index,count] of Object.entries(blessingCount)){const b=BLESSINGS[Number(index)],stacks=Math.min(3,count),bonuses:Bonuses={};for(const [k,v] of Object.entries(b.bonuses))bonuses[k as keyof Bonuses]=(v as number)*stacks;applyTimedBuff(b.name,bonuses,ROULETTE_RULES.buffDuration);}
       runMoney+=gained;const paid=Math.min(runMoney,lost);runMoney-=paid;
       for(let n=0;n<Math.min(ambush,Math.max(0,threatNow().cap-enemyList.length));n++)spawnEnemy();
+      // Emboscada invertida (rodada 37): ao sair, armadilhas shinobi/papéis bomba explodem ao redor do jogador matando os
+      // monstros próximos (o jogador estava seguro durante a interação; a horda retoma o ataque em seguida). Totens/Bijuus/Guardiões
+      // têm fluxo próprio e não entram nas armadilhas.
+      let trapped=0;const trapRadius=8;for(const e of [...enemyList]){if(e.totem||e.bijuu||e.guardian)continue;if(Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<=trapRadius){takeDamage(e,(e.hp||1)*3,'#ff8f3d',false,0,'Armadilhas shinobi');trapped++;}}if(trapped){addRing(player.position,'#ff8f3d',trapRadius);playSfx('explosion');}
       refreshStats(true);invulnerability=Math.max(invulnerability,1.2);snapshotTimer=0;
-      eventToast=delivered.length?`Roleta da Tsunade: ${delivered.length} resultado(s) entregue(s)${gained?' · +'+compactNumber(gained)+' Ryu':''}${paid?' · −'+compactNumber(paid)+' Ryu':''}${itemChoices?' · '+itemChoices+' prêmio(s) para escolher':''}${ambush?' · emboscada de '+ambush+' ninjas!':''}`:'Roleta da Tsunade: você saiu sem girar.';
+      eventToast=delivered.length?`Caça-Níquel da Tsunade: ${delivered.length} resultado(s) entregue(s)${gained?' · +'+compactNumber(gained)+' Ryu':''}${paid?' · −'+compactNumber(paid)+' Ryu':''}${itemChoices?' · '+itemChoices+' prêmio(s) para escolher':''}${trapped?' · '+trapped+' monstro(s) nas armadilhas shinobi':''}${ambush?' · emboscada de '+ambush+' ninjas!':''}`:'Caça-Níquel da Tsunade: você saiu sem girar.';
       if(delivered.length)playSfx('pickup');
       showRouletteItem();saveRun();
       return delivered;
@@ -748,7 +770,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     window.addEventListener('shinobi-sages-tab',onSagesTab);runCleanups.push(()=>window.removeEventListener('shinobi-sages-tab',onSagesTab));
     const onTrade=(event:Event)=>{if(!enabledRef.current||defeated||victory||!choiceData||sealing||document.querySelector('.game-panel-backdrop'))return;const action=(event as CustomEvent<string>).detail;if(action==='sell')sellLoot();else if(choiceLevel===-8&&action==='reroll')rerollMerchant();else if(choiceLevel===-8&&action==='exit')rewardAction('skip');recaptureAfterChoice();};
     window.addEventListener('shinobi-trade',onTrade);runCleanups.push(()=>window.removeEventListener('shinobi-trade',onTrade));
-    // Roleta da Tsunade: a UI pede giro/saída por evento síncrono e lê a resposta em detail.result.
+    // Caça-Níquel da Tsunade: a UI pede giro/saída por evento síncrono e lê a resposta em detail.result.
     const onRoulette=(event:Event)=>{const d=(event as CustomEvent<{action:string;result?:unknown}>).detail;if(!d||!enabledRef.current||defeated||victory)return;if(d.action==='spin')d.result=spinRoulette();else if(d.action==='exit'){d.result=closeRoulette();recaptureAfterChoice();}else if(d.action==='view')d.result=rouletteView();};window.addEventListener('shinobi-roulette',onRoulette);
     window.addEventListener('keydown',onKeyDown);window.addEventListener('keyup',onKeyUp);window.addEventListener('blur',onBlur);
     container.addEventListener('pointerdown',onDown);container.addEventListener('pointermove',onMove);container.addEventListener('pointerup',onUp);container.addEventListener('pointercancel',resetPointer);container.addEventListener('pointerleave',resetPointer);container.addEventListener('contextmenu',onContext);container.addEventListener('wheel',onWheel,{passive:true});
@@ -1376,7 +1398,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       accountCandidates:(setKills?:number)=>{if(setKills!==undefined)kills=setKills;return accountCandidates().map(h=>h.id);},
       defeatGuardian:()=>{const g=enemyList.find(e=>e.guardian);if(!g)return null;const before=pickups.filter(p=>p.active&&p.kind==='sealDrop').length;removeEnemy(g);return pickups.filter(p=>p.active&&p.kind==='sealDrop').length-before;},
       guardian:()=>({zone,zoneElapsed:zoneElapsed(),spawned:guardianSpawned,shikamaruPlans,hpMultiplierNow:guardianHpMultiplier(zoneElapsed()),alive:enemyList.filter(e=>e.guardian).map(e=>({heroId:e.heroId,hp:e.hp,maxHp:e.maxHp,hpMultiplier:e.hpMultiplier,shikamaruPlans:e.shikamaruPlans})),freeKunaiOnGround:pickups.filter(p=>p.active&&p.kind==='sealDrop').length,kunai,shuriken,toast:eventToast}),
-      // Roleta da Tsunade: abrir, girar N vezes sem animação (semente/casa forçada), estado, sair, simulação estatística.
+      // Caça-Níquel da Tsunade: abrir, girar N vezes sem animação (semente/casa forçada), estado, sair, simulação estatística.
       sageAuraVisible:()=>sageAura.sprite.visible,
       sages:()=>{openSages();return choiceData?.length??0;},
       cloneMotion:()=>shadowClones.map(clone=>clone.motion.state()),

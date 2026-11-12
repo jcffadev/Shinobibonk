@@ -1,19 +1,31 @@
-/* Roleta da Tsunade (src/ui/TsunadeRoulette.tsx) */
+/* Caça-Níquel da Tsunade (src/ui/TsunadeRoulette.tsx, ex-"Roleta da Tsunade" — rodada 37) */
 .tr-backdrop{position:fixed;inset:0;z-index:60;display:grid;align-items:safe center;justify-items:center;background:radial-gradient(circle at 50% 40%,#2a1a0ccc,#100b07ee);padding:16px;overflow:auto}
 .tr-modal{position:relative;width:min(1040px,100%);background:linear-gradient(160deg,#2b1d14,#1f1813 70%);border:2px solid #d9a441;border-radius:18px;box-shadow:0 20px 60px #000a,inset 0 0 0 1px #ffffff14;color:#f6ead2;padding:20px 22px}
 .tr-close{position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid #d9a44188;background:#0006;color:#f6ead2;font-size:22px;cursor:pointer}
+.tr-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.tr-head-copy{flex:1;min-width:220px}
 .tr-head small{letter-spacing:.18em;color:#e6b85a;font-size:11px}
 .tr-head h1{margin:2px 0 4px;font-size:30px;color:#ffd77a;text-shadow:0 2px 0 #6b3b0f}
 .tr-head p{margin:0 0 12px;color:#d9c8a8;font-size:14px}
+/* Face da Tsunade: retrato do roster + humor por recompensa (bom→feliz · neutro→triste · ruim→nervosa). */
+.tr-face{position:relative;width:78px;height:78px;border-radius:14px;border:2px solid #d9a441;background:#171210;flex:none;box-shadow:0 4px 14px #000a}
+.tr-face-portrait{position:absolute;inset:0;background-repeat:no-repeat;background-color:#3a2a18}
+.tr-face.mood-happy{border-color:#3aa86b;box-shadow:0 0 18px #3aa86b99,0 4px 14px #000a}
+.tr-face.mood-sad{border-color:#d9a441;box-shadow:0 0 18px #d9a44188,0 4px 14px #000a}
+.tr-face.mood-angry{border-color:#c2414d;box-shadow:0 0 18px #c2414daa,0 4px 14px #000a}
+.tr-face-badge{position:absolute;right:-9px;bottom:-9px;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#1f1813;border:2px solid #d9a441;font-size:16px}
 .tr-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 .tr-wheel-col{display:flex;flex-direction:column;align-items:center;gap:10px}
-.tr-pointer{font-size:30px;color:#ffd77a;line-height:1;margin-bottom:-14px;z-index:2;text-shadow:0 2px 4px #000}
-.tr-wheel{position:relative;width:min(340px,80vw);aspect-ratio:1;border-radius:50%;border:6px solid #d9a441;box-shadow:0 0 0 4px #5a3510,0 10px 30px #0009;will-change:transform}
-.tr-wheel.is-turbo{box-shadow:0 0 0 4px #5a3510,0 0 28px #ffd77a}
-.tr-casa{position:absolute;inset:0;display:flex;justify-content:center;pointer-events:none}
-.tr-casa b{margin-top:7%;font-size:24px;filter:drop-shadow(0 2px 2px #000a)}
-.tr-hub{position:absolute;inset:38%;border-radius:50%;background:radial-gradient(circle,#ffe6a3,#b97a24);border:3px solid #5a3510;display:grid;place-items:center;font-size:26px;color:#5a2a08;font-weight:700}
-.tr-result{min-height:52px;width:100%;max-width:360px;text-align:center;padding:8px 10px;border-radius:10px;background:#0005;border:1px solid #ffffff22;display:flex;flex-direction:column;justify-content:center}
+/* Caça-níquel: 3 rolos verticais com linha de pagamento no centro. */
+.tr-slot{position:relative;display:flex;gap:10px;padding:14px;background:linear-gradient(#171210,#241a12);border:3px solid #d9a441;border-radius:16px;box-shadow:inset 0 0 0 1px #ffffff14,0 10px 26px #000a}
+.tr-reel{position:relative;width:84px;height:192px;overflow:hidden;border-radius:10px;background:linear-gradient(#0d0a08,#1c140d 22%,#1c140d 78%,#0d0a08);box-shadow:inset 0 0 12px #000c}
+.tr-reel.is-spinning{box-shadow:inset 0 0 12px #000c,0 0 14px #ffd77a44}
+.tr-strip{will-change:transform}
+.tr-cell{height:64px;display:grid;place-items:center;border-bottom:1px solid #ffffff10}
+.tr-cell b{font-size:26px;filter:drop-shadow(0 2px 2px #000a)}
+.tr-cell.kind-bom{background:#12371f2e}.tr-cell.kind-ruim{background:#3d121733}
+.tr-payline{position:absolute;left:10px;right:10px;top:50%;height:64px;transform:translateY(-50%);pointer-events:none;border-top:2px solid #ffd77a66;border-bottom:2px solid #ffd77a66;border-radius:6px}
+.tr-result{min-height:52px;width:100%;max-width:420px;text-align:center;padding:8px 10px;border-radius:10px;background:#0005;border:1px solid #ffffff22;display:flex;flex-direction:column;justify-content:center}
 .tr-result b{font-size:17px}.tr-result small{color:#d9c8a8}
 .tr-result.kind-bom{border-color:#3aa86b;background:#12371f99}.tr-result.kind-ruim{border-color:#c2414d;background:#3d121799}
 .tr-message{margin:0;color:#ff9aa3;font-weight:600}
@@ -44,3 +56,4 @@ li.kind-bom i,li.kind-bom em{color:#7fe0a5}li.kind-ruim i,li.kind-ruim em{color:
 .tr-result .catalog-icon,.tr-pending .catalog-icon{width:28px;height:28px;vertical-align:middle}
 .tr-casa-icon.catalog-icon{display:inline-block;width:30px;height:30px;vertical-align:middle;background-repeat:no-repeat}
 .tr-odds .tr-casa-icon.catalog-icon,.tr-stats .tr-casa-icon.catalog-icon{width:20px;height:20px}
+.tr-slot .tr-casa-icon.catalog-icon{width:46px;height:46px}

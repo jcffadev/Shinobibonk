@@ -3,15 +3,15 @@ import type { Difficulty } from './progression.ts';
 import { runInflation } from './itemTrade.ts';
 
 /**
- * Roleta da Tsunade ("Lendária Perdedora"): evento de RNG com casas boas e ruins.
- * Regras puras (sem Three.js) para a simulação, a UI e o verify-rules usarem os mesmos números.
- * Valores são balanceamento provisório.
+ * Caça-Níquel da Tsunade ("Lendária Perdedora"): evento de RNG com casas boas e ruins + 5 combos de 3 iguais
+ * (rodada 37, 12/11: renomeado de "Roleta da Tsunade"). Regras puras (sem Three.js) para a simulação, a UI e o
+ * verify-rules usarem os mesmos números. Valores são balanceamento provisório.
  */
 export type RouletteKind = 'bom' | 'ruim' | 'neutro';
-export type RouletteCasaId = 'kunai' | 'shuriken' | 'pill' | 'ryu' | 'buff' | 'item' | 'jackpot' | 'lose' | 'debuff' | 'ambush' | 'empty';
+export type RouletteCasaId = 'kunai' | 'shuriken' | 'pill' | 'ryu' | 'buff' | 'item' | 'jackpot' | 'lose' | 'debuff' | 'ambush' | 'empty' | 'tsunade' | 'jiraiya' | 'hiruzen' | 'hidan' | 'kakuzu';
 export type RouletteCasa = { id: RouletteCasaId; label: string; icon: string; kind: RouletteKind; weight: number; premium?: boolean; description: string };
 
-/** Casas na ordem em que aparecem na roda (alternando boas/ruins para a animação ficar legível). */
+/** Casas na ordem em que aparecem nos rolos (alternando boas/ruins para a animação ficar legível). */
 export const ROULETTE_CASAS: RouletteCasa[] = [
   { id: 'kunai', label: 'Kunai', icon: '🗡', kind: 'bom', weight: 6, description: '+1 kunai no contador da missão.' },
   { id: 'lose', label: 'Dívida de jogo', icon: '💸', kind: 'ruim', weight: 12, description: 'Perde Ryu igual ao custo do giro (ao sair).' },
@@ -20,9 +20,15 @@ export const ROULETTE_CASAS: RouletteCasa[] = [
   { id: 'debuff', label: 'Azar da Lendária Perdedora', icon: '🌧', kind: 'ruim', weight: 10, description: '−10% de dano e −8% de movimento por 45 s.' },
   { id: 'item', label: 'Recompensa de item', icon: '🎁', kind: 'bom', weight: 2.5, premium: true, description: '+1 escolha de item (como uma kunai).' },
   { id: 'shuriken', label: 'Shuriken', icon: '🌀', kind: 'bom', weight: 6, description: '+1 shuriken no contador da missão.' },
-  { id: 'ambush', label: 'Credores da Tsunade', icon: '⚔️', kind: 'ruim', weight: 9, description: 'Emboscada leve ao sair da roleta.' },
+  { id: 'ambush', label: 'Credores da Tsunade', icon: '⚔️', kind: 'ruim', weight: 9, description: 'Emboscada leve ao sair do caça-níquel.' },
   { id: 'buff', label: 'Bênção de Tsunade', icon: '✚', kind: 'bom', weight: 4, description: 'Buff temporário de 90 s (dano, velocidade de ataque ou vitalidade).' },
   { id: 'jackpot', label: 'Sorte Grande', icon: '🎰', kind: 'bom', weight: .5, premium: true, description: '+1 escolha de item e o triplo do custo em Ryu.' },
+  // ───── Combos de 3 iguais (rodada 37, specs do usuário) — premium (Sorte favorece) ─────
+  { id: 'tsunade', label: 'Tsunade', icon: '👑', kind: 'bom', weight: .9, premium: true, description: 'Combo 3 Tsunades → "Sorte da Tsunade": +10% de dificuldade e +10% de monstros até o fim da run (mais XP e Ryu).' },
+  { id: 'jiraiya', label: 'Jiraiya', icon: '📖', kind: 'bom', weight: .9, premium: true, description: 'Combo 3 Jirayas → 1 item Raro ou superior ao sair.' },
+  { id: 'hiruzen', label: 'Hiruzen', icon: '🏮', kind: 'bom', weight: 1.2, premium: true, description: 'Combo 3 Hiruzens → 4 escolhas de item ao sair (E pega · V vende).' },
+  { id: 'hidan', label: 'Hidan', icon: '🦇', kind: 'ruim', weight: 6, description: 'Combo 3 Hidan → −5% do HP total (não mata) e +5% de dificuldade/monstros até o fim da run.' },
+  { id: 'kakuzu', label: 'Kakuzu', icon: '💰', kind: 'bom', weight: .7, premium: true, description: 'Combo 3 Kakuzus → bônus de Ryu condicionado à sua Sorte e à dificuldade do jogo.' },
 ];
 export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, c])) as Record<RouletteCasaId, RouletteCasa>;
 
@@ -34,7 +40,7 @@ export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, 
  *   (nunca 100% bom; nunca mais de 60% ruim).
  * - Casas indisponíveis (ex.: Pílula quando todas as pílulas elegíveis estão no limite) saem do sorteio ANTES de normalizar:
  *   as porcentagens exibidas são exatamente as usadas no giro.
- * Custo (economia expansiva): round(baseCost × costGrowth^(giros na run) × inflação por minuto de run (itemTrade.ts) × (1 − min(maxDiscount, desconto))).
+ * Custo (economia expansiva, rodada 37): round(baseCost × costGrowth^(giros na run) × inflação por minuto de run (itemTrade.ts) × (1 + (zona−1) × zoneCostWeight) × (1 − min(maxDiscount, desconto))).
  * Não reseta por zona.
  */
 /**
@@ -43,8 +49,10 @@ export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, 
  */
 export const ROULETTE_RULES = {
   baseCost: 30,
-  /** Crescimento exponencial por giro na run: 30, 41, 55, 74, 100, ... (×1,35 por giro). */
-  costGrowth: 1.35,
+  /** Crescimento exponencial por giro na run: 30, 51, 87, 147, 251, 426, ... (×1,70 por giro — rodada 37: "cobrar mais por rodada, gradualmente, escalando consideravelmente"). */
+  costGrowth: 1.7,
+  /** Fator de zona (rodada 37): +25% de custo por zona acima da 1 — o giro escala como o Ryu dropado pela zona. */
+  zoneCostWeight: .25,
   /** Teto do desconto total (Dente de Ouro + Bolsa Gama-chan). */
   maxDiscount: .4,
   luckDivisor: 100,
@@ -70,6 +78,25 @@ export const BLESSINGS: { name: string; bonuses: Bonuses; text: string }[] = [
   { name: 'Bênção de Tsunade · Vitalidade', bonuses: { regen: 2.5, defense: 6 }, text: '+2,5 HP/s e +6 de armadura' },
 ];
 export const BAD_LUCK = { name: 'Azar da Lendária Perdedora', bonuses: { damage: -.1, move: -.08 } as Bonuses, text: '−10% de dano e −8% de movimento' };
+
+/**
+ * Combos de 3 iguais (rodada 37, specs do usuário). Entregues em `closeRoulette()` (GameCanvas):
+ * - tsunade/hidan: bônus permanentes da run (runBuffs → threat/enemyCount, como as trocas do Ebisu); Hidan ainda perde 5% do HP máximo (piso 1 HP — não mata).
+ * - jiraiya: 1 item Raro/Épico/Lendário · hiruzen: 4 escolhas de item (pega ou vende cada uma).
+ * - kakuzu: Ryu = ryuBase × luckFactor × (1 + pressão) — sorte e dificuldade do jogo aumentam o tesouro.
+ */
+export const SLOT_COMBOS = {
+  tsunade: { name: 'Sorte da Tsunade', threat: .1, enemyCount: .1 },
+  jiraiya: { name: 'Página da Lenda', minRarity: 'Raro' },
+  hiruzen: { name: 'Conselho do Hokage', choices: 4 },
+  hidan: { name: 'Sangue do Imortal', hpLoss: .05, threat: .05, enemyCount: .05 },
+  kakuzu: { name: 'Tesouro de Kakuzu', ryuBase: 120 },
+} as const;
+export type SlotComboId = keyof typeof SLOT_COMBOS;
+/** Bônus de Ryu do combo 3 Kakuzus (sorte + dificuldade/pressão do jogo). */
+export function slotKakuzuRyu(luck: number, pressure: number) {
+  return Math.round(SLOT_COMBOS.kakuzu.ryuBase * luckFactor(luck) * (1 + Math.max(0, pressure)));
+}
 
 export function roulettePressure(curse: number, zone: number, mission: Difficulty) {
   return Math.max(0, curse - 1) * ROULETTE_RULES.curseWeight + Math.max(0, zone - 1) * ROULETTE_RULES.zoneWeight + (ROULETTE_RULES.missionWeight[mission] ?? 0);
@@ -101,8 +128,9 @@ export function rollRoulette(w: Record<RouletteCasaId, number>, rng: () => numbe
   return [...ROULETTE_CASAS].reverse().find(c => w[c.id] > 0)?.id ?? 'empty';
 }
 
-export function rouletteCost(spins: number, discount: number, runSeconds = 0) {
-  return Math.round(ROULETTE_RULES.baseCost * Math.pow(ROULETTE_RULES.costGrowth, Math.max(0, spins)) * runInflation(runSeconds) * (1 - Math.min(ROULETTE_RULES.maxDiscount, Math.max(0, discount))));
+export function rouletteCost(spins: number, discount: number, runSeconds = 0, zone = 1) {
+  const zoneFactor = 1 + Math.max(0, zone - 1) * ROULETTE_RULES.zoneCostWeight;
+  return Math.round(ROULETTE_RULES.baseCost * Math.pow(ROULETTE_RULES.costGrowth, Math.max(0, spins)) * runInflation(runSeconds) * zoneFactor * (1 - Math.min(ROULETTE_RULES.maxDiscount, Math.max(0, discount))));
 }
 
 /** Gerador determinístico (LCG) para testes com semente. */

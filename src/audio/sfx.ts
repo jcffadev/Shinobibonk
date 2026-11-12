@@ -1,6 +1,6 @@
 import type { Technique } from '../game/heroes';
 import { currentSettings } from '../game/settings';
-type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui';
+type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui' | 'explosion';
 let context: AudioContext | null = null;
 
 function audio(): AudioContext | null {
@@ -25,12 +25,15 @@ export function playSfx(kind: Sound) {
     pickup: [[660, .07, 'sine'], [880, .1, 'sine'], [1180, .12, 'sine']],
     ultimate: [[220, .12, 'sawtooth'], [330, .16, 'triangle'], [660, .25, 'sine']],
     ui: [[440, .055, 'sine']],
+    /** Explosão das armadilhas shinobi do Caça-Níquel (rodada 37): grave descendo, sem gravação externa. */
+    explosion: [[160, .18, 'sawtooth'], [85, .3, 'triangle'], [48, .5, 'sawtooth']],
   };
   let offset = 0;
   for (const [frequency, duration, type] of notes[kind]) {
     const oscillator = ctx.createOscillator(); const gain = ctx.createGain();
     oscillator.type = type; oscillator.frequency.setValueAtTime(frequency, now + offset);
     if (kind === 'ultimate') oscillator.frequency.exponentialRampToValueAtTime(frequency * 1.8, now + offset + duration);
+    if (kind === 'explosion') oscillator.frequency.exponentialRampToValueAtTime(Math.max(24, frequency * .45), now + offset + duration);
     gain.gain.setValueAtTime(.0001, now + offset); gain.gain.exponentialRampToValueAtTime(Math.max(.0002, (kind === 'attack' ? .025 : .055) * vol), now + offset + .012);
     gain.gain.exponentialRampToValueAtTime(.0001, now + offset + duration);
     oscillator.connect(gain); gain.connect(ctx.destination); oscillator.start(now + offset); oscillator.stop(now + offset + duration + .02);
