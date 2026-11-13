@@ -23,6 +23,19 @@
 | Arquivos alterados | `scripts/verify-rules.mjs`, `skills/movimentar-shinobi/SKILL.md`, `src/game/progression.ts`, `src/game/settings.ts`, `src/scene/GameCanvas.tsx`, `src/scene/bossCombat.ts`, `src/scene/playerMotion.ts`, `src/ui/SettingsScreen.tsx` |
 | Arquivos novos | `src/game/altarRewards.ts`, `src/scene/fallenShinobi.ts`, `src/scene/techniqueAreas.ts` |
 
+**Atualização da 2ª pausa (13/11):**
+- **Subagente 3: CONCLUÍDO e testado** (tsc, build, verify-rules, Playwright). Resultado registrado no relatório do chat:
+  - HP com a curva `1+0,04n/(1+n/150)` (`HP_GROWTH` em progression.ts): Naruto Nv. 415 passa de 2.961 para 308 de HP, PROPOSTO.
+  - Altar: Raro +1, Épico +2, Lendário +3 projéteis; Comum e Incomum sem projétil. `projectiles` agora repete o golpe também no corpo a corpo e em área.
+  - Ameaça por `zoneElapsed()`, reiniciando a cada zona.
+  - Ímã global mais rápido (~1,6 s para o mapa inteiro).
+  - Decisões pendentes do usuário:
+    - o golpe extra vale para os itens que já dão +1 projétil?
+    - Konan, afinidade da Tenten e sinergia da Folha saem da chance fracionária?
+- **Subagente 1:** parado quando já tinha verificado a caminhada do jogador em todos os ângulos e combinações de WASD. Faltam ajudantes, monstros, bijū, a queda e a pose deitada com a luz (`fallenShinobi.ts` parcial).
+- **Subagente 2:** parado no meio. Música (`settings.ts`, `SettingsScreen.tsx`) e áreas (`techniqueAreas.ts`) parciais; fontes e câmera não iniciadas.
+- O código parcial compila (`tsc -b` ok). Nada disso está no GitHub.
+
 **Antes de continuar:** rodar `git status` e `git diff` para ver exatamente o que já foi feito em cada arquivo. Não descartar o parcial (sem `git checkout`/`stash`/`reset`); revisar e completar.
 
 ## 2. Pedido original do usuário (13/11/2026, texto integral)
