@@ -1,4 +1,5 @@
 import { BuffText } from './BuffText';
+import { ArsenalControls, arsenalOrigin, type ArsenalControlsProps } from './ArsenalControls';
 import { useState, type ReactNode } from 'react';
 import { ITEMS, type Item, type Rarity } from '../game/catalog';
 import { RarityFilter, rarityCounts } from './RarityFilter';
@@ -28,11 +29,11 @@ export function CompactItemCard({item,status,className='',children,star}:{item:I
 }
 
 type Tab='Todos'|'Bloqueado'|'No pool'|'Em casa';
-export function MissionBag({unlocked,home,capacity,fromUnlocks,priority,prioritySlots,presets,onToggleHome,onTogglePriority,onPresets,onApply}:{
-  unlocked:string[];home:string[];capacity:number;fromUnlocks:number;priority:string[];prioritySlots:number;presets:BagPresets;
+export function MissionBag({showArchive=false,heroId,arsenalControls,plannedItems,unlocked,home,capacity,fromUnlocks,priority,prioritySlots,presets,onToggleHome,onTogglePriority,onPresets,onApply}:{
+  showArchive?:boolean;heroId:string;arsenalControls:ArsenalControlsProps;plannedItems:string[];unlocked:string[];home:string[];capacity:number;fromUnlocks:number;priority:string[];prioritySlots:number;presets:BagPresets;
   onToggleHome:(id:string)=>void;onTogglePriority:(id:string)=>void;onPresets:(next:BagPresets)=>void;onApply:(index:number)=>void;
 }){
-  const [tab,setTab]=useState<Tab>('Todos'),[search,setSearch]=useState(''),[view,setView]=useState<'catalogo'|'listas'>('catalogo');
+  const [tab,setTab]=useState<Tab>('Todos'),[search,setSearch]=useState(''),[view,setView]=useState<'catalogo'|'listas'>(showArchive?'listas':'catalogo');
   const [rarities,setRarities]=useState<Rarity[]>([]);
   const isUnlocked=(i:Item)=>i.rarity==='Comum'||unlocked.includes(i.id);
   const stateOf=(i:Item):Tab=>!isUnlocked(i)?'Bloqueado':home.includes(i.id)?'Em casa':'No pool';
@@ -44,9 +45,10 @@ export function MissionBag({unlocked,home,capacity,fromUnlocks,priority,priority
     <button role="tab" aria-selected={view==='catalogo'} className={view==='catalogo'?'active':''} onClick={()=>setView('catalogo')}>Itens da bolsa</button>
     <button role="tab" aria-selected={view==='listas'} className={view==='listas'?'active':''} onClick={()=>setView('listas')}>Itens em casa <b>{presets.slots.length}/{PRESET_LIMIT} listas</b></button>
   </div>;
-  if(view==='listas')return <div className="mission-bag">{switcher}<HomeLists home={home} capacity={capacity} presets={presets} onPresets={onPresets} onApply={onApply}/></div>;
+  if(view==='listas')return <div className="mission-bag">{switcher}<ArsenalControls {...arsenalControls}/><HomeLists heroId={heroId} plannedItems={plannedItems} home={home} capacity={capacity} presets={presets} onPresets={onPresets} onApply={onApply}/></div>;
   return <div className="mission-bag">
     {switcher}
+    <ArsenalControls {...arsenalControls}/>
     <div className="bag-toolbar">
       <div className="bag-tabs" role="tablist">{(['Todos','Bloqueado','No pool','Em casa'] as Tab[]).map(t=><button role="tab" aria-selected={tab===t} className={tab===t?'active':''} key={t} onClick={()=>setTab(t)}>{t} <b>{counts[t]}</b></button>)}</div>
       <input className="bag-search" type="search" placeholder="Buscar por nome ou efeito…" aria-label="Buscar itens da bolsa" value={search} onChange={e=>setSearch(e.target.value)}/>
@@ -68,18 +70,18 @@ export function MissionBag({unlocked,home,capacity,fromUnlocks,priority,priority
  * Criar (a partir da bolsa atual ou vazia), nomear, descrever, aplicar, duplicar e apagar. A lista em uso acompanha
  * as mudanças feitas na aba de itens. Formato salvo em sb_bag_presets_v1 (src/game/missionBag.ts).
  */
-function HomeLists({home,capacity,presets,onPresets,onApply}:{home:string[];capacity:number;presets:BagPresets;onPresets:(next:BagPresets)=>void;onApply:(index:number)=>void}){
+function HomeLists({heroId,plannedItems,home,capacity,presets,onPresets,onApply}:{heroId:string;plannedItems:string[];home:string[];capacity:number;presets:BagPresets;onPresets:(next:BagPresets)=>void;onApply:(index:number)=>void}){
   const [confirm,setConfirm]=useState<number|null>(null),[dragging,setDragging]=useState<number|null>(null);
   const move=(from:number,to:number)=>{setConfirm(null);onPresets(movePreset(presets,from,to));};
   const full=presets.slots.length>=PRESET_LIMIT;
   const icons=(ids:string[],max=10)=><span className="preset-icons">{ids.slice(0,max).map(id=>{const it=ITEMS.find(i=>i.id===id);return it?<ItemIcon key={id} name={it.name}/>:null;})}{ids.length>max&&<small>+{ids.length-max}</small>}{!ids.length&&<small>Nada em casa</small>}</span>;
   return <section className="home-lists" aria-label="Listas de itens em casa">
     <header className="home-lists-head">
-      <div><b>Itens em casa agora · {home.length}/{capacity}</b><small>{presets.active!==null&&presets.slots[presets.active]?`Em uso: ${presets.slots[presets.active].name||'Sem nome'} · as mudanças na bolsa ficam salvas nela`:'Nenhuma lista em uso · as mudanças na bolsa não são salvas em lista'}</small></div>
+      <div><b>Itens em casa agora · {home.length}/{capacity}</b><small>{presets.active!==null&&presets.slots[presets.active]?`Em uso: ${presets.slots[presets.active].name||'Sem nome'}`:'Nenhuma lista em uso'}</small></div>
       {icons(home,14)}
       <div className="home-lists-actions">
-        <button className="preset-apply" disabled={full} onClick={()=>onPresets(addPreset(presets,home))} title={full?`Limite de ${PRESET_LIMIT} listas`:'Cria uma lista com os itens em casa agora e a coloca em uso'}>+ Nova lista com a bolsa atual</button>
-        <button disabled={full} onClick={()=>onPresets(addPreset(presets,[]))}>+ Lista vazia</button>
+        <button className="preset-apply" disabled={full} onClick={()=>onPresets(addPreset(presets,home,undefined,plannedItems,heroId))} title={full?`Limite de ${PRESET_LIMIT} listas`:'Cria uma lista com os itens em casa agora e a coloca em uso'}>+ Nova lista com a bolsa atual</button>
+        <button disabled={full} onClick={()=>onPresets({...addPreset(presets,[],undefined,[],heroId),active:presets.active})}>+ Lista vazia</button>
       </div>
     </header>
     {!presets.slots.length&&<p className="bag-empty">Nenhuma lista salva. Crie uma para alternar rapidamente entre conjuntos de itens deixados em casa.</p>}
@@ -93,9 +95,10 @@ function HomeLists({home,capacity,presets,onPresets,onApply}:{home:string[];capa
       </span>
       <div className="home-list-text">
         <input aria-label={`Nome da lista ${index+1}`} placeholder="Nome da lista" value={slot.name} maxLength={PRESET_NAME_MAX} onChange={e=>onPresets(editPreset(presets,index,{name:e.target.value}))}/>
+        <small>{arsenalOrigin(slot.originHeroId)}</small>
         <textarea aria-label={`Descrição da lista ${index+1}`} placeholder="Descrição (ex.: build de Ninjutsu de Fogo, sem itens de Taijutsu)" rows={2} value={slot.description??''} maxLength={PRESET_DESCRIPTION_MAX} onChange={e=>onPresets(editPreset(presets,index,{description:e.target.value}))}/>
       </div>
-      {icons(slot.items)}
+      <div>{icons(slot.items)}{Boolean(slot.plannedItems?.length)&&<small>{slot.plannedItems?.length} na bolsa</small>}</div>
       <small className="home-list-count">{slot.items.length} {slot.items.length===1?'item':'itens'}</small>
       {confirm===index?<button className="preset-danger" onClick={()=>{setConfirm(null);onPresets(removePreset(presets,index));}}>Confirmar</button>:<button onClick={()=>setConfirm(index)}>Apagar</button>}
       <button disabled={full} onClick={()=>onPresets(duplicatePreset(presets,index))}>Duplicar</button>

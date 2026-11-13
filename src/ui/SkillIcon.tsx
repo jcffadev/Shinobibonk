@@ -1,4 +1,4 @@
-import { BATTLE_EFFECT_ATLAS, SUMMON_EFFECT_ATLAS, battleEffectCell, hasNamedBattleEffect, summonEffectCell } from '../game/techniqueVisualProfiles';
+import { BATTLE_EFFECT_ATLAS, battleEffectCell, hasNamedBattleEffect, signatureEffectTile } from '../game/techniqueVisualProfiles';
 import { expansionVisual } from '../game/rosterExpansion';
 import { puppetArt } from '../scene/kuroari';
 import { HEROES, HERO_BY_ID, familyOf, ultimateBase } from '../game/heroes';
@@ -24,6 +24,7 @@ export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:
   const heroId=familyOf(versionId);
   const merged=name.startsWith('Fusão · ')?name.slice(8).split(' / '):name.split(' + ');
   if(merged.length===2)return <span className="skill-art merged-skill-art" role="img" aria-label={name}><SkillIcon heroId={heroId} name={merged[0]}/><SkillIcon heroId={heroId} name={merged[1]}/></span>;
+  if(versionId==='kabuto-sabio'&&name==='Modo Sábio')return <span className="skill-art" role="img" aria-label={name} style={{background:'url(/assets/technique-kabuto-v1.png) left center / 200% 100% no-repeat',imageRendering:'pixelated'}}/>;
   const sage=sageFaces[heroId];
   if(sage!==undefined&&(name==='Modo Sábio'||name==='Mil Mãos de Madeira'&&heroId==='hashirama'||name.includes('Senjutsu')&&heroId==='orochimaru'))return <span className="skill-art sage-skill-art" role="img" aria-label={name} style={{backgroundPosition:(sage%3)*50+'% '+Math.floor(sage/3)*100+'%'}}/>;
   if(name.includes('Gamabunta')||heroId==='naruto'&&name==='Invocação do Sapo')return <span className="skill-art gamabunta-skill-art" role="img" aria-label={name}/>;
@@ -33,8 +34,11 @@ export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:
   const technique=techniques.get(name)??(hero?.ultimate===name?{...ultimateBase(hero),name}:undefined);
   if(name.startsWith('Espaço ')) return <span className="skill-art empty-skill-art" aria-label={name}>+</span>;
   const signature=expansionVisual(name);
-  const summon=summonEffectCell(name);
-  if(summon!==undefined)return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:'url('+SUMMON_EFFECT_ATLAS+')',backgroundSize:'400% 200%',backgroundPosition:(summon%4)*100/3+'% '+Math.floor(summon/4)*100+'%',backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;
+  const tile=signatureEffectTile(name);
+  if(tile){
+    const {path,cell,rows,cols=4}=tile;
+    return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:`url(${path})`,backgroundSize:`${cols*100}% ${rows*100}%`,backgroundPosition:`${(cell%cols)*100/(cols-1)}% ${rows===1?50:Math.floor(cell/cols)*100/(rows-1)}%`,backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;
+  }
   if(technique&&hasNamedBattleEffect(name)&&namedIcons[name]===undefined){const i=battleEffectCell(technique);return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:`url(${BATTLE_EFFECT_ATLAS})`,backgroundSize:'400% 600%',backgroundPosition:`${(i%4)*100/3}% ${Math.floor(i/4)*20}%`,backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;}
   const cell=(signature?expansionIcons[signature]:undefined)??namedIcons[name]??(name.includes('Sapo')||name.includes('Gamabunta')?undefined:technique?elementIcon[technique.element]
     :/Katon/.test(name)?8:/Suiton/.test(name)?5:/Raiton/.test(name)?10:/Doton/.test(name)?14:/Fuuton/.test(name)?11:undefined);

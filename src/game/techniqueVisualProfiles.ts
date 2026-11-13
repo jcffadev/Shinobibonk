@@ -7,6 +7,32 @@ const summons:readonly (readonly [RegExp,number])[]=[
   [/Cem Marionetes/,4],[/Ibuse/,5],[/Molusco/,6],[/Invocação dos Caminhos|Seis Caminhos do Rinnegan/,7],
 ];
 export const summonEffectCell=(name:string)=>summons.find(([pattern])=>pattern.test(name))?.[1];
+export const FACTION_EFFECT_ATLAS='/assets/technique-factions-v1.png';
+const factionCells:Record<string,number>={
+  paper:0,clay:1,scythe:2,ritual:2,threads:3,spores:4,mutant:5,bones:6,scalpel:7,
+  boulder:8,dome:8,web:9,'spider-arrow':9,flute:10,doki:10,rashomon:11,
+  resonance:12,'air-cannon':13,bells:14,'bone-blade':15,
+};
+export const FACTION_EFFECT_ATLAS_DETAIL='/assets/technique-factions-v2.png';
+const factionDetails:Record<string,number>={
+  'C2: Dragão de Argila':0,'C3: Bomba de Argila':1,'Shuriken de Papel':2,'Templo do Nirvana':3,
+  'Sequência de Punhos Múltiplos':4,'Parasitismo dos Gêmeos':4,'Kubikiribōchō: Corte de Jūzō':5,'Kubikiribōchō: Corte Ascendente':5,'Investida de Jūzō':5,
+  'Mãos de Serpentes Ocultas':6,'Mãos de Serpentes Ocultas Múltiplas':6,'Invocação dos Doki':7,
+};
+const factionNames:Record<string,number>={
+  'Fogo e Vento: Mar de Chamas':3,'Dança das Clematites':15,
+  'Bisturi de Chakra: Corte Cirúrgico':7,
+};
+export function signatureEffectTile(name:string) {
+  if(/Hakugeki/.test(name))return {path:'/assets/technique-kabuto-v1.png',cell:1,rows:1,cols:2};
+  if(name==='Muki Tensei')return {path:FACTION_EFFECT_ATLAS,cell:8,rows:4};
+  const detail=factionDetails[name];
+  if(detail!==undefined)return {path:FACTION_EFFECT_ATLAS_DETAIL,cell:detail,rows:2};
+  const cell=factionNames[name]??factionCells[expansionVisual(name)??''];
+  if(cell!==undefined)return {path:FACTION_EFFECT_ATLAS,cell,rows:4};
+  const summon=summonEffectCell(name);
+  if(summon!==undefined)return {path:SUMMON_EFFECT_ATLAS,cell:summon,rows:2};
+}
 export const BATTLE_EFFECT_ATLAS='/assets/technique-effects-roster-v1.png';
 const profiles:readonly (readonly [RegExp,number])[]=[
   [/Amaterasu/,1],

@@ -60,7 +60,7 @@ await page.getByRole('button',{name:'Limpar filtros'}).click();
 await page.locator('.cs-village-tag[title*="Konohagakure"] svg').waitFor();
 await page.screenshot({path:'artifacts/roster.png'});
 await start();
-assert.equal((await state()).form,'Academia');assert.equal((await state()).stats.maxHp,85);
+assert.equal((await state()).form,'Academia');assert.ok((await state()).stats.maxHp>=50&&(await state()).stats.maxHp<=68);
 assert.equal((await state()).enemies.filter(e=>e.heroId).length,0);checks.push('Relógio começa sem guardião antecipado');
 await page.waitForTimeout(1500);assert.equal((await state()).atlasReady,true);checks.push('Textura PNG do personagem carregada');
 await page.screenshot({path:'artifacts/combat.png'});
@@ -563,6 +563,126 @@ const healed=await fieldPage.evaluate(()=>window.__shinobiTest.inspect());
 assert.ok(Math.abs(healed.hp-10-healed.stats.maxHp*.35)<.05);
 checks.push('Bolinho de arroz recupera 35% do HP máximo');
 await fieldPage.close();
+const factionPage=await browser.newPage({viewport:{width:1280,height:800}});
+await factionPage.addInitScript(muteSpeech);
+factionPage.on('pageerror',e=>errors.push(e.message));
+const factionAssets=new Set();
+factionPage.on('response',r=>{
+ const url=new URL(r.url());
+ if(r.status()===404&&!url.pathname.endsWith('favicon.ico'))missing.push(r.url());
+ if(r.ok())factionAssets.add(url.pathname);
+});
+await factionPage.goto('http://127.0.0.1:5176/?test=1');
+await factionPage.getByRole('button',{name:'Escolher shinobi',exact:false}).click();
+for(const [name,org] of [['Konan Akatsuki','Akatsuki'],['Jūgo Taka','Taka'],['Kimimaro Clássico','Quarteto do Som']]){
+ await factionPage.getByLabel('Organização').selectOption(org);
+ await factionPage.locator('.character-card').filter({hasText:name}).click();
+ await factionPage.locator('.detail-title .cs-tag.org').filter({hasText:org}).waitFor();
+}
+await factionPage.getByRole('button',{name:'Planejar missão →',exact:true}).click();
+await factionPage.getByRole('img',{name:'Prévia da técnica Dança da Camélia'}).locator('canvas').waitFor();
+await factionPage.getByRole('button',{name:'Escolher missão →',exact:true}).click();
+await factionPage.getByRole('button',{name:/Começar!/}).click();
+await factionPage.waitForFunction(()=>window.__shinobiTest?.inspect().heroId==='kimimaro'&&window.__shinobiTest.inspect().atlasReady);
+const factionCombat=await factionPage.evaluate(()=>{
+ const api=window.__shinobiTest;
+ api.mapRoute.god();api.clearEnemies();api.target(.75);
+ const landed=api.cast('Dança da Camélia');
+ api.recruitAlly('tayuya');api.recruitAlly('kidomaru');
+ const state=api.inspect();
+ return {landed,damage:state.skillDamage['Dança da Camélia'],synergies:state.synergies.map(s=>s.id)};
+});
+assert.ok(factionCombat.landed&&factionCombat.damage>0);
+assert.ok(factionCombat.synergies.includes('org:quarteto-som'));
+await factionPage.waitForFunction(()=>performance.getEntriesByType('resource').some(entry=>entry.name.endsWith('/assets/technique-factions-v1.png')));
+assert.ok(factionAssets.has('/assets/shinobi-motion/kimimaro-roster-v1.png'));
+checks.push('Akatsuki, Taka e Quarteto nos filtros, Kimimaro com prévia e dano em combate, sinergia ativa com dois ajudantes');
+await factionPage.evaluate(()=>{const d=window.__shinobiTest;d.clearEnemies();d.mapRoute.god();});
+const motionSample=()=>factionPage.evaluate(()=>window.__shinobiTest.motion());
+await factionPage.keyboard.down('w');
+await factionPage.waitForFunction(()=>window.__shinobiTest.motion().pose==='walk');
+const up=await motionSample();
+await factionPage.keyboard.up('w');
+await factionPage.keyboard.down('s');
+await factionPage.waitForFunction(y=>window.__shinobiTest.motion().anim.uvY!==y,up.anim.uvY);
+const down=await motionSample();
+await factionPage.keyboard.up('s');
+await factionPage.keyboard.down('w');await factionPage.keyboard.down('d');
+await factionPage.waitForFunction(y=>window.__shinobiTest.motion().pose==='walk'&&window.__shinobiTest.motion().anim.uvY===y&&!window.__shinobiTest.motion().flipped,down.anim.uvY);
+await factionPage.keyboard.up('d');await factionPage.keyboard.down('a');
+await factionPage.waitForFunction(()=>window.__shinobiTest.motion().flipped);
+await factionPage.keyboard.up('a');await factionPage.keyboard.up('w');
+await factionPage.keyboard.press('Escape');
+await factionPage.getByRole('button',{name:/Configurações/}).click();
+await factionPage.locator('.st-nav').getByRole('button',{name:/Gráficos/}).click();
+await factionPage.getByRole('button',{name:'Baixa',exact:true}).click();
+await factionPage.waitForFunction(()=>window.__shinobiTest.renderSettings().resolution<.9);
+await factionPage.getByRole('button',{name:'Alta',exact:true}).click();
+await factionPage.locator('.st-nav').getByRole('button',{name:/Controles/}).click();
+await factionPage.locator('.st-card').filter({hasText:'Distância da câmera'}).getByRole('slider').fill('32');
+await factionPage.waitForFunction(()=>window.__shinobiTest.renderSettings().zoom===32);
+const far=await factionPage.evaluate(()=>window.__shinobiTest.renderSettings());
+assert.ok(far.barWidth>2.05&&far.resolution>=.95);
+await factionPage.locator('.st-backdrop').getByRole('button',{name:/Voltar/}).click();
+await factionPage.getByRole('button',{name:'Continuar missão',exact:true}).click();
+checks.push('Kimimaro alterna W/S e WD/WA pelas fileiras corretas; câmera, qualidade e barra ao afastar respondem às configurações');
+await factionPage.evaluate(()=>window.__shinobiTest.altarBlessing(4));
+await factionPage.getByRole('heading',{name:'Escolha uma bênção'}).waitFor();
+assert.equal(await factionPage.locator('.level-choice-card').count(),3);
+const altarStats=await factionPage.evaluate(()=>window.__shinobiTest.inspect().stats.extra);
+await factionPage.locator('.level-choice-card').first().click();
+await factionPage.waitForFunction(()=>!window.__shinobiTest.inspect().choice);
+const buffed=await factionPage.evaluate(()=>window.__shinobiTest.inspect().stats.extra);
+assert.equal(Object.keys({...altarStats,...buffed}).filter(key=>altarStats[key]!==buffed[key]).length,1);
+const collected=await factionPage.evaluate(()=>{
+ const d=window.__shinobiTest;
+ d.grantItem('Cartões de Informações Ninja');
+ const saved=d.inspect();
+ return {items:saved.items,damage:saved.stats.extra.damage,levels:d.totem().pendingLevels};
+});
+assert.equal(collected.items['Cartões de Informações Ninja'],1);
+assert.equal(collected.damage,(buffed.damage??0)+.05);
+assert.equal(collected.levels,2);
+checks.push('Altar oferece três bênçãos e aplica uma; Cartões de Informações Ninja concedem dano e enfileiram dois níveis');
+
+await factionPage.close();
+// As duas origens aparecem nas três telas. A configuração ativa é por versão.
+const arsenalPage=await browser.newPage({viewport:{width:1440,height:900}});
+await arsenalPage.addInitScript(()=>{
+ localStorage.setItem('sb_unlocked_heroes_v1',JSON.stringify(['kushina','deidara','hidan']));
+ localStorage.setItem('sb_bag_presets_by_hero_v1',JSON.stringify({
+  naruto:{active:0,slots:[{name:'Vento de Naruto',items:['coins']}]},
+  kushina:{active:0,slots:[{name:'Selos de Kushina',items:['wire']}]},
+ }));
+ localStorage.setItem('sb_shared_bag_imported_v1','1');
+});
+await arsenalPage.goto('http://127.0.0.1:5176/?test=1');
+await arsenalPage.getByRole('button',{name:'Shinobis',exact:true}).click();
+const pick=()=>arsenalPage.getByLabel('Arsenal de Missão',{exact:true});
+assert.match(await pick().textContent(),/Selos de Kushina · Kushina/);
+assert.match(await pick().textContent(),/Vento de Naruto · Naruto/);
+await arsenalPage.locator('.character-card').filter({hasText:'Kushina'}).click();
+assert.equal(await pick().inputValue(),'1');
+await arsenalPage.getByRole('button',{name:'Duplicar',exact:true}).click();
+assert.equal(await pick().locator('option').count(),4);
+await arsenalPage.getByRole('button',{name:'Planejar missão →',exact:true}).click();
+await arsenalPage.locator('.planner-categories').getByRole('button',{name:/Itens/}).click();
+await arsenalPage.getByRole('button',{name:'Lendário',exact:true}).click();
+const cards=arsenalPage.locator('.pool-card').filter({hasText:'Cartões de Informações Ninja'});
+await cards.locator('.planner-rarity').waitFor();
+assert.equal(await cards.locator('.planner-stack-limit').textContent(),'0/10');
+await arsenalPage.getByRole('button',{name:'Raro',exact:true}).click();
+assert.equal(await arsenalPage.getByRole('button',{name:'Lendário',exact:true}).getAttribute('aria-pressed'),'false');
+await arsenalPage.getByRole('button',{name:'Escolher missão →',exact:true}).click();
+assert.equal(await pick().locator('option').count(),4);
+await arsenalPage.getByRole('button',{name:'Excluir',exact:true}).click();
+await arsenalPage.getByRole('button',{name:'Confirmar exclusão',exact:true}).click();
+assert.equal(await pick().locator('option').count(),3);
+await arsenalPage.getByRole('button',{name:'Arsenal de Missão',exact:true}).click();
+assert.equal(await pick().locator('option').count(),3);
+checks.push('Arsenais antigos de Naruto e Kushina migrados, origem visível nas três telas, duplicação/exclusão sincronizadas e raridade 0/10');
+await arsenalPage.close();
+
 assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);checks.push('Sem exceções JavaScript ou assets 404');
 console.log(JSON.stringify({checks,errors,missing,performanceSample},null,2));fs.writeFileSync('artifacts/runtime-checks.json',JSON.stringify({date:new Date().toISOString(),checks,errors,missing,performanceSample},null,2));
 }finally{await browser?.close();await server.close();}

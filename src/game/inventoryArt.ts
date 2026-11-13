@@ -29,10 +29,12 @@ function atlasCell(path: string, index: number, sheet: number) {
 
 const itemCells = Object.fromEntries(itemPages.flatMap((ids, page) =>
   ids.map((id, index) => [id, atlasCell(`/assets/inventory-v3-${page + 1}.png`, index, page)])));
-/** Itens com arte própria usam um PNG avulso em /assets/inventory/ até ganharem arte no atlas.
- *  Rodada 47: a Isca Shinobi (`shinobi-bait`) migrou para PÍLULA (pills.ts) — lista fica vazia; a cápsula
- *  colorida com glifo (PillIcon) cobre o ícone sem arte nova, como as demais pílulas. */
+/** Ícones próprios usam PNGs avulsos até ganharem uma célula no atlas. */
 const looseItems:Record<string,ReturnType<typeof atlasCell>>=Object.fromEntries(
-  ['revive','rinne-tensei'].map(id=>[id,{backgroundImage:`url(/assets/inventory/${id}-v1.png)`,backgroundSize:'100% 100%',backgroundPosition:'center'}]));
+  ['revive','rinne-tensei','ninja-info-cards'].map(id=>[id,{backgroundImage:`url(/assets/inventory/${id}-v1.png)`,backgroundSize:'100% 100%',backgroundPosition:'center'}]));
 export const itemArt = (id: string) => looseItems[id] ?? itemCells[id];
-export const pillArt = Object.fromEntries(pills.map((id, index) => [id, atlasCell('/assets/pills-v3.png', index, 4)]));
+export const pillArt = {
+  ...Object.fromEntries(pills.map((id, index) => [id, atlasCell('/assets/pills-v3.png', index, 4)])),
+  incenso: { backgroundImage: 'url(/assets/inventory/pill-incenso-v1.png)', backgroundSize: 'contain', backgroundPosition: 'center' },
+  isca: { backgroundImage: 'url(/assets/inventory/pill-anbu-v1.png)', backgroundSize: 'contain', backgroundPosition: 'center' },
+} as Record<string, ReturnType<typeof atlasCell>>;

@@ -8,26 +8,11 @@
 .planner-active { display: flex; gap: 12px; align-items: baseline; padding: 4px 2px 12px; }
 .planner-active small { color: #aebad0; }
 .planner-categories { display: grid; grid-template-columns: 1.5fr 1fr .9fr 1fr; gap: 8px; }
-.planner-categories > button {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 10px;
-  min-height: 76px;
-  text-align: left;
-  font: inherit;
-  background: #1f293b;
-  color: #f4f0e7;
-  border: 1px solid #40506a;
-  border-radius: 12px;
-}
-.planner-categories > button.active { border-color: #f1c057; box-shadow: inset 0 0 0 1px #f1c057; }
-.planner-categories b > small, .mission-planner .build-tabs small {
-  color: #ffe29b;
-  background: #5b4728;
-  padding: 1px 7px;
-  border-radius: 10px;
-}
+.planner-categories > div {min-width:0;min-height:66px;padding:7px 9px;background:#1d283a;border:1px solid #3b4b65;border-radius:10px}
+.planner-categories > div.active {border-color:#eec25d;background:#242c3a}
+.planner-categories > div > button {display:flex;align-items:center;gap:6px;width:100%;margin:0 0 5px;padding:0;border:0;background:none;color:#f1f3f9;text-align:left;font:inherit;font-size:.87rem;font-weight:750;cursor:pointer}
+.planner-categories > div > button:hover {color:#ffe19a}
+.planner-categories button small {border-radius:10px;background:#514324;color:#ffe19a;padding:1px 6px;font-size:.7rem}
 .planner-slots { display: flex; flex-wrap: wrap; gap: 5px; }
 .planner-slots > span, .planner-slots > i {
   display: grid;
@@ -42,11 +27,8 @@
 .planner-slots > span > * { width: 22px; height: 22px; }
 .planner-tactics { margin: 12px 0; color: #d6ddea; }
 .planner-tactics summary { cursor: pointer; font-weight: 700; }
-.mission-planner .build-tabs { gap: 6px; margin: 10px 0; }
-.mission-planner .build-detail { background: #1c273a; border-color: #40506a; }
-.mission-planner .build-tech-list { border-radius: 12px; }
-.mission-planner .build-table td { padding: 7px; }
-.mission-planner .build-table .pool-card.planned { box-shadow: inset 3px 0 #f1c057; }
+.mission-planner .build-detail { background:#1c273a;border-color:#40506a;align-self:start;padding:12px;min-width:0 }
+.mission-planner .build-tech-list {border-radius:10px;padding:0;scrollbar-color:#586986 #141b28;scrollbar-width:thin}
 .ms-box select { display: block; width: 100%; margin-top: 6px; }
 @media (max-width: 640px) {
   .planner-categories { grid-template-columns: repeat(2,minmax(0,1fr)); }
@@ -79,3 +61,95 @@
 .planner-option .build-cell-actions { justify-content: flex-start; }
 .planner-fusion-icons { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .planner-fusion-icons .skill-art { width: 25px; height: 25px; }
+
+.planner-page {width:min(1530px,100%);padding:18px clamp(12px,3vw,40px)}
+.planner-page .page-heading {margin-bottom:10px;gap:10px}
+.planner-page .page-heading h1 {font-size:clamp(22px,3vw,37px)}
+.planner-page h1 em {color:#efd4a4;font-size:.8em;margin-left:.35em}
+.planner-page .page-heading .button {padding:8px 15px;min-height:34px}
+.mission-planner .planner-active {padding:0 0 7px;font-size:.88rem}
+.mission-planner .planner-tactics {margin:8px 0;font-size:.85rem}
+.mission-planner .build-view-filters {margin:6px 0 8px}
+.mission-planner .build-view-filters button {padding:4px 8px;font-size:.76rem}
+.mission-planner .pool-filters {margin:5px 0;gap:5px}
+.mission-planner .pool-filters :is(input,select,button) {padding:6px 8px;min-height:30px;font-size:.74rem}
+.mission-planner .build-workspace {gap:8px;grid-template-columns:minmax(0,2fr) minmax(230px,1fr)}
+.mission-planner .planner-card-grid {grid-template-columns:repeat(auto-fill,minmax(min(100%,185px),1fr));padding:1px 5px 3px 1px;gap:6px}
+.mission-planner .planner-option {gap:5px;padding:6px;border-width:1px}
+.mission-planner .planner-option.focused {outline:2px solid #86b5ff;outline-offset:-2px}
+.mission-planner .planner-option.archived {opacity:1;background:#21252e}
+.mission-planner .planner-option.archived .build-entry {opacity:.72}
+.mission-planner .planner-option .build-entry {padding:3px;gap:6px;background:transparent;border-radius:5px}
+.mission-planner .planner-option .build-entry > span:not([role]) {min-width:0}
+.mission-planner .planner-option .build-entry b {max-width:none;white-space:normal;font-size:.8rem}
+.mission-planner .planner-option .build-entry small {color:#b8c6de;font-size:.67rem}
+.mission-planner .planner-option-state {padding:0 3px;color:#f0d296;font-size:.67rem}
+.mission-planner .build-cell-actions {gap:4px;margin-top:auto}
+.mission-planner .build-cell-actions button,.planner-fusions button {border:1px solid #51607c;border-radius:5px;background:#334259;color:#eef3ff;font:700 .69rem inherit;padding:4px 6px;cursor:pointer}
+.mission-planner .build-cell-actions button:hover,.planner-fusions button:hover {background:#455874}
+.mission-planner .build-cell-actions button.enable-skill {background:#23584f;border-color:#528a76}
+.mission-planner .build-cell-actions button.training-star[aria-pressed=true] {color:#ffe19a;border-color:#e3b957}
+.mission-planner .build-cell-actions button:disabled,.planner-fusions button:disabled {opacity:.5;cursor:default}
+.planner-slots > span {position:relative}
+.planner-slots .planner-remove {position:absolute;top:-4px;right:-4px;display:grid;place-items:center;width:16px;height:16px;padding:0;margin:0;border:1px solid #c87876;border-radius:50%;background:#481d27;color:#fff4f4;font:800 12px/1 sans-serif;opacity:0;pointer-events:none;cursor:pointer}
+.planner-slots > span:is(:hover,:focus-within) .planner-remove {opacity:1;pointer-events:auto}
+@media (hover:none){.planner-slots .planner-remove {opacity:1;pointer-events:auto}}
+.planner-detail-heading {display:flex;align-items:center;gap:8px;margin:0 0 4px}
+.planner-detail-heading :is(.skill-art,.catalog-icon) {width:38px;height:38px;flex:none}
+.planner-detail-heading h2 {margin:0;font-size:1.06rem}
+.mission-planner .build-detail p {font-size:.8rem;line-height:1.4;margin:5px 0}
+.mission-planner .build-detail .technique-preview {height:clamp(115px,19vh,178px)}
+.planner-fusions {display:grid;gap:8px}
+.planner-fusion-toolbar {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.planner-fusion-toolbar h2 {font-size:1rem;margin:0}
+.planner-fusion-toolbar p,.planner-empty {font-size:.77rem;margin:3px 0;color:#b8c6de}
+.planner-fusion-toolbar .build-fusion-form {margin:0}
+.planner-fusion-toolbar select {max-width:190px;font-size:.75rem;color:#edf2ff;background:#222e43;border-color:#4c5e7c}
+.planner-fusion-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,485px),1fr));gap:8px}
+.planner-saved-fusion {padding:8px;border:1px solid #5f523a;border-radius:10px;background:#192233}
+.planner-saved-fusion > header {display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:6px;font-size:.81rem;color:#f6d78c}
+.fusion-comparison {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.planner-fusion-card {min-width:0;padding:8px;border:1px solid #65528a;border-radius:8px;background:#25263d}
+.planner-fusion-card.is-combination {border-color:#4b6e99;background:#202d43}
+.fusion-result-heading {display:flex;align-items:center;gap:7px}
+.fusion-result-heading > .skill-art {width:32px;height:32px;flex:none}
+.fusion-result-heading small {font-size:.68rem;color:#d5bdf3}
+.fusion-result-heading h3 {margin:1px 0 3px;font-size:.84rem}
+.fusion-sources,.fusion-tags {display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}
+.fusion-sources span,.fusion-tags span {display:inline-flex;align-items:center;gap:4px;border-radius:4px;background:#141c2c;padding:2px 5px;font-size:.68rem}
+.fusion-sources .skill-art {width:17px;height:17px}
+.planner-fusion-card dl {margin:6px 0;font-size:.72rem}
+.planner-fusion-card dl div {display:grid;grid-template-columns:66px 1fr;gap:4px;padding:2px 0}
+.planner-fusion-card dt {color:#b8c6de}
+.planner-fusion-card dd {margin:0}
+.planner-fusion-card p {font-size:.72rem;margin:4px 0 0;color:#b8c6de}
+.account-area .archive-button {font-size:.73rem;padding:6px 9px;min-height:30px}
+@media(max-width:760px){
+ .mission-planner .build-workspace {grid-template-columns:1fr}
+ .mission-planner .planner-card-grid {grid-template-columns:repeat(auto-fill,minmax(min(100%,135px),1fr))}
+}
+@media(max-width:490px){.fusion-comparison {grid-template-columns:1fr}}
+
+.planner-tooltip {position:fixed;z-index:250;pointer-events:none;display:grid;gap:4px;max-width:min(270px,calc(100vw - 16px));border:1px solid #576985;border-radius:8px;background:#172236;color:#edf4ff;box-shadow:0 7px 20px #0009;padding:8px 10px;font-size:.76rem}
+.planner-tooltip b {color:#ffdc94}
+.planner-tooltip small {color:#b3c5dc}
+.planner-option-effect {display:block;margin-top:3px;color:#a1dfca}
+.planner-tactics-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:6px 0}
+.planner-tactics-grid .build-tactics,.planner-archives {margin:0;padding:8px 10px;border:1px solid #415370;border-radius:8px;background:#1d283a;color:#e4edf9}
+.planner-archives h3 {margin:0 0 6px;font-size:.85rem}
+.planner-archives h3 small,.planner-archives .planner-slots > small {color:#b8c6de}
+.planner-tactics-grid form {display:flex;flex-wrap:wrap;gap:5px;margin:7px 0 0}
+.planner-tactics-grid form :is(input,button) {min-height:28px;border:1px solid #536482;border-radius:5px;background:#29364d;color:#f3f6fe;font-size:.75rem;padding:4px 7px}
+.planner-tactics-grid form input {flex:1;min-width:110px}
+.planner-tactics-grid form button:disabled {opacity:.5}
+@media(max-width:700px){.planner-tactics-grid{grid-template-columns:1fr}}
+
+.planner-rarity {display:inline-flex;gap:4px;align-items:center;padding:1px 5px;border:1px solid var(--rarity,#bcc5d6);border-radius:999px;color:var(--rarity,#bcc5d6);background:#141d2c;font-weight:800}
+.planner-rarity i {width:6px;height:6px;border-radius:50%;background:currentColor}
+.planner-stack-limit {display:inline-block;margin-left:5px;color:#d3ddee;font-variant-numeric:tabular-nums}
+.mission-planner .build-cell-actions button,.planner-fusions button {font:inherit;font-size:.69rem;font-weight:700}
+
+.planner-item-meta{display:inline-flex;align-items:center;gap:5px}
+.planner-rarity{border-color:color-mix(in srgb,var(--rarity) 45%,transparent);padding:2px 6px;background:#141c2bee}
+.planner-rarity i{width:7px;height:7px;box-shadow:0 0 0 2px #0006}
+.planner-stack-limit{margin-left:0}

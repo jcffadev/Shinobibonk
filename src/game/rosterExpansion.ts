@@ -43,6 +43,7 @@ function variant(base: Expansion, id: string, title: string, form: number, playW
   return { ...base, id, title, form, stats: [Math.round(hp * (1 + .12 * step)), damage * (1 + .12 * step), armor + step, speed + .08 * step],
     kit, ultimate, mission: { map, difficulty, minute, kills, title: missionTitle, story, playWith } };
 }
+const sage = 'Sábio' as const;
 const expansion: Signature = { ...strike('Jutsu de Expansão', taijutsu, neutral, 'Buff', 'impact'),
   setup: { cooldown: 14, duration: 5, bonuses: { area: .35, normal: .2, defense: 4 }, stack: false,
     summary: 'Expande o corpo de Chōji por 5 s. +35% de área, +20% de taijutsu e +4 de armadura.' } };
@@ -56,6 +57,8 @@ const ino = entry('ino','Ino Yamanaka','Genin',leaf,[83,24,4,6.8],'Mente Sensora
   [strike('Transferência de Mente',genjutsu,shadow,line,'mind','Paralisar'),strike('Perturbação da Mente',genjutsu,shadow,area,'mind','Atordoar')],'Possessão da Mente',['folha','Genin',2,160],'A Mente do Time 10','Supere o teste de concentração da família Yamanaka.');
 const obito = entry('obito','Obito Uchiha','Genin',leaf,[91,26,5,6.9],'Olho Desperto · +6 pontos de chance crítica e +10% ninjutsu.',{crit:.06,element:.1},
   [strike('Katon: Grande Bola de Fogo',ninjutsu,fire,cone,'fire'),strike('Técnica de Manipulação de Shuriken',taijutsu,neutral,line,'blade','Lentidão')],'Chamas de Kannabi',['pedra','Chunin',3,340],'A Ponte de Kannabi','Encontre Obito na rota da ponte de Kannabi.',['kakashi']);
+const kabuto = {...entry('kabuto','Kabuto Yakushi','Clássico','Vila do Som',[96,26,5,6.95],'Ninjutsu Médico · +0,9 HP/s e +1,5 coleta.',{regen:.9,pickupFlat:1.5},
+  [strike('Bisturi de Chakra',ninjutsu,neutral,melee,'scalpel'),strike('Templo do Nirvana',genjutsu,shadow,area,'sleep','Dormir')],'Bisturi de Chakra: Corte Cirúrgico',['folha','Chunin',4,345],'O Espião Médico','Identifique o espião nos arredores da arena do Exame Chūnin.',['orochimaru']),medical:true};
 const hanabi = entry('hanabi','Hanabi Hyūga','Clássico',leaf,[86,25,5,6.9],'Olhos da Casa Principal · +10% taijutsu e +7 pontos de chance crítica.',{normal:.1,crit:.07},
   [strike('Palma dos Oito Trigramas',taijutsu,neutral,melee,'palms','Atordoar'),strike('Passos da Casa Principal',taijutsu,neutral,orbit,'palms','Empurrar')],'Oito Trigramas: Sessenta e Quatro Palmas',['folha','Chunin',3,320],'A Herdeira Hyūga','Prove sua técnica no pátio do clã Hyūga.',['hinata']);
 
@@ -118,6 +121,44 @@ export const ROSTER_EXPANSION: readonly Expansion[] = [
     [strike('Taijutsu dos Monges',taijutsu,neutral,cone,'palms','Atordoar'),strike('Assassinato de Mil Braços',ninjutsu,neutral,area,'palms','Empurrar')],'Ira dos Mil Braços',['folha','Chunin',4,350],'O Monge do Fogo','Visite o Templo do Fogo e enfrente seu guardião.',['asuma']),
   entry('sakumo','Sakumo Hatake','Canino Branco',leaf,[105,28,6,7.15],'Fio de Chakra Branco · +16% taijutsu e +7 pontos de chance crítica.',{normal:.16,crit:.07},
     [strike('Corte da Lâmina Branca',taijutsu,neutral,line,'blade','Atordoar'),strike('Investida do Canino Branco',taijutsu,neutral,wave,'fang','Empurrar')],'Clarão do Canino Branco',['folha','Jonin',5,485],'A Lâmina Branca','Siga o legado do Canino Branco da Folha.',['kakashi']),
+  entry('deidara','Deidara','Akatsuki',stone,[91,29,4,7.05],'Argila Explosiva · +18% ninjutsu e +12% área.',{element:.18,area:.12},
+    [strike('C1: Ave de Argila',ninjutsu,earth,projectile,'clay','Empurrar'),strike('C2: Dragão de Argila',ninjutsu,earth,line,'clay','Atordoar')],'C3: Bomba de Argila',['pedra','Jonin',4,490],'Arte Explosiva','Intercepte os explosivos de Deidara no País da Terra.'),
+  entry('hidan','Hidan','Akatsuki','Vila das Fontes Termais',[118,28,6,6.9],'Imortalidade de Jashin · revive uma vez com 35% do HP.',{revive35:1},
+    [strike('Foice de Três Lâminas',taijutsu,neutral,cone,'scythe','Empurrar'),strike('Ritual de Jashin',ninjutsu,neutral,area,'ritual','Paralisar')],'Maldição do Sangue',['folha','Jonin',4,480],'O Ritual de Jashin','Supere o ritual de Hidan na rota do Templo do Fogo.',['asuma']),
+  entry('kakuzu','Kakuzu','Akatsuki','Vila da Cachoeira',[130,28,8,6.45],'Corações do Ressentimento · +1 HP/s e +15% ninjutsu.',{regen:1,element:.15},
+    [strike('Jiongu: Fios Negros',ninjutsu,neutral,line,'threads','Paralisar'),strike('Fūton: Pressão',ninjutsu,wind,cone,'air-cannon','Empurrar')],'Fogo e Vento: Mar de Chamas',['folha','Jonin',5,550],'Corações Roubados','Enfrente as máscaras elementais de Kakuzu após o ritual.',['hidan']),
+  entry('konan','Konan','Akatsuki',rain,[90,28,4,7.1],'Dança do Papel · +10% evasão e +1 projétil.',{dodge:.1,projectiles:1},
+    [strike('Shuriken de Papel',ninjutsu,neutral,projectile,'paper'),strike('Dança do Shikigami',ninjutsu,neutral,cone,'paper','Lentidão')],'Técnica do Papel Divino',['nevoa','Jonin',5,535],'O Anjo da Chuva','Encontre Konan entre os origamis da Chuva.'),
+  entry('zetsu','Zetsu','Akatsuki','Sem aldeia',[98,26,5,6.9],'Esporos · +0,7 HP/s e +20% duração de status.',{regen:.7,duration:.2},
+    [strike('Técnica dos Esporos',ninjutsu,neutral,area,'spores','Lentidão'),strike('Técnica Parasita',ninjutsu,neutral,line,'spores','Paralisar')],'Parasita do Zetsu Negro',['pedra','Jonin',5,530],'O Espião da Akatsuki','Localize Zetsu antes que ele volte ao subsolo.'),
+  entry('jugo','Jūgo','Taka','Vila do Som',[125,29,8,6.55],'Transformação Instintiva · +16% taijutsu e +5 armadura.',{normal:.16,defense:5},
+    [strike('Transformação Sábia: Punho',taijutsu,neutral,melee,'mutant','Atordoar'),strike('Canhão de Chakra de Jūgo',ninjutsu,neutral,line,'mutant','Empurrar')],'Barragem do Canhão de Chakra',['pedra','Jonin',5,485],'A Origem do Selo Amaldiçoado','Encontre Jūgo na rota do refúgio do Norte.',['suigetsu','karin']),
+  kabuto,
+  {...variant(kabuto,'kabuto-sabio','Sábio do Dragão',30,'kabuto',
+    [strike('Muki Tensei',ninjutsu,sage,area,'cave','Paralisar',earth),strike('Hakugeki',ninjutsu,sage,line,'white-rage','Atordoar')],
+    'Arte Sábia: Hakugeki',['nevoa','Kage',6,780],'O Sábio da Caverna Ryūchi','Jogue com Kabuto Clássico e enfrente o Sábio do Dragão.'),
+    passive:'Sábio do Dragão · Senjutsu ativo, +18% ninjutsu e +1 HP/s.',bonuses:{sage:1,element:.18,regen:1}},
+  entry('kimimaro','Kimimaro','Clássico','Vila do Som',[111,29,7,7],'Shikotsumyaku · +16% taijutsu e +6 armadura.',{normal:.16,defense:6},
+    [strike('Dança da Camélia',taijutsu,neutral,cone,'bone-blade'),strike('Dança da Samambaia',ninjutsu,neutral,area,'bones','Paralisar')],'Dança das Clematites: Flor',['folha','Jonin',5,550],'O Último Kaguya','Alcance Kimimaro na rota da recuperação de Sasuke.',['jirobo','kidomaru','tayuya','sakon-ukon']),
+  entry('jirobo','Jirōbō','Quarteto do Som','Vila do Som',[125,27,9,6.2],'Força do Selo · +8 armadura e +12% área.',{defense:8,area:.12},
+    [strike('Doton: Arremesso da Rocha',ninjutsu,earth,projectile,'boulder','Empurrar'),strike('Doton: Prisão da Cúpula de Terra',ninjutsu,earth,area,'dome','Paralisar')],'Doton: Retorno da Terra',['folha','Chunin',3,340],'A Cúpula do Som','Rompa a cúpula que bloqueia a rota da perseguição.',['orochimaru']),
+  entry('kidomaru','Kidōmaru','Quarteto do Som','Vila do Som',[90,28,5,7],'Arqueiro de Seda Dourada · +15% velocidade de projétil e +8 pontos de chance crítica.',{projectileSpeed:.15,crit:.08},
+    [strike('Teia de Aranha',ninjutsu,neutral,projectile,'web','Paralisar'),strike('Arco de Guerra da Aranha',taijutsu,neutral,projectile,'spider-arrow')],'Flecha da Aranha: Tiro Guiado',['folha','Chunin',4,380],'A Teia no Bosque','Rompa as teias e alcance Kidōmaru no bosque.',['jirobo']),
+  entry('tayuya','Tayuya','Quarteto do Som','Vila do Som',[91,27,5,6.85],'Flauta Demoníaca · +18 pontos de chance de Genjutsu e +20% duração de status.',{genjutsu:.18,duration:.2},
+    [strike('Correntes da Flauta Demoníaca',genjutsu,shadow,wave,'flute','Paralisar'),strike('Invocação dos Doki',ninjutsu,neutral,area,'doki','Atordoar')],'Flauta Demoníaca: Sonho das Correntes',['folha','Chunin',4,400],'A Flauta na Floresta','Resista à melodia de Tayuya e aos seus Doki.',['jirobo']),
+  entry('sakon-ukon','Sakon e Ukon','Quarteto do Som','Vila do Som',[110,28,7,6.75],'Corpos Gêmeos · +14% taijutsu e +0,6 HP/s.',{normal:.14,regen:.6},
+    [strike('Sequência de Punhos Múltiplos',taijutsu,neutral,melee,'twins','Atordoar'),strike('Invocação: Rashōmon',ninjutsu,neutral,line,'rashomon','Empurrar')],'Parasitismo dos Gêmeos',['folha','Jonin',4,490],'Os Gêmeos do Som','Sobreviva à emboscada de Sakon e Ukon.',['jirobo']),
+  entry('dosu','Dosu Kinuta','Trio do Som','Vila do Som',[90,26,5,6.8],'Braço Ressonante · +14 pontos de chance de status e +10% área.',{status:.14,area:.1},
+    [strike('Furadeira Ressonante',ninjutsu,neutral,melee,'resonance','Atordoar'),strike('Vibração do Amplificador',ninjutsu,neutral,cone,'resonance','Lentidão')],'Ressonância do Som',['folha','Genin',3,240],'A Ressonância do Exame','Enfrente Dosu na arena do Exame Chūnin.'),
+  entry('zaku','Zaku Abumi','Trio do Som','Vila do Som',[87,26,4,7.1],'Dutos de Ar · +16% velocidade de projétil e +10% ninjutsu.',{projectileSpeed:.16,element:.1},
+    [strike('Ondas Cortantes de Ar',ninjutsu,neutral,cone,'air-cannon','Empurrar'),strike('Ondas Cortantes Extremas',ninjutsu,neutral,line,'air-cannon','Atordoar')],'Ondas Cortantes: Descarga Total',['folha','Genin',2,190],'Os Dutos de Ar','Desvie das rajadas de Zaku na floresta do Exame.'),
+  entry('kin','Kin Tsuchi','Trio do Som','Vila do Som',[86,25,4,7.1],'Sinos Ilusórios · +16 pontos de chance de Genjutsu e +10% duração de status.',{genjutsu:.16,duration:.1},
+    [strike('Senbon com Sinos',taijutsu,neutral,projectile,'bells'),strike('Ilusão dos Sinos',genjutsu,shadow,area,'bells','Paralisar')],'Eco dos Sinos Ilusórios',['folha','Genin',2,180],'O Eco dos Sinos','Rastreie o som dos sinos de Kin na arena.'),
+  entry('juzo','Jūzō Biwa','Akatsuki',mist,[111,28,7,6.8],'Espadachim Renegado · +14% taijutsu e +5 pontos de chance crítica.',{normal:.14,crit:.05},
+    [strike('Kubikiribōchō: Corte de Jūzō',taijutsu,neutral,cone,'juzo-blade','Empurrar'),strike('Kubikiribōchō: Corte Ascendente',taijutsu,neutral,line,'juzo-blade','Atordoar')],'Investida de Jūzō',['nevoa','Jonin',5,565],'O Primeiro Parceiro de Itachi','Encontre Jūzō nos arredores da Névoa.',['itachi-akatsuki']),
+  {...entry('orochimaru-akatsuki','Orochimaru','Akatsuki',leaf,[148,30,8,7.1],'Ambição da Serpente · +18% ninjutsu e +20% duração de status.',{element:.18,duration:.2},
+    [strike('Mãos de Serpentes Ocultas',ninjutsu,neutral,line,'snake','Paralisar'),strike('Fūton: Grande Avanço',ninjutsu,wind,wave,'air-cannon','Empurrar')],'Mãos de Serpentes Ocultas Múltiplas',['nevoa','Kage',6,820],'O Manto da Serpente','Jogue com Orochimaru da Vila do Som e enfrente a versão de seu tempo na Akatsuki.'),
+    family:'orochimaru',form:30,mission:{map:'nevoa',difficulty:'Kage',minute:6,kills:820,playWith:'orochimaru-som',title:'O Manto da Serpente',story:'Jogue com Orochimaru da Vila do Som e enfrente a versão de seu tempo na Akatsuki.'}},
   variant(choji,'choji-guerra','Quarta Guerra',15,'choji',[strike('Asas de Borboleta',taijutsu,neutral,wave,'wings','Empurrar'),expansion],'Bombardeio da Borboleta',['pedra','Jonin',5,600],'As Asas da Aliança','Jogue com Chōji Genin e alcance o campo de batalha.'),
   variant(kiba,'kiba-shippuden','Shippuden',15,'kiba',[strike('Presa sobre Presa Dupla de Duas Cabeças',taijutsu,neutral,wave,'fang','Empurrar'),strike('Presa Rotativa',taijutsu,neutral,cone,'fang','Atordoar')],'Lobo de Três Cabeças',['folha','Chunin',4,380],'Duas Cabeças, Uma Presa','Jogue com Kiba Genin e aperfeiçoe o ataque em dupla.'),
   variant(shino,'shino-shippuden','Shippuden',15,'shino',[strike('Nuvem de Kikaichū',ninjutsu,neutral,wave,'swarm','Lentidão'),strike('Prisão de Insetos',ninjutsu,neutral,area,'swarm','Paralisar')],'Cerco do Clã Aburame',['folha','Chunin',4,390],'Cerco Aburame','Jogue com Shino Genin e domine a formação do enxame.'),

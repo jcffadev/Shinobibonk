@@ -20,7 +20,7 @@ export function acrobaticsArt(family:string,form:number){
     return {path:`/assets/shinobi-motion/${family}-${form}-acrobatics-v2.png`,kind:'acrobatics' as const,directional:true,rows:2,firstRow:0};
 }
 
-const gaaraSheet = (level: number) => `/assets/shinobi-motion/gaara-${level}-motion-v2.png`;
+const gaaraSheet = (level: number) => `/assets/shinobi-motion/gaara-${level}-motion-v3.png`;
 export const NARUTO_HAND_SEALS = '/assets/shinobi-motion/naruto-hand-seal-v1.png';
 const narutoSealForms = [1, 10, 25, 50];
 export function handSealArt(family: string, level: number) {

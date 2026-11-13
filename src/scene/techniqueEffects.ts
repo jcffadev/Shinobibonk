@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createAtlasEffect } from './atlasEffects';
 import { expansionVisual } from '../game/rosterExpansion';
-import { BATTLE_EFFECT_ATLAS, SUMMON_EFFECT_ATLAS, battleEffectCell, summonEffectCell } from '../game/techniqueVisualProfiles';
+import { BATTLE_EFFECT_ATLAS, FACTION_EFFECT_ATLAS, FACTION_EFFECT_ATLAS_DETAIL, battleEffectCell, signatureEffectTile } from '../game/techniqueVisualProfiles';
 import type { Technique } from '../game/heroes';
 
 const UP = new THREE.Vector3(0, 1, 0);
@@ -9,9 +9,8 @@ const TAU = Math.PI * 2;
 const effectMaps = new Map<string,THREE.Texture>();
 const effectAtlases = new Map<string,THREE.Texture>();
 function battleSprite(t:Technique) {
-  const summon=summonEffectCell(t.name);
-  const path=summon===undefined?BATTLE_EFFECT_ATLAS:SUMMON_EFFECT_ATLAS,rows=summon===undefined?6:2;
-  const cell=summon??battleEffectCell(t),key=path+':'+cell;
+  const {path,cell,rows,cols=4}=signatureEffectTile(t.name)??{path:BATTLE_EFFECT_ATLAS,cell:battleEffectCell(t),rows:6};
+  const key=path+':'+cell;
   let map=effectMaps.get(key);
   if(!map) {
     let atlas=effectAtlases.get(path);
@@ -25,8 +24,8 @@ function battleSprite(t:Technique) {
       effectAtlases.set(path,atlas);
     }
     map=atlas.clone();
-    map.repeat.set(.25,1/rows);
-    map.offset.set(cell%4/4,(rows-1-Math.floor(cell/4))/rows);
+    map.repeat.set(1/cols,1/rows);
+    map.offset.set(cell%cols/cols,(rows-1-Math.floor(cell/cols))/rows);
     effectMaps.set(key,map);
   }
   const material=new THREE.SpriteMaterial({map,transparent:true,alphaTest:.54,depthWrite:false});
@@ -72,8 +71,10 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
     return part;
   };
   const name = t.name;
-  const overlay = !/Kunai Tática|Kunai Hiraishin|Kunai do Instrutor|^Shuriken$|Senbon|Barras de Chakra|Receptores de Chakra|^Rasengan|Rasenshuriken|Bijūdama|Substituição|Bunshin|Invocação do Sapo|Gamabunta|Kuroari|Shinra Tensei|Chibaku Tensei|Susanoo|Espada de Totsuka/.test(name);
-  if(overlay)group.add(battleSprite(t));
+  const overlay = !/Kunai Tática|Kunai Hiraishin|Kunai do Instrutor|^Shuriken$|Senbon|Barras de Chakra|Receptores de Chakra|^Rasengan|Rasenshuriken|Bijūdama|Chute Giratório|Substituição|Bunshin|Invocação do Sapo|Gamabunta|Kuroari|Shinra Tensei|Chibaku Tensei|Susanoo|Espada de Totsuka/.test(name);
+  const namedAtlas=signatureEffectTile(name)?.path;
+  const factionArt=namedAtlas===FACTION_EFFECT_ATLAS||namedAtlas===FACTION_EFFECT_ATLAS_DETAIL;
+  if(overlay||factionArt)group.add(battleSprite(t));
 
   const signature = expansionVisual(name);
   if(signature && !/Rasengan|Rasenshuriken|Bijūdama|Receptores de Chakra/.test(name)) {
@@ -134,6 +135,55 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
         grains(signature==='gold'?'#fff3ad':'#8c91aa',14,.038,.12);
         group.userData.spin=4.5;
         break;
+      case 'paper':
+        fan(7,2.4,(angle,i)=>{
+          const sheet=mesh(new THREE.PlaneGeometry(.11,.25),i%2?'#f7f5ef':'#ced2f0',Math.sin(angle)*.58,.14+i*.06,Math.cos(angle)*.57);
+          sheet.rotation.set(.3*i,angle,.47*i);
+        });
+        group.userData.spin=4;
+        break;
+      case 'clay':
+        grains('#ffe1a6',13,.073,.12);
+        grains('#ef6a36',7,.045,.16);
+        group.userData.directed=true;
+        break;
+      case 'sleep':
+        fan(9,TAU,(angle,i)=>{
+          const feather=mesh(new THREE.PlaneGeometry(.08,.25),'#e7deff',Math.sin(angle)*.52,.24+i*.06,Math.cos(angle)*.52);
+          feather.rotation.set(angle,i*.6,.4*i);
+        });
+        group.userData.spin=2.2;
+        break;
+      case 'cave':
+      case 'bones':
+        fan(7,TAU*.86,(angle,i)=>{
+          const spike=mesh(new THREE.ConeGeometry(.06,.3+i%3*.22,5),signature==='cave'?'#9e8871':'#f2e5c9',Math.sin(angle)*.48,.23,Math.cos(angle)*.48);
+          spike.rotation.z=Math.sin(angle)*.42;
+          spike.rotation.x=Math.cos(angle)*.42;
+        });
+        break;
+      case 'web':
+      case 'threads':
+        fan(5,1.3,(angle,i)=>{
+          const x=Math.sin(angle)*.52;
+          trace([forward(0,.12,0),forward(x*.44,.2+i*.06,.42),forward(x,.16,.89)],.019,signature==='web'?'#efdfad':'#393342');
+        });
+        group.userData.directed=true;
+        break;
+      case 'flute':
+      case 'resonance':
+      case 'air-cannon':
+        fan(3,1,(angle,i)=>{
+          const arc=ring(.28+i*.17,signature==='air-cannon'?'#c0edff':'#c6a5f4',Math.PI*1.24);
+          arc.position.set(0,.31,.23+i*.17);
+          arc.rotation.y=angle*.4;
+        });
+        group.userData.directed=true;
+        break;
+      case 'ritual':
+        ring(.65,'#f14c56').rotation.x=Math.PI/2;
+        blade([[-.34,-.18],[.34,-.18],[0,.41]],'#902e43').position.y=.026;
+        break;
       case 'roots':
         fan(7,5.5,(angle,i)=>{
           const branch=mesh(new THREE.CylinderGeometry(.055,.11,.72+(i%3)*.2,5),i%2?'#674629':'#af7545',Math.sin(angle)*.52,.41,Math.cos(angle)*.52);
@@ -142,6 +192,7 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
         });
         break;
       case 'staff':
+      case 'juzo-blade':
       case 'blade':
       case 'chains':
         fan(signature==='chains'?7:3,1.1,(angle,i)=>{
@@ -247,6 +298,9 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
       });
     };
     group.userData.atlasFrame(0);
+  } else if (name==='Chute Giratório') {
+    for(let i=0;i<3;i++){const blade=ring(.39+i*.12,i%2?'#e7f9ff':'#ffd7a0',Math.PI*1.12);blade.position.y=.05+i*.09;blade.rotation.set(Math.PI*.5,0,-i*.42);}
+    group.userData.spin=15;
   } else if (name==='Kaiten'||name==='Palmas Protetoras'||name==='Oito Trigramas') {
     const dome=mesh(new THREE.SphereGeometry(.87,24,10,0,TAU,0,Math.PI*.5),'#7bdcff');
     dome.material.opacity=.19;
@@ -490,7 +544,14 @@ export function techniqueImpact(t: Technique) {
 
 export function animateTechniqueVisual(object: THREE.Object3D, dt: number, direction?: THREE.Vector3) {
   const sprite=object.getObjectByName('jutsu-sprite');
-  if(sprite instanceof THREE.Sprite){sprite.visible=!!sprite.material.map?.image;const age=(object.userData.battleAge??0)+dt;object.userData.battleAge=age;const scale=1.14+Math.min(age,.18)*1.65;sprite.scale.set(scale,scale,1);}
+  if(sprite instanceof THREE.Sprite){
+    sprite.visible=!!sprite.material.map?.image;
+    const age=(object.userData.battleAge??0)+dt;
+    object.userData.battleAge=age;
+    const phase=Math.min(1,age/.34),envelope=Math.sin(Math.PI*Math.min(1,.12+phase*.88));
+    sprite.scale.set(.87+envelope*.39,.72+envelope*.51,1);
+    sprite.position.y=.45+Math.sin(phase*Math.PI)*.17;
+  }
   if(object.userData.atlasFrame){object.userData.atlasAge=(object.userData.atlasAge??0)+dt;object.userData.atlasFrame(object.userData.atlasAge);}
   if(object.userData.directed && direction) object.rotation.y = Math.atan2(direction.x,direction.z);
   else if(object.userData.spin) object.rotation.y += dt*object.userData.spin;

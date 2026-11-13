@@ -152,13 +152,20 @@ export const ENEMY_FRAME = {attack:3, dash:4, jump:5} as const;
 export function createEnemyRenderer(scene: THREE.Scene) {
   const atlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-motion-v1.png');
   atlas.colorSpace = THREE.SRGBColorSpace;
-  atlas.minFilter = atlas.magFilter = THREE.NearestFilter;
-  atlas.generateMipmaps = false;
+  atlas.magFilter = THREE.NearestFilter;
+  atlas.minFilter = THREE.NearestMipmapNearestFilter;
+  const backAtlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-walk-back-v1.png');
+  backAtlas.colorSpace = THREE.SRGBColorSpace;
+  backAtlas.magFilter = THREE.NearestFilter;
+  backAtlas.minFilter = THREE.NearestMipmapNearestFilter;
   const quad = new THREE.PlaneGeometry(1, 1);
   const layout = { iOffset: 3, iSize: 2, iUv: 4, iColor: 4 };
   const bodies = new Batch(quad, billboardMaterial(atlas, false), layout, scene);
   const outlines = new Batch(quad, billboardMaterial(atlas, true), layout, scene);
-  outlines.mesh.renderOrder = 3; bodies.mesh.renderOrder = 2;
+  const backBodies = new Batch(quad,billboardMaterial(backAtlas,false),layout,scene);
+  const backOutlines = new Batch(quad,billboardMaterial(backAtlas,true),layout,scene);
+  outlines.mesh.renderOrder = backOutlines.mesh.renderOrder = 3;
+  bodies.mesh.renderOrder = backBodies.mesh.renderOrder = 2;
   const ringShape = new THREE.RingGeometry(.1 / 1.35, 1, 32);
   const markerMaterial = new THREE.ShaderMaterial({
     uniforms: THREE.UniformsUtils.merge([THREE.UniformsLib.fog, { diffuse: { value: new THREE.Color('#ff3b55') } }]),
@@ -175,10 +182,17 @@ export function createEnemyRenderer(scene: THREE.Scene) {
     s[i * 2] = sx; s[i * 2 + 1] = sy;
     const columns = COLUMN_EDGES[row], flipped = sp.userData.flipped;
     const left = columns[frame], right = columns[frame+1], top = ROW_EDGES[row], bottom = ROW_EDGES[row+1];
+    if(sp.userData.back){
+      u[i*4]=(frame+Number(flipped))/3+(flipped?-.0007:.0007);
+      u[i*4+1]=(3-row)/4+.0005;
+      u[i*4+2]=(1/3-.0014)*(flipped?-1:1);
+      u[i*4+3]=.249;
+    } else {
     u[i * 4] = (flipped ? right-.5 : left+.5)/1536;
     u[i * 4 + 1] = (1024-bottom+.5)/1024;
     u[i * 4 + 2] = (right-left-1)/1536*(flipped?-1:1);
     u[i * 4 + 3] = (bottom-top-1)/1024;
+    }
     c[i * 4] = r; c[i * 4 + 1] = g; c[i * 4 + 2] = b; c[i * 4 + 3] = 1;
   }
 
@@ -192,15 +206,15 @@ export function createEnemyRenderer(scene: THREE.Scene) {
     marker(radius: number) { const m = new THREE.Mesh(markerGeometry, markerData); m.userData.radius = radius; m.userData.opacity = .3; return m; },
     /** Copia os inimigos vivos para os buffers instanciados (1 vez por quadro, antes do render). */
     sync(enemies: readonly { sprite: THREE.Sprite; marker?: THREE.Mesh }[]) {
-      bodies.count = 0; outlines.count = 0; markers.count = 0;
+      bodies.count = outlines.count = backBodies.count = backOutlines.count = markers.count = 0;
       for (const e of enemies) {
         const sp = e.sprite;
         if (sp.userData.atlas !== undefined) {
           if (sp.parent) sp.parent.remove(sp);
           const col = sp.material.color;
-          pushBody(bodies, sp, sp.scale.x, sp.scale.y, col.r, col.g, col.b);
+          pushBody(sp.userData.back?backBodies:bodies, sp, sp.scale.x, sp.scale.y, col.r, col.g, col.b);
           const oc = sp.userData.outline as THREE.Color | undefined;
-          if (oc) pushBody(outlines, sp, sp.scale.x * 1.14, sp.scale.y * 1.08, oc.r, oc.g, oc.b);
+          if (oc) pushBody(sp.userData.back?backOutlines:outlines, sp, sp.scale.x * 1.14, sp.scale.y * 1.08, oc.r, oc.g, oc.b);
         }
         const m = e.marker;
         if (m && m.userData.radius !== undefined) {
@@ -210,10 +224,10 @@ export function createEnemyRenderer(scene: THREE.Scene) {
           markers.arr('iRadius')[i] = m.userData.radius; markers.arr('iOpacity')[i] = m.userData.opacity;
         }
       }
-      bodies.commit(); outlines.commit(); markers.commit();
+      bodies.commit(); outlines.commit(); backBodies.commit(); backOutlines.commit(); markers.commit();
     },
     /** Contagem de instâncias do último quadro (ganchos de teste). */
-    stats() { return { bodies: bodies.count, outlines: outlines.count, markers: markers.count }; },
-    dispose() { atlas.dispose(); bodies.dispose(); outlines.dispose(); markers.dispose(); quad.dispose(); ringShape.dispose(); markerGeometry.dispose(); markerData.dispose(); },
+    stats() { return { bodies: bodies.count+backBodies.count, backs:backBodies.count, outlines: outlines.count+backOutlines.count, markers: markers.count }; },
+    dispose() { atlas.dispose(); backAtlas.dispose(); bodies.dispose(); outlines.dispose(); backBodies.dispose(); backOutlines.dispose(); markers.dispose(); quad.dispose(); ringShape.dispose(); markerGeometry.dispose(); markerData.dispose(); },
   };
 }

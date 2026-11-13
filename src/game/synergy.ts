@@ -83,6 +83,8 @@ export const ORG_COMBOS: Record<string, { tag: string; icon: string; theme: stri
   akatsuki: { tag: 'AKATSUKI', icon: '☁️', theme: 'Dupla de criminosos rank S: crítico.', base: { crit: .03, critDamage: .1 } },
   alianca: { tag: 'ALIANÇA', icon: '🤝', theme: 'Divisões da Quarta Guerra: resistência e cura em conjunto.', base: { defense: 4, regen: .35 } },
   taka: { tag: 'TAKA', icon: '🦅', theme: 'Incursões do esquadrão de Sasuke: velocidade e chance crítica.', base: { move: .05, crit: .03 } },
+  'quarteto-som': { tag: 'QUARTETO DO SOM', icon: '🎼', theme: 'Formação do Som: armadura e duração de status.', base: { defense: 3, duration: .1 } },
+  'trio-som': { tag: 'TRIO DO SOM', icon: '🔔', theme: 'Amplificadores e sinos: velocidade de projétil e chance de status.', base: { projectileSpeed: .08, status: .05 } },
   sannin: { tag: 'SANNIN', icon: '🐸', theme: 'Os três ninjas lendários: vida e cura.', base: { health: 30, regen: .6 } },
   hokage: { tag: 'HOKAGE', icon: '🔥', theme: 'Líderes da Folha: experiência e área.', base: { exp: .06, area: .05 } },
   time7: { tag: 'TIME 7', icon: '7️⃣', theme: 'Trabalho em equipe do Time Kakashi: dano.', base: { damage: .05 } },

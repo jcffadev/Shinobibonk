@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Rodada 54 · 13/11/2026 — trabalho do Codex retomado e publicado pelo Claude Code
+
+O Codex parou com esta rodada sem commit (última edição 08:48 de 13/11). Publicada como estava, após validação:
+
+- **Elenco: 96 → 114 versões.** Akatsuki: Deidara, Hidan, Kakuzu, Konan, Zetsu, Jūzō e Orochimaru Akatsuki (família Orochimaru, forma 30). Som: Kabuto e Kabuto Sábio do Dragão, Kimimaro, Quarteto do Som (Jirōbō, Kidōmaru, Tayuya, Sakon e Ukon) e Trio do Som (Dosu, Zaku, Kin). Taka: Jūgo. Cada um com missão, passiva, kit, Ultimate e folha `*-roster-v1.png`.
+- **Arte:** folhas v3 de movimento dos três Gaaras, atlas de movimento das bijū, inimigos andando de costas, 5 atlas de retratos da seleção, efeitos por facção e do Kabuto, ícones da Pílula ANBU, Pílula de Incenso e Chute Giratório, cartões de informação ninja.
+- **Balanceamento (aguardando teste do usuário):** HP inicial ~57 (50–68 por personagem; antes 85); escala de dano por nível 0,74 no Nv. 1 e ~14–15 no Nv. 50; recarga de setups ×1,55; ganhos menores das passivas permanentes (regen/área/Ultimate).
+- **Regras de técnicas:** afinidade de elemento não ensina mais técnica exclusiva de outro shinobi (ex.: Jōki Bōi, Agulhas de Karasu, Mil Braços).
+- **Interface:** novo `src/ui/ArsenalControls.tsx`; mudanças no Plano de build, seleção de shinobi, mapa, Bolsa e tema ninja.
+- **TESTADO** (Claude Code, 13/11 09:40): `tsc -b`, `vite build`, `verify-rules` (114 versões, 213 técnicas, 95 itens). `verify-runtime` não executado nesta publicação. Documentação temática desta rodada não foi escrita pelo Codex: registrar detalhes ao revisar.
+
 ## Rodada 53 · 13/11/2026 — elenco, animações e efeitos
 
 - Expande o elenco com 40 versões jogáveis. Cada versão tem missão, passiva, kit, retrato, caminhada frontal e traseira, ataque, pulo e dash. Adiciona Akamaru e o aumento de tamanho do Chōji durante o Jutsu de Expansão. Revisa os cargos pela obra e retira três kits de fundadores inventados.

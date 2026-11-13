@@ -17,6 +17,7 @@ export const ENEMY_TIERS: Record<EnemyTier, { hp: number; damage: number; defens
 };
 /** Chance de um inimigo comum surgir como elite amarelo (× tuning.eliteRate). */
 export const ELITE_CHANCE = .08;
+export const eliteSpawnChance = (rate = 1, bonus = 0) => Math.min(1, Math.max(0, ELITE_CHANCE * rate * (1 + bonus)));
 /** Drops base de um inimigo normal (EXP, Ryu, Chakra) e chances. Elites e mega elites garantem Ryu e Chakra. */
 export const BASE_LOOT = { xp: 5, ryu: 3, chakra: 9, ryuChance: .72, chakraChance: .28 }; // Rodada 48 — XP por mob alta (8→5), pedido do usuário; drop por abate segue garantido
 /** Peso da dificuldade da missão no tamanho dos drops: tier^0,5 (Genin 1, Chunin 1,18, Jonin 1,38, Kage 1,61). */

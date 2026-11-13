@@ -4,6 +4,11 @@ import { createPlayerPose } from './playerPose';
 import { actionArt, acrobaticsArt, directionalArt, handSealArt } from '../game/directionalArt';
 import { familyOf } from '../game/heroes';
 
+export function movementFacing(vertical:number,horizontal:number){
+  const diagonal=Math.abs(vertical)>.32&&Math.abs(horizontal)>.32;
+  return {back:vertical>.18,left:horizontal<-.18,diagonal};
+}
+
 export type StrikePose = 'punch' | 'kick';
 type Strike = { weapon: boolean; left?: boolean; special: boolean; pose?: StrikePose; seal: boolean; back?: boolean };
 /** Fração do golpe a partir da qual um novo ataque pode encadear. Antes disso o pedido fica na fila (o mais recente vence)
@@ -53,8 +58,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   const asuma = family === 'asuma' ? new THREE.TextureLoader().load(ASUMA_ATLAS) : null;
   if (asuma) {
     asuma.colorSpace = THREE.SRGBColorSpace;
-    asuma.minFilter = asuma.magFilter = THREE.NearestFilter;
-    asuma.generateMipmaps = false;
+    asuma.magFilter = THREE.NearestFilter;
+    asuma.minFilter = THREE.NearestMipmapLinearFilter;
+    asuma.generateMipmaps = true;
   }
   const width = sprite.scale.x, height = sprite.scale.y;
   let bodyScale=1, targetBodyScale=1;
@@ -62,22 +68,25 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   const walk = hasWalkAtlas ? new THREE.TextureLoader().load('/assets/naruto-academia-walk-v1.png') : null;
   if (walk) {
     walk.colorSpace = THREE.SRGBColorSpace;
-    walk.minFilter = walk.magFilter = THREE.NearestFilter;
-    walk.generateMipmaps = false;
+    walk.magFilter = THREE.NearestFilter;
+    walk.minFilter = THREE.NearestMipmapLinearFilter;
+    walk.generateMipmaps = true;
     walk.repeat.set(.25,.5);
   }
   const diagonal = hasWalkAtlas ? new THREE.TextureLoader().load('/assets/naruto-academia-diagonal-v1.png') : null;
   if (diagonal) {
     diagonal.colorSpace = THREE.SRGBColorSpace;
-    diagonal.minFilter = diagonal.magFilter = THREE.NearestFilter;
-    diagonal.generateMipmaps = false;
+    diagonal.magFilter = THREE.NearestFilter;
+    diagonal.minFilter = THREE.NearestMipmapLinearFilter;
+    diagonal.generateMipmaps = true;
     diagonal.repeat.set(.25,.5);
   }
   const throwing = hasWalkAtlas ? new THREE.TextureLoader().load('/assets/naruto-academia-throw-v1.png') : null;
   if (throwing) {
     throwing.colorSpace = THREE.SRGBColorSpace;
-    throwing.minFilter = throwing.magFilter = THREE.NearestFilter;
-    throwing.generateMipmaps = false;
+    throwing.magFilter = THREE.NearestFilter;
+    throwing.minFilter = THREE.NearestMipmapLinearFilter;
+    throwing.generateMipmaps = true;
     throwing.repeat.set(.25,.82);
     throwing.offset.y = .075;
   }
@@ -103,8 +112,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     if (!texture) {
       texture = new THREE.TextureLoader().load(path);
       texture.colorSpace = THREE.SRGBColorSpace;
-      texture.minFilter = texture.magFilter = THREE.NearestFilter;
-      texture.generateMipmaps = false;
+      texture.magFilter = THREE.NearestFilter;
+      texture.minFilter = THREE.NearestMipmapLinearFilter;
+      texture.generateMipmaps = true;
       directionTextures.set(path, texture);
       animatedMaps.add(texture);
     }
@@ -114,7 +124,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   let idleFrac = 0; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
   let propCur = 1; // Rodada 45: fator de proporção SUAVIZADO (lerp exponencial) — elimina o 'pulo' de tamanho/altura na troca de folha.
   let queued: Strike | undefined;
-  let frameShown = 0, strideShown = 0, walkAttack = false;
+  let frameShown = 0, strideShown = 0, walkAttack = false, walkLean=0;
   const begin = (next: Strike) => {
     queued = undefined;
     attack = attackDuration = next.special ? .55 : next.weapon ? .25 : .22;
@@ -141,7 +151,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     },
     state: () => state,
     /** Inspeção de testes: quadro (coluna) em uso, progresso do golpe e se as pernas estão no passo durante o ataque. */
-    debug: () => ({ state, frame: frameShown, progress: attack > 0 ? +(1 - attack / attackDuration).toFixed(3) : 1, walkAttack, stride: +strideShown.toFixed(4), queued: !!queued }),
+    debug: () => ({ state, frame: frameShown, progress: attack > 0 ? +(1 - attack / attackDuration).toFixed(3) : 1, walkAttack, rear:!!sprite.material.map&&state==='walk'&&rear, uvY:sprite.material.map?.offset.y, stride: +strideShown.toFixed(4), queued: !!queued }),
     atlas: () => posePath,
     hurt: () => { hurt = .23; },
     setBodyScale(scale:number){targetBodyScale=scale;},
@@ -173,7 +183,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       // (deformação do playerPose, na mesma fase da caminhada), então ao terminar o golpe a caminhada segue sem pulo.
       const showAttack = attack > 0 && (actionSheet?.kind === 'full' || hurt === 0);
       state = sliding ? 'dash' : jumpHeight > 0 ? 'jump' : showAttack ? (ultimate ? 'ultimate' : 'attack')
-        : hurt > 0 ? 'hurt' : walkingInput ? 'walk' : 'idle';
+        : walkingInput ? 'walk' : hurt > 0 ? 'hurt' : 'idle';
       // Pernas no passo durante o golpe: fora a Ultimate (pose especial), o chute de Lee/Guy (a perna é o golpe)
       // e o Gaara (flutua na areia).
       walkAttack = state === 'attack' && walkingInput && strike !== 'kick' && family !== 'gaara';
@@ -242,7 +252,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         const frame = directedCast ? Math.min(3, Math.floor(attackProgress * 4))
           : state==='jump' ? (jumpProgress<.24||jumpProgress>.76?0:2) : state==='dash' ? (slideProgress<.72?2:1) : Math.floor(stepTime * 10) % 4;
         if (!useSeal && !useAction) frameShown = frame;
-        const row = directedCast ? 2 : (directionSheet.firstRow ?? 0) + Number(backwardView);
+        const row = directedCast ? 2 : (directionSheet.firstRow ?? 0) + Number(backwardView && !(state==='walk' && diagonalInput));
         const flip = directedCast ? mirror : leftward;
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
         directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
@@ -269,7 +279,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (!usesSheet) frameShown = 0;
       pose.apply(sprite.material, strideShown, proceduralMotion ? lift : 0,
         usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
-      sprite.material.rotation = !proceduralMotion ? 0 : state === 'dash' ? (mirror ? .34 : -.34)
+      const leanTarget=state==='walk'&&diagonalInput?(leftward?.09:-.09):0;
+      walkLean+=(leanTarget-walkLean)*(1-Math.exp(-dt*18));
+      sprite.material.rotation = !proceduralMotion ? walkLean : state === 'dash' ? (mirror ? .34 : -.34)
         : state === 'hurt' ? (mirror ? -.1 : .1) : state === 'walk' && backwardView ? (mirror ? .05 : -.05) : 0;
       // Squash/stretch do pulo (estica na decolagem, achata na aterrissagem) e leve alongamento horizontal no dash,
       // somados aos quadros da folha. Os pés continuam ancorados porque a altura usa a escala final.
@@ -328,19 +340,22 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const ratio = Math.max(0,Math.min(1,hp/Math.max(1,maxHp)));
       paint.clearRect(0,0,256,38);
       paint.fillStyle='#131726';paint.fillRect(0,3,256,32);
-      paint.fillStyle='#3c2533';paint.fillRect(4,7,248,24);
+      paint.fillStyle='#d4bca2';paint.fillRect(4,7,248,24);
       paint.fillStyle=ratio>.35?'#50df91':'#ff656c';paint.fillRect(4,7,Math.round(248*ratio),24);
       paint.fillStyle='#ffffff66';paint.fillRect(4,7,Math.round(248*ratio),2);
       const label=shownHp.toLocaleString('pt-BR')+' / '+shownMax.toLocaleString('pt-BR');
-      paint.font='bold 22px sans-serif';
+      paint.font='900 24px sans-serif';
       paint.textAlign='center';
       paint.textBaseline='middle';
-      paint.strokeStyle='#152019';
-      paint.lineWidth=4;
-      paint.strokeText(label,128,19,244);
-      paint.fillStyle='#fff';
+      paint.fillStyle='#090806';
       paint.fillText(label,128,19,244);
       map.needsUpdate=true;
+    },
+    healthBarWidth:()=>health?.bar.scale.x??0,
+    fitHealthBar(unitsPerPixel:number){
+      if(!health)return;
+      const width=Math.max(2.05,106*unitsPerPixel);
+      health.bar.scale.set(width,width*.151,1);
     },
     dispose(){trail?.forEach(ghost=>{scene.remove(ghost);ghost.material.dispose();});if(health){scene.remove(health.bar);health.map.dispose();health.bar.material.dispose();}walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());},
   };
@@ -351,8 +366,8 @@ function createHealthBar(scene:THREE.Scene) {
   canvas.width=256;canvas.height=38;
   const paint=canvas.getContext('2d')!;
   const map=new THREE.CanvasTexture(canvas);
-  map.magFilter=THREE.NearestFilter;
-  const bar=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthTest:false,depthWrite:false}));
+  map.magFilter=THREE.LinearFilter;
+  const bar=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthTest:false,depthWrite:false,fog:false}));
   bar.scale.set(2.05,.31,1);
   bar.center.set(.5,1);
   bar.renderOrder=30;

@@ -40,27 +40,11 @@
 .build-view-filters button[aria-pressed=true]{background:#987654;color:white}
 .build-view-filters small{margin-left:auto;color:#e3d8c5}
 .build-workspace{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:14px}
-/* Rodada 39 — planner em TABELA: Opção · Origem/efeito · Raridade/estado · Ações. */
 .build-tech-list{max-height:54vh;overflow:auto;padding-right:4px}
-table.build-table{width:100%;border-collapse:separate;border-spacing:0 6px}
-table.build-table thead th{position:sticky;top:0;z-index:2;background:#3a2a1e;color:#d9c8a9;font-size:10px;letter-spacing:.09em;text-transform:uppercase;text-align:left;padding:6px 8px}
-table.build-table thead th.th-actions{text-align:right}
-tr.pool-card td{background:#3f2d22;border-top:1px solid rgba(201,163,106,.35);border-bottom:1px solid rgba(201,163,106,.35);vertical-align:middle;padding:7px 9px}
-tr.pool-card td:first-child{border-left:1px solid rgba(201,163,106,.45);border-radius:12px 0 0 12px}
-tr.pool-card td:last-child{border-right:1px solid rgba(201,163,106,.45);border-radius:0 12px 12px 0;text-align:right}
-tr.pool-card:hover td{background:#473428}
-tr.pool-card.planned td{background:#4a3a20}
-tr.pool-card.planned td:first-child{box-shadow:inset 3px 0 0 #ffce61}
-tr.pool-card.archived td{opacity:.65}
 .build-entry{display:flex;align-items:center;gap:10px;min-width:0;text-align:left;border:0;background:transparent;color:#f0f4ff;padding:4px}
 .build-entry b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
 .build-entry small{display:block}
 .build-entry .skill-art,.build-entry .catalog-icon{width:34px;height:34px;flex:none}
-.build-cell-desc span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12px;line-height:1.35;color:#dbe6f7}
-.build-cell-state{display:flex;flex-direction:column;gap:2px;font-size:12px;font-weight:700}
-.build-cell-state small.state-on{color:#ffce61}
-.build-cell-state small.state-warn{color:#9fd8ff}
-.build-cell-state small.state-off{color:#9aa6bb}
 .build-cell-actions{display:flex;align-items:center;justify-content:flex-end;gap:4px;flex-wrap:wrap}
 .build-cell-actions button{font-size:11px;padding:5px 8px}
 tr.pool-card .enable-skill{background:#14766b;color:#effffe;font-weight:800}
@@ -98,7 +82,7 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .technique-preview canvas{display:block;width:100%;height:100%}
 .build-detail>small{display:block;margin-top:5px;color:#d4c5aa}
 .reset-danger{background:#a53043!important;color:#fff}
-@media(max-width:760px){.build-workspace{grid-template-columns:1fr}.build-tech-list{max-height:43vh}.build-entry b{max-width:120px}table.build-table{display:block}table.build-table thead{display:none}tr.pool-card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:4px}tr.pool-card td{display:block;border-left:0;border-right:0}tr.pool-card td:first-child{border-radius:12px 12px 0 0}tr.pool-card td:last-child{border-radius:0 0 12px 12px}.build-cell-actions{justify-content:flex-start}}
+@media(max-width:760px){.build-workspace{grid-template-columns:1fr}.build-tech-list{max-height:43vh}.build-entry b{max-width:120px}.build-cell-actions{justify-content:flex-start}}
 .game-panel-backdrop.over-choice{z-index:70}
 .choice-sheet-row{display:flex;justify-content:center;margin:10px 0 4px}
 .choice-sheet-button{padding:8px 14px;border:1px solid #b3977a;border-radius:11px;background:#493222;color:#e5f4ff;font-weight:750}
@@ -145,3 +129,7 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .level-choice-card .choice-art>.skill-art,.level-choice-card .choice-art>.catalog-icon{width:clamp(46px,8vh,72px);height:clamp(46px,8vh,72px)}
 .level-choice-card .choice-copy h2{line-height:1.16;text-wrap:balance}
 @media(max-width:700px){.skill-dock>.ability-bar button{min-width:43px}.skill-dock>.ability-bar .ultimate{min-width:51px}.inventory-corner{max-width:110px}}
+
+.game-shell .skill-dock>.ability-bar .ultimate{position:relative;isolation:isolate;overflow:visible}
+.ultimate-charge{position:absolute;inset:-3px;pointer-events:none;border-radius:50%;background:conic-gradient(#ffdc86 var(--charge),#3e3027 0);mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));z-index:1}
+.game-shell .skill-dock .ultimate-auto-mark{white-space:nowrap;right:0;bottom:-6px;padding:1px 3px;font-size:7px;line-height:1;border-width:1px;z-index:2}

@@ -19,10 +19,12 @@
 .cs-portrait{position:relative;display:block;width:100%;aspect-ratio:1;border-radius:9px;overflow:hidden;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--hero,#655c56) 55%,transparent),#251911 78%)}
 .cs-initials{position:absolute;inset:0;display:grid;place-items:center;font-size:26px;font-weight:900;color:#ffffff40;letter-spacing:1px}
 /* Recorte tipo "foto": amplia o sprite do atlas e foca cabeça/tronco. */
-.cs-portrait .hero-sprite{position:absolute;left:0;top:0;width:100%!important;height:100%!important;margin:0!important;transform:scale(1.45) translateY(14%);transform-origin:50% 30%}
+.cs-cropped-sprite{position:absolute;inset:0;display:block;transform-origin:0 0}
+.cs-cropped-sprite .hero-sprite{width:100%!important;height:100%!important;margin:0!important;image-rendering:pixelated}
 .cs-element{position:absolute;right:4px;bottom:4px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:900;color:#111;background:var(--el,#ddd);box-shadow:0 0 0 2px #1f140c}
 .cs-card>b{font-size:12px;line-height:1.15;color:#f2f1eb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .cs-card>small.cs-village{margin:0;font-size:9.5px;color:#c9bfae;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cs-card>.cs-legend-tag{display:inline-flex;align-items:center;border-radius:4px;border:1px solid #966314;background:#f9d77c;color:#392300;font-size:9px;line-height:1.25;font-weight:800;padding:1px 5px}
 .cs-card>i.cs-picked{position:absolute;top:4px;left:50%;transform:translateX(-50%);margin:0;padding:2px 6px;border-radius:6px;background:#f2b64d;color:#1b1406;font-size:7.5px;font-style:normal;font-weight:900;letter-spacing:.8px}
 .cs-empty{grid-column:1/-1;color:#c9bfae;font-size:13px;padding:18px 4px}
 .cs-empty button{background:none;border:0;color:#f3bf5c;cursor:pointer;font:inherit;text-decoration:underline}
@@ -43,3 +45,4 @@
 .cs-card.cs-locked .cs-portrait{filter:grayscale(.85) brightness(.7)}
 .cs-card.cs-locked::after{content:'🔒';position:absolute;top:6px;left:6px;font-size:18px;filter:none}
 .cs-mission-label{font-size:10px;color:#d8c39a;line-height:1.2;margin-top:3px}
+

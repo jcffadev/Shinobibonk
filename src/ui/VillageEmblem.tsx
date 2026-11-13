@@ -7,6 +7,7 @@ const villages:Record<string,{name:string;short:string;color:string;path:string}
   'Vila do Som': {name:'Otogakure',short:'Oto',color:'#cbb1f0',path:'M13 16V3l6 4m-6 9c0 4-8 6-8 2s8-6 8-2Z'},
   'Vila da Chuva': {name:'Amegakure',short:'Ame',color:'#a7c3ef',path:'M5 5v14m5-14v14m5-14v14m5-14v14'},
   'Vila da Cachoeira': {name:'Takigakure',short:'Taki',color:'#85e1eb',path:'M6 4h11l-5 6v10m-3-3 3 3 3-3M3 9h5m9 0h4'},
+  'Vila das Fontes Termais': {name:'Yugakure',short:'Yuga',color:'#efbdad',path:'M5 18l4-12m2 12 4-12m2 12 4-12'},
   'Vila da Grama': {name:'Kusagakure',short:'Kusa',color:'#abe58c',path:'M3 17 6 8l4 9 3-9 3 9 4-9 1 9'},
 };
 

@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-12T06:48:51.498Z",
+  "date": "2026-11-13T11:52:00.049Z",
   "scope": "Controlador real em fixture isolada; inspeção visual pelas folhas de contato",
   "coverage": [
     {
@@ -17,7 +17,7 @@
         },
         {
           "action": "walk",
-          "atlas": "",
+          "atlas": "/assets/naruto-academia-walk-v1.png",
           "uv": [
             0.25,
             0.5,
@@ -27,7 +27,7 @@
         },
         {
           "action": "walk",
-          "atlas": "",
+          "atlas": "/assets/naruto-academia-walk-v1.png",
           "uv": [
             0.25,
             0,
@@ -37,7 +37,7 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/naruto-academia-throw-v1.png",
           "uv": [
             0.5,
             0.075,
@@ -47,7 +47,7 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/naruto-academia-throw-v1.png",
           "uv": [
             0.5,
             0.075,
@@ -131,7 +131,7 @@
         },
         {
           "action": "walk",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
             0.25,
             0.8333333333333334,
@@ -141,7 +141,7 @@
         },
         {
           "action": "walk",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
             0.25,
             0.6666666666666666,
@@ -151,7 +151,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
             0.25,
             0.5,
@@ -161,7 +161,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
             0.25,
             0.3333333333333333,
@@ -171,50 +171,50 @@
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
-            0.5,
-            0.8333333333333334,
+            0.25,
+            0.16666666666666666,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
-            0.5,
-            0.6666666666666666,
+            0.25,
+            0,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
             0.5,
-            0.8333333333333334,
+            0.16666666666666666,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
             0.75,
-            0.8333333333333334,
+            0.16666666666666666,
             -0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-1-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-1-motion-v3.png",
           "uv": [
             0.5,
-            0.6666666666666666,
+            0,
             0.25,
             0.16666666666666666
           ]
@@ -493,72 +493,72 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/sasuke-classico-action-v1.png",
+          "atlas": "/assets/shinobi-motion/sasuke-1-action-v3.png",
           "uv": [
             0.25,
-            0.5,
+            0.75,
             0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "attack",
-          "atlas": "/assets/sasuke-classico-action-v1.png",
+          "atlas": "/assets/shinobi-motion/sasuke-1-action-v3.png",
           "uv": [
             0.25,
             0.5,
             0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/sasuke-classico-action-v1.png",
+          "atlas": "/assets/shinobi-motion/sasuke-1-action-v3.png",
           "uv": [
             0.25,
-            0,
             0.25,
-            0.5
+            0.25,
+            0.25
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/sasuke-classico-action-v1.png",
+          "atlas": "/assets/shinobi-motion/sasuke-1-action-v3.png",
           "uv": [
             0.25,
             0,
             0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/sasuke-classico-action-v1.png",
+          "atlas": "/assets/shinobi-motion/sasuke-1-action-v3.png",
           "uv": [
             0.5,
-            0,
             0.25,
-            0.5
+            0.25,
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/sasuke-classico-action-v1.png",
+          "atlas": "/assets/shinobi-motion/sasuke-1-action-v3.png",
           "uv": [
             0.75,
-            0,
+            0.25,
             -0.25,
-            0.5
+            0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/sasuke-classico-action-v1.png",
+          "atlas": "/assets/shinobi-motion/sasuke-1-action-v3.png",
           "uv": [
             0.5,
             0,
             0.25,
-            0.5
+            0.25
           ]
         }
       ],
@@ -1405,22 +1405,22 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/lee-1-action-v1.png",
           "uv": [
-            0.4,
-            0.4,
-            0.2,
-            0.2
+            0.25,
+            0,
+            0.25,
+            0.5
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/lee-1-action-v1.png",
           "uv": [
-            0.4,
-            0.4,
-            0.2,
-            0.2
+            0.25,
+            0,
+            0.25,
+            0.5
           ]
         },
         {
@@ -1519,7 +1519,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-1-action-v3.png",
           "uv": [
             0.25,
             0.75,
@@ -1529,17 +1529,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
-          "uv": [
-            0.25,
-            0.75,
-            0.25,
-            0.25
-          ]
-        },
-        {
-          "action": "jump",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-1-action-v3.png",
           "uv": [
             0.25,
             0.5,
@@ -1549,40 +1539,50 @@
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-1-action-v3.png",
           "uv": [
             0.25,
-            0.5,
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/neji-1-action-v3.png",
+          "uv": [
+            0.25,
+            0,
             0.25,
             0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-1-action-v3.png",
           "uv": [
             0.5,
-            0.5,
+            0.25,
             0.25,
             0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-1-action-v3.png",
           "uv": [
             0.75,
-            0.5,
+            0.25,
             -0.25,
             0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-1-action-v3.png",
           "uv": [
             0.5,
-            0.5,
+            0,
             0.25,
             0.25
           ]
@@ -2431,22 +2431,22 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/guy-1-action-v1.png",
           "uv": [
-            0.2,
-            0,
-            0.2,
-            0.2
+            0.25,
+            0.5,
+            0.25,
+            0.5
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/guy-1-action-v1.png",
           "uv": [
-            0.2,
-            0,
-            0.2,
-            0.2
+            0.25,
+            0.5,
+            0.25,
+            0.5
           ]
         },
         {
@@ -2639,9 +2639,9 @@
         },
         {
           "action": "walk",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
-            0.25,
+            0.75,
             0.75,
             0.25,
             0.25
@@ -2649,9 +2649,9 @@
         },
         {
           "action": "walk",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
-            0.25,
+            0,
             0.5,
             0.25,
             0.25
@@ -2659,7 +2659,7 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
             0.75,
             0.25,
@@ -2669,7 +2669,7 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
             0.75,
             0.25,
@@ -2679,7 +2679,7 @@
         },
         {
           "action": "jump",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
             0,
             0.25,
@@ -2689,7 +2689,7 @@
         },
         {
           "action": "jump",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
             0,
             0.25,
@@ -2699,7 +2699,7 @@
         },
         {
           "action": "dash",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
             0.25,
             0.25,
@@ -2709,7 +2709,7 @@
         },
         {
           "action": "dash",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
             0.5,
             0.25,
@@ -2719,7 +2719,7 @@
         },
         {
           "action": "dash",
-          "atlas": "",
+          "atlas": "/assets/asuma-motion-v1.png",
           "uv": [
             0.25,
             0.25,
@@ -2734,6 +2734,5478 @@
         3,
         3,
         3,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "hiruzen",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hiruzen-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "raikage-terceiro",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "raikage-quarto",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "killer-b",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/killer-b-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "onoki",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/onoki-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "ao",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ao-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "rasa",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/rasa-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "hanzo",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "mei",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/mei-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "gengetsu",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/gengetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "choji",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/choji-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kiba",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kiba-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "shino",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shino-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "ino",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ino-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kurenai",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kurenai-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "iruka",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/iruka-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "sai",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sai-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "yamato",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/yamato-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "shisui",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shisui-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "obito",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/obito-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "hiashi",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hiashi-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "hanabi",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanabi-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kisame",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kisame-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "zabuza",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zabuza-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "suigetsu",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/suigetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "mangetsu",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/mangetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "karin",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/karin-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "nagato",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/nagato-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "sasori",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sasori-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "haku",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/haku-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "chiriku",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/chiriku-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "sakumo",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sakumo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "deidara",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/deidara-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "hidan",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hidan-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kakuzu",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kakuzu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "konan",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/konan-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "zetsu",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zetsu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "jugo",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/jugo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kabuto",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kabuto-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kimimaro",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kimimaro-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "jirobo",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/jirobo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kidomaru",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kidomaru-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "tayuya",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/tayuya-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "sakon-ukon",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/sakon-ukon-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "dosu",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/dosu-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "zaku",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/zaku-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kin",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kin-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "juzo",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/juzo-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
         3,
         3
       ]
@@ -3551,7 +9023,7 @@
         },
         {
           "action": "walk",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
             0.25,
             0.8333333333333334,
@@ -3561,7 +9033,7 @@
         },
         {
           "action": "walk",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
             0.25,
             0.6666666666666666,
@@ -3571,7 +9043,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
             0.25,
             0.5,
@@ -3581,7 +9053,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
             0.25,
             0.3333333333333333,
@@ -3591,50 +9063,50 @@
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
-            0.5,
-            0.8333333333333334,
+            0.25,
+            0.16666666666666666,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
-            0.5,
-            0.6666666666666666,
+            0.25,
+            0,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
             0.5,
-            0.8333333333333334,
+            0.16666666666666666,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
             0.75,
-            0.8333333333333334,
+            0.16666666666666666,
             -0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-15-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-15-motion-v3.png",
           "uv": [
             0.5,
-            0.6666666666666666,
+            0,
             0.25,
             0.16666666666666666
           ]
@@ -3665,7 +9137,7 @@
         },
         {
           "action": "walk",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
             0.25,
             0.8333333333333334,
@@ -3675,7 +9147,7 @@
         },
         {
           "action": "walk",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
             0.25,
             0.6666666666666666,
@@ -3685,7 +9157,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
             0.25,
             0.5,
@@ -3695,7 +9167,7 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
             0.25,
             0.3333333333333333,
@@ -3705,50 +9177,50 @@
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
-            0.5,
-            0.8333333333333334,
+            0.25,
+            0.16666666666666666,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
-            0.5,
-            0.6666666666666666,
+            0.25,
+            0,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
             0.5,
-            0.8333333333333334,
+            0.16666666666666666,
             0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
             0.75,
-            0.8333333333333334,
+            0.16666666666666666,
             -0.25,
             0.16666666666666666
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/gaara-30-motion-v2.png",
+          "atlas": "/assets/shinobi-motion/gaara-30-motion-v3.png",
           "uv": [
             0.5,
-            0.6666666666666666,
+            0,
             0.25,
             0.16666666666666666
           ]
@@ -4939,22 +10411,22 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/lee-15-action-v1.png",
           "uv": [
-            0.6666666666666666,
-            0.4,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0,
+            0.25,
+            0.5
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/lee-15-action-v1.png",
           "uv": [
-            0.6666666666666666,
-            0.4,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0,
+            0.25,
+            0.5
           ]
         },
         {
@@ -5053,22 +10525,22 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/lee-30-action-v1.png",
           "uv": [
-            0.8333333333333334,
-            0.4,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0,
+            0.25,
+            0.5
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/lee-30-action-v1.png",
           "uv": [
-            0.8333333333333334,
-            0.4,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0,
+            0.25,
+            0.5
           ]
         },
         {
@@ -5167,17 +10639,27 @@
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-15-action-v3.png",
           "uv": [
             0.25,
-            0.25,
+            0.75,
             0.25,
             0.25
           ]
         },
         {
           "action": "attack",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-15-action-v3.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.25
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/neji-15-action-v3.png",
           "uv": [
             0.25,
             0.25,
@@ -5187,17 +10669,7 @@
         },
         {
           "action": "jump",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
-          "uv": [
-            0.25,
-            0,
-            0.25,
-            0.25
-          ]
-        },
-        {
-          "action": "jump",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-15-action-v3.png",
           "uv": [
             0.25,
             0,
@@ -5207,27 +10679,27 @@
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-15-action-v3.png",
           "uv": [
             0.5,
-            0,
+            0.25,
             0.25,
             0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-15-action-v3.png",
           "uv": [
             0.75,
-            0,
+            0.25,
             -0.25,
             0.25
           ]
         },
         {
           "action": "dash",
-          "atlas": "/assets/shinobi-motion/neji-action-v1.png",
+          "atlas": "/assets/shinobi-motion/neji-15-action-v3.png",
           "uv": [
             0.5,
             0,
@@ -6193,22 +11665,22 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/guy-15-action-v1.png",
           "uv": [
+            0.25,
             0.5,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.5
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/guy-15-action-v1.png",
           "uv": [
+            0.25,
             0.5,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.5
           ]
         },
         {
@@ -6307,22 +11779,22 @@
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/guy-30-action-v1.png",
           "uv": [
-            0.6666666666666666,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.5,
+            0.25,
+            0.5
           ]
         },
         {
           "action": "attack",
-          "atlas": "",
+          "atlas": "/assets/shinobi-motion/guy-30-action-v1.png",
           "uv": [
-            0.6666666666666666,
-            0,
-            0.16666666666666666,
-            0.2
+            0.25,
+            0.5,
+            0.25,
+            0.5
           ]
         },
         {
@@ -6384,6 +11856,1146 @@
         0,
         0,
         0
+      ]
+    },
+    {
+      "hero": "naruto-hokage",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kabuto-sabio",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kabuto-sabio-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "orochimaru-akatsuki",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/orochimaru-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "choji-guerra",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/choji-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "kiba-shippuden",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "shino-shippuden",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "ino-guerra",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/ino-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "tobi-akatsuki",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "obito-guerra",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/obito-guerra-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "hero": "hanabi-adulta",
+      "samples": [
+        {
+          "action": "idle",
+          "atlas": "",
+          "uv": [
+            0,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.25,
+            0.8333333333333334,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "walk",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.25,
+            0.6666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.25,
+            0.5,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "attack",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.25,
+            0.3333333333333333,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "jump",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.5,
+            0.16666666666666666,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.5,
+            0,
+            -0.25,
+            0.16666666666666666
+          ]
+        },
+        {
+          "action": "dash",
+          "atlas": "/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+          "uv": [
+            0.25,
+            0,
+            0.25,
+            0.16666666666666666
+          ]
+        }
+      ],
+      "walkAttackFrames": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3
       ]
     }
   ],

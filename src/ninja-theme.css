@@ -398,3 +398,21 @@ kbd{font-family:var(--fonte-texto)}
 .build-cell-actions button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
 .build-cell-actions button[aria-pressed=true]{background:linear-gradient(180deg,var(--selo),var(--selo2));color:#fff3df;border-color:var(--selo-borda)}
 .build-cell-actions button.enable-skill{background:linear-gradient(180deg,#3f8f63,#2c6b47);color:#eafff2;border-color:#14351f}
+
+/* Ficha em pergaminho com selos e marcadores de kunai. */
+.game-panel.sheet-panel .sheet-banner{background:linear-gradient(100deg,#e8c786,#c1ca95);border:2px solid #624328;color:#21170f}
+.game-panel.sheet-panel .sheet-identity :is(h1,small,label,label b){color:#21170f;text-shadow:none}
+.game-panel.sheet-panel .sheet-identity h1 span,.game-panel.sheet-panel .sheet-metrics>div{background:#392b20;color:#fff0d4}
+.game-panel.sheet-panel .sheet-metrics small{color:#f3ddbd}
+.game-panel.sheet-panel .sheet-column{border-radius:7px;background:linear-gradient(160deg,#e9cc92,#c5a568);color:#23180f}
+.game-panel.sheet-panel .sheet-column .sheet-scroll-title{position:relative;gap:8px;justify-content:flex-start;padding:10px 16px;background:linear-gradient(180deg,#ecd6a5,#d5b477 78%,#b78c50);color:#25180f;text-shadow:none}
+.sheet-scroll-title::before,.sheet-scroll-title::after{position:absolute;top:0;bottom:0;width:5px;background:linear-gradient(90deg,#694323,#af7945,#684225);content:""}
+.sheet-scroll-title::before{left:0}.sheet-scroll-title::after{right:0}
+.sheet-scroll-title i{flex:none;display:inline-block;width:17px;height:17px;background:#765139;clip-path:polygon(54% 0,93% 45%,57% 66%,57% 79%,72% 92%,53% 100%,34% 91%,46% 79%,46% 66%,12% 45%);transform:rotate(30deg)}
+.sheet-scroll-title small{margin-left:auto;color:#312016;font-family:var(--fonte-corpo,inherit);font-weight:800;text-align:right}
+.game-panel.sheet-panel :is(.section-label,.stat-group h3,.stat-legend,.sheet-note){color:#21170f}
+.game-panel.sheet-panel .section-label{border-bottom:1px solid #60401f55;padding-bottom:5px}
+.game-panel.sheet-panel .stat-line{color:#fff4dc}
+.game-panel.sheet-panel .sheet-tile :is(.positive,.senjutsu-line){color:#184327!important}
+.game-panel.sheet-panel .growth-tile p,.game-panel.sheet-panel .planned-tile p{color:#f1e3ca}
+.game-panel.sheet-panel .planned-tile>span,.game-panel.sheet-panel .pill-list article{color:#f9eed9}

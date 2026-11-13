@@ -568,6 +568,29 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
     }
   }
 
+  /** Contorno do golpe, projetado no relevo com as mesmas medidas usadas no hit. */
+  function footprint(t: Technique, origin: THREE.Vector3, direction: THREE.Vector3, center: THREE.Vector3, radius: number, range: number, half: number) {
+    if (hidden) return;
+    const p=paletteOf(t);
+    const point=(x:number,z:number)=>emit(true,x,gy(x,z)+.065,z,0,0,0,.28,.11,.065,p.core,.92,p.mid,0,GLOW,GROUND);
+    const edge=(x:number,z:number,dx:number,dz:number)=>{
+      const steps=Math.min(16,Math.max(3,Math.ceil(Math.hypot(dx,dz)*3)));
+      for(let i=0;i<=steps;i++)point(x+dx*i/steps,z+dz*i/steps);
+    };
+    const x=origin.x,z=origin.z,dx=direction.x,dz=direction.z;
+    if(t.shape==='Linha'){
+      const sx=-dz*half,sz=dx*half,fx=dx*range,fz=dz*range;
+      edge(x+sx,z+sz,fx,fz);edge(x-sx,z-sz,fx,fz);
+      edge(x+sx,z+sz,-2*sx,-2*sz);edge(x+fx+sx,z+fz+sz,-2*sx,-2*sz);
+      return;
+    }
+    const cone=t.shape==='Cone',angle=Math.atan2(dz,dx),spread=cone?Math.acos(.65):Math.PI;
+    const cx=cone?x:center.x,cz=cone?z:center.z,r=cone?range:radius;
+    const steps=cone?18:32;
+    for(let i=0;i<=steps;i++){const a=angle-spread+2*spread*i/steps;point(cx+Math.cos(a)*r,cz+Math.sin(a)*r);}
+    if(cone)for(const a of [angle-spread,angle+spread])edge(cx,cz,Math.cos(a)*r,Math.sin(a)*r);
+  }
+
   /** Preparo antes do acerto: bola de fogo voando até o alvo, chakra na mão, sombra/areia avançando. */
   function windup(t: Technique, origin: THREE.Vector3, target: THREE.Vector3, time: number) {
     if (hidden || time <= .02) return;
@@ -636,6 +659,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
     if (impactsThisFrame >= cap) return;
     impactsThisFrame++; recentImpacts++;
     const p = paletteOf(t), x = pos.x, y = pos.y + .1, z = pos.z;
+    emit(true,x,gy(x,z)+.075,z,0,0,0,.22,.48,.78,p.core,.85,p.mid,0,RING,GROUND);
     switch (t.element) {
       case 'Fogo': for (let i = 0; i < 4; i++) { emit(true, x + tri() * .2, y, z + tri() * .2, tri(), rand(.8, 1.8), tri(), .35, .25, .45, p.core, .9, p.edge, 0, FLAME, BILL); spin(rand(-3, 3)); } sparks(x, y, z, 3, 3, p, .35); break;
       case 'Água': for (let i = 0; i < 6; i++) { const a = i * 1.05; emit(true, x, y, z, Math.cos(a) * 1.6, rand(1.5, 3), Math.sin(a) * 1.6, .4, .12, .06, p.core, .9, p.mid, 0, GLOW, BILL); grav(9); } break;
@@ -675,6 +699,6 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
   function dispose() { scene.remove(add.mesh, norm.mesh); add.dispose(); norm.dispose(); }
   const stats = () => ({ additive: add.count, normal: norm.count, capacity: add.cap + norm.cap, emitted, recentImpacts, density });
 
-  return { cast, windup, trail, impact, aura, explosion, update, setHidden, clear, dispose, stats, emitRaw: emit,
+  return { cast, footprint, windup, trail, impact, aura, explosion, update, setHidden, clear, dispose, stats, emitRaw: emit,
     lastAxis: (x: number, y: number, z: number) => axis(x, y, z), lastStretch: stretch, isHidden: () => hidden };
 }

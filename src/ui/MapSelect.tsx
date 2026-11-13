@@ -7,7 +7,7 @@ import { isDifficultyUnlocked, mapProgress, isHeroPlayable, isMapUnlocked, MAP_O
 import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS } from '../game/unlockMissions';
 import { MISSION_TIER, type Difficulty } from '../game/progression';
-import type { BagPresets } from '../game/missionBag';
+import { ArsenalControls, type ArsenalControlsProps } from './ArsenalControls';
 import { HeroPortrait } from './RunSheet';
 import '../map-select.css';
 
@@ -19,9 +19,9 @@ const DIFF_TEXT: Record<Difficulty, string> = { Genin: 'Treinamento de novato', 
  * "Escolha o mapa" (referência do usuário): abas dos mapas no topo, prévia grande da região com guardiões por zona e
  * painel "Preparar partida" (modo, dificuldade, progresso, build, mochila e predefinições da Bolsa). Enter começa.
  */
-export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, homeCount, tactics, onApplyTactic, presets, onApplyPreset, onStart, onBack, onChangeHero, onEditPlan, onBag }: {
+export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, tactics, onApplyTactic, arsenalControls, onStart, onBack, onChangeHero, onEditPlan, onBag }: {
   heroId: string; mapId: MapId; onMap: (id: MapId) => void; mission: Difficulty; onMission: (d: Difficulty) => void;
-  planned: string[]; homeCount: number; tactics: MissionTactic[]; onApplyTactic: (index: number) => void; presets: BagPresets; onApplyPreset: (index: number) => void;
+  planned: string[]; tactics: MissionTactic[]; onApplyTactic: (index: number) => void; arsenalControls: ArsenalControlsProps;
   onStart: () => void; onBack: () => void; onChangeHero: () => void; onEditPlan: () => void; onBag: () => void;
 }) {
   const map = MAP_BY_ID[mapId], hero = HERO_BY_ID[heroId], progress = mapProgress()[mapId] ?? [];
@@ -71,13 +71,7 @@ export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, h
         <h3>MOCHILA <small>itens para levar antes de começar · em breve</small></h3>
         <div className="ms-box ms-soon"><small>O sistema de itens levados para a partida ainda será definido. Por enquanto as recompensas vêm só de kunais, shurikens e eventos.</small></div>
         <h3>ARSENAL DE MISSÃO <button type="button" className="ms-link" onClick={onBag}>Abrir</button></h3>
-        <div className="ms-box"><small>{homeCount} item(ns) em casa (fora do pool).</small>
-          {presets.slots.length>0&&<select aria-label="Arsenal de Missão" value={presets.active??''} onChange={event=>{if(event.target.value!=='')onApplyPreset(Number(event.target.value));}}>
-            <option value="" disabled>Escolher arsenal salvo…</option>
-            {presets.slots.map((slot,index)=><option key={index} value={index}>{slot.name} · {slot.items.length} em casa</option>)}
-          </select>}
-          {!presets.slots.some(Boolean) && <small> Sem predefinições salvas.</small>}
-        </div>
+        <ArsenalControls key={heroId} {...arsenalControls}/>
       </div>
       <button type="button" className="ms-start" disabled={!canStart} onClick={onStart}>{canStart ? <>▶ Começar! <kbd>Enter</kbd></> : !isHeroPlayable(heroId) ? '🔒 Shinobi bloqueado' : '🔒 Dificuldade bloqueada'}</button>
     </aside>

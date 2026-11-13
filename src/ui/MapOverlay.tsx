@@ -82,7 +82,7 @@ export function MapPanel({ world, quick }: { world: WorldSnapshot; quick: boolea
   const pos = (x: number, z: number) => ({ left: `${coordinate(x)}%`, top: `${coordinate(z)}%` });
   const pick = (id: string) => (e: MouseEvent) => { e.stopPropagation(); route(id); };
   const rows = [...world.events].sort((a, b) => dist(world, a.x, a.z) - dist(world, b.x, b.z));
-  return <div className={`map-layout${quick ? ' quick' : ''}`}>
+  return <div className={`map-layout${quick ? ' quick' : ''}${world.weatherEvent==='mist'?' mist-map':''}`}>
     <div className="world-map" onClick={e => { const rect = e.currentTarget.getBoundingClientRect(); window.dispatchEvent(new CustomEvent('shinobi-ping', { detail: { x: ((e.clientX - rect.left) / rect.width - .5) * MAP_SIZE, z: ((e.clientY - rect.top) / rect.height - .5) * MAP_SIZE } })); }}>
       <div className="map-terrain" />
       {world.explored.map((cell, i) => <span className="map-revealed" key={i} style={pos(cell.x, cell.z)} />)}
@@ -99,7 +99,7 @@ export function MapPanel({ world, quick }: { world: WorldSnapshot; quick: boolea
         {r ? <><small>ROTA ATIVA</small><b>🎯 {r.name}</b><span>{meters(r.distance)} de distância</span><button onClick={() => route(null)}>✕ Limpar rota</button></>
           : <><small>SEM ROTA</small><span>Clique num ícone para traçar rota ou numa área livre para pingar.</span></>}
       </div>
-      <h3>VISTO NESTA RUN</h3>
+      <h3>{world.weatherEvent==='mist'?'NÉVOA · VISIBILIDADE DE 5 M':'VISTO NESTA RUN'}</h3>
       {rows.length ? rows.map(m => <button className={`discovered-row${r?.id === m.id ? ' routed' : ''}${m.active === false ? ' used' : ''}`} key={m.id} disabled={m.active === false} onClick={() => route(m.id)} title={m.active === false ? 'Já usado nesta zona' : r?.id === m.id ? 'Limpar rota' : 'Traçar rota'}>
         <MarkerIcon m={m} size="mini" /><b>{m.name}<small>{markerGroup(m)}</small></b><small>{m.active === false ? 'usado' : r?.id === m.id ? '🎯 rota' : meters(dist(world, m.x, m.z))}</small>
       </button>) : <p>Explore olhando ao redor para revelar eventos e personagens no mapa.</p>}

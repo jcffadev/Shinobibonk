@@ -6,7 +6,7 @@
  * antigas `null` são descartadas na leitura e o índice da lista em uso é remapeado).
  * Prioridade: itens marcados ganham peso extra no sorteio de recompensas (ver prioritySlots/PRIORITY_WEIGHT).
  */
-export type BagPreset={name:string;items:string[];description?:string};
+export type BagPreset={name:string;items:string[];description?:string;plannedItems?:string[];originHeroId?:string};
 export type BagPresets={active:number|null;slots:BagPreset[]};
 /** Máximo de listas salvas. */
 export const PRESET_LIMIT=12;
@@ -22,44 +22,64 @@ export function normalizePresets(raw:unknown):BagPresets{
   const source=raw as {active?:unknown;slots:unknown[]};
   const slots:BagPreset[]=[];let active:number|null=null;
   source.slots.forEach((s,i)=>{
-    if(!s||typeof s!=='object'||slots.length>=PRESET_LIMIT)return;
+    if(!s||typeof s!=='object')return;
     const p=s as Partial<BagPreset>;
     if(source.active===i)active=slots.length;
-    slots.push({name:typeof p.name==='string'&&p.name.trim()?p.name.slice(0,PRESET_NAME_MAX):`Lista ${slots.length+1}`,items:strings(p.items),description:typeof p.description==='string'?p.description.slice(0,PRESET_DESCRIPTION_MAX):''});
+    slots.push({name:typeof p.name==='string'&&p.name.trim()?p.name.slice(0,PRESET_NAME_MAX):`Lista ${slots.length+1}`,items:strings(p.items),description:typeof p.description==='string'?p.description.slice(0,PRESET_DESCRIPTION_MAX):'',...(Array.isArray(p.plannedItems)?{plannedItems:strings(p.plannedItems)}:{}),...(typeof p.originHeroId==='string'?{originHeroId:p.originHeroId}:{})});
   });
   return {active,slots};
 }
-/** Rodada 39 — listas por herói: `sb_bag_presets_by_hero_v1` = { [herói]: BagPresets }.
- *  A chave global antiga (`sb_bag_presets_v1`) segue lida como seed quando o herói ainda não tem
- *  listas próprias (e nunca é apagada) — quem já tinha listas montadas não perde nada. */
+/** Listas independentes por versão de shinobi. A migração das chaves globais ocorre ao abrir o perfil. */
 export const PRESETS_BY_HERO_KEY='sb_bag_presets_by_hero_v1';
-export function readPresets(heroId?:string):BagPresets{
-  if(heroId){
-    try{
-      const raw=localStorage.getItem(PRESETS_BY_HERO_KEY);
-      if(raw){const obj=JSON.parse(raw) as Record<string, unknown>;if(obj&&obj[heroId]!==undefined)return normalizePresets(obj[heroId]);}
-    }catch{/* armazenamento corrompido: segue para a chave global antiga */}
-  }
-  try{return normalizePresets(JSON.parse(localStorage.getItem(PRESETS_KEY)||'null'));}catch{return EMPTY_PRESETS();}
+const ACTIVE_PRESET_KEY='sb_active_bag_preset_by_hero_v1';
+export function readPresets(heroId:string):BagPresets{
+  try {
+    const base=normalizePresets(JSON.parse(localStorage.getItem(PRESETS_KEY)||'null'));
+    const active=JSON.parse(localStorage.getItem(ACTIVE_PRESET_KEY)||'{}')?.[heroId];
+    return {...base,active:Number.isInteger(active)&&base.slots[active]?active:null};
+  } catch { return EMPTY_PRESETS(); }
 }
-export function savePresets(heroId:string,value:BagPresets){
-  try{
-    const raw=localStorage.getItem(PRESETS_BY_HERO_KEY);
-    const obj=raw?(JSON.parse(raw) as Record<string, unknown>):{};
-    obj[heroId]=value;
-    localStorage.setItem(PRESETS_BY_HERO_KEY,JSON.stringify(obj));
-  }catch{/* armazenamento indisponível: segue só em memória */}
+export function savePresets(heroId:string,value:BagPresets,previous?:BagPresets){
+  try {
+    const actives=JSON.parse(localStorage.getItem(ACTIVE_PRESET_KEY)||'{}') as Record<string,number|null>;
+    for(const [id,index] of Object.entries(actives)){
+      if(id===heroId||index===null||!previous)continue;
+      const slot=previous.slots[index];
+      const next=value.slots.indexOf(slot);
+      actives[id]=next>=0?next:value.slots.length===previous.slots.length&&value.slots[index]?index:null;
+    }
+    actives[heroId]=value.active;
+    localStorage.setItem(PRESETS_KEY,JSON.stringify({active:null,slots:value.slots}));
+    localStorage.setItem(ACTIVE_PRESET_KEY,JSON.stringify(actives));
+  } catch { /* armazenamento indisponível */ }
 }
-/** Atualiza a lista em uso com a lista atual de itens em casa. */
-export function syncActive(presets:BagPresets,home:string[]):BagPresets{
-  if(presets.active===null||!presets.slots[presets.active])return presets;
-  const slots=presets.slots.map((s,i)=>i===presets.active?{...s,items:[...home]}:s);
-  return {...presets,slots};
+export function migrateBagPresets(heroId:string){
+  const marker='sb_shared_bag_imported_v2';
+  try {
+    if(localStorage.getItem(marker))return;
+    const legacy=normalizePresets(JSON.parse(localStorage.getItem(PRESETS_KEY)||'null'));
+    const byHero=JSON.parse(localStorage.getItem(PRESETS_BY_HERO_KEY)||'{}') as Record<string,unknown>;
+    const slots=[...legacy.slots];
+    const active=JSON.parse(localStorage.getItem(ACTIVE_PRESET_KEY)||'{}') as Record<string,number|null>;
+    if(legacy.active!==null&&active[heroId]===undefined)active[heroId]=legacy.active;
+    for(const [id,raw] of Object.entries(byHero)){
+      const local=normalizePresets(raw);
+      local.slots.forEach((slot,index)=>{
+        let found=slots.findIndex(item=>(!item.originHeroId||item.originHeroId===id)&&item.name===slot.name&&item.description===slot.description&&item.items.join('|')===slot.items.join('|')&&(item.plannedItems??[]).join('|')===(slot.plannedItems??[]).join('|'));
+        if(found<0){found=slots.length;slots.push({...slot,originHeroId:id});}
+        else if(!slots[found].originHeroId)slots[found]={...slots[found],originHeroId:id};
+        if(local.active===index&&active[id]===undefined)active[id]=found;
+      });
+    }
+    if(slots.length)localStorage.setItem(PRESETS_KEY,JSON.stringify({active:null,slots}));
+    localStorage.setItem(ACTIVE_PRESET_KEY,JSON.stringify(active));
+    localStorage.setItem(marker,'1');
+  } catch { /* mantém as listas legadas */ }
 }
-/** Cria uma lista nova com os itens informados (por padrão, a bolsa atual) e a coloca em uso. */
-export function addPreset(presets:BagPresets,items:string[],name?:string):BagPresets{
+/** Cria uma lista com a configuração de itens e registra o shinobi de origem. */
+export function addPreset(presets:BagPresets,items:string[],name?:string,plannedItems:string[]=[],originHeroId?:string):BagPresets{
   if(presets.slots.length>=PRESET_LIMIT)return presets;
-  const slot:BagPreset={name:(name??`Lista ${presets.slots.length+1}`).slice(0,PRESET_NAME_MAX),items:[...items],description:''};
+  const slot:BagPreset={name:(name??'Arsenal '+(presets.slots.length+1)).slice(0,PRESET_NAME_MAX),items:[...items],description:'',plannedItems:[...plannedItems],originHeroId};
   return {active:presets.slots.length,slots:[...presets.slots,slot]};
 }
 export function duplicatePreset(presets:BagPresets,index:number):BagPresets{

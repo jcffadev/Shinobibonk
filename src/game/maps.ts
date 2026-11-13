@@ -74,3 +74,14 @@ export const MAPS: GameMap[] = [
 ];
 export const MAP_BY_ID = Object.fromEntries(MAPS.map((m) => [m.id, m])) as Record<MapId, GameMap>;
 export const DIFFICULTY_ORDER: Difficulty[] = ['Genin', 'Chunin', 'Jonin', 'Kage'];
+
+export type WeatherEventId = 'mist' | 'snow' | 'sand';
+export const WEATHER_EVENT_DURATION = 60;
+export const WEATHER_EVENTS: Record<WeatherEventId, MapWeather & { elites: string[] }> = {
+  mist: { name:'Névoa do Zabuza',sky:'#27313b',near:3,far:11,elites:['zabuza'] },
+  snow: { name:'Nevasca do Haku',sky:'#a5becf',near:18,far:42,elites:['haku'] },
+  sand: { name:'Tempestade de areia',sky:'#b08259',near:15,far:46,slow:.73,elites:['gaara','rasa'] },
+};
+export const WEATHER_BY_MAP: Record<MapId, WeatherEventId[]> = {
+  folha:['mist','snow'], areia:['sand'], pedra:['snow'], nevoa:['mist','snow'],
+};

@@ -39,6 +39,8 @@ const RULES: Partial<Record<StatKey, Rule>> = {
   luck: { label: 'Sorte', read: s => s.luck, next: (s, v) => s.luck + v, show: n => num(n) },
   pickupFlat: { label: 'Alcance de coleta', read: s => s.pickup, next: (s, v) => s.pickup + v, show: n => num(n) + ' m' },
   enemyCount: { label: 'Densidade da horda', read: s => s.extra.enemyCount || 0, next: (s, v) => (s.extra.enemyCount || 0) + v, show: n => '+' + pct(n) },
+  eliteSpawn: { label: 'Surgimento de Elites', read: s => s.extra.eliteSpawn || 0, next: (s, v) => (s.extra.eliteSpawn || 0) + v, show: n => '+' + pct(n) },
+  eliteDamage: { label: 'Dano contra Elites, Mega Elites e chefes', read: s => s.extra.eliteDamage || 0, next: (s, v) => (s.extra.eliteDamage || 0) + v, show: n => '+' + pct(n) },
   threat: { label: 'Dificuldade', read: s => s.extra.threat || 0, next: (s, v) => (s.extra.threat || 0) + v, show: n => '+' + pct(n) },
 };
 

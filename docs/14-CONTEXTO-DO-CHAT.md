@@ -1595,3 +1595,13 @@ Adicione os efeitos a TODAS as habilidades fielmente igual as do ANIME no nosso 
 O elenco tem 96 versões de 56 famílias, com 40 versões novas, suas missões, passivas, kits e folhas de movimento. As 96 têm caminhada de frente e de costas. Foram retirados os kits propostos para Ishikawa, Byakuren e Reto, que exigiam inventar técnicas. O atlas de efeitos está ligado ao combate e à prévia. Ainda falta comparar cada efeito com o anime e refinar as técnicas que compartilham arte. Zabuza aparece na névoa intermitente, o HUD ganhou o total de abates e foi concluída a Fase 4 de itens e pílulas.
 
 A compilação, o teste de regras, as 62 verificações em navegador e os 960 estados de movimento passaram. A publicação desta rodada segue na main do GitHub.
+
+## Rodada 54 · 13/11/2026 — retomada do trabalho do Codex (Claude Code)
+
+> Olá, consegue verificar os arquivos e o que Codex estava fazendo quando parou?
+> C:\Shinobibonk projeto - Copia — Você está trabalhando com este caminho de repositório local?
+> Sim, usar a Copia
+
+### Resposta
+
+O Claude Code vinha trabalhando por engano em `C:\Shinobibonk projeto` (cópia antiga); a pasta principal é a "- Copia" (regra da rodada 35, reforçada na 52). Na "- Copia", o Codex tinha uma rodada inteira sem commit (18 versões novas — Akatsuki, Som, Taka —, arte nova e rebalanceamento de HP/dano). Validada (tsc, build, verify-rules 114/213/95) e publicada como Rodada 54; detalhes no CHANGELOG.

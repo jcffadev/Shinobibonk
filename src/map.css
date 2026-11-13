@@ -82,3 +82,7 @@
 @keyframes notice-in{from{opacity:0;transform:translate(-50%,8px)}}
 @media(max-width:1050px){.route-chip{top:230px;width:155px}}
 @media(max-width:700px){.route-chip{top:136px;right:8px;width:140px}}
+
+.mist-map .world-map,.minimap.mist-map{background:#141b25}
+.mist-map :is(.map-terrain,.map-grid,.map-north,.map-south){opacity:.08}
+.mist-map .discovered-list{background:#202836;color:#f3eee5}

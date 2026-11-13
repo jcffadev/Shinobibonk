@@ -1,3 +1,5 @@
+import { formAt, portraitRegion } from '../game/evolution';
+import { directionalArt } from '../game/directionalArt';
 import { VillageEmblem, villageName } from './VillageEmblem';
 import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
@@ -8,9 +10,8 @@ const unlockOrder = (id: string) => isHeroPlayable(id) ? 0 : (DIFF_RANK[UNLOCK_M
 const familyOrder = (id: string) => HEROES.findIndex(h => h.id === familyOf(id)) * 100 + (HERO_BY_ID[id]?.form ?? 1);
 
 import { isHeroPlayable } from '../game/account';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { HEROES, HERO_BY_ID, HERO_CLAN, ORGANIZATIONS, familyOf, heroAffinity, heroClan, heroOrganizations, type Element } from '../game/heroes';
-import { HeroPortrait } from './RunSheet';
 import { matchesSearch } from './PoolFilters';
 
 /** Cores dos selos de elemento (mesma paleta das técnicas em heroes.ts). */
@@ -43,6 +44,83 @@ export function CharacterTags({ id }: { id: string }) {
 
 type Filters = { search: string; village: string; element: string; org: string };
 const EMPTY: Filters = { search: '', village: '', element: '', org: '' };
+
+
+const SELECT_PORTRAITS = ["hiruzen","raikage-terceiro","raikage-quarto","killer-b","onoki","ao","rasa","hanzo","mei","gengetsu","naruto-hokage","choji","kiba","shino","ino","kurenai","iruka","sai","yamato","shisui","obito","hiashi","hanabi","kisame","zabuza","suigetsu","mangetsu","karin","nagato","sasori","haku","chiriku","sakumo","deidara","hidan","kakuzu","konan","zetsu","jugo","kabuto","kabuto-sabio","kimimaro","jirobo","kidomaru","tayuya","sakon-ukon","dosu","zaku","kin","juzo","orochimaru-akatsuki","choji-guerra","kiba-shippuden","shino-shippuden","ino-guerra","tobi-akatsuki","obito-guerra","hanabi-adulta"];
+
+type PortraitRegion = ReturnType<typeof portraitRegion>;
+type Framing = { x: number; y: number; scale: number };
+
+const loadedAtlases = new Map<string, Promise<HTMLImageElement>>();
+const measuredPortraits = new Map<string, Promise<Framing>>();
+
+function measurePortrait(region: PortraitRegion): Promise<Framing> {
+  const key = [region.path, region.cols, region.rows, region.index].join(':');
+  const cached = measuredPortraits.get(key);
+  if (cached) return cached;
+  let atlas = loadedAtlases.get(region.path);
+  if (!atlas) {
+    atlas = new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = reject;
+      image.src = region.path;
+    });
+    loadedAtlases.set(region.path, atlas);
+  }
+  const frame = atlas.then(image => {
+    const size = 96;
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = size;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+    const w = image.naturalWidth / region.cols, h = image.naturalHeight / region.rows;
+    ctx.drawImage(image, (region.index % region.cols) * w, Math.floor(region.index / region.cols) * h, w, h, 0, 0, size, size);
+    const data = ctx.getImageData(0, 0, size, size).data;
+    const rows = Array.from({ length: size }, (_, y) => {
+      const xs: number[] = [];
+      for (let x = 0; x < size; x++) if (data[(y * size + x) * 4 + 3] >= 144) xs.push(x);
+      return xs;
+    });
+    const top = rows.findIndex(xs => xs.length > 1);
+    let bottom=size-1;
+    while(bottom>top&&rows[bottom].length<=1)bottom--;
+    if (bottom <= top) return { x: 50, y: 0, scale: 1 };
+    const bodyHeight = bottom - top + 1;
+    const headRows = rows.slice(top + Math.floor(bodyHeight * .12), top + Math.ceil(bodyHeight * .36));
+    const headXs = headRows.flat().sort((a, b) => a - b);
+    const headX = headXs[Math.floor(headXs.length / 2)] ?? size / 2;
+    const bust=region.path.includes('shinobi-select-portraits');
+    const scale = Math.min(2.4, Math.max(1, size * (bust?.91:1.32) / bodyHeight));
+    return { x: 50 - headX / size * scale * 100, y: 13 - top / size * scale * 100, scale };
+  });
+  measuredPortraits.set(key, frame);
+  return frame;
+}
+
+function cardRegion(id:string) {
+  const family=familyOf(id);
+  const index=SELECT_PORTRAITS.indexOf(id);
+  if(index>=0)return {path:'/assets/shinobi-select-portraits-v1-'+(1+Math.floor(index/12))+'.png',cols:4,rows:3,index:index%12};
+  if(family==='gaara'){
+    const sheet=directionalArt(family,formAt(id).level);
+    if(sheet)return {path:sheet.path,cols:4,rows:sheet.rows,index:(sheet.firstRow??0)*4};
+  }
+  return portraitRegion(id);
+}
+
+function CardPortrait({ id, decorative }: { id: string; decorative: boolean }) {
+  const [framing, setFraming] = useState<Framing>();
+  useEffect(() => {
+    let mounted = true;
+    measurePortrait(cardRegion(id)).then(value => { if (mounted) setFraming(value); }).catch(() => {});
+    return () => { mounted = false; };
+  }, [id]);
+  const {path,cols,rows,index}=cardRegion(id);
+  return <span className="cs-cropped-sprite" data-framed={Boolean(framing)}
+    style={framing ? { transform: `translate(${framing.x}%,${framing.y}%) scale(${framing.scale})` } : undefined}>
+    <span className="hero-sprite roster-sprite" role={decorative?undefined:"img"} aria-hidden={decorative||undefined} aria-label={decorative?undefined:HERO_BY_ID[id]?.name} style={{backgroundImage:`url(${path})`,backgroundSize:`${cols*100}% ${rows*100}%`,backgroundPosition:`${cols===1?0:index%cols/(cols-1)*100}% ${rows===1?0:Math.floor(index/cols)/(rows-1)*100}%`}}/>
+  </span>;
+}
 
 export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; onSelect: (id: string) => void }) {
   const [filters, setFilters] = useState<Filters>(EMPTY);
@@ -87,14 +165,14 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
           onClick={() => onSelect(entry.id)} onMouseEnter={(e) => showMission(entry.id, e.currentTarget)} onMouseLeave={() => setHover(null)} onFocus={(e) => showMission(entry.id, e.currentTarget)} onBlur={() => setHover(null)}>
           <span className="cs-portrait">
             <span className="cs-initials" aria-hidden="true">{playable?initials(entry.name):null}</span>
-            <HeroPortrait id={entry.id} decorative={!playable} />
+            <CardPortrait id={entry.id} decorative={!playable} />
             {!isHeroPlayable(entry.id) && <span className="cs-village-mark" aria-hidden="true"><VillageEmblem village={entry.village}/></span>}
             {playable&&<span className="cs-element" style={{ ['--el' as string]: ELEMENT_COLOR[element] }} title={`Elemento: ${element}`}>{ELEMENT_GLYPH[element]}</span>}
           </span>
-          {playable && LEGENDARY.has(entry.id) && <i className="cs-legend-tag">LENDÁRIO</i>}
           {playable&&<b>{entry.name}</b>}
           
           <small className="cs-village"><VillageEmblem village={entry.village}/>{villageName(entry.village,true)}</small>
+          {playable && LEGENDARY.has(entry.id) && <span className="cs-legend-tag">Lendário</span>}
           {!playable&&<small className="cs-mission-label">{entry.family!==entry.id?'Nova versão · missão':'Liberado com missão'}</small>}
           {selected && <i className="cs-picked">SELECIONADO</i>}
         </button>;

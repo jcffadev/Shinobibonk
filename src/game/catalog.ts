@@ -10,11 +10,11 @@ export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'cri
   |'healthPct'|'regenMult'|'eliteDamage'|'controlledDamage'|'statusStack'|'lowHpDamage'|'noHitDamage'|'killDamage'|'armorPhysical'|'bigCrit'
   |'lifesteal'|'thorns'|'killHeal'|'execute'|'burnChance'|'poisonChance'|'sleepChance'|'rootChance'|'chillChance'|'statusDamage'
   |'revive35'|'revive60'|'shield'|'rush'|'stance'|'smoke'|'emergencyHeal'|'periodicHeal'|'bolts'|'beam'|'freezeOnHit'
-  |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'threat'|'pillCap'|'skillCap'|'ultReset'
+  |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'eliteSpawn'|'threat'|'pillCap'|'skillCap'|'ultReset'
   // Caça-Níquel da Tsunade: +dano a cada 250 Ryu gastos na run (src/game/roulette.ts · spendBonuses)
   |'spendDamage';
 export type Bonuses = Partial<Record<StatKey, number>>;
-export type Item = { id:string; name:string; rarity:Rarity; cost:number; icon:string; sprite:number; max:number; description:string; bonuses:Bonuses };
+export type Item = { id:string; name:string; rarity:Rarity; cost:number; icon:string; sprite:number; max:number; description:string; bonuses:Bonuses; levelsOnAcquire?:number };
 const COST:Record<Rarity,number>={Comum:0,Incomum:150,Raro:300,'Épico':500,'Lendário':900};
 const item = (id:string,name:string,rarity:Rarity,sprite:number,max:number,description:string,bonuses:Bonuses):Item => ({id,name,rarity,sprite,max,description,bonuses,icon:'◆',cost:COST[rarity]});
 /** "Sem limite" da referência vira 10 cópias (convenção do projeto). */
@@ -104,7 +104,7 @@ export const ITEMS:Item[] = [
   item('training-weights','Pesos de Treinamento','Raro',4,3,'+50% de experiência e −10% de movimento.',{exp:.5,move:-.1}),
   item('banner','Estandarte da Aliança','Raro',11,2,'+40% de força dos buffs dos ajudantes.',{allyBuff:.4}),
   // Rodada 47 (pedido do usuário: "a Isca Shinobi é uma Pílula, não um item") → migrou para pills.ts como
-  // pílula "Isca Shinobi" (mesmos valores por nível: +15% horda · +12% Ryu · +8% experiência).
+  // pílula "Isca Shinobi", hoje com chance de surgimento de elites e dano contra os tiers especiais.
   item('executioner','Lâmina do Carrasco','Raro',1,4,'Inimigos comuns abaixo de 8% do HP morrem na hora (+4 pontos por cópia extra).',{execute:.08}),
   item('luck','Colar do Primeiro Hokage','Raro',2,ANY,'+20 de Sorte. Melhora a raridade das ofertas de itens.',{luck:20}),
   // Referência: porta-moedas (buff por dinheiro gasto). A carteira de sapo do Naruto.
@@ -131,6 +131,7 @@ export const ITEMS:Item[] = [
   item('haku-mirror','Espelho de Gelo de Haku','Lendário',10,1,'+15% de dano; ao ser atingido, congela inimigos próximos por 3 s (a cada 20 s).',{damage:.15,freezeOnHit:1}),
   item('sage','Armadura do Sábio','Lendário',4,2,'+30% de dano total e +20% de velocidade de ataque.',{damage:.3,attackSpeed:.2}),
   item('rinne-tensei','Chakra de Hagoromo','Lendário',9,3,'Revive uma vez com 60% do HP (uma vez por cópia).',{revive60:1}),
+  {...item('ninja-info-cards','Cartões de Informações Ninja','Lendário',3,10,'Ganha 2 níveis ao coletar e +5% de dano total por cópia.',{damage:.05}),levelsOnAcquire:2},
   item('red-moon','Olho da Lua Vermelha','Lendário',9,2,'+2 projéteis e +25% de área.',{projectiles:2,area:.25}),
   item('hokage-scroll','Pergaminho do Hokage','Lendário',3,1,'Ultimate recarrega 25% mais rápido; ao usá-la, as técnicas recarregam e ganham +30% de velocidade de ataque por 6 s.',{cool:.25,ultReset:1}),
   item('tenten','Shuriken Selo da Tenten','Lendário',1,1,'+25% de dano total. E sela instantaneamente um mega elite já derrotado.',{damage:.25}),

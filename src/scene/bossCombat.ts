@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { compactNumber } from '../game/format';
-import { BIJUU_BY_ID, BIJUU_BOMB, beastPhase } from '../game/bijuu';
+import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, beastPhase } from '../game/bijuu';
 import { HERO_BY_ID, ultimateBase, type Technique } from '../game/heroes';
 import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techniqueEffects';
 
@@ -25,7 +25,7 @@ export const BOSS_RULES = {
 
 type CastShape = 'circle' | 'cone' | 'line' | 'lineV' | 'ring';
 type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir: THREE.Vector3; range: number; width: number; windup: number; total: number; power: number; marker: THREE.Group; ultimate: boolean };
-export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number };
+export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number; motionTime:number; recoil:number; motionMap?:THREE.Texture; motionRow?:number };
 export type BossHost = { sprite: THREE.Sprite; hp: number; heroId?: string; guardian?: boolean; boss?: BossState };
 
 export type BossContext = {
@@ -79,7 +79,12 @@ export function createBossCombat(ctx: BossContext) {
     const name = beast?.name ?? HERO_BY_ID[host.heroId ?? '']?.name ?? 'Shinobi';
     const zoneIndex = Math.min(2, Math.max(0, ctx.zone() - 1));
     const cooldown = BOSS_RULES.cooldownByZone[zoneIndex] * (guardian ? .8 : 1);
-    host.boss = { name, maxHp, guardian, cooldown, next: 2 + Math.random() * 1.5, ultimateUsed: false, bar, canvas, lastRatio: 1, lastCasting: '',phase:beast?beastPhase(host.hp/maxHp):undefined,castCount:0 };
+    host.boss = { name, maxHp, guardian, cooldown, next: 2 + Math.random() * 1.5, ultimateUsed: false, bar, canvas, lastRatio: 1, lastCasting: '',phase:beast?beastPhase(host.hp/maxHp):undefined,castCount:0,motionTime:0,recoil:0 };
+    if(beast){
+      const index=BIJUU.indexOf(beast),map=new THREE.TextureLoader().load('/assets/bijuu/motion-v1-'+(1+Math.floor(index/3))+'.png');
+      map.colorSpace=THREE.SRGBColorSpace;map.magFilter=THREE.NearestFilter;map.minFilter=THREE.NearestMipmapLinearFilter;
+      map.repeat.set(.25,1/3);host.boss.motionMap=map;host.boss.motionRow=index%3;
+    }
     drawBar(host.boss, 1);
   }
 
@@ -147,6 +152,7 @@ export function createBossCombat(ctx: BossContext) {
 
   function fire(host: BossHost, state: BossState) {
     const c = state.cast!;
+    state.recoil=1;
     if (playerInside(c)) {
       const t = c.technique, controls = t.slow || t.status === 'Lentidão' || t.status === 'Paralisar' || t.status === 'Atordoar' || t.status === 'Dormir';
       ctx.hitPlayer(BOSS_RULES.baseDamage * c.power, controls ? BOSS_RULES.slowSeconds : 0);
@@ -181,6 +187,27 @@ export function createBossCombat(ctx: BossContext) {
       state.cooldown -= dt;
       if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.2,1.35,.68][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
     }
+    if(phase){
+      const moving=canAct&&!state.cast;
+      state.motionTime+=dt*(moving?5:2.5);
+      const step=Math.sin(state.motionTime);
+      const windup=state.cast?1-Math.max(0,state.cast.windup)/state.cast.total:0;
+      state.recoil=Math.max(0,state.recoil-dt*3.4);
+      const isFlying=host.heroId==='chomei';
+      const lift=isFlying?.28+Math.abs(step)*.24:moving?Math.abs(step)*.14:0;
+      if(state.motionMap?.image){
+        const pose=state.recoil>0?3:state.cast?2:Number(step<0);
+        const flip=ctx.player.position.x<host.sprite.position.x;
+        state.motionMap.repeat.x=flip?-.25:.25;
+        state.motionMap.offset.set((pose+Number(flip))/4,(2-(state.motionRow??0))/3);
+        host.sprite.material.map=state.motionMap;
+      }
+      const wide=1+windup*.10+state.recoil*.13;
+      const tall=1+(moving?step*.055:step*.018)-windup*.08+state.recoil*.08;
+      host.sprite.scale.set(5*wide,5.5*tall,1);
+      host.sprite.position.y=ctx.height(host.sprite.position.x,host.sprite.position.z)+host.sprite.scale.y*.46+lift;
+      host.sprite.material.rotation=(isFlying?.06:.022)*step+.09*windup-.12*state.recoil;
+    }
     const hpText=compactNumber(Math.ceil(host.hp))+' / '+compactNumber(state.maxHp);
     if (Math.abs(ratio - state.lastRatio) > .004 || state.hpText!==hpText || state.cast) {
       state.lastRatio = ratio;state.hpText=hpText;drawBar(state, ratio);
@@ -198,7 +225,7 @@ export function createBossCombat(ctx: BossContext) {
 
   function dispose(host: BossHost) {
     const state = host.boss; if (!state) return;
-    clearCast(state);
+    clearCast(state);state.motionMap?.dispose();
     ctx.scene.remove(state.bar); state.bar.material.map?.dispose(); state.bar.material.dispose();
     host.boss = undefined;
   }

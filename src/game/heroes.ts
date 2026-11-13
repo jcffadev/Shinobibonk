@@ -140,7 +140,8 @@ const U={
  tigre:t('Tigre do Meio-Dia','Taijutsu','Neutro','Onda',1.8),
 };
 /** Nomes das técnicas compartilhadas; qualquer outra técnica de um kit é ÚNICA daquele shinobi. */
-export const SHARED_TECHNIQUES=new Set([...Object.values(L).map(x=>x.name),'Barras de Chakra']);
+const SHARED_LIBRARY=new Set(Object.values(L).map(x=>x.name));
+export const SHARED_TECHNIQUES=new Set([...SHARED_LIBRARY,'Barras de Chakra']);
 // Temas canônicos; percentuais, atributos e composições são regras originais de protótipo. U = única, L.* = compartilhada.
 export const HEROES:Hero[]=[
  h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[U.kageBunshin,L.shuriken,L.kunai,U.rendan],'Jutsu Sexy','Clones em área, projéteis e atordoamento',0),
@@ -186,7 +187,7 @@ export const ACADEMY:Technique[]=[
  {...t('Raiton: Faísca','Ninjutsu','Raio','Linha',.7),unlockLevel:4},
 ];
 /** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
-export function isProjectileUltimate(id:string){if(id==='naruto-hokage'||id==='kisame')return true;const family=familyOf(id);if(id==='naruto')return false;/* Academia: Jutsu Sexy é em área */return family==='naruto'||family==='tenten'||family==='minato';}
+export function isProjectileUltimate(id:string){if(id==='naruto-hokage'||id==='kisame'||id==='kidomaru')return true;const family=familyOf(id);if(id==='naruto')return false;/* Academia: Jutsu Sexy é em área */return family==='naruto'||family==='tenten'||family==='minato';}
 /**
  * VERSÕES SEPARADAS (pedido do usuário, 06/11/2026): cada forma de evolution.ts virou um personagem jogável próprio, com kit,
  * passiva e atributos da fase. O id do shinobi base continua sendo a PRIMEIRA versão (ex.: `naruto` = Naruto Academia), por isso
@@ -279,7 +280,11 @@ export function versionForEncounter(family:string,zone:number,difficulty:string)
 }
 /** Determinação (Naruto): bônus máximo de dano conforme perde HP, por versão. */
 export const DETERMINATION:Record<string,number>={naruto:.2,'naruto-genin':.25,'naruto-shippuden':.25,'naruto-kyuubi':.3};
-export function ultimateBase(hero:Hero):Technique{if(familyOf(hero.id)==='choji')return hero.techniques[0];return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];}
+const ULTIMATE_FROM_STARTER=new Set(['choji','choji-guerra','kabuto','kimimaro','tayuya','sakon-ukon','juzo','orochimaru-akatsuki']);
+export function ultimateBase(hero:Hero):Technique{
+  if(ULTIMATE_FROM_STARTER.has(hero.id))return hero.techniques[0];
+  return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];
+}
 export const HERO_BY_ID=Object.fromEntries(HEROES.map(h=>[h.id,h])) as Record<string,Hero>;
 /**
  * Níveis por FASE DA OBRA (pedido do usuário, 06/11/2026): técnicas da fase criança/genin saem cedo; técnicas de fases
@@ -299,7 +304,7 @@ export const PHASE_LEVELS:Record<string,Record<string,number>>={
 for(const [id,levels] of Object.entries(PHASE_LEVELS))for(const tech of HERO_BY_ID[id].techniques)if(levels[tech.name]!==undefined)tech.unlockLevel=levels[tech.name];
 /** Usuários canônicos do Modo Sábio (Narutopedia, Sage Mode): podem aprender técnicas de elemento Sábio. */
 // Por versão: o Naruto Academia e o Genin ainda não treinaram o Senjutsu (Modo Sábio é do Shippuden em diante).
-export const SAGE_USERS=new Set(['naruto-shippuden','naruto-kyuubi','naruto-hokage','jiraiya','jiraiya-sabio','hashirama','hashirama-sabio','minato','minato-hokage']);
+export const SAGE_USERS=new Set(['naruto-shippuden','naruto-kyuubi','naruto-hokage','jiraiya','jiraiya-sabio','hashirama','hashirama-sabio','minato','minato-hokage','kabuto-sabio']);
 /** Técnicas únicas de um shinobi: as do kit que não estão na biblioteca compartilhada (1–2 por versão; a mesma única pode se repetir só dentro da família). */
 export function uniqueTechniques(heroId:string){return (HERO_BY_ID[heroId]?.techniques??[]).filter(t=>!SHARED_TECHNIQUES.has(t.name));}
 /**
@@ -323,6 +328,29 @@ export const POOL_UNLOCK={shared:8,unique:12};
  * - compartilhadas de OUTRAS vilas só com o MESMO elemento (não Neutro) e compatível;
  * - únicas de outros shinobis com elemento compatível, liberadas só depois de selar aquele shinobi pela 1ª vez (`locked` até lá).
  */
+const CANONICAL_TEACHING:Record<string,readonly string[]>={
+  'Mil Braços do Escorpião':['sasori','kankuro'],
+  'Agulhas de Karasu':['kankuro'],
+  'Areia de Ferro':['sasori','kankuro'],
+  'Punho Gentil':['neji','hinata','hiashi','hanabi'],
+  'Palma de Ar':['neji','hinata','hiashi','hanabi'],
+  'Invocação do Sapo':['naruto','jiraiya','minato'],
+  'Susanoo':['sasuke','itachi','madara','kakashi','shisui'],
+  'Rasengan':['naruto','jiraiya','minato','kakashi'],
+  'Prisão das Sombras':['shikamaru'],
+  'Raízes':['hashirama','yamato'],
+  'Modo Sábio':[],
+  'Raikiri':['sasuke','kakashi'],
+  'Byakugou':['sakura','tsunade'],
+  'Portões do Inferno':['lee','guy'],
+};
+function canonicalPhase(id:string,name:string) {
+  const family=familyOf(id);
+  if(name==='Susanoo')return family==='sasuke'?id!=='sasuke'&&id!=='sasuke-academia':family==='kakashi'?id==='kakashi-dms':true;
+  if(name==='Byakugou')return id!=='sakura';
+  if(name==='Rasengan'||name==='Invocação do Sapo')return id!=='naruto';
+  return true;
+}
 export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()):PoolTechnique[]{
   const hero=HERO_BY_ID[heroId]??HEROES[0],allowed=allowedElements(hero.id),seen=new Set(hero.techniques.map(x=>x.name));
   const list:PoolTechnique[]=hero.techniques.map(x=>({...x,source:'kit',origin:hero.id}));
@@ -331,23 +359,20 @@ export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()
     seen.add(L.modoSabio.name);
   }
   for(const basic of ACADEMY)if(allowed.has(basic.element)&&!seen.has(basic.name)){seen.add(basic.name);list.push({...basic,source:'basica',origin:hero.id});}
-  // Técnicas elementais dos novos kits entram automaticamente no pool compatível.
-  for(const other of ROSTER_EXPANSION) {
-    if(other.family===familyOf(hero.id))continue;
-    for(const tech of HERO_BY_ID[other.id].techniques) {
-      if(tech.element==='Neutro'||seen.has(tech.name)||!allowed.has(tech.element)||!SHARED_TECHNIQUES.has(tech.name))continue;
+  // Kits assinados pedem vínculo com a técnica e a versão em que ela faz sentido.
+  const family=familyOf(hero.id);
+  for(const other of HEROES){
+    if(familyOf(other.id)===family||!sealed.has(other.id))continue;
+    for(const tech of other.techniques){
+      if(seen.has(tech.name)||!allowed.has(tech.element))continue;
+      const sameVillage=hero.village!=='Sem aldeia'&&other.village===hero.village;
+      const authorized=CANONICAL_TEACHING[tech.name];
+      const shared=SHARED_LIBRARY.has(tech.name);
+      if(authorized?!authorized.includes(family)||!canonicalPhase(hero.id,tech.name):!shared||(!sameVillage&&tech.element==='Neutro'))continue;
       seen.add(tech.name);
-      list.push({...tech,unlockLevel:POOL_UNLOCK.shared,source:'elemento',origin:other.id});
+      list.push({...tech,unlockLevel:shared?POOL_UNLOCK.shared:POOL_UNLOCK.unique,source:shared?(sameVillage?'vila':'elemento'):'única',origin:other.id});
     }
   }
-  // Outras versões da MESMA família não emprestam técnicas: cada versão fica com as técnicas da própria fase.
-  const family=familyOf(hero.id),strangers=HEROES.filter(o=>familyOf(o.id)!==family);
-  const others=[...strangers.filter(o=>o.village===hero.village),...strangers.filter(o=>o.village!==hero.village)];
-  for(const other of others){if(!sealed.has(other.id))continue;for(const tech of other.techniques){
-    if(seen.has(tech.name)||!allowed.has(tech.element))continue;
-    if(SHARED_TECHNIQUES.has(tech.name)){const sameVillage=other.village===hero.village;if(!sameVillage&&tech.element==='Neutro')continue;seen.add(tech.name);list.push({...tech,unlockLevel:POOL_UNLOCK.shared,source:sameVillage?'vila':'elemento',origin:other.id});}
-    else{seen.add(tech.name);list.push({...tech,unlockLevel:POOL_UNLOCK.unique,source:'única',origin:other.id});}
-  }}
   return list;
 }
 /** Técnicas que podem aparecer na run (sem as únicas ainda bloqueadas). */
@@ -357,15 +382,17 @@ export function skillPool(heroId:string,sealed:ReadonlySet<string>=new Set()):Te
  * Clã de origem (o campo `village` converte clãs da Folha para "Vila da Folha").
  * Pain representa o corpo de Yahiko. O clã Uzumaki pertence a Nagato, que controla o Caminho Deva.
  */
-export const HERO_CLAN:Record<string,string>={madara:'Clã Uchiha',sasuke:'Clã Uchiha',itachi:'Clã Uchiha',neji:'Clã Hyuga',hinata:'Clã Hyuga',shikamaru:'Clã Nara',hashirama:'Clã Senju',tobirama:'Clã Senju',tsunade:'Clã Senju',naruto:'Clã Uzumaki',nagato:'Clã Uzumaki',kushina:'Clã Uzumaki',obito:'Clã Uchiha',shisui:'Clã Uchiha',hiashi:'Clã Hyuga',hanabi:'Clã Hyuga',karin:'Clã Uzumaki',choji:'Clã Akimichi',ino:'Clã Yamanaka',kiba:'Clã Inuzuka',shino:'Clã Aburame',suigetsu:'Clã Hōzuki',mangetsu:'Clã Hōzuki',gengetsu:'Clã Hōzuki',hiruzen:'Clã Sarutobi'};
+export const HERO_CLAN:Record<string,string>={madara:'Clã Uchiha',sasuke:'Clã Uchiha',itachi:'Clã Uchiha',neji:'Clã Hyuga',hinata:'Clã Hyuga',shikamaru:'Clã Nara',hashirama:'Clã Senju',tobirama:'Clã Senju',tsunade:'Clã Senju',naruto:'Clã Uzumaki',nagato:'Clã Uzumaki',kushina:'Clã Uzumaki',obito:'Clã Uchiha',shisui:'Clã Uchiha',hiashi:'Clã Hyuga',hanabi:'Clã Hyuga',karin:'Clã Uzumaki',choji:'Clã Akimichi',ino:'Clã Yamanaka',kiba:'Clã Inuzuka',shino:'Clã Aburame',suigetsu:'Clã Hōzuki',mangetsu:'Clã Hōzuki',gengetsu:'Clã Hōzuki',hiruzen:'Clã Sarutobi',kimimaro:'Clã Kaguya'};
 /**
  * Organizações/equipes canônicas usadas por filtros e sinergias. Um shinobi pode estar em várias.
- * Ids que ainda não existem no elenco (ex.: kisame, ino, zabuza) já ficam listados para o elenco futuro; não contam até existirem.
+ * Filiações de personagens ainda indisponíveis só contam quando entram no elenco jogável.
  */
 export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
- {id:'akatsuki',name:'Akatsuki',members:['itachi','pain','kisame','deidara','sasori','hidan','kakuzu','konan','obito','zetsu']},
+ {id:'akatsuki',name:'Akatsuki',members:['itachi','pain','kisame','deidara','sasori','hidan','kakuzu','konan','obito','zetsu','juzo','orochimaru','nagato']},
  {id:'alianca',name:'Aliança Shinobi',members:['naruto','sasuke','sakura','gaara','kankuro','hinata','guy','lee']},
  {id:'taka',name:'Taka',members:['sasuke','suigetsu','jugo','karin']},
+ {id:'quarteto-som',name:'Quarteto do Som',members:['jirobo','kidomaru','tayuya','sakon-ukon','kimimaro']},
+ {id:'trio-som',name:'Trio do Som',members:['dosu','zaku','kin']},
  {id:'sannin',name:'Sannin Lendários',members:['jiraiya','tsunade','orochimaru']},
  {id:'hokage',name:'Hokages',members:['hashirama','tobirama','minato','tsunade','kakashi','naruto','hiruzen']},
  {id:'time7',name:'Time 7',members:['naruto','sasuke','sakura','kakashi','sai','yamato']},
@@ -377,15 +404,15 @@ export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
  {id:'uzumaki',name:'Clã Uzumaki',members:['naruto','kushina','karin','nagato']},
  {id:'time10',name:'Ino-Shika-Chō',members:['shikamaru','ino','choji','asuma']},
  {id:'time8',name:'Time 8',members:['hinata','kiba','shino','kurenai']},
- {id:'espadachins',name:'Sete Espadachins da Névoa',members:['kisame','zabuza','mangetsu','chojuro','kushimaru','jinpachi','fuguki','jinin','ameyuri']},
+ {id:'espadachins',name:'Sete Espadachins da Névoa',members:['kisame','zabuza','mangetsu','chojuro','kushimaru','jinpachi','fuguki','jinin','ameyuri','juzo']},
 ];
 // Fases representadas no jogo. A fonte canônica descreve a filiação; o recorte é da versão jogável.
 const ORGANIZATION_VERSIONS: Partial<Record<string, readonly string[]>> = {
- akatsuki:['itachi-akatsuki','pain','kisame','sasori','tobi-akatsuki','nagato'],
+ akatsuki:['itachi-akatsuki','pain','kisame','sasori','tobi-akatsuki','nagato','deidara','hidan','kakuzu','konan','zetsu','juzo','orochimaru-akatsuki'],
  hokage:['hashirama','hashirama-sabio','tobirama','minato-hokage','tsunade-hokage','tsunade-byakugou','kakashi-hokage','hiruzen','naruto-hokage'],
  time7:['naruto-genin','naruto-shippuden','naruto-kyuubi','sasuke','sasuke-rinnegan','sakura','sakura-shippuden','sakura-byakugou','kakashi','sai','yamato'],
  alianca:['naruto-kyuubi','sasuke-rinnegan','sakura-byakugou','gaara-alianca','kankuro-alianca','hinata-leoes','guy-setimo-portao','lee-portoes','choji-guerra','ino-guerra','onoki','mei','raikage-quarto','killer-b'],
- taka:['sasuke-shippuden','suigetsu','karin'],
+ taka:['sasuke-shippuden','suigetsu','karin','jugo'],
 };
 export function heroOrganizations(heroId:string){
  const family=familyOf(heroId);
