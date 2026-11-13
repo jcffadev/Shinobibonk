@@ -4,7 +4,8 @@ import type { Bonuses, Rarity, StatKey } from './catalog.ts';
 // Os bônus são somados em calculateStats a partir de knownPills a cada recálculo (sem buff residual).
 // Pílulas nunca concedem Chakra diretamente; a Pílula Hiden apenas acelera a recarga da Ultimate.
 // BALANCEAMENTO PROVISÓRIO: valores por nível derivados da referência de formato com ajustes leves.
-export const PILL_MAX = 10;
+export const PILL_MAX = 9;
+export const PHARMACOLOGY_MAX = 4;
 export const PILL_SLOTS = 6;
 
 export type PillDef = {

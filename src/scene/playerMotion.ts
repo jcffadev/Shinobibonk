@@ -57,6 +57,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     asuma.generateMipmaps = false;
   }
   const width = sprite.scale.x, height = sprite.scale.y;
+  let bodyScale=1, targetBodyScale=1;
   const health = healthBar ? createHealthBar(scene) : null;
   const walk = hasWalkAtlas ? new THREE.TextureLoader().load('/assets/naruto-academia-walk-v1.png') : null;
   if (walk) {
@@ -143,6 +144,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     debug: () => ({ state, frame: frameShown, progress: attack > 0 ? +(1 - attack / attackDuration).toFixed(3) : 1, walkAttack, stride: +strideShown.toFixed(4), queued: !!queued }),
     atlas: () => posePath,
     hurt: () => { hurt = .23; },
+    setBodyScale(scale:number){targetBodyScale=scale;},
     update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean, jumpProgress: number, slideProgress: number) {
       if (!animatedMaps.has(sprite.material.map)) idleMap = sprite.material.map;
       if (level !== previousLevel) {
@@ -223,19 +225,20 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         const castFrame = painUltimate
           ? 0 : family === 'gaara' && (ultimate || handSign) && progress >= .35 && progress < .84
           ? 2 : Math.min(3, Math.floor(progress * 4));
-        const frame = state === 'jump' ? Number(jumpProgress > .22 && jumpProgress < .77)
-          : state === 'dash' ? 2 + Number(slideProgress > .7) : castFrame;
+        const separateAcrobatics = 'separateAcrobatics' in poseSheet;
+        const frame = state === 'jump' ? (separateAcrobatics ? Math.min(3,Math.floor(jumpProgress*4)) : Number(jumpProgress > .22 && jumpProgress < .77))
+          : state === 'dash' ? (separateAcrobatics ? Math.min(3,Math.floor(slideProgress*4)) : 2 + Number(slideProgress > .7)) : castFrame;
         frameShown = frame;
         const secondRow = (acrobatics && ('directional' in poseSheet ? backwardView : true)) || (poseSheet.kind === 'cast' && rear) || (poseSheet.kind === 'taijutsu' && strike === 'kick');
         const flip = acrobatics || (fullAction && !attacking) ? leftward : mirror;
         const rows=poseSheet.rows??2;
         const row = fullAction
-          ? (poseSheet.firstRow ?? 0) + (attacking ? (painUltimate ? 2 + Number(rear) : Number(rear)) : 2 + Number(backwardView))
+          ? (poseSheet.firstRow ?? 0) + (attacking ? (painUltimate ? 2 + Number(rear) : Number(rear)) : 2 + Number(separateAcrobatics ? state === 'dash' : backwardView))
           : (poseSheet.firstRow ?? 0) + Number(secondRow);
         poseMap.repeat.set(flip ? -.25 : .25, 1/rows);
         poseMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
       }
-      if (useDirection && directionMap && directionSheet) {
+      if (useDirection && directionMap && directionSheet && (!useAction || directionMap!==poseMap)) {
         const frame = directedCast ? Math.min(3, Math.floor(attackProgress * 4))
           : state==='jump' ? (jumpProgress<.24||jumpProgress>.76?0:2) : state==='dash' ? (slideProgress<.72?2:1) : Math.floor(stepTime * 10) % 4;
         if (!useSeal && !useAction) frameShown = frame;
@@ -297,7 +300,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const propTarget = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;
       // Rodada 45 — suaviza o fator de proporção (lerp exponencial): antes, o fator era aplicado de uma vez e o personagem 'pulava' de tamanho (e de altura, pois position.y segue a escala) nas trocas repouso <-> andar <-> ataque. Agora a transição é fluida (~0,15 s) e os pés seguem ancorados. Choji (cresce), Gaara e Pain (flutuam) mantêm a âncora porque ela usa a escala final.
       propCur += (propTarget - propCur) * (1 - Math.exp(-dt * 14));
-      sprite.scale.set(width * squashX * propCur, height * squashY * propCur, 1);
+      bodyScale+=(targetBodyScale-bodyScale)*(1-Math.exp(-dt*10));
+      sprite.scale.set(width * squashX * propCur * bodyScale, height * squashY * propCur * bodyScale, 1);
       const painFloat = painUltimate ? Math.sin(Math.PI * attackProgress) * .38 : 0;
       sprite.position.y = floor + jumpHeight + sprite.scale.y*.5 + painFloat;
       if (trail) {

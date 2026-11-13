@@ -1,8 +1,8 @@
 # Auditoria de efeitos e ícones · 12/11/2026
 
-Triagem do código das 56 versões. A tabela indica o caminho implementado e orienta a revisão visual em partida. A coluna de técnica inclui o kit de cada shinobi e as básicas do pool. A arte de cada ícone vem de SkillIcon.tsx, que usa atlas por técnica quando há uma célula registrada e ícone por elemento ou forma para o restante.
+A tabela abaixo registra a auditoria anterior das 56 versões. A tabela indica o caminho implementado e orienta a revisão visual em partida. A coluna de técnica inclui o kit de cada shinobi e as básicas do pool. A arte de cada ícone vem de SkillIcon.tsx, que usa atlas por técnica quando há uma célula registrada e ícone por elemento ou forma para o restante.
 
-## Técnicas · 105
+## Registro anterior · 105 técnicas
 
 | Técnica | Elemento e forma | Caminho visual |
 | --- | --- | --- |
@@ -177,3 +177,12 @@ Triagem do código das 56 versões. A tabela indica o caminho implementado e ori
 2. Nas linhas com variante, conferir se a diferença é visível em partida. Priorizar os jutsus dos Nara, o kit médico, as armas de Tenten e as invocações.
 3. Conferir o mesmo efeito na prévia, no jogador, no ajudante quando aplicável e com H ligado. Só marcar revisão visual concluída depois de jogar.
 4. Os ícones de Kuroari e Mil Braços foram ligados às folhas desta rodada. Fazer o inventário de células compartilhadas durante a revisão de cada família.
+
+
+## Rodada 53 · Integração em 96 versões
+
+O pool inclui 185 técnicas distintas, 177 nos kits. O atlas `technique-effects-roster-v1.png` tem 24 motivos, entre eles relâmpago, Amaterasu, bola de fogo, dragão de água, sombras, insetos, palmas, correntes, tigre, pavão, gelo e tinta. A resolução usa nome, assinatura do kit e elemento, nessa ordem. Parte das técnicas ainda compartilha motivo e geometria. A prévia e o combate leem o mesmo perfil. Ataques com entidades dedicadas continuam usando suas folhas e regras.
+
+A arte do anime ainda precisa de comparação individual por técnica e Ultimate. A validação técnica de atlas não certifica fidelidade ao episódio.
+
+O atlas `technique-summons-v1.png` acrescenta oito motivos próprios: leão e ave de tinta, tubarão de chakra, Hiruko, marionetes, Ibuse, molusco de Gengetsu e Rinnegan. São sprites animados por deslocamento e escala. As invocações completas com entidades separadas continuam na fila onde aplicável.

@@ -1,9 +1,42 @@
 import * as THREE from 'three';
 import { createAtlasEffect } from './atlasEffects';
+import { expansionVisual } from '../game/rosterExpansion';
+import { BATTLE_EFFECT_ATLAS, SUMMON_EFFECT_ATLAS, battleEffectCell, summonEffectCell } from '../game/techniqueVisualProfiles';
 import type { Technique } from '../game/heroes';
 
 const UP = new THREE.Vector3(0, 1, 0);
 const TAU = Math.PI * 2;
+const effectMaps = new Map<string,THREE.Texture>();
+const effectAtlases = new Map<string,THREE.Texture>();
+function battleSprite(t:Technique) {
+  const summon=summonEffectCell(t.name);
+  const path=summon===undefined?BATTLE_EFFECT_ATLAS:SUMMON_EFFECT_ATLAS,rows=summon===undefined?6:2;
+  const cell=summon??battleEffectCell(t),key=path+':'+cell;
+  let map=effectMaps.get(key);
+  if(!map) {
+    let atlas=effectAtlases.get(path);
+    if(!atlas) {
+      atlas=new THREE.TextureLoader().load(path,()=>{
+        for(const [textureKey,texture] of effectMaps)if(textureKey.startsWith(path+':'))texture.needsUpdate=true;
+      });
+      atlas.colorSpace=THREE.SRGBColorSpace;
+      atlas.minFilter=atlas.magFilter=THREE.NearestFilter;
+      atlas.generateMipmaps=false;
+      effectAtlases.set(path,atlas);
+    }
+    map=atlas.clone();
+    map.repeat.set(.25,1/rows);
+    map.offset.set(cell%4/4,(rows-1-Math.floor(cell/4))/rows);
+    effectMaps.set(key,map);
+  }
+  const material=new THREE.SpriteMaterial({map,transparent:true,alphaTest:.54,depthWrite:false});
+  const sprite=new THREE.Sprite(material);
+  sprite.position.set(0,.42,.22);
+  sprite.scale.set(1.3,1.3,1);
+  sprite.name='jutsu-sprite';
+  sprite.visible=!!map.image;
+  return sprite;
+}
 const round = (radius: number) => new THREE.IcosahedronGeometry(radius, 0);
 const forward = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 
@@ -39,6 +72,137 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
     return part;
   };
   const name = t.name;
+  const overlay = !/Kunai Tática|Kunai Hiraishin|Kunai do Instrutor|^Shuriken$|Senbon|Barras de Chakra|Receptores de Chakra|^Rasengan|Rasenshuriken|Bijūdama|Substituição|Bunshin|Invocação do Sapo|Gamabunta|Kuroari|Shinra Tensei|Chibaku Tensei|Susanoo|Espada de Totsuka/.test(name);
+  if(overlay)group.add(battleSprite(t));
+
+  const signature = expansionVisual(name);
+  if(signature && !/Rasengan|Rasenshuriken|Bijūdama|Receptores de Chakra/.test(name)) {
+    const color=t.color;
+    const fan = (count:number,span:number,fn:(angle:number,index:number)=>void) => {
+      for(let i=0;i<count;i++)fn(count===1?0:(i/(count-1)-.5)*span,i);
+    };
+    switch(signature) {
+      case 'cube': {
+        const geometry=new THREE.BoxGeometry(1.25,.85,1.25);
+        const frame=new THREE.LineSegments(new THREE.EdgesGeometry(geometry),new THREE.LineBasicMaterial({color:'#e8faff'}));
+        geometry.dispose();
+        frame.position.set(0,.47,.62);
+        group.add(frame);
+        mesh(new THREE.BoxGeometry(.79,.52,.79),'#9bd4dd',0,.47,.62).rotation.y=.35;
+        group.userData.directed=true;
+        break;
+      }
+      case 'ice':
+        fan(5,TAU*.82,(angle,i)=>{
+          const panel=mesh(new THREE.BoxGeometry(.22,.65,.05),i%2?'#b8effa':'#e6fcff',Math.sin(angle)*.57,.4,Math.cos(angle)*.57);
+          panel.rotation.y=angle;
+        });
+        group.userData.spin=2;
+        break;
+      case 'swarm':
+        grains('#263027',22,.047,.14);
+        grains('#6c8052',14,.03,.14);
+        group.userData.spin=4.6;
+        break;
+      case 'paths':
+      case 'mind':
+      case 'scan':
+        fan(signature==='paths'?6:3,TAU,(angle,i)=>{
+          const radius=signature==='paths'?.65:.32+i*.19;
+          const wave=ring(signature==='paths'?.21:radius,i%2?color:'#d9c6ff');
+          wave.position.set(signature==='paths'?Math.sin(angle)*radius:0,.18+i*.075,signature==='paths'?Math.cos(angle)*radius:0);
+          wave.rotation.x=Math.PI/2;
+        });
+        group.userData.spin=2.4;
+        break;
+      case 'shark':
+      case 'ink': {
+        const ink=signature==='ink', main=ink?'#222733':'#5ebbe8';
+        const body=mesh(new THREE.SphereGeometry(.25,9,6),main,0,.34,.3);
+        body.scale.set(.86,.72,1.85);
+        const fin=mesh(new THREE.ConeGeometry(.18,.45,3),ink?'#e4e4de':'#b9edfb',0,.56,.19);
+        fin.rotation.y=Math.PI/2;
+        fan(2,1.9,(angle)=>{
+          mesh(new THREE.ConeGeometry(.16,.47,3),main,Math.sin(angle)*.18,.34,-.15).rotation.z=angle;
+        });
+        group.userData.directed=true;
+        break;
+      }
+      case 'gold':
+      case 'iron':
+        grains(signature==='gold'?'#ffb93f':'#292d42',23,.085,.1);
+        grains(signature==='gold'?'#fff3ad':'#8c91aa',14,.038,.12);
+        group.userData.spin=4.5;
+        break;
+      case 'roots':
+        fan(7,5.5,(angle,i)=>{
+          const branch=mesh(new THREE.CylinderGeometry(.055,.11,.72+(i%3)*.2,5),i%2?'#674629':'#af7545',Math.sin(angle)*.52,.41,Math.cos(angle)*.52);
+          branch.rotation.z=Math.sin(angle)*.25;
+          branch.rotation.x=Math.cos(angle)*.25;
+        });
+        break;
+      case 'staff':
+      case 'blade':
+      case 'chains':
+        fan(signature==='chains'?7:3,1.1,(angle,i)=>{
+          const edge=signature==='chains' ? ring(.13,i%2?'#ffc36c':'#f4deb2')
+            : mesh(new THREE.BoxGeometry(.055,.045,signature==='staff'?.95:.64),signature==='staff'?'#65525a':'#edeeed');
+          edge.position.set(Math.sin(angle)*.48,.27+(i%2)*.08,.36+i*.11);
+          edge.rotation.y=angle+i*.3;
+        });
+        group.userData.directed=true;
+        break;
+      case 'fang':
+      case 'wheel':
+      case 'spiral':
+      case 'wings':
+        fan(signature==='wings'?2:3,1.8,(angle,i)=>{
+          const swirl=ring(.35+i*.055,signature==='wings'?'#98dbff':color,Math.PI*1.43);
+          swirl.rotation.set(.2+angle,.4,i*1.8);
+          swirl.position.set(Math.sin(angle)*.28,.32,.36);
+        });
+        group.userData.spin=8;
+        break;
+      case 'lightning':
+        fan(3,1,(angle,i)=>{
+          const x=Math.sin(angle)*.35;
+          trace([forward(x,.28,-.2),forward(x-.2,.52,.14),forward(x+.16,.22,.38),forward(x,.32,1.06)],.028,i%2?'#f6f5ff':'#b8abff');
+        });
+        group.userData.directed=true;
+        break;
+      case 'steam':
+      case 'poison':
+        grains(signature==='steam'?'#e9e8d9':'#b597d8',17,.13,.17);
+        grains(signature==='steam'?'#a4c2c6':'#604787',9,.08,.17);
+        group.userData.spin=1.6;
+        break;
+      case 'lava':
+      case 'fire':
+      case 'elements':
+        fan(5,1.2,(angle,i)=>{
+          const flame=mesh(new THREE.ConeGeometry(.13,.4,5),signature==='elements'?['#f98c4e','#9bf1df','#6db2fa','#d0ae83','#d5c1ff'][i]:i%2?'#ff9e47':'#ee4c35',Math.sin(angle)*.6,.22,.23+i*.13);
+          flame.rotation.x=Math.PI*.4;
+        });
+        group.userData.directed=true;
+        break;
+      case 'water':
+        fan(3,1.6,(angle,i)=>{
+          const curl=ring(.34+i*.06,i%2?'#e0f8ff':'#78cafa',Math.PI*1.2);
+          curl.position.set(Math.sin(angle)*.28,.27,.4);
+          curl.rotation.y=angle;
+        });
+        group.userData.directed=true;
+        break;
+      default: {
+        const pulse=ring(.67,color,Math.PI*1.7);
+        pulse.rotation.x=Math.PI/2;
+        grains(signature==='mark'?'#ead674':'#fff0d7',9,.07,.11);
+        group.userData.directed=true;
+      }
+    }
+    return group;
+  }
+
   if (name==='Shinra Tensei') {
     const rings=['#ffffff','#dbe9ff','#c4aeff'].map((color,index)=>{
       const wave=ring(1,color);
@@ -210,6 +374,9 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
       group.userData.directed=true;
     }
     grains(name==='Nuvem de Tinta'?'#301e49':'#e7e99b',9,.17,.12);
+  } else if (/Barras de Chakra|Receptores de Chakra/.test(name)) {
+    mesh(new THREE.CylinderGeometry(.025,.038,.85,6),'#171521',0,.17,.15).rotation.x=Math.PI/2;
+    group.userData.directed=true;
   } else if (t.element === 'Raio') {
     mesh(round(.21),'#ecfbff',0,.12,.14);
     for (let i=0;i<5;i++) {
@@ -227,6 +394,9 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
       }
       ring(.074,'#303951').rotation.x=Math.PI/2;
       group.userData.spin=22;
+    } else if(name.includes('Senbon')) {
+      for(const x of [-.12,0,.12])mesh(new THREE.CylinderGeometry(.007,.017,.63,5),'#e1f4f8',x,.14,.15).rotation.x=Math.PI/2;
+      group.userData.directed=true;
     } else {
       blade([[0,.66],[.14,.16],[0,-.07],[-.14,.16]],'#c7d7e8');
       mesh(new THREE.BoxGeometry(.065,.035,.27),'#594561',0,0,-.18);
@@ -289,14 +459,15 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
 /** Técnicas com malha própria reconhecível (invocações, Rasengan, dragões…). As demais usam só partículas (particleFx.ts). */
 const SIGNATURE_AREA = /^Rasengan|Rasenshuriken|Bijūdama|Dragão de Água|Dragão de Madeira|Kirin|Técnica de Substituição|Invocação do Sapo|Gamabunta|Katsuyu|Invocação de Manda|Turbilhão de Tentáculos|Nuvem de Escamas|Rasante Alada|Nuvem de Tinta|Shinra Tensei|Chibaku Tensei|Kaiten|Palmas Protetoras|Oito Trigramas|Punhos dos Leões Gêmeos|Caixão de Areia|Sepultamento|Kamui/;
 const SIGNATURE_SHOT = /Bunshin|Kunai|Shuriken|Senbon/;
-export const hasSignatureVisual = (t: Technique, projectile: boolean) => SIGNATURE_AREA.test(t.name) || (projectile && SIGNATURE_SHOT.test(t.name));
+export const hasSignatureVisual = (t: Technique, projectile: boolean) => !t.setup || SIGNATURE_AREA.test(t.name) || (projectile && SIGNATURE_SHOT.test(t.name));
 
 /** Cópia de um modelo em cache: compartilha geometria/material (sem alocar por cast). disposeObject ignora cópias compartilhadas. */
 const visualCache = new Map<string, THREE.Object3D>();
 export function cachedTechniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE.Object3D {
-  if (t.name.includes('Bunshin') || t.name === 'Técnica de Substituição') return techniqueVisual(t, clone);
-  let template = visualCache.get(t.name);
-  if (!template) { template = techniqueVisual(t); visualCache.set(t.name, template); }
+  if (/Bunshin|Substituição|Tensei|Caixão|Sepultamento|Oito Trigramas|Kaiten|Palmas Protetoras|Kamui/.test(t.name)) return techniqueVisual(t, clone);
+  const cacheKey=t.name+'|'+t.element+'|'+t.color;
+  let template = visualCache.get(cacheKey);
+  if (!template) { template = techniqueVisual(t); visualCache.set(cacheKey, template); }
   const copy = template.clone();
   copy.userData.shared = true;
   return copy;
@@ -318,6 +489,8 @@ export function techniqueImpact(t: Technique) {
 }
 
 export function animateTechniqueVisual(object: THREE.Object3D, dt: number, direction?: THREE.Vector3) {
+  const sprite=object.getObjectByName('jutsu-sprite');
+  if(sprite instanceof THREE.Sprite){sprite.visible=!!sprite.material.map?.image;const age=(object.userData.battleAge??0)+dt;object.userData.battleAge=age;const scale=1.14+Math.min(age,.18)*1.65;sprite.scale.set(scale,scale,1);}
   if(object.userData.atlasFrame){object.userData.atlasAge=(object.userData.atlasAge??0)+dt;object.userData.atlasFrame(object.userData.atlasAge);}
   if(object.userData.directed && direction) object.rotation.y = Math.atan2(direction.x,direction.z);
   else if(object.userData.spin) object.rotation.y += dt*object.userData.spin;

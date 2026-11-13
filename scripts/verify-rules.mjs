@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { ROSTER_EXPANSION } from '../src/game/rosterExpansion.ts';
 import { HEROES,HERO_BY_ID,heroOrganizations,skillPool,sandSynergy,versionForEncounter,isProjectileUltimate } from '../src/game/heroes.ts';
 import { calculateStats,rollCritical,difficultyAt,heroDamageScale,xpToLevelUp,effectiveLootLuck } from '../src/game/progression.ts';
 import { megaEliteHp,rollMegaSchedule } from '../src/game/enemyTiers.ts';
@@ -9,8 +10,8 @@ import { ASUMA_ATLAS,FORMS,formAt,portraitRegion } from '../src/game/evolution.t
 import { actionArt, directionalArt } from '../src/game/directionalArt.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
 // Versões separadas (06/11/2026): cada forma de evolution.ts é um personagem jogável próprio (24 famílias, 56 versões).
-assert.equal(HEROES.length,56);
-assert.equal(new Set(HEROES.map(h=>h.family)).size,24);
+assert.equal(HEROES.length,56+ROSTER_EXPANSION.length);
+assert.equal(new Set(HEROES.map(h=>h.family)).size,24+ROSTER_EXPANSION.filter(h=>h.id===h.family).length);
 for(const id of ['chomei','gyuki']){
  const portrait=portraitRegion(id);
  assert.equal(portrait.path,`/assets/bijuu/${id}-v2.png`);
@@ -40,7 +41,7 @@ for (const hero of HEROES) {
   assert.ok(!motionPairs.has(pair),`folha compartilhando quadros entre formas: ${pair}`);
   motionPairs.add(pair);
 }
-assert.equal(motionForms,56);assert.equal(versionForms.size,56,'uma versão por forma');
+assert.equal(motionForms,HEROES.length);assert.equal(versionForms.size,HEROES.length,'uma versão por forma');
 {// Todas as formas de FORMS viraram versão jogável.
  for(const [family,forms] of Object.entries(FORMS))for(const f of forms)assert.ok(versionForms.has(family+':'+f.level),'forma sem versão: '+family+' '+f.name);}
 {// Fase da obra por versão: cada versão só tem técnicas da própria fase.
@@ -80,7 +81,7 @@ assert.equal(motionForms,56);assert.equal(versionForms.size,56,'uma versão por 
  assert.ok(!skillPool('naruto',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'selar não ignora incompatibilidade elemental');
  assert.ok(skillPool('sasuke',new Set(['kakashi'])).some(t=>t.name==='Raikiri'),'única liberada após selar para shinobi compatível');
  assert.ok(!skillPool('gaara').some(t=>t.name==='Punho da Folha'),'Neutro compartilhado de outra vila não entra');
- assert.ok(!skillPool('gaara').some(t=>t.name==='Lâminas Cruzadas'),'sem selar a Temari, nada dela entra');assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Kunai Tática'),'compartilhada da mesma vila com elemento compatível entra após selar');assert.ok(!skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Lâminas Cruzadas'),'Gaara (base Areia) não aprende Vento');assert.ok(!skillPool('naruto').some(t=>t.name==='Katon: Fagulha'),'Naruto (base Vento) não aprende Katon');assert.ok(skillPool('naruto').every(t=>HEROES[0].techniques.some(k=>k.name===t.name)||t.unlockLevel<=4),'no começo: kit + básicas da Academia');assert.ok(skillPool('lee').some(t=>t.name==='Técnica de Substituição')&&!skillPool('lee').some(t=>t.name==='Katon: Fagulha'),'básicas respeitam a natureza');}
+ assert.ok(!skillPool('gaara').some(t=>t.name==='Lâminas Cruzadas'),'sem selar a Temari, nada dela entra');assert.ok(skillPool('gaara',new Set(['kankuro'])).some(t=>t.name==='Kunai Tática'),'compartilhada da mesma vila com elemento compatível entra após selar');assert.ok(!skillPool('gaara',new Set(['temari'])).some(t=>t.name==='Lâminas Cruzadas'),'Gaara (base Areia) não aprende Vento');assert.ok(!skillPool('naruto').some(t=>t.name==='Katon: Fagulha'),'Naruto (base Vento) não aprende Katon');assert.ok(skillPool('naruto').every(t=>HEROES[0].techniques.some(k=>k.name===t.name)||t.unlockLevel<=4||t.unlockLevel===8),'no começo: kit, básicas e novas elementais de nível 8');assert.ok(skillPool('lee').some(t=>t.name==='Técnica de Substituição')&&!skillPool('lee').some(t=>t.name==='Katon: Fagulha'),'básicas respeitam a natureza');}
 assert.equal(rollCritical(0,2.5,()=>0).tier,0);
 assert.deepEqual(rollCritical(1,2.5,()=>.8),{tier:1,multiplier:2.5});
 assert.deepEqual(rollCritical(1.5,2.5,()=>.49),{tier:2,multiplier:3});
@@ -122,6 +123,12 @@ const xp=calculateStats('naruto',1,{'Pergaminho de Estudo':1});assert.equal(xp.x
 const cursed=calculateStats('naruto',1,{'Selo Amaldiçoado':1});assert.equal(cursed.maxHp,Math.round(n1.maxHp*.9));assert.ok(Math.abs(cursed.damage/n1.damage-1.3)<1e-8);
 const fury=calculateStats('hashirama',1,{'Fúria da Kyuubi':1});assert.ok(Math.abs(fury.regen/calculateStats('hashirama',1).regen-.75)<1e-8);
 assert.equal(calculateStats('naruto',1,{'Pergaminho Genjutsu':1}).genjutsu,1.28);assert.equal(calculateStats('naruto',1,{'Fio de Aço Ninja':2}).extra.rootChance,.08);
+for(const id of ['choji','kiba','shino','ino','kurenai','iruka','sai','yamato','shisui','obito','hiashi','hanabi','kisame','zabuza','suigetsu','mangetsu','karin','hiruzen','raikage-terceiro','raikage-quarto','killer-b','onoki','ao','rasa','hanzo','mei','naruto-hokage','tobi-akatsuki','obito-guerra','nagato','sasori','chiriku','sakumo'])assert.ok(HERO_BY_ID[id],id+' disponível no elenco');
+assert.ok(!skillPool('naruto').some(t=>t.name==='Rasenshuriken do Sétimo'),'versões de Naruto mantêm kits próprios');
+assert.ok(skillPool('tobirama').some(t=>t.name==='Jōki Bōi'),'nova técnica elemental disponível automaticamente');
+assert.ok(heroOrganizations('hiruzen').some(group=>group.id==='hokage'));
+assert.ok(heroOrganizations('tobi-akatsuki').some(group=>group.id==='akatsuki'));
+assert.ok(!heroOrganizations('obito').some(group=>group.id==='akatsuki'));
 assert.equal(formAt('naruto',49).name,'Academia');assert.equal(formAt('naruto-shippuden',1).name,'Shippuden');assert.equal(formAt('naruto-kyuubi',1).name,'Manto da Kyuubi');assert.equal(portraitRegion('naruto-kyuubi').index,24);assert.equal(portraitRegion('sasuke-rinnegan').path,'/assets/shinobi-evolutions-v2.png');
 for(const h of HEROES){const r=portraitRegion(h.id);assert.ok(r.index>=0&&r.index<r.cols*r.rows,h.id+' retrato fora do atlas');assert.ok(fs.existsSync('public'+r.path));}
 assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['gaara','temari','kankuro']),true);
@@ -162,7 +169,7 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const {setupNumbers,setupLines,hasSenjutsu,SENJUTSU,affectedTechniques,itemAttribute:attr}=await import('../src/game/combat.ts');const {HERO_BY_ID,ultimateBase}=await import('../src/game/heroes.ts');
  assert.equal(calculateStats('naruto',1).projectileSpeed,1);assert.ok(Math.abs(calculateStats('naruto',1,{'Lente do Atirador':2}).projectileSpeed-1.28)<1e-9);assert.equal(calculateStats('naruto',1,{'Seixo Polido do Rio':2}).bounce,2);
  assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Arremesso':3}).projectileSpeed-1.3)<1e-9);
- const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual([...new Set(setups)],['Byakugou','Habanero Sangrento','Modo Sábio','Portões do Inferno']);
+ const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual([...new Set(setups)],['Byakugou','Habanero Sangrento','Jutsu de Expansão','Modo Sábio','Portões do Inferno']);
  const gates=HERO_BY_ID.lee.techniques.find(t=>t.setup);const g=setupNumbers(gates);assert.equal(g.cooldown,11);assert.equal(g.duration,6);assert.ok(Math.abs(g.uptime-6/11)<1e-9);assert.ok(setupLines(gates).includes('Ativo 55% do tempo'));assert.ok(setupLines(gates).includes('Acumulável: Não'));
  assert.ok(setupNumbers(gates,{damage:0,area:0,haste:.1,duration:.2}).uptime>g.uptime,'afixos de recarga/duração aumentam o tempo ativo');
  assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Rendan Uzumaki');assert.equal(ultimateBase(HERO_BY_ID['naruto-shippuden']).name,'Rasenshuriken');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
@@ -204,6 +211,13 @@ assert.ok(!availableItems(['critical'],['critical'],false).some(i=>i.id==='criti
  assert.equal(P.PASSIVES.length,25);assert.equal(new Set(P.PASSIVES.map(p=>p.name)).size,25);
  assert.ok(P.PASSIVES.every(p=>P.PASSIVE_SECTIONS.some(s=>s.id===p.section)));assert.ok(P.PASSIVES.every(p=>ITEMS.some(i=>i.id===p.icon)),'ícone de cada passiva existe no catálogo');
  for(const name of ['Chakra Curativo','Expansão','Farmacologia Ninja','Selo de Ressurreição','Baú do Clã','Meditação de Chakra','Bolsa Grande','Treinamento com Jiraiya'])assert.ok(P.PASSIVES.some(p=>p.name===name),name);
+ const {PILL_MAX,PHARMACOLOGY_MAX}=await import('../src/game/pills.ts');
+ assert.equal(PILL_MAX,9);
+ assert.equal(calculateStats('naruto',1,{},{},0,{'Farmacologia Ninja':PHARMACOLOGY_MAX}).extra.pillCap,4);
+ assert.equal(calculateStats('naruto',1,{'Cabaça de Pílulas':1},{},0,{'Farmacologia Ninja':PHARMACOLOGY_MAX}).extra.pillCap,6);
+ const {currentItemName,ITEM_BY_NAME}=await import('../src/game/catalog.ts');
+ assert.equal(ITEM_BY_NAME[currentItemName('Pergaminho de Ressurreição')].bonuses.revive35,1);
+ assert.equal(ITEM_BY_NAME[currentItemName('Rinne Tensei')].bonuses.revive60,1);
  const s0=calculateStats('naruto',1),s1=calculateStats('naruto',1,{},{},0,{'Chakra Curativo':5,'Expansão':5,'Meditação de Chakra':5,'Farmacologia Ninja':2,'Selo de Ressurreição':1});
  assert.ok(Math.abs(s1.regen-s0.regen-1)<1e-9);assert.ok(Math.abs(s1.area-s0.area-.15)<1e-9);assert.ok(Math.abs(s1.ultimateRate-s0.ultimateRate-.2)<1e-9);assert.equal(s1.extra.pillCap,2);assert.equal(s1.extra.revive35,1);
  assert.deepEqual(P.homeCapacity({},0),{total:5,fromChest:5,fromUnlocks:0});assert.equal(P.homeCapacity({'Baú do Clã':6},64).total,67);
@@ -235,7 +249,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  assert.match(PL.pillOfferText('Pílula do Soldado',8,0,'Lendário'),/\+20%.*Nv\. 8 → 9/);
  assert.deepEqual(PL.pillBonuses({'Pílula de Incenso':1}),{enemyCount:.10,threat:.05,gold:.12});
  assert.ok(calculateStats('naruto',1,{},{'Pílula do Pergaminho':1}).xpGain>calculateStats('naruto',1).xpGain);
- assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Soldado':10}).physical-calculateStats('naruto',1).physical-1)<1e-9,'bônus recalculado só dos níveis');}
+ assert.ok(Math.abs(calculateStats('naruto',1,{},{'Pílula do Soldado':10}).physical-calculateStats('naruto',1).physical-.9)<1e-9,'bônus recalculado só dos níveis');}
 {// Ultimate por fase (06/11/2026): toda versão tem Ultimate própria desde o Nv. 1, baseada numa técnica de ataque do PRÓPRIO kit.
  const {HERO_BY_ID,ultimateBase,versionForEncounter,versionStep}=await import('../src/game/heroes.ts');
  for(const h of HEROES){assert.ok(h.ultimate,h.id+' sem Ultimate');const b=ultimateBase(h);assert.ok(h.techniques.includes(b)&&!b.setup,h.id+': Ultimate fora do kit da fase');}
@@ -244,7 +258,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  assert.equal(HERO_BY_ID.madara.ultimate,'Susanoo Perfeito','Meteorito (Tengai Shinsei) exige o Rinnegan');assert.equal(HERO_BY_ID['madara-rinnegan'].ultimate,'Tengai Shinsei');
  assert.notEqual(HERO_BY_ID['guy-setimo-portao'].ultimate,'Oito Portões','Oito Portões é fase posterior ao Sétimo Portão');
  // Ajudantes e Mega Elites como versões: Genin/zona 1 → inicial; Kage/zona 3 → mais avançada.
- assert.equal(versionForEncounter('naruto',1,'Genin'),'naruto');assert.equal(versionForEncounter('naruto',3,'Kage'),'naruto-kyuubi');
+ assert.equal(versionForEncounter('naruto',1,'Genin'),'naruto');assert.equal(versionForEncounter('naruto',3,'Kage'),'naruto-hokage');
  assert.equal(versionForEncounter('sasuke',1,'Jonin'),'sasuke-shippuden');assert.equal(versionForEncounter('kakashi',3,'Chunin'),'kakashi-hokage');assert.equal(versionForEncounter('pain',3,'Kage'),'pain');
  for(const family of ['naruto','gaara','neji'])for(const d of ['Genin','Chunin','Jonin','Kage'])for(let z=1;z<3;z++)assert.ok(versionStep(versionForEncounter(family,z,d))<=versionStep(versionForEncounter(family,z+1,d)),'versão não regride com a zona');
  const {allyBuffBonuses,ALLY_BUFFS}=await import('../src/game/allies.ts');const {activeSynergies}=await import('../src/game/synergy.ts');
@@ -290,6 +304,15 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
   assert.ok(gcSrc.includes('let yaw=Math.PI/4, pitch=.55'),'início da partida com câmera mais deitada (0.55 rad, rodada 44)');
   const stSrc=fs.readFileSync('src/ui/SettingsScreen.tsx','utf8');
   assert.ok(stSrc.includes('6/11'),'dica do multiplicador do ponteiro do Windows no slider de sensibilidade (rodada 44)');
+}
+const { BATTLE_EFFECT_ATLAS, SUMMON_EFFECT_ATLAS, battleEffectCell, summonEffectCell } = await import('../src/game/techniqueVisualProfiles.ts');
+assert.ok(fs.existsSync('public'+BATTLE_EFFECT_ATLAS));
+assert.ok(fs.existsSync('public'+SUMMON_EFFECT_ATLAS));
+assert.equal(summonEffectCell('Performance das Cem Marionetes'),4);
+assert.equal(summonEffectCell('Invocação dos Caminhos'),7);
+for(const h of HEROES)for(const t of skillPool(h.id)){
+  const cell=battleEffectCell(t);
+  assert.ok(Number.isInteger(cell)&&cell>=0&&cell<24,h.id+': célula de efeito inválida para '+t.name);
 }
 const result={megaRate:mega/100000,rareRateZeroLuck:rare/50000,rareRateLuck200:highRare/50000,roster:HEROES.length,motionForms,techniques:new Set(HEROES.flatMap(h=>h.techniques.map(t=>t.name))).size,items:ITEMS.length};console.log(result);fs.writeFileSync('artifacts/rules-checks.json',JSON.stringify(result,null,2));
 

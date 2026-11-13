@@ -2,7 +2,20 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). Fonte da verdade: `src/game/heroes.ts` (+ `evolution.ts` para formas). O detalhe completo de cada kit (técnicas, passivas, bônus exatos) está no código; este documento é o **índice do elenco** + fila de personagens novos.
 
-## Roster atual — 24 famílias · 32 versões · 56 versões jogáveis
+## Rodada 53 · Expansão do elenco
+
+**96 versões jogáveis de 56 famílias.** São 40 versões novas, 32 famílias a mais e Akamaru como companheiro do Kiba sem ocupar vaga de ajudante. As versões por era têm retrato, kit, passiva e missão próprios. O nível durante uma missão evolui os atributos da versão escolhida.
+
+- **Kages e veteranos:** Hiruzen, A (Terceiro Raikage), A (Quarto Raikage), Killer B, Ōnoki, Ao, Rasa, Hanzō, Mei, Gengetsu e Naruto Sétimo Hokage. Killer B é jinchūriki, Ao é sensor de Kirigakure e Hanzō lidera Amegakure. Rasa é o Quarto Kazekage. A marionete do Terceiro Kazekage aparece no kit do Sasori.
+- **Tier A:** Chōji, Kiba, Shino, Ino, Kurenai, Iruka, Sai, Yamato, Shisui, Obito, Hiashi, Hanabi, Kisame, Zabuza, Suigetsu, Mangetsu e Karin.
+- **Outras versões e extras:** Tobi Akatsuki e Obito Máscara Branca compartilham a família Obito. Nagato Edo é separado de Pain (corpo de Yahiko). Entraram Sasori, Haku, Chiriku e Sakumo, além de Chōji e Ino da Guerra, Kiba e Shino Shippuden e Hanabi adulta.
+- Ishikawa, Byakuren e Reto aparecem na obra. Suas propostas de kits foram retiradas por dependerem de golpes inventados para esta rodada. Os kits restantes ainda contêm adaptações de gameplay, sobretudo onde a obra mostra poucas técnicas. O mapa da Pedra recebe as missões da Nuvem enquanto Kumogakure não tiver mapa próprio.
+- A fonte dos kits, passivas e missões é `src/game/rosterExpansion.ts`. As técnicas elementais compartilhadas do lote passam ao pool compatível a partir do nível 8. As técnicas exclusivas continuam sujeitas às regras de kit, afinidade e selamento. Iruka continua no evento da Academia, onde entra com afinidade máxima. Karin dá regeneração e coleta como ajudante.
+- Folhas novas em `public/assets/shinobi-motion/*-roster-v1.png`. Fileiras 1–6: andar de frente, andar de costas, ataque de frente, ataque de costas, pulo e dash lateral espelhável. Repouso na primeira célula de ataque. Os demais shinobis mantêm as duplas direcionais registradas. [Prompts da arte](arte-elenco-rodada-53.json).
+
+Referências: [Obito no site oficial](https://naruto-official.com/en/news/01_1706), [Espelhos de Gelo no episódio oficial](https://naruto-official.com/en/anime/naruto1/list/01_237), [Sasori e a marionete do Terceiro Kazekage](https://naruto-official.com/en/news/01_1308), [Gengetsu](https://naruto.fandom.com/wiki/Gengetsu_H%C5%8Dzuki) e [Rasa](https://naruto.fandom.com/wiki/Rasa).
+
+## Elenco anterior à expansão — 56 versões jogáveis
 
 | Família (base) | Título da base | Versões da era seguinte (passo · forma) |
 |---|---|---|
@@ -33,7 +46,7 @@
 
 Regras do elenco (CONFIRMADO, 06/11): cada shinobi tem **1–2 técnicas únicas**; o resto do kit vem da biblioteca compartilhada (`L`); versões só usam técnicas da **própria fase** (Narutopedia conferida); a versão seguinte se libera pela missão de selamento jogando com a anterior; Mega Elite/ajudante usa a versão do rank (Genin→inicial … Kage→última).
 
-## Fila de personagens novos
+## Fila histórica de personagens novos
 
 > **Rodada 38 (12/11):** fichas completas (versões, técnicas únicas, passivas, arte, efeitos) e a **revisão canônica** desta lista pela Narutopedia estão em [22-PROPOSTA-NOVOS-SHINOBIS.md](22-PROPOSTA-NOVOS-SHINOBIS.md) — divergências aguardando o usuário.
  (rodada 35, 12/11 — **APROVADO na rodada 37, 12/11/2026**)

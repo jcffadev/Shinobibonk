@@ -18,7 +18,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 - **IMPLEMENTADO** — cinco folhas novas de ação para Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. As 56 versões têm caminhada direcional. Veja a cobertura de ataque, pulo e dash na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
 - React 19, TypeScript 7, Three.js 0.187 e Vite 8; iniciada com `pnpm dev`.
-- `src/main.tsx`: hub local com elenco de **24 famílias / 56 versões**, biblioteca de ataques, plano de build, árvore permanente, loja de itens e seleção de missão.
+- `src/main.tsx`: hub local com elenco de **56 famílias / 96 versões**, biblioteca de ataques, plano de build, árvore permanente, loja de itens e seleção de missão.
 - `src/scene/GameCanvas.tsx`: cena 3D isométrica e simulação local da run.
 - `src/game/`: dados e regras (heróis, técnicas, itens, atributos, dificuldade, evoluções, zonas, árvore).
 - `game/index.html` é a versão Canvas 2D anterior, só legado.
@@ -37,7 +37,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Implementado na base atual
 
-- **Movimento e combate** — caminhada em quatro direções nas 56 versões jogáveis dos 24 shinobis, com quadros próprios por forma. WASD muda o rumo imediatamente e prioriza a última tecla oposta pressionada. Shift captura a direção no início do dash e espelha o sprite à esquerda. Gaara Kazekage e Aliança podem manter Espaço para flutuar brevemente na areia. A câmera mantém a proteção de altura sobre o terreno.
+- **Movimento e combate** — caminhada em quatro direções nas 96 versões jogáveis de 56 famílias, com quadros próprios por forma. WASD muda o rumo imediatamente e prioriza a última tecla oposta pressionada. Shift captura a direção no início do dash e espelha o sprite à esquerda. Gaara Kazekage e Aliança podem manter Espaço para flutuar brevemente na areia. A câmera mantém a proteção de altura sobre o terreno.
 - **Ações com quadros próprios neste lote** — conjuração do Naruto Clássico, ataque/pulo/dash do Sasuke inicial e socos/chutes de Lee e Guy em todas as suas formas. A fila registra a revisão do restante do elenco.
 - **Efeitos e preparação** — técnicas com visuais por natureza e golpes característicos. Chōmei e Gyūki seguem as referências do usuário. A Bolsa da Missão permite combinar busca, estado e raridade.
 - **Ofertas e saída** — uma pílula por escolha e um nível por pílula. A raridade aumenta a potência. Banir remove a opção do sorteio pelo nome durante a run. Na pausa, clique duas vezes em Desistir para confirmar. O resumo tem o botão Ir para o menu.
@@ -48,7 +48,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 - **Hub**:
   - Entrada como convidado e carteira local de teste ("Administrador", sem login) com 999.999 Lamens (o Ryu fica só dentro da run). O botão Reset devolve o que foi gasto e limpa a build.
-  - Elenco de 56 versões (24 famílias) em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
+  - Elenco de 96 versões (56 famílias) em grade de retratos, com filtros por vila, elemento (afinidade principal) e organização/clã, mais busca por nome.
   - Kit de 4 técnicas por shinobi (1–2 únicas, o resto compartilhado) e plano de build (planejar ou deixar em casa técnicas, pílulas e itens).
   - Árvore permanente com 16 nós e loja de 95 itens com filtros e arquivamento.
   - Prévia da cena a partir do menu.
@@ -194,7 +194,7 @@ Teuchi fica diante da barraca do Ichiraku. Os Sapos Sábios sobre Gamakichi comb
 - Tab é reservado ao mapa rápido, com movimento e simulação ativos. P abre e fecha a ficha. Fechar a ficha por uma ação do usuário solicita a captura do ponteiro naquele mesmo evento.
 - O estoque atual do mercador conserva os preços ao comprar e ao reabrir. Cada novo estoque considera raridade, compras acumuladas, atualizações acumuladas e tempo. O preço da atualização sobe por uso, com desconto dos itens.
 - Cada zona sorteia uma Shuriken Amaldiçoada e um Corpo de Ninja. A shuriken concede +8% de dano total e chama emboscada. O corpo chama emboscada e concede um nível ao concluir, mantendo a escolha normal de level-up. O tamanho da onda cresce com dificuldade e zona. O +8% é calibração provisória do protótipo.
-- Afiliações filtram a versão representada. As 56 versões possuem bônus de suporte. Curadores recebem regeneração e coleta. Ofensivos recebem bônus de sua escola, preservando os demais efeitos próprios. Valores são originais do jogo e seguem sujeitos a balanceamento.
+- Afiliações filtram a versão representada. As 96 versões possuem bônus de suporte. Curadores recebem regeneração e coleta. Ofensivos recebem bônus de sua escola, preservando os demais efeitos próprios. Valores são originais do jogo e seguem sujeitos a balanceamento.
 
 **PENDENTE**
 
@@ -219,3 +219,11 @@ Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em com
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 **Home:** Configurações e reprodução da trilha. **Configurações → Conta:** Reset de conta. **Preparação:** Táticas de Missão e Arsenal de Missão no topo. Escolha os salvos na tela de mapa. **Na run:** Esc abre a pausa com Configurações, o bolinho restaura HP e E junto ao Mega Elite caído inicia o selamento. Veja [a fila](13-PENDENCIAS-PARA-CONTINUAR.md).
+
+
+## Rodada 53 · Estado e próximos passos
+
+- Entregue: expansão para **96 versões de 56 famílias**, missões novas, Akamaru, expansão visual do Chōji, Zabuza na névoa, Fase 4 e contador de abates. Veja [elenco](21-ELASTAO-DE-HEROIS.md) e [efeitos](24-AUDITORIA-DE-EFEITOS.md).
+- Pendente: comparar todos os jutsus com a obra e fazer efeitos próprios onde ainda há arte compartilhada. Priorizar as invocações de Nagato, o ataque das cem marionetes de Sasori, a névoa de Zabuza, técnicas médicas, kits de pouco material canônico e Ultimates especiais.
+- Pendente: inspeção em gameplay das versões novas como jogador, ajudante e Mega Elite, incluindo orientação em câmera girada, identidade de traje, pés e transições. A suíte de atlas verifica quadros e espelhamento.
+- Fase 5 restante: sequência em tempo real, card de temporada, glossário e layout dos blocos de combate. Continuam pendentes a run completa com GPU real, a publicação externa e as propostas de escala de mapas.

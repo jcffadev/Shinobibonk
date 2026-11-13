@@ -1,5 +1,7 @@
 # Proposta — novos shinobis (Kages + elenco clássico/Shippuden)
 
+> Rodada 53: propostas deste documento são históricas. As entradas implementadas e a revisão dos cargos estão no [elenco atual](21-ELASTAO-DE-HEROIS.md).
+
 > **Revisão canônica (rodada 38):** a lista aprovada na rodada 37 (docs/13 e docs/21) diverge da Narutopedia — Killer B não foi Raikage (o 4º Raikage é A); Hanzō não foi Tsuchikage (líder da Chuva; 1º = Ishikawa); Mei é a 5ª Mizukage; Ōnoki é o 3º Tsuchikage (2º = Mū); Rasa é o 4º Kazekage; Ao não foi Mizukage (2º = Gengetsu). As fichas abaixo seguem a Narutopedia; o usuário decide.
 >
 > **Estado: PROPOSTO — aguardando validação do usuário. Nada foi implementado.** Nenhum código, arte ou arquivo existente foi alterado nesta rodada; este é o único arquivo criado.

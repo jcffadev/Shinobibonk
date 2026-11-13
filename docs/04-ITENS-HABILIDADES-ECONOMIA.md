@@ -200,7 +200,7 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
     - raios a cada 2,5 s (Pergaminho Chidori Nagashi);
     - chamas negras no inimigo mais forte a cada 6 s (Chamas de Amaterasu).
   - **Economia e mapa**: desconto nas kunais (até −40%) e na roleta (Dente de Ouro até −24%; com a Carteira Gama-chan, limite total −40%); Carteira Gama-chan (Raro, 1 cópia): +12% de Ryu, −6% no custo da roleta e +1% de dano a cada 250 Ryu gastos na run, até +30% (`spendDamage`); ±% de inimigos no mapa.
-  - **Limites**: Cabaça de Pílulas (pílulas até 12) e Pergaminho Proibido (técnicas até nível 11).
+  - **Limites**: Cabaça de Pílulas (+2 níveis, até 15 com Farmacologia Ninja) e Pergaminho Proibido (técnicas até nível 11).
 - **Mantidos por regra do projeto**: Remédio do Rock Lee (lendário, sem penalidade), Shuriken Selo da Tenten (+25% de dano e selamento instantâneo), Selo de Senjutsu (infusão Sábia de Hashirama), Pergaminho de Recrutamento e Colar do Primeiro Hokage.
 - **Sorteio**: pesos fortemente concentrados em comum (90 / 9,889 / 0,1 / 0,01 / 0,001) e corrigidos pela quantidade de itens de cada raridade.
 
@@ -235,3 +235,6 @@ A cotação de um novo estoque usa base por raridade (45/65/95/145/220 Ryu) × 1
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 Abates podem largar moedas douradas de Ryu e bolinhos de arroz. O bolinho usa o antigo valor de cura de 35% do HP máximo, até 5% de chance de drop por abate. O núcleo da Ultimate de Pain usa ondas radiais de pressão. As folhas de Kuroari e Mil Braços do Escorpião servem para ícone, prévia e combate. Consulte [a fila de efeitos](13-PENDENCIAS-PARA-CONTINUAR.md).
+
+
+**Rodada 53.** O teto por pílula é 9, ou 13 com quatro níveis de Farmacologia Ninja. A Cabaça soma mais dois, chegando a 15. Células de Hashirama ressuscitam com 35% do HP, e Chakra de Hagoromo com 60%. Os IDs de catálogo preservam compras e arsenais.

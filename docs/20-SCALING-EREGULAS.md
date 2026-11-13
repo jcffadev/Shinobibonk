@@ -118,3 +118,7 @@ Treinamento aleatório +0,6% · pílulas 9/13/15 (buff de conta = Passivas Shino
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 Bênção do altar: valores base da Rodada 51 de 5/8/12/18/25% por raridade e multiplicador de Sorte preservados. Cada altar escolhe um atributo de cada grupo. Raro, Épico e Lendário adicionam um terceiro distinto. A chance de projétil adicional usa escala 2 sobre a magnitude base e o status usa escala 1. Cura do bolinho é 35% do HP máximo antes de modificadores de debug.
+
+## Teto de pílulas (rodada 53)
+
+`PILL_MAX=9`, `PHARMACOLOGY_MAX=4`, Cabaça +2 e `PILL_SLOTS=6`. O máximo simultâneo é 15 níveis por pílula. A qualidade altera o bônus de nível, enquanto cada escolha sobe exatamente um nível.

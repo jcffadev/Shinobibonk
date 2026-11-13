@@ -1,4 +1,5 @@
 import type { Bonuses, StatKey } from './catalog';
+import { EXPANSION_BY_ID } from './rosterExpansion.ts';
 import { NPC_RULES } from './npcs.ts';
 import { HEROES, familyOf, familyVersions, type School } from './heroes.ts';
 
@@ -35,7 +36,7 @@ export const ALLY_BUFFS: Record<string, AllyBuff> = {
   kankuro: { title: 'Veneno de Marionete', bonuses: { dot: .2 } },
   guy: { title: 'Portões Abertos', bonuses: { normal: .1, move: .06 } },
   asuma: { title: 'Lâminas de Chakra', bonuses: { normal: .1, area: .06 } },
-  // NPC não jogável (evento da Iruka, src/game/npcs.ts): entra já com a passiva em força máxima.
+  // No evento da Academia, Iruka entra com afinidade máxima. Por selamento, começa no nível 1.
   iruka: { title: 'Lições da Academia', bonuses: { exp: NPC_RULES.irukaAllyExp } },
 };
 
@@ -44,9 +45,9 @@ const SCHOOL_STAT = { Taijutsu: 'normal', Ninjutsu: 'element', Genjutsu: 'genjut
 const mainSchool: Record<string, School> = { itachi: 'Genjutsu', shikamaru: 'Genjutsu' };
 for (const hero of HEROES) {
   const family = familyOf(hero.id);
-  const base = ALLY_BUFFS[family];
+  const base = ALLY_BUFFS[family] ?? { title:hero.passive.split(' · ')[0], bonuses:{} };
   const step = familyVersions(family).findIndex(v => v.id === hero.id);
-  const medical = family === 'tsunade' || family === 'sakura' && step > 0;
+  const medical = family === 'tsunade' || family === 'sakura' && step > 0 || EXPANSION_BY_ID.get(hero.id)?.medical;
   const bonuses = { ...base.bonuses };
   let title = base.title;
   if (medical) {

@@ -1568,3 +1568,30 @@ Bigbrain
 - **Movimento:** três novas folhas de ataque, pulo e dash em frente e costas, para Sasuke Genin, Neji e Neji Shippuden. A verificação de atlas passou em **56 versões e 560 estados**, incluindo fileiras distintas de caminhada em frente e costas. A revisão manual de qualidade de cada ataque, Ultimate, ícone e ajudante continua na fila.
 
 Pasta principal confirmada. Suíte completa no Edge: 62 verificações, 0 exceções JavaScript e 0 respostas 404. Testes dirigidos também confirmaram Shinra Tensei por R com dano e altar comum com um atributo ofensivo e um de utilidade/defesa. O navegador inicia a trilha sem clique quando a política de reprodução automática permite. A fila restante está no [docs/13](13-PENDENCIAS-PARA-CONTINUAR.md).
+
+## Rodada 53 · 13/11/2026
+
+### Pedido do usuário
+
+Segundo o Qwen faltava isso:
+Eu quero que você implemente todos os personagens e as suas respectivas animações.
+Temos os hokages e os tierA pra implementar conforme o Qwen listou.
+Faça isso...
+Também procure outros personagens que não temos nessas listas e monte eles, com suas respectivas missões de desbloqueio, suas habilidades únicas e movimentações...
+Não esqueça de colocar na folha de TODOS os personagens tanto novos quanto antigos, a animação de andar para cima e a de andar para baixo.
+
+Depois de fazer tudo isso, veja o que consegue continuar dessa lista.
+Não esqueça de documentar e publicar.
+
+### Complemento do usuário
+
+Apenas persoagens da OBRA NARUTO devem ser mantidos, na minha opinião, você fugiu a obra em alguns personagens ai.
+Fez a pode de andar pra frente e trás para todos os personagens do Rooster do jogo?
+
+Adicione os efeitos a TODAS as habilidades fielmente igual as do ANIME no nosso jogo, você já tem MUITA referência para fazer isso no projeto.
+
+### Resposta
+
+O elenco tem 96 versões de 56 famílias, com 40 versões novas, suas missões, passivas, kits e folhas de movimento. As 96 têm caminhada de frente e de costas. Foram retirados os kits propostos para Ishikawa, Byakuren e Reto, que exigiam inventar técnicas. O atlas de efeitos está ligado ao combate e à prévia. Ainda falta comparar cada efeito com o anime e refinar as técnicas que compartilham arte. Zabuza aparece na névoa intermitente, o HUD ganhou o total de abates e foi concluída a Fase 4 de itens e pílulas.
+
+A compilação, o teste de regras, as 62 verificações em navegador e os 960 estados de movimento passaram. A publicação desta rodada segue na main do GitHub.

@@ -1,0 +1,236 @@
+{
+  "tool": "ImageGen (ferramenta integrada)",
+  "templates": [
+    "Production sprite sheet for ShinobiBonk, transparent background, original handcrafted 32-bit crisp detailed pixel art, chibi proportion like GBA tactics game, 3/4 isometric viewing angle. Character [PERSONAGEM]. Exactly 4 columns and 6 rows evenly spaced in portrait orientation. Exactly one complete full-body character per cell, same outfit and scale, centered in cell, each feet anchored at 82% of cell. Row 1 four walk cycle frames facing camera/down with clearly alternating feet. Row 2 four walk cycle frames facing away/up with back of head visible and alternating feet. Row 3 idle stance then wind-up then attack then recoil facing camera. Row 4 same actions facing away. Row 5 jump crouch, midair tucked, landing, stand facing camera. Row 6 dash facing right: lean, burst, extended stride, recovery. Strong dark outline, consistent design across all 24 cells. Strict 4x6 fixed spacing, each isolated. No shadows, no text, no labels, no lines, no separate effects or props outside the body.",
+    "ShinobiBonk game atlas, original crisp high detail pixel art like GBA tactics sprites. [PERSONAGEM]. Chibi full body. Strict transparent background and a fixed evenly spaced 4 column by 6 row grid of 24 isolated full body sprites. Top four cells facing down toward camera, alternating legs and arms mid run. Next four facing up directly away, alternating legs and arms. Third row facing down 4-frame idle, windup, attack, recoil. Fourth row facing away 4-frame idle, windup, attack, recoil. Fifth row crouch, takeoff, tucked jump, land. Sixth row right dash forward, leaning and running low for all but recovery. Dark outlines and stable facial/outfit details across frames, no shadows, text, borders, or separate props. Margins between sprites. Centered in cells, foot anchor about 82% of every cell.",
+    "Transparent ShinobiBonk 32-bit pixel-art full body character sprites, one character only, sharp dark outlines, muted detailed colors. [PERSONAGEM]. Exact six rows and four columns, 24 evenly spaced separated cells, no grid lines or text. Row1 4 walking frames toward camera front; row2 4 walking frames away back view; row3 front idle then attack anticipation then strike then recovery; row4 same actions from back; row5 four frames of a jump; row6 four frames of a low dash toward right. Consistent identity proportions and color; full figure centered and consistent foot/paw anchoring about 82% of each cell. No cast shadows, floating effects or extras.",
+    "ShinobiBonk production asset. Original crisp handheld tactics 32-bit pixel-art, chibi full body sprite of [PERSONAGEM]. Transparent. Exactly 4 columns x 6 rows = 24 evenly spaced independent sprite cells. First row is four walking frames FACING DOWN/TOWARDS CAMERA with face visible. Second row is four walking frames FACING UP/AWAY FROM CAMERA showing back and alternating stride. Third row is idle, preparation, attack, recovery facing down. Fourth row is same facing up. Fifth row is crouch, takeoff, tucked jump, land. Sixth row is four poses of a low sideways dash facing right. Stable design and size. All limbs fully inside each cell, space around each sprite, foot anchor approximately 82% of each cell. No labels, borders, shadows, particles or scenery.",
+    "Single 24-tile battle VFX atlas for the ShinobiBonk 2.5D game, made as crisp high-contrast colorful 32-bit pixel art over transparent background. Strict fixed 4 columns by 6 rows, even padding, 24 isolated tiles, exactly one object per cell and no labels, borders, grid, characters or scenery. Each tile centered and fully inside cell. Row 1 left to right: crackling branching blue lightning, black purple Amaterasu flames, orange fireball with red tail, bright crimson phoenix made of fire. Row 2 left to right: translucent blue spiked wave, aquamarine water dragon head, arcing green cutting wind crescent, golden circular sand coffin with grains. Row 3: splintering brown wood pillars, chalk beige jagged rocks erupting, dark violet branching shadow tendrils on the floor, sharply defined deep green cloud of individual black beetles. Row 4: three distinct cyan chakra palms sweeping to right, taut crossed gold chain links, white tiger shaped pressure wave, yellow-orange peacock wing fan made of flame. Row 5: small purple spiral of distortion, star-shaped ice crystals around cyan glass, blue broad sword arc with crisp edge, smoke burst with dark outer gray puffs. Row 6: sweeping cluster of gold-dust particles, deep black ink bird wings silhouette on pale gray strokes, low purple noxious mist cloud, warm red-gold explosion around white epicenter. Keep readable at 64px. No white or gray matte outside each distinct effect.",
+    "Original detailed game item pixel art for ShinobiBonk, an upright compact laboratory vial, ivory stopper and dark brown wrap, inside pale green tissue-like leaves in amber liquid, tiny red diamond label without letters. Centered single collectible inventory icon, strong clean dark stepped outline, high contrast, GBA pixel art and original design, readable at 32px. Isolated on transparent background with padding. No caption or extra objects.",
+    "Original detailed game item pixel art for ShinobiBonk, an ivory lilac-blue glowing orb of sage chakra, three dark comma-shaped tomoe suspended inside and a small gold rim. Centered single collectible inventory icon, strong clean dark stepped outline, high contrast, GBA pixel art and original design, readable at 32px. Isolated on transparent background with padding. No caption or extra objects.",
+    "Transparent 4 columns x 2 rows sprite atlas, 8 separate original pixel-art ShinobiBonk effects, strict equal cells, no labels. Isometric elevated tactics videogame art at readable game scale. Row1: [1] Sai's black ink lion leaping right, ivory ink highlights, [2] black ink hawk flying right, white ink highlights, [3] Kisame's blue translucent chakra shark, jaws and fins recognizable, side view, [4] scarlet spiderlike puppet Hiruko with segmented articulated metal tail. Row2: [1] lavender Japanese stage rig of red cloaked marionettes hanging from blue chakra strings in a fan, [2] Ibuse big black salamander with knobbly purple gray hide, pale eyes, yellow spots and small purple poison breath, [3] giant beige clam shell opened with two dark outer shells and pale pink interior for Gengetsu's mirage, [4] scarlet ringed Rinnegan purple iris and six faint black rods pointing outward. Crisp outlines, no background, no colored matte, each silhouette fits with ample gutters."
+  ],
+  "assets": [
+    {
+      "file": "public/assets/shinobi-motion/hiruzen-roster-v1.png",
+      "template": 0,
+      "character": "elderly Hiruzen Sarutobi in black combat suit and helmet with red shoulder plates, gray goatee, no staff except attack"
+    },
+    {
+      "file": "public/assets/shinobi-motion/raikage-terceiro-roster-v1.png",
+      "template": 0,
+      "character": "Third Raikage A, giant dark skin, long pale blond hair, goatee, lightning-shaped scar on right chest, white cloak and ochre sash"
+    },
+    {
+      "file": "public/assets/shinobi-motion/raikage-quarto-roster-v1.png",
+      "template": 0,
+      "character": "Fourth Raikage A, dark skin muscular, blond slick hair and moustache, white open cloak, green trousers, gold wrist guards"
+    },
+    {
+      "file": "public/assets/shinobi-motion/onoki-roster-v1.png",
+      "template": 0,
+      "character": "Ōnoki, very short elderly Tsuchikage, bald crown and white topknot, distinctive bulbous pink nose, olive and red-brown uniform"
+    },
+    {
+      "file": "public/assets/shinobi-motion/killer-b-roster-v1.png",
+      "template": 0,
+      "character": "Killer B, dark skin, white durag, narrow black sunglasses, white Cloud vest, red rope, swords in back scabbards"
+    },
+    {
+      "file": "public/assets/shinobi-motion/ao-roster-v1.png",
+      "template": 0,
+      "character": "Ao from Naruto Shippuden, blue hair, dark right eyepatch, green Kirigakure robe and teal clothes, two talisman earrings"
+    },
+    {
+      "file": "public/assets/shinobi-motion/rasa-roster-v1.png",
+      "template": 0,
+      "character": "Fourth Kazekage Rasa, short auburn hair, brown eyes, black shinobi robes with red accents and dusty golden sand"
+    },
+    {
+      "file": "public/assets/shinobi-motion/hanzo-roster-v1.png",
+      "template": 0,
+      "character": "Hanzō of the Salamander, olive armor and hood, long blond hair, gray respirator and dark gloves"
+    },
+    {
+      "file": "public/assets/shinobi-motion/mei-roster-v1.png",
+      "template": 0,
+      "character": "Mei Terumi, auburn hair covering her right eye, green left eye, blue long split dress over fishnet, pale sandals"
+    },
+    {
+      "file": "public/assets/shinobi-motion/naruto-hokage-roster-v1.png",
+      "template": 0,
+      "character": "Adult Seventh Hokage Naruto Uzumaki, short spiky blond hair, whisker marks, orange and black uniform, open white cloak with red flame hem"
+    },
+    {
+      "file": "public/assets/shinobi-motion/choji-roster-v1.png",
+      "template": 1,
+      "character": "Chōji Akimichi as young Genin, chubby boy with brown spiked hair, green haori white scarf, red swirl cheek markings"
+    },
+    {
+      "file": "public/assets/shinobi-motion/kiba-roster-v1.png",
+      "template": 1,
+      "character": "Kiba Inuzuka Genin gray fur hood jacket with two red fang cheek marks, dark trousers; solo character"
+    },
+    {
+      "file": "public/assets/shinobi-motion/shino-roster-v1.png",
+      "template": 1,
+      "character": "Shino Aburame Genin, wraparound dark glasses and very high pale sage olive collar, brown hair and pants"
+    },
+    {
+      "file": "public/assets/shinobi-motion/ino-roster-v1.png",
+      "template": 1,
+      "character": "Ino Yamanaka Genin, very long blonde ponytail with side fringe, purple cropped outfit and white bandage skirt"
+    },
+    {
+      "file": "public/assets/shinobi-motion/kurenai-roster-v1.png",
+      "template": 1,
+      "character": "Kurenai Yūhi red eyes, long loose black hair, white red-trim wrapping dress over red mesh"
+    },
+    {
+      "file": "public/assets/shinobi-motion/iruka-roster-v1.png",
+      "template": 1,
+      "character": "Iruka Umino green Leaf flak jacket and navy clothes, brown high ponytail, scar horizontally across nose"
+    },
+    {
+      "file": "public/assets/shinobi-motion/sai-roster-v1.png",
+      "template": 1,
+      "character": "Sai, pale skin, short black hair, cropped black ANBU outfit leaving midriff, gray shoulder pad"
+    },
+    {
+      "file": "public/assets/shinobi-motion/yamato-roster-v1.png",
+      "template": 1,
+      "character": "Yamato, short brown hair, silver face framing headguard, green Leaf vest and navy suit"
+    },
+    {
+      "file": "public/assets/shinobi-motion/shisui-roster-v1.png",
+      "template": 1,
+      "character": "Shisui Uchiha, short black wavy hair, Leaf headband, dark charcoal uniform with mesh and short sword"
+    },
+    {
+      "file": "public/assets/shinobi-motion/obito-roster-v1.png",
+      "template": 1,
+      "character": "Obito Uchiha young Genin with spiky black hair orange goggles dark blue outfit with orange trim"
+    },
+    {
+      "file": "public/assets/shinobi-motion/hiashi-roster-v1.png",
+      "template": 1,
+      "character": "Hiashi Hyūga, long black hair, pale eyes, white robe and beige vest, purple sash"
+    },
+    {
+      "file": "public/assets/shinobi-motion/hanabi-roster-v1.png",
+      "template": 1,
+      "character": "Hanabi Hyūga as a child, dark straight long hair and pale Byakugan eyes, cream light jacket and dark shorts"
+    },
+    {
+      "file": "public/assets/shinobi-motion/kisame-roster-v1.png",
+      "template": 1,
+      "character": "Kisame Hoshigaki blue-gray shark humanoid with gills, spiky navy hair, Akatsuki cloak and white wrapped Samehada sword"
+    },
+    {
+      "file": "public/assets/shinobi-motion/zabuza-roster-v1.png",
+      "template": 1,
+      "character": "Zabuza Momochi head wrap, bandages on lower face, no sleeves, dark striped pants, giant broad Kubikiribōchō sword"
+    },
+    {
+      "file": "public/assets/shinobi-motion/suigetsu-roster-v1.png",
+      "template": 1,
+      "character": "Suigetsu Hōzuki pale young man short white hair purple sleeveless shirt and white-gray trousers, large sword across his back"
+    },
+    {
+      "file": "public/assets/shinobi-motion/mangetsu-roster-v1.png",
+      "template": 1,
+      "character": "Mangetsu Hōzuki spiky white hair, pointed teeth, dark gray sleeveless shirt, high neck bandages and shinobi sandals"
+    },
+    {
+      "file": "public/assets/shinobi-motion/karin-roster-v1.png",
+      "template": 1,
+      "character": "Karin Uzumaki bright long red hair asymmetrical, narrow black glasses, violet long top with shorts and long black socks"
+    },
+    {
+      "file": "public/assets/shinobi-motion/gengetsu-roster-v1.png",
+      "template": 2,
+      "character": "Gengetsu Hozuki, second Mizukage, slick blond hair, no eyebrows, thin black moustache, tall-collared olive green striped coat over dark clothes"
+    },
+    {
+      "file": "public/assets/shinobi-motion/tobi-akatsuki-roster-v1.png",
+      "template": 2,
+      "character": "Tobi Obito wearing orange spiral mask single eye and black Akatsuki cloak red clouds"
+    },
+    {
+      "file": "public/assets/shinobi-motion/obito-guerra-roster-v1.png",
+      "template": 2,
+      "character": "Obito Uchiha fourth shinobi war wearing white three-eye tomoe mask, indigo high collar cloak, gray underclothes, gunbai behind"
+    },
+    {
+      "file": "public/assets/shinobi-motion/nagato-roster-v1.png",
+      "template": 2,
+      "character": "Nagato Edo Tensei, very pale skin and long red hair, gray rippled Rinnegan eyes, crimson cloak and dark pants, standing"
+    },
+    {
+      "file": "public/assets/shinobi-motion/sasori-roster-v1.png",
+      "template": 2,
+      "character": "Sasori, red messy hair and black Akatsuki cloak with red clouds, cropped dark trousers, pale hands"
+    },
+    {
+      "file": "public/assets/shinobi-motion/haku-roster-v1.png",
+      "template": 2,
+      "character": "Haku Yuki as young hunter ninja, porcelain white mask with red details and pale gray green kimono over dark trousers, long black tied hair"
+    },
+    {
+      "file": "public/assets/shinobi-motion/chiriku-roster-v1.png",
+      "template": 2,
+      "character": "Chiriku the Fire Temple monk, shaved head, white and brown robes, deep brown gloves, gold sash and Fire Temple sash"
+    },
+    {
+      "file": "public/assets/shinobi-motion/sakumo-roster-v1.png",
+      "template": 2,
+      "character": "Sakumo Hatake, long spiky white ponytail, gray white short blade, green Leaf flak vest and navy uniform"
+    },
+    {
+      "file": "public/assets/shinobi-motion/akamaru-roster-v1.png",
+      "template": 2,
+      "character": "Young Akamaru puppy from Naruto, tiny white dog with golden-brown floppy ears, charcoal nose and a curled cream tail, no human figure"
+    },
+    {
+      "file": "public/assets/shinobi-motion/choji-guerra-roster-v1.png",
+      "template": 3,
+      "character": "Chōji Akimichi, adult-sized Fourth War, broad heavy body, long spiked reddish brown hair, red battle chest armor over cream green outfit and red spiral cheeks"
+    },
+    {
+      "file": "public/assets/shinobi-motion/kiba-shippuden-roster-v1.png",
+      "template": 3,
+      "character": "Kiba Inuzuka Shippuden, spiky brown hair, red fangs on cheeks, dark charcoal hooded leather jacket with gray fur edges, dark pants and blue sandals"
+    },
+    {
+      "file": "public/assets/shinobi-motion/shino-shippuden-roster-v1.png",
+      "template": 3,
+      "character": "Shino Aburame Shippuden, dark round sunglasses, white-gray hood covering head, gray-green jacket and trousers"
+    },
+    {
+      "file": "public/assets/shinobi-motion/ino-guerra-roster-v1.png",
+      "template": 3,
+      "character": "Ino Yamanaka in Fourth War, long blonde side ponytail, green Konoha flak vest over dark blue shirt and pants, pale blue earrings"
+    },
+    {
+      "file": "public/assets/shinobi-motion/hanabi-adulta-roster-v1.png",
+      "template": 3,
+      "character": "Hanabi Hyūga adult young woman with long black hair, bright pale eyes, yellow beige kimono with dark red sash and dark leggings"
+    },
+    {
+      "file": "public/assets/technique-effects-roster-v1.png",
+      "template": 4
+    },
+    {
+      "file": "public/assets/inventory/revive-v1.png",
+      "template": 5
+    },
+    {
+      "file": "public/assets/inventory/rinne-tensei-v1.png",
+      "template": 6
+    },
+    {
+      "file": "public/assets/technique-summons-v1.png",
+      "template": 7
+    }
+  ]
+}

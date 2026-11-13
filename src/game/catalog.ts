@@ -116,12 +116,12 @@ export const ITEMS:Item[] = [
   item('crit-seal','Selo do Golpe Fatal','Épico',7,ANY,'+40 pontos percentuais de dano crítico e +8 de chance crítica.',{critDamage:.4,crit:.08}),
   item('chidori-nagashi','Pergaminho Chidori Nagashi','Épico',9,3,'A cada 2,5 s, raios atingem 3 inimigos próximos (+1 por cópia extra) e podem paralisar.',{bolts:1}),
   item('speed','Selo de Velocidade','Épico',5,ANY,'+20% de velocidade de ataque dos ataques automáticos.',{attackSpeed:.2}),
-  item('pill-gourd','Cabaça de Pílulas','Épico',0,1,'Pílulas podem subir mais 2 níveis (até 12).',{pillCap:2}),
+  item('pill-gourd','Cabaça de Pílulas','Épico',0,1,'Pílulas podem subir mais 2 níveis, até 15 com Farmacologia Ninja.',{pillCap:2}),
   item('clone','Clone Adicional','Épico',11,3,'+1 projétil em todas as técnicas; prioriza outro inimigo.',{projectiles:1}),
   item('samurai-armor','Armadura Samurai','Épico',4,3,'+20 de armadura, +15% de HP máximo, 40 de dano a quem te acerta e −5% de movimento.',{defense:20,healthPct:.15,thorns:40,move:-.05}),
   item('kyuubi-rage','Fúria da Kyuubi','Épico',9,1,'Até +60% de dano com 25% de HP ou menos; −25% de regeneração.',{lowHpDamage:.6,regenMult:-.25}),
   item('shinigami-cloak','Manto do Shinigami','Épico',11,2,'+1% de dano a cada 100 abates na run (até +30%).',{killDamage:.01}),
-  item('revive','Pergaminho de Ressurreição','Épico',3,2,'Revive uma vez com 35% do HP (uma vez por cópia).',{revive35:1}),
+  item('revive','Células de Hashirama','Épico',3,2,'Revive uma vez com 35% do HP (uma vez por cópia).',{revive35:1}),
   item('recruit','Pergaminho de Recrutamento','Épico',11,1,'+1 vaga de ajudante nesta run.',{support:1}),
   item('wide-seal','Selo de Área Ampla','Épico',10,ANY,'+15% de dano total e +15% de área.',{damage:.15,area:.15}),
   item('iron-club','Clava de Ferro','Épico',3,2,'+1% de dano de Taijutsu a cada 2 de armadura (até +50%).',{armorPhysical:.005}),
@@ -130,7 +130,7 @@ export const ITEMS:Item[] = [
   // ───── Lendário ─────
   item('haku-mirror','Espelho de Gelo de Haku','Lendário',10,1,'+15% de dano; ao ser atingido, congela inimigos próximos por 3 s (a cada 20 s).',{damage:.15,freezeOnHit:1}),
   item('sage','Armadura do Sábio','Lendário',4,2,'+30% de dano total e +20% de velocidade de ataque.',{damage:.3,attackSpeed:.2}),
-  item('rinne-tensei','Rinne Tensei','Lendário',9,3,'Revive uma vez com 60% do HP (uma vez por cópia).',{revive60:1}),
+  item('rinne-tensei','Chakra de Hagoromo','Lendário',9,3,'Revive uma vez com 60% do HP (uma vez por cópia).',{revive60:1}),
   item('red-moon','Olho da Lua Vermelha','Lendário',9,2,'+2 projéteis e +25% de área.',{projectiles:2,area:.25}),
   item('hokage-scroll','Pergaminho do Hokage','Lendário',3,1,'Ultimate recarrega 25% mais rápido; ao usá-la, as técnicas recarregam e ganham +30% de velocidade de ataque por 6 s.',{cool:.25,ultReset:1}),
   item('tenten','Shuriken Selo da Tenten','Lendário',1,1,'+25% de dano total. E sela instantaneamente um mega elite já derrotado.',{damage:.25}),
@@ -139,6 +139,8 @@ export const ITEMS:Item[] = [
   item('forbidden-scroll','Pergaminho Proibido','Lendário',3,1,'Técnicas podem subir mais 2 níveis (até 11).',{skillCap:2}),
   item('lee','Remédio do Rock Lee','Lendário',0,1,'Punho Bêbado: +20% dano, +20% velocidade de ataque, +15% movimento e +10 pontos de evasão.',{damage:.2,attackSpeed:.2,move:.15,dodge:.1}),
 ];
+const LEGACY_ITEM_NAMES:Record<string,string>={'Pergaminho de Ressurreição':'Células de Hashirama','Rinne Tensei':'Chakra de Hagoromo'};
+export const currentItemName=(name:string)=>LEGACY_ITEM_NAMES[name]??name;
 export const ITEM_BY_NAME = Object.fromEntries(ITEMS.map(i=>[i.name,i])) as Record<string,Item>;
 export function availableItems(unlocked:readonly string[], archived:readonly string[], allForPrototype:boolean) {
   return ITEMS.filter(i=>!archived.includes(i.id)&&(allForPrototype||i.rarity==='Comum'||unlocked.includes(i.id)));

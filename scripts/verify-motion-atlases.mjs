@@ -11,13 +11,15 @@ try{
  const page=await browser.newPage({viewport:{width:1320,height:2580}});
  page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()===404)missing.push(r.url());});
  await page.goto('http://127.0.0.1:5177/__motion-review');
- await page.evaluate(async()=>{
+ const count=await page.evaluate(async()=>{
   const {THREE,HEROES,portraitRegion,createPlayerMotion}=await import('/scripts/motion-review-entry.ts');
   const loader=new THREE.TextureLoader();
+  const frameCanvas=document.createElement('canvas');frameCanvas.width=32;frameCanvas.height=32;
+  const frameContext=frameCanvas.getContext('2d',{willReadFrequently:true});
   const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
-  renderer.setSize(1320,2520);renderer.setScissorTest(true);document.body.appendChild(renderer.domElement);
-  const camera=new THREE.OrthographicCamera(-1.6,1.6,3.1,-.1,.1,30);camera.position.set(0,1.5,10);camera.lookAt(0,1.5,0);
-  const labels=document.createElement('div');labels.style.cssText='position:absolute;inset:0;pointer-events:none';document.body.appendChild(labels);
+  renderer.setSize(1320,2520);renderer.setScissorTest(true);renderer.domElement.style.cssText='position:fixed;top:0;left:0;z-index:100000';document.body.appendChild(renderer.domElement);
+  const camera=new THREE.OrthographicCamera(-1.6,1.6,1.65,-1.55,.1,30);camera.position.set(0,1.5,10);camera.lookAt(0,1.5,0);
+  const labels=document.createElement('div');labels.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:100001';document.body.appendChild(labels);
   const put=(x,y,s)=>{const label=document.createElement('div');label.style.cssText='position:absolute;left:'+x+'px;top:'+y+'px';label.textContent=s;labels.appendChild(label);};
   window.reviewPage=async pageIndex=>{
    labels.innerHTML='';renderer.setScissor(0,0,1320,2520);renderer.setClearColor('#1d2834');renderer.clear();
@@ -32,7 +34,7 @@ try{
     const motion=createPlayerMotion(scene,sprite,hero.id,false);
     const update=(dt,walking=false,back=false,left=false,jump=0,dash=false,jp=0,dp=0)=>motion.update(dt,0,100,100,walking,back,left,1,jump,dash,false,jp,dp);
     update(0);await loaded;
-    const samples=[];
+    const samples=[];let frontPixels;
     put(3,row*180+3,hero.name);
     for(let col=0;col<10;col++){
      update(1);
@@ -45,6 +47,13 @@ try{
      if(motion.state()!==expected)throw Error(hero.id+' '+names[col]+' returned '+motion.state());
      const map=sprite.material.map;
      if(!map?.image?.width)throw Error('Unloaded atlas '+hero.id+' '+expected);
+     const {width,height}=map.image,cellW=Math.abs(map.repeat.x)*width,cellH=map.repeat.y*height;
+     const sampleX=(map.offset.x+(map.repeat.x<0?map.repeat.x:0))*width,sampleY=(1-map.offset.y-map.repeat.y)*height;
+     frameContext.clearRect(0,0,32,32);frameContext.drawImage(map.image,sampleX,sampleY,cellW,cellH,0,0,32,32);
+     const pixels=frameContext.getImageData(0,0,32,32).data;
+     if(!pixels.some((value,index)=>index%4===3&&value>141))throw Error('Quadro vazio: '+hero.id+' '+names[col]);
+     if(col===1)frontPixels=pixels;
+     if(col===2&&frontPixels.every((value,index)=>value===pixels[index]))throw Error(hero.id+' repete a imagem na caminhada de costas');
      if(col===8&&map.repeat.x>=0)throw Error('Left dash not mirrored: '+hero.id);
      renderer.setViewport(col*132,(13-row)*180,132,160);renderer.setScissor(col*132,(13-row)*180,132,160);
      renderer.setClearColor(row%2?'#213747':'#26313f');renderer.render(scene,camera);
@@ -52,6 +61,11 @@ try{
      samples.push({action:expected,atlas:motion.atlas(),uv:[map.offset.x,map.offset.y,map.repeat.x,map.repeat.y]});
     }
     if(samples.slice(1).some(sample=>!sample.atlas))throw Error(hero.id+' tem movimento sem folha de animação');
+    if(samples[1].atlas.endsWith('-roster-v1.png')){
+     for(const [col,row] of [[1,0],[2,1],[3,2],[4,3],[5,4],[6,4],[7,5],[8,5],[9,5]]){
+      if(Math.abs(samples[col].uv[1]-(5-row)/6)>1e-6)throw Error(hero.id+' selecionou fileira errada em '+names[col]);
+     }
+    }
     if(samples[1].uv[1]===samples[2].uv[1])throw Error(hero.id+' usa a mesma fileira ao andar de frente e de costas');
     // Andar atacando: o golpe toca inteiro pelos quadros de ataque (sem virar caminhada no meio) e volta à caminhada ao fim.
     update(1);update(.2,true);motion.attack(false,false);const walkFrames=[];
@@ -64,12 +78,13 @@ try{
    }
    return results;
   };
+  return HEROES.length;
  });
- for(let index=0;index<4;index++){
+ for(let index=0;index<Math.ceil(count/14);index++){
   coverage.push(...await page.evaluate(i=>window.reviewPage(i),index));
   await page.screenshot({path:'artifacts/motion-review-'+(index+1)+'.png'});
  }
- assert.equal(coverage.length,56);assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);
+ assert.equal(coverage.length,count);assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);
  fs.writeFileSync('artifacts/motion-review.json',JSON.stringify({date:new Date().toISOString(),scope:'Controlador real em fixture isolada; inspeção visual pelas folhas de contato',coverage,errors,missing},null,2));
  console.log(JSON.stringify({versions:coverage.length,states:coverage.reduce((n,h)=>n+h.samples.length,0),errors,missing}));
 }finally{await browser?.close();await server.close();}

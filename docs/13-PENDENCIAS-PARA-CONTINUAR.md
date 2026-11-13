@@ -1,6 +1,14 @@
 # Fila atual do ShinobiBonk · 12/11/2026
 
-Este é o estado consolidado após os commits 11e0d18 e bee4bba. Substitui as listas antigas de integração e contagens de folhas pendentes. Histórico preservado no Git e no contexto do chat.
+O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
+
+## Rodada 53 · Estado e próximos passos
+
+- Entregue: expansão para **96 versões de 56 famílias**, missões novas, Akamaru, expansão visual do Chōji, Zabuza na névoa, Fase 4 e contador de abates. Veja [elenco](21-ELASTAO-DE-HEROIS.md) e [efeitos](24-AUDITORIA-DE-EFEITOS.md).
+- Pendente: comparar todos os jutsus com a obra e fazer efeitos próprios onde ainda há arte compartilhada. Nagato e Sasori já têm arte temática, com entidades completas ainda pendentes. Priorizar técnicas médicas, kits de pouco material canônico e Ultimates especiais.
+- Pendente: inspeção em gameplay das versões novas como jogador, ajudante e Mega Elite, incluindo orientação em câmera girada, identidade de traje, pés e transições. A suíte de atlas verifica quadros e espelhamento.
+- Fase 5 restante: sequência em tempo real, card de temporada, glossário e layout dos blocos de combate. Continuam pendentes a run completa com GPU real, a publicação externa e as propostas de escala de mapas.
+
 
 ## Confirmado e entregue
 

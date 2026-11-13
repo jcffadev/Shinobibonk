@@ -1,3 +1,4 @@
+import { expansionSheet } from './rosterExpansion.ts';
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
 const fullActionForms: Record<string, readonly number[]> = {
   sakura: [1, 15, 30],
@@ -14,6 +15,7 @@ const revisedActionForms:Record<string,readonly number[]>={
   kuri:[1],
 };
 export function acrobaticsArt(family:string,form:number){
+  if(expansionSheet(family,form))return;
   if((family==='naruto'&&form>1)||family==='lee'||family==='guy')
     return {path:`/assets/shinobi-motion/${family}-${form}-acrobatics-v2.png`,kind:'acrobatics' as const,directional:true,rows:2,firstRow:0};
 }
@@ -27,6 +29,8 @@ export function handSealArt(family: string, level: number) {
 }
 
 export function actionArt(hero: string, formLevel: number) {
+  const expansion=expansionSheet(hero,formLevel);
+  if(expansion)return {path:expansion,kind:'full' as const,rows:6,firstRow:2,separateAcrobatics:true};
   if(revisedActionForms[hero]?.includes(formLevel))return {path:`/assets/shinobi-motion/${hero}-${formLevel}-action-v3.png`,kind:'full' as const,rows:4};
   if (hero === 'gaara') return { path: gaaraSheet(formLevel), kind: 'full' as const, rows: 6, firstRow: 2 };
   if (fullActionForms[hero]?.includes(formLevel)) {
@@ -82,6 +86,8 @@ const rosterForms: Record<string, readonly number[]> = {
 };
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
+  const expansion=expansionSheet(hero,formLevel);
+  if(expansion)return {path:expansion,rows:6};
   if (hero === 'gaara') return { path: gaaraSheet(formLevel), rows: 6 };
   const custom = sheets[`${hero}-${formLevel}`];
   if (custom) return custom;

@@ -1,6 +1,7 @@
 import type { Difficulty } from './progression';
 import type { MapId } from './maps';
 import { unlockedHeroes } from './account.ts';
+import { ROSTER_EXPANSION } from './rosterExpansion.ts';
 
 /**
  * Missões de desbloqueio (pedido do usuário em 06/11/2026). Para cada shinobi bloqueado:
@@ -21,6 +22,7 @@ const V = (playWith: string, map: MapId, difficulty: Difficulty, minute: number,
  * que o passo anterior da família. Arcos conforme a Narutopedia; mapa, dificuldade, abates e minutos são PROPOSTOS.
  */
 export const VERSION_MISSIONS: Record<string, UnlockMission> = {
+  ...Object.fromEntries(ROSTER_EXPANSION.filter(hero=>hero.id!==hero.family).map(hero=>[hero.id,hero.mission])),
   'naruto-genin': V('naruto', 'folha', 'Chunin', 3, 300, 'A Bandana da Folha', 'Jogando com Naruto Academia, vença Mizuki na floresta e conquiste a bandana de genin.'),
   'naruto-shippuden': V('naruto-genin', 'pedra', 'Jonin', 5, 600, 'O Retorno de Naruto', 'Depois do treino com Jiraiya, Naruto Genin prova a força nova nas montanhas.'),
   'naruto-kyuubi': V('naruto-shippuden', 'nevoa', 'Kage', 7, 1000, 'Controle da Kurama', 'Naruto Shippuden enfrenta a Kurama dentro de si para dominar o manto de chakra.'),
@@ -81,6 +83,7 @@ export const UNLOCK_MISSIONS: Record<string, UnlockMission> = {
   hashirama: { map: 'folha', difficulty: 'Kage', minute: 7, kills: 900, requires: ['tsunade'], legendary: true, title: 'O Deus dos Shinobi', story: 'A neta Tsunade abre o caminho até o Primeiro Hokage.' },
   tobirama: { map: 'nevoa', difficulty: 'Kage', minute: 5, kills: 750, requires: ['hashirama'], title: 'O Segundo Hokage', story: 'O irmão de Hashirama domina as águas da Névoa Oculta.' },
   madara: { map: 'pedra', difficulty: 'Kage', minute: 7, kills: 1000, requires: ['hashirama', 'itachi'], legendary: true, title: 'O Fantasma dos Uchiha', story: 'O rival de Hashirama retorna no Pico do Tsuchikage.' },
+  ...Object.fromEntries(ROSTER_EXPANSION.filter(hero=>hero.id===hero.family).map(hero=>[hero.id,hero.mission])),
   ...VERSION_MISSIONS,
 };
 export const LEGENDARY = new Set(Object.entries(UNLOCK_MISSIONS).filter(([, m]) => m.legendary).map(([id]) => id));

@@ -53,8 +53,9 @@ await page.locator('.character-card').filter({hasText:'Sasuke Genin'}).click();
 assert.equal(await page.locator('.scene canvas').evaluate((el,original)=>el===original,background),true);
 await page.locator('.character-card').filter({hasText:'Naruto Academia'}).click();
 checks.push('Selecionar shinobi preserva a cena de fundo');
-assert.equal(await page.locator('.character-card').count(),56);checks.push('56 versões selecionáveis (24 famílias)');
-await page.getByLabel('Aldeia').selectOption('Vila da Areia');assert.equal(await page.locator('.character-card').count(),8);checks.push('Filtro Areia: versões de Gaara / Temari / Kankuro');
+const {HEROES}=await import('../src/game/heroes.ts');
+assert.equal(await page.locator('.character-card').count(),HEROES.length);checks.push(HEROES.length+' versões selecionáveis');
+await page.getByLabel('Aldeia').selectOption('Vila da Areia');assert.equal(await page.locator('.character-card').count(),HEROES.filter(hero=>hero.village==='Vila da Areia').length);checks.push('Filtro Areia inclui o elenco expandido');
 await page.getByRole('button',{name:'Limpar filtros'}).click();
 await page.locator('.cs-village-tag[title*="Konohagakure"] svg').waitFor();
 await page.screenshot({path:'artifacts/roster.png'});
@@ -64,8 +65,9 @@ assert.equal((await state()).enemies.filter(e=>e.heroId).length,0);checks.push('
 await page.waitForTimeout(1500);assert.equal((await state()).atlasReady,true);checks.push('Textura PNG do personagem carregada');
 await page.screenshot({path:'artifacts/combat.png'});
 await page.keyboard.press('w');const before=(await state()).player;
-await page.keyboard.down('w');await page.waitForTimeout(400);await page.keyboard.up('w');
-assert.ok(Math.hypot((await state()).player.x-before.x,(await state()).player.z-before.z)>1);checks.push('Movimento WASD');
+await page.keyboard.down('w');
+await page.waitForFunction(from=>{const {player}=window.__shinobiTest.inspect();return Math.hypot(player.x-from.x,player.z-from.z)>1;},before);
+await page.keyboard.up('w');checks.push('Movimento WASD');
 const overlapStart=await debug('motion');
 await page.evaluate(()=>{
  for(const key of ['d','a'])window.dispatchEvent(new KeyboardEvent('keydown',{key,bubbles:true}));
@@ -128,11 +130,11 @@ assert.equal((await state()).form,'Academia');let selected=(await state()).choic
 const offer=(await state()).choice[selected];await page.keyboard.press(String(selected+1));assert.equal((await state()).skills[offer.name],offer.name==='Kage Bunshin'?2:1);assert.deepEqual((await state()).growth[offer.name],offer.growth);checks.push('Afixos sorteados aplicados à habilidade escolhida');
 for(const lv of [25,50]){await debug('setLevel',lv);assert.equal((await state()).form,'Academia');}
 checks.push('Versões não trocam de forma nos níveis 10 / 25 / 50');
-await debug('setLevel',10);await debug('dismiss');await wait();await debug('clearEnemies');
+await debug('setLevel',10);await debug('dismiss');await wait();await debug('clearEnemies');await debug('clearPickups');
 const sealOrigin=(await state()).player;
 await debug('defeatMega','temari',11);await page.keyboard.press('e');await wait();
 assert.equal(await page.locator('.sealing-modal').count(),0);
-await debug('teleport',sealOrigin.x+6,sealOrigin.z);
+await debug('teleport',sealOrigin.x+11,sealOrigin.z);
 await page.keyboard.press('e');await wait();assert.match(await page.locator('.sealing-modal').innerText(),/Temari/);
 await page.screenshot({path:'artifacts/sealing.png'});
 await page.keyboard.press('p');await page.getByRole('button',{name:'Voltar à escolha'}).click();
@@ -140,12 +142,17 @@ assert.equal((await state()).sealing.phase,'ready');
 await page.keyboard.press('e');for(let n=0;n<40&&!(await state()).allies.includes('temari');n++)await page.waitForTimeout(250);assert.ok((await state()).allies.includes('temari'));
 await page.keyboard.press('Enter');await debug('dismiss');await wait();checks.push('Selamento mostra e recruta Temari após animação');
 await debug('recruitAlly','gaara');assert.equal((await state()).synergy,false);await debug('recruitAlly','kankuro');assert.equal((await state()).synergy,true);checks.push('Sinergia só ativa com os três suportes da Areia');
-await debug('clearEnemies');await debug('target',2);await debug('setCrit',2);await debug('learn','Rendan Uzumaki');
-await page.keyboard.press('h');await wait();const damageBefore=(await state()).totalDamage;
+await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');await debug('target',1);await debug('setCrit',2);await debug('learn','Rendan Uzumaki');
+await page.waitForFunction(()=>!document.querySelector('.game-panel-backdrop,.level-choice-backdrop,.sealing-modal'));
+if(!(await state()).hiddenEffects)await page.keyboard.press('h');
+await page.waitForFunction(()=>window.__shinobiTest.inspect().hiddenEffects);
+const damageBefore=(await state()).totalDamage;
 await debug('cast','Rendan Uzumaki');await wait();const hidden=await state();assert.ok(hidden.totalDamage>damageBefore);assert.equal(hidden.hiddenEffects,true);assert.equal(hidden.visibleShots,0);assert.equal(hidden.visibleNumbers,0);checks.push('H oculta projéteis/números sem impedir dano');
-await page.keyboard.press('h');
-const impact=await page.evaluate(()=>{const d=window.__shinobiTest;d.cast('Rendan Uzumaki');return d.inspect().impacts;});
-assert.ok(impact>0);
+await debug('dismiss');await page.keyboard.press('h');
+await page.waitForFunction(()=>!window.__shinobiTest.inspect().hiddenEffects);
+await debug('target',1);
+await debug('cast','Rendan Uzumaki');
+await page.waitForFunction(()=>window.__shinobiTest.inspect().impacts>0);
 await page.screenshot({path:'artifacts/rasengan.png'});
 checks.push('Rendan Uzumaki exibe impacto no inimigo quando H está desativado');
 await debug('setChakra');await page.keyboard.press('r');assert.ok((await state()).chakra<100);await page.locator('.ultimate-auto-mark').click();assert.equal((await state()).autoUlt,true);checks.push('Ultimate R e selo AUTO');
@@ -160,7 +167,7 @@ for (const [startMoney,paid,cost] of [[100,1,20],[80,2,30]]) {
  // Rodada 49 — a kunai virou PERGAMINHO: exige "E" para abrir a recompensa (custo kunaiPrice) e não é mais auto-coletada ao pisar.
  const payment=await page.evaluate(money=>{
   const test=window.__shinobiTest;test.clearEnemies();test.clearDrops();test.setMoney(money);
-  test.pickup('kunai');
+  test.clearPickups();test.pickup('kunai');
   window.dispatchEvent(new KeyboardEvent('keydown',{key:'e',bubbles:true}));
   return test.inspect();
  },startMoney);

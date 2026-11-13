@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Rodada 53 · 13/11/2026 — elenco, animações e efeitos
+
+- Expande o elenco com 40 versões jogáveis. Cada versão tem missão, passiva, kit, retrato, caminhada frontal e traseira, ataque, pulo e dash. Adiciona Akamaru e o aumento de tamanho do Chōji durante o Jutsu de Expansão. Revisa os cargos pela obra e retira três kits de fundadores inventados.
+- Integra dois atlas com 32 motivos de efeitos ao combate, ícones e prévia, preservando os caminhos dedicados de clones, Gamabunta, Susanoo e Shinra Tensei. Corrige a reativação das partículas pela tecla H. As técnicas usam efeitos por nome, motivo ou elemento. A revisão de fidelidade individual continua na fila.
+- Na Névoa Oculta, a partir de 1:10 de cada zona, a névoa engrossa durante 16 s a cada 110 s e pode trazer Zabuza como Mega Elite. A aparição evita duplicatas da família.
+- Conclui a Fase 4: Células de Hashirama (35%) e Chakra de Hagoromo (60%), com PNGs exclusivos e migração dos nomes de itens nas runs salvas. Pílulas: 9 níveis de base, 13 com Farmacologia Ninja e 15 com a Cabaça. Mantém 6 tipos por run. O HUD mostra o total de abates.
+- Verificações de movimento cobrem 96 versões e 960 estados. O Edge passou 62 verificações de fluxo, sem exceções JavaScript nem respostas 404. A suíte checa pixels não vazios, caminhada frontal/traseira e dash espelhado. Os prompts usados pela ferramenta de imagem estão em [docs/arte-elenco-rodada-53.json](docs/arte-elenco-rodada-53.json).
+
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 - **Áudio:** a Home tenta iniciar a faixa de abertura no carregamento. A faixa continua enquanto o jogador navega pelo hub. Se o navegador bloquear a reprodução automática, a primeira interação libera a mesma faixa e a Home exibe **Ativar música** enquanto ela estiver bloqueada.

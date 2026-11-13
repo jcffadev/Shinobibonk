@@ -19,7 +19,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/scene/GameCanvas.tsx` | Cena Three.js e simulação da run inteira; envia `WorldSnapshot` para o React. |
 | `src/scene/bossCombat.ts` | Chefes: barra de vida 3D e técnicas dos mega elites/guardiões com aviso no chão (`BOSS_RULES`). |
 | `src/scene/techniqueEffects.ts` | Geometria original por golpe e elemento, orientação na direção do ataque, rotação de efeitos, raios de impacto e descarte de recursos. O limite local de efeitos de impacto evita criar uma malha por inimigo em hordas grandes. |
-| `src/game/heroes.ts` | 24 famílias e 56 versões jogáveis (`HERO_VERSIONS`; `family`, `form`, `title`; `familyOf`, `familyVersions`, `versionStep`, `versionForEncounter`, `DETERMINATION`): aldeia, atributos base, passiva, bônus, 4 técnicas da fase (escola, elemento, forma, status), Ultimate. Bibliotecas `L` (compartilhadas) e `U` (únicas por família). `skillPool` respeita elemento, vila e selamento; versões da mesma família não emprestam técnicas. `sandSynergy` por família. Formas do Naruto. `HERO_CLAN`, `ORGANIZATIONS`, `HERO_NATURES` (naturezas canônicas da Narutopedia) e `heroAffinity`. |
+| `src/game/heroes.ts` | 56 famílias e 96 versões jogáveis (`HERO_VERSIONS`; `family`, `form`, `title`; `familyOf`, `familyVersions`, `versionStep`, `versionForEncounter`, `DETERMINATION`): aldeia, atributos base, passiva, bônus, 4 técnicas da fase (escola, elemento, forma, status), Ultimate. Bibliotecas `L` (compartilhadas) e `U` (únicas por família). `skillPool` respeita elemento, vila e selamento; versões da mesma família não emprestam técnicas. `sandSynergy` por família. Formas do Naruto. `HERO_CLAN`, `ORGANIZATIONS`, `HERO_NATURES` (naturezas canônicas da Narutopedia) e `heroAffinity`. |
 | `src/game/catalog.ts` | 95 itens no formato da referência (raridade, custo, limite, bônus), `StatKey` com as chaves de mecânica, `availableItems` e `rollItems` (pesos por raridade afetados por Sorte). |
 | `src/game/progression.ts` | `calculateStats` (recalcula tudo das fontes: base, nível, evoluções, itens, pílulas, árvore, buffs da run), `difficultyAt`, `incomingDamage`, `rollCritical`. |
 | `src/game/progression.ts` (nota) | `Stats.extra` guarda a soma bruta de todos os bônus; `genjutsu` é o multiplicador da escola Genjutsu; `healthPct` e `regenMult` ajustam HP máximo e regeneração. |
@@ -330,7 +330,7 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 - Tab é reservado ao mapa rápido, com movimento e simulação ativos. P abre e fecha a ficha. Fechar a ficha por uma ação do usuário solicita a captura do ponteiro naquele mesmo evento.
 - O estoque atual do mercador conserva os preços ao comprar e ao reabrir. Cada novo estoque considera raridade, compras acumuladas, atualizações acumuladas e tempo. O preço da atualização sobe por uso, com desconto dos itens.
 - Cada zona sorteia uma Shuriken Amaldiçoada e um Corpo de Ninja. A shuriken concede +8% de dano total e chama emboscada. O corpo chama emboscada e concede um nível ao concluir, mantendo a escolha normal de level-up. O tamanho da onda cresce com dificuldade e zona. O +8% é calibração provisória do protótipo.
-- Afiliações filtram a versão representada. As 56 versões possuem bônus de suporte. Curadores recebem regeneração e coleta. Ofensivos recebem bônus de sua escola, preservando os demais efeitos próprios. Valores são originais do jogo e seguem sujeitos a balanceamento.
+- Afiliações filtram a versão representada. As 96 versões possuem bônus de suporte. Curadores recebem regeneração e coleta. Ofensivos recebem bônus de sua escola, preservando os demais efeitos próprios. Valores são originais do jogo e seguem sujeitos a balanceamento.
 
 **PENDENTE**
 
@@ -367,3 +367,8 @@ Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em com
 - `src/scene/GameCanvas.tsx`: tintas de altar, bênçãos de dois grupos, drop compacto e persistência de candidatos caídos no save de campanha. A configuração de captura é lida ao interagir.
 - `src/scene/playerMotion.ts` desenha HP numérico no plano dos pés. `directionalArt.ts` seleciona as três folhas 4×4 novas.
 - `src/scene/techniqueEffects.ts`, `susanooFx.ts` e `kuroari.ts`: assinaturas visuais e atlas. `TechniquePreview.tsx` e `SkillIcon.tsx` usam as folhas das invocações.
+
+
+## Elenco expandido e atlas de efeitos (rodada 53)
+
+`rosterExpansion.ts` fornece kits, versões, passivas, missões e atlas. `directionalArt.ts` e `playerMotion.ts` aplicam os quadros em jogador, ajudantes e inimigos de elenco. `techniqueVisualProfiles.ts` liga os motivos ao atlas. `techniqueEffects.ts` usa os mesmos efeitos no campo e na prévia, com detalhes 3D e partículas limitadas. `currentItemName` migra itens de reviver nas runs salvas.

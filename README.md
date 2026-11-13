@@ -25,7 +25,7 @@ O perfil local mostra um Guest numerado até o cadastro. Criar conta preserva o 
 
 ## Estrutura
 
-O elenco atual tem 24 famílias de shinobis e 56 versões jogáveis separadas (ex.: Naruto Academia, Genin, Shippuden e Kyuubi), cada uma com kit, passiva e atributos da fase, folhas direcionais de caminhada e 97 técnicas no total. Cada versão nova é liberada por missão jogando com a anterior. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total da simulação.
+O elenco atual tem 56 famílias de shinobis e 96 versões jogáveis separadas (ex.: Naruto Academia, Genin, Shippuden e Kyuubi), cada uma com kit, passiva e atributos da fase, folhas direcionais de caminhada e 177 técnicas de kit no total. Cada versão nova é liberada por missão jogando com a anterior. As folhas usam o sprite estático da forma como referência. A horda escala até 1.600 inimigos aos 10 min; no Final Swarm o teto triplica e continua crescendo até 8.000 (`FINAL_SWARM` em `src/game/progression.ts`). O HUD exibe o total de abates e de inimigos vivos. Consulte [elenco e missões](docs/21-ELASTAO-DE-HEROIS.md) e [auditoria dos efeitos](docs/24-AUDITORIA-DE-EFEITOS.md).
 
 O Naruto Clássico tem quadros de conjuração. Sasuke inicial tem quadros de ataque, pulo e dash. Rock Lee e Might Guy têm socos e chutes em suas três formas. Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara têm folhas próprias de conjuração, pulo e dash em frente e costas. A cobertura das demais ações está na [fila](docs/13-PENDENCIAS-PARA-CONTINUAR.md).
 
@@ -38,7 +38,7 @@ O [contexto permanente de perguntas e respostas](docs/18-CONTEXTO-PERGUNTAS-RESP
 - `src/scene/techniqueEffects.ts`: visuais das técnicas. Dano e hitbox ficam na simulação.
 - `src/scene/bossCombat.ts`: chefes (mega elites e guardiões), com barra de vida e técnicas do personagem com aviso no chão.
 - `src/game/`: dados e regras sem React.
-  - `heroes.ts`: 24 famílias e 56 versões (`HERO_VERSIONS`, `familyOf`), 97 técnicas (1–2 únicas por versão, exclusivas da família, + compartilhadas), pool por vila/elemento, clãs, organizações e afinidade elemental.
+  - `heroes.ts`: 56 famílias e 96 versões (`HERO_VERSIONS`, `familyOf`), 177 técnicas (1–2 únicas por versão, exclusivas da família, + compartilhadas), pool por vila/elemento, clãs, organizações e afinidade elemental.
   - `account.ts`: shinobis jogáveis, selados, pesquisa de técnicas e progresso por mapa.
   - `maps.ts`: 4 mapas temáticos (Folha, Areia, Pedra, Névoa Oculta).
   - `unlockMissions.ts`: missões de desbloqueio, Lendários e cadeia das versões (`playWith`).

@@ -1,5 +1,7 @@
+import { BATTLE_EFFECT_ATLAS, SUMMON_EFFECT_ATLAS, battleEffectCell, hasNamedBattleEffect, summonEffectCell } from '../game/techniqueVisualProfiles';
+import { expansionVisual } from '../game/rosterExpansion';
 import { puppetArt } from '../scene/kuroari';
-import { HEROES, familyOf } from '../game/heroes';
+import { HEROES, HERO_BY_ID, familyOf, ultimateBase } from '../game/heroes';
 const techniques = new Map(HEROES.flatMap(h=>h.techniques).map(t=>[t.name,t]));
 const sageFaces:Record<string,number>={naruto:0,hashirama:1,jiraiya:2,minato:3,kabuto:4,orochimaru:5};
 const namedIcons: Record<string,number> = {
@@ -14,6 +16,7 @@ const namedIcons: Record<string,number> = {
   'Prisão de Correntes da Kurama':24,'Caixão de Areia':12,'Funeral do Deserto':12,
   'Mil Mãos de Madeira':13,'Meteorito':14,'Tengai Shinsei':14,'Bijūdama Rasenshuriken':4,'Kamui':15,'Oito Portões':17,
 };
+const expansionIcons:Record<string,number>={impact:17,wheel:18,fang:18,mark:16,swarm:7,mind:15,staff:13,elements:14,lightning:10,blade:1,cube:14,scan:22,gold:12,poison:7,lava:8,steam:9,water:5,fire:8,spiral:2,ink:7,roots:13,palms:16,shark:9,chains:24,paths:23,iron:12,ice:19,wings:11};
 const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:14,Sombra:15,Sábio:22,Neutro:18};
 // Arte do atlas por técnica ou família. O ícone vetorial cobre técnicas sem célula dedicada.
 export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:number;name:string}){
@@ -26,9 +29,14 @@ export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:
   if(name.includes('Gamabunta')||heroId==='naruto'&&name==='Invocação do Sapo')return <span className="skill-art gamabunta-skill-art" role="img" aria-label={name}/>;
   const puppet=puppetArt(name);
   if(puppet)return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:'url('+puppet+')',backgroundSize:'400% 100%',backgroundPosition:'66.6667% 50%',backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;
-  const technique=techniques.get(name);
+  const hero=HERO_BY_ID[versionId];
+  const technique=techniques.get(name)??(hero?.ultimate===name?{...ultimateBase(hero),name}:undefined);
   if(name.startsWith('Espaço ')) return <span className="skill-art empty-skill-art" aria-label={name}>+</span>;
-  const cell=namedIcons[name]??(name.includes('Sapo')||name.includes('Gamabunta')?undefined:technique?elementIcon[technique.element]
+  const signature=expansionVisual(name);
+  const summon=summonEffectCell(name);
+  if(summon!==undefined)return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:'url('+SUMMON_EFFECT_ATLAS+')',backgroundSize:'400% 200%',backgroundPosition:(summon%4)*100/3+'% '+Math.floor(summon/4)*100+'%',backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;
+  if(technique&&hasNamedBattleEffect(name)&&namedIcons[name]===undefined){const i=battleEffectCell(technique);return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:`url(${BATTLE_EFFECT_ATLAS})`,backgroundSize:'400% 600%',backgroundPosition:`${(i%4)*100/3}% ${Math.floor(i/4)*20}%`,backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;}
+  const cell=(signature?expansionIcons[signature]:undefined)??namedIcons[name]??(name.includes('Sapo')||name.includes('Gamabunta')?undefined:technique?elementIcon[technique.element]
     :/Katon/.test(name)?8:/Suiton/.test(name)?5:/Raiton/.test(name)?10:/Doton/.test(name)?14:/Fuuton/.test(name)?11:undefined);
   if(cell!==undefined)return <span className="skill-art atlas-skill-art" role="img" aria-label={name} style={{backgroundPosition:`${cell%5*25}% ${Math.floor(cell/5)*25}%`}}/>;
   const color=technique?.color??(heroId==='gaara'?'#e4be77':heroId==='hashirama'?'#8bdd83':heroId==='madara'?'#ff845b':'#64d8ff');

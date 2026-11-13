@@ -1,3 +1,4 @@
+import { PHARMACOLOGY_MAX } from './pills.ts';
 /**
  * Passivas Shinobi (árvore permanente comprada com Lamens). O `name` é a chave salva em `sb_permanent_levels`;
  * não renomeie nós existentes sem migrar o salvamento. Valores e preços provisórios.
@@ -24,7 +25,7 @@ export const PASSIVES:PassiveDef[] = [
   {name:'Celeridade',buff:'+2% velocidade de ataque por nível',base:120,max:10,icon:'speed',section:'Treinamento'},
   {name:'Expansão',buff:'+3% de área por nível',base:110,max:5,icon:'area-seal',section:'Treinamento'},
   {name:'Quarta técnica',buff:'Desbloqueia o quarto espaço de habilidade',base:400,max:1,icon:'clone',section:'Equipe da partida'},
-  {name:'Farmacologia Ninja',buff:'+1 nível máximo em cada pílula por nível',base:300,max:2,icon:'pill-gourd',section:'Equipe da partida'},
+  {name:'Farmacologia Ninja',buff:'+1 nível máximo em cada pílula por nível',base:300,max:PHARMACOLOGY_MAX,icon:'pill-gourd',section:'Equipe da partida'},
   {name:'Atualizar',buff:'+1 atualização por run (3 iniciais; até 10)',base:150,max:7,icon:'cooldown',section:'Equipe da partida'},
   {name:'Pular',buff:'+1 pulo por run (3 iniciais; até 10)',base:100,max:7,icon:'sandals',section:'Equipe da partida'},
   {name:'Banir',buff:'+1 banimento por run (3 iniciais; até 10)',base:180,max:7,icon:'tenten',section:'Equipe da partida'},

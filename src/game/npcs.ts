@@ -2,8 +2,8 @@ import type { Bonuses, StatKey } from './catalog';
 import type { Technique } from './heroes';
 
 /**
- * NPCs de evento que NÃO são personagens jogáveis (não entram em HEROES, na seleção, no total do elenco
- * nem no selamento): Ebisu e Iruka. Também guarda as regras do evento Naruto Totem.
+ * NPCs de evento: Ebisu e Iruka. Iruka também está no elenco jogável por missão.
+ * Este módulo guarda ainda as regras do evento Naruto Totem.
  * Fonte canônica dos dados de personagem: Narutopedia (naruto.fandom.com).
  * - Ebisu: Konohagakure, Tokubetsu Jōnin, "Personal Trainer" (tutor de elite).
  * - Iruka Umino: Konohagakure, Chūnin, professor da Academia.

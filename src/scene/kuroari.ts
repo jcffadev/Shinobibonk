@@ -4,7 +4,7 @@ export const KUROARI_TIME = 1.1;
 export const KUROARI_STRIKE = .55;
 export const KUROARI_ART='/assets/shinobi-motion/kuroari-cast-v4.png';
 export const KAZEKAGE_PUPPET_ART='/assets/shinobi-motion/kazekage-puppet-cast-v1.png';
-export function puppetArt(name:string){return name==='Kuroari'||name==='Prisão de Kuroari'?KUROARI_ART:name==='Mil Braços do Escorpião'?KAZEKAGE_PUPPET_ART:undefined;}
+export function puppetArt(name:string){return name==='Kuroari'||name==='Prisão de Kuroari'?KUROARI_ART:(name==='Mil Braços do Escorpião'||name==='Terceiro Kazekage: Areia de Ferro')?KAZEKAGE_PUPPET_ART:undefined;}
 
 /** Kuroari, a Formiga Negra de Kankuro. Quatro quadros da invocação em kuroari-cast-v4.png. */
 export function createKuroari(map:THREE.Texture, origin:THREE.Vector3, target:THREE.Vector3, right:THREE.Vector3){

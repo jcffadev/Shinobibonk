@@ -1,9 +1,10 @@
+import { ROSTER_EXPANSION, expansionSheet } from './rosterExpansion.ts';
 import { directionalArt } from './directionalArt.ts';
 import { HERO_BY_ID, HEROES, NARUTO_FORMS, familyOf } from './heroes.ts';
 export type Form={level:number;name:string;outfit?:string;detail?:string};
 // Níveis são design do jogo. Personagens sem outra fase apropriada mantêm a aparência.
 export const FORMS:Record<string,Form[]>={
- naruto:NARUTO_FORMS,
+ naruto:[...NARUTO_FORMS],
  gaara:[{level:1,name:'Genin'},{level:15,name:'Kazekage',outfit:'#a34943'},{level:30,name:'Aliança Shinobi',outfit:'#9b5d4d'}],
  madara:[{level:1,name:'Armadura Uchiha'},{level:15,name:'Rinnegan',detail:'rinnegan'},{level:30,name:'Seis Caminhos',outfit:'#e5e0ce',detail:'sage'}],
  hashirama:[{level:1,name:'Primeiro Hokage'},{level:20,name:'Modo Sábio',detail:'sage'}],
@@ -30,16 +31,19 @@ export const FORMS:Record<string,Form[]>={
  * (`Hero.form`): o nível da run não troca mais a forma. Ids fora do elenco (NPCs) seguem a tabela por nível.
  */
 export function formAt(id:string,level=1){const hero=HERO_BY_ID[id],family=familyOf(id),list=FORMS[family]??[{level:1,name:'Shinobi'}];if(hero)return list.find(f=>f.level===(hero.form??1))??list[0];return [...list].reverse().find(f=>level>=f.level)??list[0];}
-export function spriteFile(id:string,level=1){const family=familyOf(id),form=formAt(id,level);if(family==='naruto')return `/assets/shinobis/${NARUTO_FORMS.find(f=>f.name===form.name)!.file}.svg`;if(HERO_BY_ID[family]?.atlas!==undefined&&form.level===1)return null;return `/assets/shinobis/${family}-${form.level}.svg`;}
+export function spriteFile(id:string,level=1){const family=familyOf(id),form=formAt(id,level);if(expansionSheet(family,form.level))return null;if(family==='naruto')return `/assets/shinobis/${NARUTO_FORMS.find(f=>f.name===form.name)!.file}.svg`;if(HERO_BY_ID[family]?.atlas!==undefined&&form.level===1)return null;return `/assets/shinobis/${family}-${form.level}.svg`;}
 /** Nível de liberação da técnica `index` do kit (fonte única: `unlockLevel` em heroes.ts, ajustado por fase da obra). */
 export function requiredLevel(heroId:string,index:number){return HERO_BY_ID[heroId]?.techniques[index]?.unlockLevel??[1,5,12,20][index];}
 const evolvedCells=Object.entries(FORMS).flatMap(([id,forms])=>id==='naruto'?[]:forms.filter(f=>f.level>1).map(f=>id+'-'+f.level));
+for(const hero of ROSTER_EXPANSION)(FORMS[hero.family]??=[]).push({level:hero.form,name:hero.title});
 import { BIJUU } from './bijuu.ts';
 const leafPortraits = ['ebisu', 'iruka', 'kushina'];
 export const ASUMA_ATLAS = '/assets/asuma-motion-v1.png';
 export function portraitRegion(versionId:string,level=1){
  // Versões usam o retrato da forma da família (ex.: `naruto-shippuden` → célula Shippuden do Naruto).
  const id=familyOf(versionId);level=HERO_BY_ID[versionId]?formAt(versionId).level:level;
+ const expansion=expansionSheet(id,level);
+ if(expansion)return {path:expansion,cols:4,rows:6,index:8};
  if(id==='sapos-sabios')return {path:'/assets/shinobis/sapos-sabios-v1.png',cols:1,rows:1,index:0};
  if(id==='teuchi')return {path:'/assets/shinobis/teuchi-v1.png',cols:1,rows:1,index:0};
  if(id==='asuma')return {path:ASUMA_ATLAS,cols:4,rows:4,index:0};
