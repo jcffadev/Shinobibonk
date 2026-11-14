@@ -1679,3 +1679,11 @@ Resposta: o código já usava 1.600 (`ENEMY_SCALING.maxEnemies` e `FINAL_SWARM.m
 - **Bijū de frente e de costas:** o código o Claude faz; a arte de costas precisa ser gerada pelo Codex, porque as folhas atuais só têm a vista lateral.
 - **Skill de jutsus em WebGL:** era o pedido de 11/11 com 3 links para o Codex refinar os efeitos; o subagente foi interrompido pelo limite de uso e a skill nunca foi criada. Entrou na fila.
 - **Fila:** registrada em docs/13 ("Fila do usuário · 14/11/2026"). Os itens 1–12 já estão feitos (rodadas 54–57); os novos são o 13 (mouse preso) e o 14 (aparecimento das bijū), mais o 15 (bijū de costas) e o 16 (skill). Execução um por vez, publicando a cada item.
+
+### Item 13 — mouse preso (rodada 58)
+
+- **Causa:** o jogo soltava o ponteiro ao abrir qualquer tela por cima (cartas, roleta, selamento, NPCs, mapa, ficha).
+- **Correção:** o ponteiro fica preso nessas telas, com uma kunai virtual fazendo o papel do cursor (`src/scene/virtualCursor.ts`).
+- **O que solta o mouse:** Alt+Tab, tecla Windows e janela escondida soltam e pausam. Esc sempre solta, por regra do navegador.
+- **PASSOU:** tsc, build, 56/56 e mutação 17/17.
+- **PENDENTE DE VALIDAÇÃO E2E:** ver na prática.

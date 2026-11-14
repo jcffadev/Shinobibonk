@@ -24,6 +24,9 @@ const MUTATIONS = [
   { regra: 'costas só acima do limiar (histerese)', arquivo: 'src/scene/playerMotion.ts', de: 'if (vertical > .26) memory.back = true; else if (vertical < .1) memory.back = false;', para: 'memory.back = vertical > 0;' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },
+  { regra: 'cursor virtual não sai da tela', arquivo: 'src/scene/virtualCursor.ts', de: 'Math.min(Math.max(0, x), Math.max(0, width - 1))', para: 'x' },
+  { regra: 'clique só no mesmo elemento', arquivo: 'src/scene/virtualCursor.ts', de: 'pressed && (pressed === target || pressed.contains(target) || target.contains(pressed))', para: 'pressed' },
+  { regra: 'mouse continua preso nas telas da missão', arquivo: 'src/scene/GameCanvas.tsx', de: 'if(pointerLocked()&&!cameraCanMove()&&!ui)document.exitPointerLock();', para: 'if(pointerLocked()&&!cameraCanMove())document.exitPointerLock();' },
   { regra: 'cone desenhado = cone do acerto', arquivo: 'src/scene/GameCanvas.tsx', de: 'dot(direction)>CONE_COS', para: 'dot(direction)>.5' },
 ];
 

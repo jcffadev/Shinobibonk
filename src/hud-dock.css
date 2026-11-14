@@ -133,3 +133,7 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .game-shell .skill-dock>.ability-bar .ultimate{position:relative;isolation:isolate;overflow:visible}
 .ultimate-charge{position:absolute;inset:-3px;pointer-events:none;border-radius:50%;background:conic-gradient(#ffdc86 var(--charge),#3e3027 0);mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));z-index:1}
 .game-shell .skill-dock .ultimate-auto-mark{white-space:nowrap;right:0;bottom:-6px;padding:1px 3px;font-size:10px;line-height:1;border-width:1px;z-index:2}
+
+/* Rodada 58: cursor virtual (kunai) enquanto o ponteiro fica preso numa tela por cima do jogo — src/scene/virtualCursor.ts.
+   A ponta da kunai (3,3) é o ponto de clique, igual ao cursor real da .game-shell. */
+.virtual-cursor{position:fixed;left:0;top:0;width:26px;height:26px;margin:-3px 0 0 -3px;background:url('/assets/icons/cursor-kunai.svg') no-repeat 0 0/contain;pointer-events:none;z-index:2147483000;display:none;will-change:transform;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}

@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## Rodada 58 · 14/11/2026 — mouse preso na missão (item 13 da fila)
+
+- **Pedido do usuário:** "O jogo deve prender o mouse na tela, ficar como foco principal... apenas se dermos alttab ou tecla Windows, sair, ai o jogo pausa normalmente."
+- **Causa:** o laço do jogo soltava o ponteiro (`exitPointerLock`) sempre que abria uma tela por cima do jogo (cartas de nível, roleta, selamento, NPCs, mapa, ficha P). Com o cursor solto, o mouse podia sair da janela.
+- **Correção — cursor virtual** (`src/scene/virtualCursor.ts`):
+  - Durante a missão o ponteiro continua preso também nessas telas.
+  - Uma kunai virtual, movida 1:1 pelo mouse, faz o papel do cursor: passa por cima, clica (só quando aperta e solta no mesmo elemento), botão direito e roda do mouse nas listas.
+  - A kunai nasce no centro da tela, onde as cartas aparecem, e não sai da janela.
+- **O que solta o mouse:**
+  - Alt+Tab, tecla Windows ou janela escondida: o mouse sai e o jogo pausa (como antes).
+  - Debug, derrota e vitória: o mouse é solto.
+  - **Esc:** o navegador sempre solta o ponteiro (regra dele) e o jogo abre a pausa. No .exe (Electron) dá para prender de verdade.
+- **Testes:** `tests/cursor.test.mjs` (10 testes, DOM simulado no Node); cobertura de `virtualCursor.ts` em 100% das linhas e 92% dos caminhos; 3 mutações novas. **PASSOU:** tsc, build, 56/56 e mutação 17/17.
+- **PENDENTE DE VALIDAÇÃO E2E** (navegador suspenso para o Claude Code), ver na prática:
+  - escolher cartas, roleta, selamento e NPCs com a kunai virtual;
+  - mapa e ficha P;
+  - Alt+Tab e tecla Windows pausando;
+  - voltar ao jogo.
+
 ## Correção do teto de monstros · 14/11/2026
 
 - **Teto de monstros vivos = 1.600** (correção do usuário: "nosso cap máximo de monstros é 1600"). O código já usava 1.600; AGENTS.md, TESTING_POLICY.md, docs/13 e docs/18 diziam 1.500 e foram corrigidos. Novo teste trava o teto em todas as dificuldades, no Final Swarm e com +% de inimigos (46 testes, PASSOU).

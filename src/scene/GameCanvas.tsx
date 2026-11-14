@@ -44,6 +44,7 @@ import type { Bonuses } from '../game/catalog';
 import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSignatureVisual, disposeObject } from './techniqueEffects';
 import { createParticleFx } from './particleFx';
 import { createTechniqueAreas, CONE_COS } from './techniqueAreas';
+import { createVirtualCursor } from './virtualCursor';
 import { createSusanooFx, susanooStyleFor } from './susanooFx';
 import { zoneThreat, zoneCurse, calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, ENEMY_SCALING, FINAL_SWARM, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
 import { buildAltarOffers, extraStrikes } from '../game/altarRewards';
@@ -830,7 +831,21 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       pitch=THREE.MathUtils.clamp(pitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),CAMERA_MIN_PITCH,1.48);
     };
     let cameraViewPitch=pitch;
-    const onLockedMove=(e:MouseEvent)=>{if(pointerLocked()&&cameraCanMove())turnCamera(e.movementX,e.movementY);};
+    // Rodada 58 (pedido: "o jogo deve prender o mouse na tela… apenas se dermos alttab ou tecla Windows, sair, ai o jogo
+    // pausa"): com uma tela aberta por cima do jogo (cartas, roleta, selamento, NPC, mapa, ficha P) o ponteiro continua
+    // preso e uma kunai virtual faz o papel do cursor (src/scene/virtualCursor.ts). Esc (regra do navegador), Alt+Tab e a
+    // tecla Windows soltam o ponteiro; perder o foco pausa (onBlur).
+    const cursorEl=document.createElement('div');cursorEl.className='virtual-cursor';cursorEl.setAttribute('aria-hidden','true');document.body.appendChild(cursorEl);
+    const cursor=createVirtualCursor({elementFromPoint:(x,y)=>document.elementFromPoint(x,y),width:()=>window.innerWidth,height:()=>window.innerHeight,
+      draw:(x,y,visible)=>{cursorEl.style.display=visible?'block':'none';cursorEl.style.transform=`translate(${x}px,${y}px)`;}});
+    /** Tela de interface aberta durante a missão (o ponteiro fica preso e a kunai virtual aparece). */
+    const overlayUi=()=>enabledRef.current&&!cameraCanMove()&&!debugOpenRef.current&&!defeated&&!victory;
+    const forwardButton=(e:MouseEvent)=>{if(!e.isTrusted||!cursor.isActive())return;e.preventDefault();e.stopImmediatePropagation();if(e.type==='mousedown')cursor.down(e.button);else if(e.type==='mouseup')cursor.up(e.button);};
+    const forwardWheel=(e:WheelEvent)=>{if(!e.isTrusted||!cursor.isActive())return;e.stopImmediatePropagation();cursor.wheel(e.deltaY);};
+    for(const type of ['mousedown','mouseup','click','contextmenu','pointerdown','pointerup','auxclick'])document.addEventListener(type,forwardButton as EventListener,true);
+    document.addEventListener('wheel',forwardWheel,{capture:true,passive:true});
+    runCleanups.push(()=>{for(const type of ['mousedown','mouseup','click','contextmenu','pointerdown','pointerup','auxclick'])document.removeEventListener(type,forwardButton as EventListener,true);document.removeEventListener('wheel',forwardWheel,{capture:true});cursor.setActive(false);cursorEl.remove();});
+    const onLockedMove=(e:MouseEvent)=>{if(!e.isTrusted)return;if(pointerLocked()&&cameraCanMove())turnCamera(e.movementX,e.movementY);else if(cursor.isActive())cursor.move(e.movementX,e.movementY);};
     const onLockedRight=(e:MouseEvent)=>{if(pointerLocked()&&e.button===2&&cameraCanMove())toggleTargetLock();};
     const onLockedContext=(e:MouseEvent)=>{if(pointerLocked())e.preventDefault();};
     let hadLock=pointerLocked();
@@ -1289,7 +1304,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           if(hasSignatureVisual(t,false)){const object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(player.position);object.scale.multiplyScalar(2.8);scene.add(object);visuals.push({object,life:.7});}}}
       for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<4.2*Math.sqrt(stats.area))hit(enemy,t,NO_GROWTH,player.position);
       if(t.name===SEXY_JUTSU.name){const charm=SEXY_JUTSU.radius*Math.sqrt(stats.area);for(const enemy of enemyList)if(!enemy.bijuu&&!enemy.totem&&Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<charm){enemy.control='Atordoar';enemy.controlTime=Math.max(enemy.controlTime??0,(enemy.guardian||enemy.megaElite?SEXY_JUTSU.bossStun:SEXY_JUTSU.stun)*stats.duration);}if(!hiddenEffects)for(const [color,size] of [['#ffffff',.35],['#ffd1e8',.65],['#ff8fc7',1]] as const)addRing(player.position,color,charm*size);eventToast='Jutsu Sexy! Inimigos atordoados.';}}
-    const frame=(now:number)=>{choiceArmed();if(pointerLocked()&&!cameraCanMove())document.exitPointerLock();if(debugOpenRef.current)keys.clear();const fpsCap=currentSettings().fpsLimit;if(fpsCap>0&&now-lastFrameAt<1000/fpsCap-1)return;lastFrameAt=now;const perfT0=performance.now();const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;
+    const frame=(now:number)=>{choiceArmed();{const ui=overlayUi();if(pointerLocked()&&!cameraCanMove()&&!ui)document.exitPointerLock();cursor.setActive(pointerLocked()&&ui);}if(debugOpenRef.current)keys.clear();const fpsCap=currentSettings().fpsLimit;if(fpsCap>0&&now-lastFrameAt<1000/fpsCap-1)return;lastFrameAt=now;const perfT0=performance.now();const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;
       if(enabledRef.current&&!pausedRef.current&&!choiceData&&!roulette&&!defeated&&!victory&&!debugState.frozen&&(document.hasFocus()||testPointer||debugOpenRef.current||sealing)){
       refreshStats();invulnerability=Math.max(0,invulnerability-dt);playerSlow=Math.max(0,playerSlow-dt);
       // Temporizadores dos itens.
