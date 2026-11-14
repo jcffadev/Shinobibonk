@@ -21,8 +21,9 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 11 | Invocações deitadas com luz suave | FEITO · E2E pendente |
 | 12 | Progressão dos monstros reinicia a cada zona (+% inimigos por cima) | FEITO e TESTADO |
 | 13 | **NOVO:** mouse preso no jogo como foco principal; sair só com Alt+Tab ou tecla Windows, e aí pausa | FEITO (rodada 58: cursor virtual) e TESTADO por código · E2E pendente · Esc sempre solta (regra do navegador) |
-| 14 | **NOVO:** corrigir o aparecimento e a animação das bijū | PENDENTE — próximo |
+| 14 | **NOVO:** corrigir o aparecimento e a animação das bijū | FEITO (rodada 59) e TESTADO por código · E2E pendente |
 | 15 | Bijū andando de frente e de costas | PENDENTE: código pelo Claude; arte de costas pelo Codex (gerador de imagem) |
+| 15b | **NOVO:** revisar TODOS os personagens que têm folhas para usarem cada estilo de movimento da folha (repouso, andar frente/costas, ataque, pulo, dash) | PENDENTE — depois do 15 |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
 ## Rodada 53 · Estado e próximos passos

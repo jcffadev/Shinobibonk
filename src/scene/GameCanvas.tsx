@@ -3,7 +3,7 @@ import { createGroundMaterial, createSky, groundHeight, trailX, RENDERED_GROUND_
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { activeTuning, dropChance, tuneThreat } from '../game/tuning';
-import { createBossCombat, type BossState } from './bossCombat';
+import { createBossCombat, BIJUU_SIZE, type BossState } from './bossCombat';
 import { makeDropSprite } from './dropSprites';
 import { currentSettings, translateKey, pixelRatioFor } from '../game/settings';
 import { ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, lootScale, eliteHpRamp, megaEliteHp, rollMegaSchedule, type EnemyTier } from '../game/enemyTiers';
@@ -1115,12 +1115,15 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       ebisuDeals=null;irukaLesson=null;irukaScroll=null;npcEvent=null;
     }
     function spawnBijuu(id=rollBijuu().id,saved?:{hp:number;maxHp:number},arrivalOvertime=0){
-      const sprite=makeHero(id);sprite.scale.set(5,5.5,1);
+      const sprite=makeHero(id);sprite.scale.set(BIJUU_SIZE,BIJUU_SIZE,1);
       sprite.position.set(0,terrainHeight(0,-8)+2.5,-8);scene.add(sprite);
       const threat=tuneThreat(difficultyAt(mission,elapsed,zoneDifficulty*(1+.33*plansUsed),arrivalOvertime),tune());
       const maxHp=saved?.maxHp??Math.max(4600,Math.round(guardianVitality(threat.hp,elapsed,ZONE_SECONDS,arrivalOvertime,3)*2.4));
       const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1,defense:guardianDefense(elapsed,true),uid:++megaUid};
-      enemyList.push(beast);bossCombat.attach(beast,maxHp,true);playBijuu();return beast;
+      enemyList.push(beast);bossCombat.attach(beast,maxHp,true);playBijuu();
+      // Rodada 58: poeira de chakra no ponto onde a bijū surge (some no modo H).
+      if(!hiddenEffects)for(const [r,c] of [[2.2,'#d8c6ff'],[3.6,'#9f7bff']] as const)addRing(sprite.position,c,r);
+      return beast;
     }
     function enterPortal(){
       if(!portal)return;

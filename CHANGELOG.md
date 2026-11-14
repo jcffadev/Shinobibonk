@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Rodada 59 · 14/11/2026 — aparecimento e animação das bijū (item 14 da fila)
+
+- **Pedido do usuário:** "Corrigir o aparecimento das bijuus, animação."
+- **Três defeitos corrigidos** (`src/scene/bossCombat.ts`):
+  1. **Troca de arte ao nascer:** a bijū aparecia com a arte antiga (`bijuu-atlas-v1`, outro tamanho) até a folha de movimento carregar e então trocava. Agora já nasce com a folha `bijuu/motion-v1-*`.
+  2. **Restos de outras poses nas bordas:** o atlas gerava mipmaps, que de longe misturam os quadros vizinhos. Agora usa filtro "nearest" sem mipmaps, como as folhas dos shinobis.
+  3. **Esticada:** as células do atlas são quadradas (256×256), mas o sprite era 5 × 5,5. Agora largura = altura (`BIJUU_SIZE` = 5,5).
+- **Entrada nova (só visual):** surge do chão em 1,2 s (`BIJUU_ARRIVAL`: tamanho de 35% a 100% e opacidade de 0 a 1), com dois anéis de chakra no ponto de surgimento; os anéis não aparecem no modo H. Dano e tempo de ataque não mudam.
+- **Limite de arte:** as bijū espelham para o lado do jogador e alternam passos, mas **não têm vista de costas** — falta arte (item 15, Codex).
+- **Testes:** `tests/bijuu.test.mjs` (7 testes com a lógica real do combate no Node); 3 mutações novas. **PASSOU:** tsc, build, 63/63 e mutação 20/20.
+- **PENDENTE DE VALIDAÇÃO E2E:** ver a entrada e a animação na arena da bijū.
+
 ## Rodada 58 · 14/11/2026 — mouse preso na missão (item 13 da fila)
 
 - **Pedido do usuário:** "O jogo deve prender o mouse na tela, ficar como foco principal... apenas se dermos alttab ou tecla Windows, sair, ai o jogo pausa normalmente."

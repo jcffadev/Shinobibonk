@@ -1687,3 +1687,17 @@ Resposta: o código já usava 1.600 (`ENEMY_SCALING.maxEnemies` e `FINAL_SWARM.m
 - **O que solta o mouse:** Alt+Tab, tecla Windows e janela escondida soltam e pausam. Esc sempre solta, por regra do navegador.
 - **PASSOU:** tsc, build, 56/56 e mutação 17/17.
 - **PENDENTE DE VALIDAÇÃO E2E:** ver na prática.
+
+> beleza, para biju você não tem as folhas, mas consegue corrigir para as folhas que tem todos os estilos de movimentação de TODOS os personagens do jogo?
+
+Resposta: sim. Entrou na fila como item 15b: revisar todos os personagens com folha para usarem cada estilo de movimento que a folha oferece.
+
+### Item 14 — aparecimento e animação das bijū (rodada 59)
+
+- **Correções:**
+  1. A bijū nascia com a arte antiga e trocava para a folha nova; agora já nasce com a folha nova.
+  2. Os mipmaps do atlas faziam vazar restos de outras poses nas bordas; agora o atlas não gera mipmaps.
+  3. O sprite ficava 10% esticado; agora a largura é igual à altura.
+- **Entrada:** surge do chão em 1,2 s, só visual.
+- **PASSOU:** 63/63 e mutação 20/20.
+- **PENDENTE:** E2E na tela.

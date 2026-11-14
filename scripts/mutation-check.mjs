@@ -27,6 +27,9 @@ const MUTATIONS = [
   { regra: 'cursor virtual não sai da tela', arquivo: 'src/scene/virtualCursor.ts', de: 'Math.min(Math.max(0, x), Math.max(0, width - 1))', para: 'x' },
   { regra: 'clique só no mesmo elemento', arquivo: 'src/scene/virtualCursor.ts', de: 'pressed && (pressed === target || pressed.contains(target) || target.contains(pressed))', para: 'pressed' },
   { regra: 'mouse continua preso nas telas da missão', arquivo: 'src/scene/GameCanvas.tsx', de: 'if(pointerLocked()&&!cameraCanMove()&&!ui)document.exitPointerLock();', para: 'if(pointerLocked()&&!cameraCanMove())document.exitPointerLock();' },
+  { regra: 'bijū sem mipmaps no atlas', arquivo: 'src/scene/bossCombat.ts', de: 'map.generateMipmaps=false;', para: '' },
+  { regra: 'bijū nasce com a folha nova', arquivo: 'src/scene/bossCombat.ts', de: 'host.sprite.material.map=map;host.sprite.material.transparent=true;', para: 'host.sprite.material.transparent=true;' },
+  { regra: 'bijū sem esticar', arquivo: 'src/scene/bossCombat.ts', de: 'host.sprite.scale.set(BIJUU_SIZE*wide*grow,', para: 'host.sprite.scale.set(5*wide*grow,' },
   { regra: 'cone desenhado = cone do acerto', arquivo: 'src/scene/GameCanvas.tsx', de: 'dot(direction)>CONE_COS', para: 'dot(direction)>.5' },
 ];
 
