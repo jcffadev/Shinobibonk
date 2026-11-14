@@ -36,6 +36,9 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 
 ## Validação
 
+- Cubra as oito direções em caminhada, pulo e dash. Para novas folhas e na revisão do elenco, iguale a cobertura e a quantidade de quadros por ação ao padrão acordado. Preserve as poses próprias de Lee, Guy e Gaara. A pose de dash para cima precisa mostrar as costas. Espelhar uma pose resolve esquerda/direita quando a arte é compatível. Registre separadamente toda vista ou fase que ainda depende de arte.
+- `node --test tests/movimento.test.mjs` lê os PNGs e valida os recortes do controlador para as 114 versões sem navegador. Siga a política central antes de rodar qualquer verificação visual.
+
 - Valide o espelho da pose no dash para a esquerda em todas as famílias. O sprite segue o vetor do dash projetado na base da câmera, inclusive quando o jogador solta A durante a ação.
 - Teste W, A, S, D, WA, WD, SA e SD. Compare distâncias de direções e diagonais pelo mesmo tempo e verifique troca de fileira, espelho e continuidade da passada. Confira o comportamento com yaw girado.
 - Pule parado e em movimento, teste dash com movimento e sem tecla direcional, e troque o foco durante cada ação. Confira retorno ao solo, recarga, ausência de entrada presa e estabilidade da câmera.

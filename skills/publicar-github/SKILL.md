@@ -19,7 +19,7 @@ Use esta skill **sempre que uma tarefa terminar com alterações** em código, c
    - `tsc -b` (`node node_modules/typescript/bin/tsc -b`).
    - `vite build` (`node node_modules/vite/bin/vite.js build`).
    - `node scripts/verify-rules.mjs`.
-   - `node scripts/verify-runtime.mjs` quando a mudança afetar gameplay, HUD ou hub.
+   - Para gameplay, HUD ou hub, siga `docs/development/TESTING_POLICY.md` para validação de fluxo. Claude Code, Qwen e Codex usam testes por código enquanto a execução em navegador estiver suspensa. Registre a validação E2E pendente.
    - Se algo falhar, **não publique**: corrija ou relate a falha ao usuário.
 3. Confira o que vai subir com `git status --short`.
    - Nunca publique `Feedback da versão.txt`: ele tem credenciais em texto puro e está no `.gitignore`.

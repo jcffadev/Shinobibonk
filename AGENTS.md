@@ -25,8 +25,8 @@ Antes de executar testes, consulte:
 Respeite as restrições temporárias de execução de navegadores.
 Não execute testes E2E com navegador sem autorização explícita.
 
-- **Restrição de navegador (14/11/2026):** por decisão do usuário, ela vale **por enquanto só para o Claude Code** (ver `CLAUDE.md`). O Codex, o Qwen e os demais agentes mantêm a rotina atual de testes, inclusive os testes com navegador que já usavam (`verify-runtime`, `verify-motion-atlases`), e seguem o resto da política. Se o usuário estender a restrição, ela passa a valer para todos (§A da política).
-- Use o perfil **EQUILIBRADO** como padrão (`TESTAR_JOGO.bat`): tipos, testes por código com cobertura e build, sem navegador. Rode a suíte de navegador só quando a mudança exigir validação visual/de fluxo.
+- **Restrição de navegador (14/11/2026):** vale para Claude Code, Qwen e Codex. Consulte a §A da política central.
+- Use o perfil **EQUILIBRADO** como padrão (`TESTAR_JOGO.bat`): tipos, testes por código com cobertura e build, sem navegador. Registre a validação visual/de fluxo pendente conforme a política.
 - Toda mudança de regra de jogo vem com teste em `tests/` (ver "Como acrescentar testes" na política). Suba o mínimo em `tests/minimo.json` e, para regra importante, acrescente uma mutação em `scripts/mutation-check.mjs`.
 - Não execute testes pesados sem necessidade, nem duas suítes ao mesmo tempo. Não deixe processos órfãos.
 - Validação pendente não é aprovação: reporte com os status PASSOU / FALHOU / INSTÁVEL / NÃO EXECUTADO / NÃO MENSURÁVEL.

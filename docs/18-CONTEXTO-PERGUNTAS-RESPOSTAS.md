@@ -21,7 +21,9 @@ Survivor/roguelite de ninja (temática Naruto, identidade 100% original) para na
 - Stack: React 19 + TypeScript + Three.js, Vite 8 (`src/`). `game/index.html` é o protótipo Canvas 2D legado.
 - Publicação: commit + push em português para `origin main`; deploy no Netlify **manual** (pasta `dist` ou zip com `index.html` + `assets/` na raiz — drag & drop instável acima de ~50 MB).
 
-## 2. Direção atual (12/11/2026)
+## 2. Direção atual
+
+**14/11/2026.** Prioridade para igualar a cobertura de animações e conferir a seleção da direção real por folha, em todo o elenco. Testes de navegador suspensos para Claude Code, Qwen e Codex até nova autorização explícita. Ver [política central](development/TESTING_POLICY.md).
 
 Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos baseados no anime. Elenco atual e limites de fidelidade em [docs/21](21-ELASTAO-DE-HEROIS.md) e [docs/24](24-AUDITORIA-DE-EFEITOS.md).
 
@@ -167,7 +169,11 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 
 **Rodada 53** — P: implementar Kages, Tier A e extras da obra com missões e caminhada nos dois sentidos, aplicar efeitos às técnicas. R: 40 novas versões, atlas e movimento técnico verificado. A comparação visual jutsu a jutsu continua. Fase 4 concluída e abates no HUD.
 
-## 5. Estado atual do projeto (12/11/2026)
+**14/11/2026 — P:** retomar a passagem do Claude, verificar todas as folhas incluindo WASD e Shift, igualar cobertura por ação e estender a restrição de navegador a Codex e Qwen. **R:** matriz em Node cobre as oito direções das 114 versões. Corrigida a direção da perseguição e unificada a seleção por vetor do jogador. Ainda faltam redesenho da caminhada da expansão, uniformização de pulo/dash, arte traseira e revisão visual dos retratos. A regra de navegador ficou registrada na política central. [Pedido integral](14-CONTEXTO-DO-CHAT.md).
+
+## 5. Estado atual do projeto
+
+**14/11/2026.** São 114 versões jogáveis. Todas usam quatro células de caminhada. Pulo e dash usam, cada um, quatro células em 58 versões, duas em 55 e uma no Asuma. Faltam vistas traseiras de pulo e dash para expansão, Asuma e inimigos comuns, além da folha traseira das nove bijū. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
 
 - **Repositório:** `https://github.com/jcffadev/Shinobibonk.git`, branch `main`, commits das rodadas 35 (plano) e 36 (segmentação de contexto — ver git log). O usuário decidiu (11/11) **excluir e recriar o repositório** para remover do histórico o zip de origem não verificada e os materiais antigos (execução pendente do usuário; nada preparado para o suporte da GitHub). Até a recriação, commit/push segue neste repositório; depois, `git remote set-url origin <novo-url>` + push. `artifacts/sb-swishes-source.zip` fora do índice e no .gitignore — sai com a exclusão do repositório.
 - **Backup de segurança (rodada 36, 12/11):** `backup-ShinobiBonk-2026-11-12.zip` na **raiz do workspace** (fora da pasta do projeto) — 980 MB, **2.882 arquivos** (sem `node_modules`, com `.git`), integridade validada (contagem + hashes de amostra de CHANGELOG.md e AGENTS.md).

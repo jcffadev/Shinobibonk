@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 14/11/2026 — orientação e auditoria das 114 versões
+
+- Caminhada e dash do jogador compartilham a seleção da vista e do espelho. Inimigos comuns e Mega Elites usam o vetor real de perseguição para orientar a pose. Kuri só exibe dash se estiver acompanhando o jogador.
+- A matriz no Node lê os PNGs e verifica os recortes usados pelo controlador. Caminhada com quatro células por vista em 114 versões. Pulo e dash ainda variam entre 1, 2 e 4 células. Expansão (58 versões) e Asuma repetem as células dianteiras no dash traseiro. A arte pendente está na fila.
+- Testes com navegador suspensos para Claude Code, Qwen e Codex conforme a política central. A execução de atlas iniciada antes da mudança passou 1.140 amostras; a revisão visual em partida continua pendente.
+
+- Validação sem navegador concluída: verificação de tipos, build, 83 testes por código e 25 mutações detectadas.
+
 ## Rodada 63 · 14/11/2026 — Zabuza faz os selos antes da Névoa Oculta (item 18) e passagem para o próximo agente
 
 - **Selos do Zabuza:**

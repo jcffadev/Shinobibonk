@@ -221,6 +221,10 @@ Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em com
 **Home:** Configurações e reprodução da trilha. **Configurações → Conta:** Reset de conta. **Preparação:** Táticas de Missão e Arsenal de Missão no topo. Escolha os salvos na tela de mapa. **Na run:** Esc abre a pausa com Configurações, o bolinho restaura HP e E junto ao Mega Elite caído inicia o selamento. Veja [a fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
 
+## Auditoria de movimento · 14/11/2026
+
+As 114 versões jogáveis têm caminhada frontal e traseira ligada ao controlador e espelhamento para a esquerda. A matriz no Node encontrou quatro células de caminhada por vista. Pulo e dash ainda têm contagem desigual. As 58 versões da expansão e Asuma reutilizam o dash dianteiro na direção traseira. Veja o [estado do elenco](21-ELASTAO-DE-HEROIS.md) e a [política de testes](development/TESTING_POLICY.md).
+
 ## Rodada 53 · Estado e próximos passos
 
 - Entregue: expansão para **96 versões de 56 famílias**, missões novas, Akamaru, expansão visual do Chōji, Zabuza na névoa, Fase 4 e contador de abates. Veja [elenco](21-ELASTAO-DE-HEROIS.md) e [efeitos](24-AUDITORIA-DE-EFEITOS.md).

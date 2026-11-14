@@ -5,8 +5,7 @@ import { actionArt, acrobaticsArt, directionalArt, handSealArt } from '../game/d
 import { familyOf } from '../game/heroes';
 
 export function movementFacing(vertical:number,horizontal:number){
-  const diagonal=Math.abs(vertical)>.32&&Math.abs(horizontal)>.32;
-  return {back:vertical>.18,left:horizontal<-.18,diagonal};
+  return { back: vertical > .001, left: horizontal < -.001, diagonal: Math.abs(vertical) > .32 && Math.abs(horizontal) > .32 };
 }
 
 export type FacingMemory = { back: boolean; left: boolean };

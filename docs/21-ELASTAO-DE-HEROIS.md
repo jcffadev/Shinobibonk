@@ -2,6 +2,13 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). Fonte da verdade: `src/game/heroes.ts` (+ `evolution.ts` para formas). O detalhe completo de cada kit (técnicas, passivas, bônus exatos) está no código; este documento é o **índice do elenco** + fila de personagens novos.
 
+## Auditoria das 114 versões · 14/11/2026
+
+- Cinco atlas da seleção registram retratos para as 58 versões da expansão. Conferência de enquadramento na tela de seleção pendente.
+- Caminhada tem quatro células por vista para as 114 versões. As 58 folhas `*-roster-v1.png` precisam alinhar a direção do desenho ao padrão do Naruto Academia.
+- Tanto pulo quanto dash usam quatro células na expansão, duas em 55 versões antigas e uma no Asuma. A expansão e Asuma usam as mesmas células de frente e costas nessas duas ações.
+- Ajudantes e Mega Elites usam o controlador e a folha da versão. Os inimigos comuns têm quatro modelos em lote, cada um com três células de caminhada por vista e uma pose de pulo e dash de frente. Bijū têm folha própria de frente. A arte traseira segue pendente.
+
 ## Rodada 53 · Expansão do elenco
 
 **96 versões jogáveis de 56 famílias.** São 40 versões novas, 32 famílias a mais e Akamaru como companheiro do Kiba sem ocupar vaga de ajudante. As versões por era têm retrato, kit, passiva e missão próprios. O nível durante uma missão evolui os atributos da versão escolhida.

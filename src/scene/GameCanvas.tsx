@@ -14,7 +14,7 @@ import { alliesBonuses, allyBuffText, affinityLevel, affinityFactor, maxAffinity
 import { readSettings } from '../game/settings';
 import { DebugPanel, type DebugApi } from '../ui/DebugPanel';
 import { compactNumber } from '../game/format';
-import { createPlayerMotion, stableFacing } from './playerMotion';
+import { createPlayerMotion, movementFacing, stableFacing } from './playerMotion';
 import { createFallenBody, type FallenBody } from './fallenShinobi';
 import { createPerfMonitor } from './perfMonitor';
 import { mergedTechnique, type TechniqueMerge } from '../game/techniqueMerge';
@@ -896,7 +896,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let aspect=1;
     const projectCamera=()=>{camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();};
     const resize=()=>{const w=container.clientWidth||window.innerWidth,h=container.clientHeight||window.innerHeight;aspect=w/h;projectCamera();renderer.setSize(w,h);};resize();const observer=new ResizeObserver(resize);observer.observe(container);
-    const v1=new THREE.Vector3(),v2=new THREE.Vector3(),dir=new THREE.Vector3(),offset=new THREE.Vector3();
+    const v1=new THREE.Vector3(),v2=new THREE.Vector3(),dir=new THREE.Vector3(),enemyTravel=new THREE.Vector3(),offset=new THREE.Vector3();
     let moveVertical=0,moveHorizontal=0;
     function readMovement(out:THREE.Vector3) {
       v1.set(-Math.sin(yaw),0,-Math.cos(yaw));
@@ -1377,11 +1377,13 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         enemy.sprite.material.color.lerp(enemy.elite?ELITE_TINT:WHITE_TINT,dt*6);if(enemy.burn){enemy.burn-=dt;takeDamage(enemy,stats.damage*.15*dt*(1+ex('statusDamage')),'#ff9b46');if(!enemyList.includes(enemy))continue;}if(enemy.totem)continue;enemy.controlTime=Math.max(0,(enemy.controlTime||0)-dt);enemy.slow=Math.max(0,(enemy.slow||0)-dt);const channeling=isChanneling(weatherEvent,enemy.heroId,elapsed);const stunned=channeling||!enemy.bijuu&&enemy.controlTime>0&&enemy.control!=='Lentidão';const casting=enemy.boss?bossCombat.update(enemy,dt,Boolean(enemy.guardian||enemy.megaElite&&!enemy.account)&&!stunned&&enemy.windup===undefined&&!defeated):false;if(defeated)break;
         const sprite=enemy.sprite,batched=enemyRenderer.isBatched(sprite),motion=enemy.motion;
         dir.set(player.position.x-sprite.position.x,0,player.position.z-sprite.position.z);
-        // Rodada 55: orientação com histerese (memória no próprio sprite) — sem piscar frente/costas nem espelho.
-        const distance=dir.length(),facing=stableFacing(sprite.userData,dir.dot(v1)/Math.max(.01,distance),dir.dot(v2)/Math.max(.01,distance));
-        const {left,back,diagonal}=facing;
+        const distance=dir.length();
         const ranged=enemy.ranged!==undefined,reach=ranged?8:enemy.megaElite?1.6:1;
         const movingEnemy=!stunned&&!casting&&enemy.windup===undefined&&distance>reach&&enemy.speed>0;
+        enemyTravel.copy(dir);
+        if(movingEnemy&&moving&&distance>2.8&&distance<12)enemyTravel.addScaledVector(heading,Math.min(1.4,distance*.14));
+        enemyTravel.normalize();
+        const {left,back,diagonal}=stableFacing(sprite.userData,enemyTravel.dot(v1),enemyTravel.dot(v2));
         const mobilizes=(batched||motion)&&movingEnemy;
         if(mobilizes&&distance>2.8&&distance<7.5&&elapsed>=(enemy.moveAfter??Infinity)){
           enemy.jumping=Math.random()<.5;
@@ -1419,7 +1421,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           }else if(!ranged&&enemy.attackPoint&&Math.hypot(player.position.x-enemy.attackPoint.x,player.position.z-enemy.attackPoint.z)<radius&&invulnerability<=0){
             damagePlayer(10*(enemy.dmgMult??1)*threat.damage,enemy);
           }if(enemy.marker){scene.remove(enemy.marker);enemy.marker.geometry.dispose();(enemy.marker.material as THREE.Material).dispose();enemy.marker=undefined;}enemy.windup=undefined;enemy.hitTimer=(ranged?2.25:.9)/threat.attackRate;}
-        }else{enemy.hitTimer-=dt;if(distance>reach){if(moving&&distance>2.8&&distance<12)dir.addScaledVector(heading,Math.min(1.4,distance*.14));dir.normalize();enemy.sprite.position.addScaledVector(dir,enemy.speed*threat.speed*(enemy.slow?.75:1)*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(!arena&&!enemy.bijuu)solids.resolveBig(enemy.sprite.position);enemy.sprite.position.y=terrainHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
+        }else{enemy.hitTimer-=dt;if(distance>reach){enemy.sprite.position.addScaledVector(enemyTravel,enemy.speed*threat.speed*(enemy.slow?.75:1)*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(!arena&&!enemy.bijuu)solids.resolveBig(enemy.sprite.position);enemy.sprite.position.y=terrainHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
           else if(enemy.hitTimer<=0){enemy.windup=Math.max(.28,.65/Math.sqrt(threat.attackRate));enemy.attackPoint=player.position.clone();/* Aviso no chão desenhado em lote (enemyRenderer); o Mesh é só dado. */const marker=enemyRenderer.marker(ranged?.7:enemy.megaElite?1.7:1);marker.position.set(enemy.attackPoint.x,terrainHeight(enemy.attackPoint.x,enemy.attackPoint.z)+.2,enemy.attackPoint.z);enemy.marker=marker;}
         }
         if(motion){
@@ -1478,7 +1480,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           else kuriTimer=.5; // sem inimigo no alcance: retry leve sem queimar o loop
         }
         const kf=follows||!kuriSprite.userData.facing?stableFacing(kuriSprite.userData,dir.dot(v1),dir.dot(v2)):{...kuriSprite.userData.facing as {back:boolean;left:boolean},diagonal:false};
-        kuriMotion.update(dt,kuriFloor,1,1,follows,kf.back,kf.left,1,jumpHeight,slideTime>0,kf.diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
+        kuriMotion.update(dt,kuriFloor,1,1,follows,kf.back,kf.left,1,jumpHeight,follows&&slideTime>0,kf.diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
       }
       if(!defeated){
       chakra=Math.min(100,chakra+100*dt/55*stats.ultimateRate*tune().ultimateRate);if(autoUlt&&chakra>=100)castUltimate();
@@ -1584,12 +1586,12 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       const sliding=slideTime>0;
       const facing=sliding?dashHeading:heading;
       const walking=moving&&!defeated&&Boolean(moveHorizontal||moveVertical);
-      const diagonalWalk=walking&&Boolean(moveHorizontal&&moveVertical);
-      const viewBack=sliding?facing.dot(v1)>.001:walking?moveVertical>0:facing.dot(v1)>.18;
-      const viewLeft=sliding?facing.dot(v2)<-.001:walking?moveHorizontal<0:facing.dot(v2)<-.18;
+      const {back:viewBack,left:viewLeft,diagonal}=sliding||!walking
+        ? movementFacing(facing.dot(v1),facing.dot(v2))
+        : movementFacing(moveVertical,moveHorizontal);
       const zoomReadability=Math.max(1,76*zoom/(2.35*Math.max(1,renderer.domElement.clientHeight)));
       playerMotion.setBodyScale(zoomReadability*(familyOf(heroId)==='choji'&&activeSetups.some(setup=>setup.name==='Jutsu de Expansão')?1.48:1));
-      playerMotion.update(pausedRef.current||choiceData||roulette||sealing?0:dt,terrainHeight(player.position.x,player.position.z),hp,stats.maxHp,walking,viewBack,viewLeft,level,jumpHeight,sliding,diagonalWalk,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
+      playerMotion.update(pausedRef.current||choiceData||roulette||sealing?0:dt,terrainHeight(player.position.x,player.position.z),hp,stats.maxHp,walking,viewBack,viewLeft,level,jumpHeight,sliding,walking&&diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
       player.material.fog=false;
       playerMotion.fitHealthBar((camera.top-camera.bottom)/camera.zoom/Math.max(1,renderer.domElement.clientHeight));
       if(sandCloud){sandCloud.visible=jumpHeight>0&&!defeated&&keys.has(' ')&&sandGlideLeft>0&&jumpTime<=jumpDuration*.5;sandCloud.position.set(player.position.x,player.position.y-player.scale.y*.5-.18,player.position.z);}

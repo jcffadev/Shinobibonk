@@ -4,12 +4,12 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 ## Fila do usuário · 14/11/2026 (uma tarefa por vez, nesta ordem)
 
-Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e dois novos, o 13 e o 14. Pedido integral em docs/14. "E2E" = ver na tela; o navegador está suspenso para o Claude Code (docs/development/TESTING_POLICY.md §A).
+Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e dois novos, o 13 e o 14. Pedido integral em docs/14. "E2E" = ver na tela; o navegador está suspenso para Claude Code, Qwen e Codex (docs/development/TESTING_POLICY.md §A).
 
 | # | Pedido | Estado |
 |---|---|---|
 | 1 | Continuar de onde parou e atualizar o GitHub | FEITO (rodadas 54–57) |
-| 2 | Caminhada WASD de todos (jogador, ajudantes, monstros, bijū) | FEITO no código e TESTADO por código. E2E pendente. Bijū sem vista de costas → item 15 |
+| 2 | Caminhada WASD e direção do dash | TESTADO por código nas oito direções dos 114 jogáveis. Ajudantes e Mega Elites compartilham o controlador. Comuns usam o vetor de perseguição e têm poses traseiras só na caminhada. Padronização da arte no item 15b. |
 | 3 | Mega Elite caindo, deitado no chão, E para capturar | FEITO · E2E pendente |
 | 4 | Áreas/hitbox das técnicas mais evidentes | FEITO · E2E pendente |
 | 5 | Fontes maiores com a HUD organizada | FEITO (rodada 57) · E2E pendente |
@@ -23,7 +23,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 13 | **NOVO:** mouse preso no jogo como foco principal; sair só com Alt+Tab ou tecla Windows, e aí pausa | FEITO (rodada 58: cursor virtual) e TESTADO por código · E2E pendente · Esc sempre solta (regra do navegador) |
 | 14 | **NOVO:** corrigir o aparecimento e a animação das bijū | FEITO (rodada 59) e TESTADO por código · E2E pendente |
 | 15 | Bijū andando de frente e de costas | Código FEITO e TESTADO (rodada 59b). **Arte PENDENTE (Codex):** docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md |
-| 15b | Revisar TODOS os personagens com folha (padrão único de caminhada) | **Diagnóstico FEITO (rodada 61):** código das 114 versões ligado corretamente. As 58 folhas `*-roster-v1.png` desenham a caminhada reta para a câmera, e não de três quartos como o padrão. **Arte PENDENTE (Codex):** docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md |
+| 15b | Revisar todas as folhas e igualar a cobertura por ação e direção | **Arte PENDENTE.** Caminhada: 58 folhas de expansão para redesenhar com a referência do Naruto Academia. Pulo e dash: contagem desigual nas 114 versões. Para cada ação, 58 usam 4 células, 55 usam 2 e Asuma usa 1. Dash de costas faltando para expansão, Asuma e inimigos comuns. Conferir retratos da expansão na seleção. |
 | 17 | **NOVO:** névoa do Zabuza com quadrados brancos (print) | FEITO (rodada 62) e TESTADO por código · E2E pendente |
 | 18 | **NOVO:** Zabuza fazendo os selos antes da Névoa Oculta | FEITO (rodada 63), TESTADO por código; E2E pendente; arte pendente (Codex) |
 | 19 | **NOVO (tester):** XP parou na zona 2 (nível 582) e barra de XP não sobe em late game | PENDENTE — próximo · passagem completa em docs/26 |

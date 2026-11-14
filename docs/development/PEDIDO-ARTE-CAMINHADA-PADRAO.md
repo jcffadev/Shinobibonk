@@ -15,6 +15,10 @@ O **código** das 114 versões está ligado corretamente: repouso, andar de fren
 
 Resultado em jogo: andando para o lado, os primeiros aparecem virados para onde andam e os novos continuam olhando para a câmera.
 
+## Cobertura a completar · revisão de 14/11/2026
+
+O redesenho das fileiras 1–2 corrige a caminhada da expansão. A revisão de pulo e dash também faz parte da entrega para todo o elenco. Na expansão, as fileiras 5–6 servem às duas vistas. Asuma usa uma célula por ação. Os inimigos comuns só têm caminhada na folha de costas. Ao adicionar as poses ausentes, preserve os recortes de ataque que já existem e registre o layout final em `directionalArt.ts`. A matriz sem navegador está em `tests/movimento.test.mjs`.
+
 ## O que gerar
 
 Para cada folha da tabela abaixo, **redesenhar só as fileiras 1 e 2 (caminhada)**. As fileiras 3 a 6 (ataque de frente, ataque de costas, pulo e dash) ficam exatamente como estão.

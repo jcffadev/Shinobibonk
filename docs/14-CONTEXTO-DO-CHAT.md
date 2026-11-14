@@ -1747,3 +1747,28 @@ Resposta: sim. Entrou na fila como item 15b: revisar todos os personagens com fo
 
 - Item 18 feito: Zabuza faz os selos e a névoa engrossa aos poucos (80/80, mutação 24/24).
 - Fila completa para o próximo agente em docs/26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md.
+
+## 14/11/2026 — Auditoria do elenco e política de testes
+
+### Pedidos do usuário
+
+> Leia toda a documentação do projeto / .md e depois me fale o que você estava fazendo...
+> O Claude fez uma lista ai do que temos para fazer que ele estava fazendo.
+> Bigbrain.
+> Me diga como está o status disso, seria para TODOS os personagens.
+> **Elenco.** Estou preparando retratos em três quartos e testando quais fileiras são usadas com W, S, WD e WA, SD, SA. A revisão inclui jogador, ajudantes, mega-elites e inimigos comuns.
+> Quando estivermos andando combando teclas, ele deve andar na diagonal como era antes, quando apertarmos só uma tecla, W, A, S ou D... ele deve seguir a direção e olhar para onde está pressionado... o mesmo deve ocorrer para o DASH/SHIFT se você não criou folha que tenha o dash para as direções certas, já faça e faça para TODOS.
+>
+> Veja o .md referente a não usar mais o Edge para testes... o Claude já está trabalhando assim... ele disse que criou a restrição para você também.
+>
+> Amplie a restrição para qwen e para você.
+>
+> O importante é revisar todas as folhas de movimentação de TODOS os personagens, todas terem a mesma quantidade de animações para os respectivos personagens e fazer o controle de direção correto para cada folha.
+
+### Resposta
+
+A Rodada 54 do Codex, publicada pelo Claude em `daa5646`, trouxe o elenco a 114 versões e integrou cinco atlas de retratos da expansão. A passagem do Claude estava na Rodada 63, `9c77d43`, igual ao GitHub no início da auditoria. A fila inclui XP da zona 2, colisões, borda de altar, feedback de dano, arte de bijū de costas, selos do Zabuza, revisão das folhas e skill de jutsus em WebGL.
+
+O jogo compartilha a regra de orientação entre caminhada e dash do jogador. Inimigos em perseguição apontam pelo vetor que usam para se deslocar. A matriz lê as folhas reais e verifica as oito direções dos 114 jogáveis. Cada versão tem quatro células na caminhada. Para cada ação de pulo e dash, 58 versões usam quatro células, 55 usam duas e Asuma usa uma. As 58 versões da expansão e Asuma repetem a vista no dash traseiro. Inimigos comuns caminham de costas e ainda precisam da arte traseira de pulo/dash. As nove bijū aguardam folha traseira. A troca de poses no jogo e o enquadramento dos retratos seguem pendentes de validação visual.
+
+O teste de atlas no Edge terminou antes da ampliação da restrição. A partir da decisão registrada nesta rodada, Codex, Qwen e Claude Code usam a rotina de testes por código até nova autorização explícita para navegador.
