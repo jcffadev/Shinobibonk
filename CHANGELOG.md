@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Rodada 62 · 14/11/2026 — névoa do Zabuza sem quadrados brancos (item 17)
+
+- **Pedido do usuário:** "Corrija a névoa do bug do Zabuza…" (print com dezenas de quadrados brancos e cinza e um laranja).
+- **Causa:** os monstros comuns são desenhados em lote (instâncias). O sprite próprio de cada um é criado **sem textura** e só sai da cena quando o lote é sincronizado. Durante a névoa, o jogo deixa de sincronizar os comuns (para escondê-los), então os que **nasciam durante a névoa** ficavam na cena como quadrados brancos. Os cinza estavam mais longe, apagados pela névoa; o laranja era um elite.
+- **Correção na raiz** (`src/scene/enemyRenderer.ts`): o sprite adotado pelo lote nunca é desenhado sozinho (`material.visible = false`). O lote continua lendo posição, escala e cor. Vale para qualquer situação, não só para a névoa.
+- **Testes:** `tests/inimigos.test.mjs` (4 testes com o renderizador real no Node), incluindo o caso "nasce durante a névoa"; mutação nova acusada. **PASSOU:** tsc, build, 73/73 e mutação 22/22.
+- **PENDENTE DE VALIDAÇÃO E2E:** ver a névoa na tela, no mapa da Névoa.
+
 ## Rodada 61 · 14/11/2026 — padrão único de caminhada: diagnóstico das 114 versões (item 15b)
 
 - **Pedido do usuário:** "os primeiros… estão andando com uma animação… e os últimos que criamos estão andando de outro. Preciso de um padrão para TODOS."

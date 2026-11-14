@@ -1733,3 +1733,10 @@ Resposta: sim. Entrou na fila como item 15b: revisar todos os personagens com fo
 - **Causa da diferença:** está no desenho. O padrão (Naruto Academia, Kakashi e os primeiros 56) anda de três quartos, virado para a direita; as 58 folhas novas (`*-roster-v1.png`) desenham a caminhada reta para a câmera.
 - **Correção:** é de arte. O pedido ao Codex está em docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md, com as 58 folhas listadas; o padrão virou regra na skill movimentar-shinobi.
 - **Fila:** os itens do tester e do Zabuza entraram como 17–22 em docs/13.
+
+### Item 17 — névoa do Zabuza (rodada 62)
+
+- **Causa:** os monstros nascidos durante a névoa ficavam na cena como sprites sem textura (quadrados brancos), porque nesse período o lote não é sincronizado.
+- **Correção:** o sprite do lote nunca é desenhado sozinho.
+- **PASSOU:** 73/73 e mutação 22/22.
+- **Nota para Codex/Qwen:** a medição automática das folhas de caminhada é só auxiliar; a decisão é visual (nota adicionada em docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md).

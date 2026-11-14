@@ -31,6 +31,7 @@ const MUTATIONS = [
   { regra: 'bijū nasce com a folha nova', arquivo: 'src/scene/bossCombat.ts', de: 'host.sprite.material.map=map;host.sprite.material.transparent=true;', para: 'host.sprite.material.transparent=true;' },
   { regra: 'bijū sem esticar', arquivo: 'src/scene/bossCombat.ts', de: 'host.sprite.scale.set(BIJUU_SIZE*wide*grow,', para: 'host.sprite.scale.set(5*wide*grow,' },
   { regra: 'bijū de costas com histerese', arquivo: 'src/game/bijuu.ts', de: 'if (away > .26) return true;', para: 'if (away > 0) return true;' },
+  { regra: 'sem quadrados brancos de inimigos (névoa do Zabuza)', arquivo: 'src/scene/enemyRenderer.ts', de: ' sprite.material.visible = false; },', para: ' },' },
   { regra: 'cone desenhado = cone do acerto', arquivo: 'src/scene/GameCanvas.tsx', de: 'dot(direction)>CONE_COS', para: 'dot(direction)>.5' },
 ];
 

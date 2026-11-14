@@ -198,7 +198,10 @@ export function createEnemyRenderer(scene: THREE.Scene) {
 
   return {
     /** Marca um sprite como inimigo em lote (fica fora da cena; a posição/escala/cor viram instâncias). */
-    adopt(sprite: THREE.Sprite, row: number) { sprite.userData.atlas = row; sprite.userData.frame = 1; },
+    // Rodada 62 (bug da névoa do Zabuza: dezenas de quadrados brancos): o sprite adotado não tem textura própria — quem
+    // desenha é o lote instanciado. Se ele ficasse na cena (ex.: inimigo nascido durante a névoa, quando o lote não é
+    // sincronizado), aparecia como um quadrado branco. Agora ele nunca é desenhado sozinho; o lote lê posição, escala e cor.
+    adopt(sprite: THREE.Sprite, row: number) { sprite.userData.atlas = row; sprite.userData.frame = 1; sprite.material.visible = false; },
     isBatched(sprite: THREE.Sprite) { return sprite.userData.atlas !== undefined; },
     /** Contorno sólido do elite (cópia da silhueta 14%×8% maior, desenhada atrás). */
     outline(sprite: THREE.Sprite, color: string) { sprite.userData.outline = new THREE.Color(color); },

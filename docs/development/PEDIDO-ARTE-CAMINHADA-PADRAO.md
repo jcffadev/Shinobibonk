@@ -96,3 +96,9 @@ Para cada folha da tabela abaixo, **redesenhar só as fileiras 1 e 2 (caminhada)
 3. `node scripts/audit-walk-sheets.mjs` lista a assimetria e o lado da silhueta de cada folha de caminhada; use para comparar antes e depois. É uma medida auxiliar: confira também olhando a folha.
 4. Em jogo (o Codex pode usar o navegador; o Claude Code está sem navegador), andar com W, A, S, D e diagonais, com a câmera em 4 ângulos, ao lado de um personagem do grupo padrão (ex.: Kakashi). Os dois devem virar do mesmo jeito.
 5. Registrar com a skill `documentar-projeto`.
+
+## Nota para quem continuar (Codex, Qwen ou outro agente)
+
+- A medição de `scripts/audit-walk-sheets.mjs` **não separa sozinha** os dois grupos: o movimento das pernas também deixa a silhueta assimétrica (Kisame, reto para a câmera, mediu perto do Kakashi, que está de três quartos). Use o script para comparar antes e depois de cada folha, mas a decisão é **visual**: abrir o PNG e comparar com `naruto-academia-walk-v1.png`.
+- Conferência visual já feita pelo Claude Code em 14/11: Kisame, Hidan e Hiruzen (retos, fora do padrão); Kakashi e Naruto Academia (padrão). As demais 55 folhas `*-roster-v1.png` seguem o mesmo gerador da rodada 53/54 e devem ter o mesmo problema. Confirme ao abrir cada uma.
+- Ordem sugerida: comece pelos personagens mais jogados (Kages e Akatsuki), um PNG por vez, testando em jogo ao lado do Kakashi.

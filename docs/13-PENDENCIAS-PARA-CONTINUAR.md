@@ -24,8 +24,8 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 14 | **NOVO:** corrigir o aparecimento e a animação das bijū | FEITO (rodada 59) e TESTADO por código · E2E pendente |
 | 15 | Bijū andando de frente e de costas | Código FEITO e TESTADO (rodada 59b). **Arte PENDENTE (Codex):** docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md |
 | 15b | Revisar TODOS os personagens com folha (padrão único de caminhada) | **Diagnóstico FEITO (rodada 61):** código das 114 versões ligado corretamente. As 58 folhas `*-roster-v1.png` desenham a caminhada reta para a câmera, e não de três quartos como o padrão. **Arte PENDENTE (Codex):** docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md |
-| 17 | **NOVO:** névoa do Zabuza com quadrados brancos (print) | PENDENTE — próximo |
-| 18 | **NOVO:** Zabuza fazendo os selos (cena de ação) antes de lançar a Névoa Oculta | PENDENTE |
+| 17 | **NOVO:** névoa do Zabuza com quadrados brancos (print) | FEITO (rodada 62) e TESTADO por código · E2E pendente |
+| 18 | **NOVO:** Zabuza fazendo os selos (cena de ação) antes de lançar a Névoa Oculta | PENDENTE — próximo |
 | 19 | **NOVO (tester):** XP parou na zona 2 (nível 582) e barra de XP não sobe em late game | PENDENTE |
 | 20 | **NOVO (tester):** paredes invisíveis / colisão travando onde não há nada | PENDENTE |
 | 21 | **NOVO (tester):** borda do círculo do altar mais grossa (sem aumentar o raio) | PENDENTE |
