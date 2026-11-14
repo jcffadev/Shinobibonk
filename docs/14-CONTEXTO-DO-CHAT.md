@@ -1654,3 +1654,7 @@ Resposta: decisão registrada na política (§A), em docs/13 e docs/18. Codex e 
 - **Teste novo:** `tests/interface.test.mjs` (piso de 10 px e texto sem corte).
 - **PASSOU:** tsc, build, 45/45 e mutação 14/14.
 - **PENDENTE DE VALIDAÇÃO E2E:** conferir na tela a organização da HUD.
+
+> Lembrando que nosso cap máximo de monstros é 1600, eu errei perdão.
+
+Resposta: o código já usava 1.600 (`ENEMY_SCALING.maxEnemies` e `FINAL_SWARM.maxEnemies`). Os documentos que falavam em 1.500 foram corrigidos: AGENTS.md (invariante), TESTING_POLICY.md (§C e propostas), docs/13 e docs/18. Novo teste trava o teto em 1.600 em todas as dificuldades, com e sem Final Swarm e com +% de inimigos (46 testes).

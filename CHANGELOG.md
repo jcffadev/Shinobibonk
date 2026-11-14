@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Correção do teto de monstros · 14/11/2026
+
+- **Teto de monstros vivos = 1.600** (correção do usuário: "nosso cap máximo de monstros é 1600"). O código já usava 1.600; AGENTS.md, TESTING_POLICY.md, docs/13 e docs/18 diziam 1.500 e foram corrigidos. Novo teste trava o teto em todas as dificuldades, no Final Swarm e com +% de inimigos (46 testes, PASSOU).
+
 ## Rodada 57 · 14/11/2026 — fontes da HUD maiores
 
 - **Pedido do usuário:** "Aumentar um pouco as fontes, mas manter o hud organizado... tem algumas fontes muito pequenas, melhorar isso."

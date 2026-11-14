@@ -37,7 +37,7 @@ Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos ba
 5. Mapas com o mesmo padrão de chão/construções (atlas do primeiro mapa) — Areia/Pedra/Névoa já integrados, auditoria visual pendente.
 6. Run completa de 3 zonas → bijū → saída → ranking; FPS em GPU real.
 
-**Metas de longo prazo:** 1.500–1.600 inimigos simultâneos (Final Swarm até 8.000); meta de 5 milhões de abates; fluidez alta no hardware do usuário; depois, cadastro com servidor e hospedagem da alpha (hoje o perfil é local, por navegador).
+**Metas de longo prazo:** teto de **1.600 inimigos vivos** (normal e Final Swarm; correção do usuário em 14/11: "nosso cap máximo de monstros é 1600"; o Final Swarm já tinha descido de 8.000 para 1.600 na rodada 48); meta de 5 milhões de abates; fluidez alta no hardware do usuário; depois, cadastro com servidor e hospedagem da alpha (hoje o perfil é local, por navegador).
 
 **Atualização da rodada 52:** a cópia em `C:\Shinobibonk projeto - Copia` é a pasta principal. A Home tem trilha ao carregar, o Arsenal e as Táticas são selecionáveis na preparação e o Mega Elite caído espera E no campo.
 

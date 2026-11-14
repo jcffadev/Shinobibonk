@@ -86,6 +86,17 @@ test('+% de inimigos multiplica spawn e vivos por cima da escala, respeitando o 
   assert.ok(zoneThreat('Genin', 240, 1, 0, -5).spawnPerSecond > 0, 'redução forte de inimigos nunca zera o spawn (mínimo ×0,2)');
 });
 
+test('teto de monstros vivos é 1.600, no jogo normal e no Final Swarm (decisão do usuário, 14/11)', () => {
+  assert.equal(ENEMY_SCALING.maxEnemies, 1600);
+  assert.equal(FINAL_SWARM.maxEnemies, 1600);
+  for (const mission of Object.keys(MISSION_TIER)) for (const [seconds, overtime] of [[599, 0], [600, 300], [600, 3600]]) {
+    for (const bonus of [0, 1, 10]) {
+      const cap = zoneThreat(mission, seconds, 1.38, overtime, bonus).cap;
+      assert.ok(cap <= 1600, `${mission} ${seconds}s +${overtime}s bônus ${bonus}: ${cap}`);
+    }
+  }
+});
+
 test('maldição da zona: planos do Shikamaru (+33% cada) e bônus de ameaça (mínimo ×0,2)', () => {
   assert.ok(close(zoneCurse(1, 0, 0), 1));
   assert.ok(close(zoneCurse(1.18, 2, 0), 1.18 * 1.66));

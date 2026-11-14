@@ -58,7 +58,7 @@ Princípios:
 
 Reproduzíveis por seed, rodando no núcleo de simulação headless quando ele existir. Ainda **não implementados** (dependem da camada 3):
 
-- **Monstros:** 1.500 vivos ao mesmo tempo; movimentação e IA em alta densidade; ataques simultâneos.
+- **Monstros:** 1.600 vivos ao mesmo tempo (teto do jogo, `ENEMY_SCALING.maxEnemies` = `FINAL_SWARM.maxEnemies`; correção do usuário em 14/11); movimentação e IA em alta densidade; ataques simultâneos.
 - **Combate:** projéteis e habilidades em área; efeitos de status simultâneos; críticos e multiplicadores de dano.
 - **Buffs:** temporários e permanentes.
 - **Abates e recompensas:** abates simultâneos; drops e coleta de XP; reposição de inimigos.
@@ -130,7 +130,7 @@ Registrar sempre: versão do código (commit), cenário, seed, configuração/pe
 
 ## Propostas (aguardando decisão do usuário)
 
-1. **Núcleo de simulação headless** (camadas 3 e 4): extrair de `GameCanvas.tsx` um módulo de simulação sem Three.js/DOM (inimigos, spawn, dano, status, drops, recompensas, selamento) para rodar 1.500 monstros e medir p95/p99 e memória. É uma refatoração grande e arriscada, porque o `GameCanvas` tem ~1.800 linhas com simulação e renderização misturadas. Sugestão: fazer em etapas, uma regra por vez, como já foi feito com altar, ímã e ameaça por zona.
+1. **Núcleo de simulação headless** (camadas 3 e 4): extrair de `GameCanvas.tsx` um módulo de simulação sem Three.js/DOM (inimigos, spawn, dano, status, drops, recompensas, selamento) para rodar 1.600 monstros e medir p95/p99 e memória. É uma refatoração grande e arriscada, porque o `GameCanvas` tem ~1.800 linhas com simulação e renderização misturadas. Sugestão: fazer em etapas, uma regra por vez, como já foi feito com altar, ímã e ameaça por zona.
 2. **Invariantes de recompensa e atributos** já testáveis hoje sem refatoração grande: recálculo de `calculateStats` ao remover item/pílula, teto de suportes, `lootScale`/`megaEliteHp` por tier.
 3. **Baseline de resultados**: salvar o relatório do `run-tests` (contagem, cobertura, tempo) em `artifacts/` e comparar com a execução anterior para acusar regressão de tempo ou cobertura.
 4. **ESLint** com regras mínimas (`no-unused-vars`, `no-undef`) para análise estática.
