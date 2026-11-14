@@ -1701,3 +1701,8 @@ Resposta: sim. Entrou na fila como item 15b: revisar todos os personagens com fo
 - **Entrada:** surge do chão em 1,2 s, só visual.
 - **PASSOU:** 63/63 e mutação 20/20.
 - **PENDENTE:** E2E na tela.
+
+### Item 15 — bijū de costas (rodada 59b)
+
+- **Código:** pronto e testado; a bijū troca para a folha de costas ao andar para dentro da tela.
+- **Arte:** o Codex precisa gerar 3 folhas de costas (pedido em docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md). Enquanto `BIJUU_BACK_SHEETS` estiver vazio, nada muda na tela.

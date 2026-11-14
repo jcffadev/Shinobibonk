@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Rodada 59b · 14/11/2026 — bijū de frente e de costas: código pronto, arte pendente (item 15)
+
+- **Código pronto:** `src/scene/bossCombat.ts` troca para a folha de **costas** quando a bijū anda para dentro da tela, com a mesma histerese do jogador (vira acima de 0,26, volta abaixo de 0,1; parada mantém a vista). Usa a direção da câmera (`viewForward` = v1).
+- **Sem 404:** a folha de costas só é carregada se estiver registrada em `BIJUU_BACK_SHEETS` (`src/game/bijuu.ts`), que hoje está **vazia**. Enquanto isso, nada muda na tela.
+- **Arte pendente (Codex):** pedido detalhado em [docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md](docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md) — 3 páginas `motion-costas-v1-1..3.png` no mesmo layout 1024×768 (4×3 células de 256×256) e uma linha de registro.
+- **Testes:** 4 testes novos com folha falsa (afastar → costas, parar → mantém, voltar → frente, sem arte → sem carregar); 1 mutação nova. **PASSOU:** tsc, build, 67/67 e mutação 21/21.
+
 ## Rodada 59 · 14/11/2026 — aparecimento e animação das bijū (item 14 da fila)
 
 - **Pedido do usuário:** "Corrigir o aparecimento das bijuus, animação."

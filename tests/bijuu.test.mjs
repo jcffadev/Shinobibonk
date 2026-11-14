@@ -9,12 +9,12 @@ import { load, installCanvasStub, memoryStorage } from './helpers/load.mjs';
 installCanvasStub();
 globalThis.localStorage ??= memoryStorage();
 const B = await load('/src/scene/bossCombat.ts');
-const { BIJUU } = await load('/src/game/bijuu.ts');
+const { BIJUU, BIJUU_BACK_SHEETS, bijuuFacesAway, bijuuSheetCell } = await load('/src/game/bijuu.ts');
 
-function setup(id = BIJUU[0].id) {
+function setup(id = BIJUU[0].id, extra = {}) {
   const scene = new THREE.Scene(), player = new THREE.Object3D();
   player.position.set(-6, 0, 0);
-  const combat = B.createBossCombat({ scene, player, height: () => 0, zone: () => 3, hidden: () => false, hitPlayer: () => {}, viewRight: () => new THREE.Vector3(1, 0, 0) });
+  const combat = B.createBossCombat({ scene, player, height: () => 0, zone: () => 3, hidden: () => false, hitPlayer: () => {}, viewRight: () => new THREE.Vector3(1, 0, 0), viewForward: () => new THREE.Vector3(0, 0, -1), ...extra });
   const oldArt = new THREE.Texture();
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: oldArt }));
   sprite.scale.set(B.BIJUU_SIZE, B.BIJUU_SIZE, 1);
@@ -83,4 +83,40 @@ test('espelha pelo lado da tela onde está o jogador, sem piscar perto do centro
   host.sprite.position.set(-6.3, 0, 0); // jogador quase alinhado (0,3 m)
   combat.update(host, 1 / 30, false);
   assert.equal(host.boss.flip, true, 'dentro da folga de 0,6 m não troca');
+});
+
+test('vista de costas: regra com histerese (igual ao jogador)', () => {
+  assert.equal(bijuuFacesAway(false, .9), true, 'andando para dentro da tela → costas');
+  assert.equal(bijuuFacesAway(true, -.9), false, 'vindo para a câmera → frente');
+  assert.equal(bijuuFacesAway(true, .2), true, 'zona intermediária mantém');
+  assert.equal(bijuuFacesAway(false, .2), false, 'zona intermediária mantém');
+  assert.equal(bijuuFacesAway(true, undefined), true, 'parada mantém a última vista');
+  assert.deepEqual(bijuuSheetCell(4), { page: 1, row: 1 });
+});
+
+test('sem arte de costas registrada: nenhuma folha extra é carregada (sem 404)', () => {
+  assert.ok(Array.isArray(BIJUU_BACK_SHEETS));
+  const { host } = setup(BIJUU[0].id, { backSheets: [] });
+  assert.equal(host.boss.backMap, undefined);
+});
+
+test('com arte de costas: anda para dentro da tela → folha de costas; volta → frente', () => {
+  const { combat, host } = setup(BIJUU[4].id, { backSheets: [undefined, '/assets/bijuu/costas-2.png'] });
+  assert.ok(host.boss.backMap, 'folha de costas carregada para a página certa');
+  assert.ok(Math.abs(host.boss.backMap.offset.y - (2 - 1) / 3) < 1e-9, 'mesma linha da folha de frente');
+  fakeImage(host.boss.motionMap); fakeImage(host.boss.backMap);
+  for (let t = 0; t < 1.5; t += 1 / 30) combat.update(host, 1 / 30, false); // termina a entrada parada
+  for (let i = 0; i < 20; i++) { host.sprite.position.z -= .1; combat.update(host, 1 / 30, false); }
+  assert.equal(host.sprite.material.map, host.boss.backMap, 'de costas ao se afastar da câmera');
+  for (let i = 0; i < 20; i++) combat.update(host, 1 / 30, false);
+  assert.equal(host.sprite.material.map, host.boss.backMap, 'parada mantém as costas');
+  for (let i = 0; i < 20; i++) { host.sprite.position.z += .1; combat.update(host, 1 / 30, false); }
+  assert.equal(host.sprite.material.map, host.boss.motionMap, 'de frente ao vir para a câmera');
+});
+
+test('com arte registrada mas ainda não carregada: usa a folha de frente', () => {
+  const { combat, host } = setup(BIJUU[0].id, { backSheets: ['/assets/bijuu/costas-1.png'] });
+  fakeImage(host.boss.motionMap);
+  for (let i = 0; i < 40; i++) { host.sprite.position.z -= .1; combat.update(host, 1 / 30, false); }
+  assert.equal(host.sprite.material.map, host.boss.motionMap);
 });

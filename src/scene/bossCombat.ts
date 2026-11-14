@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { compactNumber } from '../game/format';
-import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, beastPhase } from '../game/bijuu';
+import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, BIJUU_BACK_SHEETS, beastPhase, bijuuFacesAway, bijuuSheetCell } from '../game/bijuu';
 import { HERO_BY_ID, ultimateBase, type Technique } from '../game/heroes';
 import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techniqueEffects';
 
@@ -29,7 +29,9 @@ export type BossState = { name: string; maxHp: number; guardian: boolean; cooldo
   /** Rodada 55: espelho com histerese, posição anterior (andar = deslocamento real) e quadro exibido (testes). */
   flip?:boolean; lastX?:number; lastZ?:number; walkBlend?:number; pose?:number;
   /** Rodada 58: segundos restantes da entrada (a bijū surge do chão; só visual). */
-  arrival?:number };
+  arrival?:number;
+  /** Rodada 59: folha de costas (quando existir) e a vista atual (true = de costas, andando para longe da câmera). */
+  backMap?:THREE.Texture; away?:boolean };
 /**
  * Bijū (Rodada 58 — pedido: "Corrigir o aparecimento das bijuus, animação"):
  * - tamanho na tela: as células dos atlas `bijuu/motion-v1-*` são quadradas (256×256), então a largura = altura
@@ -51,6 +53,10 @@ export type BossContext = {
   hitPlayer: (base: number, slowSeconds: number) => void;
   /** Rodada 55: direita da tela projetada no chão (v2 da câmera). Espelha a bijū pela câmera e não pelo eixo X do mundo. */
   viewRight?: () => THREE.Vector3;
+  /** Rodada 59: direção "para dentro da tela" no chão (v1 da câmera). Escolhe a folha de frente ou de costas. */
+  viewForward?: () => THREE.Vector3;
+  /** Folhas de costas por página (padrão: BIJUU_BACK_SHEETS). Testes injetam a sua. */
+  backSheets?: (string | undefined)[];
 };
 
 const markerMaterial = () => new THREE.MeshBasicMaterial({ color: '#ff2f4f', transparent: true, opacity: .22, side: THREE.DoubleSide, depthWrite: false });
@@ -103,6 +109,9 @@ export function createBossCombat(ctx: BossContext) {
       // Já nasce com a folha de movimento (antes mostrava a arte antiga até a folha carregar e trocava de tamanho na tela).
       host.sprite.material.map=map;host.sprite.material.transparent=true;host.sprite.material.opacity=0;host.sprite.material.needsUpdate=true;
       host.boss.arrival=BIJUU_ARRIVAL;
+      // Folha de costas só se o arquivo estiver registrado (nada de 404 enquanto a arte não existe).
+      const backPath=(ctx.backSheets??BIJUU_BACK_SHEETS)[bijuuSheetCell(index).page];
+      if(backPath){const back=new THREE.TextureLoader().load(backPath);back.colorSpace=THREE.SRGBColorSpace;back.magFilter=THREE.NearestFilter;back.minFilter=THREE.NearestFilter;back.generateMipmaps=false;back.repeat.set(.25,1/3);back.offset.set(0,(2-index%3)/3);host.boss.backMap=back;}
     }
     drawBar(host.boss, 1);
   }
@@ -210,9 +219,13 @@ export function createBossCombat(ctx: BossContext) {
       // Rodada 55 — anda só quando DE FATO se desloca (antes: 'pode agir' = andando, então a bijū colada no jogador
       // ou presa no relevo ficava trocando os quadros de passo parada). Velocidade medida pela posição do quadro anterior.
       const px=host.sprite.position.x,pz=host.sprite.position.z;
-      const speed=state.lastX===undefined||dt<=0?0:Math.hypot(px-state.lastX,pz-(state.lastZ??pz))/dt;
+      const stepX=state.lastX===undefined?0:px-state.lastX,stepZ=state.lastZ===undefined?0:pz-state.lastZ,stepLength=Math.hypot(stepX,stepZ);
+      const speed=dt<=0?0:stepLength/dt;
       state.lastX=px;state.lastZ=pz;
       const movingNow=!state.cast&&speed>.25;
+      // Rodada 59: de costas quando anda para longe da câmera (com histerese; parada mantém a vista).
+      const fwd=ctx.viewForward?.();
+      state.away=bijuuFacesAway(state.away??false,movingNow&&fwd&&stepLength>1e-6?(stepX*fwd.x+stepZ*fwd.z)/stepLength:undefined);
       state.walkBlend=(state.walkBlend??0)+((movingNow?1:0)-(state.walkBlend??0))*(1-Math.exp(-dt*10));
       const moving=state.walkBlend>.5;
       state.motionTime+=dt*(moving?5:2.5);
@@ -221,7 +234,8 @@ export function createBossCombat(ctx: BossContext) {
       state.recoil=Math.max(0,state.recoil-dt*3.4);
       const isFlying=host.heroId==='chomei';
       const lift=isFlying?.28+Math.abs(step)*.24:moving?Math.abs(step)*.14:0;
-      if(state.motionMap?.image){
+      const sheet=state.away&&state.backMap?.image?state.backMap:state.motionMap;
+      if(sheet?.image){
         // Parada: quadro 0 (a respiração vem da escala); andando: alterna os dois quadros de passo da folha.
         const pose=state.recoil>0?3:state.cast?2:moving?Number(step<0):0;
         state.pose=pose;
@@ -231,9 +245,9 @@ export function createBossCombat(ctx: BossContext) {
         const side=right?(ctx.player.position.x-px)*right.x+(ctx.player.position.z-pz)*right.z:host.sprite.position.x-ctx.player.position.x<0?1:-1;
         if(state.flip===undefined)state.flip=side<0;else if(side<-.6)state.flip=true;else if(side>.6)state.flip=false;
         const flip=state.flip;
-        state.motionMap.repeat.x=flip?-.25:.25;
-        state.motionMap.offset.set((pose+Number(flip))/4,(2-(state.motionRow??0))/3);
-        host.sprite.material.map=state.motionMap;
+        sheet.repeat.x=flip?-.25:.25;
+        sheet.offset.set((pose+Number(flip))/4,(2-(state.motionRow??0))/3);
+        host.sprite.material.map=sheet;
       }
       const wide=1+windup*.10+state.recoil*.13;
       const tall=1+(moving?step*.055:step*.018)-windup*.08+state.recoil*.08;
@@ -261,7 +275,7 @@ export function createBossCombat(ctx: BossContext) {
 
   function dispose(host: BossHost) {
     const state = host.boss; if (!state) return;
-    clearCast(state);state.motionMap?.dispose();
+    clearCast(state);state.motionMap?.dispose();state.backMap?.dispose();
     ctx.scene.remove(state.bar); state.bar.material.map?.dispose(); state.bar.material.dispose();
     host.boss = undefined;
   }
