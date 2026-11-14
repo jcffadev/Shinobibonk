@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Rodada 61 · 14/11/2026 — padrão único de caminhada: diagnóstico das 114 versões (item 15b)
+
+- **Pedido do usuário:** "os primeiros… estão andando com uma animação… e os últimos que criamos estão andando de outro. Preciso de um padrão para TODOS."
+- **CONFIRMADO:**
+  - O código está certo: as 114 versões têm andar de frente e de costas, ataque, pulo e dash ligados. Naruto Academia e Asuma usam atlas próprios.
+  - A diferença está no **desenho**. O padrão (Naruto Academia, Kakashi e os primeiros 56) desenha a caminhada **de três quartos, virada para a direita**.
+  - As **58 folhas `*-roster-v1.png`** das rodadas 53–54 desenham a caminhada **reta para a câmera** e reta de costas. Por isso, andando para o lado, os novos não viram para onde andam.
+- **Arte pendente (Codex):** redesenhar só as fileiras 1–2 dessas 58 folhas no padrão. Pedido com a lista completa e as referências em [docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md](docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md). Não precisa mexer em código: basta substituir o PNG.
+- **Novo `scripts/audit-walk-sheets.mjs`** (sem navegador): lê os PNG e mede a silhueta das fileiras de caminhada de todas as versões. É uma medida auxiliar; a confirmação final é olhando a folha.
+- **Skill `movimentar-shinobi`:** padrão único de caminhada registrado como regra.
+- **Fila:** entram os itens novos do usuário (névoa do Zabuza e selos) e do tester (XP, colisão, borda do altar, feedback de dano).
+
 ## Rodada 60 · 14/11/2026 — botão "Arquivo Shinobi", tela branca e varredura do material de referência
 
 - **Botão branco no topo do hub** (usuário: "o que é o botão branco ali? simplesmente não consigo ver, mudar a cor e deixar parecido com os outros"). Era o **Arquivo Shinobi**: sem fundo próprio, ficava com o fundo branco do navegador e o texto branco do `.button`. Agora usa a mesma placa de madeira do perfil ao lado (`src/ninja-theme.css`). Novo teste: os botões do topo precisam ter fundo próprio.

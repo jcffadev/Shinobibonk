@@ -1718,3 +1718,18 @@ Resposta: sim. Entrou na fila como item 15b: revisar todos os personagens com fo
 - **ABRIR_JOGO:** o servidor estava rodando (o Vite atualizava arquivos); a aba branca era da página aberta durante a edição do código. O print seguinte já mostra o hub. Os módulos carregam sem erro. Se acontecer de novo: Ctrl+F5.
 - **Botão branco:** era o "Arquivo Shinobi" sem fundo próprio; agora usa a placa de madeira, igual ao perfil ao lado.
 - **Material de referência:** nada de vídeo, print ou executável no projeto. O protótipo antigo v03 (zip rastreado) citava o nome numa linha; foi movido intacto para a pasta arquivada externa e removido do repositório. O teste de zero rastro agora também lê o conteúdo dos .zip.
+
+## Rodada 61 · 14/11/2026 — padrão de caminhada, feedback do tester e névoa do Zabuza
+
+> Cara eu ainda preciso que você revise TODAS as folhas... Verifique se temos o caminhar para TODOS os lados, porque os primeiros sei la 26 shinobis estão andando com uma animação... e os ultimos que criamos estão andando de outro. Preciso de um padrão para TODOS, respeitando a folha de movimentação. Revise isso e conserte, seja la onde estiver o erro, pelo amor de cristo.
+>
+> Feedback de um tester... investigue e arrume os problemas. (print do WhatsApp: XP parou na zona 2 no nível 582 com Rock Lee e voltou na zona 3; paredes invisíveis/colisão; câmera bem melhor; XP do late game não sobe unidade por unidade; engrossar a borda do círculo do altar sem aumentar; falta peso ao levar dano (feedback visual ou sonoro); a névoa não apareceu de novo)
+>
+> Corrija a nevoa do bug do zabuza... quero um action time do Zabuza castando os selos, pegue do anime dele castando para fazer a névoa oculta (print: névoa com dezenas de quadrados brancos/cinza e um laranja)
+
+### Resposta (item 15b)
+
+- **Código:** as 114 versões estão ligadas corretamente.
+- **Causa da diferença:** está no desenho. O padrão (Naruto Academia, Kakashi e os primeiros 56) anda de três quartos, virado para a direita; as 58 folhas novas (`*-roster-v1.png`) desenham a caminhada reta para a câmera.
+- **Correção:** é de arte. O pedido ao Codex está em docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md, com as 58 folhas listadas; o padrão virou regra na skill movimentar-shinobi.
+- **Fila:** os itens do tester e do Zabuza entraram como 17–22 em docs/13.
