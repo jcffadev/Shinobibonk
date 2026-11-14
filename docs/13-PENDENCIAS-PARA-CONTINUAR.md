@@ -2,6 +2,29 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Fila do usuário · 14/11/2026 (uma tarefa por vez, nesta ordem)
+
+Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e dois novos, o 13 e o 14. Pedido integral em docs/14. "E2E" = ver na tela; o navegador está suspenso para o Claude Code (docs/development/TESTING_POLICY.md §A).
+
+| # | Pedido | Estado |
+|---|---|---|
+| 1 | Continuar de onde parou e atualizar o GitHub | FEITO (rodadas 54–57) |
+| 2 | Caminhada WASD de todos (jogador, ajudantes, monstros, bijū) | FEITO no código e TESTADO por código. E2E pendente. Bijū sem vista de costas → item 15 |
+| 3 | Mega Elite caindo, deitado no chão, E para capturar | FEITO · E2E pendente |
+| 4 | Áreas/hitbox das técnicas mais evidentes | FEITO · E2E pendente |
+| 5 | Fontes maiores com a HUD organizada | FEITO (rodada 57) · E2E pendente |
+| 6 | Música padrão em ~10% | FEITO e TESTADO |
+| 7 | Ímã do morro de bolinhos no mapa inteiro | FEITO e TESTADO |
+| 8 | Deitar mais a câmera | FEITO · E2E pendente |
+| 9 | Scale de HP menor (Nv. 415 com 1.613 de HP) | FEITO e TESTADO; curva PROPOSTA para o usuário testar |
+| 10 | Projétil extra por raridade nas recompensas | FEITO e TESTADO. Decisões abertas: golpe extra dos itens de +1 projétil; chance da Konan/Tenten |
+| 11 | Invocações deitadas com luz suave | FEITO · E2E pendente |
+| 12 | Progressão dos monstros reinicia a cada zona (+% inimigos por cima) | FEITO e TESTADO |
+| 13 | **NOVO:** mouse preso no jogo como foco principal; sair só com Alt+Tab ou tecla Windows, e aí pausa | PENDENTE — próximo |
+| 14 | **NOVO:** corrigir o aparecimento e a animação das bijū | PENDENTE |
+| 15 | Bijū andando de frente e de costas | PENDENTE: código pelo Claude; arte de costas pelo Codex (gerador de imagem) |
+| 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
+
 ## Rodada 53 · Estado e próximos passos
 
 - Entregue: expansão para **96 versões de 56 famílias**, missões novas, Akamaru, expansão visual do Chōji, Zabuza na névoa, Fase 4 e contador de abates. Veja [elenco](21-ELASTAO-DE-HEROIS.md) e [efeitos](24-AUDITORIA-DE-EFEITOS.md).

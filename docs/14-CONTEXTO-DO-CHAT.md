@@ -1658,3 +1658,24 @@ Resposta: decisão registrada na política (§A), em docs/13 e docs/18. Codex e 
 > Lembrando que nosso cap máximo de monstros é 1600, eu errei perdão.
 
 Resposta: o código já usava 1.600 (`ENEMY_SCALING.maxEnemies` e `FINAL_SWARM.maxEnemies`). Os documentos que falavam em 1.500 foram corrigidos: AGENTS.md (invariante), TESTING_POLICY.md (§C e propostas), docs/13 e docs/18. Novo teste trava o teto em 1.600 em todas as dificuldades, com e sem Final Swarm e com +% de inimigos (46 testes).
+
+## Rodada 58 · 14/11/2026 — fila do usuário (uma tarefa por vez)
+
+> Você consegue fazer as bijus andarem de frente e costas?
+> A skill dos jutsus em WebGL, a partir dos 3 links, ainda não foi criada.
+> Não entendi isso, siga o que falta fazer.
+>
+> Coloque isso em fila também:
+> To do: Continuar de onde parou, atualizar o GitHub. Prioridade, arrumar as animações de caminhada de TODOS no JOGO, ajudantes, jogador, monstros, bijuus, TUDO. Para funcionar conforme alinhamos em relação ao WASD. Ao derrotar um mega-elite, fazer animação/folha do personagem sendo derrotado e ficar deitado no chão, chegar perto para apertar o E para capturar. Deixar mais evidente os hitbox das habilidades/áreas de efeito. Aumentar um pouco as fontes, mas manter o hud organizado... tem algumas fontes muito pequenas, melhorar isso. Abaixar a musica configuração padrão, está muito alto quando abre o jogo a primeira vez, deixar um som agradável. Cerca de 10%. O magnetismo do morro de bolinho não está puxando os itens do mapa todo, revisar. Ser possível deitar mais a câmera. Scale de HP ainda muito alto, revisar esse scale, estou level 415 e estou com 1613 de HP é muita coisa. Temos um buff +35% chance projétil extra/golpe extra, remova e coloque +1 projétil... lendário será +3 projéteis/golpes. Epico será 2, abaixo disso é raro é 1. Incomum/comum não tem projétil na lista de buffs. Isso para recompensa de altares e coisas dos tipo. Ao passar de zona, resetar e voltar do início a progressão dos monstros... como se fosse o jogo começando do 0 na zona 1, mas claro os buffs de %+inimigos/+%hordas que temos deve influenciar quando for tendo o scale para aparecer mais monstros no mapa.
+>
+> O jogo deve prender o mouse na tela, ficar como foco principal... apenas se dermos alttab ou tecla Windows, sair, ai o jogo pausa normalmente.
+>
+> Corrigir o aparecimento das bijuus, animação.
+>
+> Faça um de cada vez, tenha atenção máxima, bigbrain.
+
+### Resposta
+
+- **Bijū de frente e de costas:** o código o Claude faz; a arte de costas precisa ser gerada pelo Codex, porque as folhas atuais só têm a vista lateral.
+- **Skill de jutsus em WebGL:** era o pedido de 11/11 com 3 links para o Codex refinar os efeitos; o subagente foi interrompido pelo limite de uso e a skill nunca foi criada. Entrou na fila.
+- **Fila:** registrada em docs/13 ("Fila do usuário · 14/11/2026"). Os itens 1–12 já estão feitos (rodadas 54–57); os novos são o 13 (mouse preso) e o 14 (aparecimento das bijū), mais o 15 (bijū de costas) e o 16 (skill). Execução um por vez, publicando a cada item.
