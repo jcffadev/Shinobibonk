@@ -1638,3 +1638,7 @@ Rodada 55 publicada. Detalhes e pendências E2E no CHANGELOG. Próxima tarefa: f
 - **Resultados (PASSOU):** leve, equilibrado e mutação.
 - **NÃO EXECUTADO:** E2E com navegador.
 - **Proposta, sem implementar:** simulação headless e stress de 1.500 monstros, porque exigem extrair o núcleo de simulação do GameCanvas.
+
+> por enquanto só no claude, vou testar no codex e qwen depois, se for preciso mando eles a adicionar a restrição para eles
+
+Resposta: decisão registrada na política (§A), em docs/13 e docs/18. Codex e Qwen seguem sem a restrição de navegador. Em seguida: fontes da HUD.

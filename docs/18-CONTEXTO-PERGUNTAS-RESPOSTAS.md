@@ -43,7 +43,7 @@ Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos ba
 
 ## 3. Decisões permanentes do usuário
 
-- **14/11/2026 (rodada 56) — Política central de testes:** `docs/development/TESTING_POLICY.md` vale para todos os agentes (perfil padrão EQUILIBRADO, status PASSOU/FALHOU/INSTÁVEL/NÃO EXECUTADO/NÃO MENSURÁVEL, toda regra nova com teste em `tests/`). A restrição de navegador continua só para o Claude Code.
+- **14/11/2026 (rodada 56) — Política central de testes:** `docs/development/TESTING_POLICY.md` vale para todos os agentes (perfil padrão EQUILIBRADO, status PASSOU/FALHOU/INSTÁVEL/NÃO EXECUTADO/NÃO MENSURÁVEL, toda regra nova com teste em `tests/`). A restrição de navegador continua só para o Claude Code — **CONFIRMADO pelo usuário em 14/11**: "por enquanto só no claude, vou testar no codex e qwen depois, se for preciso mando eles a adicionar a restrição para eles".
 - **14/11/2026 — Testes sem navegador (temporário, só Claude Code):** não abrir Edge/Chrome/Firefox, nem headless/Playwright, para testar; validar com tsc, build, verify-rules e `tests/` (`TESTAR_JOGO.bat`); o que exigir navegador fica "PENDENTE DE VALIDAÇÃO E2E". Política completa em `CLAUDE.md`; só volta com autorização explícita.
 
 Decisões de longa duração. Mudança de qualquer item = nova entrada aqui com a data, sem apagar a antiga.

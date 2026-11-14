@@ -25,7 +25,7 @@ ESLint não está configurado no projeto.
 
 ## A. Política temporária de navegadores
 
-**Decisão do usuário (14/11/2026): a restrição de navegador vale, por enquanto, SOMENTE para o Claude Code.** O Codex, o Qwen e os demais agentes continuam com a rotina de testes que já usavam (inclusive `verify-runtime` e `verify-motion-atlases`), seguindo o restante desta política. *Se o usuário estender a restrição a todos os agentes, basta trocar esta frase; as regras abaixo já valem para quem estiver restrito.*
+**Decisão do usuário (14/11/2026, confirmada): a restrição de navegador vale, por enquanto, SOMENTE para o Claude Code.** ("por enquanto só no claude, vou testar no codex e qwen depois, se for preciso mando eles a adicionar a restrição para eles") O Codex, o Qwen e os demais agentes continuam com a rotina de testes que já usavam (inclusive `verify-runtime` e `verify-motion-atlases`), seguindo o restante desta política. *Se o usuário estender a restrição a todos os agentes, basta trocar esta frase; as regras abaixo já valem para quem estiver restrito.*
 
 Para o agente restrito (hoje, o Claude Code), até autorização explícita do usuário:
 
