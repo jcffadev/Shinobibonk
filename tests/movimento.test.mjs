@@ -72,7 +72,7 @@ test('inimigos apontam no mesmo vetor usado para caminhar e dar dash', () => {
   assert.match(canvas, /enemy\.sprite\.position\.addScaledVector\(enemyTravel,enemy\.speed/);
 });
 
-test('as 114 versões selecionam quadros não vazios para movimento e dash nas oito direções', (t) => {
+test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direções', (t) => {
   const images = new Map();
   const cells = new Map();
   const getImage = (path) => {
@@ -100,7 +100,8 @@ test('as 114 versões selecionam quadros não vazios para movimento e dash nas o
   const missingRearDash = [];
   const dashFrameCounts = {};
   const jumpFrameCounts = {};
-  for (const hero of HEROES) {
+  const actors = [...HEROES, { id: 'akamaru' }, { id: 'kuri' }];
+  for (const hero of actors) {
     const portrait = portraitRegion(hero.id);
     const idle = new THREE.TextureLoader().load(portrait.path);
     idle.repeat.set(1 / portrait.cols, 1 / portrait.rows);
@@ -141,6 +142,11 @@ test('as 114 versões selecionam quadros não vazios para movimento e dash nas o
     for (const keys of ['A', 'D', 'SD', 'SA']) assert.equal(walks[keys][0].row, walks.S[0].row, hero.id + ' caminhada ' + keys);
     for (const keys of ['WD', 'WA']) assert.equal(dashes[keys][0].row, dashes.W[0].row, hero.id + ' dash ' + keys);
     for (const keys of ['A', 'D', 'SD', 'SA']) assert.equal(dashes[keys][0].row, dashes.S[0].row, hero.id + ' dash ' + keys);
+    for (const phases of [...Object.values(jumps), ...Object.values(dashes)]) {
+      assert.equal(new Set(phases.map((sample) => sample.cell)).size, 4, hero.id + ' acrobacia');
+    }
+    assert.notEqual(jumps.W[0].cell, jumps.S[0].cell, hero.id + ' pulo de costas');
+    assert.notEqual(dashes.W[0].cell, dashes.S[0].cell, hero.id + ' dash de costas');
     const jumpFrames = new Set(jumps.S.map((sample) => sample.cell)).size;
     jumpFrameCounts[jumpFrames] = (jumpFrameCounts[jumpFrames] ?? 0) + 1;
     const dashFrames = new Set(dashes.S.map((sample) => sample.cell)).size;
@@ -152,5 +158,7 @@ test('as 114 versões selecionam quadros não vazios para movimento e dash nas o
   }
   t.diagnostic('Quadros distintos de pulo por quantidade de versões: ' + JSON.stringify(jumpFrameCounts));
   t.diagnostic('Quadros distintos de dash por quantidade de versões: ' + JSON.stringify(dashFrameCounts));
-  t.diagnostic('Dash dianteiro e traseiro usam as mesmas células em ' + missingRearDash.length + ' versões.');
+  assert.deepEqual(missingRearDash, [], 'cada forma precisa de dash traseiro próprio');
+  assert.deepEqual(jumpFrameCounts, { 4: actors.length });
+  assert.deepEqual(dashFrameCounts, { 4: actors.length });
 });

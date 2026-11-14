@@ -4,7 +4,11 @@
 > Pedido do usuário: as bijū precisam andar de frente **e de costas**, como os shinobis.
 > **O código já está pronto** (Rodada 59): só falta a arte e uma linha de registro.
 
-## O que existe hoje
+## Entrega · 14/11/2026
+
+Três páginas traseiras integradas e testadas por código. Conferir visualmente a contagem de caudas em cada pose e as trocas de vista em partida.
+
+## Folhas dianteiras
 
 - `public/assets/bijuu/motion-v1-1.png`, `-2.png` e `-3.png`: **1024 × 768**, grade de **4 colunas × 3 linhas**, células de **256 × 256**, fundo transparente.
 - **Colunas** (iguais em todas as páginas): 1 = passo A · 2 = passo B · 3 = técnica (preparação/ataque) · 4 = rugido/recuo ao levar dano.
@@ -56,7 +60,7 @@ Pode registrar só as páginas prontas; uma página vazia continua usando a vist
 ## Como testar
 
 1. `TESTAR_JOGO.bat`: `tests/bijuu.test.mjs` já cobre a troca de folha com uma folha falsa.
-2. Em jogo (Codex pode usar o navegador; o Claude Code está sem navegador): arena da bijū, andar em volta dela com a câmera em 4 ângulos. Conferir:
+2. Na validação manual em jogo, conforme a política central de navegador: arena da bijū, andar em volta dela com a câmera em 4 ângulos. Conferir:
    - costas ao se afastar, frente ao vir;
    - espelho lateral;
    - pés no mesmo apoio;

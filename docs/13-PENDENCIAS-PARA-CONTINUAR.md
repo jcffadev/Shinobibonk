@@ -9,7 +9,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | # | Pedido | Estado |
 |---|---|---|
 | 1 | Continuar de onde parou e atualizar o GitHub | FEITO (rodadas 54–57) |
-| 2 | Caminhada WASD e direção do dash | TESTADO por código nas oito direções dos 114 jogáveis. Ajudantes e Mega Elites compartilham o controlador. Comuns usam o vetor de perseguição e têm poses traseiras só na caminhada. Padronização da arte no item 15b. |
+| 2 | Caminhada WASD e direção do dash | TESTADO por código nas oito direções dos 114 jogáveis. Ajudantes e Mega Elites compartilham o controlador. Comuns usam o vetor de perseguição e têm folhas de frente e de costas. Matriz de recortes aprovada; validação em partida pendente. |
 | 3 | Mega Elite caindo, deitado no chão, E para capturar | FEITO · E2E pendente |
 | 4 | Áreas/hitbox das técnicas mais evidentes | FEITO · E2E pendente |
 | 5 | Fontes maiores com a HUD organizada | FEITO (rodada 57) · E2E pendente |
@@ -22,8 +22,8 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 12 | Progressão dos monstros reinicia a cada zona (+% inimigos por cima) | FEITO e TESTADO |
 | 13 | **NOVO:** mouse preso no jogo como foco principal; sair só com Alt+Tab ou tecla Windows, e aí pausa | FEITO (rodada 58: cursor virtual) e TESTADO por código · E2E pendente · Esc sempre solta (regra do navegador) |
 | 14 | **NOVO:** corrigir o aparecimento e a animação das bijū | FEITO (rodada 59) e TESTADO por código · E2E pendente |
-| 15 | Bijū andando de frente e de costas | Código FEITO e TESTADO (rodada 59b). **Arte PENDENTE (Codex):** docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md |
-| 15b | Revisar todas as folhas e igualar a cobertura por ação e direção | **Arte PENDENTE.** Caminhada: 58 folhas de expansão para redesenhar com a referência do Naruto Academia. Pulo e dash: contagem desigual nas 114 versões. Para cada ação, 58 usam 4 células, 55 usam 2 e Asuma usa 1. Dash de costas faltando para expansão, Asuma e inimigos comuns. Conferir retratos da expansão na seleção. |
+| 15 | Bijū andando de frente e de costas | **INTEGRADO E TESTADO POR CÓDIGO** nas nove. Conferir escala, transição e contagem visual de caudas em todas as poses. |
+| 15b | Revisar todas as folhas e igualar a cobertura por ação e direção | **INTEGRADO E TESTADO POR CÓDIGO** nas 114 versões e nos quatro modelos comuns. Quatro quadros por vista em caminhada, pulo e dash e seleção pelas oito direções. Ajudantes e mega-elites reaproveitam os atlas. Conferir fluidez na partida, enquadramento dos retratos e o acabamento individual dos companheiros. |
 | 17 | **NOVO:** névoa do Zabuza com quadrados brancos (print) | FEITO (rodada 62) e TESTADO por código · E2E pendente |
 | 18 | **NOVO:** Zabuza fazendo os selos antes da Névoa Oculta | FEITO (rodada 63), TESTADO por código; E2E pendente; arte pendente (Codex) |
 | 19 | **NOVO (tester):** XP parou na zona 2 (nível 582) e barra de XP não sobe em late game | PENDENTE — próximo · passagem completa em docs/26 |

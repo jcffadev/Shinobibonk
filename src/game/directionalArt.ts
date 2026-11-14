@@ -1,4 +1,4 @@
-import { expansionSheet } from './rosterExpansion.ts';
+import { ROSTER_EXPANSION, expansionSheet } from './rosterExpansion.ts';
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
 const fullActionForms: Record<string, readonly number[]> = {
   sakura: [1, 15, 30],
@@ -14,7 +14,41 @@ const revisedActionForms:Record<string,readonly number[]>={
   kankuro:[1,15,30],kushina:[1],
   kuri:[1],
 };
+// Versões clássicas com quatro fases de pulo e dash, nas duas vistas.
+const fullAcrobatics = new Set([
+  'naruto-1', 'naruto-50', 'kuri-1',
+  'gaara-1', 'gaara-15', 'gaara-30', 'guy-1', 'guy-15', 'guy-30', 'hashirama-1',
+  'hashirama-20', 'hinata-1', 'hinata-15', 'hinata-30', 'itachi-1', 'itachi-15', 'jiraiya-1',
+  'jiraiya-20', 'kakashi-1', 'kakashi-25', 'kankuro-1', 'kankuro-15', 'kankuro-30', 'kushina-1',
+  'lee-1', 'lee-15', 'lee-30', 'madara-1', 'madara-15', 'madara-30', 'minato-1',
+  'minato-15', 'naruto-10', 'naruto-25', 'neji-1', 'neji-15', 'orochimaru-1', 'orochimaru-15',
+  'pain-1', 'sakura-1', 'sakura-15', 'sakura-30', 'sasuke-1', 'sasuke-15', 'sasuke-30',
+  'shikamaru-1', 'shikamaru-15', 'shikamaru-30', 'temari-1', 'temari-15', 'tenten-1', 'tenten-15',
+  'tobirama-1', 'tsunade-1', 'tsunade-15', 'tsunade-30',
+]);
+// Versões da expansão e companheiros com quadros traseiros próprios.
+const expansionDirectionalIds = new Set([
+  'akamaru', 'ao', 'chiriku', 'choji', 'choji-guerra', 'deidara', 'dosu', 'iruka', 'raikage-quarto', 'tayuya', 'gengetsu', 'haku', 'hanabi',
+  'hanabi-adulta', 'hanzo', 'hiashi', 'hidan', 'hiruzen', 'ino', 'ino-guerra',
+  'jirobo', 'jugo', 'juzo', 'kabuto', 'kabuto-sabio', 'kakuzu', 'karin',
+  'kiba', 'kiba-shippuden', 'kidomaru', 'killer-b', 'kimimaro', 'kin', 'kisame',
+  'konan', 'kurenai', 'mangetsu', 'mei', 'nagato', 'naruto-hokage', 'obito',
+  'obito-guerra', 'onoki', 'orochimaru-akatsuki', 'raikage-terceiro', 'rasa', 'sai', 'sakon-ukon',
+  'sakumo', 'sasori', 'shino', 'shino-shippuden', 'shisui', 'suigetsu', 'tobi-akatsuki',
+  'yamato', 'zabuza', 'zaku', 'zetsu',
+]);
+const expandedIdsByForm = new Map(ROSTER_EXPANSION.map(entry => [`${entry.family}-${entry.form}`, entry.id]));
+const revisedDirectionalId = (family: string, form: number) => expandedIdsByForm.get(`${family}-${form}`) ?? family;
+const revisedDirectionalPath = (family: string) => `/assets/shinobi-motion/${family}-directional-v2.png`;
+
 export function acrobaticsArt(family:string,form:number){
+  const formId = `${family}-${form}`;
+  if (fullAcrobatics.has(formId))
+    return {path:`/assets/shinobi-motion/${formId}-acrobatics-v3.png`,kind:'directional-acrobatics' as const,rows:4,firstRow:0};
+  const id = revisedDirectionalId(family, form);
+  if (expansionDirectionalIds.has(id))
+    return {path:revisedDirectionalPath(id),kind:'rear-acrobatics' as const,rows:4,firstRow:2};
+  if(family==='asuma')return {path:'/assets/shinobi-motion/asuma-1-acrobatics-v3.png',kind:'directional-acrobatics' as const,rows:4,firstRow:0};
   if(expansionSheet(family,form))return;
   if((family==='naruto'&&form>1)||family==='lee'||family==='guy')
     return {path:`/assets/shinobi-motion/${family}-${form}-acrobatics-v2.png`,kind:'acrobatics' as const,directional:true,rows:2,firstRow:0};
@@ -95,6 +129,8 @@ const rosterForms: Record<string, readonly number[]> = {
 };
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
+  const id = revisedDirectionalId(hero, formLevel);
+  if (expansionDirectionalIds.has(id)) return {path:revisedDirectionalPath(id),rows:4};
   const expansion=expansionSheet(hero,formLevel);
   if(expansion)return {path:expansion,rows:6};
   if (hero === 'gaara') return { path: gaaraSheet(formLevel), rows: 6 };

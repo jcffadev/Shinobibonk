@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 14/11/2026 — folhas de movimento do elenco completo
+
+- Padroniza caminhada, pulo e dash dos 114 jogáveis em quatro quadros por vista. As 58 versões da expansão recebem caminhada em três quartos e novas acrobacias traseiras. A montagem do Naruto Academia e do Manto da Kurama reaproveita as poses principais existentes.
+- Ajudantes e mega-elites usam os mesmos recortes das versões jogáveis. Akamaru recebe caminhada e acrobacias de costas, e Kuri recebe quatro fases de acrobacias nas duas vistas. Os quatro inimigos comuns usam atlas em lote com 13 células por vista: quatro de caminhada, uma de ataque, quatro de pulo e quatro de dash.
+- As nove bijū recebem folhas traseiras. Enquanto se deslocam, o espelho segue o passo real.
+- A validação em partida e a revisão de contagem visual de caudas seguem na fila. Verificação de tipos, build, 85 testes e 26 mutações passaram. A matriz verificou também Akamaru e Kuri.
+
 ## 14/11/2026 — orientação e auditoria das 114 versões
 
 - Caminhada e dash do jogador compartilham a seleção da vista e do espelho. Inimigos comuns e Mega Elites usam o vetor real de perseguição para orientar a pose. Kuri só exibe dash se estiver acompanhando o jogador.

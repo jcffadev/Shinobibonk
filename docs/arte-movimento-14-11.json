@@ -1,0 +1,26 @@
+{
+  "data": "14/11/2026",
+  "referencia": "Spritemap original de cada versão e Naruto Academia como referência de pose. Nenhuma imagem oficial é distribuída.",
+  "pedidos": [
+    {
+      "alvos": "58 versões da expansão e Akamaru",
+      "folha": "4 colunas e quatro fileiras",
+      "prompt": "Derivar a personagem do sprite original. Desenhar quatro passos em três quartos para a direita, quatro passos de costas, quatro fases do pulo de costas e quatro do dash de costas. Corpo inteiro, mesmos acessórios, contorno e proporções. Espaço transparente entre as células."
+    },
+    {
+      "alvos": "Versões clássicas, Asuma e formas do Naruto",
+      "folha": "Quatro fases por ação e vista",
+      "prompt": "Usar a folha atual de ação como referência de identidade. Crouch, lançamento, ápice e aterrissagem para o pulo; preparação, impulso, passo longo e frenagem para o dash. Frente e costas em três quartos. Sem texto, sombra ou chão."
+    },
+    {
+      "alvos": "Quatro inimigos comuns",
+      "folha": "Atlas frontal e traseiro",
+      "prompt": "Manter kunai e capuz violeta, espadachim de lenço vermelho, ninja da Areia e samurai roxo. Gerar fases de pulo e dash e completar o ciclo de caminhada. Preservar silhueta e paleta."
+    },
+    {
+      "alvos": "Nove bijū",
+      "folha": "Três páginas de 4 × 3",
+      "prompt": "Recriar cada bijū de costas em três quartos, com duas poses de passo, preparação e rugido/recuo. Preservar a quantidade de caudas e os apêndices de cada design, inclusive seis asas e uma cauda do Chōmei."
+    }
+  ]
+}

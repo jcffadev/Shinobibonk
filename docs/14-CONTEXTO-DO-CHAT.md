@@ -1772,3 +1772,21 @@ A Rodada 54 do Codex, publicada pelo Claude em `daa5646`, trouxe o elenco a 114 
 O jogo compartilha a regra de orientação entre caminhada e dash do jogador. Inimigos em perseguição apontam pelo vetor que usam para se deslocar. A matriz lê as folhas reais e verifica as oito direções dos 114 jogáveis. Cada versão tem quatro células na caminhada. Para cada ação de pulo e dash, 58 versões usam quatro células, 55 usam duas e Asuma usa uma. As 58 versões da expansão e Asuma repetem a vista no dash traseiro. Inimigos comuns caminham de costas e ainda precisam da arte traseira de pulo/dash. As nove bijū aguardam folha traseira. A troca de poses no jogo e o enquadramento dos retratos seguem pendentes de validação visual.
 
 O teste de atlas no Edge terminou antes da ampliação da restrição. A partir da decisão registrada nesta rodada, Codex, Qwen e Claude Code usam a rotina de testes por código até nova autorização explícita para navegador.
+
+## 14/11/2026 — Movimentação de todo o elenco
+
+> O importante é revisar todas as folhas de movimentação de TODOS os personagens, todas terem a mesma quantidade de animações para os respectivos personagens e fazer o controle de direção correto para cada folha.
+>
+> Para o outro agente começar: peça para ler docs/26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md.
+>
+> Você está tratando/revisando TODOS os personagens, referente as folhas?
+>
+> Todos tem a caminhada para cima e para baixo, para quando apertamos só W ou só S, ele usar as respectivas animações?
+>
+> Então agora todas as direções estão funcionando normalmente?
+>
+> O que temos na sua fila para fazer?
+
+A mensagem também trouxe a passagem do Claude com as entregas das rodadas anteriores e a lista ordenada de XP, colisão, borda do altar, feedback de dano, artes, skill WebGL, verificação visual e decisões de projéteis. A lista atualizada fica em [docs/26](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
+
+**Resposta.** Revisão concluída por código para as 114 versões. W usa a caminhada de costas; S, a de frente; A e diagonais para a esquerda espelham o sprite. Shift mantém o rumo ao iniciar o dash. Cada versão usa quatro quadros por vista de caminhada, pulo e dash. Os quatro modelos comuns receberam a mesma quantidade, e as nove bijū têm folhas traseiras registradas. Jogador, ajudantes e mega-elites usam o mesmo controlador por versão. O Naruto Academia e o Manto da Kurama reaproveitam as poses principais. Resta ver em partida as transições, o enquadramento dos retratos e a fidelidade de cada pose das bijū. A política sem navegador permanece ativa para os três agentes.

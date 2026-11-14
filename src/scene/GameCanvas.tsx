@@ -1397,10 +1397,10 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         const striking=enemy.windup!==undefined&&enemy.windup<=.2;
         if(batched){
           sprite.userData.flipped=left;
-          // Rodada 55: diagonal para longe da câmera também usa a folha de COSTAS (antes só o 'reto para cima').
-          sprite.userData.back=back&&movingEnemy&&!movingSpecial&&!striking;
-          sprite.userData.frame=striking?ENEMY_FRAME.attack:movingSpecial?(enemy.jumping?ENEMY_FRAME.jump:ENEMY_FRAME.dash)
-            :movingEnemy?Math.floor(elapsed*10+sprite.id%3)%3:1;
+          sprite.userData.back=back;
+          sprite.userData.frame=striking?ENEMY_FRAME.attack:movingSpecial
+            ? (enemy.jumping?ENEMY_FRAME.jump:ENEMY_FRAME.dash)+Math.min(3,Math.floor(progress*4))
+            :movingEnemy?Math.floor(elapsed*10+sprite.id%4)%4:1;
         }
         if(motion&&((striking&&(enemy.windup??0)+dt>.2)||(casting&&enemy.boss?.cast&&enemy.boss.cast.windup<=.2&&enemy.boss.cast.windup+dt>.2))){
           const cast=enemy.boss?.cast;

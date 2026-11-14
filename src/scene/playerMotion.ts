@@ -222,7 +222,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         walkAtlas.offset.set((frame + Number(leftward)) / 4, backwardView ? 0 : .5);
         rowShown = Number(backwardView);
       }
-      const useAsuma = !!asuma?.image && state !== 'idle';
+      const acrobatic = state === 'jump' || state === 'dash';
+      const useAsuma = !!asuma?.image && state !== 'idle' && !(acrobatic && acrobaticsMap?.image);
       if (useAsuma && asuma) {
         const frame = state === 'walk' ? (rear ? 4 : 0) + Math.floor(stepTime * 11) % 4
           : state === 'jump' ? 8 : state === 'dash' ? 9 : state === 'hurt' ? 10
@@ -246,25 +247,30 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         sealMap.repeat.set(mirror ? -.25 : .25, .25);
         sealMap.offset.set((frame + Number(mirror)) / 4, (3 - sealSheet.row) / 4);
       }
-      const poseSheet=(state==='jump'||state==='dash')&&acrobaticsSheet?acrobaticsSheet:actionSheet;
-      const poseMap=(state==='jump'||state==='dash')&&acrobaticsSheet?acrobaticsMap:actionMap;
+      const useAcrobatics = acrobatic && !!acrobaticsMap?.image && (acrobaticsSheet?.kind !== 'rear-acrobatics' || backwardView);
+      const poseSheet = useAcrobatics ? acrobaticsSheet : actionSheet;
+      const poseMap = useAcrobatics ? acrobaticsMap : actionMap;
+      const rearAcrobatics = poseSheet?.kind === 'rear-acrobatics';
+      const directionalAcrobatics = poseSheet?.kind === 'directional-acrobatics';
       const acrobatics = poseSheet?.kind === 'acrobatics' && (state === 'jump' || state === 'dash');
       const fullAction = poseSheet?.kind === 'full' && (attacking || state === 'jump' || state === 'dash');
-      const useAction = !!poseMap?.image && (fullAction || acrobatics || (attacking && (poseSheet?.kind !== 'taijutsu' || !!strike) && !(academy && poseSheet?.kind==='acrobatics')));
+      const useAction = !!poseMap?.image && (rearAcrobatics || directionalAcrobatics || fullAction || acrobatics || (attacking && (poseSheet?.kind !== 'taijutsu' || !!strike) && !(academy && poseSheet?.kind==='acrobatics')));
       if (useAction && poseMap && poseSheet) {
         const progress = attackProgress;
         const castFrame = painUltimate
           ? 0 : family === 'gaara' && (ultimate || handSign) && progress >= .35 && progress < .84
           ? 2 : Math.min(3, Math.floor(progress * 4));
-        const separateAcrobatics = 'separateAcrobatics' in poseSheet;
+        const separateAcrobatics = rearAcrobatics || directionalAcrobatics || 'separateAcrobatics' in poseSheet;
         const frame = state === 'jump' ? (separateAcrobatics ? Math.min(3,Math.floor(jumpProgress*4)) : Number(jumpProgress > .22 && jumpProgress < .77))
           : state === 'dash' ? (separateAcrobatics ? Math.min(3,Math.floor(slideProgress*4)) : 2 + Number(slideProgress > .7)) : castFrame;
         frameShown = frame;
         const secondRow = (acrobatics && ('directional' in poseSheet ? backwardView : true)) || (poseSheet.kind === 'cast' && rear) || (poseSheet.kind === 'taijutsu' && strike === 'kick');
-        const flip = acrobatics || (fullAction && !attacking) ? leftward : mirror;
+        const flip = acrobatic ? leftward : mirror;
         const rows=poseSheet.rows??2;
-        const row = fullAction
-          ? (poseSheet.firstRow ?? 0) + (attacking ? (painUltimate ? 2 + Number(rear) : Number(rear)) : 2 + Number(separateAcrobatics ? state === 'dash' : backwardView))
+        const row = directionalAcrobatics
+          ? (state === 'dash' ? 2 : 0) + Number(backwardView)
+          : rearAcrobatics ? poseSheet.firstRow + Number(state === 'dash')
+          : fullAction ? (poseSheet.firstRow ?? 0) + (attacking ? (painUltimate ? 2 + Number(rear) : Number(rear)) : 2 + Number(separateAcrobatics ? state === 'dash' : backwardView))
           : (poseSheet.firstRow ?? 0) + Number(secondRow);
         poseMap.repeat.set(flip ? -.25 : .25, 1/rows);
         rowShown = (row - (poseSheet.firstRow ?? 0)) % 2;

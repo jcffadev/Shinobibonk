@@ -4,6 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
+import { decodePng, cellShape } from '../scripts/audit-walk-sheets.mjs';
 import { load, installCanvasStub, memoryStorage } from './helpers/load.mjs';
 
 installCanvasStub();
@@ -94,6 +95,18 @@ test('vista de costas: regra com histerese (igual ao jogador)', () => {
   assert.deepEqual(bijuuSheetCell(4), { page: 1, row: 1 });
 });
 
+test('as páginas traseiras registradas têm quatro quadros nas três linhas', () => {
+  const pages = BIJUU_BACK_SHEETS.filter(Boolean);
+  assert.equal(pages.length, Math.ceil(BIJUU.length / 3));
+  for (const path of pages) {
+    const img = decodePng('public' + path);
+    assert.deepEqual([img.width, img.height], [1024, 768]);
+    for (let row = 0; row < 3; row++) for (let frame = 0; frame < 4; frame++) {
+      assert.ok(!cellShape(img, frame * 256, row * 256, 256, 256).empty, path + ' ' + row + '/' + frame);
+    }
+  }
+});
+
 test('sem arte de costas registrada: nenhuma folha extra é carregada (sem 404)', () => {
   assert.ok(Array.isArray(BIJUU_BACK_SHEETS));
   const { host } = setup(BIJUU[0].id, { backSheets: [] });
@@ -106,8 +119,9 @@ test('com arte de costas: anda para dentro da tela → folha de costas; volta �
   assert.ok(Math.abs(host.boss.backMap.offset.y - (2 - 1) / 3) < 1e-9, 'mesma linha da folha de frente');
   fakeImage(host.boss.motionMap); fakeImage(host.boss.backMap);
   for (let t = 0; t < 1.5; t += 1 / 30) combat.update(host, 1 / 30, false); // termina a entrada parada
-  for (let i = 0; i < 20; i++) { host.sprite.position.z -= .1; combat.update(host, 1 / 30, false); }
+  for (let i = 0; i < 20; i++) { host.sprite.position.x += .05; host.sprite.position.z -= .1; combat.update(host, 1 / 30, false); }
   assert.equal(host.sprite.material.map, host.boss.backMap, 'de costas ao se afastar da câmera');
+  assert.equal(host.boss.flip, false, 'o passo aponta para a direita mesmo com o jogador à esquerda');
   for (let i = 0; i < 20; i++) combat.update(host, 1 / 30, false);
   assert.equal(host.sprite.material.map, host.boss.backMap, 'parada mantém as costas');
   for (let i = 0; i < 20; i++) { host.sprite.position.z += .1; combat.update(host, 1 / 30, false); }

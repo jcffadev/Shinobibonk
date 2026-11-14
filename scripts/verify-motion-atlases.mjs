@@ -61,10 +61,8 @@ try{
      samples.push({action:expected,atlas:motion.atlas(),uv:[map.offset.x,map.offset.y,map.repeat.x,map.repeat.y]});
     }
     if(samples.slice(1).some(sample=>!sample.atlas))throw Error(hero.id+' tem movimento sem folha de animação');
-    if(samples[1].atlas.endsWith('-roster-v1.png')){
-     for(const [col,row] of [[1,0],[2,1],[3,2],[4,3],[5,4],[6,4],[7,5],[8,5],[9,5]]){
-      if(Math.abs(samples[col].uv[1]-(5-row)/6)>1e-6)throw Error(hero.id+' selecionou fileira errada em '+names[col]);
-     }
+    for(const [front,back] of [[5,6],[7,9]]){
+     if(samples[front].atlas===samples[back].atlas&&samples[front].uv[1]===samples[back].uv[1])throw Error(hero.id+' repete a fileira em '+names[back]);
     }
     if(samples[1].uv[1]===samples[2].uv[1])throw Error(hero.id+' usa a mesma fileira ao andar de frente e de costas');
     // Andar atacando: o golpe toca inteiro pelos quadros de ataque (sem virar caminhada no meio) e volta à caminhada ao fim.

@@ -223,7 +223,7 @@ Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em com
 
 ## Auditoria de movimento · 14/11/2026
 
-As 114 versões jogáveis têm caminhada frontal e traseira ligada ao controlador e espelhamento para a esquerda. A matriz no Node encontrou quatro células de caminhada por vista. Pulo e dash ainda têm contagem desigual. As 58 versões da expansão e Asuma reutilizam o dash dianteiro na direção traseira. Veja o [estado do elenco](21-ELASTAO-DE-HEROIS.md) e a [política de testes](development/TESTING_POLICY.md).
+As 114 versões jogáveis usam quatro quadros por vista para caminhada, pulo e dash. A matriz no Node verifica as oito direções. As 58 versões da expansão usam novas caminhadas e vistas traseiras de pulo/dash. Os quatro modelos de inimigo comum também têm quatro quadros por vista para essas três ações. As nove bijū têm folhas de costas. Veja o [estado do elenco](21-ELASTAO-DE-HEROIS.md) e a [política de testes](development/TESTING_POLICY.md).
 
 ## Rodada 53 · Estado e próximos passos
 

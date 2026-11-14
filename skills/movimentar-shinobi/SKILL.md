@@ -37,6 +37,7 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 ## Validação
 
 - Cubra as oito direções em caminhada, pulo e dash. Para novas folhas e na revisão do elenco, iguale a cobertura e a quantidade de quadros por ação ao padrão acordado. Preserve as poses próprias de Lee, Guy e Gaara. A pose de dash para cima precisa mostrar as costas. Espelhar uma pose resolve esquerda/direita quando a arte é compatível. Registre separadamente toda vista ou fase que ainda depende de arte.
+- Caminhada, pulo e dash dos jogáveis usam quatro quadros por vista. Nas folhas suplementares `*-directional-v2.png`, as fileiras são caminhada frente/costas, pulo de costas e dash de costas. Em `*-acrobatics-v3.png`, são pulo frente/costas e dash frente/costas.
 - `node --test tests/movimento.test.mjs` lê os PNGs e valida os recortes do controlador para as 114 versões sem navegador. Siga a política central antes de rodar qualquer verificação visual.
 
 - Valide o espelho da pose no dash para a esquerda em todas as famílias. O sprite segue o vetor do dash projetado na base da câmera, inclusive quando o jogador solta A durante a ação.

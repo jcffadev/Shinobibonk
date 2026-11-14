@@ -38,7 +38,7 @@ export const EXTRA_SEAL_SHEETS: Record<string, string> = {
 ## Como testar
 
 1. `TESTAR_JOGO.bat`: `tests/clima.test.mjs` cobre a conjuração, a névoa engrossando e o Zabuza parado durante os selos.
-2. **Em jogo** (o Codex pode usar o navegador; o Claude Code está sem navegador), no mapa da Névoa, a partir de 1:10 da zona. Conferir:
+2. **Na validação manual em jogo**, conforme a política central de navegador, no mapa da Névoa, a partir de 1:10 da zona. Conferir:
    - o Zabuza aparece à vista;
    - faz os selos;
    - o aviso aparece;

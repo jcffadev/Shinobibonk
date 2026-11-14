@@ -87,13 +87,13 @@ await page.keyboard.up('d');
 checks.push('WASD: a última tecla oposta muda a direção sem travar, e a anterior volta ao soltar');
 await debug('dismiss');await debug('clearEnemies');await debug('clearDrops');
 await page.keyboard.press('Space');
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/naruto-academia-acrobatics-v1.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/naruto-1-acrobatics-v3.png');});
 await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
 await debug('hurt',1);await page.keyboard.press('Space');
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/naruto-academia-acrobatics-v1.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/naruto-1-acrobatics-v3.png');});
 await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
 await page.keyboard.press('Shift');
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/naruto-academia-acrobatics-v1.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/naruto-1-acrobatics-v3.png');});
 checks.push('Naruto Academia usa quadros de pulo e dash, inclusive ao levar dano');
 // Dispara A e Shift no mesmo quadro e solta A logo após ativar.
 for (const [key,sign] of [['a',-1],['d',1]]) {
@@ -105,7 +105,7 @@ for (const [key,sign] of [['a',-1],['d',1]]) {
  },key);
  const sample=await page.waitForFunction(()=>{
   const m=window.__shinobiTest.motion();
-  return m.pose==='dash'&&m.atlas.endsWith('/naruto-academia-acrobatics-v1.png')?m:null;
+  return m.pose==='dash'&&m.atlas.endsWith('/naruto-1-acrobatics-v3.png')?m:null;
  });
  const now=await sample.jsonValue();
  const lateral=(now.x-from.x)*Math.cos(from.yaw)-(now.z-from.z)*Math.sin(from.yaw);
@@ -316,10 +316,10 @@ assert.equal(await page.locator('.scene').evaluate(el=>getComputedStyle(el).curs
 assert.equal(await page.locator('.vitamin-row').evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(0, 0, 0, 0)');
 await debug('clearEnemies');await debug('clearDrops');
 await page.keyboard.press('Space');
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/sasuke-1-action-v3.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='jump'&&m.atlas.endsWith('/sasuke-1-acrobatics-v3.png');});
 await page.waitForFunction(()=>window.__shinobiTest.motion().jumpHeight===0);
 await page.keyboard.press('Shift');
-await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/sasuke-1-action-v3.png');});
+await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='dash'&&m.atlas.endsWith('/sasuke-1-acrobatics-v3.png');});
 await page.waitForFunction(()=>window.__shinobiTest.motion().slideTime===0);
 await debug('target',1);assert.equal(await debug('cast','Kunai Tática'),true);
 await page.waitForFunction(()=>{const m=window.__shinobiTest.motion();return m.pose==='attack'&&m.atlas.endsWith('/sasuke-1-action-v3.png');});

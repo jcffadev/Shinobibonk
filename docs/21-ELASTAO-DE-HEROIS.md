@@ -5,9 +5,9 @@
 ## Auditoria das 114 versões · 14/11/2026
 
 - Cinco atlas da seleção registram retratos para as 58 versões da expansão. Conferência de enquadramento na tela de seleção pendente.
-- Caminhada tem quatro células por vista para as 114 versões. As 58 folhas `*-roster-v1.png` precisam alinhar a direção do desenho ao padrão do Naruto Academia.
-- Tanto pulo quanto dash usam quatro células na expansão, duas em 55 versões antigas e uma no Asuma. A expansão e Asuma usam as mesmas células de frente e costas nessas duas ações.
-- Ajudantes e Mega Elites usam o controlador e a folha da versão. Os inimigos comuns têm quatro modelos em lote, cada um com três células de caminhada por vista e uma pose de pulo e dash de frente. Bijū têm folha própria de frente. A arte traseira segue pendente.
+- As 114 versões têm quatro quadros por vista em caminhada, pulo e dash. As 58 novas folhas `*-directional-v2.png` padronizam a caminhada em três quartos e trazem quadros próprios de pulo e dash de costas.
+- As versões clássicas usam `*-acrobatics-v3.png` para pulo e dash. Naruto Academia e Manto da Kurama mantêm as poses principais da folha anterior nas novas sequências.
+- Ajudantes e Mega Elites usam as folhas das versões jogáveis. Akamaru recebe atlas direcional e Kuri recebe quatro fases de pulo e dash nas duas vistas. Os quatro modelos comuns têm folhas em lote com quatro quadros de caminhada, quatro de pulo e quatro de dash, além do ataque, em ambas as vistas. As nove bijū têm folhas traseiras com o mesmo layout da frente.
 
 ## Rodada 53 · Expansão do elenco
 

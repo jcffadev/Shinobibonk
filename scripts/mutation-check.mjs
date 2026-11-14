@@ -22,6 +22,7 @@ const MUTATIONS = [
   { regra: 'música padrão 10%', arquivo: 'src/game/settings.ts', de: 'const MUSIC_DEFAULT = .1', para: 'const MUSIC_DEFAULT = .7' },
   { regra: 'volume do jogador preservado', arquivo: 'src/game/settings.ts', de: '&& parsed.musicVolume === OLD_MUSIC_DEFAULT) parsed.musicVolume', para: ') parsed.musicVolume' },
   { regra: 'dash e caminhada viram para a esquerda', arquivo: 'src/scene/playerMotion.ts', de: 'left: horizontal < -.001', para: 'left: horizontal > .001' },
+  { regra: 'dash traseiro usa a fileira de costas', arquivo: 'src/scene/playerMotion.ts', de: "(state === 'dash' ? 2 : 0) + Number(backwardView)", para: "(state === 'dash' ? 2 : 0)" },
   { regra: 'costas só acima do limiar (histerese)', arquivo: 'src/scene/playerMotion.ts', de: 'if (vertical > .26) memory.back = true; else if (vertical < .1) memory.back = false;', para: 'memory.back = vertical > 0;' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },

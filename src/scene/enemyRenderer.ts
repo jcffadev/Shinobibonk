@@ -144,17 +144,17 @@ function billboardMaterial(map: THREE.Texture, solid: boolean) {
 
 
 
-// Divisões nos corredores transparentes da folha original de 1536 × 1024.
-const ROW_EDGES = [0, 256, 512, 754, 1024];
-const COLUMN_EDGES = ROW_EDGES.slice(1).map((_, row) => [0, 256, 512, row===3?725:750, 1042, 1280, 1536]);
-export const ENEMY_FRAME = {attack:3, dash:4, jump:5} as const;
+const ATLAS_COLUMNS = 13;
+const ATLAS_ROWS = 4;
+const CELL = 256;
+export const ENEMY_FRAME = {attack:4, jump:5, dash:9} as const;
 
 export function createEnemyRenderer(scene: THREE.Scene) {
-  const atlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-motion-v1.png');
+  const atlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-front-v3.png');
   atlas.colorSpace = THREE.SRGBColorSpace;
   atlas.magFilter = THREE.NearestFilter;
   atlas.minFilter = THREE.NearestMipmapNearestFilter;
-  const backAtlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-walk-back-v1.png');
+  const backAtlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-back-v3.png');
   backAtlas.colorSpace = THREE.SRGBColorSpace;
   backAtlas.magFilter = THREE.NearestFilter;
   backAtlas.minFilter = THREE.NearestMipmapNearestFilter;
@@ -180,19 +180,13 @@ export function createEnemyRenderer(scene: THREE.Scene) {
     const o = batch.arr('iOffset'), s = batch.arr('iSize'), u = batch.arr('iUv'), c = batch.arr('iColor');
     o[i * 3] = sp.position.x; o[i * 3 + 1] = sp.position.y; o[i * 3 + 2] = sp.position.z;
     s[i * 2] = sx; s[i * 2 + 1] = sy;
-    const columns = COLUMN_EDGES[row], flipped = sp.userData.flipped;
-    const left = columns[frame], right = columns[frame+1], top = ROW_EDGES[row], bottom = ROW_EDGES[row+1];
-    if(sp.userData.back){
-      u[i*4]=(frame+Number(flipped))/3+(flipped?-.0007:.0007);
-      u[i*4+1]=(3-row)/4+.0005;
-      u[i*4+2]=(1/3-.0014)*(flipped?-1:1);
-      u[i*4+3]=.249;
-    } else {
-    u[i * 4] = (flipped ? right-.5 : left+.5)/1536;
-    u[i * 4 + 1] = (1024-bottom+.5)/1024;
-    u[i * 4 + 2] = (right-left-1)/1536*(flipped?-1:1);
-    u[i * 4 + 3] = (bottom-top-1)/1024;
-    }
+    const flipped = sp.userData.flipped;
+    const flip = Number(!!flipped);
+    const width = ATLAS_COLUMNS * CELL, height = ATLAS_ROWS * CELL;
+    u[i * 4] = ((frame + flip) * CELL + .5 - flip) / width;
+    u[i * 4 + 1] = ((ATLAS_ROWS - 1 - row) * CELL + .5) / height;
+    u[i * 4 + 2] = (CELL - 1) / width * (flipped ? -1 : 1);
+    u[i * 4 + 3] = (CELL - 1) / height;
     c[i * 4] = r; c[i * 4 + 1] = g; c[i * 4 + 2] = b; c[i * 4 + 3] = 1;
   }
 

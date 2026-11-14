@@ -21,14 +21,12 @@ export const beastPhase = (ratio: number) => ratio > 2/3 ? 1 : ratio > 1/3 ? 2 :
 export const rollBijuu = (rng = Math.random) => BIJUU[Math.min(BIJUU.length-1,Math.floor(rng()*BIJUU.length))];
 export const bijuuLamens = (difficulty: number, plans: number) => Math.round(180 * difficulty * (1 + .33 * plans));
 
-/**
- * Folhas de COSTAS das bijū (Rodada 59 — pedido do usuário: bijū andando de frente e de costas). As folhas atuais
- * (`/assets/bijuu/motion-v1-1..3.png`) só têm a vista lateral/de frente. Quando o Codex gerar as folhas de costas no MESMO
- * layout (1024×768, 4 colunas × 3 linhas de 256×256: passo A, passo B, técnica, rugido/recuo; linhas na mesma ordem de
- * BIJUU, 3 bijū por página), basta registrar aqui o caminho de cada página (índice 0 = página 1). Página vazia = sem
- * costas (a bijū continua usando a folha de frente). Pedido de arte: docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md.
- */
-export const BIJUU_BACK_SHEETS: (string | undefined)[] = [];
+/** Páginas traseiras na ordem de BIJUU. Cada linha tem dois passos, preparação e recuo. */
+export const BIJUU_BACK_SHEETS: (string | undefined)[] = [
+  '/assets/bijuu/motion-costas-v1-1.png',
+  '/assets/bijuu/motion-costas-v1-2.png',
+  '/assets/bijuu/motion-costas-v1-3.png',
+];
 /** Página da folha (0, 1, 2) e linha dentro dela para a bijū `index` de BIJUU. */
 export const bijuuSheetCell = (index: number) => ({ page: Math.floor(index / 3), row: index % 3 });
 /**

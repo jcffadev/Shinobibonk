@@ -4,7 +4,11 @@
 > Criado pelo Claude Code em 14/11/2026, item 15b da fila (`docs/13`).
 > Pedido do usuário: "os primeiros… estão andando com uma animação… e os últimos que criamos estão andando de outro. Preciso de um padrão para TODOS, respeitando a folha de movimentação."
 
-## Diagnóstico (CONFIRMADO)
+## Entrega · 14/11/2026
+
+As folhas revisadas `*-directional-v2.png` têm quatro colunas e quatro fileiras: andar de frente, andar de costas, pulo de costas e dash de costas. São suplementares. As folhas `*-roster-v1.png` continuam fornecendo ataques e acrobacias dianteiras. As versões antigas usam folhas completas `*-acrobatics-v3.png`, com pulo frente/costas e dash frente/costas em quatro fases. A matriz de `tests/movimento.test.mjs` exige quatro recortes por ação nas oito direções de todos os 114 jogáveis.
+
+## Diagnóstico anterior à entrega
 
 O **código** das 114 versões está ligado corretamente: repouso, andar de frente e de costas, ataque, pulo e dash. A diferença está no **desenho** das fileiras de caminhada.
 
@@ -98,7 +102,7 @@ Para cada folha da tabela abaixo, **redesenhar só as fileiras 1 e 2 (caminhada)
 1. Substituir o PNG no mesmo caminho; não precisa mexer em código (`directionalArt` → `expansionSheet` já aponta para o arquivo).
 2. `TESTAR_JOGO.bat` (sem navegador).
 3. `node scripts/audit-walk-sheets.mjs` lista a assimetria e o lado da silhueta de cada folha de caminhada; use para comparar antes e depois. É uma medida auxiliar: confira também olhando a folha.
-4. Em jogo (o Codex pode usar o navegador; o Claude Code está sem navegador), andar com W, A, S, D e diagonais, com a câmera em 4 ângulos, ao lado de um personagem do grupo padrão (ex.: Kakashi). Os dois devem virar do mesmo jeito.
+4. Validação manual em partida, respeitando a política central de navegador, andar com W, A, S, D e diagonais, com a câmera em 4 ângulos, ao lado de um personagem do grupo padrão (ex.: Kakashi). Os dois devem virar do mesmo jeito.
 5. Registrar com a skill `documentar-projeto`.
 
 ## Nota para quem continuar (Codex, Qwen ou outro agente)

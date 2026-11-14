@@ -239,11 +239,15 @@ export function createBossCombat(ctx: BossContext) {
         // Parada: quadro 0 (a respiração vem da escala); andando: alterna os dois quadros de passo da folha.
         const pose=state.recoil>0?3:state.cast?2:moving?Number(step<0):0;
         state.pose=pose;
-        // Espelho pela DIREITA DA TELA (a câmera gira 360°): a arte olha para a direita; vira quando o jogador
-        // está à esquerda na tela. Histerese de ±0,6 m para não piscar com o jogador bem acima/abaixo dela.
-        const right=ctx.viewRight?.();
-        const side=right?(ctx.player.position.x-px)*right.x+(ctx.player.position.z-pz)*right.z:host.sprite.position.x-ctx.player.position.x<0?1:-1;
-        if(state.flip===undefined)state.flip=side<0;else if(side<-.6)state.flip=true;else if(side>.6)state.flip=false;
+        // Andando, o espelho segue o passo real. Parada ou conjurando, a bijū volta a mirar no jogador.
+        const right = ctx.viewRight?.();
+        const horizontal = right && movingNow ? (stepX * right.x + stepZ * right.z) / stepLength : undefined;
+        const side = right ? (ctx.player.position.x - px) * right.x + (ctx.player.position.z - pz) * right.z : Math.sign(ctx.player.position.x - px);
+        const value = horizontal ?? side;
+        const threshold = horizontal === undefined ? .6 : .1;
+        if (state.flip === undefined) state.flip = value < 0;
+        else if (value < -threshold) state.flip = true;
+        else if (value > threshold) state.flip = false;
         const flip=state.flip;
         sheet.repeat.x=flip?-.25:.25;
         sheet.offset.set((pose+Number(flip))/4,(2-(state.motionRow??0))/3);

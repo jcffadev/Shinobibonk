@@ -139,7 +139,7 @@ IMPLEMENTADO: prévia de Susanoo utiliza o mesmo rig WebGL e partículas do comb
 
 PENDENTE: criar folhas completas de Kankuro 1/15/30 e Kushina 1 (quatro versões); revisar/refinar ataques antigos de Neji 1/15, Sasuke Genin e Naruto Clássico/Shippuden. A existência da folha não confirma que todas as poses foram aprovadas visualmente. Conferir consistência com o sprite parado, frente/costas e dash esquerdo em cada versão e como ajudante.
 
-A matriz `node --test tests/movimento.test.mjs` usa os PNGs reais e o controlador do jogo para verificar caminhada, ataque, pulo e dash do elenco. A revisão de arte segue a fila em [docs/13](docs/13-PENDENCIAS-PARA-CONTINUAR.md). Os testes com navegador ficam suspensos para Claude Code, Qwen e Codex conforme a [política central](docs/development/TESTING_POLICY.md).
+A matriz `node --test tests/movimento.test.mjs` usa os PNGs reais e o controlador do jogo para verificar caminhada, ataque, pulo e dash do elenco. Os 114 jogáveis têm quatro quadros de caminhada, pulo e dash por vista, com espelhamento nas oito direções. [Próximas verificações](docs/13-PENDENCIAS-PARA-CONTINUAR.md). Os testes com navegador ficam suspensos para Claude Code, Qwen e Codex conforme a [política central](docs/development/TESTING_POLICY.md).
 
 Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em combate de todos os lançadores, sons com licença verificada e uma run prolongada de três zonas até bijuu/saída/ranking. Preservar o balanceamento existente conforme instrução do usuário. Não publicar artifacts/sb-swishes-source.zip: é um arquivo preexistente de origem/licença não verificada.
 
