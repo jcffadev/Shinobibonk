@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { ROSTER_EXPANSION } from '../src/game/rosterExpansion.ts';
 import { HEROES,HERO_BY_ID,heroOrganizations,skillPool,sandSynergy,versionForEncounter,isProjectileUltimate } from '../src/game/heroes.ts';
-import { calculateStats,rollCritical,difficultyAt,heroDamageScale,xpToLevelUp,effectiveLootLuck } from '../src/game/progression.ts';
+import { calculateStats,rollCritical,difficultyAt,heroDamageScale,heroHpScale,xpToLevelUp,effectiveLootLuck } from '../src/game/progression.ts';
+import { altarProjectiles,projectileLabel } from '../src/game/altarRewards.ts';
 import { megaEliteHp,rollMegaSchedule } from '../src/game/enemyTiers.ts';
 import { guardianVitality,guardianDefense } from '../src/game/missions.ts';
 import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
@@ -103,6 +104,12 @@ for(const id of ['damage','life','sandals','experience','coins','luck','pickup',
 const n1=calculateStats('naruto',1),n2=calculateStats('naruto',2);
 assert.ok(n2.damage/n1.damage>1.09&&n2.damage/n1.damage<1.12);assert.equal(n1.maxHp,57);for(const hero of HEROES){const s=calculateStats(hero.id,1);assert.ok(s.maxHp>=50&&s.maxHp<=68,hero.id+" HP inicial "+s.maxHp);assert.ok(calculateStats(hero.id,25).maxHp>s.maxHp*1.65);}
 assert.equal(heroDamageScale(1),.74);assert.ok(heroDamageScale(50)>14&&heroDamageScale(50)<15);
+// Rodada 55 (PROPOSTO): HP por nível desacelera — 1 + 0,04n/(1+n/150); Nv. 415 ≈ ×5,4 (antes ×52, ~2.960 HP sem itens).
+assert.equal(heroHpScale(1),1);assert.ok(Math.abs(heroHpScale(415)-5.4)<.01);assert.ok(heroHpScale(100)>3.3&&heroHpScale(100)<3.5);
+assert.ok(calculateStats('naruto',415).maxHp<=320&&calculateStats('naruto',415).maxHp>=290,'Naruto Nv. 415 sem itens ~308 HP');
+for(let l=2;l<=600;l+=7)assert.ok(heroHpScale(l)>heroHpScale(l-7),'HP sempre cresce com o nível');
+// Rodada 55: bênção de altar dá projétil/golpe inteiro só de Raro para cima (Comum/Incomum = 0).
+assert.deepEqual([0,1,2,3,4].map(altarProjectiles),[0,0,1,2,3]);assert.equal(projectileLabel(1),'+1 projétil/golpe extra');
 assert.ok(heroDamageScale(500)>7000&&heroDamageScale(1000)>90000);
 assert.equal(xpToLevelUp(1),30);assert.ok(xpToLevelUp(1000)>xpToLevelUp(500));
 const overtime=18*60,runSeconds=10*60+overtime;
@@ -301,7 +308,10 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
   const gcSrc=fs.readFileSync('src/scene/GameCanvas.tsx','utf8');
   assert.ok(gcSrc.includes("yaw-=dx*.0025*settings.mouseSensitivity"),'taxa do yaw reduzida e simétrica (rodada 44)');
   assert.ok(gcSrc.includes("dy*.0025*settings.mouseSensitivity"),'taxa do pitch reduzida e simétrica (rodada 44)');
-  assert.ok(gcSrc.includes("clamp(pitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),.05,1.48)"),'piso do pitch deitado para 0.05 rad (rodada 44)');
+  assert.ok(gcSrc.includes("clamp(pitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),CAMERA_MIN_PITCH,1.48)")&&gcSrc.includes('CAMERA_MIN_PITCH = .03'),'piso do pitch deitado para 0.03 rad (rodada 44 → 55)');
+  assert.ok(gcSrc.includes('CAMERA_OCCLUSION_ALLOWANCE')&&!gcSrc.includes('terrainHeight(camera.position.x,camera.position.z)+1.2'),'scan de terreno tolera canela coberta e sem trava de altura da câmera (rodada 55)');
+  const { DEFAULT_SETTINGS } = await import('../src/game/settings.ts');
+  assert.equal(DEFAULT_SETTINGS.musicVolume,.1,'música padrão em 10% (rodada 55)');
   assert.ok(gcSrc.includes('let yaw=Math.PI/4, pitch=.55'),'início da partida com câmera mais deitada (0.55 rad, rodada 44)');
   const stSrc=fs.readFileSync('src/ui/SettingsScreen.tsx','utf8');
   assert.ok(stSrc.includes('6/11'),'dica do multiplicador do ponteiro do Windows no slider de sensibilidade (rodada 44)');

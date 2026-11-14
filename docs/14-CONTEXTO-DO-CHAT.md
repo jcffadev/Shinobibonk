@@ -1605,3 +1605,17 @@ A compilação, o teste de regras, as 62 verificações em navegador e os 960 es
 ### Resposta
 
 O Claude Code vinha trabalhando por engano em `C:\Shinobibonk projeto` (cópia antiga); a pasta principal é a "- Copia" (regra da rodada 35, reforçada na 52). Na "- Copia", o Codex tinha uma rodada inteira sem commit (18 versões novas — Akatsuki, Som, Taka —, arte nova e rebalanceamento de HP/dano). Validada (tsc, build, verify-rules 114/213/95) e publicada como Rodada 54; detalhes no CHANGELOG.
+
+## Rodada 55 · 13–14/11/2026 — lote de caminhada, Mega Elite caído, HUD, HP, projéteis, zonas e testes
+
+Pedido integral do lote (13/11): ver [docs/25](25-RETOMADA-LOTE-13-11.md) §2. Mensagens complementares:
+
+> pausar · retomar · pausar e fazer sem subagentes, fazer 1 tarefa por vez ai · Tem certeza que todos os personagens estão andando normal? Respeitando as folhas de animação para a caminhada com o WASD, virando para as respectivas direções e andando reto, diagonal... enfim · Pause seus testes abrindo o microsoft edge por enquanto... crie software de teste automatizado na minha máquina por código · Apenas para o claude por enquanto, faça esse .md (política de testes sem navegador colada pelo usuário)
+
+### Resposta
+
+Caminhada medida no jogo antes da suspensão do navegador: jogador certo nas 8 direções × 4 ângulos; ajudantes e Mega Elites certos; monstros 33/35. As bijū não viram de costas, porque falta arte de costas (PENDENTE de arte).
+
+Política de testes sem navegador registrada em `CLAUDE.md` (só para o Claude Code). Criados `tests/` (22 testes em node:test, sem navegador), `TESTAR_JOGO.bat` e `npm test`. O erro que o usuário viu ao rodar o .bat era da primeira versão, que passava a pasta `tests\` ao Node; já corrigido para o padrão `tests/*.test.mjs` e verificado (22 de 22).
+
+Rodada 55 publicada. Detalhes e pendências E2E no CHANGELOG. Próxima tarefa: fontes da HUD.

@@ -9,6 +9,23 @@ export function movementFacing(vertical:number,horizontal:number){
   return {back:vertical>.18,left:horizontal<-.18,diagonal};
 }
 
+export type FacingMemory = { back: boolean; left: boolean };
+/**
+ * Rodada 55 — orientação de atores que andam sozinhos (ajudantes, Kuri, clones, Mega Elites, inimigos comuns/elite).
+ * `vertical`/`horizontal` são as componentes NORMALIZADAS do deslocamento na base da câmera (v1 = para longe da
+ * câmera, v2 = direita da tela), então a regra vale com a câmera em qualquer ângulo (360°).
+ * Histerese em vez de um limiar único: costas liga acima de 0,26 e desliga abaixo de 0,10; o espelho vira para a
+ * esquerda abaixo de −0,10 e volta acima de +0,10, e na faixa do meio mantém o último lado. Assim, andando de lado
+ * (vertical ≈ 0) ou reto para cima/baixo (horizontal ≈ 0), a fileira e o espelho NÃO piscam a cada quadro.
+ * A memória fica no próprio ator (`holder.facing`, normalmente `sprite.userData`).
+ */
+export function stableFacing(holder: { facing?: FacingMemory }, vertical: number, horizontal: number) {
+  const memory = holder.facing ?? (holder.facing = { back: vertical > .18, left: horizontal < -.18 });
+  if (vertical > .26) memory.back = true; else if (vertical < .1) memory.back = false;
+  if (horizontal < -.1) memory.left = true; else if (horizontal > .1) memory.left = false;
+  return { back: memory.back, left: memory.left, diagonal: Math.abs(vertical) > .32 && Math.abs(horizontal) > .32 };
+}
+
 export type StrikePose = 'punch' | 'kick';
 type Strike = { weapon: boolean; left?: boolean; special: boolean; pose?: StrikePose; seal: boolean; back?: boolean };
 /** Fração do golpe a partir da qual um novo ataque pode encadear. Antes disso o pedido fica na fila (o mais recente vence)
@@ -124,7 +141,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   let idleFrac = 0; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
   let propCur = 1; // Rodada 45: fator de proporção SUAVIZADO (lerp exponencial) — elimina o 'pulo' de tamanho/altura na troca de folha.
   let queued: Strike | undefined;
-  let frameShown = 0, strideShown = 0, walkAttack = false, walkLean=0;
+  let frameShown = 0, strideShown = 0, walkAttack = false, walkLean=0, rowShown = -1;
   const begin = (next: Strike) => {
     queued = undefined;
     attack = attackDuration = next.special ? .55 : next.weapon ? .25 : .22;
@@ -151,7 +168,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     },
     state: () => state,
     /** Inspeção de testes: quadro (coluna) em uso, progresso do golpe e se as pernas estão no passo durante o ataque. */
-    debug: () => ({ state, frame: frameShown, progress: attack > 0 ? +(1 - attack / attackDuration).toFixed(3) : 1, walkAttack, rear:!!sprite.material.map&&state==='walk'&&rear, uvY:sprite.material.map?.offset.y, stride: +strideShown.toFixed(4), queued: !!queued }),
+    debug: () => ({ state, frame: frameShown, progress: attack > 0 ? +(1 - attack / attackDuration).toFixed(3) : 1, walkAttack, rear:!!sprite.material.map&&state==='walk'&&rear, uvY:sprite.material.map?.offset.y, stride: +strideShown.toFixed(4), queued: !!queued,
+      /** Rodada 55: fileira da folha em uso (0 = frente, 1 = costas, −1 = sem folha direcional/repouso), espelho e folha. */
+      row: rowShown, flip: (sprite.material.map?.repeat.x ?? 1) < 0, atlas: posePath }),
     atlas: () => posePath,
     hurt: () => { hurt = .23; },
     setBodyScale(scale:number){targetBodyScale=scale;},
@@ -170,6 +189,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         sealMap = sealSheet && sheetTexture(sealSheet.path);
       }
       attack = Math.max(0, attack - dt);
+      rowShown = -1;
       if (queued && (attack === 0 || 1 - attack / attackDuration >= CHAIN_AT)) begin(queued);
       const attackProgress = attack > 0 ? 1 - attack / attackDuration : 1;
       // Rodada 45 — fase contínua: antes, ao parar, stepTime zerava e a caminhada 'reiniciava' do quadro 0 ao retomar (o 'snap'/falha que o usuário via). Agora a fase segue, e o ciclo de passos continua de onde parou (mais fluido, como uma caminhada real).
@@ -201,6 +221,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         frameShown = frame;
         walkAtlas.repeat.x = leftward ? -.25 : .25;
         walkAtlas.offset.set((frame + Number(leftward)) / 4, backwardView ? 0 : .5);
+        rowShown = Number(backwardView);
       }
       const useAsuma = !!asuma?.image && state !== 'idle';
       if (useAsuma && asuma) {
@@ -208,6 +229,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
           : state === 'jump' ? 8 : state === 'dash' ? 9 : state === 'hurt' ? 10
           : state === 'ultimate' ? 15 : throwingWeapon ? Math.min(14, 12 + Math.floor((.25 - attack) / .08)) : 11;
         frameShown = frame % 4;
+        if (state === 'walk') rowShown = Number(rear);
         asuma.repeat.set(mirror ? -.25 : .25, .25);
         asuma.offset.set((frame % 4 + Number(mirror)) / 4, (3 - Math.floor(frame / 4)) / 4);
       }
@@ -246,14 +268,18 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
           ? (poseSheet.firstRow ?? 0) + (attacking ? (painUltimate ? 2 + Number(rear) : Number(rear)) : 2 + Number(separateAcrobatics ? state === 'dash' : backwardView))
           : (poseSheet.firstRow ?? 0) + Number(secondRow);
         poseMap.repeat.set(flip ? -.25 : .25, 1/rows);
+        rowShown = (row - (poseSheet.firstRow ?? 0)) % 2;
         poseMap.offset.set((frame + Number(flip)) / 4, (rows-1-row)/rows);
       }
       if (useDirection && directionMap && directionSheet && (!useAction || directionMap!==poseMap)) {
         const frame = directedCast ? Math.min(3, Math.floor(attackProgress * 4))
           : state==='jump' ? (jumpProgress<.24||jumpProgress>.76?0:2) : state==='dash' ? (slideProgress<.72?2:1) : Math.floor(stepTime * 10) % 4;
         if (!useSeal && !useAction) frameShown = frame;
-        const row = directedCast ? 2 : (directionSheet.firstRow ?? 0) + Number(backwardView && !(state==='walk' && diagonalInput));
+        // Rodada 55 — a diagonal para longe da câmera (W+A / W+D) também usa a fileira de COSTAS. Antes a diagonal
+        // caía sempre na fileira de frente (o personagem 'andava de costas olhando para a câmera').
+        const row = directedCast ? 2 : (directionSheet.firstRow ?? 0) + Number(backwardView);
         const flip = directedCast ? mirror : leftward;
+        if (!useSeal && !useAction) rowShown = directedCast ? Number(rear) : row - (directionSheet.firstRow ?? 0);
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
         directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
       }

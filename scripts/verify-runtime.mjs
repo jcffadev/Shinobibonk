@@ -327,7 +327,8 @@ checks.push('Sasuke inicial usa quadros de ataque, pulo e dash; cursor e fundo d
 
 for(const id of ['chomei','gyuki']){
  await debug('clearEnemies');
- await page.waitForFunction(name=>window.__shinobiTest.bossArt(name).endsWith('/bijuu/'+name+'-v2.png'),id);
+ // Rodada 54: as bijū usam os atlas de movimento (frente/costas/passo) em vez das artes -v2 estáticas.
+ await page.waitForFunction(name=>/\/bijuu\/motion-v1-[1-3]\.png$/.test(window.__shinobiTest.bossArt(name)),id);
 }
 checks.push('Chōmei e Gyūki usam as novas texturas na cena');
 

@@ -25,7 +25,9 @@ export const BOSS_RULES = {
 
 type CastShape = 'circle' | 'cone' | 'line' | 'lineV' | 'ring';
 type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir: THREE.Vector3; range: number; width: number; windup: number; total: number; power: number; marker: THREE.Group; ultimate: boolean };
-export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number; motionTime:number; recoil:number; motionMap?:THREE.Texture; motionRow?:number };
+export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number; motionTime:number; recoil:number; motionMap?:THREE.Texture; motionRow?:number;
+  /** Rodada 55: espelho com histerese, posição anterior (andar = deslocamento real) e quadro exibido (testes). */
+  flip?:boolean; lastX?:number; lastZ?:number; walkBlend?:number; pose?:number };
 export type BossHost = { sprite: THREE.Sprite; hp: number; heroId?: string; guardian?: boolean; boss?: BossState };
 
 export type BossContext = {
@@ -36,6 +38,8 @@ export type BossContext = {
   hidden: () => boolean;
   /** Aplica o golpe no jogador (ameaça, armadura, evasão, invulnerabilidade e god mode ficam com a simulação). */
   hitPlayer: (base: number, slowSeconds: number) => void;
+  /** Rodada 55: direita da tela projetada no chão (v2 da câmera). Espelha a bijū pela câmera e não pelo eixo X do mundo. */
+  viewRight?: () => THREE.Vector3;
 };
 
 const markerMaterial = () => new THREE.MeshBasicMaterial({ color: '#ff2f4f', transparent: true, opacity: .22, side: THREE.DoubleSide, depthWrite: false });
@@ -188,7 +192,14 @@ export function createBossCombat(ctx: BossContext) {
       if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.2,1.35,.68][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
     }
     if(phase){
-      const moving=canAct&&!state.cast;
+      // Rodada 55 — anda só quando DE FATO se desloca (antes: 'pode agir' = andando, então a bijū colada no jogador
+      // ou presa no relevo ficava trocando os quadros de passo parada). Velocidade medida pela posição do quadro anterior.
+      const px=host.sprite.position.x,pz=host.sprite.position.z;
+      const speed=state.lastX===undefined||dt<=0?0:Math.hypot(px-state.lastX,pz-(state.lastZ??pz))/dt;
+      state.lastX=px;state.lastZ=pz;
+      const movingNow=!state.cast&&speed>.25;
+      state.walkBlend=(state.walkBlend??0)+((movingNow?1:0)-(state.walkBlend??0))*(1-Math.exp(-dt*10));
+      const moving=state.walkBlend>.5;
       state.motionTime+=dt*(moving?5:2.5);
       const step=Math.sin(state.motionTime);
       const windup=state.cast?1-Math.max(0,state.cast.windup)/state.cast.total:0;
@@ -196,8 +207,15 @@ export function createBossCombat(ctx: BossContext) {
       const isFlying=host.heroId==='chomei';
       const lift=isFlying?.28+Math.abs(step)*.24:moving?Math.abs(step)*.14:0;
       if(state.motionMap?.image){
-        const pose=state.recoil>0?3:state.cast?2:Number(step<0);
-        const flip=ctx.player.position.x<host.sprite.position.x;
+        // Parada: quadro 0 (a respiração vem da escala); andando: alterna os dois quadros de passo da folha.
+        const pose=state.recoil>0?3:state.cast?2:moving?Number(step<0):0;
+        state.pose=pose;
+        // Espelho pela DIREITA DA TELA (a câmera gira 360°): a arte olha para a direita; vira quando o jogador
+        // está à esquerda na tela. Histerese de ±0,6 m para não piscar com o jogador bem acima/abaixo dela.
+        const right=ctx.viewRight?.();
+        const side=right?(ctx.player.position.x-px)*right.x+(ctx.player.position.z-pz)*right.z:host.sprite.position.x-ctx.player.position.x<0?1:-1;
+        if(state.flip===undefined)state.flip=side<0;else if(side<-.6)state.flip=true;else if(side>.6)state.flip=false;
+        const flip=state.flip;
         state.motionMap.repeat.x=flip?-.25:.25;
         state.motionMap.offset.set((pose+Number(flip))/4,(2-(state.motionRow??0))/3);
         host.sprite.material.map=state.motionMap;

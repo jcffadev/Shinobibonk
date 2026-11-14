@@ -15,6 +15,18 @@ export function heroDamageScale(level:number) {
   const levels=Math.max(0,level-1);
   return (.74+.26*Math.min(1,levels/14))*(1+levels*.04)*(1+levels/72)**3;
 }
+/**
+ * Crescimento do HP base por nível (Rodada 55 — pedido do usuário: "Scale de HP ainda muito alto… level 415 e estou com
+ * 1613 de HP é muita coisa"). Antes (rodada 54): `1 + 0,032n + 0,00022n²` (quadrático: Nv. 415 ≈ ×52 → ~2.960 HP sem itens).
+ * Agora o ganho por nível desacelera (hiperbólico): `1 + 0,04n / (1 + n/150)` — ~4%/nível no início (Nv. 1–25 um pouco acima do antigo),
+ * ~1/4 disso no Nv. 150 e teto assintótico ×7. Nv. 10 ×1,34 · 50 ×2,51 · 100 ×3,39 · 200 ×4,42 · 415 ×5,40.
+ * Valores PROPOSTOS — o usuário testa e ajustamos.
+ */
+export const HP_GROWTH={perLevel:.04,softLevels:150};
+export function heroHpScale(level:number) {
+  const levels=Math.max(0,level-1);
+  return 1+HP_GROWTH.perLevel*levels/(1+levels/HP_GROWTH.softLevels);
+}
 export function effectiveLootLuck(luck:number, elapsed:number) {
   return luck*(.2+.8*Math.min(1,Math.max(0,elapsed)/150));
 }
@@ -39,7 +51,7 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
   const baseHp=46+.085*Math.min(215,base.hp);
   const armorByLevel=base.armor*(1+n*.01)+n*.25;
   return applyPowerlevel({
-    sage:add('sage'),maxHp:Math.round((baseHp*(1+n*.032+n*n*.00022)+add('health')+bonusHp+scaled('Resistência')*3)*Math.max(.1,1+add('healthPct'))),
+    sage:add('sage'),maxHp:Math.round((baseHp*heroHpScale(level)+add('health')+bonusHp+scaled('Resistência')*3)*Math.max(.1,1+add('healthPct'))),
     damage:base.damage*heroDamageScale(level)*(1+add('damage')+scaled('Treinamento')*.04)*(familyOf(heroId)==='gaara'?1+(armorByLevel+add('defense')+scaled('Colete Shinobi')*2)*.01:1),
     armor:armorByLevel+add('defense')+scaled('Colete Shinobi')*2,
     crit:Math.max(0,base.crit+n*.0015+add('crit')+scaled('Precisão')*.01),critDamage:2.5+add('critDamage'),
@@ -53,7 +65,8 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
 /** Escala das missões sobre a base Genin (o que é salvo no debug vale como Genin e é multiplicado por isto). */
 export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6};
 /**
- * Escala dos inimigos com o tempo TOTAL da run (não reseta por zona). Valores provisórios; o debug multiplica por cima.
+ * Escala dos inimigos com o tempo DA ZONA (Rodada 55: reinicia do minuto 0 a cada zona — antes era o tempo total da run).
+ * `seconds` = zoneElapsed no GameCanvas; ZONE_DIFFICULTY, missão e +% de inimigos/ameaça entram por cima. Valores provisórios; o debug multiplica por cima.
  * Revisão 06/11/2026 (pedido do usuário: "8 min e só 60 bichos", "HP/dano baixíssimos"):
  * - HP  = tier × (1 + min × hpLinear) × hpPerMinute^min      → Genin: 2 min ×2,1 · 5 min ×5,0 · 8 min ×10,4 · 10 min ×16 · 15 min ×46 · 30 min ×660
  * - Dano= tier × (1 + min × damageLinear) × damagePerMinute^min → 10 min ×5,4 · 30 min ×40

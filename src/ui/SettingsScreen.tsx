@@ -59,7 +59,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
     const d = DEFAULT_SETTINGS;
     const by: Record<Category, Partial<GameSettings>> = {
       som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, musicVolume: d.musicVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
-      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
+      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, showTechniqueAreas: d.showTechniqueAreas, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
       tela: { resolution: d.resolution, renderer: d.renderer },
       controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, autoUltimate: d.autoUltimate, sealAnimation: d.sealAnimation },
       teclas: { keys: { ...DEFAULT_KEYS } },
@@ -89,6 +89,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
           <Card title="V-Sync (sincronizar com o monitor)" hint="Ligado: um quadro por quadro do monitor. Desligado: renderiza acima da taxa do monitor quando o sistema aguentar (mais CPU/calor). No navegador é o melhor esforço; no .exe desliga a sincronização direto" wide><Toggle value={settings.vsync} onChange={(v) => set({ vsync: v })} /></Card>
           <Card title="Placa de vídeo" hint="Escolhe a GPU do jogo; a troca recria o contexto na hora. No .exe: placa e renderizador (OpenGL/DirectX) à sua escolha" wide><Choice value={settings.gpu} options={[{ value: 'auto', label: 'Automática' }, { value: 'desempenho', label: 'Alto desempenho (dedicada)' }, { value: 'integrada', label: 'Integrada (economia)' }]} onChange={(v) => set({ gpu: v })} /></Card>
           <Card title="Ocultar meus ataques" hint="Começa a partida sem desenhar os efeitos dos seus golpes (H alterna). O dano continua igual"><Toggle value={settings.hideMyAttacks} onChange={(v) => set({ hideMyAttacks: v })} /></Card>
+          <Card title="Mostrar áreas das técnicas" hint="Contorno no chão de onde cada técnica acerta (mesmo alcance do dano). Com H fica só o contorno"><Toggle value={settings.showTechniqueAreas} onChange={(v) => set({ showTechniqueAreas: v })} /></Card>
           <Card title="Números de dano"><Toggle value={settings.damageNumbers} onChange={(v) => set({ damageNumbers: v })} /></Card>
           <Card title="Drops discretos" hint="EXP, Ryu e Chakra menores; são coletados igual"><Toggle value={settings.discreetDrops} onChange={(v) => set({ discreetDrops: v })} /></Card>
           <Card title="Efeitos de coleta" hint="Nenhum: sem som ao coletar. Dá mais FPS com muitos drops"><Choice value={settings.pickupFx} options={[{ value: 'completos', label: 'Completos' }, { value: 'simples', label: 'Simples' }, { value: 'nenhum', label: 'Nenhum' }]} onChange={(v) => set({ pickupFx: v })} /></Card>

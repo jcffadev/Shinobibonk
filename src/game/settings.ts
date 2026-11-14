@@ -21,7 +21,7 @@ export type GameSettings = {
   // Som
   volume: number; sfxVolume: number; voiceVolume: number; musicVolume: number; voiceLanguage: 'pt' | 'ja'; muteInBackground: boolean;
   // Gráficos
-  quality: Quality; fpsLimit: number; vsync: boolean; gpu: GpuChoice; hideMyAttacks: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
+  quality: Quality; fpsLimit: number; vsync: boolean; gpu: GpuChoice; hideMyAttacks: boolean; showTechniqueAreas: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
   // Tela
   resolution: Resolution; renderer: Renderer;
   // Controles
@@ -32,16 +32,21 @@ export type GameSettings = {
   hudScale: number; hudOpacity: number; minimap: boolean; minimapScale: number; toasts: boolean;
   // Conta
   playerName: string;
+  /** Versão do formato salvo (migrações de padrão). 2 = rodada 55 (música padrão 10%). */
+  settingsVersion: number;
 };
+/** Rodada 55 (pedido do usuário: "abaixar a música na configuração padrão… cerca de 10%"): padrão da música 0,7 → 0,1. */
+const MUSIC_DEFAULT = .1, OLD_MUSIC_DEFAULT = .7, SETTINGS_VERSION = 2;
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
-  volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: .7, voiceLanguage: 'pt', muteInBackground: true,
-  quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
+  volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: MUSIC_DEFAULT, voiceLanguage: 'pt', muteInBackground: true,
+  quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
   resolution: 'auto', renderer: 'directx',
   mouseSensitivity: 1, invertY: false, cameraDistance: 19, autoUltimate: false,
   keys: { ...DEFAULT_KEYS },
   hudScale: 1, hudOpacity: 1, minimap: true, minimapScale: 1, toasts: true,
   playerName: 'Shinobi',
+  settingsVersion: SETTINGS_VERSION,
 };
 const KEY = 'sb_settings_v1';
 
@@ -51,7 +56,10 @@ function load(): GameSettings {
     const parsed = raw ? JSON.parse(raw) as Partial<GameSettings> : {};
     const keys = { ...DEFAULT_KEYS, ...(parsed.keys ?? {}) };
     if (keys.sheet === 'tab') { keys.sheet = 'p'; keys.quickMap = 'tab'; }
-    return { ...DEFAULT_SETTINGS, ...parsed, keys };
+    // Migração v1 → v2: quem salvou a música exatamente no padrão antigo (70%) passa ao novo padrão (10%);
+    // qualquer outro valor salvo é escolha do jogador e fica como está.
+    if ((parsed.settingsVersion ?? 1) < SETTINGS_VERSION && parsed.musicVolume === OLD_MUSIC_DEFAULT) parsed.musicVolume = MUSIC_DEFAULT;
+    return { ...DEFAULT_SETTINGS, ...parsed, keys, settingsVersion: SETTINGS_VERSION };
   } catch { return { ...DEFAULT_SETTINGS, keys: { ...DEFAULT_KEYS } }; }
 }
 let current: GameSettings = load();

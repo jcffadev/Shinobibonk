@@ -68,6 +68,11 @@
 4. Conferir áreas e câmera em capturas.
 5. Documentar a Rodada 55 e publicar.
 
+**Atualização de 14/11 — Rodada 55 publicada (ver CHANGELOG):** tudo acima foi para o GitHub, testado sem navegador. Restam:
+1. **Fontes da HUD** (não iniciado).
+2. Itens **PENDENTES DE VALIDAÇÃO E2E** (navegador suspenso para o Claude, ver `CLAUDE.md`).
+3. Arte de costas das bijū.
+
 **Antes de continuar:** rodar `git status` e `git diff` para ver exatamente o que já foi feito em cada arquivo. Não descartar o parcial (sem `git checkout`/`stash`/`reset`); revisar e completar.
 
 ## 2. Pedido original do usuário (13/11/2026, texto integral)

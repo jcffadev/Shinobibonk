@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## Rodada 55 · 14/11/2026 — caminhada, Mega Elite caído, HP, projéteis, zonas e testes sem navegador
+
+Lote do usuário de 13/11 (pedido integral em docs/14 e em [docs/25](docs/25-RETOMADA-LOTE-13-11.md)). Feito em parte por subagentes e concluído pelo Claude Code, uma tarefa por vez.
+
+- **Caminhada (WASD × câmera):** nova `stableFacing` com histerese (`playerMotion.ts`) em ajudantes, clones, Kuri e monstros, sem piscar entre frente e costas nem no espelho. Monstros usam a folha de costas também na diagonal. Bijū espelham pela direita da tela e só alternam os passos quando de fato se deslocam (`bossCombat.ts`). Medição feita no navegador antes da suspensão desses testes: jogador certo nas 8 direções × 4 ângulos; ajudantes e Mega Elites certos; monstros 33/35. **PENDENTE de arte:** as bijū não viram de costas, porque o atlas `bijuu/motion-v1-*` só tem vista lateral.
+- **Mega Elite caído** (`src/scene/fallenShinobi.ts`): cambaleia, cai e fica deitado com halo suave no chão, na cor do contorno (vermelho para Mega Elite, ciano para Shinobi para selar). Aparece com ⛓ no minimapa/mapa e é capturado com **E** até 10 m (G recusa). Restaurado já deitado ao retomar a run.
+- **Áreas das técnicas** (`src/scene/techniqueAreas.ts`): contorno + preenchimento no chão com o alcance real do golpe; opção **Configurações → Gráficos → Mostrar áreas das técnicas** (padrão ligado; com H fica só o contorno).
+- **Música** padrão 70% → **10%**; quem tinha o padrão antigo e nunca mexeu migra para 10%, e volumes escolhidos são mantidos.
+- **Câmera:** piso do ângulo 0,05 → 0,03 rad; a encosta pode cobrir até a canela antes de o ângulo subir; plano distante dinâmico; sem a trava de altura que inclinava a vista.
+- **HP por nível (PROPOSTO):** `1 + 0,04n/(1+n/150)` (`HP_GROWTH`). Naruto sem itens: Nv. 100 361→193 · Nv. 415 2.961→308.
+- **Projétil nas recompensas:** sai "+35% de chance de projétil extra" do altar. Raro +1, Épico +2, Lendário +3 projéteis/golpes; Comum e Incomum não sorteiam projétil (`src/game/altarRewards.ts`). `projectiles` agora também repete o golpe nas técnicas corpo a corpo/área (0,14 s depois; Ultimate fora).
+- **Troca de zona:** a progressão dos monstros (HP, dano, vivos, spawn, Final Swarm, Mega Elite) usa o tempo **da zona** e recomeça do minuto 0, com ×1,18 (Z2) / ×1,38 (Z3), a dificuldade e os +% de inimigos/ameaça por cima.
+- **Ímã do morro de bolinhos:** drop puxado pelo ímã global chega em ≤ ~1,2 s de qualquer ponto do mapa.
+- **Testes sem navegador (pedido do usuário):** nova pasta `tests/` (`node:test`, módulos do jogo carregados pelo Vite dentro do Node), `TESTAR_JOGO.bat` (tipos + testes + build) e `npm test`. Política em `CLAUDE.md`: o Claude Code não abre navegador para testes até nova autorização. `verify-runtime` atualizado para as texturas `motion-v1` das bijū.
+- **TESTADO:** `tsc -b`, `vite build`, `verify-rules` (114/213/95) e `tests/` (22 testes, 0 falhas).
+- **PENDENTE DE VALIDAÇÃO E2E** (o navegador está suspenso): visual do corpo caído com o halo (perto, longe, névoa); áreas das técnicas em combate; câmera deitada perto de morros e bordas; caminhada com a GPU real; `verify-runtime` completo (a última execução parou no passo de configurações/câmera do Kimimaro, linha ~628, e deve ser revista na reativação).
+- **Não feito:** aumento das fontes da HUD (próxima tarefa).
+
 ## Rodada 54 · 13/11/2026 — trabalho do Codex retomado e publicado pelo Claude Code
 
 O Codex parou com esta rodada sem commit (última edição 08:48 de 13/11). Publicada como estava, após validação:

@@ -53,6 +53,21 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 
 Use `acrobaticsArt` quando a versão já tiver ataque aprovado e precisar somente de pulo/dash. Folha 4×2: frente/costas; colunas impulso, joelhos recolhidos, dash baixo, frenagem. Folha completa 4×4: duas linhas de ataque frente/costas e duas linhas de pulo/dash. Normalize com `scripts/pack-sprite-atlas.ps1`, preservando uma escala por folha e alinhamento dos pés. Mirar à esquerda deve espelhar a orientação. Arte integrada não equivale a revisão visual concluída; registre a cobertura real por versão e confira também como ajudante.
 
+## Rodada 55 · 13/11/2026 — caminhada de TODOS os atores conforme o WASD
+
+- **Regra única de fileira:** frente/costas e espelho vêm do deslocamento na base da câmera (`v1` = para longe da câmera, `v2` = direita da tela), então valem com a câmera girada em qualquer ângulo. Para longe da câmera = **costas**, inclusive na **diagonal** (W+A, W+D, e o mesmo para ajudantes/inimigos que sobem na tela). Nunca force a fileira de frente na diagonal (era o bug de `playerMotion.ts`: `!(walk && diagonal)`; e no lote dos inimigos: `!diagonal`).
+- **Jogador:** teclas discretas (`moveVertical > 0` = costas, `moveHorizontal < 0` = espelho), última tecla oposta vence, como já alinhado.
+- **Atores que andam sozinhos** (ajudantes, Kuri, clones, Mega Elites/guardiões/Shinobi para selar, inimigos comuns e elites): use `stableFacing(holder, vertical, horizontal)` de `playerMotion.ts` com a memória no próprio sprite (`sprite.userData`). Histerese: costas liga > 0,26 e desliga < 0,10; espelho liga < −0,10 e desliga > +0,10; no meio mantém o último lado. Nada de `> 0`/`< 0` sem dead zone. Ajudante parado (dentro do slot) mantém a última orientação.
+- **Inimigos em lote (`enemyRenderer.ts`):** andando para longe da câmera usam `shinobi-enemy-walk-back-v1.png` (3 quadros), vindo usam a folha de frente (quadros 0–2); parados usam o quadro 1 de frente; golpe/pulo/dash só de frente.
+- **Bijū (`bossCombat.ts`):** espelho pela direita da TELA (`viewRight` = `v2`), não pelo X do mundo, com histerese de ±0,6 m; passos só quando há deslocamento real (> 0,25 m/s, medido pela posição anterior); parada = quadro 0 + respiração de escala. As folhas `bijuu/motion-v1-*.png` só têm vista de frente (4 colunas: passo A, passo B, preparo, rugido) — costas da bijū dependem de arte nova.
+- **Ganchos de teste:** `actorMotion()` (jogador, ajudantes, Kuri, megas, inimigos em lote, bijū e clones: `row` 0 frente/1 costas, `flip`, `frame`, `state`), `setYaw(rad)`, `fallen()` e `defeatAccount(id, distância)`.
+
+## Corpo caído (Mega Elite / Shinobi para selar) · rodada 55
+
+- `src/scene/fallenShinobi.ts` (`createFallenBody`): sem arte nova, o sprite estático da forma cambaleia (0,4 s), cai girando 90° em torno dos pés para o lado oposto ao jogador (até 0,95 s), quica com poeira e fica **deitado** com respiração leve. É um billboard girado em espaço de tela: deitado em qualquer ângulo de câmera. Contorno na cor (vermelho Mega Elite `#ff4d6d`, ciano Shinobi para selar `#5ff0ff`).
+- Luz: halo no chão que acompanha o relevo (disco suave + anel) e feixe vertical bem fraco, mistura normal (sem aditivo/bloom), `fog:false` para aparecer na névoa, pulsação lenta (2,6 s) e opacidade ≤ 0,72 (cor do contorno clareada 25%). Modo H: só o anel, fixo em 0,45, sem feixe nem poeira. Minimapa/mapa: marcador com retrato e ⛓.
+- E dentro de 10 m do **centro do corpo deitado** captura (ritual ou selamento direto conforme a configuração); G recusa no ritual; troca de zona remove o corpo. O save guarda o centro e `account`.
+
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 Ao verificar o atlas, exija uma folha em todos os estados animados e fileiras de caminhada distintas para frente e costas. Na matriz de teste, use o chute de Lee e o soco de Guy como no controlador em jogo. Para uma folha 4×4, ataque de costas usa a segunda fileira e pulo/dash de costas usam a quarta. A inspeção de recorte e semelhança com o repouso continua separada da suíte.
