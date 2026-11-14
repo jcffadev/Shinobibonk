@@ -105,6 +105,10 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 
 Painel com **41 multiplicadores** (Inimigos · Elites/Mega · Personagem · Ganhos · Drops) salvos em `localStorage` (`sb_debug_tuning_v1`), padrão = todos 1, **valem como base Genin** e são multiplicados por `MISSION_TIER` nas outras dificuldades; alterações valem na hora, no meio da run. É a ferramenta de iteração do balanceamento com o usuário.
 
+## Abertura e XP por zona · 14/11/2026
+
+A abertura interpola de 0,34 a 1 no primeiro minuto. Em Genin, o primeiro quadro calcula teto 12 e 0,68 inimigos por segundo antes da reposição. O [diagnóstico de XP](development/DIAGNOSTICO-XP-ZONA.md) detalha a curva em níveis 100, 300 e 582 e a distinção entre relógio da zona e da missão.
+
 ## 13. Números de dano na tela — `GameCanvas.tsx`
 
 Teto de números simultâneos **300** (era 60; revisão 11/11 — o usuário pode deixar spammando) com pool de sprites + cache LRU de textura.

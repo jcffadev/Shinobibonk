@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'portal conserva XP atraído', arquivo: 'src/game/drops.ts', de: '(magnet || distance < pickupRadius)', para: 'distance < pickupRadius' },
+  { regra: 'marco grande não bloqueia além de 3 m', arquivo: 'src/scene/collision.ts', de: 'buildingMaxRadius: 3,', para: 'buildingMaxRadius: 7,' },
   { regra: 'Comum/Incomum sem projétil no altar', arquivo: 'src/game/altarRewards.ts', de: 'ALTAR_PROJECTILES=[0,0,1,2,3]', para: 'ALTAR_PROJECTILES=[0,1,1,2,3]' },
   { regra: 'Lendário dá +3 projéteis', arquivo: 'src/game/altarRewards.ts', de: 'ALTAR_PROJECTILES=[0,0,1,2,3]', para: 'ALTAR_PROJECTILES=[0,0,1,2,2]' },
   { regra: 'Ultimate não repete golpe', arquivo: 'src/game/altarRewards.ts', de: 'if(ultimate)return 0;', para: '' },

@@ -46,3 +46,5 @@
 .cs-card.cs-locked::after{content:'🔒';position:absolute;top:6px;left:6px;font-size:18px;filter:none}
 .cs-mission-label{font-size:11.5px;color:#d8c39a;line-height:1.2;margin-top:3px}
 
+
+.sheet-banner .sheet-select-portrait { flex:0 0 clamp(56px,7vw,88px); width:clamp(56px,7vw,88px); align-self:center; }

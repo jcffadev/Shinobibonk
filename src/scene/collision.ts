@@ -11,7 +11,8 @@ export const COLLISION_RULES = {
   /** Raio do tronco/pedra por tipo do atlas de ambiente: árvore, pinheiro, bambu, rocha. */
   scenery: [.5, .42, .55, .85],
   /** Fração da largura do sprite que vira raio da base de uma construção. */
-  building: .3,
+  building: .18,
+  buildingMaxRadius: 3,
   /** Folga ao posicionar eventos e coletáveis fora das construções. */
   placementMargin: 2.5,
 };
@@ -31,10 +32,18 @@ export function createSolids() {
     }
     return moved;
   };
+  function add(x: number, z: number, r: number, building = false) {
+    const solid = { x, z, r, big: building };
+    all.push(solid);
+    if (building) big.push(solid);
+  }
   return {
     all, big,
     /** `building` também desvia inimigos e afasta eventos e coletáveis. */
-    add(x: number, z: number, r: number, building = false) { const s = { x, z, r, big: building }; all.push(s); if (building) big.push(s); },
+    add,
+    addBuilding(x: number, z: number, width: number) {
+      add(x, z, Math.min(COLLISION_RULES.buildingMaxRadius, width * COLLISION_RULES.building), true);
+    },
     /** Jogador: colide com tudo. Duas passadas resolvem cantos entre dois sólidos vizinhos. */
     resolve(p: Point, radius = COLLISION_RULES.playerRadius) { if (!COLLISION_RULES.enabled) return false; const moved = push(all, p, radius); if (moved) push(all, p, radius); return moved; },
     /** Inimigos: só contornam construções (poucos sólidos; barato com milhares de inimigos). */

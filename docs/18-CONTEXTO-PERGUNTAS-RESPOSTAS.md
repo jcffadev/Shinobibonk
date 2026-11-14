@@ -108,7 +108,13 @@ Decisões de longa duração. Mudança de qualquer item = nova entrada aqui com 
 | 12/11 | **Ataques inimigos (rodada 51 — pedido do usuário, 12/11):** os projéteis inimigos voltam a ser **Kunai/Shuriken** (o usuário reclamou da troca para pergaminhos); os **pergaminhos do chão permanecem como recompensa** (rodada 49) — visuais separadas entre projéteis inimigos e pickups do chão. |
 | — | Terminologia: `attackSpeed` = **velocidade de ataque** (nunca "cadência"). pt-BR, objetivo e técnico. |
 
+## Direção atual de arte e câmera · 14/11
+
+O usuário exige vistas distintas para todas as versões. W e S usam costas e frente retas, A e D perfil, combos diagonais em três quartos. A ficha e a seleção compartilham o retrato em três quartos. A faixa infantil usa Gaara Genin como mínimo. Adultos mantêm a altura do grupo, com Zabuza acima dela. Câmera mantém o jogador central e visível sobre relevo e inimigos sobrepostos.
+
 ## 4. Registro cronológico de P/R (todas as rodadas)
+
+**Rodada 64 (14/11)** — seguiu a fila de correções, acrescentou as vistas e escala do elenco ao diagnóstico, atualizou Hanzō e Haku e entregou foco e câmera suavizados. Texto integral em [docs/14](14-CONTEXTO-DO-CHAT.md). As vistas de todo o elenco e os retratos que ainda são frontais permanecem pendentes na [matriz](development/COBERTURA-DE-VISTAS.md).
 
 Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-CONTEXTO-DO-CHAT.md](14-CONTEXTO-DO-CHAT.md) (seção de mesmo título) e, para o chat anterior, [ShinobiBonk_CONTEXTO_COMPLETO_DO_CHAT.md](../ShinobiBonk_CONTEXTO_COMPLETO_DO_CHAT.md) (raiz do projeto).
 

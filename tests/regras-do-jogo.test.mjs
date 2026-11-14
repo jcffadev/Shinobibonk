@@ -41,7 +41,7 @@ test('captura do caído: E até 10 m', () => {
 test('câmera pode deitar mais que o piso antigo (0,05 rad) e o laço usa a constante', () => {
   const m = canvas.match(/CAMERA_MIN_PITCH\s*=\s*([\d.]+)/);
   assert.ok(m && Number(m[1]) > 0 && Number(m[1]) < .05, `piso atual ${m?.[1]}`);
-  assert.match(canvas, /pitch=THREE\.MathUtils\.clamp\(pitch\+dy\*.*,CAMERA_MIN_PITCH,1\.48\)/, 'o giro do mouse respeita o piso novo');
+  assert.match(canvas, /targetPitch=THREE\.MathUtils\.clamp\(targetPitch\+dy\*.*,CAMERA_MIN_PITCH,1\.48\)/, 'o giro do mouse respeita o piso novo');
   assert.ok(!/,\.05,1\.48\)/.test(canvas), 'o piso antigo não sobrou');
 });
 
@@ -64,4 +64,10 @@ test('nome do jogo de referência também não aparece DENTRO dos .zip rastreado
     }
   }
   assert.deepEqual(found, []);
+});
+
+test('cena usa a coleta de XP antes da limpeza da zona, o raio do altar e o retorno de dano efetivo', () => {
+  assert.match(canvas, /if \(xpCollectedAtPortal\(drop.type,drop.magnet,distance,stats.pickup\)\)[\s\S]*?xp\+=collectedXp[\s\S]*?clearZone\(\);zoneStart=elapsed/);
+  assert.match(canvas, /RingGeometry\(ALTAR_RULES.radius-\.28,ALTAR_RULES.radius,48\)/);
+  assert.match(canvas, /if\(hp<hpBefore\)\s*\{\s*playerMotion.hurt\(\);\s*playSfx\('hurt'\)/);
 });

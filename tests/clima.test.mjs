@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { castProgress, blendFog, mistHides, isChanneling, CLEAR_FOG, CAST_DISTANCE } from '../src/game/weatherCast.ts';
 import { WEATHER_EVENTS } from '../src/game/maps.ts';
-import { handSealArt, EXTRA_SEAL_SHEETS } from '../src/game/directionalArt.ts';
+import { handSealArt } from '../src/game/directionalArt.ts';
+import { decodePng, cellShape } from '../scripts/audit-walk-sheets.mjs';
 
 const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
 const mist = WEATHER_EVENTS.mist;
@@ -49,12 +50,16 @@ test('Zabuza fica parado fazendo os selos (e só ele)', () => {
   assert.equal(isChanneling(undefined, 'zabuza', 0), false);
 });
 
-test('folha de selos do Zabuza: vazia até a arte existir; quando registrada, passa a ser usada', () => {
-  assert.equal(handSealArt('zabuza', 1), undefined, 'sem arte: usa a pose de conjuração da folha de ação');
-  assert.ok(handSealArt('naruto', 1), 'Naruto continua com a folha de selos');
-  EXTRA_SEAL_SHEETS.zabuza = '/assets/shinobi-motion/zabuza-seal-v1.png';
-  try { assert.deepEqual(handSealArt('zabuza', 1), { path: '/assets/shinobi-motion/zabuza-seal-v1.png', row: 0 }); }
-  finally { delete EXTRA_SEAL_SHEETS.zabuza; }
+test('selos do Zabuza: a folha tem preparo e selo distintos de frente e de costas', () => {
+  const art=handSealArt('zabuza', 1);
+  assert.deepEqual(art,{path:'/assets/shinobi-motion/zabuza-seal-v1.png',row:0});
+  const image=decodePng(new URL('../public'+art.path,import.meta.url));
+  assert.deepEqual([image.width,image.height],[1280,1280]);
+  const shapes=[0,1,2,3].map(col=>cellShape(image,col*320,0,320,320));
+  assert.ok(shapes.every(shape=>!shape.empty));
+  assert.equal(new Set(shapes.map(shape=>shape.asym)).size,4);
+  assert.ok(handSealArt('naruto',1));
+  assert.equal(handSealArt('haku',1),undefined);
 });
 
 test('GameCanvas: Zabuza surge à vista, faz selos, névoa engrossa e só depois esconde', () => {
@@ -63,7 +68,7 @@ test('GameCanvas: Zabuza surge à vista, faz selos, névoa engrossa e só depois
   assert.match(canvas, /castEnd:w\.cast\?elapsed\+w\.cast\.seconds:undefined/);
   assert.match(canvas, /eventToast=w\.cast\?w\.cast\.line:/, 'fala da técnica');
   assert.match(canvas, /const channeling=isChanneling\(weatherEvent,enemy\.heroId,elapsed\);const stunned=channeling\|\|/, 'parado durante os selos');
-  assert.match(canvas, /if\(channeling&&motion\)\{[^}]*motion\.attack\(false,false,true,undefined,true\);/, 'repete os selos');
+  assert.match(canvas, /if\(channeling&&motion\)\{[^}]*motion\.attack\(false,left,true,undefined,true,back\);/, 'repete os selos');
   assert.match(canvas, /blendFog\(active,castProgress\(elapsed,weatherEvent\?\.castEnd/, 'névoa engrossando');
   assert.ok(!/weatherEvent\?\.id==='mist'/.test(canvas), 'toda verificação de névoa passa por mistHides');
 });

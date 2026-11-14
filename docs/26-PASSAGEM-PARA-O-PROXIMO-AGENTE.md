@@ -15,6 +15,14 @@
 - **Zero rastro do jogo de referência:** nada com o nome dele no projeto. O teste em `tests/regras-do-jogo.test.mjs` verifica os arquivos e o conteúdo dos .zip.
 - `TEST_UNLOCK_ALL = true` (`src/game/account.ts`) deixa o elenco liberado para teste. Voltar a `false` antes de versão pública.
 
+## Estado de 14/11 após a primeira revisão dos pedidos novos
+
+- **Próximo:** completar a arte em perfil de todo o elenco e as vistas retas que faltam. Consultar a [matriz por versão](development/COBERTURA-DE-VISTAS.md) e os critérios da skill de movimento. Teste de recortes é diferente da avaliação do ângulo do desenho.
+- Hanzō e Haku têm arte original atualizada no jogo. Zabuza usa a folha de selos. A ficha passou a usar o retrato da seleção. Ainda conferir os retratos que precisam de vista em três quartos.
+- Foco do jogador, fade, câmera e terreno foram atualizados. Revisão manual da direção da passada, da escala, dos retratos, da câmera e do cenário continua pendente.
+- A correção do portal conserva XP atraído ou próximo. [Diagnóstico numérico](development/DIAGNOSTICO-XP-ZONA.md). Colisão, borda do altar e feedback de dano foram implementados. As propostas sobre bônus de XP e projéteis aguardam decisão.
+- A skill de jutsus WebGL e os testes em partida continuam na fila.
+
 ## Fila, em ordem
 
 | # | Item | Estado e o que fazer |

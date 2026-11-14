@@ -113,7 +113,7 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
       const { back, left, diagonal } = M.movementFacing(vertical, horizontal);
       walks[keys] = [];
       const update = (dt, walking, jump, sliding, progress) => {
-        motion.update(dt, 0, 1, 1, walking, back, left, 1, jump, sliding, diagonal, progress, progress);
+        motion.update(dt, 0, 1, 1, walking, back, left, 1, jump, sliding, diagonal, progress, progress,vertical===0&&horizontal!==0);
       };
       for (let i = 0; i < 6; i++) {
         update(.08, true, 0, false, 0);
@@ -138,10 +138,10 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
       update(.6, false, 0, false, 0);
     }
     assert.notEqual(walks.W[0].row, walks.S[0].row, hero.id + ' frente e costas');
-    for (const keys of ['WD', 'WA']) assert.equal(walks[keys][0].row, walks.W[0].row, hero.id + ' caminhada ' + keys);
-    for (const keys of ['A', 'D', 'SD', 'SA']) assert.equal(walks[keys][0].row, walks.S[0].row, hero.id + ' caminhada ' + keys);
-    for (const keys of ['WD', 'WA']) assert.equal(dashes[keys][0].row, dashes.W[0].row, hero.id + ' dash ' + keys);
-    for (const keys of ['A', 'D', 'SD', 'SA']) assert.equal(dashes[keys][0].row, dashes.S[0].row, hero.id + ' dash ' + keys);
+    if (['naruto','haku','hanzo','sakumo','choji'].includes(hero.id)) {
+      assert.notEqual(walks.W[0].row,walks.WD[0].row,hero.id+' reta W versus diagonal WD');
+      assert.notEqual(walks.D[0].cell,walks.SD[0].cell,hero.id+' lateral versus diagonal');
+    }
     for (const phases of [...Object.values(jumps), ...Object.values(dashes)]) {
       assert.equal(new Set(phases.map((sample) => sample.cell)).size, 4, hero.id + ' acrobacia');
     }

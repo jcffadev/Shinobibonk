@@ -4,6 +4,8 @@ Atualizado em 11/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Mapa de arquivos
 
+**Atualização de 14/11/2026.** `cardinalWalkArt` e `lateralWalkArt` orientam `playerMotion`. O membro jogável, o Mega Elite e os ajudantes usam a base da câmera junto ao controlador compartilhado. A renderização consulta `playerFocus.ts` para calcular a opacidade de sobreposição. `enemyRenderer.ts` separa a pequena parte translúcida em lotes e preserva a passagem opaca da horda. `CardPortrait` é usado pela seleção e pelo banner da ficha. A matriz e a revisão pendente ficam em [Cobertura das vistas](development/COBERTURA-DE-VISTAS.md).
+
 `directionalArt.ts` registra as folhas por shinobi e nível da forma. Os 24 shinobis jogáveis têm caminhada com quatro quadros de frente e quatro de costas por forma, com espelhamento em X. A pose parada continua usando o sprite de `portraitRegion`, referência para a caminhada. Nas folhas que reúnem formas, `firstRow` aponta para o primeiro quadro de frente da dupla de fileiras. A textura é carregada e reutilizada por caminho durante a missão. `terrainArt.ts` define a cadeia de montanhas fora da área jogável e o céu em gradiente. `choiceCount` concentra o teto de quatro ofertas. A lista da roleta exclui pílulas dos novos giros.
 
 O cadastro local fica em `localProfile.ts`. Os perfis e verificadores PBKDF2 ficam no navegador. Ao trocar de perfil, os dados `sb_*` ativos são arquivados e os do perfil escolhido passam a ser os dados ativos. A criação de conta promove o Guest sem trocar os dados ativos.

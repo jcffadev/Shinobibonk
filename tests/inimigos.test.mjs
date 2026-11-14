@@ -74,3 +74,15 @@ test('GameCanvas: os inimigos comuns são criados pelo lote (makeSprite → adop
   const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.match(canvas, /const makeSprite=\(index:number,w=1\.8,h=2\.2\)=>\{const sp=new THREE\.Sprite\(new THREE\.SpriteMaterial\(\)\);enemyRenderer\.adopt\(sp,index\);/);
 });
+
+test('lote mantém o inimigo atrás opaco e envia o que cobre o jogador para a passada com fade', () => {
+  const {scene,renderer,spawn}=rig();
+  const near=spawn(1), far=spawn(4);
+  renderer.sync([near,far], sprite=>sprite===near.sprite? .28 : 1, .25);
+  const faded=scene.children.find(object=>object.geometry?.instanceCount===1&&object.material.transparent);
+  assert.ok(faded);
+  assert.ok(faded.geometry.getAttribute('iColor').array[3]<.3);
+  assert.equal(renderer.stats().bodies,2);
+  renderer.sync([near,far],()=>1,.3);
+  assert.equal(faded.visible,false);
+});

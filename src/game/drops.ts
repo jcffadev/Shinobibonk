@@ -7,3 +7,13 @@ export const GLOBAL_PULL_SECONDS=1.2;
 export function magnetSpeed(currentSpeed:number,distance:number,globalPull:boolean){
   return globalPull?Math.max(currentSpeed,distance/GLOBAL_PULL_SECONDS):currentSpeed;
 }
+
+/** Aplica o ganho de XP a cada orbe, inclusive aos orbes em coleta na troca de zona. */
+export function collectedXp(value: number, playerMultiplier: number, tuningMultiplier: number) {
+  return Math.round(value * playerMultiplier * tuningMultiplier);
+}
+
+/** O portal conclui a coleta dos orbes já atraídos ou no alcance de coleta. */
+export function xpCollectedAtPortal(type: string, magnet: boolean, distance: number, pickupRadius: number) {
+  return type === 'xp' && (magnet || distance < pickupRadius);
+}

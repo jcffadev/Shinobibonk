@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 14/11/2026 — direção de caminhada, foco do jogador e correções da fila
+
+- A ficha reutiliza o retrato enquadrado da seleção. Hanzō agora tem roupa cinza-violeta e respirador com dois filtros. Haku recebe túnica verde-azulada, máscara, senbons e novas folhas de movimento. Zabuza usa quatro poses dedicadas para a Névoa Oculta.
+- A câmera suaviza rotação, inclinação e zoom em torno do jogador. O herói permanece visível diante do relevo, os inimigos sobrepostos perdem opacidade e o terreno central fica mais aberto, com os marcos e texturas atuais.
+- O controlador diferencia a frente, as costas, as diagonais e o perfil quando há arte específica. A altura de referência usa Gaara Genin para crianças e valores próprios para adultos e Zabuza. A auditoria das 114 versões registra a cobertura parcial das vistas específicas.
+- A abertura da horda Genin começa com teto de 12 vivos e taxa base de 0,68 por segundo. A rampa volta à densidade anterior no primeiro minuto.
+- O portal preserva XP já atraído ou no alcance. O HUD exibe números completos. Colisão de construções usa 18% da largura, com raio máximo de 3 m. O altar tem contorno de 0,28 m e mantém 3 m de raio. Golpe que tira HP aciona borda, pulso da barra e som curto.
+- Tipos, build e 92 testes por código passaram. Pendente de validação E2E em partida conforme a política central. A arte lateral, as vistas retas faltantes e o enquadramento em três quartos de todo o elenco seguem na fila.
+
 ## 14/11/2026 — folhas de movimento do elenco completo
 
 - Padroniza caminhada, pulo e dash dos 114 jogáveis em quatro quadros por vista. As 58 versões da expansão recebem caminhada em três quartos e novas acrobacias traseiras. A montagem do Naruto Academia e do Manto da Kurama reaproveita as poses principais existentes.

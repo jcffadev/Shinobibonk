@@ -178,5 +178,6 @@ for (const hero of ROSTER_EXPANSION) {
 export const expansionVisual = (name: string) => signatures.get(name)?.visual;
 export const expansionSheet = (hero: string, form: number) => {
   const entry = ROSTER_EXPANSION.find(entry => entry.family === hero && entry.form === form);
+  if(entry?.id==='hanzo'||entry?.id==='haku')return '/assets/shinobi-motion/'+entry.id+'-roster-v2.png';
   return entry || hero === 'akamaru' ? '/assets/shinobi-motion/' + (entry?.id ?? hero) + '-roster-v1.png' : undefined;
 };

@@ -4,6 +4,8 @@ Protótipo jogável de um survivor roguelite inspirado no universo ninja. A base
 
 Repositório: https://github.com/jcffadev/Shinobibonk
 
+Os 114 shinobis têm caminhada, pulo e dash mapeados. A cobertura de vistas retas e laterais está em [Cobertura das vistas](docs/development/COBERTURA-DE-VISTAS.md). A ficha usa o mesmo retrato da seleção.
+
 ## Começar
 
 Requisitos: Node.js compatível com Vite 8 (testado com Node 24.22) e pnpm.

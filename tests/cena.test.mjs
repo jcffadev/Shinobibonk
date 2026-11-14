@@ -4,7 +4,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import { load, installCanvasStub, memoryStorage } from './helpers/load.mjs';
-import { magnetSpeed, GLOBAL_PULL_SECONDS } from '../src/game/drops.ts';
+import { collectedXp, magnetSpeed, xpCollectedAtPortal, GLOBAL_PULL_SECONDS } from '../src/game/drops.ts';
+
+import { COLLISION_RULES, createSolids } from '../src/scene/collision.ts';
 
 installCanvasStub();
 globalThis.localStorage ??= memoryStorage();
@@ -102,4 +104,47 @@ test('ímã do morro: drop de qualquer distância chega em ≤ 1,2 s; ímã norm
     assert.ok(t <= GLOBAL_PULL_SECONDS + dt, `${distance} m em ${t.toFixed(2)} s`);
   }
   assert.equal(magnetSpeed(4, 100, false), 4, 'sem ímã global, a velocidade é a do ímã normal');
+});
+
+test('portal conserva só o XP em coleta ou perto, com os multiplicadores da coleta normal', () => {
+  const drops = [
+    {type:'xp', magnet:true, distance:12, value:11},
+    {type:'xp', magnet:false, distance:2, value:8},
+    {type:'xp', magnet:false, distance:4, value:15},
+    {type:'ryu', magnet:true, distance:1, value:5},
+  ];
+  const atPortal = drops.filter(d => xpCollectedAtPortal(d.type, d.magnet, d.distance, 2.5));
+  assert.equal(atPortal.reduce((xp,d) => xp + collectedXp(d.value, 1.25, 1.1), 0), 26);
+  assert.equal(xpCollectedAtPortal('xp', false, 2.5, 2.5), false);
+});
+
+test('colisão de marco grande termina a 3 m e casa mantém a base sólida', () => {
+  const solids = createSolids();
+  solids.addBuilding(0, 0, 22);
+  solids.addBuilding(15, 0, 5.5);
+  solids.add(30, 0, COLLISION_RULES.scenery[0]);
+  for (const x of [0,15]) {
+    const far = {x, z:4};
+    const near = {x, z:.5};
+    assert.equal(solids.resolve(far), false);
+    assert.equal(solids.resolve(near), true);
+    assert.ok(near.z > 1);
+  }
+  assert.equal(solids.big[0].r, 3);
+  assert.equal(solids.big[1].r, .99);
+  assert.equal(solids.resolveBig({x:30,z:.2}), false);
+  assert.equal(solids.resolve({x:30,z:.2}), true);
+});
+
+test('fade usa profundidade e sobreposição da câmera, sem atingir inimigos atrás ou ao lado', async () => {
+  const {focusOpacity,setFocusView}=await import('../src/scene/playerFocus.ts');
+  const view=new Float64Array(9),camera=new THREE.OrthographicCamera();
+  camera.position.set(8,4,8);camera.lookAt(0,0,0);camera.updateMatrixWorld(true);
+  setFocusView(view,camera.matrixWorld.elements);
+  const player=new THREE.Vector3(),size={x:1.5,y:2};
+  const front=new THREE.Vector3(...view.slice(6)).multiplyScalar(2);
+  const left=new THREE.Vector3(...view.slice(0,3)).multiplyScalar(3);
+  assert.ok(Math.abs(focusOpacity(view,player,size,front,size)-.28)<.0001);
+  assert.equal(focusOpacity(view,player,size,front.negate(),size),1);
+  assert.equal(focusOpacity(view,player,size,left,size),1);
 });

@@ -99,6 +99,7 @@ function measurePortrait(region: PortraitRegion): Promise<Framing> {
 
 function cardRegion(id:string) {
   const family=familyOf(id);
+  if(id==='hanzo'||id==='haku')return portraitRegion(id);
   const index=SELECT_PORTRAITS.indexOf(id);
   if(index>=0)return {path:'/assets/shinobi-select-portraits-v1-'+(1+Math.floor(index/12))+'.png',cols:4,rows:3,index:index%12};
   if(family==='gaara'){
@@ -108,7 +109,7 @@ function cardRegion(id:string) {
   return portraitRegion(id);
 }
 
-function CardPortrait({ id, decorative }: { id: string; decorative: boolean }) {
+export function CardPortrait({ id, decorative = false }: { id: string; decorative?: boolean }) {
   const [framing, setFraming] = useState<Framing>();
   useEffect(() => {
     let mounted = true;

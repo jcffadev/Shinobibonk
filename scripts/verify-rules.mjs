@@ -306,13 +306,13 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
 }
 { // Rodada 44: mouse calmo e simétrico (1:1, sem aceleração — rodada 29 mantida) + câmera mais deitada (piso 0.05 rad) + início 0.55 rad
   const gcSrc=fs.readFileSync('src/scene/GameCanvas.tsx','utf8');
-  assert.ok(gcSrc.includes("yaw-=dx*.0025*settings.mouseSensitivity"),'taxa do yaw reduzida e simétrica (rodada 44)');
+  assert.ok(gcSrc.includes("targetYaw-=dx*.0025*settings.mouseSensitivity"),'taxa do yaw reduzida e simétrica (rodada 44)');
   assert.ok(gcSrc.includes("dy*.0025*settings.mouseSensitivity"),'taxa do pitch reduzida e simétrica (rodada 44)');
-  assert.ok(gcSrc.includes("clamp(pitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),CAMERA_MIN_PITCH,1.48)")&&gcSrc.includes('CAMERA_MIN_PITCH = .03'),'piso do pitch deitado para 0.03 rad (rodada 44 → 55)');
+  assert.ok(gcSrc.includes("clamp(targetPitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),CAMERA_MIN_PITCH,1.48)")&&gcSrc.includes('CAMERA_MIN_PITCH = .03'),'piso do pitch deitado para 0.03 rad (rodada 44 → 55)');
   assert.ok(gcSrc.includes('CAMERA_OCCLUSION_ALLOWANCE')&&!gcSrc.includes('terrainHeight(camera.position.x,camera.position.z)+1.2'),'scan de terreno tolera canela coberta e sem trava de altura da câmera (rodada 55)');
   const { DEFAULT_SETTINGS } = await import('../src/game/settings.ts');
   assert.equal(DEFAULT_SETTINGS.musicVolume,.1,'música padrão em 10% (rodada 55)');
-  assert.ok(gcSrc.includes('let yaw=Math.PI/4, pitch=.55'),'início da partida com câmera mais deitada (0.55 rad, rodada 44)');
+  assert.ok(gcSrc.includes('pitch=.55, targetPitch=pitch'),'início da partida com câmera mais deitada (0.55 rad, rodada 44)');
   const stSrc=fs.readFileSync('src/ui/SettingsScreen.tsx','utf8');
   assert.ok(stSrc.includes('6/11'),'dica do multiplicador do ponteiro do Windows no slider de sensibilidade (rodada 44)');
 }

@@ -27,10 +27,10 @@ export function groundHeight(map: GameMap['id'], x: number, z: number) {
     ridge = peaks * Math.exp(-((edge - center) ** 2) / 340) * blend ** 2;
   }
   const hills = .36 * Math.sin(x * .14) * Math.cos(z * .12)
-    + mound(x, z, -16, -9, 15, 12, 3.8)
-    + mound(x, z, 16, 7, 12, 13, 3.3)
-    + mound(x, z, -42, 26, 18, 14, 9.5)
-    + mound(x, z, 48, -31, 16, 19, 12)
+    + mound(x, z, -24, -12, 18, 14, 2.4)
+    + mound(x, z, 25, 11, 17, 15, 2.6)
+    + mound(x, z, -49, 32, 19, 15, 7.4)
+    + mound(x, z, 53, -37, 18, 20, 9.6)
     + mound(x, z, -44, -42, 15, 17, 10)
     + ridge;
   if (map !== 'folha') {

@@ -2,6 +2,14 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Prioridades atuais · 14/11/2026
+
+1. Completar a caminhada em perfil, as vistas retas e a inspeção das diagonais, pulo e dash em todas as versões, ajudantes, inimigos comuns e bijū. A [matriz por versão](development/COBERTURA-DE-VISTAS.md) marca as lacunas. O pedido inclui revisar os retratos de frente ainda presentes e deixar todo o elenco em três quartos.
+2. Revisar em partida o tamanho real do elenco, o foco, a câmera e o terreno. Conferir Hanzō, Haku, selos do Zabuza e as correções de XP, colisão, altar e feedback de dano.
+3. Definir com o usuário um ajuste de XP por minuto ao trocar de zona. A [medição da curva](development/DIAGNOSTICO-XP-ZONA.md) registra as hipóteses e a correção de perda dos orbes no portal.
+4. Preparar e aplicar a skill de efeitos de jutsus em WebGL.
+5. Validar em partida também os itens históricos pendentes e consultar as decisões abertas de projéteis da fila.
+
 ## Fila do usuário · 14/11/2026 (uma tarefa por vez, nesta ordem)
 
 Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e dois novos, o 13 e o 14. Pedido integral em docs/14. "E2E" = ver na tela; o navegador está suspenso para Claude Code, Qwen e Codex (docs/development/TESTING_POLICY.md §A).

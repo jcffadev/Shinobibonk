@@ -122,7 +122,7 @@ export function finalSwarmFactor(overtimeSeconds:number){return overtimeSeconds>
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
   const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds);
   // Revisão 11/11/2026: sem desconto de early game em nenhum rank — cada dificuldade escala em sua devida proporção (tier).
-  const opening=.52+.48*Math.min(1,minutes);
+  const opening=.34+.66*Math.min(1,minutes);
   const baseCap=Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*opening));
   const swarmRamp=swarm>1?Math.min(1,overtimeSeconds/60/FINAL_SWARM.rampMinutes):1;
   // Rodada 49 — rampa do FINAL SWARM: teto em min(teto normal, 800) até +4 min (240 s), depois sobe linearmente

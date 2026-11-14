@@ -20,3 +20,7 @@ Leia a direção de arte de `AGENTS.md`. Abra os atlases usados pelo módulo alv
 - Use o nome e a natureza do golpe para escolher sua silhueta, trajetória e impacto. Para cenas como Gamabunta, separe os quadros do ator do efeito em movimento para alinhar a origem com a boca ou as mãos.
 - Use o atlas de pixel art para a Substituição e a aura do Modo Sábio. A aura deve permanecer visível durante o buff. Reaproveite quadros e efeitos na prévia com alvos, inclusive a animação de corrida de clones.
 - Para os ícones de Modo Sábio, mantenha a identidade e as marcas oculares de cada shinobi conforme a referência da obra. Para aldeias, mostre o emblema e o nome original.
+
+## Consistência das versões
+
+Crie o repouso e o retrato em três quartos a partir da mesma identidade. Na caminhada, separe frente reta, costas retas, perfil, diagonal frontal e diagonal traseira. Use a pose da vista e o enquadramento da mesma versão. A altura visível vem do corpo, com Gaara Genin como referência infantil. Compare o personagem dianteiro e traseiro lado a lado para reconhecer de imediato roupa, silhueta, idade e acessórios. Siga os critérios de cobertura em `skills/movimentar-shinobi`.

@@ -76,3 +76,10 @@ Use `acrobaticsArt` quando a versão já tiver ataque aprovado e precisar soment
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 Ao verificar o atlas, exija uma folha em todos os estados animados e fileiras de caminhada distintas para frente e costas. Na matriz de teste, use o chute de Lee e o soco de Guy como no controlador em jogo. Para uma folha 4×4, ataque de costas usa a segunda fileira e pulo/dash de costas usam a quarta. A inspeção de recorte e semelhança com o repouso continua separada da suíte.
+
+## Direções e tamanho · padrão do elenco em 14/11
+
+- Separe cinco vistas base com quatro fases de caminhada cada: frente reta (S), costas retas (W), perfil para a direita (D e espelho para A), três quartos de frente (SD e SA) e três quartos de costas (WD e WA). Uma fileira frontal espelhada continua sendo frontal. O mesmo mapa de ângulos vale para pulo e dash em folhas novas. Preserve a velocidade unitária de deslocamento e a fase dos quatro passos nas transições.
+- A seleção e a ficha usam o mesmo retrato em três quartos, alinhado pela cabeça. Conserve o rosto visível, a identidade da versão e a margem para o topo da cabeça.
+- Compare a altura alfa do corpo, excluindo espaço transparente, rastro, aura e efeitos. A faixa infantil começa em Gaara Genin, a faixa adulta tem altura própria e personagens excepcionalmente altos, como Zabuza, podem excedê-la. Pés no mesmo apoio. Verifique também em zoom distante, com monstros e cenário à frente, como jogador, ajudante e inimigo quando aplicável.
+- Na revisão, abra as folhas reais, confira visualmente a orientação de cada vista e teste o recorte das oito entradas. Arquivos diferentes ou quatro quadros distintos provam a integração, mas a orientação exige inspeção da pose. Atualize a [matriz por versão](../../docs/development/COBERTURA-DE-VISTAS.md). As lacunas devem permanecer identificadas até que a arte específica seja revisada.

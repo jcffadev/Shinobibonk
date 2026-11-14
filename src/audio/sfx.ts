@@ -1,7 +1,8 @@
 import type { Technique } from '../game/heroes';
 import { familyOf } from '../game/heroes';
 import { currentSettings } from '../game/settings';
-type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui' | 'explosion';
+type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui' | 'explosion' | 'hurt';
+let lastHurt = -Infinity;
 let context: AudioContext | null = null;
 
 function audio(): AudioContext | null {
@@ -18,11 +19,17 @@ function audio(): AudioContext | null {
 export function playSfx(kind: Sound) {
   const S = currentSettings(); if (S.muteInBackground && document.hidden) return;
   const vol = Math.max(0, S.volume * S.sfxVolume); if (vol <= .001) return;
+  if (kind === 'hurt') {
+    const time = performance.now();
+    if (time - lastHurt < 320) return;
+    lastHurt = time;
+  }
   const ctx = audio(); if (!ctx) return;
   const now = ctx.currentTime;
   const notes: Record<Sound, [number, number, OscillatorType][]> = {
     attack: [[520, .07, 'triangle'], [760, .08, 'square']],
     impact: [[180, .1, 'sawtooth'], [90, .12, 'triangle']],
+    hurt: [[135, .13, 'triangle'], [78, .12, 'sine']],
     pickup: [[660, .07, 'sine'], [880, .1, 'sine'], [1180, .12, 'sine']],
     ultimate: [[220, .12, 'sawtooth'], [330, .16, 'triangle'], [660, .25, 'sine']],
     ui: [[440, .055, 'sine']],

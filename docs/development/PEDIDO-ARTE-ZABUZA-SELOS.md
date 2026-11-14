@@ -4,7 +4,9 @@
 > Criado pelo Claude Code em 14/11/2026, item 18 da fila (`docs/13`).
 > Pedido do usuário: "quero um action time do Zabuza castando os selos, pegue do anime dele castando para fazer a névoa oculta".
 
-## O que já está pronto no código (Rodada 63)
+A folha original entrou em `public/assets/shinobi-motion/zabuza-seal-v1.png`. A primeira fileira tem quatro poses distintas. A referência foi o [Selo de Confronto da Névoa Oculta](https://naruto.fandom.com/wiki/Hiding_in_Mist_Technique), adaptado para o atlas em duas fases por vista. A validação em partida permanece pendente.
+
+## O que já estava pronto no código (Rodada 63)
 
 - **Entrada do Zabuza:** quando começa a "Névoa do Zabuza", ele surge **à vista**, 7 m à frente do jogador, e fica **parado fazendo os selos** por 2,6 s.
 - **Aviso e névoa:** aparece "Zabuza: Ninpō · Kirigakure no Jutsu!" e a névoa engrossa aos poucos. Só depois ele some nela, como antes.

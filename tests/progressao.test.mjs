@@ -2,7 +2,8 @@
 // Importa os módulos direto (TypeScript nativo do Node), sem Vite nem navegador.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { heroHpScale, HP_GROWTH, calculateStats, difficultyAt, zoneThreat, zoneCurse, ZONE_DIFFICULTY, ENEMY_SCALING, FINAL_SWARM, MISSION_TIER } from '../src/game/progression.ts';
+import { xpToLevelUp, heroHpScale, HP_GROWTH, calculateStats, difficultyAt, zoneThreat, zoneCurse, ZONE_DIFFICULTY, ENEMY_SCALING, FINAL_SWARM, MISSION_TIER } from '../src/game/progression.ts';
+import { lootScale, xpDropValue } from '../src/game/enemyTiers.ts';
 import { HEROES } from '../src/game/heroes.ts';
 import { close } from './helpers/load.mjs';
 
@@ -107,4 +108,19 @@ test('maldição da zona: planos do Shikamaru (+33% cada) e bônus de ameaça (m
 test('dificuldade da missão multiplica por cima (Genin < Chunin < Jonin < Kage)', () => {
   const order = ['Genin', 'Chunin', 'Jonin', 'Kage'].map(m => difficultyAt(m, 120));
   for (let i = 1; i < order.length; i++) assert.ok(order[i].hp > order[i - 1].hp && order[i].damage > order[i - 1].damage);
+});
+
+test('XP por abate usa o relógio total e a curva continua nas trocas de zona', () => {
+  const samples = [0, 599, 600, 1199, 1200, 1799];
+  const normalXp = samples.map(elapsed => xpDropValue(lootScale('normal', 0, 0, MISSION_TIER.Genin), 1, elapsed));
+  assert.deepEqual(normalXp, [5, 8, 8, 11, 11, 15]);
+  assert.deepEqual([100, 300, 582].map(level => Math.ceil(xpToLevelUp(level))), [1174, 5069, 11629]);
+  assert.equal(xpDropValue(3, 1.25, 600), 29, 'bônus da zona ativa é aplicado antes do arredondamento');
+});
+
+test('abertura mais espaçada e densidade recuperada ao final do primeiro minuto', () => {
+  const base=difficultyAt('Genin',0);
+  assert.equal(base.cap,12);
+  assert.ok(close(base.spawnPerSecond,.68));
+  assert.ok(close(difficultyAt('Genin',60).spawnPerSecond,8));
 });

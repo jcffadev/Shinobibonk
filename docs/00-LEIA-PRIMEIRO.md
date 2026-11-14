@@ -15,6 +15,8 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
+- **IMPLEMENTADO em 14/11** — câmera suavizada, prioridade visual do jogador, fade dos inimigos sobrepostos, retrato compartilhado na ficha e atualização de arte do Hanzō, Haku e Zabuza. O trabalho dos sprites do elenco continua na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
+
 - **IMPLEMENTADO** — cinco folhas novas de ação para Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. As 56 versões têm caminhada direcional. Veja a cobertura de ataque, pulo e dash na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
 - React 19, TypeScript 7, Three.js 0.187 e Vite 8; iniciada com `pnpm dev`.

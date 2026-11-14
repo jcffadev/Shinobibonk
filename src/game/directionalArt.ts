@@ -43,6 +43,8 @@ const revisedDirectionalPath = (family: string) => `/assets/shinobi-motion/${fam
 
 export function acrobaticsArt(family:string,form:number){
   const formId = `${family}-${form}`;
+  if(family==='hanzo'||family==='haku')
+    return {path:'/assets/shinobi-motion/'+family+'-acrobatics-v3.png',kind:'directional-acrobatics' as const,rows:4,firstRow:0};
   if (fullAcrobatics.has(formId))
     return {path:`/assets/shinobi-motion/${formId}-acrobatics-v3.png`,kind:'directional-acrobatics' as const,rows:4,firstRow:0};
   const id = revisedDirectionalId(family, form);
@@ -60,10 +62,9 @@ const narutoSealForms = [1, 10, 25, 50];
 /**
  * Folhas de SELOS de outros shinobis (Rodada 63 — Zabuza fazendo os selos da Névoa Oculta). Mesmo layout da folha do
  * Naruto: 4 colunas (preparação de frente, selo de frente, preparação de costas, selo de costas) × 4 fileiras; usa a
- * fileira 0. Vazio até o Codex gerar a arte (pedido: docs/development/PEDIDO-ARTE-ZABUZA-SELOS.md); enquanto isso o
- * conjurador usa a pose de conjuração da própria folha de ação.
+ * fileira 0. Outros shinobis podem reutilizar o mesmo layout.
  */
-export const EXTRA_SEAL_SHEETS: Record<string, string> = {};
+const EXTRA_SEAL_SHEETS: Record<string, string> = {zabuza:'/assets/shinobi-motion/zabuza-seal-v1.png'};
 export function handSealArt(family: string, level: number) {
   const row = family === 'naruto' ? narutoSealForms.indexOf(level) : -1;
   if (row >= 0) return { path: NARUTO_HAND_SEALS, row };
@@ -130,6 +131,8 @@ const rosterForms: Record<string, readonly number[]> = {
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
   const id = revisedDirectionalId(hero, formLevel);
+  if (id==='hanzo') return {path:'/assets/shinobi-motion/hanzo-walk-v3.png',rows:4,firstRow:2};
+  if (id==='haku') return {path:'/assets/shinobi-motion/haku-walk-v3.png',rows:3};
   if (expansionDirectionalIds.has(id)) return {path:revisedDirectionalPath(id),rows:4};
   const expansion=expansionSheet(hero,formLevel);
   if(expansion)return {path:expansion,rows:6};
@@ -141,4 +144,29 @@ export function directionalArt(hero: string, formLevel: number): DirectionalShee
   const form = levels.indexOf(formLevel);
   if (form < 0) return;
   return { path: `/assets/shinobi-motion/${hero}-walk-v1.png`, rows: levels.length * 2, firstRow: form * 2 };
+}
+
+type WalkRows = { path: string; rows: number; front: number; back?: number; side?: number; dashSide?: number };
+/** Vistas independentes de caminhada. A ausência de vista específica mantém o recorte direcional existente. */
+export function cardinalWalkArt(family: string, form: number): WalkRows | undefined {
+  if(family==='naruto'&&form===1)
+    return {path:'/assets/shinobi-motion/naruto-academia-cardinal-v2.png',rows:4,front:0,back:1,side:2,dashSide:3};
+  if(family==='naruto'&&[10,25,50].includes(form)){
+    const row=[10,25,50].indexOf(form)*2;
+    return {path:'/assets/shinobi-motion/naruto-classic-cardinal-v2.png',rows:6,front:row,side:row+1};
+  }
+  if(family==='hanzo')
+    return {path:'/assets/shinobi-motion/hanzo-walk-v3.png',rows:4,front:0,back:1,side:2};
+  const id=revisedDirectionalId(family,form);
+  if(!expansionDirectionalIds.has(id))return;
+  const path=expansionSheet(family,form);
+  return path?{path,rows:6,front:0,back:1}:undefined;
+}
+
+export function lateralWalkArt(family: string, form: number) {
+  if(family==='haku')return {path:'/assets/shinobi-motion/haku-walk-v3.png',rows:3,row:2};
+  if(family==='sakumo'||(family==='choji'&&form===1))
+    return {path:'/assets/shinobi-motion/sakumo-choji-lateral-v1.png',rows:2,row:Number(family==='choji')};
+  const sheet=cardinalWalkArt(family,form);
+  return sheet?.side!==undefined?{path:sheet.path,rows:sheet.rows,row:sheet.side}:undefined;
 }

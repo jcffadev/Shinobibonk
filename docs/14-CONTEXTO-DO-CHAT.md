@@ -1790,3 +1790,54 @@ O teste de atlas no Edge terminou antes da ampliação da restrição. A partir 
 A mensagem também trouxe a passagem do Claude com as entregas das rodadas anteriores e a lista ordenada de XP, colisão, borda do altar, feedback de dano, artes, skill WebGL, verificação visual e decisões de projéteis. A lista atualizada fica em [docs/26](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
 
 **Resposta.** Revisão concluída por código para as 114 versões. W usa a caminhada de costas; S, a de frente; A e diagonais para a esquerda espelham o sprite. Shift mantém o rumo ao iniciar o dash. Cada versão usa quatro quadros por vista de caminhada, pulo e dash. Os quatro modelos comuns receberam a mesma quantidade, e as nove bijū têm folhas traseiras registradas. Jogador, ajudantes e mega-elites usam o mesmo controlador por versão. O Naruto Academia e o Manto da Kurama reaproveitam as poses principais. Resta ver em partida as transições, o enquadramento dos retratos e a fidelidade de cada pose das bijū. A política sem navegador permanece ativa para os três agentes.
+
+## Rodada 64 · 14/11/2026 — seguir a fila, foco e movimento de todo o elenco
+
+**Pedidos da rodada**
+
+> Siga a fila
+>
+> Siga a fila
+
+> Quero que na ficha fique a foto de seleção do personagem para TODOS os personagens do jogo.
+> O caminhar com W e S para andar reto pra cima e reto pra baixo, não estão funcionando o personagem ainda anda em diagonal...
+> Os monstros ainda estão sobrepondo o personagem... precisa ter um fadezinho nos monstros quando eles estiverem em cima do nosso personagem, nosso personagem SEMPRE deve ficar em foco, inclusive quando morros/montanhas pelo zoom forem sobrepor ele, vou te mostrar como quero por vídeo referencia a movimentação/camera/cenário do nosso jogo.
+> Implemente os ajustes necessários para ficar IGUAL, mas a qualidade visual deve se manter como a do nosso
+
+> Ja pedi para atualizar o Hanzo, pq ainda não atualizou?
+>
+> E porque o posicionamento de uns personagens na seleção/ficha estão meio de lado/perfil e outros estão de frente?
+> Deixe como padrão todos de perfil.
+>
+> Todos os personagens precisam ter o mesmo padrão de tamanho, claro, se forem crianças... ter o padrão próprio, mas ter um mínimo, que seria o Gaara, ou fazer o Konahamaru...
+> Agora... o Zabuza por exemplo pequeno, não existe, reveja todos os personagens fora de padrão e aumente eles
+>
+> Você também não atualizou o Haku ainda, ja falei pra você fazer isso...
+
+> Me dê a lista do que tem a fazer.
+> Mas, você vai fazer AGORA, revisar as folhas de movimentações de TODOS os personagens, TODOS, sem exceção.
+> Vai aumentar os personagens e coloca-los no padrão de tamanho e você vai, arrumar a movimentação de TODOS pela folha.
+> Eu estou a 2 dias tentando trabalhar isso com você, ai eu pego o Sakumo, Choji e ainda estão andando só pra cima e só pra baixo...
+> Ai eu pego o naruto e ele só anda em diagonal, isso eu falo o sprite...
+>
+> Eles tem que andar para todos os lados, veja o video, aprenda o que te pedi sobre camera e movimentação, olhe n nossas folhas e faça os ajustes necessários para ficar igual.
+> Eu não vou aceitar algo diferente, me avise quando terminar para revisão
+
+> aproveite e já suba o Hanzo e a Haku atualizados tambem com isso tudo
+>
+> Você vai aprender com o videoq ue te enviei de referencia...
+>
+> Identificar cenário e aprimorar o nosso
+> Camera estilo de camera e deixar igual para o nosso
+> estilo de caminhada/direção e corrigir o nosso
+>
+> Quantidade de monstros iniciais também da pra aprender para nosso scale
+>
+> Ai você faz as correções necessárias e atualiza as skills necessárias para fazer um padrão de criação, eu nao sei porque motivo, voce criou os novos personagens fora do padrão...
+>
+> Não é pra fazer apenas para os exemplos de choji e Sakumo, é para TODOS os personagens, todas as versões.
+> Presta atenção hein
+
+**Resposta da rodada**
+
+A ficha reutiliza o retrato da seleção para as 114 versões. Câmera, foco e fade dos inimigos foram implementados. Hanzō e Haku receberam roupas e atlas revisados e Zabuza recebeu a folha de selos. A altura usa o sprite visível de cada ator, com faixas infantil e adulta. Abertura Genin começa com teto 12, retorna ao ritmo anterior aos 60 s e preserva o teto tardio. Colisão, borda do altar e feedback de dano foram corrigidos. O portal conserva XP dos orbes atraídos ou próximos. Tipos, build e 92 testes passaram no Node. A [matriz](development/COBERTURA-DE-VISTAS.md) marca a parte de arte que continua faltando e a [fila](13-PENDENCIAS-PARA-CONTINUAR.md) registra a ordem de continuidade. A revisão integral das vistas e dos retratos ainda está aberta. A validação em partida permanece pendente. As imagens e o vídeo de referência foram tratados fora da publicação.

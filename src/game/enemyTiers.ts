@@ -51,3 +51,8 @@ export function eliteHpRamp(tier: EnemyTier, zoneSeconds: number) {
   const progress = Math.min(1, Math.max(0, zoneSeconds) / 300);
   return initial + (1 - initial) * progress;
 }
+
+/** O relógio total da missão continua contando na troca de zona. */
+export function xpDropValue(loot: number, zoneBonus: number, elapsed: number) {
+  return Math.round(BASE_LOOT.xp * loot * zoneBonus * (1 + Math.max(0, elapsed / 60 - 3) * .075));
+}

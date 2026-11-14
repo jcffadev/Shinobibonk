@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { ASUMA_ATLAS, formAt } from '../game/evolution';
 import { createPlayerPose } from './playerPose';
-import { actionArt, acrobaticsArt, directionalArt, handSealArt } from '../game/directionalArt';
+import { actionArt, acrobaticsArt, cardinalWalkArt, directionalArt, handSealArt, lateralWalkArt } from '../game/directionalArt';
+import { ACTOR_SCALE } from '../game/worldScale';
 import { familyOf } from '../game/heroes';
 
 export function movementFacing(vertical:number,horizontal:number){
@@ -66,11 +67,22 @@ const alphaFracOf = (map: THREE.Texture, px: number, py: number, pw: number, ph:
   return frac;
 };
 
+const CHILD_FORMS:Record<string,readonly number[]>={
+  naruto:[1,10],sasuke:[1],sakura:[1],gaara:[1],choji:[1],lee:[1],neji:[1],hinata:[1],tenten:[1],
+  temari:[1],kankuro:[1],shikamaru:[1],hanabi:[1],kiba:[1],ino:[1],shino:[1],obito:[1],
+};
+export function actorVisibleHeight(family:string,form:number) {
+  if(family==='akamaru'||family==='kuri')return 1.02;
+  if(CHILD_FORMS[family]?.includes(form))return 1.92;
+  return family==='zabuza'?2.58:2.32;
+}
+
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true) {
   // Versões usam as folhas da família na forma da versão (ex.: naruto-shippuden → folhas do Naruto no nível 25).
   const family = familyOf(heroId);
   const hasWalkAtlas = family === 'naruto' && formAt(heroId, 1).level === 1;
   const pose = createPlayerPose();
+  const bodyHeight = actorVisibleHeight(family,formAt(heroId).level);
   const asuma = family === 'asuma' ? new THREE.TextureLoader().load(ASUMA_ATLAS) : null;
   if (asuma) {
     asuma.colorSpace = THREE.SRGBColorSpace;
@@ -118,6 +130,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   let acrobaticsSheet:ReturnType<typeof acrobaticsArt>;
   let acrobaticsMap:THREE.Texture|undefined;
   let sealSheet: ReturnType<typeof handSealArt>;
+  let cardinalSheet: ReturnType<typeof cardinalWalkArt>,sideSheet: ReturnType<typeof lateralWalkArt>;
+  let cardinalMap: THREE.Texture|undefined,sideMap: THREE.Texture|undefined;
   let sealMap: THREE.Texture | undefined;
   let handSign = false;
   let strike: StrikePose | undefined;
@@ -129,15 +143,15 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       texture = new THREE.TextureLoader().load(path);
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.magFilter = THREE.NearestFilter;
-      texture.minFilter = THREE.NearestMipmapLinearFilter;
-      texture.generateMipmaps = true;
+      texture.minFilter = THREE.NearestFilter;
+      texture.generateMipmaps = false;
       directionTextures.set(path, texture);
       animatedMaps.add(texture);
     }
     return texture;
   };
   let attack = 0, attackDuration = .22, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
-  let idleFrac = 0; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
+  let idleFrac = 0, visualSize = 1; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
   let propCur = 1; // Rodada 45: fator de proporção SUAVIZADO (lerp exponencial) — elimina o 'pulo' de tamanho/altura na troca de folha.
   let queued: Strike | undefined;
   let frameShown = 0, strideShown = 0, walkAttack = false, walkLean=0, rowShown = -1;
@@ -173,7 +187,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     atlas: () => posePath,
     hurt: () => { hurt = .23; },
     setBodyScale(scale:number){targetBodyScale=scale;},
-    update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean, jumpProgress: number, slideProgress: number) {
+    update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean, jumpProgress: number, slideProgress: number, lateralInput = false) {
       if (!animatedMaps.has(sprite.material.map)) idleMap = sprite.material.map;
       if (level !== previousLevel) {
         previousLevel = level;
@@ -185,6 +199,10 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         acrobaticsSheet=acrobaticsArt(family,form);
         acrobaticsMap=acrobaticsSheet&&sheetTexture(acrobaticsSheet.path);
         sealSheet = handSealArt(family, form);
+        cardinalSheet=cardinalWalkArt(family,form);
+        sideSheet=lateralWalkArt(family,form);
+        cardinalMap=cardinalSheet&&sheetTexture(cardinalSheet.path);
+        sideMap=sideSheet&&sheetTexture(sideSheet.path);
         sealMap = sealSheet && sheetTexture(sealSheet.path);
       }
       attack = Math.max(0, attack - dt);
@@ -222,8 +240,23 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         walkAtlas.offset.set((frame + Number(leftward)) / 4, backwardView ? 0 : .5);
         rowShown = Number(backwardView);
       }
+      const sideDash=state==='dash'&&lateralInput&&cardinalSheet?.dashSide!==undefined;
+      const sideWalk=state==='walk'&&lateralInput&&sideSheet?.row!==undefined;
+      const verticalWalk=state==='walk'&&!diagonalInput&&!lateralInput&&!!cardinalSheet;
+      const exactMap=sideWalk?sideMap:cardinalMap;
+      const exactSheet=sideWalk?sideSheet:cardinalSheet;
+      const exactRow=sideWalk?sideSheet?.row:sideDash?cardinalSheet?.dashSide:
+        verticalWalk?(backwardView?cardinalSheet?.back:cardinalSheet?.front):undefined;
+      const useExact=!!exactMap?.image&&!!exactSheet&&exactRow!==undefined;
+      if(useExact&&exactMap&&exactSheet&&exactRow!==undefined){
+        const frame=sideDash?Math.min(3,Math.floor(slideProgress*4)):Math.floor(stepTime*10)%4;
+        const flip=(sideDash||sideWalk||verticalWalk)&&leftward;
+        frameShown=frame;rowShown=Number(backwardView);
+        exactMap.repeat.set(flip?-.25:.25,1/exactSheet.rows);
+        exactMap.offset.set((frame+Number(flip))/4,(exactSheet.rows-1-exactRow)/exactSheet.rows);
+      }
       const acrobatic = state === 'jump' || state === 'dash';
-      const useAsuma = !!asuma?.image && state !== 'idle' && !(acrobatic && acrobaticsMap?.image);
+      const useAsuma = !useExact && !!asuma?.image && state !== 'idle' && !(acrobatic && acrobaticsMap?.image);
       if (useAsuma && asuma) {
         const frame = state === 'walk' ? (rear ? 4 : 0) + Math.floor(stepTime * 11) % 4
           : state === 'jump' ? 8 : state === 'dash' ? 9 : state === 'hurt' ? 10
@@ -234,7 +267,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         asuma.offset.set((frame % 4 + Number(mirror)) / 4, (3 - Math.floor(frame / 4)) / 4);
       }
       const directedCast = !!directionSheet?.cast && (state === 'attack' || state === 'ultimate');
-      const useDirection = !!directionMap?.image && (state === 'walk' || directedCast || state==='jump' || state==='dash');
+      const useDirection = !useExact && !!directionMap?.image && (state === 'walk' || directedCast || state==='jump' || state==='dash');
       const attacking = state === 'attack' || state === 'ultimate';
       // Rodada 43 — Ultimate do Pain (Yahiko): levitação com os braços levantados. A folha de ação
       // (pain-1-action-v3.png) já tem a pose (fileira 2 frente / fileira 3 costas, quadro 0); seguramos
@@ -254,7 +287,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const directionalAcrobatics = poseSheet?.kind === 'directional-acrobatics';
       const acrobatics = poseSheet?.kind === 'acrobatics' && (state === 'jump' || state === 'dash');
       const fullAction = poseSheet?.kind === 'full' && (attacking || state === 'jump' || state === 'dash');
-      const useAction = !!poseMap?.image && (rearAcrobatics || directionalAcrobatics || fullAction || acrobatics || (attacking && (poseSheet?.kind !== 'taijutsu' || !!strike) && !(academy && poseSheet?.kind==='acrobatics')));
+      const useAction = !useExact && !!poseMap?.image && (rearAcrobatics || directionalAcrobatics || fullAction || acrobatics || (attacking && (poseSheet?.kind !== 'taijutsu' || !!strike) && !(academy && poseSheet?.kind==='acrobatics')));
       if (useAction && poseMap && poseSheet) {
         const progress = attackProgress;
         const castFrame = painUltimate
@@ -288,10 +321,10 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
         directionMap.repeat.set(flip ? -.25 : .25, 1 / directionSheet.rows);
         directionMap.offset.set((frame + Number(flip)) / 4, (directionSheet.rows - 1 - row) / directionSheet.rows);
       }
-      const usesSheet = useSeal || useAsuma || useAction || useDirection || !!casting || !!walking;
-      posePath = useSeal ? sealSheet!.path : useAsuma ? ASUMA_ATLAS : useAction ? poseSheet!.path : useDirection ? directionSheet!.path
+      const usesSheet = useExact || useSeal || useAsuma || useAction || useDirection || !!casting || !!walking;
+      posePath = useExact ? exactSheet!.path : useSeal ? sealSheet!.path : useAsuma ? ASUMA_ATLAS : useAction ? poseSheet!.path : useDirection ? directionSheet!.path
         : casting ? '/assets/naruto-academia-throw-v1.png' : walking ? (walkAtlas === diagonal ? '/assets/naruto-academia-diagonal-v1.png' : '/assets/naruto-academia-walk-v1.png') : '';
-      sprite.material.map = useSeal ? sealMap! : useAsuma ? asuma : useAction ? poseMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
+      sprite.material.map = useExact ? exactMap! : useSeal ? sealMap! : useAsuma ? asuma : useAction ? poseMap! : useDirection ? directionMap! : casting ? throwing : walking ? walkAtlas : idleMap;
       sprite.material.alphaTest = usesSheet ? .55 : .18;
       // A passada do golpe em movimento usa a mesma frequência dos quadros de caminhada (10 quadros/s, ciclo de 4).
       const stride = state === 'walk' ? Math.sin(stepTime * 16) * .075 : walkAttack ? Math.sin(stepTime * Math.PI * 5) * (usesSheet ? .06 : .075)
@@ -339,12 +372,21 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
           if (cw > 0 && ch > 0 && cy >= 0 && cx >= 0) cellFrac = alphaFracOf(cellMap, cx, cy, cw, ch);
         }
       }
+      const idleCell=idleMap?.image as {width:number;height:number}|undefined;
+      if(!idleFrac&&idleMap&&idleCell){
+        const w=idleCell.width*idleMap.repeat.x,h=idleCell.height*idleMap.repeat.y;
+        idleFrac=alphaFracOf(idleMap,idleCell.width*idleMap.offset.x,idleCell.height*(1-idleMap.offset.y)-h,w,h);
+      }
       if (state === 'idle' && !usesSheet && cellFrac > 0) idleFrac = cellFrac;
+      if(idleFrac>0){
+        const target=Math.max(.9,Math.min(2.4,bodyHeight*ACTOR_SCALE/(height*idleFrac)));
+        visualSize+=(target-visualSize)*(1-Math.exp(-dt*18));
+      }
       const propTarget = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;
       // Rodada 45 — suaviza o fator de proporção (lerp exponencial): antes, o fator era aplicado de uma vez e o personagem 'pulava' de tamanho (e de altura, pois position.y segue a escala) nas trocas repouso <-> andar <-> ataque. Agora a transição é fluida (~0,15 s) e os pés seguem ancorados. Choji (cresce), Gaara e Pain (flutuam) mantêm a âncora porque ela usa a escala final.
       propCur += (propTarget - propCur) * (1 - Math.exp(-dt * 14));
       bodyScale+=(targetBodyScale-bodyScale)*(1-Math.exp(-dt*10));
-      sprite.scale.set(width * squashX * propCur * bodyScale, height * squashY * propCur * bodyScale, 1);
+      sprite.scale.set(width * squashX * propCur * bodyScale * visualSize, height * squashY * propCur * bodyScale * visualSize, 1);
       const painFloat = painUltimate ? Math.sin(Math.PI * attackProgress) * .38 : 0;
       sprite.position.y = floor + jumpHeight + sprite.scale.y*.5 + painFloat;
       if (trail) {
@@ -386,7 +428,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     fitHealthBar(unitsPerPixel:number){
       if(!health)return;
       const width=Math.max(2.05,106*unitsPerPixel);
-      health.bar.scale.set(width,width*.151,1);
+      const pulse=1+.12*hurt/.23;
+      health.bar.scale.set(width*pulse,width*.151*pulse,1);
     },
     dispose(){trail?.forEach(ghost=>{scene.remove(ghost);ghost.material.dispose();});if(health){scene.remove(health.bar);health.map.dispose();health.bar.material.dispose();}walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());},
   };
