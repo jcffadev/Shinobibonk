@@ -36,6 +36,38 @@
 - **Subagente 2:** parado no meio. Música (`settings.ts`, `SettingsScreen.tsx`) e áreas (`techniqueAreas.ts`) parciais; fontes e câmera não iniciadas.
 - O código parcial compila (`tsc -b` ok). Nada disso está no GitHub.
 
+**Atualização da 3ª pausa (14/11) — sem subagentes, uma tarefa por vez (pedido do usuário):**
+
+**Já feito no código (sem commit):**
+- Música padrão 10% com migração.
+- Opção "Mostrar áreas das técnicas" e contornos no chão (`techniqueAreas.ts`).
+- Câmera: piso de 0,03 rad, scan de encosta mais permissivo e `far` dinâmico.
+- `stableFacing` com histerese em ajudantes, clones, Kuri e monstros.
+- Monstros usam a folha de costas também na diagonal.
+- Bijū espelham pela câmera e só andam quando se deslocam.
+- Corpo caído com queda, pose deitada, halo na cor do contorno e ícone ⛓ no mapa (`fallenShinobi.ts`).
+- Tudo do Subagente 3.
+
+**Medido em jogo (Edge, 4 ângulos de câmera):**
+- Jogador certo nas 8 direções × 4 ângulos (W e diagonais para cima → costas; S → frente; A espelha).
+- Ajudantes e Mega Elites com fileira e espelho corretos; parados, ficam em repouso.
+- Monstros: 33 de 35 corretos (1 errado, possivelmente no meio de um golpe; falta conferir).
+- **Bijū NÃO viram de costas:** o atlas `bijuu/motion-v1-*` só tem vista lateral. PENDENTE de arte (2 quadros de costas por bijū).
+
+**Testes:**
+- tsc, build, verify-rules e verify-motion-atlases (114 versões, 1140 estados) passaram.
+- `verify-runtime`:
+  - 1ª rodada parou na recusa com G (não reproduziu isolado; provável instabilidade);
+  - 2ª parou na textura das bijū; o teste foi atualizado para `motion-v1` em `scripts/verify-runtime.mjs`;
+  - 3ª rodada interrompida pela pausa.
+
+**Próximos passos, em ordem:**
+1. Rodar `verify-runtime` até passar e fazer o commit do que está pronto.
+2. Conferir o Mega Elite caído com a luz e o E (de perto, de longe, na névoa).
+3. Fontes da HUD: não iniciado.
+4. Conferir áreas e câmera em capturas.
+5. Documentar a Rodada 55 e publicar.
+
 **Antes de continuar:** rodar `git status` e `git diff` para ver exatamente o que já foi feito em cada arquivo. Não descartar o parcial (sem `git checkout`/`stash`/`reset`); revisar e completar.
 
 ## 2. Pedido original do usuário (13/11/2026, texto integral)
