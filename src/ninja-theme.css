@@ -53,16 +53,16 @@ kbd{font-family:var(--fonte-texto)}
 .game-shell .game-level>.hero-sprite{left:16px;top:7px;width:78px;height:90px;border:3px solid var(--madeira-borda);border-radius:7px;background-color:#f4c98a;box-shadow:inset 0 0 0 2px var(--ouro);filter:none}
 .game-shell .game-level .level-seal{position:absolute;left:66px;top:74px;z-index:1;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--bg-selo);border:2px solid var(--selo-borda);color:#fff3df;font:400 16px/1 var(--fonte-titulo);box-shadow:0 3px 0 rgba(0,0,0,.4)}
 .game-shell .game-level>b{font:800 15px/1.1 var(--fonte-texto);color:var(--tinta);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.game-shell .game-level>strong{color:var(--selo2);font-size:11px;font-weight:800;text-align:left;line-height:1.1}
-.game-shell .game-level small{color:var(--tinta2);font-size:10px;font-weight:800;line-height:1.1}
+.game-shell .game-level>strong{color:var(--selo2);font-size:12px;font-weight:800;text-align:left;line-height:1.1}
+.game-shell .game-level small{color:var(--tinta2);font-size:11.5px;font-weight:800;line-height:1.1}
 .game-shell .game-level .hp-track,.game-shell .game-level .xp-track{height:11px;margin-top:2px;background:#2a1c14;border:2px solid #120b07;border-radius:3px 9px 4px 10px}
 .game-shell .game-level .hp-track i,.game-shell .game-level .xp-track i{border-radius:0 7px 3px 0;background:var(--vida);box-shadow:inset 0 2px 0 rgba(255,255,255,.28),inset 0 -2px 0 rgba(0,0,0,.25)}
 .game-shell .game-level .xp-track i{background:var(--xp)}
 
 /* Barra superior: faixa de pergaminho; relógio numa placa de madeira; recursos em plaquinhas. */
 .game-shell .game-topbar{border:0;border-top:3px solid var(--papel3);border-bottom:3px solid var(--papel3);border-radius:4px;background:var(--bg-pergaminho);color:var(--tinta);box-shadow:var(--sombra-papel);padding:5px 22px 5px}
-.game-shell .topbar-mission .game-mission{color:var(--selo2);font-weight:800;font-size:11px}
-.game-shell .topbar-mission .run-weather{color:var(--tinta2);text-shadow:none;font-weight:700;font-size:10.5px}
+.game-shell .topbar-mission .game-mission{color:var(--selo2);font-weight:800;font-size:12px}
+.game-shell .topbar-mission .run-weather{color:var(--tinta2);text-shadow:none;font-weight:700;font-size:12px}
 .game-shell .topbar-clock .run-clock{padding:3px 18px 1px;border:2px solid var(--madeira-borda);border-radius:0 0 10px 10px;background:var(--bg-placa);box-shadow:var(--sombra-placa);color:#fff0cf;font:400 26px/1.05 var(--fonte-titulo);text-shadow:0 2px 0 var(--madeira-borda)}
 .game-shell .topbar-clock .final-swarm-clock{color:#ffd0c8!important;background:var(--bg-selo);font-size:19px}
 .game-shell .topbar-resources>span{border:2px solid var(--madeira-borda);border-radius:6px;background:var(--bg-placa);box-shadow:var(--sombra-placa);color:#f7e6c0;font-weight:800}
@@ -75,13 +75,13 @@ kbd{font-family:var(--fonte-texto)}
 /* Minimapa: aro de madeira com corda; rótulo de teclas em "teclas de papel". */
 .game-shell .minimap{border:5px solid var(--madeira2);background:radial-gradient(circle,#31402c 0 58%,#263222 59% 100%);box-shadow:0 0 0 3px var(--corda),0 0 0 5px var(--madeira-borda),0 5px 0 5px rgba(0,0,0,.35)}
 .game-shell .minimap .map-grid{opacity:.5;background-image:linear-gradient(rgba(240,220,170,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(240,220,170,.13) 1px,transparent 1px)}
-.game-shell .minimap-caption{top:calc(16px + var(--mm-size) + 12px);color:#f3dfb8;font:800 10px/1.3 var(--fonte-texto)}
+.game-shell .minimap-caption{top:calc(16px + var(--mm-size) + 12px);color:#f3dfb8;font:800 11.5px/1.3 var(--fonte-texto)}
 .game-shell .minimap-caption kbd{padding:0 5px;border:2px solid var(--madeira-borda);border-bottom-width:3px;border-radius:5px;background:var(--papel);color:var(--tinta);font-weight:800}
 .game-shell .debug-toggle,.game-shell .debug-panel{top:calc((16px + var(--mm-size) + 32px) * var(--mm-zoom) + 8px)}
 
 /* Sinergias: pergaminho recolhível. */
 .synergy-panel{border:0;border-top:3px solid var(--papel3);border-bottom:3px solid var(--papel3);border-radius:4px;background:var(--bg-pergaminho);box-shadow:var(--sombra-papel);padding:5px 18px;color:var(--tinta)}
-.synergy-panel .ally-cards-title,.synergy-panel .synergy-toggle{color:var(--selo2);text-shadow:none;font-weight:900;font-size:9.5px;letter-spacing:.06em}
+.synergy-panel .ally-cards-title,.synergy-panel .synergy-toggle{color:var(--selo2);text-shadow:none;font-weight:900;font-size:11.5px;letter-spacing:.06em}
 .synergy-panel .synergy-toggle:hover,.synergy-panel .synergy-toggle:focus-visible{color:var(--selo)}
 .synergy-panel.collapsed{padding:3px 18px}
 .synergy-row b{color:var(--tinta)}
@@ -106,7 +106,7 @@ kbd{font-family:var(--fonte-texto)}
 
 /* Slots 1–4: etiquetas de papel (ofuda). */
 .game-shell .skill-dock>.ability-bar button{border:2px solid var(--madeira-borda);border-radius:4px;background:linear-gradient(180deg,var(--papel-claro),var(--papel) 70%,var(--papel2));color:var(--tinta);box-shadow:0 4px 0 rgba(0,0,0,.4),inset 0 0 0 2px rgba(184,50,42,.35)}
-.game-shell .skill-dock>.ability-bar button small{color:var(--tinta2);font-weight:800;font-size:9.5px;line-height:1.1}
+.game-shell .skill-dock>.ability-bar button small{color:var(--tinta2);font-weight:800;font-size:11.5px;line-height:1.1}
 .game-shell .skill-dock>.ability-bar button.unlearned{opacity:1;filter:none;border-style:dashed;border-color:var(--papel3);background:rgba(29,20,16,.62);box-shadow:none}
 .game-shell .skill-dock>.ability-bar button.unlearned small{color:var(--papel2)}
 .game-shell .skill-dock>.ability-bar button.unlearned>.skill-art{opacity:.5}
@@ -140,7 +140,7 @@ kbd{font-family:var(--fonte-texto)}
 .level-choice .level-choice-title{border:0;border-top:3px solid var(--papel3);border-bottom:3px solid var(--papel3);border-radius:4px;background:var(--bg-pergaminho);box-shadow:var(--sombra-papel);padding:8px 40px 10px}
 .level-choice-title small{color:var(--selo2)}
 .level-choice-title h1{color:var(--tinta);font:400 31px/1.15 var(--fonte-titulo);text-shadow:none}
-.level-choice-title p{color:var(--tinta2);font-size:12px}
+.level-choice-title p{color:var(--tinta2);font-size:13px}
 .level-choice-card{border:3px solid var(--madeira-borda)!important;border-radius:6px;background:var(--bg-pergaminho);color:var(--tinta);box-shadow:0 0 0 3px var(--rarity-strong),0 0 18px color-mix(in srgb,var(--rarity-strong) 55%,transparent),0 6px 0 3px rgba(0,0,0,.35)}
 .level-choice-card:hover{border-color:var(--madeira-borda)!important;box-shadow:0 0 0 4px var(--ouro),0 0 22px color-mix(in srgb,var(--rarity-strong) 70%,transparent),0 6px 0 4px rgba(0,0,0,.35)}
 /* Rodada 47 (item 6) — a área do ícone fica PREENCHIDA com a cor da raridade (antes era um brilho suave); as classes rarity-* (rarity.css) expõem --rarity/--rarity-strong. */
@@ -200,7 +200,7 @@ kbd{font-family:var(--fonte-texto)}
 .home-topbar{background:var(--bg-placa);border-bottom:3px solid var(--madeira-borda);box-shadow:0 3px 0 var(--corda),0 6px 0 rgba(0,0,0,.35)}
 .language-chip{border:2px solid var(--selo-borda);border-radius:8px;background:var(--bg-selo);color:#ffe7b8;font-family:var(--fonte-titulo);font-weight:400}
 .language-chip span{color:#fff3df;font-size:13px}
-.hub-nav button{border:2px solid var(--madeira-borda);border-radius:5px;background:var(--bg-papel);color:var(--tinta);font-size:12px;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+.hub-nav button{border:2px solid var(--madeira-borda);border-radius:5px;background:var(--bg-papel);color:var(--tinta);font-size:13px;box-shadow:0 3px 0 rgba(0,0,0,.35)}
 .hub-nav button.active,.hub-nav button:hover{border-color:var(--selo-borda);background:var(--bg-selo);color:#fff3df}
 .hub-nav .admin-reset{color:var(--selo2)!important}
 .hub-nav .admin-reset:hover{color:#fff3df!important}
@@ -230,7 +230,7 @@ kbd{font-family:var(--fonte-texto)}
 .mode-cards article>strong,.mode-cards article button{color:#ffe08a}
 /* Faixa com as 4 vilas (miniaturas da arte do projeto). */
 .hub-vilas-tira{display:flex;gap:10px;margin-top:14px}
-.hub-vilas-tira span{flex:1;display:flex;flex-direction:column;gap:3px;color:#f3dfb8;font:400 12px/1 var(--fonte-titulo);text-align:center;text-shadow:0 1px 0 #000}
+.hub-vilas-tira span{flex:1;display:flex;flex-direction:column;gap:3px;color:#f3dfb8;font:400 13px/1 var(--fonte-titulo);text-align:center;text-shadow:0 1px 0 #000}
 .hub-vilas-tira i{display:block;aspect-ratio:16/9;border:3px solid var(--madeira-borda);border-radius:5px;background:url('/assets/map-previews-v1.png') 0 0/200% 200% no-repeat;box-shadow:0 0 0 2px var(--corda),0 4px 0 2px rgba(0,0,0,.4)}
 .hub-vilas-tira .vila-areia i{background-position:100% 0}.hub-vilas-tira .vila-pedra i{background-position:0 100%}.hub-vilas-tira .vila-nevoa i{background-position:100% 100%}
 /* Painel lateral: pergaminho com o shinobi escolhido e sua fala. */
@@ -246,7 +246,7 @@ kbd{font-family:var(--fonte-texto)}
 .local-panel .step-card:hover{background:#fff6dc}
 .local-panel .step-card>b{display:grid;place-items:center;width:30px;height:30px;border-radius:6px;background:var(--bg-selo);border:2px solid var(--selo-borda);color:#fff3df;font:400 13px/1 var(--fonte-titulo)}
 .local-panel .step-card strong{font-size:13px}
-.local-panel .step-card small{color:var(--tinta3);font-size:10.5px;font-weight:700}
+.local-panel .step-card small{color:var(--tinta3);font-size:12px;font-weight:700}
 .local-panel .step-card i{color:var(--selo)}
 .local-panel .offline-note{background:rgba(58,42,32,.12);color:var(--tinta2);font-weight:700}
 .home-footer{background:var(--bg-placa);border-top:2px solid var(--madeira-borda);color:#f0dcb6}
@@ -352,7 +352,7 @@ kbd{font-family:var(--fonte-texto)}
   .ally-cards .ally-portrait{width:32px;height:32px}
   .ally-cards .ally-portrait .hero-sprite{width:30px;height:36px;margin-top:6px}
   .ally-cards .ally-info>:nth-child(n+3){display:none}
-  .ally-cards .ally-buff{font-size:9px}
+  .ally-cards .ally-buff{font-size:11px}
 }
 /* Detalhe do shinobi: o nome no título maior não pode empurrar os atributos para fora do pergaminho. */
 .character-layout .detail-panel{padding:18px 20px;min-width:0}
@@ -370,7 +370,7 @@ kbd{font-family:var(--fonte-texto)}
 .level-choice.cards-4{width:min(1060px,96vw)}
 
 /* Rodada 47 (item 9) — selo "★ Treinada · +15% de dano" nas técnicas treinadas com Jiraiya (ficha da run). */
-.trained-badge{display:inline-block;margin:3px 0 0;padding:2px 10px;border:2px solid var(--madeira-borda);border-radius:4px;background:linear-gradient(180deg,var(--ouro),#c98f2e);color:var(--tinta);font:400 11px/1.6 var(--fonte-titulo);box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.trained-badge{display:inline-block;margin:3px 0 0;padding:2px 10px;border:2px solid var(--madeira-borda);border-radius:4px;background:linear-gradient(180deg,var(--ouro),#c98f2e);color:var(--tinta);font:400 12px/1.6 var(--fonte-titulo);box-shadow:0 2px 0 rgba(0,0,0,.35)}
 
 /* Rodada 47 (item 7) — ficha da run com moldura de madeira/corda e pinceladas chakra/dourado nas colunas
    (Técnicas · Inventário). A base vem de run-ui.css (.sheet-banner/.sheet-column/.stripe/.sheet-tile).
@@ -392,7 +392,7 @@ kbd{font-family:var(--fonte-texto)}
 
 /* Rodada 47 (item 8) — as ações do planejador (Planejar para Missão / Treinar / Não aprender) agora parecem BOTÕES:
    placa de pergaminho com borda de madeira; ativo = selo vermelho (hanko); "Permitir aprender" mantém verde (base hud-dock.css). */
-.build-cell-actions button{padding:6px 10px;font-size:11px;font-weight:700;color:var(--tinta);background:linear-gradient(180deg,var(--papel-claro),var(--papel2));border:2px solid var(--madeira-borda);border-radius:5px;box-shadow:0 2px 0 rgba(0,0,0,.4);cursor:pointer}
+.build-cell-actions button{padding:6px 10px;font-size:12px;font-weight:700;color:var(--tinta);background:linear-gradient(180deg,var(--papel-claro),var(--papel2));border:2px solid var(--madeira-borda);border-radius:5px;box-shadow:0 2px 0 rgba(0,0,0,.4);cursor:pointer}
 .build-cell-actions button:hover:not(:disabled){border-color:var(--selo);background:linear-gradient(180deg,var(--papel-claro),var(--papel))}
 .build-cell-actions button:active:not(:disabled){transform:translateY(1px);box-shadow:0 1px 0 rgba(0,0,0,.4)}
 .build-cell-actions button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}

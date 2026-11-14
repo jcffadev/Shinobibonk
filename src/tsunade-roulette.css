@@ -4,7 +4,7 @@
 .tr-close{position:absolute;top:10px;right:12px;width:34px;height:34px;border-radius:50%;border:1px solid #d9a44188;background:#0006;color:#f6ead2;font-size:22px;cursor:pointer}
 .tr-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .tr-head-copy{flex:1;min-width:220px}
-.tr-head small{letter-spacing:.18em;color:#e6b85a;font-size:11px}
+.tr-head small{letter-spacing:.18em;color:#e6b85a;font-size:12px}
 .tr-head h1{margin:2px 0 4px;font-size:30px;color:#ffd77a;text-shadow:0 2px 0 #6b3b0f}
 .tr-head p{margin:0 0 12px;color:#d9c8a8;font-size:14px}
 /* Face da Tsunade: retrato do roster + humor por recompensa (bom→feliz · neutro→triste · ruim→nervosa). */
@@ -32,14 +32,14 @@
 .tr-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .tr-actions button{border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer;border:1px solid #ffffff33;color:#f6ead2;background:#ffffff14}
 .tr-actions button:disabled{opacity:.55;cursor:default}
-.tr-actions kbd{margin-left:6px;padding:1px 6px;border-radius:5px;background:#0007;border:1px solid #ffffff33;font-size:11px}
+.tr-actions kbd{margin-left:6px;padding:1px 6px;border-radius:5px;background:#0007;border:1px solid #ffffff33;font-size:12px}
 .tr-spin{background:linear-gradient(#e9b450,#b97a24)!important;color:#2a1405!important;border-color:#ffe6a3!important}
 .tr-fast.on{border-color:#3aa86b!important;background:#12371f!important}
-.tr-help{margin:0;font-size:12px;color:#bfae8e;text-align:center}
+.tr-help{margin:0;font-size:13px;color:#bfae8e;text-align:center}
 .tr-side{display:flex;flex-direction:column;gap:12px;min-width:0}
 .tr-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0}
 .tr-stats div{background:#0004;border:1px solid #ffffff1a;border-radius:8px;padding:6px 8px}
-.tr-stats dt{font-size:11px;color:#bfae8e}.tr-stats dd{margin:0;font-weight:700}.tr-stats small{font-weight:400;color:#bfae8e}
+.tr-stats dt{font-size:12px;color:#bfae8e}.tr-stats dd{margin:0;font-weight:700}.tr-stats small{font-weight:400;color:#bfae8e}
 .tr-odds,.tr-pending{background:#0004;border:1px solid #ffffff1a;border-radius:10px;padding:8px 10px;font-size:13px}
 .tr-odds .good{color:#7fe0a5}.tr-odds .bad{color:#ff9aa3}
 .tr-odds ul{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 10px}

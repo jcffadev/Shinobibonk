@@ -1642,3 +1642,15 @@ Rodada 55 publicada. Detalhes e pendências E2E no CHANGELOG. Próxima tarefa: f
 > por enquanto só no claude, vou testar no codex e qwen depois, se for preciso mando eles a adicionar a restrição para eles
 
 Resposta: decisão registrada na política (§A), em docs/13 e docs/18. Codex e Qwen seguem sem a restrição de navegador. Em seguida: fontes da HUD.
+
+## Rodada 57 · 14/11/2026 — fontes da HUD
+
+> (Lote de 13/11) Aumentar um pouco as fontes, mas manter o hud organizado... tem algumas fontes muito pequenas, melhorar isso. · "Pode seguir também."
+
+### Resposta
+
+- **Mudança:** 369 tamanhos de fonte subiram um degrau (7–12 px → 10–13 px; textos de 13 px ou mais não mudaram).
+- **Checagem estática:** nenhum texto cortado em caixa fixa.
+- **Teste novo:** `tests/interface.test.mjs` (piso de 10 px e texto sem corte).
+- **PASSOU:** tsc, build, 45/45 e mutação 14/14.
+- **PENDENTE DE VALIDAÇÃO E2E:** conferir na tela a organização da HUD.

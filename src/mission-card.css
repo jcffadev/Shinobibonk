@@ -3,14 +3,14 @@
 .mc.legendary{border-color:#f5c542;box-shadow:0 0 0 1px #f5c54255,0 10px 26px #000a}
 .mc header{display:flex;align-items:center;gap:10px}
 .mc-symbol{flex:none;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--map);color:#1c1510;font-weight:900;font-size:18px}
-.mc header small{display:block;font-size:9px;letter-spacing:.12em;opacity:.75}.mc header b{display:block;font-size:15px;line-height:1.15}
+.mc header small{display:block;font-size:11px;letter-spacing:.12em;opacity:.75}.mc header b{display:block;font-size:15px;line-height:1.15}
 .mc.legendary header small{color:#f5c542;opacity:1}
-.mc header em{margin-left:auto;font-style:normal;font-size:11px;font-weight:900;padding:2px 8px;border-radius:999px;background:#45352b}.mc header em.ready{background:#2fbf5f}
-.mc-where{display:flex;flex-wrap:wrap;gap:4px}.mc-where i{font-style:normal;font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#ffffff14}
-.mc p{margin:0;font-size:12px;line-height:1.4;opacity:.9}
+.mc header em{margin-left:auto;font-style:normal;font-size:12px;font-weight:900;padding:2px 8px;border-radius:999px;background:#45352b}.mc header em.ready{background:#2fbf5f}
+.mc-where{display:flex;flex-wrap:wrap;gap:4px}.mc-where i{font-style:normal;font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:999px;background:#ffffff14}
+.mc p{margin:0;font-size:13px;line-height:1.4;opacity:.9}
 .mc ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
-.mc li{display:flex;align-items:center;gap:7px;font-size:11px;padding:4px 6px;border-radius:8px;background:#ffffff0a;opacity:.85}
-.mc li.ok{opacity:1;background:#2fbf5f22}.mc li strong{margin-left:auto;font-size:12px}.mc li.ok strong{color:#7dffb0}
+.mc li{display:flex;align-items:center;gap:7px;font-size:12px;padding:4px 6px;border-radius:8px;background:#ffffff0a;opacity:.85}
+.mc li.ok{opacity:1;background:#2fbf5f22}.mc li strong{margin-left:auto;font-size:13px}.mc li.ok strong{color:#7dffb0}
 .mc-dot{width:18px;text-align:center;font-weight:900}.mc li.ok .mc-dot{color:#7dffb0}
 .mc-portrait{width:22px;height:22px;border-radius:50%;overflow:hidden;flex:none;background:#392c23}
 .mc.compact{padding:8px 10px}.mc.compact header b{font-size:13px}

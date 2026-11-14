@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## Rodada 57 · 14/11/2026 — fontes da HUD maiores
+
+- **Pedido do usuário:** "Aumentar um pouco as fontes, mas manter o hud organizado... tem algumas fontes muito pequenas, melhorar isso."
+- **369 tamanhos ajustados em 20 arquivos CSS**, em degraus pequenos e só onde a leitura era difícil:
+
+  | Antes | Depois |
+  |---|---|
+  | 7 / 7,5 px | 10 px |
+  | 8 px | 10,5 px |
+  | 9 px | 11 px |
+  | 9,5 / 10 px | 11,5 px |
+  | 10,5 / 11 px | 12 px |
+  | 12 / 12,5 px | 13 px |
+  | rem pequenos (0,67–0,76) | 0,75–0,8 rem |
+
+  Títulos e textos de 13 px ou mais não mudaram.
+- **Checagem estática:** nenhuma caixa com altura ou entrelinha fixa ficou menor que o texto novo.
+- **Novo `tests/interface.test.mjs`**, que vira trava permanente:
+  - piso de 10 px para todas as fontes;
+  - texto sem corte nas caixas fixas;
+  - os arquivos CSS foram encontrados.
+- **Testes:** mínimo de testes passa a 45; uma mutação nova (fonte de 7 px na HUD) foi acusada.
+- **PASSOU:** `tsc`, build, 45/45 testes e prova por mutação 14/14.
+- **PENDENTE DE VALIDAÇÃO E2E** (navegador suspenso para o Claude Code): ver na tela, em 1280×720 e 1600×900, se a HUD continua organizada. Atenção a slots, contadores do inventário, cartões de ajudantes e minimapa.
+
 ## Rodada 56 · 14/11/2026 — testes por código confiáveis e política central de testes
 
 - **Política central** em [docs/development/TESTING_POLICY.md](docs/development/TESTING_POLICY.md): navegador (§A), camadas (§B), stress planejado (§C), confiabilidade (§D), métricas (§E), perfis LEVE/EQUILIBRADO/PROFUNDO (§F), controle de execução (§G) e status de relatório (§H). `AGENTS.md` (todos os agentes) e `CLAUDE.md` (só Claude Code) apontam para ela. **A restrição de navegador vale só para o Claude Code** (decisão do usuário); Codex/Qwen mantêm a rotina atual.

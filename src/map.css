@@ -1,12 +1,12 @@
 /* Mapa (M/Tab), minimapa e HUD de rota/ping — src/ui/MapOverlay.tsx */
 .mk{position:relative;display:grid;place-items:center;flex:none;border-radius:50%;border:2px solid var(--mk,#f9d55b);background:#37281ef0;box-shadow:0 0 8px color-mix(in srgb,var(--mk,#f9d55b) 55%,transparent);overflow:visible;font-style:normal;line-height:1}
 .mk-map{width:34px;height:34px;font-size:17px}
-.mk-mini{width:20px;height:20px;font-size:11px;border-width:1.5px;box-shadow:0 0 4px #0009}
+.mk-mini{width:20px;height:20px;font-size:12px;border-width:1.5px;box-shadow:0 0 4px #0009}
 .mk em{font-style:normal}
 .mk img{width:72%;height:72%;object-fit:contain;image-rendering:pixelated}
 /* Retrato recortado em círculo; overflow visível para o selo (sup) do tipo de evento. */
 .mk.has-portrait .hero-sprite{width:100%!important;height:118%!important;margin:0!important;transform:translateY(6%);filter:none;clip-path:circle(46% at 50% 42%)}
-.mk sup{position:absolute;right:-6px;bottom:-5px;display:grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#1e1611;border:1px solid var(--mk,#f9d55b);font-size:9px;line-height:1}
+.mk sup{position:absolute;right:-6px;bottom:-5px;display:grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#1e1611;border:1px solid var(--mk,#f9d55b);font-size:11px;line-height:1}
 .mk-mini sup{display:none}
 .mk.used{filter:grayscale(1) brightness(.65);opacity:.7}
 .tone-npc{--mk:#6fe0ff}.tone-event{--mk:#f9d55b}.tone-danger{--mk:#ff5a5a}.tone-challenge{--mk:#ff9a3d}.tone-altar{--mk:#ffe98c}.tone-shop{--mk:#7dffb0}.tone-curse{--mk:#b86bff}
@@ -36,7 +36,7 @@
 
 /* Mapa M/Tab */
 .world-map>i.map-marker{z-index:4;display:flex;flex-direction:column;align-items:center;gap:2px;width:auto;height:auto;border:0;background:none;box-shadow:none;cursor:pointer}
-.world-map>i.map-marker small{padding:1px 5px;border-radius:7px;background:#211710d9;color:#fff;font-size:9px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}
+.world-map>i.map-marker small{padding:1px 5px;border-radius:7px;background:#211710d9;color:#fff;font-size:11px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s}
 .world-map>i.map-marker:hover small,.world-map>i.map-marker.routed small{opacity:1}
 .world-map>i.map-marker:hover .mk{transform:scale(1.18)}
 .world-map>i.map-marker.routed .mk{border-color:#fff;box-shadow:0 0 0 3px #ffe14d,0 0 14px #ffe14d}
@@ -46,30 +46,30 @@
 .map-layout.quick .world-map>i.map-marker small{display:none}
 .route-box{margin-bottom:12px;padding:10px;border:1px solid #ffffff22;border-radius:10px;background:#24170ec9;display:grid;gap:5px}
 .route-box.on{border-color:#ffe14d;background:#2c2a14d9}
-.route-box small{color:#e7b956;font-size:9px;letter-spacing:1.5px}
+.route-box small{color:#e7b956;font-size:11px;letter-spacing:1.5px}
 .route-box b{font-size:13px;color:#fff}
-.route-box span{font-size:10px;color:#e5ddd0}
-.route-box button{justify-self:start;padding:5px 10px;border-radius:8px;border:1px solid #ffe14d;background:#3d3712;color:#fff3b0;font-size:10px;cursor:pointer}
+.route-box span{font-size:11.5px;color:#e5ddd0}
+.route-box button{justify-self:start;padding:5px 10px;border-radius:8px;border:1px solid #ffe14d;background:#3d3712;color:#fff3b0;font-size:11.5px;cursor:pointer}
 .discovered-list button.discovered-row{width:100%;border:1px solid transparent;color:#fff;text-align:left;cursor:pointer;font:inherit}
 .discovered-list button.discovered-row:hover:not(:disabled){border-color:#ffe14d88}
 .discovered-list button.discovered-row.routed{border-color:#ffe14d;background:#3a3412b0}
 .discovered-list button.discovered-row.used{opacity:.55;cursor:default}
-.discovered-row b small{display:block;color:#c7b9a0;font-size:8px;font-weight:600}
-.discovered-list .map-legend{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:12px;padding-top:10px;border-top:1px solid #ffffff20;font-size:9px;color:#e3dbce}
+.discovered-row b small{display:block;color:#c7b9a0;font-size:10.5px;font-weight:600}
+.discovered-list .map-legend{display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:12px;padding-top:10px;border-top:1px solid #ffffff20;font-size:11px;color:#e3dbce}
 .discovered-list .map-legend span{display:flex;align-items:center;gap:4px}
-.discovered-list .map-legend p{margin:4px 0 0;color:#d4cab9;font-size:10px;line-height:1.5}
+.discovered-list .map-legend p{margin:4px 0 0;color:#d4cab9;font-size:11.5px;line-height:1.5}
 .lg{display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid var(--mk);background:#37281e}
 .map-layout.quick .discovered-list{max-height:min(49vh,420px);overflow:auto}
 
 /* HUD de rota */
 .route-chip{position:absolute;z-index:6;top:262px;right:18px;width:178px;box-sizing:border-box;display:flex;align-items:center;gap:7px;padding:6px 8px;border:1px solid #ffe14d;border-radius:12px;background:#2a211bea;color:#fff;box-shadow:0 4px 12px #0007}
 .route-chip>span{font-size:16px}
-.route-chip b{flex:1;min-width:0;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.route-chip b{flex:1;min-width:0;font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .route-chip b small{display:block;color:#ffe14d;font-size:14px;font-weight:900}
 .route-chip button{padding:3px 7px;border-radius:7px;border:1px solid #ffffff44;background:#48382d;color:#fff;cursor:pointer}
 .route-arrow,.route-pin{position:absolute;z-index:5;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;transition:left .2s linear,top .2s linear}
 .route-arrow>span{display:block;color:#ffe14d;font-size:30px;line-height:1;text-shadow:0 0 6px #000,0 0 10px #ffe14d88}
-.route-arrow small,.route-pin small{padding:2px 7px;border-radius:8px;background:#291b12cc;color:#fff3b0;font-size:10px;font-weight:800;white-space:nowrap}
+.route-arrow small,.route-pin small{padding:2px 7px;border-radius:8px;background:#291b12cc;color:#fff3b0;font-size:11.5px;font-weight:800;white-space:nowrap}
 .route-pin{transform:translate(-50%,-120%)}
 .route-pin>span{color:#ffe14d;font-size:22px;text-shadow:0 0 6px #000;animation:pin-bob .8s ease-in-out infinite}
 @keyframes pin-bob{50%{transform:translateY(-5px)}}
@@ -78,7 +78,7 @@
 .route-notice.arrived b{color:#61ffa8;font-size:30px;font-weight:900;letter-spacing:1px}
 .route-notice.lost{border-color:#ff9a3d}
 .route-notice.set{border-color:#ffe14d;top:auto;bottom:210px}
-.route-notice small{color:#fff;font-size:11px;font-weight:700}
+.route-notice small{color:#fff;font-size:12px;font-weight:700}
 @keyframes notice-in{from{opacity:0;transform:translate(-50%,8px)}}
 @media(max-width:1050px){.route-chip{top:230px;width:155px}}
 @media(max-width:700px){.route-chip{top:136px;right:8px;width:140px}}

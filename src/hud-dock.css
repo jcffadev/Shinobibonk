@@ -7,7 +7,7 @@
 .skill-dock>.vitamin-row{width:max-content;min-height:0;max-width:100%;gap:4px;padding:0;background:none;box-shadow:none;backdrop-filter:none}
 .skill-dock>.vitamin-row .inv-icon{width:26px;height:26px;flex:none}
 .skill-dock>.vitamin-row .catalog-icon{width:100%;height:100%}
-.skill-dock>.vitamin-row .inv-icon small{right:0;bottom:0;min-width:10px;padding:0 2px;font-size:8px}
+.skill-dock>.vitamin-row .inv-icon small{right:0;bottom:0;min-width:10px;padding:0 2px;font-size:10.5px}
 /* Ajuda de teclas fica abaixo do dock, à direita do botão "← Preparação" (left:16px; bottom:17px). */
 .game-help{left:124px;bottom:14px;max-width:400px}
 /* Escolha com muitas cartas (cópia do Kakashi): grade de até 4 colunas com rolagem. */
@@ -46,7 +46,7 @@
 .build-entry small{display:block}
 .build-entry .skill-art,.build-entry .catalog-icon{width:34px;height:34px;flex:none}
 .build-cell-actions{display:flex;align-items:center;justify-content:flex-end;gap:4px;flex-wrap:wrap}
-.build-cell-actions button{font-size:11px;padding:5px 8px}
+.build-cell-actions button{font-size:12px;padding:5px 8px}
 tr.pool-card .enable-skill{background:#14766b;color:#effffe;font-weight:800}
 tr.pool-card .enable-skill:hover{background:#209d88}
 tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #ffce61}
@@ -55,7 +55,7 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .build-fusion h3,.build-tactics h3{margin:0 0 8px;color:#ffd06b;font-size:15px}
 .build-fusion-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
 .build-fusion-form select{background:#241811;color:#f0e9d8;border:1px solid #796355;border-radius:9px;padding:7px 9px;max-width:260px}
-.fusion-preview{background:#241811;border:1px dashed #796355;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:12.5px}
+.fusion-preview{background:#241811;border:1px dashed #796355;border-radius:10px;padding:10px 12px;margin:10px 0;font-size:13px}
 .fusion-preview p{margin:4px 0}
 .fusion-preview span{font-weight:800;color:#ffd06b}
 .fusion-preview small{color:#d4c5aa}
@@ -69,15 +69,15 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .tactic-chip{display:flex;align-items:center;gap:10px;background:#302117;border:1px solid rgba(201,163,106,.35);border-radius:10px;padding:7px 10px;flex-wrap:wrap}
 .tactic-chip b{color:#ffd06b}
 .tactic-chip small{flex:1;color:#d4c5aa}
-.fusion-badge{display:inline-block;background:#4a3a63;color:#d9c8ff;border:1px solid #7b63a8;padding:1px 8px;border-radius:999px;font-size:11px;font-style:normal}
+.fusion-badge{display:inline-block;background:#4a3a63;color:#d9c8ff;border:1px solid #7b63a8;padding:1px 8px;border-radius:999px;font-size:12px;font-style:normal}
 .build-detail{border:1px solid #796355;border-radius:14px;padding:20px;background:#3a291e;color:#dce7ff}
 .build-detail .skill-art,.build-detail .catalog-icon{width:56px;height:56px}
 .build-detail h2{margin:9px 0}
 .build-detail b{color:#ffd06b}
 .technique-base-data{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:12px 0}
 .technique-base-data div{background:#302117;padding:7px 8px;border-radius:8px}
-.technique-base-data dt{font-size:10px;color:#d0be9f}
-.technique-base-data dd{font-size:12px;font-weight:700;margin:2px 0 0}
+.technique-base-data dt{font-size:11.5px;color:#d0be9f}
+.technique-base-data dd{font-size:13px;font-weight:700;margin:2px 0 0}
 .technique-preview{height:170px;overflow:hidden;border:1px solid #6c5342;border-radius:12px;background:radial-gradient(at 55% 72%,#284d4d,#281a10 79%)}
 .technique-preview canvas{display:block;width:100%;height:100%}
 .build-detail>small{display:block;margin-top:5px;color:#d4c5aa}
@@ -119,9 +119,9 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .inventory-corner{gap:4px;max-width:min(255px,35vw);max-height:90px;min-height:0;overflow:auto;scrollbar-width:thin}
 .inventory-corner .inv-icon{width:25px;height:25px;flex:none}
 .inventory-corner .catalog-icon{width:100%;height:100%}
-.inventory-corner .inv-icon small{right:0;bottom:0;min-width:10px;padding:0 2px;font-size:8px}
+.inventory-corner .inv-icon small{right:0;bottom:0;min-width:10px;padding:0 2px;font-size:10.5px}
 /* Expandir/recolher a grade de itens (botão ou tecla I; preferência em sb_hud_items_expanded_v1). */
-.inventory-corner .inventory-toggle{position:sticky;top:0;z-index:1;flex:none;height:25px;min-width:34px;padding:0 6px;border:1px solid #f4d48580;border-radius:7px;background:#37271cee;color:#f4d485;font:900 10px/1 inherit;cursor:pointer}
+.inventory-corner .inventory-toggle{position:sticky;top:0;z-index:1;flex:none;height:25px;min-width:34px;padding:0 6px;border:1px solid #f4d48580;border-radius:7px;background:#37271cee;color:#f4d485;font:900 11.5px/1 inherit;cursor:pointer}
 .inventory-corner .inventory-toggle:hover,.inventory-corner .inventory-toggle:focus-visible{background:#543d2d;outline:2px solid #f4d485}
 .inventory-corner.expanded{max-width:min(470px,48vw);max-height:min(62vh,520px)}
 .inventory-corner.expanded .inv-icon{width:30px;height:30px}
@@ -132,4 +132,4 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 
 .game-shell .skill-dock>.ability-bar .ultimate{position:relative;isolation:isolate;overflow:visible}
 .ultimate-charge{position:absolute;inset:-3px;pointer-events:none;border-radius:50%;background:conic-gradient(#ffdc86 var(--charge),#3e3027 0);mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));z-index:1}
-.game-shell .skill-dock .ultimate-auto-mark{white-space:nowrap;right:0;bottom:-6px;padding:1px 3px;font-size:7px;line-height:1;border-width:1px;z-index:2}
+.game-shell .skill-dock .ultimate-auto-mark{white-space:nowrap;right:0;bottom:-6px;padding:1px 3px;font-size:10px;line-height:1;border-width:1px;z-index:2}

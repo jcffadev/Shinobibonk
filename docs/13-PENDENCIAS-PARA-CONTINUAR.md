@@ -45,7 +45,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 > **Rodada 56 (14/11/2026) — testes:**
 > - **Feito:** política central em [development/TESTING_POLICY.md](development/TESTING_POLICY.md); 42 testes por código; prova por mutação 13/13; perfis no `TESTAR_JOGO.bat`.
-> - **Próximo:** fontes da HUD (autorizado).
+> - **Feito (rodada 57):** fontes da HUD aumentadas, com teste de piso de 10 px. **PENDENTE DE VALIDAÇÃO E2E:** ver a HUD na tela.
 > - **Depois, aguardando decisão do usuário:** núcleo de simulação headless para stress de 1.500 monstros e p95/p99; invariantes de recompensa e recálculo de atributos; baseline de resultados; ESLint.
 > - **CONFIRMADO pelo usuário (14/11):** a restrição de navegador fica **só no Claude Code**. Codex e Qwen continuam como estão; o usuário vai testá-los e, se precisar, manda eles adicionarem a restrição.
 

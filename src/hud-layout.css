@@ -5,22 +5,22 @@
 .game-shell .game-topbar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;column-gap:14px;row-gap:3px;padding:7px 14px 6px}
 .game-shell .topbar-block{display:flex;align-items:center;min-width:0}
 .game-shell .topbar-mission{flex-direction:column;align-items:flex-start;gap:2px;text-align:left}
-.game-shell .topbar-mission .game-mission{width:auto;margin:0;overflow:hidden;max-width:100%;font-size:10.5px;white-space:nowrap;text-overflow:ellipsis}
-.game-shell .topbar-mission .run-weather{display:block;align-self:flex-start;max-width:100%;overflow:hidden;padding:0;background:none;color:#e7dcca;font-size:10px;white-space:nowrap;text-overflow:ellipsis}
+.game-shell .topbar-mission .game-mission{width:auto;margin:0;overflow:hidden;max-width:100%;font-size:12px;white-space:nowrap;text-overflow:ellipsis}
+.game-shell .topbar-mission .run-weather{display:block;align-self:flex-start;max-width:100%;overflow:hidden;padding:0;background:none;color:#e7dcca;font-size:11.5px;white-space:nowrap;text-overflow:ellipsis}
 .game-shell .topbar-clock{justify-content:center}
 .game-shell .topbar-clock .run-clock{font-size:26px;line-height:1;white-space:nowrap}
 .game-shell .topbar-clock .final-swarm-clock{font-size:20px}
 .game-shell .topbar-resources{justify-content:flex-end;gap:6px}
-.game-shell .topbar-resources>span{padding:4px 8px;font-size:11px;white-space:nowrap}
-.game-shell .game-topbar .run-prices{grid-column:1/-1;justify-content:center;gap:3px 8px;width:auto;margin:0;padding-top:4px;border-top:1px solid #ffffff14;color:#cec3af;font-size:9.5px}
+.game-shell .topbar-resources>span{padding:4px 8px;font-size:12px;white-space:nowrap}
+.game-shell .game-topbar .run-prices{grid-column:1/-1;justify-content:center;gap:3px 8px;width:auto;margin:0;padding-top:4px;border-top:1px solid #ffffff14;color:#cec3af;font-size:11.5px}
 .game-shell .game-topbar .run-prices span{padding:1px 6px}
-.game-shell .game-topbar .run-prices small{align-self:center;color:#aca18e;font-size:9px}
+.game-shell .game-topbar .run-prices small{align-self:center;color:#aca18e;font-size:11px}
 
 /* Avisos (toasts como "Emboscada!") seguem fora da barra: .world-toast em top:140px (run-ui.css), abaixo da barra compacta. */
 
 /* Minimapa: rótulo próprio sob o círculo e selo DEBUG abaixo do rótulo, acompanhando a escala do HUD/minimapa. */
 .game-shell{--mm-size:190px;--mm-zoom:calc(var(--hud-scale,1) * var(--minimap-scale,1))}
-.game-shell .minimap-caption{position:absolute;z-index:3;top:calc(16px + var(--mm-size) + 4px);right:18px;width:var(--mm-size);text-align:center;color:#f0e9dc;font:800 9px/1.2 system-ui,sans-serif;letter-spacing:.04em;text-shadow:0 1px 2px #000,0 0 4px #000;pointer-events:none;zoom:var(--mm-zoom);opacity:var(--hud-opacity,1)}
+.game-shell .minimap-caption{position:absolute;z-index:3;top:calc(16px + var(--mm-size) + 4px);right:18px;width:var(--mm-size);text-align:center;color:#f0e9dc;font:800 11px/1.2 system-ui,sans-serif;letter-spacing:.04em;text-shadow:0 1px 2px #000,0 0 4px #000;pointer-events:none;zoom:var(--mm-zoom);opacity:var(--hud-opacity,1)}
 .game-shell .minimap-caption kbd{padding:0 4px;border:1px solid #ffffff40;border-radius:4px;background:#211711cc;font:inherit}
 .game-shell.hide-minimap .minimap-caption{display:none}
 .game-shell .debug-toggle,.game-shell .debug-panel{top:calc((16px + var(--mm-size) + 22px) * var(--mm-zoom) + 8px)}
@@ -28,14 +28,14 @@
 .game-shell .debug-panel{right:12px}
 
 /* Itens: grade já limitada a 3 linhas com rolagem (hud-dock.css); contador mais legível. */
-.game-shell .inventory-corner .inv-icon small{min-width:11px;padding:0 2px;border-radius:4px;background:#1f140ce6;color:#fff;font-size:9px;font-weight:900;line-height:11px;text-shadow:none}
+.game-shell .inventory-corner .inv-icon small{min-width:11px;padding:0 2px;border-radius:4px;background:#1f140ce6;color:#fff;font-size:11px;font-weight:900;line-height:11px;text-shadow:none}
 
 /* SINERGIAS recolhível pelo título. */
-.synergy-panel .synergy-toggle{display:flex;align-items:center;gap:4px;width:100%;padding:0;border:0;background:none;font:inherit;font-size:9px;font-weight:900;letter-spacing:.08em;text-align:left;text-shadow:0 1px 2px #000;cursor:pointer}
+.synergy-panel .synergy-toggle{display:flex;align-items:center;gap:4px;width:100%;padding:0;border:0;background:none;font:inherit;font-size:11px;font-weight:900;letter-spacing:.08em;text-align:left;text-shadow:0 1px 2px #000;cursor:pointer}
 .synergy-panel .synergy-toggle:hover,.synergy-panel .synergy-toggle:focus-visible{color:#fff0c9}
 .synergy-panel.collapsed{padding:4px 8px}
 
-@media(max-width:1050px){.game-shell{--mm-size:155px}.game-shell .topbar-clock .run-clock{font-size:21px}.game-shell .topbar-resources>span{padding:3px 6px;font-size:10px}}
+@media(max-width:1050px){.game-shell{--mm-size:155px}.game-shell .topbar-clock .run-clock{font-size:21px}.game-shell .topbar-resources>span{padding:3px 6px;font-size:11.5px}}
 @media(max-width:700px){
   .game-shell .game-topbar{display:flex;flex-wrap:wrap}
   .game-shell .minimap-caption{display:none}
@@ -43,7 +43,7 @@
 }
 
 /* Prévia "atributo atual → novo" das pílulas (cartas de level-up, ficha P, plano de build). */
-.pill-stat-preview{display:grid;gap:2px;margin-top:6px;padding:5px 8px;border-radius:8px;background:#25180fb3;color:#e9e0d0;font-size:10.5px;line-height:1.25;text-align:left}
-.pill-stat-preview i{color:#cbbba0;font-size:9px;font-style:normal;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.pill-stat-preview{display:grid;gap:2px;margin-top:6px;padding:5px 8px;border-radius:8px;background:#25180fb3;color:#e9e0d0;font-size:12px;line-height:1.25;text-align:left}
+.pill-stat-preview i{color:#cbbba0;font-size:11px;font-style:normal;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
 .pill-stat-preview b{color:#fff}
 .pill-stat-preview em{color:#7ff0a6;font-style:normal;font-weight:900}

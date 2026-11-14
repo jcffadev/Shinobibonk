@@ -70,7 +70,7 @@
 .mission-planner .planner-active {padding:0 0 7px;font-size:.88rem}
 .mission-planner .planner-tactics {margin:8px 0;font-size:.85rem}
 .mission-planner .build-view-filters {margin:6px 0 8px}
-.mission-planner .build-view-filters button {padding:4px 8px;font-size:.76rem}
+.mission-planner .build-view-filters button {padding:4px 8px;font-size:.8rem}
 .mission-planner .pool-filters {margin:5px 0;gap:5px}
 .mission-planner .pool-filters :is(input,select,button) {padding:6px 8px;min-height:30px;font-size:.74rem}
 .mission-planner .build-workspace {gap:8px;grid-template-columns:minmax(0,2fr) minmax(230px,1fr)}
@@ -82,16 +82,16 @@
 .mission-planner .planner-option .build-entry {padding:3px;gap:6px;background:transparent;border-radius:5px}
 .mission-planner .planner-option .build-entry > span:not([role]) {min-width:0}
 .mission-planner .planner-option .build-entry b {max-width:none;white-space:normal;font-size:.8rem}
-.mission-planner .planner-option .build-entry small {color:#b8c6de;font-size:.67rem}
-.mission-planner .planner-option-state {padding:0 3px;color:#f0d296;font-size:.67rem}
+.mission-planner .planner-option .build-entry small {color:#b8c6de;font-size:.75rem}
+.mission-planner .planner-option-state {padding:0 3px;color:#f0d296;font-size:.75rem}
 .mission-planner .build-cell-actions {gap:4px;margin-top:auto}
-.mission-planner .build-cell-actions button,.planner-fusions button {border:1px solid #51607c;border-radius:5px;background:#334259;color:#eef3ff;font:700 .69rem inherit;padding:4px 6px;cursor:pointer}
+.mission-planner .build-cell-actions button,.planner-fusions button {border:1px solid #51607c;border-radius:5px;background:#334259;color:#eef3ff;font:700 .75rem inherit;padding:4px 6px;cursor:pointer}
 .mission-planner .build-cell-actions button:hover,.planner-fusions button:hover {background:#455874}
 .mission-planner .build-cell-actions button.enable-skill {background:#23584f;border-color:#528a76}
 .mission-planner .build-cell-actions button.training-star[aria-pressed=true] {color:#ffe19a;border-color:#e3b957}
 .mission-planner .build-cell-actions button:disabled,.planner-fusions button:disabled {opacity:.5;cursor:default}
 .planner-slots > span {position:relative}
-.planner-slots .planner-remove {position:absolute;top:-4px;right:-4px;display:grid;place-items:center;width:16px;height:16px;padding:0;margin:0;border:1px solid #c87876;border-radius:50%;background:#481d27;color:#fff4f4;font:800 12px/1 sans-serif;opacity:0;pointer-events:none;cursor:pointer}
+.planner-slots .planner-remove {position:absolute;top:-4px;right:-4px;display:grid;place-items:center;width:16px;height:16px;padding:0;margin:0;border:1px solid #c87876;border-radius:50%;background:#481d27;color:#fff4f4;font:800 13px/1 sans-serif;opacity:0;pointer-events:none;cursor:pointer}
 .planner-slots > span:is(:hover,:focus-within) .planner-remove {opacity:1;pointer-events:auto}
 @media (hover:none){.planner-slots .planner-remove {opacity:1;pointer-events:auto}}
 .planner-detail-heading {display:flex;align-items:center;gap:8px;margin:0 0 4px}
@@ -104,7 +104,7 @@
 .planner-fusion-toolbar h2 {font-size:1rem;margin:0}
 .planner-fusion-toolbar p,.planner-empty {font-size:.77rem;margin:3px 0;color:#b8c6de}
 .planner-fusion-toolbar .build-fusion-form {margin:0}
-.planner-fusion-toolbar select {max-width:190px;font-size:.75rem;color:#edf2ff;background:#222e43;border-color:#4c5e7c}
+.planner-fusion-toolbar select {max-width:190px;font-size:.8rem;color:#edf2ff;background:#222e43;border-color:#4c5e7c}
 .planner-fusion-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,485px),1fr));gap:8px}
 .planner-saved-fusion {padding:8px;border:1px solid #5f523a;border-radius:10px;background:#192233}
 .planner-saved-fusion > header {display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:6px;font-size:.81rem;color:#f6d78c}
@@ -113,16 +113,16 @@
 .planner-fusion-card.is-combination {border-color:#4b6e99;background:#202d43}
 .fusion-result-heading {display:flex;align-items:center;gap:7px}
 .fusion-result-heading > .skill-art {width:32px;height:32px;flex:none}
-.fusion-result-heading small {font-size:.68rem;color:#d5bdf3}
+.fusion-result-heading small {font-size:.75rem;color:#d5bdf3}
 .fusion-result-heading h3 {margin:1px 0 3px;font-size:.84rem}
 .fusion-sources,.fusion-tags {display:flex;flex-wrap:wrap;gap:4px;margin:5px 0}
-.fusion-sources span,.fusion-tags span {display:inline-flex;align-items:center;gap:4px;border-radius:4px;background:#141c2c;padding:2px 5px;font-size:.68rem}
+.fusion-sources span,.fusion-tags span {display:inline-flex;align-items:center;gap:4px;border-radius:4px;background:#141c2c;padding:2px 5px;font-size:.75rem}
 .fusion-sources .skill-art {width:17px;height:17px}
-.planner-fusion-card dl {margin:6px 0;font-size:.72rem}
+.planner-fusion-card dl {margin:6px 0;font-size:.76rem}
 .planner-fusion-card dl div {display:grid;grid-template-columns:66px 1fr;gap:4px;padding:2px 0}
 .planner-fusion-card dt {color:#b8c6de}
 .planner-fusion-card dd {margin:0}
-.planner-fusion-card p {font-size:.72rem;margin:4px 0 0;color:#b8c6de}
+.planner-fusion-card p {font-size:.76rem;margin:4px 0 0;color:#b8c6de}
 .account-area .archive-button {font-size:.73rem;padding:6px 9px;min-height:30px}
 @media(max-width:760px){
  .mission-planner .build-workspace {grid-template-columns:1fr}
@@ -130,7 +130,7 @@
 }
 @media(max-width:490px){.fusion-comparison {grid-template-columns:1fr}}
 
-.planner-tooltip {position:fixed;z-index:250;pointer-events:none;display:grid;gap:4px;max-width:min(270px,calc(100vw - 16px));border:1px solid #576985;border-radius:8px;background:#172236;color:#edf4ff;box-shadow:0 7px 20px #0009;padding:8px 10px;font-size:.76rem}
+.planner-tooltip {position:fixed;z-index:250;pointer-events:none;display:grid;gap:4px;max-width:min(270px,calc(100vw - 16px));border:1px solid #576985;border-radius:8px;background:#172236;color:#edf4ff;box-shadow:0 7px 20px #0009;padding:8px 10px;font-size:.8rem}
 .planner-tooltip b {color:#ffdc94}
 .planner-tooltip small {color:#b3c5dc}
 .planner-option-effect {display:block;margin-top:3px;color:#a1dfca}
@@ -139,7 +139,7 @@
 .planner-archives h3 {margin:0 0 6px;font-size:.85rem}
 .planner-archives h3 small,.planner-archives .planner-slots > small {color:#b8c6de}
 .planner-tactics-grid form {display:flex;flex-wrap:wrap;gap:5px;margin:7px 0 0}
-.planner-tactics-grid form :is(input,button) {min-height:28px;border:1px solid #536482;border-radius:5px;background:#29364d;color:#f3f6fe;font-size:.75rem;padding:4px 7px}
+.planner-tactics-grid form :is(input,button) {min-height:28px;border:1px solid #536482;border-radius:5px;background:#29364d;color:#f3f6fe;font-size:.8rem;padding:4px 7px}
 .planner-tactics-grid form input {flex:1;min-width:110px}
 .planner-tactics-grid form button:disabled {opacity:.5}
 @media(max-width:700px){.planner-tactics-grid{grid-template-columns:1fr}}
@@ -147,7 +147,7 @@
 .planner-rarity {display:inline-flex;gap:4px;align-items:center;padding:1px 5px;border:1px solid var(--rarity,#bcc5d6);border-radius:999px;color:var(--rarity,#bcc5d6);background:#141d2c;font-weight:800}
 .planner-rarity i {width:6px;height:6px;border-radius:50%;background:currentColor}
 .planner-stack-limit {display:inline-block;margin-left:5px;color:#d3ddee;font-variant-numeric:tabular-nums}
-.mission-planner .build-cell-actions button,.planner-fusions button {font:inherit;font-size:.69rem;font-weight:700}
+.mission-planner .build-cell-actions button,.planner-fusions button {font:inherit;font-size:.75rem;font-weight:700}
 
 .planner-item-meta{display:inline-flex;align-items:center;gap:5px}
 .planner-rarity{border-color:color-mix(in srgb,var(--rarity) 45%,transparent);padding:2px 6px;background:#141c2bee}
