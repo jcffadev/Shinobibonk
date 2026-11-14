@@ -1,4 +1,5 @@
 import type { Difficulty } from './progression';
+import type { WeatherCast } from './weatherCast';
 
 /**
  * Mapas jogáveis (pedido do usuário em 06/11/2026): cada um com temática, paleta, clima, cenário e guardiões próprios.
@@ -77,8 +78,9 @@ export const DIFFICULTY_ORDER: Difficulty[] = ['Genin', 'Chunin', 'Jonin', 'Kage
 
 export type WeatherEventId = 'mist' | 'snow' | 'sand';
 export const WEATHER_EVENT_DURATION = 60;
-export const WEATHER_EVENTS: Record<WeatherEventId, MapWeather & { elites: string[] }> = {
-  mist: { name:'Névoa do Zabuza',sky:'#27313b',near:3,far:11,elites:['zabuza'] },
+export const WEATHER_EVENTS: Record<WeatherEventId, MapWeather & { elites: string[]; cast?: WeatherCast }> = {
+  // Rodada 63: Zabuza faz os selos à vista do jogador antes da névoa (src/game/weatherCast.ts).
+  mist: { name:'Névoa do Zabuza',sky:'#27313b',near:3,far:11,elites:['zabuza'],cast:{seconds:2.6,line:'Zabuza: Ninpō · Kirigakure no Jutsu!'} },
   snow: { name:'Nevasca do Haku',sky:'#a5becf',near:18,far:42,elites:['haku'] },
   sand: { name:'Tempestade de areia',sky:'#b08259',near:15,far:46,slow:.73,elites:['gaara','rasa'] },
 };

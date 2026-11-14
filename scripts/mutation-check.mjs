@@ -32,6 +32,8 @@ const MUTATIONS = [
   { regra: 'bijū sem esticar', arquivo: 'src/scene/bossCombat.ts', de: 'host.sprite.scale.set(BIJUU_SIZE*wide*grow,', para: 'host.sprite.scale.set(5*wide*grow,' },
   { regra: 'bijū de costas com histerese', arquivo: 'src/game/bijuu.ts', de: 'if (away > .26) return true;', para: 'if (away > 0) return true;' },
   { regra: 'sem quadrados brancos de inimigos (névoa do Zabuza)', arquivo: 'src/scene/enemyRenderer.ts', de: ' sprite.material.visible = false; },', para: ' },' },
+  { regra: 'névoa só esconde depois dos selos', arquivo: 'src/game/weatherCast.ts', de: "elapsed >= (event.castEnd ?? 0)", para: 'true' },
+  { regra: 'Zabuza parado durante os selos', arquivo: 'src/scene/GameCanvas.tsx', de: 'const stunned=channeling||', para: 'const stunned=' },
   { regra: 'cone desenhado = cone do acerto', arquivo: 'src/scene/GameCanvas.tsx', de: 'dot(direction)>CONE_COS', para: 'dot(direction)>.5' },
 ];
 

@@ -1740,3 +1740,10 @@ Resposta: sim. Entrou na fila como item 15b: revisar todos os personagens com fo
 - **Correção:** o sprite do lote nunca é desenhado sozinho.
 - **PASSOU:** 73/73 e mutação 22/22.
 - **Nota para Codex/Qwen:** a medição automática das folhas de caminhada é só auxiliar; a decisão é visual (nota adicionada em docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md).
+
+### Rodada 63 e passagem de trabalho
+
+> publicar agora o que precisamos fazer do jeito que estão as coisas, vou continuar com outra IA, porque voce ja esta no limite... Anote tudo e deixe em fila para a fazer, para o outro agente continuar. Faça AGORA!
+
+- Item 18 feito: Zabuza faz os selos e a névoa engrossa aos poucos (80/80, mutação 24/24).
+- Fila completa para o próximo agente em docs/26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md.

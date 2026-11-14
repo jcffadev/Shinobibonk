@@ -23,9 +23,18 @@ export function acrobaticsArt(family:string,form:number){
 const gaaraSheet = (level: number) => `/assets/shinobi-motion/gaara-${level}-motion-v3.png`;
 export const NARUTO_HAND_SEALS = '/assets/shinobi-motion/naruto-hand-seal-v1.png';
 const narutoSealForms = [1, 10, 25, 50];
+/**
+ * Folhas de SELOS de outros shinobis (Rodada 63 — Zabuza fazendo os selos da Névoa Oculta). Mesmo layout da folha do
+ * Naruto: 4 colunas (preparação de frente, selo de frente, preparação de costas, selo de costas) × 4 fileiras; usa a
+ * fileira 0. Vazio até o Codex gerar a arte (pedido: docs/development/PEDIDO-ARTE-ZABUZA-SELOS.md); enquanto isso o
+ * conjurador usa a pose de conjuração da própria folha de ação.
+ */
+export const EXTRA_SEAL_SHEETS: Record<string, string> = {};
 export function handSealArt(family: string, level: number) {
   const row = family === 'naruto' ? narutoSealForms.indexOf(level) : -1;
-  return row < 0 ? undefined : { path: NARUTO_HAND_SEALS, row };
+  if (row >= 0) return { path: NARUTO_HAND_SEALS, row };
+  const extra = EXTRA_SEAL_SHEETS[family];
+  return extra ? { path: extra, row: 0 } : undefined;
 }
 
 export function actionArt(hero: string, formLevel: number) {

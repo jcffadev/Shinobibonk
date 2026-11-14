@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Rodada 63 · 14/11/2026 — Zabuza faz os selos antes da Névoa Oculta (item 18) e passagem para o próximo agente
+
+- **Selos do Zabuza:**
+  - Ele surge à vista, 7 m à frente do jogador, e fica parado fazendo os selos por 2,6 s, com o aviso "Zabuza: Ninpō · Kirigakure no Jutsu!".
+  - A névoa engrossa aos poucos; só depois ele e os inimigos somem nela. Mapa, rota e minimapa também só escondem depois dos selos.
+  - Regras em `src/game/weatherCast.ts`; configuração em `WEATHER_EVENTS.mist.cast`.
+  - Sem arte fiel ainda: usa a pose de conjuração da própria folha. O código está pronto para a folha de selos (`EXTRA_SEAL_SHEETS`); pedido em [docs/development/PEDIDO-ARTE-ZABUZA-SELOS.md](docs/development/PEDIDO-ARTE-ZABUZA-SELOS.md).
+- **Testes:** `tests/clima.test.mjs` (7). **PASSOU:** tsc, build, 80/80 e mutação 24/24. **PENDENTE DE VALIDAÇÃO E2E:** ver a cena no mapa da Névoa.
+- **Passagem:** o usuário vai continuar com outra IA. Fila completa em [docs/26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md](docs/26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md):
+  - itens do tester (XP, colisão, borda do altar, dano);
+  - artes pendentes;
+  - skill de jutsus;
+  - validação E2E;
+  - decisões do usuário.
+
 ## Rodada 62 · 14/11/2026 — névoa do Zabuza sem quadrados brancos (item 17)
 
 - **Pedido do usuário:** "Corrija a névoa do bug do Zabuza…" (print com dezenas de quadrados brancos e cinza e um laranja).
