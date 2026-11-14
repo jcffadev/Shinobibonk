@@ -43,6 +43,12 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 ## Prioridades em ordem
 
+> **Rodada 56 (14/11/2026) — testes:**
+> - **Feito:** política central em [development/TESTING_POLICY.md](development/TESTING_POLICY.md); 42 testes por código; prova por mutação 13/13; perfis no `TESTAR_JOGO.bat`.
+> - **Próximo:** fontes da HUD (autorizado).
+> - **Depois, aguardando decisão do usuário:** núcleo de simulação headless para stress de 1.500 monstros e p95/p99; invariantes de recompensa e recálculo de atributos; baseline de resultados; ESLint.
+> - **Confirmar com o usuário:** a restrição de navegador fica só no Claude Code ou passa a valer também para o Codex?
+
 > **Rodada 38 (12/11/2026):** animação andar+atacar **IMPLEMENTADA e TESTADA** (headless); HUD ninja **aplicada** (ficha P, Bolsa, Plano, Ataques, Passivas, configurações e resumo ainda só com os tokens — redesenho próprio PENDENTE); ABRIR_JOGO robusto; proposta de novos shinobis em [docs/22](22-PROPOSTA-NOVOS-SHINOBIS.md) com **15 perguntas e divergências canônicas** na lista aprovada da rodada 37 — **não implementar personagens novos antes da resposta do usuário**. Prioridade 5 (mapas): colisão e bordas IMPLEMENTADAS em 11/11; falta inspeção visual dos 4 mapas e da prévia da seleção. `TEST_UNLOCK_ALL = true` (elenco liberado para teste) — voltar a `false` antes da versão pública. Skill `animar-jutsu-webgl` (jutsus em WebGL, 3 links do usuário) PENDENTE: o subagente foi cortado pelo limite em 11/11.
 
 1. **Kankuro RESOLVIDO** (usuário confirmou em 11/11/2026: "kankuro já foi corrigido" — arte das folhas 1/15/30 + walk/action v3 está no repositório). Restam deste item: **Kushina (1)** (quarta versão ainda sem folha completa) + conferida rápida do ataque automático em combate/como ajudante nas novas folhas.

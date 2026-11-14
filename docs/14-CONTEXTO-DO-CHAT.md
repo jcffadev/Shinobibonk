@@ -1619,3 +1619,22 @@ Caminhada medida no jogo antes da suspensão do navegador: jogador certo nas 8 d
 Política de testes sem navegador registrada em `CLAUDE.md` (só para o Claude Code). Criados `tests/` (22 testes em node:test, sem navegador), `TESTAR_JOGO.bat` e `npm test`. O erro que o usuário viu ao rodar o .bat era da primeira versão, que passava a pasta `tests\` ao Node; já corrigido para o padrão `tests/*.test.mjs` e verificado (22 de 22).
 
 Rodada 55 publicada. Detalhes e pendências E2E no CHANGELOG. Próxima tarefa: fontes da HUD.
+
+## Rodada 56 · 14/11/2026 — testes confiáveis e política central de testes
+
+> Eu quero que você veja como pode melhorar esse teste, entenda o que você fez e faça todas as melhoras para que consigamos extrair o máximo da pureza e certeza que os testes estão passando 100%, agora não quero que fique apenas no claude essa funcionalidade, pode expandir para codex/qwen... Porém, por enquanto ainda manter a forma de testes dele, só o claude por enquanto para de usar o edge.
+>
+> (Complementos da mesma rodada:)
+> - "Pode seguir também" (fontes da HUD, depois desta tarefa).
+> - "faça esse .md" — seção "Política de testes" apontando para docs/development/TESTING_POLICY.md — "Você vai criar esse ultimo markdown de testes e questão de não usar o edge, com a restrição apenas para o claude, no agents.md".
+> - Prompt longo de evolução da infraestrutura de testes (camadas, stress de 1.500 monstros, métricas p95/p99, perfis, confiabilidade, relatório).
+> - "crie um .md para isso": tarefa de centralizar a política em TESTING_POLICY.md + AGENTS.md + CLAUDE.md (capítulos A–H, perfis leve/equilibrado/profundo com metas de 40/65/85% de CPU, status PASSOU/FALHOU/INSTÁVEL/NÃO EXECUTADO/NÃO MENSURÁVEL, entregar diagnóstico antes de implementar infraestrutura nova).
+
+### Resposta
+
+- **Política e instruções:** criada `docs/development/TESTING_POLICY.md` (capítulos A–H, comandos reais, como acrescentar testes, propostas). `AGENTS.md` ganhou a seção "Política de testes" (todos os agentes). `CLAUDE.md` foi reorganizado para apontar para a política, mantendo a restrição de navegador ativa só para o Claude Code. Conflito registrado: o prompt colado pedia a restrição também ao Codex, mas a instrução direta do usuário foi "restrição apenas para o claude"; seguida a instrução direta, aguardando confirmação.
+- **Lógica extraída para módulos puros:** altar, golpes extras, ameaça por zona, ímã e cone.
+- **Testes:** reescritos por comportamento (42); executor com garantias; prova por mutação 13/13; perfis no `TESTAR_JOGO.bat`.
+- **Resultados (PASSOU):** leve, equilibrado e mutação.
+- **NÃO EXECUTADO:** E2E com navegador.
+- **Proposta, sem implementar:** simulação headless e stress de 1.500 monstros, porque exigem extrair o núcleo de simulação do GameCanvas.

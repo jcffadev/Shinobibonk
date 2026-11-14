@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## Rodada 56 · 14/11/2026 — testes por código confiáveis e política central de testes
+
+- **Política central** em [docs/development/TESTING_POLICY.md](docs/development/TESTING_POLICY.md): navegador (§A), camadas (§B), stress planejado (§C), confiabilidade (§D), métricas (§E), perfis LEVE/EQUILIBRADO/PROFUNDO (§F), controle de execução (§G) e status de relatório (§H). `AGENTS.md` (todos os agentes) e `CLAUDE.md` (só Claude Code) apontam para ela. **A restrição de navegador vale só para o Claude Code** (decisão do usuário); Codex/Qwen mantêm a rotina atual.
+- **Lógica extraída do `GameCanvas` para módulos puros testáveis**, sem mudar o comportamento:
+  - `buildAltarOffers`, `extraStrikes` e `altarLuckMultiplier` em `src/game/altarRewards.ts` (o pool e as bases do altar foram para lá);
+  - `zoneThreat` e `zoneCurse` em `src/game/progression.ts`;
+  - `magnetSpeed` em `src/game/drops.ts`;
+  - o acerto do Cone passou a usar a mesma constante `CONE_COS` da área desenhada.
+- **Testes reescritos por comportamento** (antes vários só procuravam texto no código): 42 testes em 6 arquivos, cobrindo:
+  - fórmula exata do HP nos níveis 1–3000 e nas 114 versões;
+  - zona nova = início da zona 1 × multiplicador, nas 4 dificuldades;
+  - +% de inimigos com tetos;
+  - 4.000 bênçãos por raridade com semente fixa;
+  - golpes extras e chance observada;
+  - migração da música (4 cenários + save corrompido);
+  - queda, luz e modo H do Mega Elite caído com Three.js no Node;
+  - expiração e reaproveitamento das áreas das técnicas;
+  - simulação do voo do ímã;
+  - ausência do nome do jogo de referência.
+- **`scripts/run-tests.mjs`**: sequencial, 120 s por arquivo, registra ambiente/commit, recusa teste com navegador. Falha com:
+  - qualquer falha, skip, todo ou cancelamento;
+  - arquivo sem testes;
+  - total abaixo de `tests/minimo.json`;
+  - cobertura abaixo do mínimo (altarRewards 100%/100%/97%, drops 100%).
+- **`scripts/mutation-check.mjs` (prova dos testes):** estraga 13 regras de propósito e exige que os testes acusem cada uma. Resultado: 13/13 acusadas; arquivos restaurados.
+- **Perfis:** `TESTAR_JOGO.bat [leve|equilibrado|profundo]`; `npm test`, `npm run test:leve`, `npm run test:mutacao`.
+- **PASSOU:** perfil leve (42/42, 2,5 s), equilibrado (tipos + 42/42 com cobertura + build) e prova por mutação (13/13). **NÃO EXECUTADO** (navegador suspenso para o Claude): `verify-runtime`, `verify-motion-atlases`. **PENDENTE:** simulação headless e stress de 1.500 monstros (proposta na política).
+
 ## Rodada 55 · 14/11/2026 — caminhada, Mega Elite caído, HP, projéteis, zonas e testes sem navegador
 
 Lote do usuário de 13/11 (pedido integral em docs/14 e em [docs/25](docs/25-RETOMADA-LOTE-13-11.md)). Feito em parte por subagentes e concluído pelo Claude Code, uma tarefa por vez.

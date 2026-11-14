@@ -17,6 +17,21 @@ Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs
 - Todo novo shinobi jogável entra com repouso, caminhada direcional, ataque, pulo e dash/esquiva testados em cada forma, inclusive evoluções. Use a arte estática da forma e as técnicas do personagem como referências. Na revisão do elenco existente, preserve Naruto Academia e Manto da Kurama conforme pedido do usuário.
 - Claude Code e Codex trabalham no mesmo repositório: antes de começar, rode `git status`/`git pull` e leia `docs/13-PENDENCIAS-PARA-CONTINUAR.md` (fila em andamento). Ao terminar, documente e faça commit + push para o outro agente continuar na mesma página.
 
+## Política de testes
+
+Antes de executar testes, consulte:
+`docs/development/TESTING_POLICY.md`
+
+Respeite as restrições temporárias de execução de navegadores.
+Não execute testes E2E com navegador sem autorização explícita.
+
+- **Restrição de navegador (14/11/2026):** por decisão do usuário, ela vale **por enquanto só para o Claude Code** (ver `CLAUDE.md`). O Codex, o Qwen e os demais agentes mantêm a rotina atual de testes, inclusive os testes com navegador que já usavam (`verify-runtime`, `verify-motion-atlases`), e seguem o resto da política. Se o usuário estender a restrição, ela passa a valer para todos (§A da política).
+- Use o perfil **EQUILIBRADO** como padrão (`TESTAR_JOGO.bat`): tipos, testes por código com cobertura e build, sem navegador. Rode a suíte de navegador só quando a mudança exigir validação visual/de fluxo.
+- Toda mudança de regra de jogo vem com teste em `tests/` (ver "Como acrescentar testes" na política). Suba o mínimo em `tests/minimo.json` e, para regra importante, acrescente uma mutação em `scripts/mutation-check.mjs`.
+- Não execute testes pesados sem necessidade, nem duas suítes ao mesmo tempo. Não deixe processos órfãos.
+- Validação pendente não é aprovação: reporte com os status PASSOU / FALHOU / INSTÁVEL / NÃO EXECUTADO / NÃO MENSURÁVEL.
+- A política central é a referência: não copie as regras dela para outros documentos.
+
 ## Publicação no GitHub
 - Ao fim de **toda** tarefa que alterou arquivos, depois de documentar e verificar, siga `skills/publicar-github/SKILL.md`: commit em português e push para `origin main` (`https://github.com/jcffadev/Shinobibonk.git`). Nunca use force push. Nunca publique credenciais (ex.: `Feedback da versão.txt`, que está no `.gitignore`).
 

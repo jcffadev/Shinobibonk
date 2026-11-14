@@ -76,3 +76,8 @@ A [auditoria dos efeitos](24-AUDITORIA-DE-EFEITOS.md) inventaria o caminho visua
 
 - Kits, missões e folhas novas: [docs/21](21-ELASTAO-DE-HEROIS.md) e `src/game/rosterExpansion.ts`.
 - Perfis de efeitos: [docs/24](24-AUDITORIA-DE-EFEITOS.md) e `src/game/techniqueVisualProfiles.ts`.
+
+## Testes (rodada 56, 14/11/2026)
+
+- Política central: [development/TESTING_POLICY.md](development/TESTING_POLICY.md) — comandos, camadas, perfis, status e como acrescentar testes.
+- Testes por código: `tests/` · executor `scripts/run-tests.mjs` · prova por mutação `scripts/mutation-check.mjs` · atalho `TESTAR_JOGO.bat`.

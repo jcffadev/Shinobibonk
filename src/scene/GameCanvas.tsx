@@ -43,10 +43,11 @@ import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, 
 import type { Bonuses } from '../game/catalog';
 import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSignatureVisual, disposeObject } from './techniqueEffects';
 import { createParticleFx } from './particleFx';
-import { createTechniqueAreas } from './techniqueAreas';
+import { createTechniqueAreas, CONE_COS } from './techniqueAreas';
 import { createSusanooFx, susanooStyleFor } from './susanooFx';
-import { calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, ENEMY_SCALING, FINAL_SWARM, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
-import { altarProjectiles, projectileLabel } from '../game/altarRewards';
+import { zoneThreat, zoneCurse, calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, ENEMY_SCALING, FINAL_SWARM, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
+import { buildAltarOffers, extraStrikes } from '../game/altarRewards';
+import { magnetSpeed } from '../game/drops';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
 import { rollRarityTier, RARITY_ORDER } from '../game/combat';
 import { ROULETTE_BY_ID, ROULETTE_RULES, BLESSINGS, BAD_LUCK, SLOT_COMBOS, slotKakuzuRyu, rouletteWeights, roulettePressure, rollRoulette, rouletteCost, seededRng, spendBonuses, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
@@ -87,33 +88,8 @@ export const CHOICE_GUARD = { armSeconds: .2 }; // Rodada 48 — engasgada ao in
  * barra por segundo): Normal 4%/s (~25 s para zerar) … Lendário 18%/s (~5,5 s). Cada altar guarda o próprio progresso.
  */
 export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerSecond: [.04, .06, .09, .13, .18] };
-/**
- * Bênção do altar protegido (Rodada 51 — pedido do usuário: "Os altares não são para dar itens, mas buffs aleatórios
- * de acordo com sua sorte/qualidade do altar"): três atributos oferecidos, dos quais o jogador escolhe um.
- * Magnitude = ALTAR_BUFF_BASE[tier] × escala do atributo × (1 + sorte além de 10, +2% por ponto, teto +120%).
- * Valores PROPOSTOS (sessão de 12/11) — o usuário testa a gameplay e ajustamos. Como os buffs de roleta/NPC, ficam em
- * runBuffs também é preservado no SavedRun. refreshStats recalcula sempre das fontes.
- */
-export const ALTAR_BUFF_BASE=[.05,.08,.12,.18,.25]; // Comum→Lendário
-export const ALTAR_BUFF_POOL:[StatKey,number,(v:number)=>string][]=[
-  ['damage',1,v=>`+${Math.round(v*100)}% de dano`],
-  ['crit',1,v=>`+${Math.round(v*100)}% de chance crítica`],
-  ['critDamage',1,v=>`+${Math.round(v*100)}% de dano crítico`],
-  ['attackSpeed',1,v=>`+${Math.round(v*100)}% de velocidade de ataque`],
-  ['move',1,v=>`+${Math.round(v*100)}% de velocidade de movimento`],
-  ['area',1,v=>`+${Math.round(v*100)}% de raio de área`],
-  // Rodada 55: sai a "chance de projétil extra"; projétil/golpe inteiro só a partir de Raro (+1 · Épico +2 · Lendário +3 — altarRewards.ts).
-  ['projectiles',1,v=>projectileLabel(v)],
-  ['status',1,v=>`+${Math.round(v*100)}% de chance de status`],
-  ['cool',1,v=>`+${Math.round(v*100)}% de recarga da Ultimate`],
-  ['exp',1.2,v=>`+${Math.round(v*100)}% de experiência`],
-  ['gold',1.2,v=>`+${Math.round(v*100)}% de Ryu`],
-  ['dodge',1,v=>`+${Math.round(v*100)}% de esquiva`],
-  ['defense',40,v=>`+${Math.max(1,Math.round(v))} de armadura`],
-  ['regen',4,v=>`+${v.toFixed(1)} HP/s de regeneração`],
-  ['health',200,v=>`+${Math.round(v)} de HP máximo`],
-  ['luck',40,v=>`+${Math.max(1,Math.round(v))} de Sorte`],
-];
+/** Bênção do altar (Rodada 51/55): valores, sorteio e textos em src/game/altarRewards.ts (lógica pura, testada em tests/). */
+export { ALTAR_BUFF_BASE, ALTAR_BUFF_POOL } from '../game/altarRewards';
 /** Bolinho de arroz: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .05, heal: .35 };
 type Enemy = { bodyAmbush?: MapPickup; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
@@ -167,7 +143,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Rodada 55 (pedido do usuário: "ao passar de zona, resetar e voltar do início a progressão dos monstros"): escala pelo
     // tempo DA ZONA (zoneElapsed) — cada zona recomeça do minuto 0 (densidade, vivos, HP/dano, Final Swarm), com o multiplicador
     // da zona (ZONE_DIFFICULTY), a missão e os +% de inimigos/ameaça (enemyCount/threat) por cima. Arena da bijū = zona cheia (600 s).
-    const threatNow=()=>{const t=tuneThreat(difficultyAt(mission,arena?ZONE_SECONDS:zoneElapsed(),zoneDifficulty*(1+.33*shikamaruPlans)*Math.max(.2,1+ex('threat')),overtimeNow()),tune());const density=Math.max(.2,1+ex('enemyCount'));return {...t,spawnPerSecond:t.spawnPerSecond*density,spawnInterval:t.spawnInterval/density,cap:Math.min(t.swarm>1?FINAL_SWARM.maxEnemies:ENEMY_SCALING.maxEnemies,Math.max(1,Math.round(t.cap*density)))};};
+    const threatNow=()=>zoneThreat(mission,arena?ZONE_SECONDS:zoneElapsed(),zoneCurse(zoneDifficulty,shikamaruPlans,ex('threat')),overtimeNow(),ex('enemyCount'),t=>tuneThreat(t,tune()));
     const hero=HERO_BY_ID[heroId]??HEROES[0],techniques=skillPool(hero.id,sealedHeroes()),growth:Record<string,SkillGrowth>={},cooldowns:Record<string,number>={},runBuffs:Bonuses={},skillDamage:Record<string,number>={};
     let zoneStart=0,plansUsed=0,arena=false,bijuuReward=0,defeatedBijuu='',finalSwarmAnnounced=false,spawnBudget=0,globalMagnetUntil=0;
     let portal:{kind:PortalKind;x:number;z:number;mesh:THREE.Group}|null=null;
@@ -309,18 +285,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let pendingAltar:{tier:number;name:string}|undefined;
     function openAltarBlessing(tier:number,name:string){
       pendingAltar={tier,name};
-      const altarBase=ALTAR_BUFF_BASE[tier]??ALTAR_BUFF_BASE[0],luckMult=1+Math.min(1.2,Math.max(0,stats.luck-10)*.02);
-      const offenseKeys=new Set<StatKey>(['damage','crit','critDamage','attackSpeed','area','cool','projectiles']);
-      // Comum/Incomum não sorteiam projétil; Raro +1 · Épico +2 · Lendário +3 (inteiro, sem escala de Sorte).
-      const offense=ALTAR_BUFF_POOL.filter(([key])=>offenseKeys.has(key)&&(key!=='projectiles'||altarProjectiles(tier)>0));
-      const utility=ALTAR_BUFF_POOL.filter(([key])=>!offenseKeys.has(key));
-      const take=(pool:typeof ALTAR_BUFF_POOL)=>pool.splice(Math.floor(Math.random()*pool.length),1)[0];
-      const picked=[take(offense),take(utility),take(Math.random()<.5?offense:utility)];
       choiceLevel=-10;
-      choiceData=picked.map(([key,scale,label])=>{
-        const value=key==='projectiles'?altarProjectiles(tier):Math.round(altarBase*scale*luckMult*100)/100;
-        return {id:'altar-'+key,kind:'stat',name:label(value),rarity:RARITY_ORDER[tier]??'Comum',icon:offenseKeys.has(key)?'⚔':'忍',description:key==='projectiles'?'Projétil a mais nas técnicas de projétil; golpe a mais nas de corpo a corpo/área. Ativo até o fim da missão.':'Bônus ativo até o fim da missão.',bonus:{[key]:value}};
-      });
+      choiceData=buildAltarOffers(tier,stats.luck);
       keys.clear();eventToast=name+' conquistado';snapshotTimer=0;saveRun();
     }
     // Arsenal da Tenten (NPC, antes Kakashi): forja uma cópia de 1 item que o jogador já carrega. A escolha usa choiceLevel=-1; o evento só é gasto ao copiar.
@@ -1290,7 +1256,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         const resolve=()=>{
         // Rodada 55: área real do golpe no chão (mesmas medidas do teste abaixo); a Área já foi telegrafada no cast.
         if(!ally){if(areaTelegraphed)areaTelegraphed=false;else areas.mark(t,origin,direction,center,radius,range,ATTACK_SCALE*.65*Math.sqrt(stats.area*(1+g.area)),0,hiddenEffects);}
-        for(const enemy of [...enemyList]){const delta=enemy.sprite.position.clone().sub(origin);delta.y=0;const d=delta.length(),along=delta.dot(direction),cross=Math.abs(delta.x*direction.z-delta.z*direction.x);let inside=false;if(t.shape==='Linha')inside=along>=0&&along<=range&&cross<ATTACK_SCALE*.65*Math.sqrt(stats.area*(1+g.area));else if(t.shape==='Cone')inside=d<=range&&(d<.2||delta.normalize().dot(direction)>.65);else inside=Math.hypot(enemy.sprite.position.x-center.x,enemy.sprite.position.z-center.z)<=radius;if(inside)hit(enemy,t,g,origin,ally);}
+        for(const enemy of [...enemyList]){const delta=enemy.sprite.position.clone().sub(origin);delta.y=0;const d=delta.length(),along=delta.dot(direction),cross=Math.abs(delta.x*direction.z-delta.z*direction.x);let inside=false;if(t.shape==='Linha')inside=along>=0&&along<=range&&cross<ATTACK_SCALE*.65*Math.sqrt(stats.area*(1+g.area));else if(t.shape==='Cone')inside=d<=range&&(d<.2||delta.normalize().dot(direction)>CONE_COS);else inside=Math.hypot(enemy.sprite.position.x-center.x,enemy.sprite.position.z-center.z)<=radius;if(inside)hit(enemy,t,g,origin,ally);}
         // Visual: Susanoo procedural; malha própria só para técnicas assinatura (Rasengan, invocações…); o resto é partícula por natureza × forma, na área/alcance reais.
         if(!hiddenEffects){const half=ATTACK_SCALE*.65*Math.sqrt(stats.area*(1+g.area));
           if(ally||!areas.enabled())particles.footprint(t,origin,direction,center,radius,range,half);
@@ -1307,7 +1273,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         if(instant||delay<=0)resolve();else pendingHits.push({time:delay,run:resolve});
         // Rodada 55: `projectiles` vale como GOLPE extra nas técnicas sem projétil (corpo a corpo, cone, linha, área): cada projétil
         // além do 1º repete o acerto 0,14 s depois (mesma regra de chance fracionária do projétil; Ultimate fora).
-        if(!t.ultimate){const extra=Math.min(11,Math.floor(stats.projectiles)-1+Math.floor(stats.projectileChance)+(Math.random()<stats.projectileChance%1?1:0));for(let k=1;k<=extra;k++)pendingHits.push({time:Math.max(0,delay)+k*.14,run:resolve});}}
+        {const extra=extraStrikes(stats.projectiles,stats.projectileChance,!!t.ultimate);for(let k=1;k<=extra;k++)pendingHits.push({time:Math.max(0,delay)+k*.14,run:resolve});}}
       const motion=ally?allyMotion:playerMotion;
       if(!t.ultimate)motion?.attack(t.school==='Taijutsu'||academyThrow,direction.dot(v2)<0,false,t.school!=='Taijutsu'?undefined:t.name==='Furacão da Folha'||t.name==='Lótus Primária'?'kick':'punch',/Bunshin|Caixão de Areia/.test(t.name),direction.dot(v1)>.001);
       if(!ally)playTechniqueSound(t,false,heroId);return true;
@@ -1524,7 +1490,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       for(let i=drops.length-1;i>=0;i--){const drop=drops[i];{const base=(drop.mesh.userData.baseScale||1)*(drop.magnet ? .72 : 1);if(drop.type==='ryu')drop.mesh.scale.set(base*Math.max(.36,Math.abs(Math.cos(elapsed*3.2+i))),base,1);else{const pulse=1+Math.sin(elapsed*4+i)*.06;drop.mesh.scale.set(base*pulse,base*pulse,1);}}const ddx=player.position.x-drop.mesh.position.x,ddz=player.position.z-drop.mesh.position.z,dist=Math.hypot(ddx,ddz);
         if(!drop.magnet&&elapsed-drop.born>=DROP_RULES.settle&&(dist<stats.pickup||elapsed<globalMagnetUntil)){drop.magnet=true;drop.speed=DROP_RULES.magnetSpeed*.4;drop.mesh.userData.globalPull=elapsed<globalMagnetUntil;}
         // Rodada 55 (ímã do morro, mapa inteiro): drop puxado pelo ímã global chega em ≤ ~1,2 s de qualquer distância.
-        if(drop.magnet){drop.speed+=DROP_RULES.magnetAccel*dt;if(drop.mesh.userData.globalPull)drop.speed=Math.max(drop.speed,dist/1.2);const step=Math.min(dist,drop.speed*dt);if(dist>0){drop.mesh.position.x+=ddx/dist*step;drop.mesh.position.z+=ddz/dist*step;}drop.mesh.position.y=player.position.y-.2;}
+        if(drop.magnet){drop.speed+=DROP_RULES.magnetAccel*dt;drop.speed=magnetSpeed(drop.speed,dist,!!drop.mesh.userData.globalPull);const step=Math.min(dist,drop.speed*dt);if(dist>0){drop.mesh.position.x+=ddx/dist*step;drop.mesh.position.z+=ddz/dist*step;}drop.mesh.position.y=player.position.y-.2;}
         else drop.mesh.position.y=terrainHeight(drop.mesh.position.x,drop.mesh.position.z)+.55+Math.sin(elapsed*3+i)*.1;
         if(drop.magnet&&dist-(drop.speed*dt)<=DROP_RULES.touch){
           if(drop.type==='xp')xp+=Math.round(drop.value*stats.xpGain*tune().xpGain);

@@ -141,3 +141,20 @@ export function rollCritical(chance:number,criticalMultiplier=2.5,rng=Math.rando
   if(chance>=1)return rng()<Math.min(1,chance-1)?{tier:2,multiplier:criticalMultiplier+.5}:{tier:1,multiplier:criticalMultiplier};
   return rng()<Math.max(0,chance)?{tier:1,multiplier:criticalMultiplier}:{tier:0,multiplier:1};
 }
+
+export type Threat=ReturnType<typeof difficultyAt>;
+/**
+ * Multiplicador de ameaça de uma zona (Rodada 55): dificuldade própria da zona (ZONE_DIFFICULTY) × planos do Shikamaru
+ * (+33% cada) × bônus de ameaça dos itens/eventos (mínimo ×0,2).
+ */
+export function zoneCurse(zoneMultiplier:number,shikamaruPlans:number,threatBonus:number){return zoneMultiplier*(1+.33*shikamaruPlans)*Math.max(.2,1+threatBonus);}
+/**
+ * Ameaça dos monstros numa zona (Rodada 55 — pedido do usuário: "ao passar de zona, resetar e voltar do início a
+ * progressão dos monstros… mas claro os buffs de %+inimigos/+%hordas… deve influenciar"). `zoneSeconds` é o tempo DA ZONA
+ * (cada zona recomeça do 0). `enemyCountBonus` (+% de inimigos) multiplica spawn e teto de vivos por cima da escala,
+ * respeitando o teto absoluto (1.600 fora do Final Swarm). `tuning` aplica os parâmetros do debug (identidade nos testes).
+ */
+export function zoneThreat(mission:Difficulty,zoneSeconds:number,curse:number,overtimeSeconds:number,enemyCountBonus:number,tuning:(t:Threat)=>Threat=t=>t):Threat{
+  const t=tuning(difficultyAt(mission,zoneSeconds,curse,overtimeSeconds));const density=Math.max(.2,1+enemyCountBonus);
+  return {...t,spawnPerSecond:t.spawnPerSecond*density,spawnInterval:t.spawnInterval/density,cap:Math.min(t.swarm>1?FINAL_SWARM.maxEnemies:ENEMY_SCALING.maxEnemies,Math.max(1,Math.round(t.cap*density)))};
+}

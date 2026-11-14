@@ -43,6 +43,7 @@ Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos ba
 
 ## 3. Decisões permanentes do usuário
 
+- **14/11/2026 (rodada 56) — Política central de testes:** `docs/development/TESTING_POLICY.md` vale para todos os agentes (perfil padrão EQUILIBRADO, status PASSOU/FALHOU/INSTÁVEL/NÃO EXECUTADO/NÃO MENSURÁVEL, toda regra nova com teste em `tests/`). A restrição de navegador continua só para o Claude Code.
 - **14/11/2026 — Testes sem navegador (temporário, só Claude Code):** não abrir Edge/Chrome/Firefox, nem headless/Playwright, para testar; validar com tsc, build, verify-rules e `tests/` (`TESTAR_JOGO.bat`); o que exigir navegador fica "PENDENTE DE VALIDAÇÃO E2E". Política completa em `CLAUDE.md`; só volta com autorização explícita.
 
 Decisões de longa duração. Mudança de qualquer item = nova entrada aqui com a data, sem apagar a antiga.
@@ -162,6 +163,7 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 
 | 52 | Áudio, drops, planejador, altares, selamento e folhas de ação | Corrigir a trilha da Home, separar moeda e cura, reorganizar a preparação e atualizar o visual de técnicas e shinobis. A cópia em C: é a pasta principal. | Implementação e detalhes no [contexto integral](14-CONTEXTO-DO-CHAT.md) e no [CHANGELOG](../CHANGELOG.md). Folhas testadas para as 56 versões. Revisão visual das técnicas restantes em [docs/13](13-PENDENCIAS-PARA-CONTINUAR.md). |
 | 55 | **Caminhada, Mega Elite caído, HP, projéteis, zonas e testes sem navegador** (13–14/11) | Lote de 13/11 (docs/25) + "fazer sem subagentes, 1 tarefa por vez" + "Tem certeza que todos os personagens estão andando normal?" + "crie software de teste automatizado… por código" + política de testes sem navegador "apenas para o claude" | stableFacing com histerese; corpo caído com halo e E; áreas das técnicas; música 10%; câmera mais deitada; HP desacelerado (PROPOSTO); projétil inteiro por raridade; ameaça por tempo da zona; ímã ≤1,2 s; tests/ + TESTAR_JOGO.bat + CLAUDE.md | IMPLEMENTADO · TESTADO sem navegador (tsc, build, verify-rules, 22 testes) · visuais PENDENTES DE VALIDAÇÃO E2E · fontes pendentes |
+| 56 | **Testes confiáveis + política central de testes** (14/11) | "faça todas as melhoras para… certeza que os testes estão passando 100%… expandir para codex/qwen… só o claude por enquanto para de usar o edge" + TESTING_POLICY.md (capítulos A–H, perfis, status) + AGENTS.md/CLAUDE.md | Lógica pura extraída do GameCanvas; 42 testes por comportamento; run-tests com garantias (skip/todo/mínimo/cobertura/timeout/ambiente); prova por mutação 13/13; perfis leve/equilibrado/profundo; política central; restrição de navegador só no Claude | PASSOU (leve, equilibrado, mutação) · E2E NÃO EXECUTADO · simulação headless/stress = PROPOSTO |
 
 **Rodada 53** — P: implementar Kages, Tier A e extras da obra com missões e caminhada nos dois sentidos, aplicar efeitos às técnicas. R: 40 novas versões, atlas e movimento técnico verificado. A comparação visual jutsu a jutsu continua. Fase 4 concluída e abates no HUD.
 
