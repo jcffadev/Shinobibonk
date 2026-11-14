@@ -6,7 +6,7 @@ Os Mega Elites e os ajudantes que usam essas versões consultam as mesmas folhas
 
 O dash acompanha o vetor e o lado das oito direções, com quatro fases de frente e de costas. A arte de perfil dedicada do dash está no Naruto Academia. Para as demais versões o dash e o pulo continuam apoiados nas vistas frontal e traseira. A aprovação visual dos ângulos, poses e transições em partida está pendente conforme a [política de testes](TESTING_POLICY.md).
 
-Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros e o espelho.
+Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros, o espelho e a margem transparente das células dos 26 atlas dedicados. Os atlas foram repaginados a partir dos originais para evitar recorte e vazamento da fileira vizinha.
 
 | Versão | S/W · frente/costas | A/D · perfil | Diagonais · frente/costas |
 | --- | --- | --- | --- |

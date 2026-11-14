@@ -91,7 +91,17 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
     const h = Math.round((1 - map.offset.y) * height) - top;
     assert.ok(left >= 0 && top >= 0 && left + w <= width && top + h <= height, label);
     const cell = JSON.stringify([path, left, top, w, h]);
-    if (!cells.has(cell)) cells.set(cell, !cellShape(getImage(path), left, top, w, h).empty);
+    if (!cells.has(cell)) {
+      const img = getImage(path);
+      cells.set(cell, !cellShape(img, left, top, w, h).empty);
+      if (/\/walk-(cardinal|side)-\d+\.png$/.test(path)) {
+        const margin = 12;
+        for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+          if (x >= margin && x < w - margin && y >= margin && y < h - margin) continue;
+          assert.ok(img.alpha(left + x, top + y) <= 128, label + ' margem da célula ' + cell);
+        }
+      }
+    }
     assert.ok(cells.get(cell), label);
     return { cell, row: map.offset.y };
   };

@@ -5,6 +5,7 @@
 - As 114 versões têm quatro quadros para cada uma das cinco vistas de caminhada. W e S selecionam costas e frente; A e D, perfil; as combinações de teclas, três quartos. Ajudantes e Mega Elites compartilham os recortes. Quatro modelos de inimigos comuns também receberam fileiras laterais.
 - As fotos da seleção e da ficha usam o mesmo perfil da versão. Hanzō recebe perfil próprio. A normalização preserva a escala de cada ator ao alternar vistas.
 - O dash acompanha o vetor das oito direções. Pulo e dash contam com quatro fases de frente e de costas; a maioria das versões ainda precisa de arte lateral e diagonal dedicada. A avaliação visual em partida segue na fila.
+- Os 26 atlas novos foram repaginados pelas margens reais da arte. Isso corrigiu 320 células retas que invadiam a margem, com partes da fileira vizinha visíveis em alguns quadros. O teste verifica também a transparência das margens.
 - Nova skill de jutsus WebGL com referências e mapa de implementação. Verificação de tipos, build e 93 testes por código passaram.
 
 ## 14/11/2026 — direção de caminhada, foco do jogador e correções da fila
