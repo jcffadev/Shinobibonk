@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Rodada 60 · 14/11/2026 — botão "Arquivo Shinobi", tela branca e varredura do material de referência
+
+- **Botão branco no topo do hub** (usuário: "o que é o botão branco ali? simplesmente não consigo ver, mudar a cor e deixar parecido com os outros"). Era o **Arquivo Shinobi**: sem fundo próprio, ficava com o fundo branco do navegador e o texto branco do `.button`. Agora usa a mesma placa de madeira do perfil ao lado (`src/ninja-theme.css`). Novo teste: os botões do topo precisam ter fundo próprio.
+- **"Por que não consegui abrir pelo ABRIR_JOGO?"** O servidor estava no ar (a janela mostrava o Vite atualizando arquivos). A página branca era a aba aberta enquanto o código era editado; o print seguinte do usuário já mostra o hub carregado. Todos os módulos do jogo carregam sem erro no Node (verificado). Se acontecer de novo: **Ctrl+F5** na aba.
+- **Material do jogo de referência** (usuário: "Confira se temos referência… na pasta do projeto… precisa ficar em uma pasta fora"). Não havia vídeos, prints, executáveis ou pastas do jogo de referência no projeto. O único rastro era o protótipo antigo `history/v03_ShinobiBonk_v03_corrigido.zip`, que citava o nome numa linha interna. Ele foi **movido intacto** para a pasta externa arquivada e removido do repositório. O teste de zero rastro agora procura o nome também **dentro dos .zip** rastreados.
+- **PASSOU:** tsc, build e 69/69 testes.
+
 ## Rodada 59b · 14/11/2026 — bijū de frente e de costas: código pronto, arte pendente (item 15)
 
 - **Código pronto:** `src/scene/bossCombat.ts` troca para a folha de **costas** quando a bijū anda para dentro da tela, com a mesma histerese do jogador (vira acima de 0,26, volta abaixo de 0,1; parada mantém a vista). Usa a direção da câmera (`viewForward` = v1).

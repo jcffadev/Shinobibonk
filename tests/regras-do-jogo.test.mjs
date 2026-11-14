@@ -49,3 +49,19 @@ test('nome do jogo de referência não aparece no código, testes nem documenta�
   const run = spawnSync('git', ['grep', '-l', '-i', '-E', 'pok.{0,3}bonk', '--', '.', ':!.gitignore'], { cwd: root, encoding: 'utf8' });
   assert.equal(run.stdout.trim(), '', `arquivos com o nome: ${run.stdout}`);
 });
+
+test('nome do jogo de referência também não aparece DENTRO dos .zip rastreados (14/11: achado num protótipo antigo)', async () => {
+  const zlib = await import('node:zlib');
+  const zips = spawnSync('git', ['ls-files', '*.zip'], { cwd: root, encoding: 'utf8' }).stdout.split('\n').filter(Boolean);
+  const name = /pok[eé]?\s?bonk/i, found = [];
+  for (const zip of zips) {
+    const b = fs.readFileSync(new URL(zip, root));
+    for (let i = b.indexOf(Buffer.from([0x50, 0x4b, 0x03, 0x04])); i >= 0; i = b.indexOf(Buffer.from([0x50, 0x4b, 0x03, 0x04]), i + 4)) {
+      const method = b.readUInt16LE(i + 8), size = b.readUInt32LE(i + 18), n = b.readUInt16LE(i + 26), extra = b.readUInt16LE(i + 28);
+      const entry = b.subarray(i + 30, i + 30 + n).toString(), data = b.subarray(i + 30 + n + extra, i + 30 + n + extra + size);
+      let text = ''; try { text = (method === 8 ? zlib.inflateRawSync(data) : data).toString(); } catch { /* binário */ }
+      if (name.test(entry) || name.test(text)) found.push(`${zip}: ${entry}`);
+    }
+  }
+  assert.deepEqual(found, []);
+});

@@ -416,3 +416,9 @@ kbd{font-family:var(--fonte-texto)}
 .game-panel.sheet-panel .sheet-tile :is(.positive,.senjutsu-line){color:#184327!important}
 .game-panel.sheet-panel .growth-tile p,.game-panel.sheet-panel .planned-tile p{color:#f1e3ca}
 .game-panel.sheet-panel .planned-tile>span,.game-panel.sheet-panel .pill-list article{color:#f9eed9}
+
+/* Rodada 60 (pedido do usuário: "o que é o botão branco ali? simplesmente não consigo ver, mudar a cor e deixar parecido
+   com os outros"): "Arquivo Shinobi" no topo do hub não tinha fundo próprio — ficava com o fundo branco do navegador e o
+   texto branco do .button. Agora usa a mesma placa de madeira do perfil ao lado. */
+.account-area .archive-button{background:var(--bg-placa);color:#f7e6c0;border:2px solid var(--madeira-borda);border-radius:8px;box-shadow:var(--sombra-placa);font-weight:800;white-space:nowrap}
+.account-area .archive-button:hover{filter:brightness(1.12)}

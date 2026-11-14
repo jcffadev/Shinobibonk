@@ -1706,3 +1706,15 @@ Resposta: sim. Entrou na fila como item 15b: revisar todos os personagens com fo
 
 - **Código:** pronto e testado; a bijū troca para a folha de costas ao andar para dentro da tela.
 - **Arte:** o Codex precisa gerar 3 folhas de costas (pedido em docs/development/PEDIDO-ARTE-BIJUU-COSTAS.md). Enquanto `BIJUU_BACK_SHEETS` estiver vazio, nada muda na tela.
+
+## Rodada 60 · 14/11/2026 — perguntas e ajustes durante a fila
+
+> Confira se temos referencia do jogo [jogo de referência], vídeos/algo assim na pasta do projeto, lembre-se que precisa ficar em uma pasta fora [pasta arquivada]
+> Porque nao consegui abrir o jogo, pelo abri_jogo? (print: aba em branco em 127.0.0.1:5173 e janela do PowerShell com "[vite] (client) hmr update /src/hud-dock.css")
+> o que é o botão branco ali? simplesmente nãao consigo ver, mudar a cor e deixar parecido com os outros (print do topo do hub)
+
+### Resposta
+
+- **ABRIR_JOGO:** o servidor estava rodando (o Vite atualizava arquivos); a aba branca era da página aberta durante a edição do código. O print seguinte já mostra o hub. Os módulos carregam sem erro. Se acontecer de novo: Ctrl+F5.
+- **Botão branco:** era o "Arquivo Shinobi" sem fundo próprio; agora usa a placa de madeira, igual ao perfil ao lado.
+- **Material de referência:** nada de vídeo, print ou executável no projeto. O protótipo antigo v03 (zip rastreado) citava o nome numa linha; foi movido intacto para a pasta arquivada externa e removido do repositório. O teste de zero rastro agora também lê o conteúdo dos .zip.

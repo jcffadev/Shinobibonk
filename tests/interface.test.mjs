@@ -44,3 +44,11 @@ test('texto não fica cortado: entrelinha e altura fixas comportam a fonte', () 
   }
   assert.deepEqual(clipped, []);
 });
+
+test('botões do topo do hub têm fundo próprio (sem texto branco sobre fundo branco do navegador)', () => {
+  for (const selector of ['.archive-button', '.account-button']) {
+    const bodies = rules().filter(r => r.selector.includes(selector)).map(r => r.body);
+    assert.ok(bodies.length, selector + ' tem regra CSS');
+    assert.ok(bodies.some(body => /background\s*:/.test(body)), selector + ' sem background');
+  }
+});
