@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 14/11/2026 — cinco vistas de caminhada em todas as versões
+
+- As 114 versões têm quatro quadros para cada uma das cinco vistas de caminhada. W e S selecionam costas e frente; A e D, perfil; as combinações de teclas, três quartos. Ajudantes e Mega Elites compartilham os recortes. Quatro modelos de inimigos comuns também receberam fileiras laterais.
+- As fotos da seleção e da ficha usam o mesmo perfil da versão. Hanzō recebe perfil próprio. A normalização preserva a escala de cada ator ao alternar vistas.
+- O dash acompanha o vetor das oito direções. Pulo e dash contam com quatro fases de frente e de costas; a maioria das versões ainda precisa de arte lateral e diagonal dedicada. A avaliação visual em partida segue na fila.
+- Nova skill de jutsus WebGL com referências e mapa de implementação. Verificação de tipos, build e 93 testes por código passaram.
+
 ## 14/11/2026 — direção de caminhada, foco do jogador e correções da fila
 
 - A ficha reutiliza o retrato enquadrado da seleção. Hanzō agora tem roupa cinza-violeta e respirador com dois filtros. Haku recebe túnica verde-azulada, máscara, senbons e novas folhas de movimento. Zabuza usa quatro poses dedicadas para a Névoa Oculta.

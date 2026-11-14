@@ -15,12 +15,12 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
-- **IMPLEMENTADO em 14/11** — câmera suavizada, prioridade visual do jogador, fade dos inimigos sobrepostos, retrato compartilhado na ficha e atualização de arte do Hanzō, Haku e Zabuza. O trabalho dos sprites do elenco continua na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
+- **IMPLEMENTADO em 14/11** — câmera suavizada, prioridade visual do jogador, fade dos inimigos sobrepostos, retrato em perfil compartilhado na ficha e atualização de Hanzō, Haku e Zabuza. Os 114 jogáveis têm cinco vistas de caminhada registradas na [matriz](development/COBERTURA-DE-VISTAS.md).
 
 - **IMPLEMENTADO** — cinco folhas novas de ação para Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. As 56 versões têm caminhada direcional. Veja a cobertura de ataque, pulo e dash na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
 - React 19, TypeScript 7, Three.js 0.187 e Vite 8; iniciada com `pnpm dev`.
-- `src/main.tsx`: hub local com elenco de **56 famílias / 96 versões**, biblioteca de ataques, plano de build, árvore permanente, loja de itens e seleção de missão.
+- `src/main.tsx`: hub local com elenco de **72 famílias / 114 versões**, biblioteca de ataques, plano de build, árvore permanente, loja de itens e seleção de missão.
 - `src/scene/GameCanvas.tsx`: cena 3D isométrica e simulação local da run.
 - `src/game/`: dados e regras (heróis, técnicas, itens, atributos, dificuldade, evoluções, zonas, árvore).
 - `game/index.html` é a versão Canvas 2D anterior, só legado.

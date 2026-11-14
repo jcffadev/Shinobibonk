@@ -158,6 +158,10 @@ export function createEnemyRenderer(scene: THREE.Scene) {
   backAtlas.colorSpace = THREE.SRGBColorSpace;
   backAtlas.magFilter = THREE.NearestFilter;
   backAtlas.minFilter = THREE.NearestMipmapNearestFilter;
+  const sideAtlas = new THREE.TextureLoader().load('/assets/shinobi-enemy-side-v1.png');
+  sideAtlas.colorSpace = THREE.SRGBColorSpace;
+  sideAtlas.magFilter = THREE.NearestFilter;
+  sideAtlas.minFilter = THREE.NearestMipmapNearestFilter;
   const quad = new THREE.PlaneGeometry(1, 1);
   const layout = { iOffset: 3, iSize: 2, iUv: 4, iColor: 4 };
   const bodies = new Batch(quad, billboardMaterial(atlas, false), layout, scene);
@@ -168,7 +172,14 @@ export function createEnemyRenderer(scene: THREE.Scene) {
   const fadedBackBodies = new Batch(quad,billboardMaterial(backAtlas,false,true),layout,scene);
   const fadedOutlines = new Batch(quad,billboardMaterial(atlas,true,true),layout,scene);
   const fadedBackOutlines = new Batch(quad,billboardMaterial(backAtlas,true,true),layout,scene);
-  const fading = [fadedBodies,fadedBackBodies,fadedOutlines,fadedBackOutlines];
+  const sideBodies = new Batch(quad,billboardMaterial(sideAtlas,false),layout,scene);
+  const sideOutlines = new Batch(quad,billboardMaterial(sideAtlas,true),layout,scene);
+  const fadedSideBodies = new Batch(quad,billboardMaterial(sideAtlas,false,true),layout,scene);
+  const fadedSideOutlines = new Batch(quad,billboardMaterial(sideAtlas,true,true),layout,scene);
+  sideBodies.mesh.renderOrder=fadedSideBodies.mesh.renderOrder=2;
+  sideOutlines.mesh.renderOrder=3;fadedSideOutlines.mesh.renderOrder=1;
+  const sideBatches=[sideBodies,sideOutlines];
+  const fading = [fadedBodies,fadedBackBodies,fadedOutlines,fadedBackOutlines,fadedSideBodies,fadedSideOutlines];
   fadedOutlines.mesh.renderOrder=fadedBackOutlines.mesh.renderOrder=1;
   fadedBodies.mesh.renderOrder=fadedBackBodies.mesh.renderOrder=2;
   outlines.mesh.renderOrder = backOutlines.mesh.renderOrder = 3;
@@ -211,7 +222,7 @@ export function createEnemyRenderer(scene: THREE.Scene) {
     /** Copia os inimigos vivos para os buffers instanciados (1 vez por quadro, antes do render). */
     sync(enemies: readonly { sprite: THREE.Sprite; marker?: THREE.Mesh }[], opacity?: (sprite: THREE.Sprite) => number, dt=0) {
       bodies.count = outlines.count = backBodies.count = backOutlines.count = markers.count = 0;
-      for(const batch of fading)batch.count=0;
+      for(const batch of [...sideBatches,...fading])batch.count=0;
       for (const e of enemies) {
         const sp = e.sprite;
         if (sp.userData.atlas !== undefined) {
@@ -220,10 +231,11 @@ export function createEnemyRenderer(scene: THREE.Scene) {
           const alpha=opacity?THREE.MathUtils.damp(sp.userData.focusAlpha??1,opacity(sp),18,dt):1;
           sp.userData.focusAlpha=alpha;
           const back=sp.userData.back,fade=alpha<.98;
-          const body=fade?(back?fadedBackBodies:fadedBodies):(back?backBodies:bodies);
+          const side=sp.userData.side;
+          const body=side?(fade?fadedSideBodies:sideBodies):fade?(back?fadedBackBodies:fadedBodies):(back?backBodies:bodies);
           pushBody(body, sp, sp.scale.x, sp.scale.y, col.r, col.g, col.b,alpha);
           const oc = sp.userData.outline as THREE.Color | undefined;
-          const outline=fade?(back?fadedBackOutlines:fadedOutlines):(back?backOutlines:outlines);
+          const outline=side?(fade?fadedSideOutlines:sideOutlines):fade?(back?fadedBackOutlines:fadedOutlines):(back?backOutlines:outlines);
           if (oc) pushBody(outline, sp, sp.scale.x * 1.14, sp.scale.y * 1.08, oc.r, oc.g, oc.b,alpha);
         } else if(opacity) {
           sp.material.opacity=THREE.MathUtils.damp(sp.material.opacity,opacity(sp),18,dt);
@@ -239,10 +251,11 @@ export function createEnemyRenderer(scene: THREE.Scene) {
         }
       }
       bodies.commit(); outlines.commit(); backBodies.commit(); backOutlines.commit(); markers.commit();
+      for(const batch of sideBatches)batch.commit();
       for(const batch of fading)batch.commit();
     },
     /** Contagem de instâncias do último quadro (ganchos de teste). */
-    stats() { return { bodies: bodies.count+backBodies.count+fadedBodies.count+fadedBackBodies.count, backs:backBodies.count+fadedBackBodies.count, outlines: outlines.count+backOutlines.count+fadedOutlines.count+fadedBackOutlines.count, markers: markers.count }; },
-    dispose() { atlas.dispose(); backAtlas.dispose(); bodies.dispose(); outlines.dispose(); backBodies.dispose(); backOutlines.dispose(); markers.dispose(); for(const batch of fading)batch.dispose(); quad.dispose(); ringShape.dispose(); markerGeometry.dispose(); markerData.dispose(); },
+    stats() { return { bodies: bodies.count+backBodies.count+fadedBodies.count+fadedBackBodies.count+sideBodies.count+fadedSideBodies.count, sides:sideBodies.count+fadedSideBodies.count, backs:backBodies.count+fadedBackBodies.count, outlines: outlines.count+backOutlines.count+fadedOutlines.count+fadedBackOutlines.count+sideOutlines.count+fadedSideOutlines.count, markers: markers.count }; },
+    dispose() { atlas.dispose(); backAtlas.dispose(); sideAtlas.dispose(); for(const batch of sideBatches)batch.dispose(); bodies.dispose(); outlines.dispose(); backBodies.dispose(); backOutlines.dispose(); markers.dispose(); for(const batch of fading)batch.dispose(); quad.dispose(); ringShape.dispose(); markerGeometry.dispose(); markerData.dispose(); },
   };
 }

@@ -7,7 +7,7 @@
 - **Pasta única:** `C:\Shinobibonk projeto - Copia\ShinobiBonk_Codex_Projeto_Completo`. Ao fim de cada item: documentar (CHANGELOG, docs/13, docs/14, docs/18) e fazer commit + push em `origin main`, sem force push.
 - **Testes:** perfil EQUILIBRADO (`TESTAR_JOGO.bat` = tipos + `scripts/run-tests.mjs` com cobertura + build). Antes de publicar mudança de regra, rode `TESTAR_JOGO.bat profundo`, que inclui a prova por mutação (`scripts/mutation-check.mjs`, hoje 26/26).
   - Toda regra nova vem com teste em `tests/`.
-  - Suba `tests/minimo.json` (hoje 85).
+  - Suba `tests/minimo.json` (hoje 93).
   - Para regra importante, acrescente uma mutação em `scripts/mutation-check.mjs`.
 - **Navegador:** testes suspensos para Claude Code, Qwen e Codex até nova autorização explícita. Política central em `docs/development/TESTING_POLICY.md`.
   - A última execução do `verify-runtime` (13/11) parou num passo de configurações/câmera do Kimimaro, perto da linha 628 do script. Ele precisa ser rodado e revisado.
@@ -15,26 +15,25 @@
 - **Zero rastro do jogo de referência:** nada com o nome dele no projeto. O teste em `tests/regras-do-jogo.test.mjs` verifica os arquivos e o conteúdo dos .zip.
 - `TEST_UNLOCK_ALL = true` (`src/game/account.ts`) deixa o elenco liberado para teste. Voltar a `false` antes de versão pública.
 
-## Estado de 14/11 após a primeira revisão dos pedidos novos
+## Estado após a rodada 64
 
-- **Próximo:** completar a arte em perfil de todo o elenco e as vistas retas que faltam. Consultar a [matriz por versão](development/COBERTURA-DE-VISTAS.md) e os critérios da skill de movimento. Teste de recortes é diferente da avaliação do ângulo do desenho.
-- Hanzō e Haku têm arte original atualizada no jogo. Zabuza usa a folha de selos. A ficha passou a usar o retrato da seleção. Ainda conferir os retratos que precisam de vista em três quartos.
-- Foco do jogador, fade, câmera e terreno foram atualizados. Revisão manual da direção da passada, da escala, dos retratos, da câmera e do cenário continua pendente.
-- A correção do portal conserva XP atraído ou próximo. [Diagnóstico numérico](development/DIAGNOSTICO-XP-ZONA.md). Colisão, borda do altar e feedback de dano foram implementados. As propostas sobre bônus de XP e projéteis aguardam decisão.
-- A skill de jutsus WebGL e os testes em partida continuam na fila.
+- Caminhada em cinco vistas nas 114 versões. A seleção e a ficha usam o mesmo perfil. Ajudantes e Mega Elites compartilham as folhas. Os quatro modelos comuns têm vista em perfil na perseguição lateral. Consulte a [matriz](development/COBERTURA-DE-VISTAS.md).
+- Hanzō e Haku têm arte original atualizada. Zabuza usa a folha de selos. Foco do jogador, fade, câmera e terreno foram atualizados. Revisão visual em partida segue aberta.
+- Portal conserva XP próximo ou atraído. Colisão, borda do altar e feedback de dano foram implementados. As propostas sobre XP e projéteis aguardam decisão.
+- A skill de jutsus WebGL está registrada. Tipos, build e 93 testes passaram nesta revisão.
 
 ## Fila, em ordem
 
 | # | Item | Estado e o que fazer |
 |---|---|---|
-| 19 | **Tester:** XP parou na zona 2 (Rock Lee, nível 582) e voltou na zona 3; no late game a barra de XP "não sobe unidade por unidade" | **PENDENTE — próximo.** Hipótese, não confirmada: desde a rodada 55 a ameaça recomeça a cada zona (`zoneThreat` com `zoneElapsed`, pedido do usuário), mas o XP por abate (em `removeEnemy`: `BASE_LOOT.xp × lootScale × xpMultiplier × (1 + (elapsed/60 − 3) × 0,075)`) e o XP necessário (`xpToLevelUp`) não acompanham. No início da zona 2 nascem poucos monstros e cada abate rende pouco no nível 582, então a barra parece parada. Confira também `xpMultiplier` e `lootMultiplier`, zerados a cada zona. Passos: (a) medir com um teste por código o XP por abate e o XP para subir nos níveis 100/300/582, no início e no fim de cada zona; (b) propor ao usuário a regra de escala (tempo total da run ou nível) e não decidir sozinho; (c) o HUD deve mostrar progresso mesmo com ganho pequeno (ex.: XP atual/necessário). |
-| 20 | **Tester:** paredes invisíveis / colisão travando onde não há nada (print na Vila da Folha, perto do torii) | **PENDENTE.** Causa provável em `src/scene/collision.ts`: o raio das construções é a largura do sprite × 0,3 (`COLLISION_RULES.building`), com centro na base. Nos marcos grandes (monumento de 22 m → 6,6 m de raio) e nos lugares regionais, o círculo invade a área à frente do desenho, que parece chão livre. Sugestão: fator menor (ex.: 0,18) com teto de raio (ex.: 3 m); conferir árvores, bambus e rochas. Testar com teste unitário e andando em volta de cada construção no navegador. |
-| 21 | **Tester:** engrossar a borda do círculo do altar, sem aumentar o raio | **PENDENTE.** No `GameCanvas.tsx` (procure `ALTAR_RULES` e o desenho do círculo), aumentar só a espessura do contorno, na cor da raridade. `ALTAR_RULES.radius` (3) não muda. |
-| 22 | **Tester:** falta peso ao levar dano ("é preciso ficar muito atento ao HP") | **PENDENTE.** Sugestão: borda vermelha na tela proporcional ao dano; som curto de impacto com limite de frequência (`src/audio/sfx.ts` já tem trava contra repetição); pulso na barra de HP. Respeitar o modo H e o volume configurado. |
+| 19 | XP ao trocar de zona | Correção de perda de orbes e leitura do HUD implementada. [Diagnóstico numérico](development/DIAGNOSTICO-XP-ZONA.md). Uma curva nova de XP por zona continua em proposta. |
+| 20 | Paredes invisíveis junto a construções | Colisão por 18% da largura, com teto de 3 m. Conferência manual do entorno pendente. |
+| 21 | Borda do altar | Contorno de 0,28 m voltado para dentro. Raio de 3 m. Conferência manual pendente. |
+| 22 | Feedback de dano | Vinheta proporcional ao HP perdido, pulso da barra e som breve. Conferência manual pendente. |
 | 15 | Arte: bijū de costas | **INTEGRADO E TESTADO POR CÓDIGO.** Três atlas em `public/assets/bijuu/motion-costas-v1-*.png`. Restam a prova visual em partida e a contagem de caudas em cada pose. |
-| 15b | Arte: padrão único de caminhada, pulo e dash | **INTEGRADO E TESTADO POR CÓDIGO.** As 114 versões têm quatro quadros por vista para as três ações. Quatro modelos comuns com o mesmo padrão de fases. Conferir visualmente as transições em partida, os companheiros e os retratos. Ver `docs/13-PENDENCIAS-PARA-CONTINUAR.md`. |
-| 18 | Arte: selos do Zabuza | Código pronto (rodada 63). **Codex:** `zabuza-seal-v1.png` e registro em `EXTRA_SEAL_SHEETS`. Pedido: `docs/development/PEDIDO-ARTE-ZABUZA-SELOS.md`. |
-| 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, nunca criada) | **PENDENTE.** Links: uol.com.br/start/listas/os-13-jutsus-mais-legais-de-naruto.htm · legiaodosherois.com.br/lista/os-10-jutsus-mais-poderosos-de-naturo.html · animativa.com/pt-br/blog/os-jutsus-mais-poderosos-de-naruto/. Criar `skills/animar-jutsu-webgl/SKILL.md` e um ponteiro em `.claude/skills/`. Conteúdo: tabela dos jutsus (usuário, natureza, aparência, trajetória, impacto) com o link da Narutopedia de cada um, o estado de cada efeito em `src/scene/techniqueEffects.ts`/`particleFx.ts` e o passo a passo para refinar. Ver `docs/24-AUDITORIA-DE-EFEITOS.md`. |
+| 15b | Movimento e retratos do elenco | Cinco vistas de caminhada, quatro fases por vista nas 114 versões. Quatro fases de pulo e dash de frente e costas. Faltam artes dedicadas de pulo/dash em perfil e diagonal na maioria das versões e validação visual. |
+| 18 | Selos do Zabuza | Folha original dianteira e traseira integrada. Conferência do fluxo em partida pendente. |
+| 16 | Skill de jutsus WebGL | [Skill](../skills/animar-jutsu-webgl/SKILL.md) e [auditoria de efeitos](24-AUDITORIA-DE-EFEITOS.md) atualizadas. Faltam aplicar as revisões por técnica. |
 | E2E | Validação visual pendente | Conferir na tela: caminhada sem piscar; Mega Elite caído com halo e E; áreas das técnicas; música 10%; câmera deitada; fontes da HUD em 1280×720 e 1600×900; cursor virtual nas cartas, roleta, selamento, NPCs, mapa e ficha (Esc sempre solta, regra do navegador); entrada das bijū; névoa do Zabuza sem quadrados e com os selos; botão Arquivo Shinobi. |
 | Decisões | Do usuário | (1) O golpe extra no corpo a corpo vale para os itens que já dão +1 projétil? Hoje vale. (2) Konan, afinidade da Tenten e sinergia da Folha saem da "chance de projétil" fracionária? (3) Curva de HP e reinício por zona: o usuário testa. (4) Liberar o núcleo de simulação headless (stress de 1.600 monstros, p95/p99), proposto em `docs/development/TESTING_POLICY.md`? (5) Perguntas de `docs/22-PROPOSTA-NOVOS-SHINOBIS.md`. |
 

@@ -4,10 +4,10 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 ## Prioridades atuais · 14/11/2026
 
-1. Completar a caminhada em perfil, as vistas retas e a inspeção das diagonais, pulo e dash em todas as versões, ajudantes, inimigos comuns e bijū. A [matriz por versão](development/COBERTURA-DE-VISTAS.md) marca as lacunas. O pedido inclui revisar os retratos de frente ainda presentes e deixar todo o elenco em três quartos.
+1. Validar em partida as cinco vistas integradas das 114 versões, o enquadramento em perfil e as transições. Completar artes dedicadas de dash e pulo nos ângulos ainda cobertos pelas duas vistas. Conferir os quatro inimigos comuns, ajudantes e bijū. [Matriz por versão](development/COBERTURA-DE-VISTAS.md).
 2. Revisar em partida o tamanho real do elenco, o foco, a câmera e o terreno. Conferir Hanzō, Haku, selos do Zabuza e as correções de XP, colisão, altar e feedback de dano.
 3. Definir com o usuário um ajuste de XP por minuto ao trocar de zona. A [medição da curva](development/DIAGNOSTICO-XP-ZONA.md) registra as hipóteses e a correção de perda dos orbes no portal.
-4. Preparar e aplicar a skill de efeitos de jutsus em WebGL.
+4. Aplicar a [skill de jutsus WebGL](../skills/animar-jutsu-webgl/SKILL.md) às técnicas que ainda usam efeitos genéricos. [Auditoria](24-AUDITORIA-DE-EFEITOS.md).
 5. Validar em partida também os itens históricos pendentes e consultar as decisões abertas de projéteis da fila.
 
 ## Fila do usuário · 14/11/2026 (uma tarefa por vez, nesta ordem)
@@ -17,7 +17,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | # | Pedido | Estado |
 |---|---|---|
 | 1 | Continuar de onde parou e atualizar o GitHub | FEITO (rodadas 54–57) |
-| 2 | Caminhada WASD e direção do dash | TESTADO por código nas oito direções dos 114 jogáveis. Ajudantes e Mega Elites compartilham o controlador. Comuns usam o vetor de perseguição e têm folhas de frente e de costas. Matriz de recortes aprovada; validação em partida pendente. |
+| 2 | Caminhada WASD e direção do dash | Caminhada de cinco vistas e direção/espelho validados no controlador das 114 versões. Ajudantes e Mega Elites compartilham o controlador. Quatro modelos comuns têm três vistas. Arte de pulo/dash em outros ângulos e validação em partida pendentes. |
 | 3 | Mega Elite caindo, deitado no chão, E para capturar | FEITO · E2E pendente |
 | 4 | Áreas/hitbox das técnicas mais evidentes | FEITO · E2E pendente |
 | 5 | Fontes maiores com a HUD organizada | FEITO (rodada 57) · E2E pendente |

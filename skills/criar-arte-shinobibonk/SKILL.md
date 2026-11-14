@@ -23,4 +23,4 @@ Leia a direção de arte de `AGENTS.md`. Abra os atlases usados pelo módulo alv
 
 ## Consistência das versões
 
-Crie o repouso e o retrato em três quartos a partir da mesma identidade. Na caminhada, separe frente reta, costas retas, perfil, diagonal frontal e diagonal traseira. Use a pose da vista e o enquadramento da mesma versão. A altura visível vem do corpo, com Gaara Genin como referência infantil. Compare o personagem dianteiro e traseiro lado a lado para reconhecer de imediato roupa, silhueta, idade e acessórios. Siga os critérios de cobertura em `skills/movimentar-shinobi`.
+Crie o repouso em três quartos e o retrato em perfil a partir da mesma identidade. Use o mesmo recorte de retrato na seleção e na ficha. Na caminhada, separe frente reta, costas retas, perfil, diagonal frontal e diagonal traseira. Use a pose da vista e o enquadramento da mesma versão. A altura visível vem do corpo, com Gaara Genin como referência infantil. Compare o personagem dianteiro e traseiro lado a lado para reconhecer de imediato roupa, silhueta, idade e acessórios. Siga os critérios de cobertura em `skills/movimentar-shinobi`.

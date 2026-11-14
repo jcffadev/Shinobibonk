@@ -146,25 +146,70 @@ export function directionalArt(hero: string, formLevel: number): DirectionalShee
   return { path: `/assets/shinobi-motion/${hero}-walk-v1.png`, rows: levels.length * 2, firstRow: form * 2 };
 }
 
+const cardinalPairs = [
+  ["lee-1","neji-1","hinata-1","kankuro-1","tenten-1"],
+  ["kakashi-1","kakashi-25","itachi-1","itachi-15","asuma-1"],
+  ["naruto-10","naruto-25","naruto-50","sakura-15","sakura-30"],
+  ["gaara-15","gaara-30","sasuke-15","sasuke-30","shikamaru-1"],
+  ["madara-1","madara-15","madara-30","hashirama-1","hashirama-20"],
+  ["minato-1","minato-15","tsunade-1","tsunade-15","tsunade-30"],
+  ["jiraiya-1","jiraiya-20","orochimaru-1","orochimaru-15","tobirama-1"],
+  ["lee-15","lee-30","guy-1","guy-15","guy-30"],
+  ["neji-15","hinata-15","hinata-30","temari-1","temari-15"],
+  ["tenten-15","kankuro-15","kankuro-30","shikamaru-15","shikamaru-30"],
+  ["kushina-1","pain-1"]
+] as const;
+const cardinalByForm=new Map<string,{path:string;rows:number;front:number;back:number}>();
+cardinalPairs.forEach((ids,page)=>ids.forEach((key,index)=>{
+  cardinalByForm.set(key,{path:`/assets/shinobi-motion/walk-cardinal-${page+2}.png`,rows:ids.length*2,front:index*2,back:index*2+1});
+}));
+
 type WalkRows = { path: string; rows: number; front: number; back?: number; side?: number; dashSide?: number };
 /** Vistas independentes de caminhada. A ausência de vista específica mantém o recorte direcional existente. */
 export function cardinalWalkArt(family: string, form: number): WalkRows | undefined {
+  const exact=cardinalByForm.get(`${family}-${form}`);
+  if(exact)return exact;
   if(family==='naruto'&&form===1)
     return {path:'/assets/shinobi-motion/naruto-academia-cardinal-v2.png',rows:4,front:0,back:1,side:2,dashSide:3};
-  if(family==='naruto'&&[10,25,50].includes(form)){
-    const row=[10,25,50].indexOf(form)*2;
-    return {path:'/assets/shinobi-motion/naruto-classic-cardinal-v2.png',rows:6,front:row,side:row+1};
-  }
   if(family==='hanzo')
     return {path:'/assets/shinobi-motion/hanzo-walk-v3.png',rows:4,front:0,back:1,side:2};
+  const row=['gaara','sasuke','sakura','zabuza'].indexOf(family)*2;
+  if(form===1&&row>=0)return {path:'/assets/shinobi-motion/walk-cardinal-1.png',rows:8,front:row,back:row+1};
   const id=revisedDirectionalId(family,form);
   if(!expansionDirectionalIds.has(id))return;
   const path=expansionSheet(family,form);
   return path?{path,rows:6,front:0,back:1}:undefined;
 }
 
+// Uma fileira de quatro passos por versão, com perfil voltado à direita.
+const sideWalkRows=[
+  ["gaara-1","gaara-15","gaara-30","sasuke-1","sasuke-15","sasuke-30","sakura-1","sakura-15"],
+  ["sakura-30","kakashi-1","kakashi-25","itachi-1","itachi-15","zabuza-1"],
+  ["choji-15","naruto-70","lee-1","lee-15","guy-1","neji-1"],
+  ["madara-1","madara-15","madara-30","hashirama-1","hashirama-20","kushina-1"],
+  ["minato-1","minato-15","tsunade-1","tsunade-15","tsunade-30","jiraiya-1","jiraiya-20","tobirama-1"],
+  ["deidara-1","hidan-1","kakuzu-1","konan-1","zetsu-1","sasori-1","kisame-1","juzo-1"],
+  ["hinata-1","hinata-15","hinata-30","neji-15","tenten-1","tenten-15","temari-1","temari-15"],
+  ["asuma-1","iruka-1","shikamaru-1","shikamaru-15","shikamaru-30","kankuro-1","kankuro-15","kankuro-30"],
+  ["orochimaru-1","orochimaru-15","orochimaru-30","kabuto-1","kabuto-30","kimimaro-1","jugo-1","suigetsu-1"],
+  ["pain-1","nagato-1","obito-1","obito-15","obito-30","shisui-1","sai-1","yamato-1"],
+  ["raikage-terceiro-1","raikage-quarto-1","killer-b-1","onoki-1","rasa-1","mei-1","gengetsu-1","ao-1"],
+  ["kiba-1","kiba-15","shino-1","shino-15","ino-1","ino-15","kurenai-1","karin-1"],
+  ["hiruzen-1","hiashi-1","hanabi-1","hanabi-15","chiriku-1","mangetsu-1","jirobo-1","kidomaru-1"],
+  ["tayuya-1","sakon-ukon-1","dosu-1","zaku-1","kin-1","lee-30","guy-15","guy-30"]
+] as const;
+const sideWalkById=new Map<string,{path:string;rows:number;row:number}>();
+sideWalkRows.forEach((ids,page)=>ids.forEach((id,row)=>{
+  sideWalkById.set(id,{path:`/assets/shinobi-motion/walk-side-${page+1}.png`,rows:ids.length,row});
+}));
+
 export function lateralWalkArt(family: string, form: number) {
+  const profile=sideWalkById.get(`${family}-${form}`);
+  if(profile)return profile;
   if(family==='haku')return {path:'/assets/shinobi-motion/haku-walk-v3.png',rows:3,row:2};
+  if(family==='hanzo')return {path:'/assets/shinobi-motion/hanzo-profile-v1.png',rows:1,row:0};
+  if(family==='naruto'&&[10,25,50].includes(form))
+    return {path:'/assets/shinobi-motion/naruto-classic-cardinal-v2.png',rows:6,row:[10,25,50].indexOf(form)*2+1};
   if(family==='sakumo'||(family==='choji'&&form===1))
     return {path:'/assets/shinobi-motion/sakumo-choji-lateral-v1.png',rows:2,row:Number(family==='choji')};
   const sheet=cardinalWalkArt(family,form);

@@ -86,3 +86,21 @@ test('lote mantém o inimigo atrás opaco e envia o que cobre o jogador para a p
   renderer.sync([near,far],()=>1,.3);
   assert.equal(faded.visible,false);
 });
+
+test('quatro modelos comuns têm quatro passos no perfil lateral', () => {
+  const atlas=decodePng('public/assets/shinobi-enemy-side-v1.png');
+  const {scene,renderer,spawn}=rig();
+  const enemy=spawn();
+  enemy.sprite.userData.side=true;
+  for(let row=0;row<4;row++){
+    enemy.sprite.userData.atlas=row;
+    for(let step=0;step<4;step++){
+      assert.ok(!cellShape(atlas,step*256,row*256,256,256).empty);
+      enemy.sprite.userData.frame=step;
+      renderer.sync([enemy]);
+      assert.equal(renderer.stats().sides,1);
+      const batch=scene.children.find(object=>object.geometry?.instanceCount===1);
+      assert.ok(Math.abs(batch.geometry.getAttribute('iUv').array[0]-(step*256+.5)/3328)<1e-6);
+    }
+  }
+});

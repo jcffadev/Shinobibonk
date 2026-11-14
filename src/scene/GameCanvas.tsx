@@ -974,7 +974,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const bossCombat=createBossCombat({scene,player,height:terrainHeight,zone:()=>zone,hidden:()=>hiddenEffects,
       hitPlayer:(base,slow)=>{damagePlayer(base*threatNow().damage,undefined,slow);},viewRight:()=>v2,viewForward:()=>v1});
     function spawnEnemy(challenge=false,megaElite=false,guardian=false,forcedId?:string,accountSeal=false){const t=tune(),candidates=megaElite&&!guardian&&!forcedId?HEROES.filter(h=>h.family===h.id&&!hasAllyFamily(h.id)&&!enemyList.some(enemy=>enemy.heroId&&familyOf(enemy.heroId)===h.id)):[],naturalFamily=candidates[Math.floor(Math.random()*candidates.length)]?.id,id=forcedId??(guardian?ZONES[zone-1].guardians[Math.floor(Math.random()*ZONES[zone-1].guardians.length)]:naturalFamily?versionForEncounter(naturalFamily,zone,mission):heroId),angle=Math.random()*Math.PI*2;if(accountSeal)megaElite=true;const swarmRing=!challenge&&!megaElite&&!guardian&&overtimeNow()>0,r=challenge?7:megaElite?12:swarmRing?FINAL_SWARM.spawnRing[0]+Math.random()*(FINAL_SWARM.spawnRing[1]-FINAL_SWARM.spawnRing[0]):10+Math.random()*8,x=THREE.MathUtils.clamp(player.position.x+Math.cos(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),z=THREE.MathUtils.clamp(player.position.z+Math.sin(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),elite=!megaElite&&!challenge&&(forceElite||Math.random()<eliteSpawnChance(t.eliteRate,ex('eliteSpawn')));
-      const tier:EnemyTier=accountSeal?'account':guardian?'mega':megaElite?'mega':elite?'elite':'normal',T=ENEMY_TIERS[tier];const e=megaElite?makeHero(id,Math.max(1,level)):makeSprite(Math.floor(Math.random()*4),elite?1.9:1.55,elite?2.5:2);if(megaElite)e.scale.multiplyScalar(1.4);e.position.set(x,terrainHeight(x,z)+(megaElite?1.6:1),z);if(elite)addOutline(e,'#ffd21f');else if(accountSeal)addOutline(e,'#5ff0ff');else if(megaElite&&!guardian)addOutline(e,'#ff4d6d');scene.add(e);const threat=threatNow();const hpBase=accountSeal?T.hp*t.accountHp:elite?T.hp*t.eliteHp*eliteHpRamp(tier,zoneElapsed()):challenge?30:T.hp;const enemy:Enemy={sprite:e,hp:guardian?guardianHpNow(threat.hp):megaElite&&!accountSeal?megaEliteHp(zoneElapsed(),t.megaHp*t.enemyHp*MISSION_TIER[mission]*zoneDifficulty*(1+.33*shikamaruPlans)*Math.max(.2,1+ex('threat'))):Math.round(hpBase*threat.hp),speed:megaElite?2.6:elite?3.8:2.8+Math.random()*.8,hitTimer:.2,challenge,megaElite,elite,guardian,heroId:megaElite?id:undefined,tier,account:accountSeal,defense:guardian?guardianDefense(elapsed):Math.min(.85,T.defense*(tier==='elite'?t.eliteDefense:tier==='mega'&&!guardian?t.megaDefense*(.60+.40*Math.min(1,zoneElapsed()/480)):1)+(threat.armor??0)),dmgMult:guardian?2.2:T.damage*(tier==='elite'?t.eliteDamage:tier==='mega'?t.megaDamage:1)};if(guardian){enemy.hpMultiplier=guardianHpMultiplier(zoneElapsed());enemy.shikamaruPlans=shikamaruPlans;enemy.guardianZone=zone;}enemy.maxHp=enemy.hp;if(tier==='normal'&&!challenge&&Math.random()<.07+.13*Math.min(1,zoneElapsed()/300))enemy.ranged=Math.floor(Math.random()*enemyWeapons.length);enemy.moveAfter=elapsed+3+Math.random()*5;if(megaElite){enemy.uid=++megaUid;enemy.motionLevel=level;enemy.motion=createPlayerMotion(scene,e,id,false);}enemyList.push(enemy);if(megaElite&&!accountSeal)bossCombat.attach(enemy,enemy.hp,guardian);return enemy;}
+      const tier:EnemyTier=accountSeal?'account':guardian?'mega':megaElite?'mega':elite?'elite':'normal',T=ENEMY_TIERS[tier];const e=megaElite?makeHero(id,Math.max(1,level)):makeSprite(Math.floor(Math.random()*4),elite?1.9:1.55,elite?2.5:2);if(megaElite)e.scale.multiplyScalar(1.4);e.position.set(x,terrainHeight(x,z)+(megaElite?1.6:1),z);if(elite)addOutline(e,'#ffd21f');else if(accountSeal)addOutline(e,'#5ff0ff');else if(megaElite&&!guardian)addOutline(e,'#ff4d6d');scene.add(e);const threat=threatNow();const hpBase=accountSeal?T.hp*t.accountHp:elite?T.hp*t.eliteHp*eliteHpRamp(tier,zoneElapsed()):challenge?30:T.hp;const enemy:Enemy={sprite:e,hp:guardian?guardianHpNow(threat.hp):megaElite&&!accountSeal?megaEliteHp(zoneElapsed(),t.megaHp*t.enemyHp*MISSION_TIER[mission]*zoneDifficulty*(1+.33*shikamaruPlans)*Math.max(.2,1+ex('threat'))):Math.round(hpBase*threat.hp),speed:megaElite?2.6:elite?3.8:2.8+Math.random()*.8,hitTimer:.2,challenge,megaElite,elite,guardian,heroId:megaElite?id:undefined,tier,account:accountSeal,defense:guardian?guardianDefense(elapsed):Math.min(.85,T.defense*(tier==='elite'?t.eliteDefense:tier==='mega'&&!guardian?t.megaDefense*(.60+.40*Math.min(1,zoneElapsed()/480)):1)+(threat.armor??0)),dmgMult:guardian?2.2:T.damage*(tier==='elite'?t.eliteDamage:tier==='mega'?t.megaDamage:1)};if(guardian){enemy.hpMultiplier=guardianHpMultiplier(zoneElapsed());enemy.shikamaruPlans=shikamaruPlans;enemy.guardianZone=zone;}enemy.maxHp=enemy.hp;if(tier==='normal'&&!challenge&&Math.random()<.07+.13*Math.min(1,zoneElapsed()/300))enemy.ranged=Math.floor(Math.random()*enemyWeapons.length);enemy.moveAfter=elapsed+3+Math.random()*5;if(megaElite){enemy.uid=++megaUid;enemy.motionLevel=level;enemy.motion=createPlayerMotion(scene,e,id,false,1.4);}enemyList.push(enemy);if(megaElite&&!accountSeal)bossCombat.attach(enemy,enemy.hp,guardian);return enemy;}
     // Guardião (chefe final da zona): 1 por zona. Invocado pelo jogador no Selo do guardião (E).
     let weatherEvent:{id:WeatherEventId;until:number;elite:string;x:number;z:number;castEnd?:number}|undefined;
     function scheduleWeather(){nextWeatherAt=elapsed+65+Math.random()*55;}
@@ -1427,6 +1427,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         if(batched){
           sprite.userData.flipped=left;
           sprite.userData.back=back;
+          sprite.userData.side=lateralEnemy&&movingEnemy&&!movingSpecial;
           sprite.userData.frame=striking?ENEMY_FRAME.attack:movingSpecial
             ? (enemy.jumping?ENEMY_FRAME.jump:ENEMY_FRAME.dash)+Math.min(3,Math.floor(progress*4))
             :movingEnemy?Math.floor(elapsed*10+sprite.id%4)%4:1;
@@ -1489,7 +1490,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         // (frente<->costas) 'flippava' a cada frame quando o aliado andava quase de lado para a tela.
         // Rodada 55: + histerese (stableFacing) — parado, mantém a última orientação em vez de ler o ruído do slot.
         const af=follows||!ally.userData.facing?stableFacing(ally.userData,dir.dot(v1),dir.dot(v2)):{...ally.userData.facing as {back:boolean;left:boolean},diagonal:false};
-        motion?.update(dt,floor,1,1,follows,af.back,af.left,level,jumpHeight,dash,af.diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
+        motion?.update(dt,floor,1,1,follows,af.back,af.left,level,jumpHeight,dash,af.diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration,Math.abs(dir.dot(v1))<.26&&Math.abs(dir.dot(v2))>.32);
       }if(allyTimer<=0)allyTimer=allyInterval();
       // Kuri (rodada 41): segue o Kankuro em formação e ataca no timer próprio (não compartilha o allyTimer).
       if(companionId&&kuriSprite&&kuriMotion&&!defeated){
@@ -1509,7 +1510,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           else kuriTimer=.5; // sem inimigo no alcance: retry leve sem queimar o loop
         }
         const kf=follows||!kuriSprite.userData.facing?stableFacing(kuriSprite.userData,dir.dot(v1),dir.dot(v2)):{...kuriSprite.userData.facing as {back:boolean;left:boolean},diagonal:false};
-        kuriMotion.update(dt,kuriFloor,1,1,follows,kf.back,kf.left,1,jumpHeight,follows&&slideTime>0,kf.diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration);
+        kuriMotion.update(dt,kuriFloor,1,1,follows,kf.back,kf.left,1,jumpHeight,follows&&slideTime>0,kf.diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration,Math.abs(dir.dot(v1))<.26&&Math.abs(dir.dot(v2))>.32);
       }
       if(!defeated){
       chakra=Math.min(100,chakra+100*dt/55*stats.ultimateRate*tune().ultimateRate);if(autoUlt&&chakra>=100)castUltimate();
@@ -1534,7 +1535,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         sprite.position.addScaledVector(dir,Math.min(gap-.63,dt*(clone.technique.name==='Técnica de Substituição'?13:8.2)*stats.projectileSpeed));
         // Rodada 55: clones também com histerese (antes sem dead zone: >0/<0 piscava frente/costas e o espelho).
         const cf=stableFacing(sprite.userData,dir.dot(v1),dir.dot(v2));
-        clone.motion.update(dt,terrainHeight(sprite.position.x,sprite.position.z),1,1,true,cf.back,cf.left,clone.level,0,false,cf.diagonal,0,0);
+        clone.motion.update(dt,terrainHeight(sprite.position.x,sprite.position.z),1,1,true,cf.back,cf.left,clone.level,0,false,cf.diagonal,0,0,Math.abs(dir.dot(v1))<.26&&Math.abs(dir.dot(v2))>.32);
       }
       for(let i=shots.length-1;i>=0;i--){const shot=shots[i],travel=Math.min(shot.remaining,shot.speed*dt);shot.mesh.position.addScaledVector(shot.direction,travel);shot.mesh.position.y=terrainHeight(shot.mesh.position.x,shot.mesh.position.z)+1.1;shot.remaining-=travel;animateTechniqueVisual(shot.mesh,dt,shot.direction);if(!hiddenEffects)particles.trail(shot.technique,shot,shot.mesh.position,shot.direction,shot.radius,dt,!!shot.mesh.userData.particleHead);
         for(const enemy of [...enemyList])if(!shot.hit.has(enemy)&&Math.hypot(enemy.sprite.position.x-shot.mesh.position.x,enemy.sprite.position.z-shot.mesh.position.z)<shot.radius+.4){shot.hit.add(enemy);hit(enemy,shot.technique,shot.growth,shot.origin,shot.ally);if(shot.technique.shape==='Projétil')shot.remaining=0;}
@@ -1621,7 +1622,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       const {back:viewBack,left:viewLeft,diagonal}=sliding||!walking
         ? movementFacing(facing.dot(v1),facing.dot(v2))
         : movementFacing(moveVertical,moveHorizontal);
-      const zoomReadability=Math.max(1,76*zoom/(2.35*Math.max(1,renderer.domElement.clientHeight)));
+      const zoomReadability=Math.max(1,64*zoom/(1.55*Math.max(1,renderer.domElement.clientHeight)));
       playerMotion.setBodyScale(zoomReadability*(familyOf(heroId)==='choji'&&activeSetups.some(setup=>setup.name==='Jutsu de Expansão')?1.48:1));
       playerMotion.update(pausedRef.current||choiceData||roulette||sealing?0:dt,terrainHeight(player.position.x,player.position.z),hp,stats.maxHp,walking,viewBack,viewLeft,level,jumpHeight,sliding,walking&&diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration,sliding?Math.abs(facing.dot(v1))<.32:moveVertical===0&&moveHorizontal!==0);
       if(damageVignette){
@@ -1641,8 +1642,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(mistHides(weatherEvent,elapsed)){
         const close=enemyList.find(e=>e.heroId===weatherEvent?.elite&&Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<5);
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=e===close;
-        if(close){close.sprite.material.opacity=THREE.MathUtils.damp(close.sprite.material.opacity,enemyOpacity(close.sprite),18,dt);}
-        enemyRenderer.sync(close?[close]:[]);
+        enemyRenderer.sync(close?[close]:[],enemyOpacity,dt);
       }else{
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=true;
         enemyRenderer.sync(enemyList,enemyOpacity,dt);

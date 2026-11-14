@@ -137,10 +137,14 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
       inspect(sprite.material.map, hero.id + ' ataque ' + keys);
       update(.6, false, 0, false, 0);
     }
-    assert.notEqual(walks.W[0].row, walks.S[0].row, hero.id + ' frente e costas');
-    if (['naruto','haku','hanzo','sakumo','choji'].includes(hero.id)) {
-      assert.notEqual(walks.W[0].row,walks.WD[0].row,hero.id+' reta W versus diagonal WD');
-      assert.notEqual(walks.D[0].cell,walks.SD[0].cell,hero.id+' lateral versus diagonal');
+    assert.notEqual(walks.W[0].cell, walks.S[0].cell, hero.id + ' frente e costas');
+    if (HEROES.includes(hero)) {
+      const views=['W','S','D','SD','WD'].map(key=>new Set(walks[key].map(sample=>sample.cell)));
+      const cells=views.flatMap(view=>[...view]);
+      assert.equal(new Set(cells).size,20,hero.id+' cinco vistas exclusivas e quatro quadros por vista');
+      for (const [left,right] of [['A','D'],['SA','SD'],['WA','WD']]) {
+        assert.deepEqual(new Set(walks[left].map(sample=>sample.cell)),new Set(walks[right].map(sample=>sample.cell)),hero.id+' espelha '+left);
+      }
     }
     for (const phases of [...Object.values(jumps), ...Object.values(dashes)]) {
       assert.equal(new Set(phases.map((sample) => sample.cell)).size, 4, hero.id + ' acrobacia');

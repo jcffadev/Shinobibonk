@@ -186,3 +186,26 @@ O pool inclui 185 técnicas distintas, 177 nos kits. O atlas `technique-effects-
 A arte do anime ainda precisa de comparação individual por técnica e Ultimate. A validação técnica de atlas não certifica fidelidade ao episódio.
 
 O atlas `technique-summons-v1.png` acrescenta oito motivos próprios: leão e ave de tinta, tubarão de chakra, Hiruko, marionetes, Ibuse, molusco de Gengetsu e Rinnegan. São sprites animados por deslocamento e escala. As invocações completas com entidades separadas continuam na fila onde aplicável.
+
+## Referências para os próximos jutsus · 14/11/2026
+
+A coluna de implementação descreve o caminho verificado no código. As notas de arte orientam a próxima revisão em partida.
+
+| Técnica | Usuário e natureza na obra | Trajetória, silhueta e impacto | Implementação |
+| --- | --- | --- | --- |
+| Rasengan | Naruto, Minato e Jiraiya · chakra rotativo | Esfera comprimida na palma, contato direto, espiral transborda no impacto. [Fonte oficial](https://naruto-official.com/en/news/01_1802) | Geometria em `techniqueEffects.ts`, espiral em `particleFx.ts`. |
+| Rasenshuriken | Naruto · Vento | Quatro lâminas em torno do núcleo, giro rápido, área se expande no impacto. [Narutopedia](https://naruto.fandom.com/wiki/Wind_Release%3A_Rasenshuriken) | Malha e trajetória próprias. Conferir a leitura entre formas. |
+| Kage Bunshin | Naruto · Ninjutsu | Fumaça revela clones com a roupa da forma. Em jogo correm ao alvo e somem após o golpe. [Narutopedia](https://naruto.fandom.com/wiki/Shadow_Clone_Technique) | Ator e movimento em `GameCanvas.tsx`. |
+| Amaterasu | Itachi e Sasuke · Fogo | Chamas negras surgem no ponto focado e aderem ao espaço atingido. [Narutopedia](https://naruto.fandom.com/wiki/Amaterasu) | Paleta negra, partículas e combustão no local; rever leitura a grande distância. |
+| Susanoo e Espada de Totsuka | Itachi, Sasuke e Madara · dōjutsu | Costelas e torso se armam até o golpe; cor, arma e silhueta por usuário. [Narutopedia](https://naruto.fandom.com/wiki/Susanoo) | Rig procedural em `susanooFx.ts`, com estilo separado por família. |
+| Shinra Tensei | Pain, Caminho Deva · Rinnegan | Onda circular de repulsão a partir do usuário, poeira e destroços se afastam. [Narutopedia](https://naruto.fandom.com/wiki/Shinra_Tensei) | Anéis dedicados e detritos em `techniqueEffects.ts`, pose elevada em `playerMotion.ts`. |
+| Chibaku Tensei | Nagato pelo Caminho Deva · Rinnegan | Núcleo escuro acima do ponto, fragmentos convergem até formar satélite. [Narutopedia](https://naruto.fandom.com/wiki/Chibaku_Tensei) | Núcleo e pedras animados; revisar fase de formação. |
+| Jinton | Ōnoki e Mū · Terra, Vento e Fogo | Volume translúcido lançado após preparo com as mãos; expansão delimita o impacto. [Narutopedia](https://naruto.fandom.com/wiki/Dust_Release) | O refinamento pede volume dedicado quando o cadastro usa a base de natureza/forma. |
+| Mil Mãos de Madeira | Hashirama Sábio · Madeira e senjutsu | Estátua com leque de braços. Os socos sucessivos partem do mesmo centro. [Narutopedia](https://naruto.fandom.com/wiki/Sage_Art_Wood_Release%3A_True_Several_Thousand_Hands) | A auditoria registra base por elemento e forma, com modelo dedicado pendente. |
+| Tsukuyomi | Itachi · Genjutsu do Mangekyō | Contraste deslocado e lua vermelha localizada. [Narutopedia](https://naruto.fandom.com/wiki/Tsukuyomi) | Variante de partículas. Rever o foco no alvo e as sobreposições da HUD. |
+| Kamui | Obito e Kakashi · Ninjutsu de espaço-tempo | Torção converge para um ponto, ativo no alvo ou no usuário conforme a versão. [Narutopedia](https://naruto.fandom.com/wiki/Kamui) | Registro de geometria própria. A assinatura do efeito deve seguir o usuário cadastrado. |
+| Hiraishin | Tobirama e Minato · Ninjutsu de espaço-tempo | Selo marca o destino; salto instantâneo entre pontos. [Narutopedia](https://naruto.fandom.com/wiki/Flying_Thunder_God_Technique) | Kunai tem efeito de projétil. Verificar cada ataque derivado antes de atribuir teletransporte. |
+| Oito Portões | Guy e Lee · Taijutsu | Aura e respiração intensificam por estágio. Golpe acompanha chute ou soco. [Narutopedia](https://naruto.fandom.com/wiki/Eight_Gates) | Emissor de aura por nome; poses próprias de Taijutsu. |
+| Bijūdama | Bijū e jinchūriki · chakra | Esfera densa se acumula, viaja e amplia área na explosão. [Narutopedia](https://naruto.fandom.com/wiki/Tailed_Beast_Ball) | Malha própria e fase de impacto. Usar junto à arte e à trajetória do chefe. |
+
+O guia de trabalho fica em [animar-jutsu-webgl](../skills/animar-jutsu-webgl/SKILL.md).

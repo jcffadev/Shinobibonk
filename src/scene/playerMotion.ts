@@ -77,12 +77,12 @@ export function actorVisibleHeight(family:string,form:number) {
   return family==='zabuza'?2.58:2.32;
 }
 
-export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true) {
+export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true, sizeMultiplier=1) {
   // Versões usam as folhas da família na forma da versão (ex.: naruto-shippuden → folhas do Naruto no nível 25).
   const family = familyOf(heroId);
   const hasWalkAtlas = family === 'naruto' && formAt(heroId, 1).level === 1;
   const pose = createPlayerPose();
-  const bodyHeight = actorVisibleHeight(family,formAt(heroId).level);
+  const bodyHeight = actorVisibleHeight(family,formAt(heroId).level)*sizeMultiplier;
   const asuma = family === 'asuma' ? new THREE.TextureLoader().load(ASUMA_ATLAS) : null;
   if (asuma) {
     asuma.colorSpace = THREE.SRGBColorSpace;

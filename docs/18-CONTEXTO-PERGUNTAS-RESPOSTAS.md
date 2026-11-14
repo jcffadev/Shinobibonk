@@ -15,7 +15,7 @@
 Survivor/roguelite de ninja (temática Naruto, identidade 100% original) para navegador, inspirado na **experiência** de um jogo de referência externo (nenhum nome, asset ou mecânica copiada; o material de referência foi arquivado fora do repositório em 11/11/2026 — ver §7).
 
 - Mundo 3D estilizado (2.5D) em visão isométrica com relevo, montanhas e construções; personagens em pixel art chibi (billboards), câmera orbital 360°.
-- 24 famílias / **56 versões independentes** de shinobis jogáveis (cada versão tem kit, passiva, Ultimate e caminhada próprios); missões em cadeia para liberar versões.
+- 72 famílias / **114 versões independentes** de shinobis jogáveis (cada versão tem kit, passiva, Ultimate e caminhada próprios); missões em cadeia para liberar versões.
 - Runs por zonas com hordas contínuas, eventos, altares, mega elites (selamento), guardiões, Final Swarm, bijū final e ranking local.
 - Economia: **Ryu** (run) e **Lamens** (conta, só pelo desempenho da run). Técnicas, pílulas, itens, árvore permanente, oficina de fusão (sapos do monte).
 - Stack: React 19 + TypeScript + Three.js, Vite 8 (`src/`). `game/index.html` é o protótipo Canvas 2D legado.
@@ -114,7 +114,7 @@ O usuário exige vistas distintas para todas as versões. W e S usam costas e fr
 
 ## 4. Registro cronológico de P/R (todas as rodadas)
 
-**Rodada 64 (14/11)** — seguiu a fila de correções, acrescentou as vistas e escala do elenco ao diagnóstico, atualizou Hanzō e Haku e entregou foco e câmera suavizados. Texto integral em [docs/14](14-CONTEXTO-DO-CHAT.md). As vistas de todo o elenco e os retratos que ainda são frontais permanecem pendentes na [matriz](development/COBERTURA-DE-VISTAS.md).
+**Rodada 64 (14/11)** — integrou cinco vistas de caminhada e retratos em perfil nas 114 versões, com o mesmo controlador para ajudantes e Mega Elites. Quatro inimigos comuns receberam perfil. Atualizou Hanzō, Haku, Zabuza, altura do elenco, foco e câmera. Tipos, build e 93 testes passaram. Arte de pulo/dash em ângulos adicionais e validação em partida seguem na [fila](13-PENDENCIAS-PARA-CONTINUAR.md). Pedido completo em [docs/14](14-CONTEXTO-DO-CHAT.md) e vistas por versão na [matriz](development/COBERTURA-DE-VISTAS.md).
 
 Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-CONTEXTO-DO-CHAT.md](14-CONTEXTO-DO-CHAT.md) (seção de mesmo título) e, para o chat anterior, [ShinobiBonk_CONTEXTO_COMPLETO_DO_CHAT.md](../ShinobiBonk_CONTEXTO_COMPLETO_DO_CHAT.md) (raiz do projeto).
 

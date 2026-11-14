@@ -1,5 +1,5 @@
 import { formAt, portraitRegion } from '../game/evolution';
-import { directionalArt } from '../game/directionalArt';
+import { lateralWalkArt } from '../game/directionalArt';
 import { VillageEmblem, villageName } from './VillageEmblem';
 import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
@@ -46,8 +46,6 @@ type Filters = { search: string; village: string; element: string; org: string }
 const EMPTY: Filters = { search: '', village: '', element: '', org: '' };
 
 
-const SELECT_PORTRAITS = ["hiruzen","raikage-terceiro","raikage-quarto","killer-b","onoki","ao","rasa","hanzo","mei","gengetsu","naruto-hokage","choji","kiba","shino","ino","kurenai","iruka","sai","yamato","shisui","obito","hiashi","hanabi","kisame","zabuza","suigetsu","mangetsu","karin","nagato","sasori","haku","chiriku","sakumo","deidara","hidan","kakuzu","konan","zetsu","jugo","kabuto","kabuto-sabio","kimimaro","jirobo","kidomaru","tayuya","sakon-ukon","dosu","zaku","kin","juzo","orochimaru-akatsuki","choji-guerra","kiba-shippuden","shino-shippuden","ino-guerra","tobi-akatsuki","obito-guerra","hanabi-adulta"];
-
 type PortraitRegion = ReturnType<typeof portraitRegion>;
 type Framing = { x: number; y: number; scale: number };
 
@@ -89,8 +87,7 @@ function measurePortrait(region: PortraitRegion): Promise<Framing> {
     const headRows = rows.slice(top + Math.floor(bodyHeight * .12), top + Math.ceil(bodyHeight * .36));
     const headXs = headRows.flat().sort((a, b) => a - b);
     const headX = headXs[Math.floor(headXs.length / 2)] ?? size / 2;
-    const bust=region.path.includes('shinobi-select-portraits');
-    const scale = Math.min(2.4, Math.max(1, size * (bust?.91:1.32) / bodyHeight));
+    const scale = Math.min(2.4, Math.max(1, size * 1.32 / bodyHeight));
     return { x: 50 - headX / size * scale * 100, y: 13 - top / size * scale * 100, scale };
   });
   measuredPortraits.set(key, frame);
@@ -98,14 +95,8 @@ function measurePortrait(region: PortraitRegion): Promise<Framing> {
 }
 
 function cardRegion(id:string) {
-  const family=familyOf(id);
-  if(id==='hanzo'||id==='haku')return portraitRegion(id);
-  const index=SELECT_PORTRAITS.indexOf(id);
-  if(index>=0)return {path:'/assets/shinobi-select-portraits-v1-'+(1+Math.floor(index/12))+'.png',cols:4,rows:3,index:index%12};
-  if(family==='gaara'){
-    const sheet=directionalArt(family,formAt(id).level);
-    if(sheet)return {path:sheet.path,cols:4,rows:sheet.rows,index:(sheet.firstRow??0)*4};
-  }
+  const side=lateralWalkArt(familyOf(id),formAt(id).level);
+  if(side)return {path:side.path,cols:4,rows:side.rows,index:side.row*4};
   return portraitRegion(id);
 }
 
