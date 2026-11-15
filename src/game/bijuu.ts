@@ -21,6 +21,18 @@ export const beastPhase = (ratio: number) => ratio > 2/3 ? 1 : ratio > 1/3 ? 2 :
 export const rollBijuu = (rng = Math.random) => BIJUU[Math.min(BIJUU.length-1,Math.floor(rng()*BIJUU.length))];
 export const bijuuLamens = (difficulty: number, plans: number) => Math.round(180 * difficulty * (1 + .33 * plans));
 
+/** Páginas dianteiras na ordem de BIJUU. */
+export const BIJUU_FRONT_SHEETS = [
+  '/assets/bijuu/motion-v1-1.png',
+  '/assets/bijuu/motion-v1-2.png',
+  '/assets/bijuu/motion-v1-3.png',
+] as const;
+
+export const BIJUU_SPAWN_DISTANCE = 7;
+export function bijuuSpawnPoint(x: number, z: number, yaw: number) {
+  return { x: x - Math.sin(yaw) * BIJUU_SPAWN_DISTANCE, z: z - Math.cos(yaw) * BIJUU_SPAWN_DISTANCE };
+}
+
 /** Páginas traseiras na ordem de BIJUU. Cada linha tem dois passos, preparação e recuo. */
 export const BIJUU_BACK_SHEETS: (string | undefined)[] = [
   '/assets/bijuu/motion-costas-v1-1.png',

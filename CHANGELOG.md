@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 15/11/2026 · Sprite da bijū na arena final
+
+- A bijū surge a 7 m à frente da câmera e a animação de entrada começa quando a folha está pronta. O fade genérico dos inimigos deixa de escrever na opacidade da bijū. Se o atlas dianteiro falhar, há imagem de reserva da mesma bijū.
+- A arena oculta a decoração da vila e reaplica a ambientação ao retomar. O save conserva a posição do chefe. Em um save da arena sem chefe e sem portal de saída, a luta pode começar ao retomar.
+- **PASSOU:** 192 de 192 testes por código, TypeScript e build (perfil equilibrado).
+- **PENDENTE DE VALIDAÇÃO E2E:** entrar e retomar a arena, conferir a emergência, o caminhar e os ataques das nove bijū.
+
 ## 15/11/2026 · Emboscada da Akatsuki e cinco casas na roleta
 
 - O Altar do Desafio deu lugar à Emboscada da Akatsuki. Zetsu emerge usando a arte do elenco e a nuvem vermelha aparece no mapa. Clique no Zetsu ou use E perto dele.

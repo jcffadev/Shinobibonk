@@ -10,7 +10,7 @@ import { load, installCanvasStub, memoryStorage } from './helpers/load.mjs';
 installCanvasStub();
 globalThis.localStorage ??= memoryStorage();
 const B = await load('/src/scene/bossCombat.ts');
-const { BIJUU, BIJUU_BACK_SHEETS, bijuuFacesAway, bijuuSheetCell } = await load('/src/game/bijuu.ts');
+const { BIJUU, BIJUU_FRONT_SHEETS, BIJUU_BACK_SHEETS, BIJUU_SPAWN_DISTANCE, bijuuSpawnPoint, bijuuFacesAway, bijuuSheetCell } = await load('/src/game/bijuu.ts');
 
 function setup(id = BIJUU[0].id, extra = {}) {
   const scene = new THREE.Scene(), player = new THREE.Object3D();
@@ -133,4 +133,52 @@ test('com arte registrada mas ainda não carregada: usa a folha de frente', () =
   fakeImage(host.boss.motionMap);
   for (let i = 0; i < 40; i++) { host.sprite.position.z -= .1; combat.update(host, 1 / 30, false); }
   assert.equal(host.sprite.material.map, host.boss.motionMap);
+});
+
+test('todas as poses que a arena usa existem nos atlas dianteiros', () => {
+  assert.equal(BIJUU_FRONT_SHEETS.length, Math.ceil(BIJUU.length / 3));
+  for (const path of BIJUU_FRONT_SHEETS) {
+    const img = decodePng('public' + path);
+    assert.deepEqual([img.width, img.height], [1024, 768]);
+    for (let row = 0; row < 3; row++) for (let frame = 0; frame < 4; frame++) {
+      assert.ok(!cellShape(img, frame * 256, row * 256, 256, 256).empty, path + ' ' + row + '/' + frame);
+    }
+  }
+});
+
+test('a chegada espera pela folha animada e o fade da horda não altera a opacidade', async () => {
+  const { combat, host, scene } = setup();
+  for (let i = 0; i < 60; i++) combat.update(host, 1 / 30, true);
+  assert.equal(host.sprite.material.visible, false, 'nenhum quadro vazio é desenhado');
+  assert.equal(host.boss.arrival, B.BIJUU_ARRIVAL, 'a entrada ainda está pronta para tocar');
+  fakeImage(host.boss.motionMap);
+  combat.update(host, 1 / 30, false);
+  assert.equal(host.sprite.material.visible, true);
+  const before = host.sprite.material.opacity;
+  assert.ok(before > 0 && before < 1);
+  const { createEnemyRenderer } = await load('/src/scene/enemyRenderer.ts');
+  const renderer = createEnemyRenderer(scene);
+  renderer.sync([host], () => .04, 1);
+  assert.equal(host.sprite.material.opacity, before);
+  renderer.dispose();
+
+  const delayed = setup();
+  delayed.host.boss.motionFailed = true;
+  fakeImage(delayed.oldArt);
+  delayed.combat.update(delayed.host, 1 / 30, false);
+  assert.equal(delayed.host.sprite.material.map, delayed.oldArt, 'imagem de reserva se a animação falhar');
+  assert.equal(delayed.host.sprite.material.visible, true);
+});
+
+test('entrada fica no rumo da câmera e a arena é preparada também ao retomar', async () => {
+  for (const yaw of [0, Math.PI / 4, Math.PI, 1.5 * Math.PI]) {
+    const p = bijuuSpawnPoint(20, -16, yaw);
+    assert.ok(Math.abs(Math.hypot(p.x - 20, p.z + 16) - BIJUU_SPAWN_DISTANCE) < 1e-9);
+    assert.ok((p.x - 20) * -Math.sin(yaw) + (p.z + 16) * -Math.cos(yaw) > 0);
+  }
+  const { readFileSync } = await import('node:fs');
+  const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.match(canvas, /bijuuSpawnPoint\(player\.position\.x,player\.position\.z,yaw\)/);
+  assert.match(canvas, /if\(arena\)\{\s*openBijuuArena\(\);[\s\S]*?spawnBijuu\(camp\.boss\.id,camp\.boss\)/);
+  assert.match(canvas, /else if\(!portal&&!defeatedBijuu\)spawnBijuu\(\)/);
 });

@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'fade da horda não interfere na entrada da bijū', arquivo: 'src/scene/enemyRenderer.ts', de: 'else if(opacity&&!sp.userData.bijuuEntrance)', para: 'else if(opacity)' },
   { regra: 'roleta só tem as cinco casas de personagem', arquivo: 'src/game/roulette.ts', de: "{ id: 'tsunade', label: 'Tsunade'", para: "{ id: 'kunai', label: 'Tsunade'" },
   { regra: 'emboscada da Akatsuki rende três pergaminhos', arquivo: 'src/game/akatsukiAmbush.ts', de: 'rewards: 3', para: 'rewards: 1' },
   { regra: 'level-up não solta o WASD pressionado', arquivo: 'src/scene/GameCanvas.tsx', de: 'openLevelReward();invulnerability=3;', para: 'openLevelReward();invulnerability=3;movementInput.clear();' },

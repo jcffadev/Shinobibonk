@@ -1,7 +1,7 @@
 import { techniqueProc } from '../game/combat';
 import * as THREE from 'three';
 import { compactNumber } from '../game/format';
-import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, BIJUU_BACK_SHEETS, beastPhase, bijuuFacesAway, bijuuSheetCell } from '../game/bijuu';
+import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, BIJUU_FRONT_SHEETS, BIJUU_BACK_SHEETS, beastPhase, bijuuFacesAway, bijuuSheetCell } from '../game/bijuu';
 import { HERO_BY_ID, SHAPE_POWER, ultimateBase, type Technique } from '../game/heroes';
 import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techniqueEffects';
 
@@ -30,7 +30,7 @@ export type BossState = { name: string; maxHp: number; guardian: boolean; cooldo
   /** Rodada 55: espelho com histerese, posição anterior (andar = deslocamento real) e quadro exibido (testes). */
   flip?:boolean; lastX?:number; lastZ?:number; walkBlend?:number; pose?:number;
   /** Rodada 58: segundos restantes da entrada (a bijū surge do chão; só visual). */
-  arrival?:number;
+  arrival?:number; fallbackArt?:THREE.Texture|null; motionFailed?:boolean;
   /** Rodada 59: folha de costas (quando existir) e a vista atual (true = de costas, andando para longe da câmera). */
   backMap?:THREE.Texture; away?:boolean };
 /**
@@ -103,16 +103,20 @@ export function createBossCombat(ctx: BossContext) {
     const cooldown = BOSS_RULES.cooldownByZone[zoneIndex] * (guardian ? .8 : 1);
     host.boss = { name, maxHp, guardian, cooldown, next: 2 + Math.random() * 1.5, ultimateUsed: false, bar, canvas, lastRatio: 1, lastCasting: '',phase:beast?beastPhase(host.hp/maxHp):undefined,castCount:0,motionTime:0,recoil:0 };
     if(beast){
-      const index=BIJUU.indexOf(beast),map=new THREE.TextureLoader().load('/assets/bijuu/motion-v1-'+(1+Math.floor(index/3))+'.png');
+      const {page,row}=bijuuSheetCell(BIJUU.indexOf(beast)),state=host.boss;
+      state.fallbackArt=host.sprite.material.map;
+      const map=new THREE.TextureLoader().load(BIJUU_FRONT_SHEETS[page],undefined,undefined,()=>{state.motionFailed=true;});
+      host.sprite.userData.bijuuEntrance=true;
+      host.sprite.material.visible=false;
       // Sem mipmaps: num atlas eles misturam os quadros vizinhos e, de longe, aparecem restos de outras poses nas bordas.
       map.colorSpace=THREE.SRGBColorSpace;map.magFilter=THREE.NearestFilter;map.minFilter=THREE.NearestFilter;map.generateMipmaps=false;
-      map.repeat.set(.25,1/3);map.offset.set(0,(2-index%3)/3);host.boss.motionMap=map;host.boss.motionRow=index%3;
+      map.repeat.set(.25,1/3);map.offset.set(0,(2-row)/3);state.motionMap=map;state.motionRow=row;
       // Já nasce com a folha de movimento (antes mostrava a arte antiga até a folha carregar e trocava de tamanho na tela).
       host.sprite.material.map=map;host.sprite.material.transparent=true;host.sprite.material.opacity=0;host.sprite.material.needsUpdate=true;
       host.boss.arrival=BIJUU_ARRIVAL;
       // Folha de costas só se o arquivo estiver registrado (nada de 404 enquanto a arte não existe).
-      const backPath=(ctx.backSheets??BIJUU_BACK_SHEETS)[bijuuSheetCell(index).page];
-      if(backPath){const back=new THREE.TextureLoader().load(backPath);back.colorSpace=THREE.SRGBColorSpace;back.magFilter=THREE.NearestFilter;back.minFilter=THREE.NearestFilter;back.generateMipmaps=false;back.repeat.set(.25,1/3);back.offset.set(0,(2-index%3)/3);host.boss.backMap=back;}
+      const backPath=(ctx.backSheets??BIJUU_BACK_SHEETS)[page];
+      if(backPath){const back=new THREE.TextureLoader().load(backPath);back.colorSpace=THREE.SRGBColorSpace;back.magFilter=THREE.NearestFilter;back.minFilter=THREE.NearestFilter;back.generateMipmaps=false;back.repeat.set(.25,1/3);back.offset.set(0,(2-row)/3);state.backMap=back;}
     }
     drawBar(host.boss, 1);
   }
@@ -214,7 +218,7 @@ export function createBossCombat(ctx: BossContext) {
       const progress = 1 - Math.max(0, state.cast.windup) / state.cast.total;
       state.cast.marker.traverse((child) => { if (child instanceof THREE.Mesh) (child.material as THREE.MeshBasicMaterial).opacity = .18 + progress * .5; });
       if (state.cast.windup <= 0) fire(host, state);
-    } else if (canAct) {
+    } else if (canAct && (!phase || host.sprite.material.visible)) {
       state.cooldown -= dt;
       if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.2,1.35,.68][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
     }
@@ -237,8 +241,11 @@ export function createBossCombat(ctx: BossContext) {
       state.recoil=Math.max(0,state.recoil-dt*3.4);
       const isFlying=host.heroId==='chomei';
       const lift=isFlying?.28+Math.abs(step)*.24:moving?Math.abs(step)*.14:0;
-      const sheet=state.away&&state.backMap?.image?state.backMap:state.motionMap;
-      if(sheet?.image){
+      const sheet=state.away&&state.backMap?.image?state.backMap:state.motionMap?.image?state.motionMap:undefined;
+      const fallback=state.motionFailed&&state.fallbackArt?.image?state.fallbackArt:undefined;
+      host.sprite.material.visible=!!(sheet||fallback);
+      if(fallback&&!sheet)host.sprite.material.map=fallback;
+      if(sheet){
         // Parada: quadro 0 (a respiração vem da escala); andando: alterna os dois quadros de passo da folha.
         const pose=state.recoil>0?3:state.cast?2:moving?Number(step<0):0;
         state.pose=pose;
@@ -259,7 +266,7 @@ export function createBossCombat(ctx: BossContext) {
       const wide=1+windup*.10+state.recoil*.13;
       const tall=1+(moving?step*.055:step*.018)-windup*.08+state.recoil*.08;
       // Entrada: cresce de 35% a 100% e aparece (opacidade) em BIJUU_ARRIVAL s.
-      if(state.arrival!==undefined){state.arrival=Math.max(0,state.arrival-dt);const k=arrivalProgress(state.arrival);host.sprite.material.opacity=k;if(state.arrival<=0){state.arrival=undefined;host.sprite.material.opacity=1;}}
+      if(state.arrival!==undefined&&host.sprite.material.visible){state.arrival=Math.max(0,state.arrival-dt);const k=arrivalProgress(state.arrival);host.sprite.material.opacity=k;if(state.arrival<=0){state.arrival=undefined;host.sprite.material.opacity=1;}}
       const grow=state.arrival!==undefined?.35+.65*arrivalProgress(state.arrival):1;
       host.sprite.scale.set(BIJUU_SIZE*wide*grow,BIJUU_SIZE*tall*grow,1);
       host.sprite.position.y=ctx.height(host.sprite.position.x,host.sprite.position.z)+host.sprite.scale.y*.46+lift;

@@ -345,6 +345,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - **Confirmado e implementado.** Emboscada da Akatsuki substitui o Altar do Desafio. Zetsu surge do chão e inicia por clique ou E. Dificuldade acompanha a partida e a zona. O grupo completo derrotado dá três pergaminhos grátis.
 - **Guardião.** O Myōjinmon continua sendo o ponto de invocação com E. O portal que avança a zona abre ao derrotar o Guardião.
 
+### Aparição das bijū · 15/11/2026
+
+- **Implementado.** A arena final mostra a entrada da bijū à frente da câmera e aguarda a folha. O fade dos inimigos comuns ficou separado da opacidade do chefe. O save da arena restaura o chefe na posição gravada.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

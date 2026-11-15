@@ -49,6 +49,7 @@ O [contexto permanente de perguntas e respostas](docs/18-CONTEXTO-PERGUNTAS-RESP
   - `enemyTiers.ts`: inimigo normal, elite amarelo, Mega Elite e Shinobi para selar. O primeiro Mega Elite da partida tem no máximo 3.000 HP.
   - `movementInput.ts`: mantém WASD e setas pressionados durante escolhas, Treinamento e contato com obstáculos.
   - `akatsukiAmbush.ts`: regras do Zetsu e da emboscada que substitui o Altar do Desafio. Vencer concede três pergaminhos grátis.
+  - `bijuu.ts`: bestas, ataques e configuração da entrada e dos atlas na arena final.
   - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
   - `roulette.ts`: Caça-Níquel da Tsunade (ex-"Roleta da Tsunade").
   - `settings.ts`: configurações do jogador.

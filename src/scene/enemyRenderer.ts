@@ -237,7 +237,7 @@ export function createEnemyRenderer(scene: THREE.Scene) {
           const oc = sp.userData.outline as THREE.Color | undefined;
           const outline=side?(fade?fadedSideOutlines:sideOutlines):fade?(back?fadedBackOutlines:fadedOutlines):(back?backOutlines:outlines);
           if (oc) pushBody(outline, sp, sp.scale.x * 1.14, sp.scale.y * 1.08, oc.r, oc.g, oc.b,alpha);
-        } else if(opacity) {
+        } else if(opacity&&!sp.userData.bijuuEntrance) {
           sp.material.opacity=THREE.MathUtils.damp(sp.material.opacity,opacity(sp),18,dt);
           const outline=sp.children[0];
           if(outline instanceof THREE.Sprite)outline.material.opacity=sp.material.opacity;

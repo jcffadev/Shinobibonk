@@ -2446,3 +2446,9 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Cade o Mega Elite do portal do guardião? o que libera a próxima zona
 
 **Resposta.** Zetsu emerge ao se aproximar. A nuvem vermelha indica a Emboscada da Akatsuki, acionada com clique ou E, com três pergaminhos grátis depois de derrotar as 13 versões da organização registradas no jogo. A roleta usa somente os cinco personagens solicitados. Para avançar a zona, use E no Portal do Guardião · Myōjinmon e vença o Guardião. A Akatsuki ocupa o espaço do Altar do Desafio.
+
+## 15/11/2026 — sprite das bijū na arena final
+
+> As bijuu não estão aparecendo os sprites delas na luta final... precisamos arrumar
+
+**Resposta.** A arena posiciona a entrada na frente da câmera, espera o carregamento do atlas e conserva a opacidade própria da animação. Se a folha falhar, usa a arte de reserva da mesma bijū. A retomada restaura o chefe e seus pontos de vida. As nove folhas foram conferidas por código. A verificação na tela ficou pendente.
