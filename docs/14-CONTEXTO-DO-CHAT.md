@@ -2126,7 +2126,7 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 
 > 4s de cooldown para uma skill é MUITA coisa... Muita mesmo pode por ataques meele 0.5 ou 0.7, projeteis que acertam mais de 1 cerca de 1,5 e area 2s
 
-> Claro, você precisa balancear as outras dificuldades também, considerando que nosso Kage é o Nightmare deles. Quero que você simule partidas parecidas... Faça a ferramenta que precisa e faça várias simulações
+> Claro, você precisa balancear as outras dificuldades também, considerando que nosso Kage é a dificuldade máxima do jogo de referência. Quero que você simule partidas parecidas... Faça a ferramenta que precisa e faça várias simulações
 
 > os números de dano na tela... E não o numero tipo 123148, seria 123.1K
 

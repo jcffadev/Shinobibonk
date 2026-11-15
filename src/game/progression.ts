@@ -72,7 +72,7 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
 /** Escala das missões sobre a base Genin (o que é salvo no debug vale como Genin e é multiplicado por isto). */
 export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6};
 /**
- * Rodada 76 (pedido do usuário: "balancear as outras dificuldades também, considerando que nosso Kage é o Nightmare deles"):
+ * Rodada 76 (pedido do usuário: "balancear as outras dificuldades também, considerando que nosso Kage é a dificuldade máxima do jogo de referência"):
  * vida do MONSTRO COMUM por dificuldade (Kage ≈ 2× o Genin, como o material de referência mostrou) e abertura de nascimentos
  * por dificuldade. O MISSION_TIER continua valendo para dano, velocidade, elites, Mega Elites e chefes.
  */

@@ -5,7 +5,7 @@
 - **Pedidos do usuário:**
   - "4s de cooldown para uma skill é MUITA coisa… ataques meele 0.5 ou 0.7, projeteis que acertam mais de 1 cerca de 1,5 e area 2s".
   - "Diminuir também um pouco a velocidade de respawn nos primeiros níveis, ir nascendo 1 monstro por segundo no começo… um pouquinho mais longe… as emboscadas também devem ser eventos com maiores intervalos".
-  - "você precisa balancear as outras dificuldades também, considerando que nosso Kage é o Nightmare deles… Faça a ferramenta que precisa e faça várias simulações".
+  - "você precisa balancear as outras dificuldades também, considerando que nosso Kage é a dificuldade máxima do jogo de referência… Faça a ferramenta que precisa e faça várias simulações".
   - Números de dano curtos: "123148, seria 123.1K".
 - **Números de dano:** `damageLabel` (`src/game/format.ts`) mostra 50, 999, 1K, 123.1K, 1M, 1B, 1T, 1Q, Qi, Sx… e depois notação curta (3e36). Os números flutuantes usam esse formato.
 - **Recarga por forma, mostrada no Nv 1** (`SHAPE_COOLDOWN`, `src/game/heroes.ts`):
