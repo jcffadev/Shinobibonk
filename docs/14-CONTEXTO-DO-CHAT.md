@@ -2185,3 +2185,17 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Na aba Habilidades, as técnicas de uma fusão planejada mostram a receita "A + B = Fusão".
 - **Testes:** tsc, testes e build rodados numa cópia limpa só com estas mudanças (outra sessão tinha trabalho em andamento na pasta). **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 83 · 15/11/2026 — tela pisca vermelho ao levar dano + som do hit
+
+> A questão da tela piscando vermelho tipo... em jogo de FPS, que os cantos da tela da umas piscadas em vermelho... sabe? Mais o som do hit recebido pelo personagem principal.
+
+**Resposta.**
+
+- Antes havia um tingimento vermelho da tela inteira por 0,28 s e um som grave. Agora o vermelho fica só nas bordas e cantos (centro transparente, sem pegar cliques).
+- A intensidade depende do dano em relação à vida máxima e some em 0,42 s. Com muitos monstros batendo, um piscar novo só começa a cada 0,36 s; golpes no meio só reforçam o piscar atual, sem estroboscópio.
+- Abaixo de 30% de vida fica uma vinheta vermelha fraca, pulsando devagar.
+- Som de hit recebido: os tons graves de antes + um estalo curto que cresce com o golpe. Respeita volume geral × efeitos e toca no máximo a cada 0,32 s.
+- Nova opção em Configurações → Gráficos: "Tela vermelha ao levar dano", ligada por padrão. O som continua com ela desligada.
+- **Testes:** 9 testes novos de lógica pura (`tests/vinheta-de-dano.test.mjs`); tsc, testes (154/154) e build passaram. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

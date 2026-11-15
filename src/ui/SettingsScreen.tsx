@@ -59,7 +59,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
     const d = DEFAULT_SETTINGS;
     const by: Record<Category, Partial<GameSettings>> = {
       som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, musicVolume: d.musicVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
-      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, showTechniqueAreas: d.showTechniqueAreas, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers },
+      graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, showTechniqueAreas: d.showTechniqueAreas, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers, damageFlash: d.damageFlash },
       tela: { resolution: d.resolution, renderer: d.renderer },
       controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, autoUltimate: d.autoUltimate, sealAnimation: d.sealAnimation },
       teclas: { keys: { ...DEFAULT_KEYS } },
@@ -91,6 +91,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
           <Card title="Ocultar meus ataques" hint="Começa a partida sem desenhar os efeitos dos seus golpes (H alterna). O dano continua igual"><Toggle value={settings.hideMyAttacks} onChange={(v) => set({ hideMyAttacks: v })} /></Card>
           <Card title="Mostrar áreas das técnicas" hint="Contorno no chão de onde cada técnica acerta (mesmo alcance do dano). Com H fica só o contorno"><Toggle value={settings.showTechniqueAreas} onChange={(v) => set({ showTechniqueAreas: v })} /></Card>
           <Card title="Números de dano"><Toggle value={settings.damageNumbers} onChange={(v) => set({ damageNumbers: v })} /></Card>
+          <Card title="Tela vermelha ao levar dano" hint="As bordas da tela piscam em vermelho a cada golpe recebido e ficam levemente vermelhas com pouca vida. O som do golpe continua"><Toggle value={settings.damageFlash} onChange={(v) => set({ damageFlash: v })} /></Card>
           <Card title="Drops discretos" hint="EXP, Ryu e Chakra menores; são coletados igual"><Toggle value={settings.discreetDrops} onChange={(v) => set({ discreetDrops: v })} /></Card>
           <Card title="Efeitos de coleta" hint="Nenhum: sem som ao coletar. Dá mais FPS com muitos drops"><Choice value={settings.pickupFx} options={[{ value: 'completos', label: 'Completos' }, { value: 'simples', label: 'Simples' }, { value: 'nenhum', label: 'Nenhum' }]} onChange={(v) => set({ pickupFx: v })} /></Card>
           <Card title="Mostrar FPS"><Toggle value={settings.showFps} onChange={(v) => set({ showFps: v })} /></Card>

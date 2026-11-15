@@ -9,7 +9,7 @@ import { pillStatPreview } from '../game/pillPreview';
 import { PillStatPreview } from './PillStatPreview';
 import { techniquePool, HERO_BY_ID, heroAffinity, familyOf, type PoolTechnique, type Technique } from '../game/heroes';
 import { sealedHeroes, researchProgress } from '../game/account';
-import { PRESET_LIMIT } from '../game/missionBag';
+import { ArsenalControls, type ArsenalControlsProps } from './ArsenalControls';
 import { combineBonus, fusionBonus, fusionCatalog, fusionDisplayName, fusionRecipeText, isMergedName, kekkeiFusion, mergedTechnique } from '../game/techniqueMerge';
 /** Origem da técnica no pool (regra do usuário: 1–2 únicas por shinobi; compartilhadas por vila/elemento; únicas de outros só após selar). */
 function sourceText(t:PoolTechnique){const who=HERO_BY_ID[t.origin]?.name??t.origin;if(t.source==='kit')return 'Kit próprio.';if(t.source==='basica')return 'Básica da Academia (sempre disponível).';if(t.source==='vila')return 'Compartilhada · mesma vila ('+who+').';if(t.source==='elemento')return 'Compartilhada · mesmo elemento '+t.element+' ('+who+').';return t.locked?'Única de '+who+' · bloqueada até selar '+who+' pela 1ª vez.':'Única de '+who+' (selado).';}
@@ -28,10 +28,9 @@ export type MissionTactic={name:string;planned:string[];trained:string[];home:st
 /** Plano individual do shinobi e táticas salvas na conta. */
 function PlannerRarity({rarity,max}:{rarity:Rarity;max:number}){return <span className="planner-item-meta"><span className={`planner-rarity rarity-${rarity.toLowerCase()}`}><i aria-hidden="true"/>{rarity}</span><span className="planner-stack-limit" title="Limite de cópias na missão">0/{max}</span></span>;}
 
-export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,archiveItemLimit,toggleArchivedItem,saveItemPreset,itemPresetCount,archivedSkills,archiveLimit,trainingSlots,trained,trainTechnique,toggleSkill,fusionPlan,addFusionPair,removeFusionPair,tactics,saveTactic,applyTactic,deleteTactic,updateTactic}:{hero:{id:string;name:string;skills:string[]};unlocked:string[];planned:string[];togglePlanned:(name:string)=>void;archivedItems:string[];archiveItemLimit:number;toggleArchivedItem:(id:string)=>void;saveItemPreset:(name:string)=>void;itemPresetCount:number;archivedSkills:string[];archiveLimit:number;trainingSlots:number;trained:string[];trainTechnique:(name:string)=>void;toggleSkill:(name:string)=>void;fusionPlan:[string,string][];addFusionPair:(a:string,b:string)=>void;removeFusionPair:(index:number)=>void;tactics:MissionTactic[];saveTactic:(name:string)=>void;applyTactic:(index:number)=>void;deleteTactic:(index:number)=>void;updateTactic:(index:number)=>void;}){
+export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,archiveItemLimit,toggleArchivedItem,arsenalControls,archivedSkills,archiveLimit,trainingSlots,trained,trainTechnique,toggleSkill,fusionPlan,addFusionPair,removeFusionPair,tactics,saveTactic,applyTactic,deleteTactic,updateTactic}:{hero:{id:string;name:string;skills:string[]};unlocked:string[];planned:string[];togglePlanned:(name:string)=>void;archivedItems:string[];archiveItemLimit:number;toggleArchivedItem:(id:string)=>void;arsenalControls:ArsenalControlsProps;archivedSkills:string[];archiveLimit:number;trainingSlots:number;trained:string[];trainTechnique:(name:string)=>void;toggleSkill:(name:string)=>void;fusionPlan:[string,string][];addFusionPair:(a:string,b:string)=>void;removeFusionPair:(index:number)=>void;tactics:MissionTactic[];saveTactic:(name:string)=>void;applyTactic:(index:number)=>void;deleteTactic:(index:number)=>void;updateTactic:(index:number)=>void;}){
  const [tab,setTab]=useState('Habilidades'),[filters,setFiltersState]=useState({...EMPTY_FILTERS}),[rarities,setRarities]=useState<Rarity[]>([]),[selected,setSelected]=useState(''),[view,setView]=useState<'all'|'planned'|'archived'>('all'),[,setTick]=useState(0);
  const [tip,setTip]=useState<{name:string;x:number;y:number}|null>(null);
- const [presetName,setPresetName]=useState('');
  const [fusionA,setFusionA]=useState(''),[fusionB,setFusionB]=useState('');
  useEffect(()=>{const on=()=>setTick(n=>n+1);window.addEventListener('shinobi-account',on);return ()=>window.removeEventListener('shinobi-account',on);},[]);
  const techniques=techniquePool(hero.id,sealedHeroes()),research=researchProgress();const researchOf=(t:PoolTechnique)=>t.source==='kit'||t.source==='basica'?1:research[t.name]||0;
@@ -99,16 +98,15 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
     </span>):<i aria-hidden="true"/>}</div>
    </div>)}
   </section>
+  {/* Rodada 82 (pedido do usuário: "Colocar essa parte na parte do preparar missão… ao carregar o modelo que está salvo… já vai
+      aparecer os itens" e "Deveria ficar acima de taticas salvas"): o seletor de modelo salvo saiu da escolha do shinobi. */}
+  <section className="planner-arsenal" aria-label="Modelo salvo de itens"><b>Modelo salvo</b><small>Carregar um modelo coloca os itens dele no plano e em casa.</small><ArsenalControls {...arsenalControls}/></section>
   <details className="planner-tactics">
    <summary>Táticas salvas · {tactics.length}/4</summary>
    <div className="planner-tactics-grid">
     <MissionTactics heroName={hero.name} tactics={tactics} saveTactic={saveTactic} applyTactic={applyTactic} deleteTactic={deleteTactic} updateTactic={updateTactic}/>
     <section className="planner-archives"><h3>Itens arquivados <small>{archivedItems.length}/{archiveItemLimit}</small></h3>
       <div className="planner-slots">{ITEMS.filter(item=>archivedItems.includes(item.id)).map(item=><span key={item.id} title={item.name}><ItemIcon name={item.name}/><button type="button" className="planner-remove" aria-label={'Retirar '+item.name+' do arquivo'} onClick={()=>toggleArchivedItem(item.id)}>×</button></span>)}{!archivedItems.length&&<small>Nenhum item arquivado.</small>}</div>
-      <form onSubmit={event=>{event.preventDefault();if(!presetName.trim())return;saveItemPreset(presetName.trim());setPresetName('');}}>
-       <input aria-label="Nome do arsenal" placeholder="Nome do arsenal" maxLength={32} value={presetName} onChange={event=>setPresetName(event.target.value)}/>
-       <button type="submit" disabled={!presetName.trim()||itemPresetCount>=PRESET_LIMIT}>Salvar arsenal da conta</button>
-      </form>
     </section>
    </div>
   </details>
@@ -125,8 +123,10 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
      <h3>Fusões que você pode aprender · {catalog.length}</h3>
      <p className="planner-fusion-hint">Saem das técnicas do pool deste shinobi. Selar mais shinobis traz técnicas novas e libera mais fusões.</p>
      <div className="planner-fusion-catalog" aria-label="Fusões disponíveis">
-       {shownCatalog.map(f=>{const done=fusionPlan.some(p=>p.includes(f.pair[0])&&p.includes(f.pair[1]));return <button type="button" key={f.result.name} className={'fusion-catalog-entry'+(f.kekkei?' is-kekkei':'')} aria-pressed={f.pair.includes(fusionA)&&f.pair.includes(fusionB)} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);}}>
-         <SkillIcon heroId={hero.id} name={f.result.name}/><span><b>{f.name}</b><small>{fusionRecipeText(f.pair,f.kekkei?'Kekkei Genkai':'Fusão')}</small>{done&&<small className="fusion-catalog-planned">Planejada</small>}</span>
+       {shownCatalog.map(f=>{const planIndex=fusionPlan.findIndex(p=>p.includes(f.pair[0])&&p.includes(f.pair[1])),done=planIndex>=0;
+         // Rodada 82 (pedido do usuário: "Ao clicar na fusão, ela já fica selecionada"): 1 clique planeja; clicar de novo tira do plano.
+         return <button type="button" key={f.result.name} className={'fusion-catalog-entry'+(f.kekkei?' is-kekkei':'')} aria-pressed={done} disabled={!done&&fusionPlan.length>=4} title={done?'Clique para tirar do plano':fusionPlan.length>=4?'Limite de 4 fusões planejadas':'Clique para planejar'} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}>
+         <SkillIcon heroId={hero.id} name={f.result.name}/><span><b>{f.name}</b><small>{fusionRecipeText(f.pair,f.kekkei?'Kekkei Genkai':'Fusão')}</small>{done&&<small className="fusion-catalog-planned">✓ Planejada</small>}</span>
        </button>;})}
      </div>
      {!catalog.length&&<p className="planner-empty">Este pool ainda não tem duas técnicas que se fundem. Sele mais shinobis para liberar fusões.</p>}

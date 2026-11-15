@@ -182,3 +182,7 @@
 .fusion-catalog-planned{color:#9fe0a0;opacity:1!important}
 .fusion-manual{margin:10px 0}
 .fusion-manual>summary{cursor:pointer;margin-bottom:6px}
+/* Rodada 82 — modelo salvo de itens acima das Táticas salvas */
+.planner-arsenal{display:grid;gap:4px;margin:10px 0 4px}
+.planner-arsenal>small{opacity:.75}
+.planner-arsenal .arsenal-controls{margin:0}

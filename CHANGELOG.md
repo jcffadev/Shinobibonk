@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 15/11/2026 · Tela pisca vermelho nas bordas ao levar dano + som do hit (Rodada 83)
+
+- **Pedido do usuário:** "A questão da tela piscando vermelho tipo... em jogo de FPS, que os cantos da tela da umas piscadas em vermelho... sabe? Mais o som do hit recebido pelo personagem principal."
+- **Antes:** ao perder HP, a tela inteira ficava vermelha por 0,28 s (gradiente cobrindo também o centro) e tocava um som grave (`hurt`, limite de 320 ms).
+- **Vinheta (`src/game/damageFeedback.ts`, lógica pura):**
+  - Vermelho só nas bordas e cantos: centro transparente até 48% do raio (`src/style.css`, `.player-damage-vignette`, `pointer-events:none`).
+  - Intensidade = 0,3 + 2,4 × (dano ÷ vida máxima), com teto 0,9. Some em linha reta em 0,42 s.
+  - Limite de frequência: um piscar novo só começa 0,36 s depois do anterior. Golpes no meio só elevam a intensidade, sem reiniciar o brilho.
+  - Vida baixa: abaixo de 30% do HP, vinheta fraca e contínua (0,12 → 0,34 conforme a vida cai), com pulso lento de 1,1 por segundo.
+  - Com H (efeitos ocultos) a vinheta fica a 55%. Some na derrota e fora da partida.
+- **Som (`playHurt` em `src/audio/sfx.ts`):** os dois tons graves do `hurt` + um estalo curto de ruído que cresce com a força do golpe. Volume = volume geral × efeitos (`sfxGain`); no máximo um a cada 0,32 s (`hurtSoundAllowed`).
+- **Configurações → Gráficos:** nova opção **"Tela vermelha ao levar dano"** (`damageFlash`), ligada por padrão; "Restaurar padrão" a inclui. Desligada, tira o piscar e a vinheta de vida baixa; o som continua (controlado pelo volume de efeitos).
+- **Testes:**
+  - 9 testes novos em `tests/vinheta-de-dano.test.mjs`: intensidade pelo dano, duração, anti-estroboscópio, reforço sem reinício, vida baixa, opção desligada, volume e anti-spam do som, e a ligação no GameCanvas/sfx/Configurações/CSS. Cobertura de `damageFeedback.ts` exigida em `tests/minimo.json`; mínimo subiu para 154.
+  - `tests/regras-do-jogo.test.mjs` passou a conferir o novo fluxo (`registerHit` + `playHurt`) no lugar de `playSfx('hurt')`.
+  - tsc, `scripts/run-tests.mjs` (154/154) e build: PASSOU.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver em partida o piscar só nas bordas, a diferença entre golpe leve e forte, a ausência de estroboscópio com muitos monstros, a vinheta de vida baixa, o som e a opção desligada.
+
 ## 15/11/2026 · Fusões que o shinobi pode aprender (Rodada 81)
 
 - **Pedido do usuário:** "nas fusões, é pra aparecer já as fusões que o ninja pode aprender… Quando for liberando ninja na conta, vai aparecer mais habilidades que ele pode aprender e vai aparecer, mais fusões também... ele vai selecionar a fusão que ele sabe e ai, na aba de Habilidades, vai aparecer que ele precisa por exemplo, shuriken + vento = Rasenshuriken Fuuton".

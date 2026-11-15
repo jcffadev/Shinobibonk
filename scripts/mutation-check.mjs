@@ -42,6 +42,7 @@ const MUTATIONS = [
   { regra: 'câmera começa perto', arquivo: 'src/game/settings.ts', de: 'default: 12, min: 8, max: 22,', para: 'default: 19, min: 8, max: 22,' },
   { regra: 'ninja do tamanho do monstro comum', arquivo: 'src/game/worldScale.ts', de: 'export const MONSTER_VISIBLE_HEIGHT = 2.0 * .83;', para: 'export const MONSTER_VISIBLE_HEIGHT = 2.0 * .83 * .55;' },
   { regra: 'catálogo de fusões com Kekkei Genkai no topo', arquivo: 'src/game/techniqueMerge.ts', de: 'Number(b.kekkei)-Number(a.kekkei)||', para: '' },
+  { regra: 'um clique no catálogo planeja a fusão', arquivo: 'src/ui/BuildPlanner.tsx', de: 'else addFusionPair(...f.pair);', para: 'else {}' },
   { regra: 'farol do pergaminho grátis é alto', arquivo: 'src/scene/rewardBeacon.ts', de: 'height: 30,', para: 'height: 4,' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },

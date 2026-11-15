@@ -69,5 +69,6 @@ test('nome do jogo de referência também não aparece DENTRO dos .zip rastreado
 test('cena usa a coleta de XP antes da limpeza da zona, o raio do altar e o retorno de dano efetivo', () => {
   assert.match(canvas, /if \(xpCollectedAtPortal\(drop.type,drop.magnet,distance,stats.pickup\)\)[\s\S]*?xp\+=collectedXp[\s\S]*?clearZone\(\);zoneStart=elapsed/);
   assert.match(canvas, /RingGeometry\(ALTAR_RULES.radius-\.28,ALTAR_RULES.radius,48\)/);
-  assert.match(canvas, /if\(hp<hpBefore\)\s*\{\s*playerMotion.hurt\(\);\s*playSfx\('hurt'\)/);
+  // Rodada 83: o retorno de dano efetivo virou piscar nas bordas + som de hit recebido (game/damageFeedback.ts).
+  assert.match(canvas, /if\(hp<hpBefore\)\s*\{\s*playerMotion.hurt\(\);\s*registerHit\(damageFlash,performance\.now\(\),hpBefore-hp,stats\.maxHp\);\s*playHurt\(/);
 });

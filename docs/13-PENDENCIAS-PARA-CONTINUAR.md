@@ -58,7 +58,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 19 | **NOVO (tester):** XP parou na zona 2 (nível 582) e barra de XP não sobe em late game | PENDENTE — próximo · passagem completa em docs/26 |
 | 20 | **NOVO (tester):** paredes invisíveis / colisão travando onde não há nada | FEITO (rodada 70): corpo na escala do desenho, cenário escondido removido, dash atravessa · TESTADO por código · E2E pendente |
 | 21 | **NOVO (tester):** borda do círculo do altar mais grossa (sem aumentar o raio) | PENDENTE |
-| 22 | **NOVO (tester):** feedback visual/sonoro ao levar dano | PENDENTE |
+| 22 | Feedback visual/sonoro ao levar dano: **FEITO na rodada 83** (bordas da tela piscam em vermelho, vinheta fraca com vida baixa, som de hit recebido, opção "Tela vermelha ao levar dano"). Ver item 33 | PENDENTE DE VALIDAÇÃO E2E |
 | 23 | **DECISÃO PENDENTE:** liberar no pool as naturezas da obra (hoje 18/72 famílias têm 2+). Natureza fora da obra nunca entra. Opções e dados que faltam em [DECISAO-KEKKEI-GENKAI.md](development/DECISAO-KEKKEI-GENKAI.md) | AGUARDA O USUÁRIO |
 | 24 | **NOVO:** Jūzō "travado" ao andar (jogador e ajudante). A arte da corrida de frente e de costas tem as pernas paradas em `corrida-23.png`. **Pedido de arte ao Codex** em [PEDIDO-ARTE-JUZO-CORRIDA.md](development/PEDIDO-ARTE-JUZO-CORRIDA.md) | PENDENTE (arte) |
 | 25 | **NOVO (rodada 73):** área de captura (10 m) e facho de luz no Mega Elite caído; farol verde de 30 m e marcação no minimapa, Tab e M para todo pergaminho grátis (G, Guardião, desafio). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
@@ -68,6 +68,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 29 | ~~Ordem entre dificuldades no fim da partida~~ **ENCERRADO (rodada 80):** decisão do usuário — mais monstros dando mais XP/nível no Kage é intencional; os erros do jogador decidem a partida. Protegido por teste: cada degrau de dificuldade pesa (vida ≥1,2×, dano ≥1,3×) e os degraus são proporcionais. Segue aberto só o muro da conta nova na entrada do Final Swarm (~30 min) | FEITO |
 | 30 | **NOVO (rodada 78):** técnicas em Órbita e corpo a corpo acertam no alvo, nunca no pé do jogador (Susanoo, Limbo, Esferas, Kaiten…); Órbitas lançadas alcançam 4,5 m. Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 31 | **NOVO (rodada 81):** aba Fusões abre com as fusões que o shinobi pode aprender (cresce ao selar); a aba Habilidades mostra a receita "A + B = Fusão" das fusões planejadas. Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
+| 33 | **NOVO (rodada 83):** tela pisca vermelho nas bordas ao levar dano + som de hit recebido. Ver em partida: o vermelho fica só nas bordas e cantos (centro limpo); golpe forte pisca mais que golpe leve; some em ~0,4 s; com muitos monstros batendo não vira estroboscópio; abaixo de 30% de vida fica uma vinheta fraca pulsando devagar; o som respeita o volume de efeitos e não empilha; desligar a opção em Gráficos tira a vinheta (o som continua). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
 ## Rodada 53 · Estado e próximos passos

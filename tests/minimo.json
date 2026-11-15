@@ -1,6 +1,6 @@
 {
   "_leia": "Piso de segurança dos testes por código. Ao criar testes, suba minimoDeTestes para o novo total; nunca abaixe para fazer o resultado passar. Cobertura vale para módulos de lógica pura importados direto pelos testes.",
-  "minimoDeTestes": 145,
+  "minimoDeTestes": 154,
   "cobertura": [
     {
       "arquivo": "src/game/altarRewards.ts",
@@ -22,6 +22,12 @@
     },
     {
       "arquivo": "src/game/weatherCast.ts",
+      "linhas": 100,
+      "funcoes": 100,
+      "ramificacoes": 90
+    },
+    {
+      "arquivo": "src/game/damageFeedback.ts",
       "linhas": 100,
       "funcoes": 100,
       "ramificacoes": 90

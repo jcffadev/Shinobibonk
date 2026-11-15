@@ -124,5 +124,6 @@ button { font: inherit; }
 
 .game-level .xp-counter { font-variant-numeric: tabular-nums; }
 
-.player-damage-vignette { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; background:radial-gradient(ellipse at center,rgba(196,17,31,.64) 24%,rgba(218,23,35,.88) 74%,#e62436 100%); }
+.player-damage-vignette { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; background:radial-gradient(ellipse at center,rgba(150,0,14,0) 48%,rgba(170,6,20,.32) 66%,rgba(205,14,30,.72) 84%,rgba(232,24,42,.95) 100%); }
+/* Rodada 83: vinheta só nas bordas e cantos (centro transparente, sem pegar cliques); opacidade vem de game/damageFeedback.ts. */
 @media (prefers-reduced-motion: reduce) { .player-damage-vignette { display:none; } }

@@ -70,7 +70,8 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/ui/BuildPlanner.tsx` | Plano pré-run: planejar ou deixar em casa técnicas, pílulas e itens. |
 | `src/ui/PoolFilters.tsx` | Filtros de busca, raridade, escola, elemento, forma, atributo e aldeia. |
 | `src/ui/SkillIcon.tsx` | Ícone desenhado por técnica. |
-| `src/audio/sfx.ts` | Sons procedurais via Web Audio. |
+| `src/audio/sfx.ts` | Sons procedurais via Web Audio. `playHurt` (rodada 83) é o som de hit recebido do jogador. |
+| `src/game/damageFeedback.ts` | Lógica pura do retorno de dano no jogador (rodada 83): intensidade do piscar vermelho nas bordas, limite de frequência, vinheta de vida baixa, volume de efeitos e anti-spam do som. O `GameCanvas` aplica o resultado em `.player-damage-vignette`. Testes em `tests/vinheta-de-dano.test.mjs`. |
 | `src/style.css`, `src/run-ui.css`, `src/sealing.css` | Hub, HUD/ficha/cartas e ritual de selamento/AUTO. |
 | `public/assets/shinobi-roster-v2.png` | Retratos base do elenco (grade 5×5). |
 | `public/assets/shinobi-evolutions-v2.png` | Retratos das formas evoluídas (grade 6×5). |

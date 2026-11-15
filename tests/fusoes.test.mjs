@@ -153,9 +153,20 @@ test('planejador: abre com o catálogo e a aba Habilidades mostra a receita da f
   for (const wired of [
     "const catalog=tab==='Fusões'?fusionCatalog(fusionOptions,familyOf(hero.id)):[];",
     'Fusões que você pode aprender · {catalog.length}',
-    'onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);}}',
+    'onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}',
+    'aria-pressed={done} disabled={!done&&fusionPlan.length>=4}',
     'fusionPlan.filter(pair=>pair.includes(name)).map(pair=>fusionRecipeText(pair,fusionName(pair)))',
     '{technique&&fusionRecipes(e.name).map(',
     '{fusionRecipes(focused.name).map(',
   ]) assert.ok(planner.includes(wired), wired);
+});
+
+test('modelo salvo de itens fica no planejamento, acima das Táticas salvas, e saiu da escolha do shinobi (rodada 82)', () => {
+  const planner = read('src/ui/BuildPlanner.tsx'), main = read('src/main.tsx');
+  const arsenal = planner.indexOf('<ArsenalControls {...arsenalControls}/>'), tactics = planner.indexOf('<details className="planner-tactics">');
+  assert.ok(arsenal > 0 && arsenal < tactics, 'seletor acima de Táticas salvas');
+  assert.ok(main.includes(' arsenalControls={arsenalControls} '), 'o planejamento recebe os controles');
+  const characters = main.slice(main.indexOf("page === 'characters'"), main.indexOf("page === 'build'"));
+  assert.ok(!characters.includes('<ArsenalControls'), 'não fica mais na escolha do shinobi');
+  assert.ok(!planner.includes('Salvar arsenal da conta'), 'sem o segundo botão de salvar');
 });

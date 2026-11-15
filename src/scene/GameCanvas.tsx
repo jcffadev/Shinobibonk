@@ -30,7 +30,8 @@ import { createDamageNumbers } from './damageNumbers';
 import { BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
 import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE, PLAYER_SIZE } from '../game/worldScale';
-import { playSfx, playTechniqueSound } from '../audio/sfx';
+import { playHurt, playSfx, playTechniqueSound } from '../audio/sfx';
+import { createDamageFlash, flashStrength, registerHit, vignetteOpacity } from '../game/damageFeedback';
 // Rodada 42 — trilha sonora: "The Raising Fighting Spirit" ao iniciar a luta contra a bijū (também está no pool de run).
 import { playBijuu } from '../audio/music';
 import { choiceCount, choiceUses, weaponPrice, jiraiyaRolls, prioritySlots, PRIORITY_WEIGHT } from '../game/preparation';
@@ -940,7 +941,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     runCleanups.push(()=>{for(const g of ringGeometries)g.dispose();});
     const addRing=(position:THREE.Vector3,color:string,size:number)=>{if(hiddenEffects)return;const ring=new THREE.Mesh(ringGeometryFor(size),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.9}));ring.rotation.x=Math.PI/2;ring.position.copy(position);ring.position.y=terrainHeight(position.x,position.z)+.18;scene.add(ring);effects.push(ring);};
     // Chefes (mega elites e guardiões): barra de vida 3D e técnicas do personagem com aviso no chão.
-    let playerSlow=0, damageFxUntil=0, damageFxStrength=0;
+    let playerSlow=0;
+    /** Rodada 83: piscar vermelho nas bordas + som de hit recebido (lógica pura em game/damageFeedback.ts). */
+    const damageFlash=createDamageFlash();
     const damageVignette=container.querySelector<HTMLElement>('.player-damage-vignette');
     /** Todo dano recebido passa aqui: escudo, evasão, armadura (+Postura de Pedra), espinhos, adrenalina, fumaça, gelo de Haku e ressurreição. */
     function damagePlayer(raw:number,attacker?:Enemy,slow=0){
@@ -952,9 +955,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       invulnerability=.25;timeSinceHit=0;
       if(hp<hpBefore){
         playerMotion.hurt();
-        playSfx('hurt');
-        damageFxStrength=Math.min(.69,.31+(hpBefore-hp)/Math.max(1,stats.maxHp)*1.4);
-        damageFxUntil=performance.now()+280;
+        registerHit(damageFlash,performance.now(),hpBefore-hp,stats.maxHp);
+        playHurt(flashStrength(hpBefore-hp,stats.maxHp));
         addRing(player.position,'#ff535a',.8);
       }
       if(slow>0){playerSlow=Math.max(playerSlow,slow);eventToast='Você foi atingido e está lento!';}
@@ -1643,8 +1645,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       playerMotion.setBodyScale(zoomReadability*(familyOf(heroId)==='choji'&&activeSetups.some(setup=>setup.name==='Jutsu de Expansão')?1.48:1));
       playerMotion.update(pausedRef.current||choiceData||roulette||sealing?0:dt,terrainHeight(player.position.x,player.position.z),hp,stats.maxHp,walking,viewBack,viewLeft,level,jumpHeight,sliding,walking&&diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration,sliding?Math.abs(facing.dot(v1))<.32:moveVertical===0&&moveHorizontal!==0);
       if(damageVignette){
-        const fade=Math.max(0,damageFxUntil-now)/280;
-        damageVignette.style.opacity=String(enabledRef.current?Math.min(1,fade)*damageFxStrength*(hiddenEffects ? .55 : 1):0);
+        damageVignette.style.opacity=String(vignetteOpacity(damageFlash,now,hp,stats.maxHp,{enabled:enabledRef.current&&!defeated&&currentSettings().damageFlash,hiddenEffects}));
       }
       player.material.fog=false;
       player.material.depthTest=true;

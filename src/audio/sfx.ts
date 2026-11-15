@@ -1,6 +1,7 @@
 import type { Technique } from '../game/heroes';
 import { familyOf } from '../game/heroes';
 import { currentSettings } from '../game/settings';
+import { hurtSoundAllowed, sfxGain } from '../game/damageFeedback';
 type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui' | 'explosion' | 'hurt';
 let lastHurt = -Infinity;
 let context: AudioContext | null = null;
@@ -18,10 +19,10 @@ function audio(): AudioContext | null {
 /** Efeitos curtos sintetizados no browser, sem gravações externas. */
 export function playSfx(kind: Sound) {
   const S = currentSettings(); if (S.muteInBackground && document.hidden) return;
-  const vol = Math.max(0, S.volume * S.sfxVolume); if (vol <= .001) return;
+  const vol = sfxGain(S); if (vol <= .001) return;
   if (kind === 'hurt') {
     const time = performance.now();
-    if (time - lastHurt < 320) return;
+    if (!hurtSoundAllowed(lastHurt, time)) return;
     lastHurt = time;
   }
   const ctx = audio(); if (!ctx) return;
@@ -49,6 +50,18 @@ export function playSfx(kind: Sound) {
   }
 }
 
+/**
+ * Som de "hit recebido" do personagem principal (rodada 83): os dois tons graves do `hurt` + um estalo curto de ruído
+ * que cresce com a força do golpe (`intensity` 0–1, a mesma do piscar vermelho). Respeita volume geral × efeitos e o
+ * limite de frequência de `hurtSoundAllowed` (vários monstros batendo não empilham sons).
+ */
+export function playHurt(intensity: number) {
+  const S = currentSettings(); if (S.muteInBackground && document.hidden) return;
+  const vol = sfxGain(S); if (vol <= .001) return;
+  if (!hurtSoundAllowed(lastHurt, performance.now())) return;
+  playSfx('hurt');
+  sweep(1100, 220, .11, (.05 + .09 * Math.min(1, Math.max(0, intensity))) * vol, true);
+}
 
 let lastVoice = -Infinity;
 const japanese: Record<string,string> = {

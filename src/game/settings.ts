@@ -22,6 +22,8 @@ export type GameSettings = {
   volume: number; sfxVolume: number; voiceVolume: number; musicVolume: number; voiceLanguage: 'pt' | 'ja'; muteInBackground: boolean;
   // Gráficos
   quality: Quality; fpsLimit: number; vsync: boolean; gpu: GpuChoice; hideMyAttacks: boolean; showTechniqueAreas: boolean; discreetDrops: boolean; pickupFx: PickupFx; showFps: boolean; damageNumbers: boolean;
+  /** Rodada 83: bordas da tela piscam em vermelho ao levar dano (+ vinheta fraca com vida baixa). Ligado por padrão. */
+  damageFlash: boolean;
   // Tela
   resolution: Resolution; renderer: Renderer;
   // Controles
@@ -47,7 +49,7 @@ export const clampZoom = (value: number) => Math.min(CAMERA_ZOOM.max, Math.max(C
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
   volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: MUSIC_DEFAULT, voiceLanguage: 'pt', muteInBackground: true,
-  quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
+  quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true, damageFlash: true,
   resolution: 'auto', renderer: 'directx',
   mouseSensitivity: 1, invertY: false, cameraDistance: CAMERA_ZOOM.default, autoUltimate: false,
   keys: { ...DEFAULT_KEYS },

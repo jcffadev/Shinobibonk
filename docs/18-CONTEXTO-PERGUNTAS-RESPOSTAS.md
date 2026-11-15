@@ -258,6 +258,12 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - A aba Fusões do planejamento lista as fusões possíveis com o pool do shinobi (`fusionCatalog` em `src/game/techniqueMerge.ts`), Kekkei Genkai primeiro; selar shinobis aumenta a lista.
 - A aba Habilidades mostra a receita (`fusionRecipeText`: "A + B = Fusão") nas técnicas das fusões planejadas.
 
+### Rodada 83 · 15/11/2026
+
+- Ao levar dano, as bordas e cantos da tela piscam em vermelho (intensidade pelo dano ÷ vida máxima, some em 0,42 s, no máximo um piscar novo a cada 0,36 s). Abaixo de 30% de vida fica uma vinheta fraca e pulsando. Lógica pura em `src/game/damageFeedback.ts`.
+- Som de hit recebido (`playHurt`): tons graves + estalo que cresce com o golpe, volume geral × efeitos, no máximo um a cada 0,32 s.
+- Opção "Tela vermelha ao levar dano" em Configurações → Gráficos, ligada por padrão. Visual PENDENTE DE VALIDAÇÃO E2E.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
