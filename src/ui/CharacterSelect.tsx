@@ -1,5 +1,4 @@
-import { formAt, portraitRegion } from '../game/evolution';
-import { lateralWalkArt } from '../game/directionalArt';
+import { menuPortraitRegion } from '../game/evolution';
 import { VillageEmblem, villageName } from './VillageEmblem';
 import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
@@ -46,13 +45,13 @@ type Filters = { search: string; village: string; element: string; org: string }
 const EMPTY: Filters = { search: '', village: '', element: '', org: '' };
 
 
-type PortraitRegion = ReturnType<typeof portraitRegion>;
+type PortraitRegion = ReturnType<typeof menuPortraitRegion>;
 type Framing = { x: number; y: number; scale: number };
 
 const loadedAtlases = new Map<string, Promise<HTMLImageElement>>();
-const measuredPortraits = new Map<string, Promise<Framing>>();
+const measuredPortraits = new Map<string, Promise<{ crop: Framing; body: Framing }>>();
 
-function measurePortrait(region: PortraitRegion): Promise<Framing> {
+function measurePortrait(region: PortraitRegion): Promise<{ crop: Framing; body: Framing }> {
   const key = [region.path, region.cols, region.rows, region.index].join(':');
   const cached = measuredPortraits.get(key);
   if (cached) return cached;
@@ -82,32 +81,35 @@ function measurePortrait(region: PortraitRegion): Promise<Framing> {
     const top = rows.findIndex(xs => xs.length > 1);
     let bottom=size-1;
     while(bottom>top&&rows[bottom].length<=1)bottom--;
-    if (bottom <= top) return { x: 50, y: 0, scale: 1 };
+    if (bottom <= top) return { crop: { x: 0, y: 0, scale: 1 }, body: { x: 0, y: 0, scale: 1 } };
     const bodyHeight = bottom - top + 1;
     const headRows = rows.slice(top + Math.floor(bodyHeight * .12), top + Math.ceil(bodyHeight * .36));
     const headXs = headRows.flat().sort((a, b) => a - b);
     const headX = headXs[Math.floor(headXs.length / 2)] ?? size / 2;
     const scale = Math.min(2.4, Math.max(1, size * 1.32 / bodyHeight));
-    return { x: 50 - headX / size * scale * 100, y: 13 - top / size * scale * 100, scale };
+    const bodyRows = rows.slice(top, bottom + 1).filter(xs => xs.length > 1);
+    const left = Math.min(...bodyRows.map(xs => xs[0]));
+    const right = Math.max(...bodyRows.map(xs => xs[xs.length - 1]));
+    const bodyScale = .90 * size / Math.max(bodyHeight, right - left + 1);
+    return {
+      crop: { x: 50 - headX / size * scale * 100, y: 13 - top / size * scale * 100, scale },
+      body: { x: 50 - (left + right + 1) / 2 / size * bodyScale * 100, y: 50 - (top + bottom + 1) / 2 / size * bodyScale * 100, scale: bodyScale },
+    };
   });
   measuredPortraits.set(key, frame);
   return frame;
 }
 
-function cardRegion(id:string) {
-  const side=lateralWalkArt(familyOf(id),formAt(id).level);
-  if(side)return {path:side.path,cols:4,rows:side.rows,index:side.row*4};
-  return portraitRegion(id);
-}
 
-export function CardPortrait({ id, decorative = false }: { id: string; decorative?: boolean }) {
-  const [framing, setFraming] = useState<Framing>();
+export function CardPortrait({ id, decorative = false, fullBody = false }: { id: string; decorative?: boolean; fullBody?:boolean }) {
+  const [measured, setMeasured] = useState<{ id: string; crop: Framing; body: Framing }>();
   useEffect(() => {
     let mounted = true;
-    measurePortrait(cardRegion(id)).then(value => { if (mounted) setFraming(value); }).catch(() => {});
+    measurePortrait(menuPortraitRegion(id)).then(value => { if (mounted) setMeasured({ id, ...value }); }).catch(() => {});
     return () => { mounted = false; };
   }, [id]);
-  const {path,cols,rows,index}=cardRegion(id);
+  const framing = measured?.id === id ? (fullBody ? measured.body : measured.crop) : undefined;
+  const {path,cols,rows,index}=menuPortraitRegion(id);
   return <span className="cs-cropped-sprite" data-framed={Boolean(framing)}
     style={framing ? { transform: `translate(${framing.x}%,${framing.y}%) scale(${framing.scale})` } : undefined}>
     <span className="hero-sprite roster-sprite" role={decorative?undefined:"img"} aria-hidden={decorative||undefined} aria-label={decorative?undefined:HERO_BY_ID[id]?.name} style={{backgroundImage:`url(${path})`,backgroundSize:`${cols*100}% ${rows*100}%`,backgroundPosition:`${cols===1?0:index%cols/(cols-1)*100}% ${rows===1?0:Math.floor(index/cols)/(rows-1)*100}%`}}/>

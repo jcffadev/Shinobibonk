@@ -128,7 +128,7 @@ export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeco
   // Rodada 49 — rampa do FINAL SWARM: teto em min(teto normal, 800) até +4 min (240 s), depois sobe linearmente
   // até 1600 (teto absoluto) a +7 min (420 s). Fora do swarm o teto normal (máx. 1600) se aplica.
   const cap=swarm>1?(()=>{const base=Math.min(baseCap,FINAL_SWARM.ramp800Cap);if(overtimeSeconds<=FINAL_SWARM.ramp800Seconds)return base;const t=Math.min(1,(overtimeSeconds-FINAL_SWARM.ramp800Seconds)/Math.max(1,FINAL_SWARM.rampSeconds-FINAL_SWARM.ramp800Seconds));return Math.min(FINAL_SWARM.maxEnemies,Math.floor(base+(FINAL_SWARM.maxEnemies-base)*t));})():baseCap;
-  const baseSpawn=Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier)*opening)*(swarm>1?1+(swarm-1)*swarmRamp:1);
+  const baseSpawn=Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier)*opening*(.8+.2*Math.min(1,minutes)))*(swarm>1?1+(swarm-1)*swarmRamp:1);
   const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):baseSpawn;
   return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,minutes/1.5)*.19*(tier-1)/.4)*curse*swarm,damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,

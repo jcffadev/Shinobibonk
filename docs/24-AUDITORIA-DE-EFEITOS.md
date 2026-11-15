@@ -209,3 +209,19 @@ A coluna de implementação descreve o caminho verificado no código. As notas d
 | Bijūdama | Bijū e jinchūriki · chakra | Esfera densa se acumula, viaja e amplia área na explosão. [Narutopedia](https://naruto.fandom.com/wiki/Tailed_Beast_Ball) | Malha própria e fase de impacto. Usar junto à arte e à trajetória do chefe. |
 
 O guia de trabalho fica em [animar-jutsu-webgl](../skills/animar-jutsu-webgl/SKILL.md).
+
+## Rodada 68 · Auditoria mecânica e de arte · 15/11/2026
+
+O catálogo inspecionado contém 221 técnicas de pool distintas e 112 nomes de ultimates. O limite de chance inicial e a curva de crítico são transversais. A revisão de fidelidade por técnica continua em lotes. Estado das referências consultadas nesta rodada:
+
+| Caso | Obra e referência | Aplicação |
+| --- | --- | --- |
+| Banshō Ten’in | [Pain contra Kakashi](https://naruto-official.com/anime/naruto2/list/01_603) e [cap. 435](https://www.viz.com/shonenjump/naruto-chapter-435/chapter/4924) | Onda circular com atração, sem bônus próprio de crítico. |
+| Chibaku Tensei / Shinra Tensei | [Coluna oficial da invasão de Pain](https://naruto-official.com/en/news/01_1321) | Campo puxa para o núcleo; Shinra repele a partir do conjurador. |
+| Nara e Yamanaka | [Shikamaru](https://naruto-official.com/en/news/01_1910) e [Guerra Shinobi](https://naruto-official.com/en/news/01_1327) | Técnicas de sombra e transferência mental classificadas como Ninjutsu nas entradas corrigidas. |
+| Mei | [Yōton corrosivo](https://naruto.fandom.com/wiki/Lava_Release%3A_Melting_Apparition_Technique) e [Futton corrosivo](https://naruto.fandom.com/wiki/Boil_Release%3A_Skilled_Mist_Technique) | Torrente direcional e dano contínuo da névoa. Queimadura segue progressão. |
+| Hyōton / Mokuton | [Gelo](https://naruto.fandom.com/wiki/Ice_Release) e [Madeira](https://naruto.fandom.com/wiki/Wood_Release) | Água + Vento congela em área; Terra + Água imobiliza no bosque. |
+| Ranton / Shakuton | [Circo Laser](https://naruto.fandom.com/wiki/Storm_Release%3A_Laser_Circus) e [Shakuton](https://naruto.fandom.com/wiki/Scorch_Release) | Raio + Água dá feixes; Fogo + Vento dá esferas de calor. O par do Shakuton se apoia na fusão mostrada no mangá. |
+| Dōjutsu | [Mangekyō](https://naruto.fandom.com/wiki/Mangeky%C5%8D_Sharingan) e [Shisui](https://naruto-official.com/en/news/01_1625) | Tomoe e lâminas próprios de cada usuário. Arte vetorial original no padrão dos ícones. |
+
+Receitas de linhagem não elemental e pares apenas propostos pela wiki ficam para revisão; não surgem automaticamente pelo nome do elemento. A arte da execução usa fases de malha e partículas. Cada animação autoral e folha de selos ainda precisa de conferência visual em missão.

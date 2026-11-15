@@ -126,5 +126,5 @@ button { font: inherit; }
 
 .game-level .xp-counter { font-variant-numeric: tabular-nums; }
 
-.player-damage-vignette { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; box-shadow:inset 0 0 clamp(42px, 12vw, 170px) #cf2525; }
+.player-damage-vignette { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; background:radial-gradient(ellipse at center,rgba(196,17,31,.64) 24%,rgba(218,23,35,.88) 74%,#e62436 100%); }
 @media (prefers-reduced-motion: reduce) { .player-damage-vignette { display:none; } }

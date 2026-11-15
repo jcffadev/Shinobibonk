@@ -150,3 +150,7 @@ Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em com
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 A Home tenta iniciar a trilha ao carregar. Táticas de Missão e Arsenal de Missão guardam planos e listas por shinobi. Na missão, o Mega Elite derrotado espera interação com E a até 10 m. Veja [os controles atuais](docs/00-LEIA-PRIMEIRO.md) e [o registro da rodada](CHANGELOG.md).
+
+### Ajustes de 15/11/2026
+
+O ranking usa armazenamento local por padrão. A [integração Netlify/PostgreSQL](docs/development/RANKING-E-CLAS.md) pode ser habilitada ao provisionar o serviço. O planejador mostra fusões elementais elegíveis, o tipo e a progressão de cada técnica. Consulte o [changelog](CHANGELOG.md) para o HUD e o balanceamento.

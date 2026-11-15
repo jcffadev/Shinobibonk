@@ -1,3 +1,4 @@
+import { runningArt } from './runningArt.ts';
 import { ROSTER_EXPANSION, expansionSheet } from './rosterExpansion.ts';
 import { directionalArt } from './directionalArt.ts';
 import { HERO_BY_ID, HEROES, NARUTO_FORMS, familyOf } from './heroes.ts';
@@ -63,4 +64,15 @@ export function portraitRegion(versionId:string,level=1){
  if(id==='naruto')return {path:'/assets/shinobi-roster-v2.png',cols:5,rows:5,index:level<10?0:level<25?22:level<50?23:24};
  if(form.level>1)return {path:'/assets/shinobi-evolutions-v2.png',cols:6,rows:5,index:Math.max(0,evolvedCells.indexOf(id+'-'+form.level))};
  return {path:'/assets/shinobi-roster-v2.png',cols:5,rows:5,index:Math.max(0,HEROES.findIndex(h=>h.id===id))};
+}
+
+export function menuPortraitRegion(id:string) {
+ const family=familyOf(id), form=formAt(id).level;
+ if(family==='naruto'&&form===1)return {path:'/assets/naruto-academia-diagonal-v1.png',cols:4,rows:2,index:0};
+ if(id==='killer-b'){
+   const running=runningArt(id);
+   if(running)return {path:running.path,cols:4,rows:running.rows,index:(running.firstRow+3)*4};
+ }
+ const sheet=directionalArt(family,form);
+ return sheet?{path:sheet.path,cols:4,rows:sheet.rows,index:(sheet.firstRow??0)*4}:portraitRegion(id);
 }

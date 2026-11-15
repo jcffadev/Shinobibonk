@@ -6,7 +6,7 @@ Atualizado em 11/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 `src/game/runningArt.ts` indexa as folhas de corrida por ID da versão jogável. `playerMotion` seleciona uma das cinco vistas e a primeira fileira da versão. A textura carrega no primeiro deslocamento. Ações específicas continuam nos atlas de combate e acrobacia.
 
-**Atualização de 14/11/2026.** `cardinalWalkArt` fornece W/S, `lateralWalkArt` fornece A/D e as folhas direcionais fornecem as diagonais. `playerMotion` escolhe a vista e conserva a fase. O jogador, os Mega Elites e os ajudantes usam esse controlador e a base da câmera. `playerFocus.ts` calcula sobreposição, e `enemyRenderer.ts` separa as poucas entidades translúcidas em lotes. A seleção e a ficha compartilham o `CardPortrait`, que usa a fileira de perfil. [Cobertura das vistas](development/COBERTURA-DE-VISTAS.md).
+**Atualização de 14/11/2026.** `cardinalWalkArt` fornece W/S, `lateralWalkArt` fornece A/D e as folhas direcionais fornecem as diagonais. `playerMotion` escolhe a vista e conserva a fase. O jogador, os Mega Elites e os ajudantes usam esse controlador e a base da câmera. `playerFocus.ts` calcula sobreposição, e `enemyRenderer.ts` separa as poucas entidades translúcidas em lotes. A seleção e a ficha compartilham o `CardPortrait`. O recorte de três quartos e a centralização pela silhueta foram atualizados em 15/11. [Cobertura das vistas](development/COBERTURA-DE-VISTAS.md).
 
 `directionalArt.ts` registra as folhas por shinobi e nível da forma. Os 24 shinobis jogáveis têm caminhada com quatro quadros de frente e quatro de costas por forma, com espelhamento em X. A pose parada continua usando o sprite de `portraitRegion`, referência para a caminhada. Nas folhas que reúnem formas, `firstRow` aponta para o primeiro quadro de frente da dupla de fileiras. A textura é carregada e reutilizada por caminho durante a missão. `terrainArt.ts` define a cadeia de montanhas fora da área jogável e o céu em gradiente. `choiceCount` concentra o teto de quatro ofertas. A lista da roleta exclui pílulas dos novos giros.
 
@@ -377,3 +377,7 @@ Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em com
 ## Elenco expandido e atlas de efeitos (rodada 53)
 
 `rosterExpansion.ts` fornece kits, versões, passivas, missões e atlas. `directionalArt.ts` e `playerMotion.ts` aplicam os quadros em jogador, ajudantes e inimigos de elenco. `techniqueVisualProfiles.ts` liga os motivos ao atlas. `techniqueEffects.ts` usa os mesmos efeitos no campo e na prévia, com detalhes 3D e partículas limitadas. `currentItemName` migra itens de reviver nas runs salvas.
+
+## 15/11/2026 · Ranking online, casting e fusões
+
+O cliente usa src/game/onlineRanking.ts e a função Netlify em netlify/functions/ranking.mjs. PostgreSQL contém registros validados e projeções transitórias. No jogo, src/game/combat.ts centraliza chance por nível, src/game/techniqueMerge.ts define receitas e src/game/dojutsu.ts identifica o olho usado em cada fase. GameCanvas integra gravidade, VFX e acertos. A câmera mantém a inclinação comandada e o relevo pode encobrir o jogador pela profundidade.

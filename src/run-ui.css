@@ -77,3 +77,5 @@
 .run-prices b{color:#ffce72}
 
 .ichiraku-cost{display:inline-block;border-radius:999px;padding:4px 9px;background:#29211b;color:#ffd475;font-weight:800}
+
+.ichiraku-forget-action{display:block;margin:10px 24px 2px 0;padding:8px 12px;border:1px solid #ef8a75;border-radius:8px;background:linear-gradient(180deg,#a8392d,#74261e);color:#fff1e8;font-weight:800;text-align:center}.level-choice-card:hover .ichiraku-forget-action,.level-choice-card:focus-visible .ichiraku-forget-action{background:linear-gradient(180deg,#be4538,#912c22)}

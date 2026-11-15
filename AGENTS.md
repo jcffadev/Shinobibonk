@@ -14,7 +14,7 @@ Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs
 
 ## Skills de arte e movimento
 - Para criar ou integrar arte, siga `skills/criar-arte-shinobibonk/SKILL.md`; para movimento, pulo, dash e animação dos shinobis, siga `skills/movimentar-shinobi/SKILL.md`.
-- Todo novo shinobi jogável entra com repouso, caminhada direcional, ataque, pulo e dash/esquiva testados em cada versão. O deslocamento em WASD usa a corrida com braços para trás, em cinco vistas com quatro quadros cada. Seleção e ficha compartilham o retrato em perfil da versão. Para efeitos siga `skills/animar-jutsu-webgl/SKILL.md`. Use a arte estática da forma e as técnicas do personagem como referências. Na revisão do elenco existente, preserve Naruto Academia e Manto da Kurama conforme pedido do usuário.
+- Todo novo shinobi jogável entra com repouso, caminhada direcional, ataque, pulo e dash/esquiva testados em cada versão. O deslocamento em WASD usa a corrida com braços para trás, em cinco vistas com quatro quadros cada. Seleção, ficha e ranking compartilham o retrato em três quartos da versão. Ajuste o centro pela silhueta do quadro. Para efeitos siga `skills/animar-jutsu-webgl/SKILL.md`. Use a arte estática da forma e as técnicas do personagem como referências. Na revisão do elenco existente, preserve Naruto Academia e Manto da Kurama conforme pedido do usuário.
 - Claude Code e Codex trabalham no mesmo repositório: antes de começar, rode `git status`/`git pull` e leia `docs/13-PENDENCIAS-PARA-CONTINUAR.md` (fila em andamento). Ao terminar, documente e faça commit + push para o outro agente continuar na mesma página.
 
 ## Política de testes
@@ -33,6 +33,8 @@ Não execute testes E2E com navegador sem autorização explícita.
 - A política central é a referência: não copie as regras dela para outros documentos.
 
 ## Publicação no GitHub
+
+- Claude Code, Codex e Qwen seguem skills/proteger-publicacao/SKILL.md em mudanças de contas, ranking, credenciais, banco, hospedagem e instalador.
 - Ao fim de **toda** tarefa que alterou arquivos, depois de documentar e verificar, siga `skills/publicar-github/SKILL.md`: commit em português e push para `origin main` (`https://github.com/jcffadev/Shinobibonk.git`). Nunca use force push. Nunca publique credenciais (ex.: `Feedback da versão.txt`, que está no `.gitignore`).
 
 ## Material do jogo de referência (zero rastro)
@@ -55,9 +57,9 @@ Não execute testes E2E com navegador sem autorização explícita.
 ## Invariantes de design
 - 4 habilidades comuns em slots 1–4, ativadas **somente automaticamente**, slot 4 desbloqueável na progressão permanente.
 - Ultimate natural disponível desde nível 1: R manual; a **tecla Y é obrigatória** e alterna o uso automático (o selo AUTO embutido no botão R faz o mesmo por clique). Não remover Y. A recarga é passiva por tempo e pode receber aceleradores por drop azul (orbe de chakra); Chakra também é usado por ninjas Taijutsu. Itens não concedem Chakra diretamente.
-- Drops no chão devem ser distinguíveis (decisão do usuário em 06/11/2026): Chakra/carga da Ultimate = orbe azul; XP = essência roxa (maior para elite/mega elite/guardião); Ryu = moeda dourada com 両; bolinho de arroz = cura 35% do HP máximo (até 5% por abate); pílula rosa; item laranja.
+- Drops no chão devem ser distinguíveis (decisão do usuário em 06/11/2026): Chakra/carga da Ultimate = orbe azul; XP = essência roxa (maior para elite/mega elite/guardião); Ryu = moeda dourada com 両; bolinho de arroz = cura 35% do HP máximo (até 2,5% por abate); pílula rosa; item laranja.
 - M abre mapa completo; minimapa permanente superior direito; eventos só são registrados após serem **vistos em tela**. Conforme orientação mais recente do usuário, Tab abre o mapa rápido e P abre ficha/build/itens/pool.
-- HUD: nível superior esquerdo, pílulas acima das habilidades, inventário com ícones/quantidades inferior direito.
+- HUD: nível superior esquerdo, pílulas acima das habilidades, inventário com ícones/quantidades inferior esquerdo; habilidades e pílulas no canto inferior direito.
 - 3 shinobi de suporte base +1 por item da run +1 passiva permanente comprada com Lamens = máximo atual 5, sem contar herói.
 - Lamens compra desbloqueios pré-run de itens não comuns e níveis da árvore permanente; desbloquear item só o adiciona ao pool. Lamens são ganhos **só pelo desempenho da run**; Ryu da run, itens e pílulas (inclusive a Pílula do Mercador) não geram Lamens.
 - Level-up oferece **somente técnicas e pílulas**, nunca itens. Técnicas todas no máximo → só pílulas; pílulas todas no limite → só técnicas. Itens só por recompensas (kunai, shuriken, eventos).

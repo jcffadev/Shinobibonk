@@ -8,13 +8,14 @@ import type { WorldSnapshot } from '../scene/GameCanvas';
 import type { LamenReward } from '../game/rewards';
 import '../summary.css';
 
+import type { ResultStatus } from '../game/onlineRanking';
 import type { LocalRank } from '../game/ranking';
 
 // Tela de estatísticas pós-run (somente leitura). Deriva tudo do WorldSnapshot final.
 const fmt=(value:number,digits=1)=>value.toLocaleString('pt-BR',{maximumFractionDigits:digits});
 const clock=(seconds:number)=>`${Math.floor(seconds/60)}:${String(Math.floor(seconds%60)).padStart(2,'0')}`;
 
-export function RunSummary({world,hero,mission,reward=null,rank=null,onRetry,onPrepare,onMenu}:{world:WorldSnapshot;hero:{id:string;name:string};mission:string;reward?:LamenReward|null;rank?:LocalRank|null;onRetry:()=>void;onPrepare:()=>void;onMenu:()=>void}){
+export function RunSummary({world,hero,mission,reward=null,rank=null,onlineRankStatus,onRetry,onPrepare,onMenu}:{world:WorldSnapshot;hero:{id:string;name:string};mission:string;reward?:LamenReward|null;rank?:LocalRank|null;onlineRankStatus?:ResultStatus|'sending';onRetry:()=>void;onPrepare:()=>void;onMenu:()=>void}){
   const elapsed=Math.max(0,world.elapsed);
   const dps=elapsed>0?world.totalDamage/elapsed:0;
   const allDamage=world.totalDamage+world.allyDamage;
@@ -47,6 +48,7 @@ export function RunSummary({world,hero,mission,reward=null,rank=null,onRetry,onP
           <li className="mult"><span>Dificuldade {mission}</span><small>subtotal {fmt(reward.subtotal,0)} × {fmt(reward.multiplier,2)}</small><b>= {fmt(Math.round(reward.subtotal*reward.multiplier),0)}</b></li></ul>
       </section>}
       <div className="summary-body">
+        {onlineRankStatus&&<p className="summary-col summary-ranking" role="status">{({sending:'Enviando resultado ao ranking…', accepted:'Resultado registrado na temporada.',review:'Resultado aguardando revisão do ranking.',queued:'Resultado pendente. O jogo tentará enviar novamente.',invalid:'O servidor não aceitou o resultado desta partida.'})[onlineRankStatus]}</p>}
         {rank&&<section className="summary-col summary-ranking"><h2 className="stripe gold">Ranking local <small>Posição {rank.position} nesta região e dificuldade</small></h2><ol>{rank.top.map((entry,index)=><li key={index}><b>{HERO_BY_ID[entry.heroId]?.name??entry.heroId}</b><span>{entry.victory?'Vitória':'Zona '+entry.zone} · {entry.kills} abates · {clock(entry.elapsed)}</span></li>)}</ol></section>}
         <section className="summary-col">
           <h2 className="stripe blue">Dano por técnica <small>{damageRows.length} fontes</small></h2>

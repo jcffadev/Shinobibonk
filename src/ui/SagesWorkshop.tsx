@@ -1,3 +1,4 @@
+import { kekkeiFusion } from '../game/techniqueMerge';
 import { useState } from 'react';
 import type { WorldSnapshot } from '../scene/GameCanvas';
 import { HeroPortrait, RunSheetButton } from './RunSheet';
@@ -22,7 +23,7 @@ export function SagesWorkshop({world,heroId,onSheet}:{world:WorldSnapshot;heroId
     const [a,b]=card.merge!.names;
     return <button key={card.id} className="sages-pair" aria-label={(kind==='fuse'?'Fundir ':'Combinar ')+a+' com '+b} onClick={()=>window.dispatchEvent(new CustomEvent('shinobi-choose',{detail:{index,id:card.id}}))}>
      <div className="sages-pair-art"><SkillIcon heroId={heroId} name={a}/><span>+</span><SkillIcon heroId={heroId} name={b}/></div>
-     <div><h2>{a}</h2><h3>{b}</h3><p>{kind==='fuse'?'Nova técnica · afixos somados · nível 1':'Duas técnicas · um espaço · ×1,5 de dano'}</p></div><kbd>{index+1}</kbd>
+     <div><h2>{kekkeiFusion(card.name)?.name??a}</h2><h3>{kekkeiFusion(card.name)?a+' + '+b:b}</h3><p>{kekkeiFusion(card.name)?card.description:kind==='fuse'?'Nova técnica · afixos somados · nível 1':'Duas técnicas · um espaço · ×1,5 de dano'}</p></div><kbd>{index+1}</kbd>
     </button>;
    }):<p className="sages-empty">Aprenda duas técnicas de ataque para usar a oficina.</p>}
   </div>

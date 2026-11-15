@@ -10,10 +10,10 @@ import { PillStatPreview } from './PillStatPreview';
 import { techniquePool, HERO_BY_ID, heroAffinity, type PoolTechnique, type Technique } from '../game/heroes';
 import { sealedHeroes, researchProgress } from '../game/account';
 import { PRESET_LIMIT } from '../game/missionBag';
-import { mergedTechnique } from '../game/techniqueMerge';
+import { kekkeiFusion, kekkeiRecipe, mergedTechnique } from '../game/techniqueMerge';
 /** Origem da técnica no pool (regra do usuário: 1–2 únicas por shinobi; compartilhadas por vila/elemento; únicas de outros só após selar). */
 function sourceText(t:PoolTechnique){const who=HERO_BY_ID[t.origin]?.name??t.origin;if(t.source==='kit')return 'Kit próprio.';if(t.source==='basica')return 'Básica da Academia (sempre disponível).';if(t.source==='vila')return 'Compartilhada · mesma vila ('+who+').';if(t.source==='elemento')return 'Compartilhada · mesmo elemento '+t.element+' ('+who+').';return t.locked?'Única de '+who+' · bloqueada até selar '+who+' pela 1ª vez.':'Única de '+who+' (selado).';}
-import { attackCooldown,setupNumbers,itemSchools,itemElement,itemAttribute,techniqueCritical,techniqueDetail,techniqueStatusText } from '../game/combat';
+import { attackCooldown,setupNumbers,itemSchools,itemElement,itemAttribute,techniqueCritical,techniqueDetail,techniqueSchool,techniqueStatusText } from '../game/combat';
 import { ItemIcon } from './RunSheet';
 import { SkillIcon } from './SkillIcon';
 import { ELEMENT_COLOR } from './CharacterSelect';
@@ -39,7 +39,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  const itemsBeforeRarity=ITEMS.filter(i=>(!filters.school||itemSchools(i).includes(filters.school))&&(!filters.element||itemElement(i)===filters.element)&&(!filters.attribute||itemAttribute(i)===filters.attribute)&&matchesSearch(i.name+' '+i.description,filters.search));
  const excluded=[...techniques.filter(t=>archivedSkills.includes(t.name)&&t.name!==hero.skills[0]).map(t=>t.name),...ITEMS.filter(i=>archivedItems.includes(i.id)).map(i=>i.name)];
  const favorites=planned.filter(name=>!excluded.includes(name)&&(techniques.some(t=>t.name===name)||PILL_NAMES.includes(name)||ITEMS.some(i=>i.name===name)));
- const entries=tab==='Itens'?ITEMS.filter(i=>(!rarities.length||rarities.includes(i.rarity))&&(!filters.school||itemSchools(i).includes(filters.school))&&(!filters.element||itemElement(i)===filters.element)&&(!filters.attribute||itemAttribute(i)===filters.attribute)).map(i=>({id:i.id,name:i.name,description:i.description,archived:archivedItems.includes(i.id),unlocked:i.rarity==='Comum'||unlocked.includes(i.id),locked:false,toggle:undefined,icon:<ItemIcon name={i.name}/>,rarity:i.rarity})):tab==='Pílulas'?PILL_NAMES.map(name=>({id:name,name,description:pillDescription(name),archived:false,unlocked:true,locked:false,toggle:undefined,icon:<ItemIcon name={name}/>,rarity:`Pílula · máximo ${PILL_MAX} níveis`})):techniques.filter(t=>(!filters.school||t.school===filters.school)&&(!filters.shape||t.shape===filters.shape)&&(!filters.element||t.element===filters.element)).map(t=>({id:t.name,name:t.name,description:(t.setup?techniqueDetail(t)+' Nv. '+t.unlockLevel+'. ':t.school+' · '+t.element+' · '+t.shape+' · Nv. '+t.unlockLevel+'. '+(t.status?'Pode '+t.status.toLowerCase()+'. ':''))+sourceText(t)+(t.element!=='Neutro'&&t.element===heroAffinity(hero.id)?' Natureza do shinobi: ×1,5 de dano.':'')+(t.source!=='kit'&&!t.locked?' Pesquisa '+Math.round(researchOf(t)*100)+'% (aprenda/melhore na run; 100% libera planejar).':''),archived:archivedSkills.includes(t.name),unlocked:!t.locked&&researchOf(t)>=1,locked:t.name===hero.skills[0]||t.locked||(!archivedSkills.includes(t.name)&&archivedSkills.length>=archiveLimit),toggle:()=>toggleSkill(t.name),icon:<SkillIcon heroId={hero.id} name={t.name}/>,rarity:t.name===hero.skills[0]?'Inicial obrigatória':t.locked?'🔒 Única bloqueada':t.source==='kit'?'Kit · técnica automática':t.source==='basica'?'Básica · Academia':t.source==='única'?'Única de outro shinobi · '+Math.round(researchOf(t)*100)+'%':'Compartilhada · '+Math.round(researchOf(t)*100)+'%'}));
+ const entries=tab==='Itens'?ITEMS.filter(i=>(!rarities.length||rarities.includes(i.rarity))&&(!filters.school||itemSchools(i).includes(filters.school))&&(!filters.element||itemElement(i)===filters.element)&&(!filters.attribute||itemAttribute(i)===filters.attribute)).map(i=>({id:i.id,name:i.name,description:i.description,archived:archivedItems.includes(i.id),unlocked:i.rarity==='Comum'||unlocked.includes(i.id),locked:false,toggle:undefined,icon:<ItemIcon name={i.name}/>,rarity:i.rarity})):tab==='Pílulas'?PILL_NAMES.map(name=>({id:name,name,description:pillDescription(name),archived:false,unlocked:true,locked:false,toggle:undefined,icon:<ItemIcon name={name}/>,rarity:`Pílula · máximo ${PILL_MAX} níveis`})):techniques.filter(t=>(!filters.school||techniqueSchool(t)===filters.school)&&(!filters.shape||t.shape===filters.shape)&&(!filters.element||t.element===filters.element)).map(t=>({id:t.name,name:t.name,description:(t.setup?techniqueDetail(t)+' Nv. '+t.unlockLevel+'. ':techniqueSchool(t)+' · '+t.element+' · '+t.shape+' · Nv. '+t.unlockLevel+'. '+(t.status?'Pode '+t.status.toLowerCase()+'. ':''))+sourceText(t)+(t.element!=='Neutro'&&t.element===heroAffinity(hero.id)?' Natureza do shinobi: ×1,5 de dano.':'')+(t.source!=='kit'&&!t.locked?' Pesquisa '+Math.round(researchOf(t)*100)+'% (aprenda/melhore na run; 100% libera planejar).':''),archived:archivedSkills.includes(t.name),unlocked:!t.locked&&researchOf(t)>=1,locked:t.name===hero.skills[0]||t.locked||(!archivedSkills.includes(t.name)&&archivedSkills.length>=archiveLimit),toggle:()=>toggleSkill(t.name),icon:<SkillIcon heroId={hero.id} name={t.name}/>,rarity:t.name===hero.skills[0]?'Inicial obrigatória':t.locked?'🔒 Única bloqueada':t.source==='kit'?'Kit · técnica automática':t.source==='basica'?'Básica · Academia':t.source==='única'?'Única de outro shinobi · '+Math.round(researchOf(t)*100)+'%':'Compartilhada · '+Math.round(researchOf(t)*100)+'%'}));
  const visible=entries.filter(e=>matchesSearch(e.name+' '+e.description,filters.search)&&(view==='all'||(view==='archived'?e.archived:planned.includes(e.name)&&!e.archived)));
  const focused=visible.find(e=>e.id===selected)??visible[0];
  const preview=tab==='Habilidades'?techniques.find(t=>t.name===focused?.name&&!t.locked):undefined;
@@ -49,6 +49,12 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  // Rodada 39 — Fusões: candidatos seguem a regra da Oficina dos Sapos Sábios (sem setup, sem bloqueio).
  // A execução continua na run (1 uso por zona); aqui apenas planeja o par e marca o pool da run com ⚗.
  const fusionOptions=techniques.filter(t=>!t.setup&&!t.locked&&!archivedSkills.includes(t.name));
+ const [fusionSearch,setFusionSearch]=useState('');
+ const suggested=new Map<string,[string,string]>();
+ if(tab==='Fusões')for(const [i,a] of fusionOptions.entries())for(const b of fusionOptions.slice(i+1)){
+   const recipe=kekkeiRecipe(a,b);
+   if(recipe&&!suggested.has(recipe.name)&&matchesSearch(recipe.name+' '+a.name+' '+b.name,fusionSearch))suggested.set(recipe.name,[a.name,b.name]);
+ }
  const candidate:[string,string]=[fusionA,fusionB];
  const canPreview=fusionOptions.some(t=>t.name===fusionA)&&fusionOptions.some(t=>t.name===fusionB)&&fusionA!==fusionB;
  const duplicate=fusionPlan.some(pair=>pair.includes(fusionA)&&pair.includes(fusionB));
@@ -106,19 +112,28 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
     </section>
    </div>
   </details>
-  {tab!=='Fusões'&&<PoolFilters value={filters} onChange={setFilters} facets={tab==='Itens'?{school:['Taijutsu','Ninjutsu','Genjutsu'],element:ITEMS.map(itemElement),attribute:ITEMS.map(itemAttribute)}:tab==='Habilidades'?{school:techniques.map(t=>t.school),element:techniques.map(t=>t.element),shape:techniques.map(t=>t.shape)}:{}}/>}
+  {tab!=='Fusões'&&<PoolFilters value={filters} onChange={setFilters} facets={tab==='Itens'?{school:['Taijutsu','Ninjutsu','Genjutsu'],element:ITEMS.map(itemElement),attribute:ITEMS.map(itemAttribute)}:tab==='Habilidades'?{school:techniques.map(techniqueSchool),element:techniques.map(t=>t.element),shape:techniques.map(t=>t.shape)}:{}}/>}
   {tab==='Itens'&&<RarityFilter selected={rarities} onChange={setRarities} counts={rarityCounts(itemsBeforeRarity)}/>}
   {tab==='Fusões'
    ? <section className="planner-fusions" aria-label="Fusões de técnicas">
      <div className="planner-fusion-toolbar">
        <div><h2>Fusões de técnicas</h2><p>A Oficina dos Sapos Sábios permite fundir ou combinar uma vez por zona.</p></div>
-       <div className="build-fusion-form">
-        <select value={fusionA} onChange={e=>setFusionA(e.target.value)} aria-label="Primeira técnica da fusão"><option value="">Primeira técnica…</option>{fusionOptions.filter(t=>t.name!==fusionB).map(t=><option key={t.name} value={t.name}>{t.name}</option>)}</select>
-        <span aria-hidden="true">+</span>
-        <select value={fusionB} onChange={e=>setFusionB(e.target.value)} aria-label="Segunda técnica da fusão"><option value="">Segunda técnica…</option>{fusionOptions.filter(t=>t.name!==fusionA).map(t=><option key={t.name} value={t.name}>{t.name}</option>)}</select>
-        <button type="button" disabled={!canPreview||duplicate||fusionPlan.length>=4} onClick={()=>{addFusionPair(...candidate);setFusionA('');setFusionB('');}}>Planejar par ({fusionPlan.length}/4)</button>
-       </div>
+       <button type="button" className="planner-fusion-save" disabled={!canPreview||duplicate||fusionPlan.length>=4}
+         onClick={()=>{addFusionPair(...candidate);setFusionA('');setFusionB('');}}>{duplicate?'Par já planejado':'Planejar fusão'} ({fusionPlan.length}/4)</button>
      </div>
+     <label className="fusion-search"><span>Buscar técnica ou fusão</span><input type="search" value={fusionSearch} onChange={e=>setFusionSearch(e.target.value)} placeholder="Ex. Gelo, Raio, Circo Laser"/></label>
+     <h3>{fusionA&&!fusionB?'Escolha a segunda técnica':'Escolha as duas técnicas'}</h3>
+     <div className="fusion-ingredient-grid" aria-label="Técnicas para fundir">
+       {fusionOptions.filter(t=>matchesSearch(t.name+' '+t.element+' '+techniqueSchool(t),fusionSearch)||t.name===fusionA||t.name===fusionB).map(t=><button type="button" className="fusion-ingredient" key={t.name} aria-pressed={t.name===fusionA||t.name===fusionB}
+         onClick={()=>{if(t.name===fusionA){setFusionA(fusionB);setFusionB('');}
+           else if(t.name===fusionB)setFusionB('');
+           else if(!fusionA)setFusionA(t.name);
+           else setFusionB(t.name);}}>
+         <SkillIcon heroId={hero.id} name={t.name}/><span><b>{t.name}</b><small>{t.element} · {t.shape}</small>
+         <small>{techniqueStatusText(t)}</small></span>
+       </button>)}
+     </div>
+     {!canPreview&&suggested.size>0&&<><h3>Kekkei Genkai disponíveis para planejar</h3><div className="planner-kekkei-grid">{Array.from(suggested,([name,pair])=><div key={name}><FusionCard heroId={hero.id} pair={pair} kind="fuse" pool={techniques}/><button className="planner-fusion-save" type="button" onClick={()=>{setFusionA(pair[0]);setFusionB(pair[1]);}}>Ver o par</button></div>)}</div></>}
      {canPreview&&<div className="fusion-comparison">
        <FusionCard heroId={hero.id} pair={candidate} kind="fuse" pool={techniques}/>
        <FusionCard heroId={hero.id} pair={candidate} kind="combine" pool={techniques}/>
@@ -143,15 +158,16 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
           const technique=tab==='Habilidades'?techniqueByName.get(e.name):undefined;
           return <article key={e.id} className={['pool-card','planner-option',planned.includes(e.name)?'planned':'',e.archived?'archived':'',focused?.id===e.id?'focused':'',tab==='Itens'?'rarity-'+e.rarity.toLowerCase():''].join(' ')}>
             <button type="button" className="build-entry" aria-pressed={focused?.id===e.id} onClick={()=>setSelected(e.id)}>
-              {e.icon}<span><b>{e.name}</b><small>{technique?`Aprende no Nv. ${technique.unlockLevel} · ${technique.element} · ${technique.shape}`:tab==='Itens'?<><PlannerRarity rarity={ITEM_BY_NAME[e.name].rarity} max={ITEM_BY_NAME[e.name].max}/></>:estado(e)}</small></span>
+              {e.icon}<span><b>{e.name}</b><small>{technique?`Aprende no Nv. ${technique.unlockLevel} · ${techniqueSchool(technique)} · ${technique.element} · ${technique.shape}`:tab==='Itens'?<><PlannerRarity rarity={ITEM_BY_NAME[e.name].rarity} max={ITEM_BY_NAME[e.name].max}/></>:estado(e)}</small></span>
             </button>
             {technique?<small className="planner-option-state">{e.archived?'Em casa':e.rarity}{trained.includes(e.name)?' · +15% de dano':''}<span className="planner-option-effect">{techniqueStatusText(technique)}</span></small>:<p><BuffText text={e.description}/></p>}
+            {technique&&inFusion(e.name)&&<b className="fusion-badge planner-fusion-requirement">Requisito para Fusão</b>}
             {entryActions(e)}
           </article>;
         })}
       </div>
      </div>
-     <aside className="build-detail" aria-label="Detalhes da opção">{focused?<><header className="planner-detail-heading">{focused.icon}<h2>{focused.name}</h2></header><p><BuffText text={focused.description}/></p>{tab==='Itens'&&<PlannerRarity rarity={ITEM_BY_NAME[focused.name].rarity} max={ITEM_BY_NAME[focused.name].max}/>}{tab==='Pílulas'&&<PillStatPreview title="No Nv. 1 do shinobi, com 1 nível da pílula" lines={pillStatPreview(focused.name,base,hero.id,1)}/>}{preview&&<><dl className="technique-base-data"><div><dt>Nível para aprender</dt><dd>{preview.unlockLevel} na missão</dd></div><div><dt>Status da técnica</dt><dd>{techniqueStatusText(preview)}</dd></div><div><dt>Chance crítica inicial</dt><dd>{preview.setup?'—':Math.round((base.crit+techniqueCritical(preview).chance)*100)+'%'}</dd></div><div><dt>Dano crítico inicial</dt><dd>{preview.setup?'—':Math.round((base.critDamage+techniqueCritical(preview).damage)*100)+'%'}</dd></div><div><dt>Recarga base</dt><dd>{(preview.setup?setupNumbers(preview).cooldown:attackCooldown(preview,1)).toLocaleString('pt-BR')} s</dd></div></dl><TechniquePreview technique={preview} heroId={hero.id}/><small>Prévia em alvos de treino</small></>}{planned.includes(focused.name)&&!focused.archived&&<b>Planejado</b>}{inFusion(focused.name)&&<b className="fusion-badge">⚗ Participa de uma fusão planejada</b>}</>:<p>Nenhuma opção com estes filtros.</p>}</aside>
+     <aside className="build-detail" aria-label="Detalhes da opção">{focused?<><header className="planner-detail-heading">{focused.icon}<h2>{focused.name}</h2></header><p><BuffText text={focused.description}/></p>{tab==='Itens'&&<PlannerRarity rarity={ITEM_BY_NAME[focused.name].rarity} max={ITEM_BY_NAME[focused.name].max}/>}{tab==='Pílulas'&&<PillStatPreview title="No Nv. 1 do shinobi, com 1 nível da pílula" lines={pillStatPreview(focused.name,base,hero.id,1)}/>}{preview&&<><dl className="technique-base-data"><div><dt>Nível para aprender</dt><dd>{preview.unlockLevel} na missão</dd></div><div><dt>Status da técnica</dt><dd>{techniqueStatusText(preview)}</dd></div><div><dt>Chance crítica inicial</dt><dd>{preview.setup?'—':Math.round((base.crit+techniqueCritical(preview).chance)*100)+'%'}</dd></div><div><dt>Dano crítico inicial</dt><dd>{preview.setup?'—':Math.round((base.critDamage+techniqueCritical(preview).damage)*100)+'%'}</dd></div><div><dt>Recarga base</dt><dd>{(preview.setup?setupNumbers(preview).cooldown:attackCooldown(preview,1)).toLocaleString('pt-BR')} s</dd></div></dl><TechniquePreview technique={preview} heroId={hero.id}/><small>Prévia em alvos de treino</small></>}{planned.includes(focused.name)&&!focused.archived&&<b>Planejado</b>}{inFusion(focused.name)&&<b className="fusion-badge">Requisito para Fusão</b>}</>:<p>Nenhuma opção com estes filtros.</p>}</aside>
     </div>
    </>}
  </div>;
@@ -161,12 +177,13 @@ function FusionCard({heroId,pair,kind,pool}:{heroId:string;pair:[string,string];
  const result=mergedTechnique({kind,names:pair},pool);
  const [first,second]=pair.map(name=>pool.find(technique=>technique.name===name));
  if(!result||!first||!second)return <div className="planner-fusion-card"><p>Par indisponível no pool atual.</p></div>;
+ const recipe=kekkeiFusion(result.name);
  const fused=kind==='fuse', parts=fused?[result]:[first,second];
- const effects=fused?[result.status,result.secondaryStatus,result.burn?'Queimadura':null]:
+ const effects=fused?[result.status,result.secondaryStatus,result.burn?'Queimadura':null,result.poison?'Dano contínuo':null,result.gravity?'Gravidade':null]:
   parts.flatMap(technique=>[technique.status,technique.burn?'Queimadura':null]);
  const projectiles=parts.some(t=>['Projétil','Em V'].includes(t.shape));
  return <article className={`planner-fusion-card ${fused?'is-fusion':'is-combination'}`}>
-  <div className="fusion-result-heading"><SkillIcon heroId={heroId} name={result.name}/><div><small>{fused?'Fusão · Épico':'Combinação · Raro'}</small><h3>{result.name}</h3></div></div>
+  <div className="fusion-result-heading"><SkillIcon heroId={heroId} name={result.name}/><div><small>{recipe?'Kekkei Genkai · Épico':fused?'Fusão · Épico':'Combinação · Raro'}</small><h3>{recipe?.name??result.name}</h3></div></div>
   <div className="fusion-sources">{[first,second].map(technique=><span key={technique.name}><SkillIcon heroId={heroId} name={technique.name}/>{technique.name}</span>)}</div>
   <div className="fusion-tags">
    {[...new Set([first.element,second.element])].map(element=><span key={element} style={{color:ELEMENT_COLOR[element]}}>{element}</span>)}
@@ -174,11 +191,13 @@ function FusionCard({heroId,pair,kind,pool}:{heroId:string;pair:[string,string];
   </div>
   <dl>
    <div><dt>Dano</dt><dd>{fused?'2× a média · afixos somados':'1,5× por técnica'}</dd></div>
-   <div><dt>Recarga</dt><dd>{result.cooldown.toLocaleString('pt-BR')} s</dd></div>
-   {effects.some(Boolean)&&<div><dt>Efeitos</dt><dd>{[...new Set(effects.filter(Boolean))].join(' · ')}</dd></div>}
+   <div><dt>Recarga no Nv. 1</dt><dd>{attackCooldown(result,1).toLocaleString('pt-BR',{maximumFractionDigits:2})} s</dd></div>
+   {effects.some(Boolean)&&<div><dt>Efeitos</dt><dd>{fused?techniqueStatusText(result):[...new Set(effects.filter(Boolean))].join(' · ')}</dd></div>}
    <div><dt>Melhorias</dt><dd>Dano, área, recarga{effects.some(Boolean)?', duração de status':''}{projectiles?', projéteis':''}</dd></div>
   </dl>
-  <p>{fused?'Nova técnica em área a partir do Nv. 1.':'As duas técnicas usam o mesmo espaço.'}</p>
+  {recipe&&<p>{recipe.summary}</p>}
+  <p>{fused?'Nova técnica do Nv. 1 ao Nv. 7.':'As duas técnicas usam o mesmo espaço.'}</p>
+  <div className="fusion-ingredients-detail">{[first,second].map(t=><div key={t.name}><b>{t.name}</b><small>{t.school} · {t.shape} · {techniqueStatusText(t)}</small></div>)}</div>
  </article>;
 }
 

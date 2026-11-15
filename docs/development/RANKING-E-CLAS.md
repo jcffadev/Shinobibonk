@@ -10,11 +10,17 @@ A sigla de um clã é única. Um perfil pode criar um clã, entrar num existente
 
 A base compartilhada entre perfis do mesmo navegador fica em `shinobibonk.league.v1`. E-mail e verificador da senha continuam no cadastro de origem. O resumo de fim de missão mantém o ranking pessoal de região e dificuldade. Validação em partida segue pendente.
 
-## Publicação online · proposta
+## Publicação online
 
-- Hospedar o frontend no Netlify e usar Supabase Auth com PostgreSQL. Manter preferências de tela e a partida em andamento no dispositivo. Guardar progresso, clãs, temporadas, resultados e builds concluídas no servidor.
-- Usar tabelas relacionais para perfis, temporadas, clãs e membros. Registrar cada missão concluída com identificador único e guardar o retrato final da build em JSONB. Calcular o ranking a partir dos recordes aceitos, com índices por temporada e região.
-- Usar políticas de acesso para separar os dados públicos da ficha e os dados privados da conta. A API autenticada cria o identificador da missão, confere o vínculo com a conta e a versão do jogo, trata reenvios e decide se o resultado entra no placar. Uma verificação de plausibilidade é uma primeira camada de revisão. Para competição com premiação, a pontuação precisa de replay verificável ou simulação no servidor.
-- Importar progresso local por conta mediante confirmação. Preservar os recordes locais como histórico, mantendo a primeira temporada competitiva restrita a resultados registrados pelo servidor.
+A função Netlify usa a migração em supabase/migrations e registra partidas solo clássicas no PostgreSQL com a conta autenticada. A temporada, o Top 100, a posição pessoal além do Top 100, o histórico, as builds, os clãs e o avatar são calculados com os dados aceitos. O cartão na partida mostra os abates, a sequência de quatro segundos e a projeção atualizada a cada cinco segundos. A posição confirmada só muda com resultados aceitos.
 
-O serviço online depende de provisionamento, autenticação, API de resultados e validação. A interface atual usa a base local.
+1. Aplique a migração SQL no projeto PostgreSQL com Supabase Auth.
+2. Configure o domínio oficial HTTPS e a confirmação de e-mail no Auth. No modelo de e-mail use {{ .SiteURL }}/.netlify/functions/ranking?confirm={{ .TokenHash }} para a confirmação do lado da função.
+3. Configure VITE_RANKING_ONLINE=1 no escopo de build do Netlify. Defina RANK_SUPABASE_URL, RANK_SUPABASE_KEY (chave publicável do provedor), RANK_PUBLIC_ORIGIN (origem HTTPS exata) e RANK_SESSION_SECRET (32 bytes aleatórios em hexadecimal) no escopo da função.
+4. Faça deploy e teste criação de conta, avatar, término de missão e filtros com uma conta de teste antes de anunciar o placar.
+
+As tabelas ficam em esquema privado. As operações públicas acessam somente funções concedidas por papel. A sessão fica num cookie autenticado e cifrado, HttpOnly, Secure e SameSite=Lax. A resposta pública traz apelido, avatar e dados de partida. E-mail, tokens e configuração do provedor ficam fora das fichas e do bundle.
+
+O servidor confere conta, identificação da partida, campos e plausibilidade, preserva idempotência e separa registros em revisão. A integridade competitiva depende de simulação autoritativa ou replay verificável. O sistema ainda recebe as métricas do cliente. A interface oferece os filtros de modo e equipe, que receberão dados quando os modos correspondentes tiverem integração. O modo solo clássico funciona para submissão. Credenciais e progresso do cadastro local permanecem no dispositivo.
+
+O instalador Windows depende da distribuição final. Código, assets e parâmetros executados no dispositivo são inspecionáveis. Parâmetros reservados e cálculo autoritativo precisam residir no servidor para preservar confidencialidade. Ainda não há instalador nem ambiente de produção divulgado nesta rodada.

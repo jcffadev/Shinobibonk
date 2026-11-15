@@ -76,6 +76,27 @@ test('top 100 não corta a colocação pessoal e a ficha exibe build e missões'
   assert.match(member, /Pílula da Fortuna/);
   assert.match(member, /Missões recentes/);
   const home = renderToStaticMarkup(createElement(LeagueHome, { board, profileId: 101, open() {} }));
-  assert.match(home, /Ver Top 100/);
+  assert.match(home, /Ver Ranking/);
   assert.equal((home.match(/class="league-row rank-/g) ?? []).length, 5);
+});
+
+test('apelido e moldura da conta aparecem no ranking sem misturar perfis',async()=>{
+  const {setLeaguePortrait}=await import('../src/game/league.ts');
+  const {profileDisplayName}=await import('../src/game/localProfile.ts');
+  const player=profile(1, 'Guest001');
+  assert.equal(profileDisplayName(player,'  Ninja  '),'Ninja');
+  assert.equal(profileDisplayName(player,'Shinobi'),'Guest001');
+  let board=setLeaguePortrait(emptyLeague(),{...player,name:'Ninja'},{avatar:'killer-b',frame:'jade'});
+  board=addLeagueMission(board,{...player,name:'Ninja'},run(99));
+  board=addLeagueMission(board,profile(2),run(1));
+  const [first,second]=leagueStandings(board,{season});
+  assert.equal(first.member.avatar,'killer-b');assert.equal(first.member.frame,'jade');
+  assert.equal(second.member.avatar,undefined);
+});
+
+test('a sequência de abates reinicia depois de quatro segundos',async()=>{
+  const {extendStreak,recentStreak}=await import('../src/game/killStreak.ts');
+  const initial=extendStreak({count:0,lastAt:0},5);
+  assert.equal(extendStreak(initial,9).count,2);
+  assert.equal(recentStreak(initial,9.1),0);
 });

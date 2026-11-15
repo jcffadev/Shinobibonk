@@ -15,11 +15,11 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
-- **IMPLEMENTADO** — ranking de temporada no hub, Top 100, filtros, clãs e fichas com builds e missões, entre os perfis do navegador. [Detalhes e proposta online](development/RANKING-E-CLAS.md).
+- **IMPLEMENTADO** — ranking de temporada no hub, Top 100, filtros, clãs e fichas com builds e missões, entre os perfis do navegador. [Detalhes e configuração online](development/RANKING-E-CLAS.md).
 
 - **IMPLEMENTADO em 14/11** — as 114 versões têm corrida com os braços para trás no deslocamento normal, em cinco vistas. Jogador, ajudantes e Mega Elites compartilham o atlas da versão.
 
-- **IMPLEMENTADO em 14/11** — câmera suavizada, prioridade visual do jogador, fade dos inimigos sobrepostos, retrato em perfil compartilhado na ficha e atualização de Hanzō, Haku e Zabuza. Os 114 jogáveis têm cinco vistas de caminhada registradas na [matriz](development/COBERTURA-DE-VISTAS.md).
+- **IMPLEMENTADO em 14/11** — câmera suavizada, prioridade visual do jogador, fade dos inimigos sobrepostos, retrato em três quartos compartilhado na ficha (atualizado em 15/11) e atualização de Hanzō, Haku e Zabuza. Os 114 jogáveis têm cinco vistas de caminhada registradas na [matriz](development/COBERTURA-DE-VISTAS.md).
 
 - **IMPLEMENTADO** — cinco folhas novas de ação para Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. As 56 versões têm caminhada direcional. Veja a cobertura de ataque, pulo e dash na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
@@ -237,3 +237,5 @@ As 114 versões jogáveis usam quatro quadros por vista para caminhada, pulo e d
 - Pendente: comparar todos os jutsus com a obra e fazer efeitos próprios onde ainda há arte compartilhada. Priorizar as invocações de Nagato, o ataque das cem marionetes de Sasori, a névoa de Zabuza, técnicas médicas, kits de pouco material canônico e Ultimates especiais.
 - Pendente: inspeção em gameplay das versões novas como jogador, ajudante e Mega Elite, incluindo orientação em câmera girada, identidade de traje, pés e transições. A suíte de atlas verifica quadros e espelhamento.
 - Fase 5 restante: sequência em tempo real, card de temporada, glossário e layout dos blocos de combate. Continuam pendentes a run completa com GPU real, a publicação externa e as propostas de escala de mapas.
+
+Em 15/11 o plano de missão passou a mostrar fusão e combinação lado a lado. O jogador pode personalizar o avatar e a moldura que aparecem no ranking. A partida solo online depende de configurar o serviço.

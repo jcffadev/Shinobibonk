@@ -1,3 +1,6 @@
+import { techniqueEye } from '../game/dojutsu';
+import { DojutsuIcon } from './DojutsuIcon';
+import { kekkeiFusion } from '../game/techniqueMerge';
 import { BATTLE_EFFECT_ATLAS, battleEffectCell, hasNamedBattleEffect, signatureEffectTile } from '../game/techniqueVisualProfiles';
 import { expansionVisual } from '../game/rosterExpansion';
 import { puppetArt } from '../scene/kuroari';
@@ -22,9 +25,16 @@ const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:1
 export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:number;name:string}){
   // Versões (naruto-shippuden…) usam a arte da família.
   const heroId=familyOf(versionId);
+  const recipe=kekkeiFusion(name);
+  if(recipe){
+    const i=recipe.icon;
+    return <span className="skill-art" role="img" aria-label={name} style={{backgroundImage:'url('+BATTLE_EFFECT_ATLAS+')',backgroundSize:'400% 600%',backgroundPosition:(i%4)*100/3+'% '+Math.floor(i/4)*20+'%',backgroundRepeat:'no-repeat',imageRendering:'pixelated'}}/>;
+  }
   const merged=name.startsWith('Fusão · ')?name.slice(8).split(' / '):name.split(' + ');
   if(merged.length===2)return <span className="skill-art merged-skill-art" role="img" aria-label={name}><SkillIcon heroId={heroId} name={merged[0]}/><SkillIcon heroId={heroId} name={merged[1]}/></span>;
   if(versionId==='kabuto-sabio'&&name==='Modo Sábio')return <span className="skill-art" role="img" aria-label={name} style={{background:'url(/assets/technique-kabuto-v1.png) left center / 200% 100% no-repeat',imageRendering:'pixelated'}}/>;
+  const eye=techniqueEye(name,versionId);
+  if(eye)return <DojutsuIcon name={name} eye={eye}/>;
   const sage=sageFaces[heroId];
   if(sage!==undefined&&(name==='Modo Sábio'||name==='Mil Mãos de Madeira'&&heroId==='hashirama'||name.includes('Senjutsu')&&heroId==='orochimaru'))return <span className="skill-art sage-skill-art" role="img" aria-label={name} style={{backgroundPosition:(sage%3)*50+'% '+Math.floor(sage/3)*100+'%'}}/>;
   if(name.includes('Gamabunta')||heroId==='naruto'&&name==='Invocação do Sapo')return <span className="skill-art gamabunta-skill-art" role="img" aria-label={name}/>;

@@ -71,7 +71,9 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
     return part;
   };
   const name = t.name;
-  const overlay = !/Kunai Tática|Kunai Hiraishin|Kunai do Instrutor|^Shuriken$|Senbon|Barras de Chakra|Receptores de Chakra|^Rasengan|Rasenshuriken|Bijūdama|Chute Giratório|Substituição|Bunshin|Invocação do Sapo|Gamabunta|Kuroari|Shinra Tensei|Chibaku Tensei|Susanoo|Espada de Totsuka/.test(name);
+  group.userData.motionElement=t.element;
+  group.userData.motionShape=t.shape;
+  const overlay = !/Kunai Tática|Kunai Hiraishin|Kunai do Instrutor|^Shuriken$|Senbon|Barras de Chakra|Receptores de Chakra|^Rasengan|Rasenshuriken|Bijūdama|Chute Giratório|Substituição|Bunshin|Invocação do Sapo|Gamabunta|Kuroari|Bansho Tenin|Shinra Tensei|Chibaku Tensei|Susanoo|Espada de Totsuka/.test(name);
   const namedAtlas=signatureEffectTile(name)?.path;
   const factionArt=namedAtlas===FACTION_EFFECT_ATLAS||namedAtlas===FACTION_EFFECT_ATLAS_DETAIL;
   if(overlay||factionArt)group.add(battleSprite(t));
@@ -251,6 +253,24 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
         group.userData.directed=true;
       }
     }
+    return group;
+  }
+
+  if (t.gravity === 'pull') {
+    const waves = ['#e3d7ff','#ba92ff','#7952e5'].map(color => {
+      const wave = ring(1,color);
+      wave.rotation.x = Math.PI / 2;
+      wave.position.y = .25;
+      return wave;
+    });
+    group.userData.atlasFrame = (age:number) => {
+      waves.forEach((wave,i) => {
+        const p=THREE.MathUtils.clamp((age-i*.06)/.38,0,1);
+        wave.visible=age>=i*.06&&p<1;
+        wave.scale.setScalar(Math.max(.08,1-p**.65));
+        wave.material.opacity=(1-p)*.85;
+      });
+    };
     return group;
   }
 
@@ -524,6 +544,8 @@ export function cachedTechniqueVisual(t: Technique, clone?: () => THREE.Sprite):
   if (!template) { template = techniqueVisual(t); visualCache.set(cacheKey, template); }
   const copy = template.clone();
   copy.userData.shared = true;
+  const poster=copy.getObjectByName('jutsu-sprite');
+  if(poster instanceof THREE.Sprite)poster.material=poster.material.clone();
   return copy;
 }
 
@@ -542,23 +564,55 @@ export function techniqueImpact(t: Technique) {
   return impact;
 }
 
-export function animateTechniqueVisual(object: THREE.Object3D, dt: number, direction?: THREE.Vector3) {
+type MotionPart={object:THREE.Object3D;position:THREE.Vector3;scale:THREE.Vector3;rotation:number};
+const motionParts=new WeakMap<THREE.Object3D,MotionPart[]>();
+
+/** A arte fornece a silhueta. As peças 3D têm movimento próprio do preparo à dissipação. */
+export function animateTechniqueVisual(object: THREE.Object3D, dt: number, direction?: THREE.Vector3, absoluteAge?: number) {
+  const age=absoluteAge??((object.userData.battleAge??0)+dt);
+  object.userData.battleAge=age;
   const sprite=object.getObjectByName('jutsu-sprite');
   if(sprite instanceof THREE.Sprite){
-    sprite.visible=!!sprite.material.map?.image;
-    const age=(object.userData.battleAge??0)+dt;
-    object.userData.battleAge=age;
-    const phase=Math.min(1,age/.34),envelope=Math.sin(Math.PI*Math.min(1,.12+phase*.88));
-    sprite.scale.set(.87+envelope*.39,.72+envelope*.51,1);
-    sprite.position.y=.45+Math.sin(phase*Math.PI)*.17;
+    const life=object.userData.motionShape==='Projétil'||object.userData.motionShape==='Em V'||object.userData.motionShape==='Onda' ? .46 : .30;
+    const phase=THREE.MathUtils.clamp(age/life,0,1);
+    const envelope=Math.sin(Math.PI*phase);
+    sprite.visible=Boolean(sprite.material.map?.image)&&phase<1;
+    sprite.material.opacity=envelope*.82;
+    sprite.scale.set(.52+envelope*.72,.38+envelope*.87,1);
+    sprite.position.y=.27+phase*.39;
   }
-  if(object.userData.atlasFrame){object.userData.atlasAge=(object.userData.atlasAge??0)+dt;object.userData.atlasFrame(object.userData.atlasAge);}
-  if(object.userData.directed && direction) object.rotation.y = Math.atan2(direction.x,direction.z);
-  else if(object.userData.spin) object.rotation.y += dt*object.userData.spin;
+  if(object.userData.atlasFrame)object.userData.atlasFrame(age);
+  else if(object.userData.motionElement&&!object.userData.spin){
+    let parts=motionParts.get(object);
+    if(!parts){
+      parts=object.children.filter(child=>child instanceof THREE.Mesh).map(child=>({object:child,position:child.position.clone(),scale:child.scale.clone(),rotation:child.rotation.y}));
+      motionParts.set(object,parts);
+    }
+    const element=object.userData.motionElement;
+    const angle=element==='Vento'||element==='Sombra'||element==='Sábio'?4*age:0;
+    const rise=element==='Fogo'||element==='Madeira'||element==='Terra'||element==='Areia';
+    const stretch=element==='Raio'?1.55:1.15;
+    for(const [i,part] of parts.entries()){
+      const p=Math.min(1,age/(.32+i%4*.035));
+      const spread=.38+.62*(1-(1-p)**2);
+      const wave=Math.sin(p*Math.PI);
+      part.object.position.copy(part.position).multiplyScalar(spread).applyAxisAngle(UP,angle);
+      if(rise)part.object.position.y+=wave*(.13+i%4*.045);
+      const scale=.58+.42*spread;
+      part.object.scale.set(part.scale.x*scale*(1+wave*(stretch-1)),part.scale.y*scale*(1+wave*.32),part.scale.z*scale*(1+wave*(element==='Água'?.5:.1)));
+      part.object.rotation.y=part.rotation+angle;
+    }
+  }
+  if(object.userData.directed&&direction)object.rotation.y=Math.atan2(direction.x,direction.z);
+  else if(object.userData.spin)object.rotation.y+=dt*object.userData.spin;
 }
 
 export function disposeObject(object:THREE.Object3D) {
-  if(object.userData.shared) return;
+  if(object.userData.shared) {
+    const poster=object.getObjectByName('jutsu-sprite');
+    if(poster instanceof THREE.Sprite)poster.material.dispose();
+    return;
+  }
   const materials = new Set<THREE.Material>();
   object.traverse(child=>{
     if(child instanceof THREE.Mesh || child instanceof THREE.Line) child.geometry.dispose();

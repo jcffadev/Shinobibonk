@@ -87,3 +87,8 @@ export function signOutLocalProfile() {
   const state = readProfiles();
   if (state.active !== state.guest) switchProfile(state, { ...state, active: state.guest });
 }
+
+export function profileDisplayName(profile: Pick<LocalProfile,'name'>, nickname: string) {
+  const alias = nickname.trim();
+  return alias && alias !== 'Shinobi' ? alias : profile.name;
+}

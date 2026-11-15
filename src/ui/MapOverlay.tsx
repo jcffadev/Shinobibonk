@@ -118,12 +118,13 @@ export function RouteHud({ world }: { world: WorldSnapshot }) {
   if (r) {
     const W = window.innerWidth, H = window.innerHeight, X = (r.screen.x + 1) / 2 * W, Y = (1 - r.screen.y) / 2 * H;
     // Margens livres do HUD: cartão do herói/topo, minimapa à direita e dock de habilidades embaixo.
-    const box = { l: 60, r: W - 60, t: 170, b: H - 210 };
+    const side=Math.min(94,W*.20), top=Math.min(170,H*.28), bottom=Math.min(166,H*.28);
+    const box = { l: side, r: W - side, t: top, b: H - bottom };
     if (X > box.l && X < box.r && Y > box.t && Y < box.b) pointer = <div className="route-pin" style={{ left: X, top: Y }}><span>▼</span><small>{meters(r.distance)}</small></div>;
     else {
       const cx = W / 2, cy = H / 2, dx = X - cx, dy = Y - cy;
-      const k = Math.min(dx > 0 ? (box.r - cx) / dx : dx < 0 ? (box.l - cx) / dx : Infinity, dy > 0 ? (box.b - cy) / dy : dy < 0 ? (box.t - cy) / dy : Infinity);
-      pointer = <div className="route-arrow" style={{ left: cx + dx * k, top: cy + dy * k }}><span style={{ transform: `rotate(${Math.atan2(dy, dx)}rad)` }}>➤</span><small>{r.name} · {meters(r.distance)}</small></div>;
+      const k = Math.min(1,dx > 0 ? (box.r - cx) / dx : dx < 0 ? (box.l - cx) / dx : Infinity, dy > 0 ? (box.b - cy) / dy : dy < 0 ? (box.t - cy) / dy : Infinity);
+      pointer = <div className="route-arrow" style={{ left: cx + dx * k, top: cy + dy * k }}><span style={{ transform: `rotate(${Math.atan2(dy, dx)}rad)` }}>➤</span><small>{meters(r.distance)}</small></div>;
     }
   }
   return <>

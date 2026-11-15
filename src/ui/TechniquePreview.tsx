@@ -41,6 +41,8 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
     const player=actor(character,-2.6,0);
     const playerMotion=createPlayerMotion(scene,player,heroId,false);
     const dummies=[actor(enemyArt,2,0),actor(enemyArt,3,.75),actor(enemyArt,2.7,-1.1)];
+    if(technique.gravity==='pull')for(const [i,dummy] of dummies.entries())dummy.position.set(-.4+Math.cos(i*2)*1.2,1,Math.sin(i*2)*1.2);
+    const dummyStarts=dummies.map(dummy=>dummy.position.clone());
     const grid=new THREE.GridHelper(12,12,'#397065','#2c4f50');
     scene.add(grid);
     const forward=new THREE.Vector3(1,0,0);
@@ -58,8 +60,8 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
     const puppet=puppetPath?createKuroari(texture(puppetPath),player.position,dummies[0].position,forward):null;
     const effect=frog?.group??puppet?.group??sage?.sprite??techniqueVisual(technique);
     scene.add(effect);
-    const travel=movingClone||['Projétil','Em V','Onda'].includes(technique.shape);
-    const anchored=technique.setup||['Órbita','Cone','Linha','Corpo a corpo'].includes(technique.shape);
+    const travel=movingClone||(!technique.gravity&&['Projétil','Em V','Onda'].includes(technique.shape));
+    const anchored=technique.gravity==='pull'||technique.setup||['Órbita','Cone','Linha','Corpo a corpo'].includes(technique.shape);
     const resize=()=>{
       const w=Math.max(1,box.clientWidth),h=Math.max(1,box.clientHeight),ratio=w/h;
       camera.left=-3.05*ratio;camera.right=3.05*ratio;camera.updateProjectionMatrix();
@@ -74,7 +76,7 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
       last=now;
       if(age<lastAge){guardian?.clear();particles?.clear();}
       if(lastAge<.25&&age>=.25){
-        playerMotion.attack(['Projétil','Em V'].includes(technique.shape),false,false,technique.school==='Taijutsu'?'punch':undefined,/Bunshin|Caixão de Areia/.test(technique.name));
+        playerMotion.attack(['Projétil','Em V'].includes(technique.shape),false,false,technique.school==='Taijutsu'?'punch':undefined,true,false,.38);
         guardian?.trigger(susanooStyleFor(familyOf(heroId)),player.position,forward,dummies[0].position,1.2);
       }
       lastAge=age;
@@ -84,8 +86,13 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
       const hit=!technique.setup&&age>=hitAt&&age<hitAt+.23;
       for(const [i,dummy] of dummies.entries()){
         const contacted=i===0||['Área','Cone','Onda','Órbita','Em V'].includes(technique.shape);
+        const pull=Math.max(0,Math.min(1,(age-.38)/.42));
+        dummy.position.copy(dummyStarts[i]);
+        if(technique.gravity==='pull')dummy.position.lerp(player.position,pull*.74);
         dummy.material.color.set(hit&&contacted?'#ff796b':'#ffffff');
       }
+      impact.position.copy(dummies[0].position);
+      impact.material.opacity=hit?1-(age-hitAt)/.23:0;
       impact.visible=hit;
       impact.scale.setScalar(1+Math.max(0,age-hitAt)*4);
       impact.quaternion.copy(camera.quaternion);
@@ -113,7 +120,8 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
         effect.scale.setScalar(technique.setup?1+p:Math.max(.65,p*1.45));
         if(sage){sage.frame(Math.floor(age*9)%4);effect.scale.set(2.6,2.6,1);}
         else if(movingClone&&effect.userData.atlasFrame)effect.userData.atlasFrame(Math.max(0,age-hitAt));
-        else animateTechniqueVisual(effect,dt,forward);
+        else if(technique.gravity==='pull'){effect.scale.setScalar(technique.range);effect.userData.atlasFrame?.(Math.max(0,age-.33));}
+        else animateTechniqueVisual(effect,dt,forward,Math.max(0,age-.33));
       }
       renderer.render(scene,camera);
     });

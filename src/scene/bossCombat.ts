@@ -1,3 +1,4 @@
+import { techniqueProc } from '../game/combat';
 import * as THREE from 'three';
 import { compactNumber } from '../game/format';
 import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, BIJUU_BACK_SHEETS, beastPhase, bijuuFacesAway, bijuuSheetCell } from '../game/bijuu';
@@ -50,7 +51,7 @@ export type BossContext = {
   zone: () => number;
   hidden: () => boolean;
   /** Aplica o golpe no jogador (ameaça, armadura, evasão, invulnerabilidade e god mode ficam com a simulação). */
-  hitPlayer: (base: number, slowSeconds: number) => void;
+  hitPlayer: (base: number, slowSeconds: number, gravity?:Technique['gravity'], center?:THREE.Vector3) => void;
   /** Rodada 55: direita da tela projetada no chão (v2 da câmera). Espelha a bijū pela câmera e não pelo eixo X do mundo. */
   viewRight?: () => THREE.Vector3;
   /** Rodada 59: direção "para dentro da tela" no chão (v1 da câmera). Escolhe a folha de frente ou de costas. */
@@ -80,7 +81,7 @@ function drawBar(state: BossState, ratio: number) {
 }
 
 function shapeOf(t: Technique): CastShape {
-  if (t.shape === 'Área') return 'circle';
+  if (t.gravity === 'pull' || t.shape === 'Área') return 'circle';
   if (t.shape === 'Cone') return 'cone';
   if (t.shape === 'Em V') return 'lineV';
   if (t.shape === 'Linha' || t.shape === 'Projétil') return 'line';
@@ -136,7 +137,7 @@ export function createBossCombat(ctx: BossContext) {
       shape=shapeOf(technique);range=technique.range*(1+(phase-1)*.12);width=1.5+(phase-1)*.3;power=technique.power*(1+(phase-1)*.16);
     }else if (hero&&state.guardian && lowHp && !state.ultimateUsed) {
       // Ultimate do guardião, uma vez, abaixo de 50% de HP: grande área em volta dele.
-      technique = { ...ultimateBase(hero), name: hero.ultimate, setup: undefined, shape: 'Área' };
+      technique = { ...ultimateBase(hero), name: hero.ultimate, setup: undefined, shape: 'Área', gravity:hero.ultimate==='Shinra Tensei'?'push':undefined };
       shape = 'circle'; range = 5.6; power = BOSS_RULES.ultimatePower; ultimate = true; state.ultimateUsed = true;
     } else if(hero) {
       // Mega elites usam mais técnicas conforme a zona; guardiões usam o kit todo.
@@ -145,7 +146,7 @@ export function createBossCombat(ctx: BossContext) {
       technique = available[state.next % Math.max(1, available.length)] ?? hero.techniques[0];
       state.next = Math.floor(Math.random() * 1000);
       shape = shapeOf(technique); power = technique.power;
-      range = shape === 'circle' ? (technique.shape === 'Corpo a corpo' ? 2.6 : 2.4) : shape === 'cone' ? 6 : shape === 'ring' ? (technique.shape === 'Onda' ? 4.4 : 3.2) : 10;
+      range = shape === 'circle' ? (technique.gravity==='pull'?technique.range:technique.shape === 'Corpo a corpo' ? 2.6 : 2.4) : shape === 'cone' ? 6 : shape === 'ring' ? (technique.shape === 'Onda' ? 4.4 : 3.2) : 10;
     }
     else return;
     // Círculo de técnica em Área cai sobre a posição atual do jogador; os demais saem do chefe.
@@ -182,8 +183,9 @@ export function createBossCombat(ctx: BossContext) {
     const c = state.cast!;
     state.recoil=1;
     if (playerInside(c)) {
-      const t = c.technique, controls = t.slow || t.status === 'Lentidão' || t.status === 'Paralisar' || t.status === 'Atordoar' || t.status === 'Dormir';
-      ctx.hitPlayer(BOSS_RULES.baseDamage * c.power, controls ? BOSS_RULES.slowSeconds : 0);
+      const t=c.technique;
+      const controls=Boolean(t.status&&t.status!=='Empurrar')&&Math.random()<techniqueProc(t.statusChance);
+      ctx.hitPlayer(BOSS_RULES.baseDamage*c.power,controls?BOSS_RULES.slowSeconds:0,t.gravity,c.center);
     }
     if (!ctx.hidden()) {
       const visual = techniqueVisual(c.technique);

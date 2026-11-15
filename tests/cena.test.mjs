@@ -148,3 +148,12 @@ test('fade usa profundidade e sobreposição da câmera, sem atingir inimigos at
   assert.equal(focusOpacity(view,player,size,front.negate(),size),1);
   assert.equal(focusOpacity(view,player,size,left,size),1);
 });
+
+test('barra de HP pode aparecer sobre o chão e desaparecer quando uma encosta cobre o ator', async () => {
+  const {terrainOccludesActor}=await load('/src/scene/terrainArt.ts');
+  const hill=(x,z)=>z>=2&&z<=4?2:0;
+  assert.equal(terrainOccludesActor(0,.45,0,0,.11,20,()=>0),false);
+  assert.equal(terrainOccludesActor(0,.45,0,0,.11,20,hill),true);
+  assert.equal(terrainOccludesActor(0,.45,0,Math.PI,.11,20,hill),false);
+  assert.equal(terrainOccludesActor(0,.45,0,0,.90,20,hill),false);
+});

@@ -14,3 +14,12 @@ Leia a [auditoria de efeitos](../../docs/24-AUDITORIA-DE-EFEITOS.md). Confira a 
 5. Reuse as fases na prévia da habilidade. Valide a área e a ordem das fases com testes Node e a política do projeto. Registre em changelog a fonte visual, os casos conferidos em jogo e o que falta ver.
 
 Referências de seleção de técnicas [UOL Start](https://www.uol.com.br/start/listas/os-13-jutsus-mais-legais-de-naruto.htm), [Legião dos Heróis](https://www.legiaodosherois.com.br/lista/os-10-jutsus-mais-poderosos-de-naturo.html) e [Animativa](https://www.animativa.com/pt-br/blog/os-jutsus-mais-poderosos-de-naruto/).
+
+## Mecânica e pose de conjuração
+
+- Identifique a execução na obra, a versão do usuário, o alcance, a forma e o efeito. Mantenha a função reconhecível em combate e na prévia, como a atração do Banshō, a repulsão do Shinra e o núcleo do Chibaku. Ajuste dano, chance e duração conforme a curva do jogo.
+- O controlador de casting deve acionar preparação de mãos desde o começo e manter a sequência até o lançamento. A regra vale ao incluir ou revisar qualquer versão, tanto no jogador quanto em ajudantes, mega-elites, guardiões, totens e personagens de eventos. Preserve preparações e finalizações próprias de cada golpe. Confira a folha real e a duração do casting de cada papel.
+- Integre preparo, movimento, impacto, reação do alvo e dissipação. O ícone pode servir à interface. Use quadros ou malha animada na execução, com área e impacto no ponto real de acerto. Confira o resultado em partida e na prévia.
+- O efeito próprio começa com até 10% no Nv. 1 e cresce pelo nível da técnica e pelos buffs da missão. Para ataques sem efeito, confira chance e dano crítico por nível. Em fusões, aplique o teto até Nv. 7 e use a mesma fórmula e descrição no plano e na oficina.
+- Para Kekkei Genkai, confirme as duas naturezas e a execução do jutsu na Narutopedia e, quando disponível, em fonte oficial. Receitas futuras entram se as naturezas forem sustentadas pela obra. O plano depende do pool daquele shinobi, e a oficina exige os dois Ninjutsu aprendidos. O desbloqueio por fusão é uma mecânica do ShinobiBonk e não concede linhagem ou amplia o pool ordinário.
+- Em dōjutsu, identifique olho, portador e forma. Kamui compartilha o desenho com Obito e Kakashi, o Kotoamatsukami usa o de Shisui e Amaterasu varia entre Itachi e Sasuke. Siga o atlas do projeto e mantenha a diferença entre ícone do olho e efeito real da técnica.

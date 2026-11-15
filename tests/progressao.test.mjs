@@ -113,14 +113,18 @@ test('dificuldade da missão multiplica por cima (Genin < Chunin < Jonin < Kage)
 test('XP por abate usa o relógio total e a curva continua nas trocas de zona', () => {
   const samples = [0, 599, 600, 1199, 1200, 1799];
   const normalXp = samples.map(elapsed => xpDropValue(lootScale('normal', 0, 0, MISSION_TIER.Genin), 1, elapsed));
-  assert.deepEqual(normalXp, [5, 8, 8, 11, 11, 15]);
+  assert.deepEqual(normalXp, [4, 7, 7, 10, 10, 13]);
   assert.deepEqual([100, 300, 582].map(level => Math.ceil(xpToLevelUp(level))), [1174, 5069, 11629]);
-  assert.equal(xpDropValue(3, 1.25, 600), 29, 'bônus da zona ativa é aplicado antes do arredondamento');
+  assert.equal(xpDropValue(3, 1.25, 600), 25, 'bônus da zona ativa é aplicado antes do arredondamento');
 });
 
 test('abertura mais espaçada e densidade recuperada ao final do primeiro minuto', () => {
   const base=difficultyAt('Genin',0);
   assert.equal(base.cap,12);
-  assert.ok(close(base.spawnPerSecond,.68));
+  assert.ok(close(base.spawnPerSecond,.544));
   assert.ok(close(difficultyAt('Genin',60).spawnPerSecond,8));
+  for(const rank of Object.keys(MISSION_TIER)) {
+    assert.ok(close(difficultyAt(rank,0).spawnPerSecond,.544*Math.sqrt(MISSION_TIER[rank])));
+    assert.ok(close(difficultyAt(rank,60).spawnPerSecond,8*Math.sqrt(MISSION_TIER[rank])));
+  }
 });

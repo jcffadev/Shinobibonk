@@ -28,7 +28,7 @@ export function stableFacing(holder: { facing?: FacingMemory }, vertical: number
 }
 
 export type StrikePose = 'punch' | 'kick';
-type Strike = { weapon: boolean; left?: boolean; special: boolean; pose?: StrikePose; seal: boolean; back?: boolean };
+type Strike = { castSeconds?:number; weapon: boolean; left?: boolean; special: boolean; pose?: StrikePose; seal: boolean; back?: boolean };
 /** Fração do golpe a partir da qual um novo ataque pode encadear. Antes disso o pedido fica na fila (o mais recente vence)
  *  e começa assim que a soltura (3º quadro) terminou de aparecer; assim, com velocidade de ataque alta, o golpe nunca
  *  reinicia no quadro de preparação nem fica piscando. A Ultimate entra na hora. */
@@ -159,7 +159,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   let frameShown = 0, strideShown = 0, walkAttack = false, walkLean=0, rowShown = -1;
   const begin = (next: Strike) => {
     queued = undefined;
-    attack = attackDuration = next.special ? .55 : next.weapon ? .25 : .22;
+    attack = attackDuration = next.castSeconds ?? (next.special ? .55 : next.weapon ? .25 : .22);
     ultimate = next.special;
     throwingWeapon = next.weapon;
     strike = next.pose;
@@ -174,9 +174,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
   }) : null;
   const trailHistory: THREE.Vector3[] = [];
   return {
-    attack: (weapon = false, left?: boolean, special = false, pose?: StrikePose, seal = false, back?: boolean) => {
+    attack: (weapon = false, left?: boolean, special = false, pose?: StrikePose, seal = false, back?: boolean, castSeconds?:number) => {
       if (ultimate && attack > 0 && !special) return;
-      const next: Strike = { weapon, left, special, pose, seal, back };
+      const next: Strike = { weapon, left, special, pose, seal, back, castSeconds };
       // Golpe em andamento e ainda antes do ponto de encadeamento: não reinicia, guarda o pedido.
       if (!special && attack > 0 && 1 - attack / attackDuration < CHAIN_AT) { queued = next; return; }
       begin(next);
@@ -430,8 +430,9 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       map.needsUpdate=true;
     },
     healthBarWidth:()=>health?.bar.scale.x??0,
-    fitHealthBar(unitsPerPixel:number){
+    fitHealthBar(unitsPerPixel:number,visible=true){
       if(!health)return;
+      health.bar.visible=visible;
       const width=Math.max(2.05,106*unitsPerPixel);
       const pulse=1+.12*hurt/.23;
       health.bar.scale.set(width*pulse,width*.151*pulse,1);

@@ -125,7 +125,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
         </>}
         {category === 'idioma' && <Card title="Idioma do jogo" hint="Os textos do jogo estão em português; outros idiomas em breve" wide><Choice value="pt" options={[{ value: 'pt', label: 'Português (Brasil)' }, { value: 'es', label: 'Español', soon: true }, { value: 'en', label: 'English', soon: true }]} onChange={() => { }} /></Card>}
         {category === 'conta' && <>
-          <Card title="Nome do jogador" hint="Apelido exibido ao passar sobre o cartão do perfil" wide><input className="st-input" maxLength={20} value={settings.playerName} onChange={(e) => set({ playerName: e.target.value })} /></Card>
+          <Card title="Nome do jogador" hint="Apelido exibido no cartão do perfil e no ranking local" wide><input className="st-input" maxLength={20} value={settings.playerName} onChange={(e) => set({ playerName: e.target.value })} /></Card>
           <Card title="Começar do zero" hint="Volta aos 3 shinobis iniciais, apaga selados, pesquisa e progresso dos mapas. Lamens e Passivas ficam" wide><button type="button" className="st-danger" onClick={() => { if (window.confirm('Começar do zero? Shinobis desbloqueados, pesquisa e progresso dos mapas serão apagados.')) resetAccount(); }}>Reiniciar progresso</button></Card>
           <Card title="Reset de conta" hint="Recomece do zero com uma conta nova neste navegador." wide><button type="button" className="st-danger" onClick={onResetAccount}>Reset de conta</button></Card>
         </>}

@@ -82,3 +82,7 @@ A [auditoria dos efeitos](24-AUDITORIA-DE-EFEITOS.md) inventaria o caminho visua
 
 - Política central: [development/TESTING_POLICY.md](development/TESTING_POLICY.md) — comandos, camadas, perfis, status e como acrescentar testes.
 - Testes por código: `tests/` · executor `scripts/run-tests.mjs` · prova por mutação `scripts/mutation-check.mjs` · atalho `TESTAR_JOGO.bat`.
+
+## Ranking, contas e publicação
+
+[Guia de ranking e clãs](development/RANKING-E-CLAS.md), [skill compartilhada de publicação](../skills/proteger-publicacao/SKILL.md) e [auditoria de jutsus](24-AUDITORIA-DE-EFEITOS.md). As receitas ficam em src/game/techniqueMerge.ts e os dōjutsu em src/game/dojutsu.ts.

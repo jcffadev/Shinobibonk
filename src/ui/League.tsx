@@ -1,3 +1,4 @@
+import { isProfileFrame, type ProfileFrame } from '../game/profilePortrait';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { HEROES, HERO_BY_ID } from '../game/heroes';
 import { MAPS, MAP_BY_ID, type MapId } from '../game/maps';
@@ -7,12 +8,13 @@ import {
   type League, type LeagueBuild, type LeagueMember, type LeagueMission, type Standing,
 } from '../game/league';
 import { compactNumber } from '../game/format';
-import { HeroPortrait, ItemIcon } from './RunSheet';
+import { ItemIcon } from './RunSheet';
+import { CardPortrait } from './CharacterSelect';
 import { SkillIcon } from './SkillIcon';
 import './league.css';
 
 type Tab = 'ranking' | 'clans';
-export type LeagueStart = { tab: Tab; memberId?: number };
+export type LeagueStart = { tab: Tab; memberId?: number | string };
 const exact = (n: number) => Math.floor(n).toLocaleString('pt-BR');
 const heroName = (id: string) => HERO_BY_ID[id]?.name ?? id;
 const clock = (seconds: number) => `${exact(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
@@ -31,14 +33,14 @@ function timeLeft(ms: number) {
   return hours >= 24 ? `${Math.floor(hours / 24)} d ${hours % 24} h` : `${hours} h`;
 }
 
-function Portrait({ id }: { id?: string }) {
-  return <span className="league-portrait">{id && HERO_BY_ID[id] ? <HeroPortrait id={id} decorative /> : <b aria-hidden="true">忍</b>}</span>;
+export function Portrait({ id, frame }: { id?: string; frame?: ProfileFrame }) {
+  return <span className="league-portrait" data-frame={isProfileFrame(frame)?frame:undefined}>{id && HERO_BY_ID[id] ? <CardPortrait id={id} decorative /> : <b aria-hidden="true">忍</b>}</span>;
 }
 
 function MemberLine({ entry, rank, open }: { entry: Standing; rank: number; open: () => void }) {
   const { member, featured, score } = entry;
   return <button type="button" className={`league-row rank-${rank}`} onClick={open}>
-    <span className="league-place">{rank}</span><Portrait id={featured.heroId}/>
+    <span className="league-place">{rank}</span><Portrait id={member.avatar ?? featured.heroId} frame={member.frame}/>
     <span className="league-name"><b>{member.name}{member.clan && <small className="league-tag">{member.clan}</small>}</b>
       <small>{heroName(featured.heroId)}</small></span>
     <strong className="league-score" title={exact(score) + ' abates'}>{compactNumber(score)}</strong>
@@ -63,7 +65,7 @@ export function LeagueHome({ board, profileId, open }: { board: League; profileI
         <strong>{mine < 0 ? '—' : '#' + (mine + 1)}</strong>
       </button>
       <div className="league-actions">
-        <button type="button" className="league-main-button" onClick={() => open({ tab: 'ranking' })}>Ver Top 100 <span aria-hidden="true">→</span></button>
+        <button type="button" className="league-main-button" onClick={() => open({ tab: 'ranking' })}>Ver Ranking <span aria-hidden="true">→</span></button>
         <button type="button" onClick={() => open({ tab: 'clans' })}>Clãs</button>
       </div>
     </div>
@@ -96,7 +98,7 @@ function MissionDetails({ run, byHero = false }: { run: LeagueMission; byHero?: 
   </details>;
 }
 
-function MemberProfile({ member, rank }: { member: LeagueMember; rank?: number }) {
+export function MemberProfile({ member, rank }: { member: Omit<LeagueMember,'id'> & { avatar?: string }; rank?: number }) {
   const latest = member.history[0];
   const stats = [
     ['Missões', member.missions], ['Vitórias', member.wins], ['Abates', member.kills],
@@ -104,7 +106,7 @@ function MemberProfile({ member, rank }: { member: LeagueMember; rank?: number }
   ] as const;
   return <>
     <header className="league-profile-head">
-      <Portrait id={latest?.heroId}/><div><p>Ficha shinobi</p><h2>{member.name}</h2>
+      <Portrait id={member.avatar ?? latest?.heroId} frame={member.frame}/><div><p>Ficha shinobi</p><h2>{member.name}</h2>
         <span>Desde {new Date(member.joinedAt).toLocaleDateString('pt-BR')}{rank ? ` · #${rank} na temporada` : ''}</span></div>
       {member.clan && <span className="league-tag">{member.clan}</span>}
     </header>
@@ -174,15 +176,24 @@ export function LeagueScreen({ board, profileId, start, onBack, act }: {
 }) {
   const season = useSeason();
   const [tab, setTab] = useState<Tab>(start.tab);
-  const [selected, setSelected] = useState<number | undefined>(start.memberId);
-  useEffect(() => { setTab(start.tab); setSelected(start.memberId); }, [start]);
+  const [selected, setSelected] = useState<number | undefined>(typeof start.memberId === 'number' ? start.memberId : undefined);
+  useEffect(() => { setTab(start.tab); setSelected(typeof start.memberId === 'number' ? start.memberId : undefined); }, [start]);
   const [map, setMap] = useState<MapId | ''>('');
   const [difficulty, setDifficulty] = useState<Difficulty | ''>('');
   const [hero, setHero] = useState('');
+  const [byHero, setByHero] = useState(false);
   const global = useMemo(() => leagueStandings(board, { season: season.number }), [board, season.number]);
   const scoped = useMemo(() => leagueStandings(board, {
     season: season.number, map: map || undefined, difficulty: difficulty || undefined, heroId: hero || undefined,
   }), [board, season.number, map, difficulty, hero]);
+  const heroPlaces = useMemo(() => {
+    if (!byHero) return {};
+    const keys = Object.keys(board.members[profileId]?.best ?? {});
+    return Object.fromEntries([...new Set(keys.map(key => key.split('/').at(-1)!))].flatMap(id => {
+      const position = leagueStandings(board, {season: season.number, map: map || undefined, difficulty: difficulty || undefined, heroId: id}).findIndex(row => row.member.id === profileId) + 1;
+      return position ? [[id, position]] : [];
+    }));
+  },[board, byHero, map, difficulty, profileId, season.number]);
   const mine = scoped.findIndex(row => row.member.id === profileId);
   const pod = scoped.slice(0, 3);
   const focused = selected === undefined ? undefined : board.members[selected];
@@ -204,13 +215,13 @@ export function LeagueScreen({ board, profileId, start, onBack, act }: {
               <label>Dificuldade <select value={difficulty} onChange={e => setDifficulty(e.target.value as Difficulty | '')}>
                 <option value="">Todas as dificuldades</option>{DIFFICULTIES.map(entry => <option key={entry}>{entry}</option>)}
               </select></label>
-              <label>Shinobi <select value={hero} onChange={e => setHero(e.target.value)}><option value="">Todos os shinobis</option>
-                {HEROES.map(entry => <option key={entry.id} value={entry.id}>{entry.name}</option>)}</select></label>
+              <label className="league-toggle-hero"><input type="checkbox" checked={byHero} onChange={e=>{setByHero(e.target.checked);if(!e.target.checked)setHero('');}}/> Por shinobi</label>
               <p>{map ? 'Melhor missão nesta região.' : 'Soma da melhor missão de cada região.'}</p>
             </aside>
             <section className="league-card league-results">
               <div className="league-section-line"><h3>{map ? MAP_BY_ID[map].name : 'Todas as regiões'}</h3>
                 <span>Top {TOP_LIMIT} · {exact(scoped.length)} {scoped.length === 1 ? 'perfil' : 'perfis'}</span></div>
+              {byHero&&<HeroRankPicker hero={hero} choose={setHero} places={heroPlaces}/>}
               {pod.length > 0 ? <div className="league-podium">{pod.map((row, i) =>
                 <MemberLine key={row.member.id} entry={row} rank={i + 1} open={() => setSelected(row.member.id)}/>
               )}</div> : <p className="league-empty">Ainda não há missões registradas com estes filtros.</p>}
@@ -225,4 +236,11 @@ export function LeagueScreen({ board, profileId, start, onBack, act }: {
           </div>}
       </>}
   </section>;
+}
+
+export function HeroRankPicker({hero, choose, places}:{hero:string; choose:(id:string)=>void;places:Record<string,number>}) {
+  return <><div className="league-section-line"><button type="button" className="league-filter-reset" disabled={!hero} onClick={()=>choose('')}>Todos os shinobis</button></div>
+    <div className="league-hero-picker" aria-label="Colocação por shinobi">{HEROES.map(entry=><button type="button" key={entry.id} aria-pressed={entry.id===hero} onClick={()=>choose(entry.id)}>
+      <Portrait id={entry.id}/>{places[entry.id]&&<strong>#{exact(places[entry.id])}</strong>}<span>{entry.name}</span>
+    </button>)}</div></>;
 }

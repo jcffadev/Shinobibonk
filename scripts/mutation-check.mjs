@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'status inicia no teto de 10%', arquivo: 'src/game/combat.ts', de: 'const initial = Math.min(base, .1);', para: 'const initial = base;' },
+  { regra: 'fusão não ultrapassa o nível 7', arquivo: 'src/game/techniqueMerge.ts', de: 'FUSION_LEVEL_CAP = 7', para: 'FUSION_LEVEL_CAP = 12' },
   { regra: 'ranking usa a melhor missão por região', arquivo: 'src/game/league.ts', de: 'if (!previous || compareRun(run, previous) < 0) best.set(run.map, run);', para: 'if (!previous || compareRun(run, previous) > 0) best.set(run.map, run);' },
   { regra: 'portal conserva XP atraído', arquivo: 'src/game/drops.ts', de: '(magnet || distance < pickupRadius)', para: 'distance < pickupRadius' },
   { regra: 'marco grande não bloqueia além de 3 m', arquivo: 'src/scene/collision.ts', de: 'buildingMaxRadius: 3,', para: 'buildingMaxRadius: 7,' },

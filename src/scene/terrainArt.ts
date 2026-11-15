@@ -32,7 +32,10 @@ export function groundHeight(map: GameMap['id'], x: number, z: number) {
     + mound(x, z, -49, 32, 19, 15, 7.4)
     + mound(x, z, 53, -37, 18, 20, 9.6)
     + mound(x, z, -44, -42, 15, 17, 10)
-    + ridge;
+    + mound(x, z, -35, 8, 5, 3.5, 1.6)
+    + mound(x, z, 28, -13, 4.5, 4, 1.3)
+    + mound(x, z, 49, 28, 5, 3.8, 1.8)
+    + ridge * .77;
   if (map !== 'folha') {
     let height=hills+mound(x,z,3,-26,22,11,4.8);
     for(const place of REGIONAL_PLACES) {
@@ -41,14 +44,23 @@ export function groundHeight(map: GameMap['id'], x: number, z: number) {
       const blend=THREE.MathUtils.smoothstep(distance,edge,edge+5);
       height=THREE.MathUtils.lerp(3.5,height,blend);
     }
-    return height;
+    return height * .58;
   }
   const monument = mound(x, z, 0, -45, 22, 17, 10);
   // Perto das estátuas, mantenha um topo largo sob toda a base do sprite.
   const pedestal = (center: number) =>
     mound(center + Math.sign(x - center) * Math.max(0, Math.abs(x - center) - 3.5),
       24 + Math.sign(z - 24) * Math.max(0, Math.abs(z - 24) - 2.5), center, 24, 6.5, 12, 6);
-  return hills + monument + pedestal(30) + pedestal(53);
+  return (hills + monument + pedestal(30) + pedestal(53)) * .58;
+}
+
+/** Verifica se a direção de visão encontra uma encosta antes de chegar ao ator. */
+export function terrainOccludesActor(x:number,y:number,z:number,yaw:number,pitch:number,maxDistance:number,ground:(x:number,z:number)=>number) {
+  const dx=Math.sin(yaw), dz=Math.cos(yaw), rise=Math.tan(pitch);
+  for(let d=.75;d<maxDistance;d+=d<7?.75:2.5){
+    if(ground(x+dx*d,z+dz*d)>y+d*rise+.07)return true;
+  }
+  return false;
 }
 
 /** Céu acompanha o clima, com a cor da névoa no horizonte. */
@@ -97,7 +109,7 @@ export function groundArt(map: GameMap) {
       const onPath = Math.abs(x - trailX(z)) < 2.25 + patch * .45;
       const inPlaza = Math.abs(x) < 9 && z > -22 && z < -11;
       const river = map.id === 'folha' && Math.abs(x - 41.5 - Math.sin(z * .13) * 2) < 3.1 && z > 12;
-      const stone = groundHeight(map.id, x, z) > 4.2 + patch;
+      const stone = groundHeight(map.id, x, z) > 2.9 + patch;
       const color = river ? water : inPlaza ? plaza : onPath ? dirt : stone ? rock : grass;
       let shade = .88 + .18 * fleck + .08 * patch;
       if (inPlaza && !river) {

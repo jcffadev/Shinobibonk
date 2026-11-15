@@ -1,3 +1,4 @@
+import type { ProfilePortrait } from './profilePortrait.ts';
 import { MAPS, type MapId } from './maps.ts';
 import { readLocalRankHistory, type RankedRun } from './ranking.ts';
 import type { Difficulty } from './progression.ts';
@@ -20,7 +21,7 @@ export type LeagueBuild = {
 export type LeagueMission = RankedRun & {
   map: MapId; difficulty: Difficulty; finishedAt: number; build?: LeagueBuild;
 };
-export type LeagueMember = {
+export type LeagueMember = ProfilePortrait & {
   id: number; name: string; clan?: string; joinedAt: number; missions: number;
   wins: number; kills: number; seconds: number; highestLevel: number;
   best: Record<string, LeagueMission>; builds: Record<string, LeagueMission>; history: LeagueMission[];
@@ -90,6 +91,11 @@ export function syncLeagueProfile(profile: Identity) {
   const board = ensureLeagueMember(previous, profile, previous.members[profile.id] ? [] : readLocalRankHistory());
   if (board !== previous) writeLeague(board);
   return board;
+}
+
+export function setLeaguePortrait(board: League, profile: Identity, portrait: ProfilePortrait) {
+  const ready = ensureLeagueMember(board, profile);
+  return { ...ready, members: { ...ready.members, [profile.id]: { ...ready.members[profile.id], ...portrait } } };
 }
 
 export function addLeagueMission(board: League, profile: Identity, run: LeagueMission) {

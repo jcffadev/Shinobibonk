@@ -1,7 +1,7 @@
 /* HUD inferior: pílulas em linha própria ACIMA da barra de habilidades (sem sobreposição).
    .skill-dock empilha .vitamin-row e .ability-bar em fluxo normal; as regras antigas de
    posição absoluta de cada barra (style.css/run-ui.css) são neutralizadas aqui. */
-.skill-dock{position:absolute;z-index:3;left:20px;bottom:96px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:calc(100% - 40px);pointer-events:none}
+.skill-dock{position:absolute;z-index:3;right:20px;bottom:96px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:calc(100% - 40px);pointer-events:none}
 .skill-dock>.vitamin-row,.skill-dock>.ability-bar{position:static;left:auto;right:auto;bottom:auto;transform:none;pointer-events:auto}
 .skill-dock>.ability-bar{width:auto;flex-wrap:nowrap}
 .skill-dock>.vitamin-row{width:max-content;min-height:0;max-width:100%;gap:4px;padding:0;background:none;box-shadow:none;backdrop-filter:none}
@@ -15,7 +15,7 @@
 .level-choice-cards.many-cards .level-choice-card{min-height:0}
 @media(max-width:700px){
   .level-choice-cards.many-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .skill-dock{left:8px;bottom:50px;gap:6px;max-width:calc(100% - 16px)}
+  .skill-dock{right:8px;bottom:50px;gap:6px;max-width:calc(100% - 16px)}
   .skill-dock>.vitamin-row .inv-icon{width:23px;height:23px}
 }
 
@@ -137,3 +137,12 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 /* Rodada 58: cursor virtual (kunai) enquanto o ponteiro fica preso numa tela por cima do jogo — src/scene/virtualCursor.ts.
    A ponta da kunai (3,3) é o ponto de clique, igual ao cursor real da .game-shell. */
 .virtual-cursor{position:fixed;left:0;top:0;width:26px;height:26px;margin:-3px 0 0 -3px;background:url('/assets/icons/cursor-kunai.svg') no-repeat 0 0/contain;pointer-events:none;z-index:2147483000;display:none;will-change:transform;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+
+.game-shell .inventory-corner{left:18px;right:auto}
+.game-shell .skill-dock>.ability-bar button{display:grid;justify-items:center;align-content:center;text-align:center}
+.game-shell .skill-dock>.ability-bar button>.skill-art{margin:0;justify-self:center;align-self:center}
+.game-shell .skill-dock>.ability-bar .ultimate{width:65px;height:65px;padding:0}
+.game-shell .skill-dock>.ability-bar .ultimate>.skill-art{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%)}
+.game-shell .skill-dock>.ability-bar .ultimate em{position:absolute;bottom:3px;left:0;right:0;margin:0;text-align:center}
+.game-shell .skill-dock .ultimate-auto-mark{left:50%;right:auto;transform:translateX(-50%)}
+@media(max-width:700px){.game-shell .skill-dock{left:auto;right:8px}.game-shell .inventory-corner{left:7px;right:auto}.game-shell .skill-dock>.ability-bar .ultimate{width:55px;height:55px}}

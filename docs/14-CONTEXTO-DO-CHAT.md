@@ -1896,3 +1896,21 @@ As 114 versões receberam corrida com braços para trás no WASD. São 57 atlas,
 **Resposta da rodada**
 
 O hub ganhou um cartão de temporada, Top 100, clãs e uma ficha acessível pelo retrato. A ficha mostra a última build usada por shinobi e as missões recentes. As classificações desta versão pertencem aos perfis do mesmo navegador. Para publicação compartilhada, a proposta é PostgreSQL com Supabase Auth e uma API autenticada com validação de resultados. A política oficial da referência descreve armazenamento no servidor, dados públicos da ficha e revisão de partidas. O produto de banco usado por ela não foi divulgado nessa fonte. [Regras e proposta online](development/RANKING-E-CLAS.md).
+
+## Rodada 68 · 15/11/2026
+
+**Pedidos.** Ranking Top 100 com posição pessoal além da lista, abates e sequência dentro da missão, filtros por mapa, dificuldade, personagem, modo e tamanho da equipe. Nome do jogador, avatar e moldura próprios. Botão “Ver Ranking”. Seleção e ficha usam o mesmo retrato de Naruto Shippuden como referência, em três quartos, com enquadramento uniforme e revisão específica do Killer B. Verificar a divergência entre o nome visível e o apelido do perfil e se login ou senha aparecem no código. Preparar o serviço para Netlify, discutir instalador Windows e incluir skill de proteção de segredos para todos os agentes.
+
+**Resposta.** Perfil local agora resolve o apelido do próprio usuário e guarda avatar e moldura por conta. O servidor usa o apelido da conta online. O login local usa um verificador PBKDF2 com sal. A consulta aos arquivos rastreados e ao histórico nos escopos do app não mostrou os identificadores pesquisados. A infraestrutura de ranking solo usa Netlify e PostgreSQL configuráveis, com aprovação de resultados no serviço. Teste de produção, co-op e simulação autoritativa seguem pendentes. A aplicação não lê nem recupera a senha original.
+
+**Pedidos.** Corrigir erro de abertura do Vite e foto que cobria o hub. Reduzir a velocidade do mouse nos menus e fazer a tela piscar em vermelho com som ao perder HP. Reduzir 50% do tamanho do personagem controlado e depois mais 20%. Restaurar os monstros comuns ao tamanho original. Diminuir as elevações e permitir que a montanha esconda o personagem conforme a câmera. Reduzir pela metade bolinhos em todos os mapas e dificuldades. Reduzir um pouco o XP e o spawn no primeiro minuto em todas as dificuldades. Centralizar ícones, incluindo ultimate.
+
+**Resposta.** Vite e recorte corrigidos. Cursor dos menus em 55% com movimento bruto. Flash vermelho ocupa a cena quando há dano real. Jogador a 40% da escala anterior; inimigos, coadjuvantes e bosses seguem o tamanho próprio. Morros mais baixos e terreno faz oclusão. Bolinhos diminuem à metade dos valores anteriores e mantêm cura. XP de abates −12% antes do arredondamento. Spawn normal começa com −20% e converge no minuto 1 de cada zona. Os ícones do HUD foram centralizados.
+
+**Pedidos.** Pesquisar todos os jutsus, ajustar efeitos e dizer a escola no card. O Banshō Ten’in deve ser onda circular que atrai. Status de técnica no Nv. 1 até 10% antes de buffs, crítico e dano crítico escalam. Fundir até Nv. 7, com ícones, efeito, comparação e “Requisito para Fusão”. Receitas de Kekkei Genkai de acordo com a obra. Animar todas as técnicas com acerto visível e documentar selos durante casting em qualquer papel. Usar dōjutsu próprios por usuário.
+
+**Resposta.** Progressão compartilhada, atração e repulsão, seis receitas com referências, cartas de fusão e combinação, ícones de dōjutsu e movimento contínuo no render. A pose durante o casting é requisito permanente. A conferência autoral e visual de todas as técnicas e folhas de selos segue na auditoria.
+
+**Pedidos complementares.** A barra de HP nos pés ficou oculta após o ajuste do terreno. Colocar o botão vermelho “Esquecer” no Ichiraku. Refinar a posição do GPS.
+
+**Resposta.** A barra usa a altura legível em tela e fica visível com o shinobi em linha de visão. O card do Ichiraku destaca a ação em vermelho. A seta do GPS usa margens proporcionais à tela e indica distância, com o nome separado no cartão fixo.

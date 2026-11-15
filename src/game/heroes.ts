@@ -3,8 +3,8 @@ import { EXPANSION_BY_ID, ROSTER_EXPANSION } from './rosterExpansion.ts';
 export type School='Taijutsu'|'Ninjutsu'|'Genjutsu';
 export type Element='Neutro'|'Fogo'|'Água'|'Vento'|'Terra'|'Raio'|'Madeira'|'Areia'|'Sombra'|'Sábio';
 export type Shape='Projétil'|'Corpo a corpo'|'Cone'|'Onda'|'Em V'|'Linha'|'Área'|'Órbita'|'Buff';
-export type Control='Atordoar'|'Paralisar'|'Dormir'|'Empurrar'|'Lentidão';
-export type Technique={name:string;school:School;element:Element;secondaryElement?:Element;ultimate?:boolean;shape:Shape;color:string;power:number;range:number;cooldown:number;slow?:boolean;burn?:boolean;status?:Control;secondaryStatus?:Control;secondaryStatusChance?:number;statusChance:number;unlockLevel:number;setup?:Setup};
+export type Control='Atordoar'|'Paralisar'|'Dormir'|'Empurrar'|'Lentidão'|'Congelar';
+export type Technique={name:string;school:School;element:Element;secondaryElement?:Element;ultimate?:boolean;gravity?:'pull'|'core'|'push';shape:Shape;color:string;power:number;range:number;cooldown:number;slow?:boolean;burn?:boolean;poison?:boolean;status?:Control;secondaryStatus?:Control;secondaryStatusChance?:number;statusChance:number;unlockLevel:number;setup?:Setup};
 /**
  * Técnica de setup (buff puro): não causa dano, é ativada automaticamente (com inimigo a até 9 m) e dá bônus temporários.
  * Recarga própria: NÃO é reduzida pela velocidade de ataque nem pela velocidade de projétil (só pelo afixo de recarga do level-up).
@@ -18,7 +18,7 @@ export type Setup={cooldown:number;duration:number;bonuses:Bonuses;stack:boolean
  */
 export type Hero={id:string;name:string;village:string;color:string;passive:string;bonuses:Bonuses;base:{hp:number;damage:number;armor:number;speed:number;crit:number;regen:number};skills:string[];techniques:Technique[];ultimate:string;build:string;atlas?:number;family?:string;form?:number;title?:string};
 const colors:Record<Element,string>={Neutro:'#d7e6ff',Fogo:'#ff7c45',Água:'#5fb6ef',Vento:'#8de8ca',Terra:'#c7a16c',Raio:'#b3c5ff',Madeira:'#8bd464',Areia:'#ddae70',Sombra:'#ad84e8',Sábio:'#f5da86'};
-const t=(name:string,school:School,element:Element,shape:Shape,power=1):Technique=>({name,school,element,shape,color:colors[element],power,range:shape==='Corpo a corpo'?1.6:shape==='Cone'?2.8:shape==='Órbita'?1.7:4.5,cooldown:shape==='Corpo a corpo'?1.2:shape==='Área'?2:1.5,slow:element==='Sombra',burn:element==='Fogo',status:school==='Genjutsu'?(name.includes('Corvo')?'Dormir':name.includes('Tsukuyomi')?'Atordoar':'Paralisar'):element==='Raio'?'Paralisar':element==='Vento'?'Empurrar':element==='Madeira'||element==='Areia'?'Lentidão':shape==='Corpo a corpo'?'Atordoar':undefined,statusChance:school==='Genjutsu'?.3:.12,unlockLevel:1});
+const t=(name:string,school:School,element:Element,shape:Shape,power=1):Technique=>({name,school,element,shape,color:colors[element],power,range:shape==='Corpo a corpo'?1.6:shape==='Cone'?2.8:shape==='Órbita'?1.7:4.5,cooldown:shape==='Corpo a corpo'?1.2:shape==='Área'?2:1.5,slow:element==='Sombra',burn:element==='Fogo',poison:/Venenos[ao]|Tóxic[ao]|Corrosiv[ao]/.test(name),status:school==='Genjutsu'?(name.includes('Corvo')?'Dormir':name.includes('Tsukuyomi')?'Atordoar':'Paralisar'):element==='Raio'?'Paralisar':element==='Vento'?'Empurrar':element==='Madeira'||element==='Areia'?'Lentidão':shape==='Corpo a corpo'?'Atordoar':undefined,statusChance:school==='Genjutsu'?.3:.12,unlockLevel:1});
 /** Cria uma técnica de setup. Valores provisórios. */
 const s=(name:string,school:School,element:Element,setup:Setup):Technique=>({name,school,element,shape:'Buff',color:colors[element],power:0,range:9,cooldown:setup.cooldown,statusChance:0,unlockLevel:1,setup});
 const SAGE_MODE:Setup={cooldown:16,duration:7,bonuses:{damage:.15,area:.2},stack:false,sage:true,summary:'Entra no Modo Sábio: +dano e +área; aplica o elemento Sábio, dá Senjutsu ao Ninjutsu e faz o taijutsu corpo a corpo acertar em área ao redor.'};
@@ -57,7 +57,7 @@ const L={
  agulhasAreia:t('Agulhas de Areia','Ninjutsu','Areia','Cone'),
  ondaAreia:t('Onda de Areia','Ninjutsu','Areia','Onda'),
  agulhasSombra:t('Agulhas da Sombra','Genjutsu','Sombra','Em V'),
- prisaoSombra:t('Prisão das Sombras','Genjutsu','Sombra','Área'),
+ prisaoSombra:{...t('Prisão das Sombras','Ninjutsu','Sombra','Área'),status:'Paralisar' as const,statusChance:.35},
  nevoa:t('Névoa Venenosa','Ninjutsu','Sombra','Área'),
  modoSabio:s('Modo Sábio','Ninjutsu','Sábio',SAGE_MODE),
  /**
@@ -123,8 +123,8 @@ const U={
  palmas128:t('Cento e Vinte e Oito Palmas','Taijutsu','Neutro','Linha',1.8),
  protetoras:t('Palmas Protetoras','Taijutsu','Neutro','Órbita'),
  leoes:t('Punhos dos Leões Gêmeos','Taijutsu','Neutro','Cone',1.6),
- possessao:t('Possessão das Sombras','Genjutsu','Sombra','Cone'),
- costura:t('Costura das Sombras','Genjutsu','Sombra','Linha'),
+ possessao:{...t('Possessão das Sombras','Ninjutsu','Sombra','Cone'),status:'Paralisar' as const,statusChance:.35},
+ costura:{...t('Costura das Sombras','Ninjutsu','Sombra','Linha'),status:'Paralisar' as const,statusChance:.35},
  sombrasMassa:t('Possessão em Massa','Genjutsu','Sombra','Área',1.7),
  corteLeque:t('Corte do Leque','Ninjutsu','Vento','Cone'),
  tornado:t('Tornado Cortante','Ninjutsu','Vento','Órbita'),
@@ -162,7 +162,7 @@ export const HEROES:Hero[]=[
  h('shikamaru','Shikamaru','Clã Nara','#a5b783',120,17,5,6.6,'Estrategista · +30% duração de status e +10 pontos de chance de lentidão.',{duration:.3,status:.1},[U.possessao,L.kunai,L.agulhasSombra,L.prisaoSombra],'Estrangulamento das Sombras','Controle, duração e velocidade de ataque'),
  h('temari','Temari','Vila da Areia','#d1be8a',125,22,4,6.7,'Mestra do Leque · +25% raio dos ataques.',{area:.25},[U.corteLeque,L.laminas,L.vendaval,U.tornado],'Invocação de Kamatari','Área, projéteis e ninjutsu'),
  h('tenten','Tenten','Vila da Folha','#dc9f91',120,16,4,7,'Mestra de Armas · ×1,5 de dano em técnicas neutras ou de projétil. +1 projétil por disparo.',{projectiles:1},[L.shuriken,U.kunaiExplosiva,L.senbon,U.corrente],'Dragões Gêmeos','Projéteis, taijutsu e crítico'),
- h('pain','Pain','Vila da Chuva','#ca86cb',140,24,7,6.2,'Caminho Deva · +20% ninjutsu e +15% raio de área. Nagato (Clã Uzumaki) controla o corpo de Yahiko pelos receptores de chakra.',{element:.2,area:.15},[L.kunai,t('Chibaku Tensei','Ninjutsu','Neutro','Área'),t('Bansho Tenin','Ninjutsu','Neutro','Cone'),t('Barras de Chakra','Ninjutsu','Neutro','Projétil')],'Shinra Tensei','Ninjutsu, área e recarga'),
+ h('pain','Pain','Vila da Chuva','#ca86cb',140,24,7,6.2,'Caminho Deva · +20% ninjutsu e +15% raio de área. Nagato (Clã Uzumaki) controla o corpo de Yahiko pelos receptores de chakra.',{element:.2,area:.15},[L.kunai,{...t('Chibaku Tensei','Ninjutsu','Neutro','Área'),gravity:'core'},{...t('Bansho Tenin','Ninjutsu','Neutro','Onda'),gravity:'pull',color:'#bda0ff'},t('Barras de Chakra','Ninjutsu','Neutro','Projétil')],'Shinra Tensei','Ninjutsu, área e recarga'),
  h('tobirama','Tobirama','Vila da Folha','#82cbe6',135,21,7,6.8,'Estratégia Suiton · +15% velocidade de ataque e +15% recarga da Ultimate.',{attackSpeed:.15,cool:.15},[t('Corte de Água','Ninjutsu','Água','Linha'),L.dragaoAgua,L.agulhasAgua,t('Onda Explosiva','Ninjutsu','Água','Área',1.4)],'Mar do Segundo Hokage','Velocidade de ataque, ninjutsu e recarga'),
  h('kankuro','Kankuro','Vila da Areia','#a48fc7',130,18,6,6.5,'Marionetista · +20% duração de status e ataques aplicam veneno de 20% do impacto em 3 s.',{duration:.2,dot:.2},[U.karasu,U.kuroari,L.parede,L.kunai],'Teatro das Marionetes','Veneno, duração e projéteis'),
  h('guy','Might Guy','Vila da Folha','#69cf81',145,25,7,6.8,'Poder da Juventude · +30% taijutsu e +10% movimento.',{normal:.3,move:.1},[L.furacao,L.punho,L.portoes,U.chuteDinamico],'Portões Internos','Taijutsu, velocidade de ataque e crítico'),

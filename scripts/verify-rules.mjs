@@ -309,7 +309,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
   assert.ok(gcSrc.includes("targetYaw-=dx*.0025*settings.mouseSensitivity"),'taxa do yaw reduzida e simétrica (rodada 44)');
   assert.ok(gcSrc.includes("dy*.0025*settings.mouseSensitivity"),'taxa do pitch reduzida e simétrica (rodada 44)');
   assert.ok(gcSrc.includes("clamp(targetPitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),CAMERA_MIN_PITCH,1.48)")&&gcSrc.includes('CAMERA_MIN_PITCH = .03'),'piso do pitch deitado para 0.03 rad (rodada 44 → 55)');
-  assert.ok(gcSrc.includes('CAMERA_OCCLUSION_ALLOWANCE')&&!gcSrc.includes('terrainHeight(camera.position.x,camera.position.z)+1.2'),'scan de terreno tolera canela coberta e sem trava de altura da câmera (rodada 55)');
+  assert.ok(gcSrc.includes('const viewPitch=pitch;')&&gcSrc.includes('player.material.depthTest=true;'),'o terreno oculta o jogador sem alterar a inclinação da câmera (rodada 68)');
   const { DEFAULT_SETTINGS } = await import('../src/game/settings.ts');
   assert.equal(DEFAULT_SETTINGS.musicVolume,.1,'música padrão em 10% (rodada 55)');
   assert.ok(gcSrc.includes('pitch=.55, targetPitch=pitch'),'início da partida com câmera mais deitada (0.55 rad, rodada 44)');

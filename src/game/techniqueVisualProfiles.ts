@@ -1,3 +1,4 @@
+import { kekkeiFusion } from './techniqueMerge.ts';
 import type { Technique } from './heroes.ts';
 import { expansionVisual } from './rosterExpansion.ts';
 
@@ -64,6 +65,8 @@ const profiles:readonly (readonly [RegExp,number])[]=[
 const visualCells:Record<string,number>={swarm:11,mind:10,chains:13,roots:8,shark:4,water:4,steam:19,poison:22,lava:23,lightning:0,fire:2,elements:2,gold:20,iron:7,ice:17,ink:21,palms:12,blade:18,staff:18,scan:12,paths:16,impact:9,wings:15,wheel:9,fang:9,mark:6,cube:9,spiral:16};
 const elementCells:Record<Technique['element'],number>={Neutro:18,Fogo:2,Água:4,Vento:6,Terra:9,Raio:0,Madeira:8,Areia:20,Sombra:10,Sábio:12};
 export function battleEffectCell(technique:Technique) {
+  const recipe=kekkeiFusion(technique.name);
+  if(recipe)return recipe.icon;
   const named=profiles.find(([name])=>name.test(technique.name));
   const visual=expansionVisual(technique.name);
   return named?.[1] ?? (visual?visualCells[visual]:undefined) ?? elementCells[technique.element];

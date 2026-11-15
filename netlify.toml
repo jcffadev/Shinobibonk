@@ -7,6 +7,9 @@
 [build.environment]
   NODE_VERSION = "22"
 
+[functions]
+  directory = "netlify/functions"
+
 # Aplicação de página única: qualquer rota cai no index.html.
 [[redirects]]
   from = "/*"

@@ -2,7 +2,17 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
-## Prioridades atuais · 14/11/2026
+## Prioridades atuais · 15/11/2026
+
+1. Validação visual em partida das 114 poses e dos retratos em três quartos, HUD invertido, câmera e oclusão do terreno, som e flash ao perder HP, cursor nos menus, planejador e oficina. Política E2E vigente.
+2. Fechar revisão de jutsus um a um por referência da obra. Cobrir Ultimates e efeitos de inimigos, ajudantes e eventos. Confirmar a folha de selos de cada versão e os dōjutsu no jogo.
+3. Conferir em partida o GPS atualizado e verificar a curva de XP das zonas posteriores após o ajuste.
+4. Provisionar ranking público, conferir e-mail e deploy real, integração dos modos e placar co-op. Validar replay ou simulação autoritativa antes de competição.
+5. Preparar a distribuição instalada quando a estratégia de servidor do combate e os assets públicos estiverem definidos.
+
+Validação por código concluída com 104 testes, TypeScript e builds. PostgreSQL local e gateway com servidor simulado também passaram. Pendente de validação E2E conforme a política do projeto.
+
+## Registro anterior · 14/11/2026
 
 1. Validar em partida as cinco vistas integradas das 114 versões, o enquadramento em perfil e as transições. Completar artes dedicadas de dash e pulo nos ângulos ainda cobertos pelas duas vistas. Conferir os quatro inimigos comuns, ajudantes e bijū. [Matriz por versão](development/COBERTURA-DE-VISTAS.md).
 2. Revisar em partida o tamanho real do elenco, o foco, a câmera e o terreno. Conferir Hanzō, Haku, selos do Zabuza e as correções de XP, colisão, altar e feedback de dano.

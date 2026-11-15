@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 15/11/2026 · Jutsus, preparo de missão, HUD e ranking
+
+- Banshō Ten’in atrai em onda circular, Chibaku Tensei puxa para o núcleo e Shinra Tensei repele. Chance de status e queimadura no Nv. 1 até 10% antes de buffs; crítico e dano crítico próprios sobem por nível. Cartas mostram a escola e as chances efetivas.
+- Fusões param no Nv. 7. Planejador com ícones, efeitos, requisitos na aba Habilidades e comparação com combinação. Seis receitas de Kekkei Genkai, usáveis na Oficina dos Sapos com os ingredientes aprendidos.
+- Animação compartilhada de malhas com movimento por natureza e impacto no alvo. Ícones de dōjutsu por portador, validação do recorte dos 114 retratos e troca do quadro de Killer B. A revisão autoral de cada jutsu e a validação em partida continuam pendentes.
+- Jogador a 40% da escala visual anterior, terreno a 58% da altura e oclusão pela câmera. Flash vermelho de tela inteira e som ao perder HP. Cursor virtual de menu em 55%. Habilidades e pílulas à direita, inventário à esquerda e ícones centralizados.
+- Bolinhos com 2,5% de chance por abate e 50% nos pontos de Ryu. XP por inimigo −12% e surgimento normal até −20% no primeiro minuto de cada zona em todos os ranks.
+- Avatar e moldura por conta, apelido configurado visível e cartão da temporada em partida. Base de ranking solo online preparada para Netlify e PostgreSQL. Ambiente hospedado e outros modos seguem pendentes.
+- Barra com HP atual e máximo restaura a leitura aos pés quando o terreno deixa o jogador à vista. Ação vermelha Esquecer no Ichiraku e seta do GPS dentro das margens da janela.
+- Skill de segurança de publicação compartilhada entre agentes. Skill de jutsus registra selos durante o tempo real de conjuração para qualquer shinobi que lança habilidades.
+
+
+Validação em 15/11: 104 testes por código com cobertura, TypeScript, builds local e online, teste da função e migração PostgreSQL com 105 perfis. E2E visual pendente.
+
 ## 14/11/2026 — temporada, ranking e clãs no hub
 
 - A inicial mostra a prévia da temporada e a posição pessoal. A aba Ranking lista até 100 perfis, com pódio e filtros de região, dificuldade e shinobi.

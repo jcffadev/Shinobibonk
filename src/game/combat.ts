@@ -94,7 +94,7 @@ export function itemAttribute(item:Item){
 export const SENJUTSU={chance:.25,multiplier:1.5,label:'Senjutsu (modo sábio)',color:'#f5da86'};
 /** Uma técnica tem a linha Senjutsu quando é Ninjutsu e está infundida com o elemento Sábio (próprio, item Selo de Senjutsu ou Modo Sábio ativo). */
 export function hasSenjutsu(t:Technique,sageInfused:boolean){return !t.setup&&t.school==='Ninjutsu'&&(t.element==='Sábio'||sageInfused);}
-export function senjutsuText(){return `${SENJUTSU.label}: ${Math.round(SENJUTSU.chance*100)}% de chance por acerto de causar dano adicional de ${String(SENJUTSU.multiplier).replace('.',',')}× o dano normal.`;}
+export function senjutsuText(level=1){return `${SENJUTSU.label}: ${Math.round(techniqueProc(SENJUTSU.chance,level)*100)}% de chance por acerto de causar dano adicional de ${String(SENJUTSU.multiplier).replace('.',',')}× o dano normal.`;}
 
 /** Multiplicador de recarga da técnica aprendida. O Nv. 1 é deliberadamente mais lento. */
 export function techniqueCooldownScale(level:number){
@@ -116,24 +116,46 @@ export function setupLines(t:Technique,g:SkillGrowth=NO_GROWTH,level=1):string[]
  const s=setupNumbers(t,g,level);
  return [`Recarga ${n1(s.cooldown)} s`,`Duração ${n1(s.duration)} s`,...bonusText(s.bonuses).split(' · ').filter(Boolean),...(s.sage?['Elemento Sábio + Senjutsu no Ninjutsu','Taijutsu corpo a corpo acerta em área ao redor']:[]),`Ativo ${Math.round(s.uptime*100)}% do tempo`,`Acumulável: ${s.stack?'Sim':'Não'}`];
 }
-/** Ataques sem controle ou queimadura ganham bônus próprios de crítico. */
-export const techniqueCritical = (t:Technique) => !t.setup&&!t.status&&!t.secondaryStatus&&!t.burn
-  ? {chance:.08,damage:.25}
-  : {chance:0,damage:0};
-export function techniqueStatusText(t:Technique) {
-  if(t.setup)return 'Preparação';
-  const statuses=[
-    t.status&&t.statusChance>0?t.status+' · '+n1(t.statusChance*100)+'%':null,
-    t.secondaryStatus&&t.secondaryStatusChance?t.secondaryStatus+' · '+n1(t.secondaryStatusChance*100)+'%':null,
-    t.burn?'Queimadura · 100%':null,
+const effectProgress = (level: number) => Math.max(0, Math.min(1, (level - 1) / 8));
+
+/** Teto inicial por efeito. Bônus conquistados podem elevar a chance durante a missão. */
+export function techniqueProc(base: number, level = 1, bonus = 0) {
+  const initial = Math.min(base, .1);
+  return Math.max(0, Math.min(.95, initial + (base - initial) * effectProgress(level) + bonus));
+}
+
+export function techniqueSchool(t: Technique) {
+  return t.element === 'Sábio' || t.setup?.sage ? 'Senjutsu' : t.school;
+}
+
+/** Ataques sem efeito próprio podem ganhar crítico com os níveis da técnica. */
+export function techniqueCritical(t: Technique, level = 1) {
+  if (t.setup || t.status || t.secondaryStatus || t.burn || t.poison || t.gravity) return { chance: 0, damage: 0 };
+  const progress = effectProgress(level);
+  return { chance: .02 + .06 * progress, damage: .05 + .20 * progress };
+}
+
+export const BURN_CHANCE = .60;
+export const POISON_CHANCE = .50;
+const GRAVITY_TEXT = { pull: "Uma onda ao redor do usuário puxa inimigos para perto.", core: "Um núcleo gravitacional puxa inimigos para o centro do impacto.", push: "Uma onda ao redor do usuário repele inimigos." };
+export function techniqueStatusText(t: Technique, level = 1, bonus = 0) {
+  if (t.setup) return 'Preparação';
+  const statuses = [
+    t.gravity && GRAVITY_TEXT[t.gravity],
+    t.status && t.statusChance > 0 && t.status + ' · ' + n1(techniqueProc(t.statusChance, level, bonus) * 100) + '%',
+    t.secondaryStatus && t.secondaryStatusChance && t.secondaryStatus + ' · ' + n1(techniqueProc(t.secondaryStatusChance, level, bonus) * 100) + '%',
+    t.burn && 'Queimadura · ' + n1(techniqueProc(BURN_CHANCE, level, bonus) * 100) + '%',
+    t.poison && 'Dano contínuo · ' + n1(techniqueProc(POISON_CHANCE, level, bonus) * 100) + '%',
   ].filter(Boolean);
-  return statuses.join(' / ')||'+8 p.p. crítico · +25% dano crítico';
+  if (statuses.length) return statuses.join(' / ');
+  const crit = techniqueCritical(t, level);
+  return "+" + n1(crit.chance * 100) + " p.p. crítico · +" + n1(crit.damage * 100) + "% dano crítico";
 }
 /** Texto curto de uma técnica para tooltips/cartas (setup ou ataque com linha Senjutsu). */
-export function techniqueDetail(t:Technique,g:SkillGrowth=NO_GROWTH,sageInfused=false,sageModeKnown=false):string{
- if(t.setup)return `Setup (buff, sem dano) · ${t.setup.summary} ${setupLines(t,g).join(' · ')}.`;
- const parts=[`${t.school} · ${t.element} · ${t.shape}`,techniqueStatusText(t)];
- if(hasSenjutsu(t,sageInfused))parts.push(senjutsuText());
+export function techniqueDetail(t:Technique,g:SkillGrowth=NO_GROWTH,sageInfused=false,sageModeKnown=false,level=1,bonus=0):string{
+ if(t.setup)return `Setup (buff, sem dano) · ${t.setup.summary} ${setupLines(t,g,level).join(' · ')}.`;
+ const parts=[`${techniqueSchool(t)} · ${t.element} · ${t.shape}`,techniqueStatusText(t,level,bonus)];
+ if(hasSenjutsu(t,sageInfused))parts.push(senjutsuText(level));
  else if(t.school==='Ninjutsu'&&sageModeKnown)parts.push(`${SENJUTSU.label} durante o Modo Sábio.`);
  return parts.join(' · ');
 }
