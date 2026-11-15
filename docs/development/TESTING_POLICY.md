@@ -25,7 +25,7 @@ ESLint não está configurado no projeto.
 
 ## A. Política temporária de navegadores
 
-**Decisão do usuário (14/11/2026): testes de navegador ficam suspensos para Claude Code, Qwen e Codex até nova autorização explícita.**
+**Decisão do usuário (14/11/2026): testes de navegador ficam suspensos para Claude Code, Qwen e Codex até nova autorização explícita.** **CONFIRMADO pelo usuário em 15/11/2026:** "Está para todas as IAs" (substitui a decisão de 14/11 que limitava a restrição ao Claude Code).
 
 A restrição inclui:
 

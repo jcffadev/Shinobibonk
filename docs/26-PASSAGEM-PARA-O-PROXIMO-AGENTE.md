@@ -57,5 +57,5 @@
   - `src/scene/bossCombat.ts`: bijū.
   - `src/scene/enemyRenderer.ts`: inimigos em lote.
   - `src/scene/collision.ts`: colisão (item 20).
-- **Testes:** `tests/*.test.mjs` (11 arquivos, 80 testes), `tests/helpers/load.mjs`, `tests/minimo.json`, `scripts/run-tests.mjs`, `scripts/mutation-check.mjs`, `scripts/audit-walk-sheets.mjs`, `TESTAR_JOGO.bat`.
+- **Testes:** `tests/*.test.mjs` (14 arquivos, 110 testes em 15/11), `tests/helpers/load.mjs`, `tests/minimo.json`, `scripts/run-tests.mjs`, `scripts/mutation-check.mjs`, `scripts/audit-walk-sheets.mjs`, `TESTAR_JOGO.bat`.
 - **Material do jogo de referência:** só fora do projeto, na pasta arquivada na raiz do workspace (`skills/referencia-externa/SKILL.md`).

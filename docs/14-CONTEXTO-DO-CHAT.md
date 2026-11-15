@@ -1957,3 +1957,7 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - **Correção:** a proporção agora iguala a largura da cabeça (60–135%), com piso de 70% da altura do corpo. Resultado: mediana 1,00.
 - **PASSOU:** tsc, build, 110/110. **PENDENTE DE VALIDAÇÃO E2E:** ver na tela.
 - **Publicado no GitHub.**
+
+> Está para todas as IAs
+
+**Resposta.** Decisão registrada: a restrição de navegador vale para Claude Code, Codex, Qwen e qualquer outra IA, até nova autorização explícita. A política central e o AGENTS.md já diziam isso; foram acrescentados o registro da confirmação (TESTING_POLICY §A e docs/18 §3, substituindo a decisão de 14/11) e a correção da contagem de testes em docs/26.
