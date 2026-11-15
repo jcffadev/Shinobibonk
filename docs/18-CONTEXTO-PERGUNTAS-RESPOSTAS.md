@@ -209,6 +209,10 @@ Fusões (decisões do usuário):
 - São 8 receitas, com Jiton e Bakuton.
 - As naturezas da linhagem entram no pool do personagem.
 
+### Rodada 72 · 15/11/2026
+
+Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wiki não liberar." Natureza fora da obra nunca entra no pool. A auditoria não achou nenhuma fora. As linhagens da rodada 71 foram conferidas na Narutopedia. Liberar as naturezas da obra que ainda faltam ficou anotado para revisar depois, em `docs/development/DECISAO-KEKKEI-GENKAI.md`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

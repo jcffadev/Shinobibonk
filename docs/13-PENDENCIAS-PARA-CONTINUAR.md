@@ -59,6 +59,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 20 | **NOVO (tester):** paredes invisíveis / colisão travando onde não há nada | FEITO (rodada 70): corpo na escala do desenho, cenário escondido removido, dash atravessa · TESTADO por código · E2E pendente |
 | 21 | **NOVO (tester):** borda do círculo do altar mais grossa (sem aumentar o raio) | PENDENTE |
 | 22 | **NOVO (tester):** feedback visual/sonoro ao levar dano | PENDENTE |
+| 23 | **DECISÃO PENDENTE:** liberar no pool as naturezas da obra (hoje 18/72 famílias têm 2+). Natureza fora da obra nunca entra. Opções e dados que faltam em [DECISAO-KEKKEI-GENKAI.md](development/DECISAO-KEKKEI-GENKAI.md) | AGUARDA O USUÁRIO |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
 ## Rodada 53 · Estado e próximos passos

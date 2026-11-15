@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 15/11/2026 · Decisão sobre naturezas e Kekkei Genkai (Rodada 72)
+
+- **Decisão do usuário:** "Se ele não tem natureza, igual no anime/obra/mangá, wiki não liberar."
+- **Auditoria:** nenhuma natureza fora da obra está liberada nas 25 famílias com dado canônico. As 9 linhagens da rodada 71 foram conferidas na Narutopedia em 15/11/2026.
+- **Anotado para revisar** em `docs/development/DECISAO-KEKKEI-GENKAI.md`:
+  - liberar ou não as naturezas da obra (opções A, B e C);
+  - as 48 famílias sem dado de natureza;
+  - candidatos como o Madara com Ranton.
+- Nenhum código alterado.
+
 ## 15/11/2026 · Fusões e Kekkei Genkai completas (Rodada 71)
 
 - **Pedidos do usuário:**

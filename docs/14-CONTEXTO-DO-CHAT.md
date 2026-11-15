@@ -2017,3 +2017,27 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
   - **PASSOU:** tsc, 125/125 com cobertura e build.
   - **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 72 · 15/11/2026 — naturezas da obra
+
+> Como assim explique
+
+**Resposta.**
+
+- O pool usa só a afinidade, o kit e a linhagem; não usa as naturezas da obra.
+- Por isso só 18 das 72 famílias pegam 2+ naturezas.
+- Liberar mais derruba a regra de elemento base de 06/11.
+
+> Se ele não tem natureza, igual no anime/obra/mangá, wiki não liberar.
+>
+> Mas, deixar anotado isso em algum .md decisão sobre kekkei genkais sei la, para depois revisarmos ou implementarmos se encessário
+>
+> Me explique como vaif uncionar as kekei genkais
+
+**Resposta.**
+
+- A auditoria não achou natureza fora da obra.
+- As linhagens foram conferidas na Narutopedia: a Madeira é Terra + Água, e o Madara também tem Ranton (anotado).
+- A decisão e as opções ficaram em `docs/development/DECISAO-KEKKEI-GENKAI.md`.
+- Expliquei o funcionamento das Kekkei Genkai.
+- **Publicado no GitHub.**
