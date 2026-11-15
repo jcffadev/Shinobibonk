@@ -11,7 +11,7 @@ import { sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain
 import { createTotemBar } from './narutoTotem';
 import { NPC_ALLIES, NPC_RULES, TOTEM_RULES, dealBonuses, dealLabel, dealText, pctText, rollEbisuDeals, rollIrukaLegendary, rollIrukaLesson, type StatDeal } from '../game/npcs';
 import { alliesBonuses, allyBuffText, affinityLevel, affinityFactor, maxAffinityPoints, AFFINITY_RULES, ALLY_BUFFS } from '../game/allies';
-import { readSettings } from '../game/settings';
+import { readSettings, saveSettings } from '../game/settings';
 import { DebugPanel, type DebugApi } from '../ui/DebugPanel';
 import { compactNumber } from '../game/format';
 import { createPlayerMotion, movementFacing, stableFacing } from './playerMotion';
@@ -25,7 +25,7 @@ import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from './gamabunta
 import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } from './kuroari';
 import { createEnemyRenderer, ENEMY_FRAME } from './enemyRenderer';
 import { focusOpacity, setFocusView } from './playerFocus';
-import { createHeightField } from './heightField';
+import { createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightField';
 import { createDamageNumbers } from './damageNumbers';
 import { BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
@@ -166,6 +166,10 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let renderer = createRenderer(); container.appendChild(renderer.domElement); let activeGpu = currentSettings().gpu;
     scene.add(new THREE.HemisphereLight('#d4e9ff', '#35402d', 2.4)); const sun = new THREE.DirectionalLight('#ffe6b0', 3); sun.position.set(-8, 18, 7); scene.add(sun);
     const terrainHeight=createHeightField((x:number,z:number)=>groundHeight(MAP.id,x,z),MAP_SIZE/2);
+    // Rodada 88 (pedido do usuário: "as vezes o pé do personagem está indo para abaixo do solo… corrigir em todos os mapas…
+    // todos os personagens"): personagens ficam de pé no ponto MAIS ALTO do chão sob os pés (raio FOOT_RADIUS). Na encosta
+    // de um terraço o chão logo à frente é mais alto que o centro e escondia os pés.
+    const standHeight=(x:number,z:number)=>footHeight(terrainHeight,x,z);
     const solids=createSolids();
     // Partículas das técnicas (natureza × forma) e Susanoo procedural: pools fixos, só visual (particleFx.ts / susanooFx.ts).
     const particles=createParticleFx(scene,terrainHeight),susanoo=createSusanooFx(scene,particles,terrainHeight);particles.setHidden(hiddenEffects);
@@ -177,6 +181,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const terrainPositions=terrainGeometry.attributes.position;
     for(let i=0;i<terrainPositions.count;i++)terrainPositions.setZ(i,terrainHeight(terrainPositions.getX(i),-terrainPositions.getY(i)));
     terrainGeometry.computeVertexNormals();
+    // Rodada 88: o chão recua um pouco na profundidade, para a base dos sprites não ser cortada pela encosta.
+    groundLook.material.polygonOffset=true;groundLook.material.polygonOffsetFactor=GROUND_DEPTH_OFFSET.factor;groundLook.material.polygonOffsetUnits=GROUND_DEPTH_OFFSET.units;
     const ground=new THREE.Mesh(terrainGeometry,groundLook.material);
     ground.rotation.x=-Math.PI/2;scene.add(ground);
     const texture = new THREE.TextureLoader().load('/assets/shinobi-sprites-atlas.png'); texture.colorSpace = THREE.SRGBColorSpace; texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter; texture.generateMipmaps = false;const orochimaruTexture=new THREE.TextureLoader().load('/assets/orochimaru-sprite.svg');orochimaruTexture.colorSpace=THREE.SRGBColorSpace;orochimaruTexture.magFilter=THREE.NearestFilter;orochimaruTexture.minFilter=THREE.NearestFilter;
@@ -188,7 +194,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const heroTextures=new Map<string,THREE.Texture>();
     const heroMaterial=(id:string,lv=1)=>{const r=portraitRegion(id,lv),key=r.path+':'+r.index;let map=heroTextures.get(key);if(!map){map=new THREE.TextureLoader().load(r.path);map.colorSpace=THREE.SRGBColorSpace;map.magFilter=THREE.NearestFilter;map.minFilter=THREE.NearestMipmapLinearFilter;map.generateMipmaps=true;map.repeat.set(1/r.cols,1/r.rows);map.offset.set((r.index%r.cols)/r.cols,(r.rows-1-Math.floor(r.index/r.cols))/r.rows);heroTextures.set(key,map);}return new THREE.SpriteMaterial({map,transparent:true,alphaTest:.1,depthWrite:false});};
     const makeHero=(id:string,lv=1,size=1)=>{const sprite=new THREE.Sprite(heroMaterial(id,lv));const scale=ACTOR_SCALE*size*(familyOf(id)==='gaara'?1.1:1);sprite.scale.set(1.65*scale,2.25*scale,1);return sprite;};
-    const player=makeHero(heroId,1,PLAYER_SIZE);player.position.y=terrainHeight(0,0)+player.scale.y*.5;scene.add(player);
+    const player=makeHero(heroId,1,PLAYER_SIZE);player.position.y=standHeight(0,0)+player.scale.y*.5;scene.add(player);
     const playerMotion=createPlayerMotion(scene,player,heroId,true,PLAYER_SIZE);
     const focusView = new Float64Array(9);
     const enemyOpacity=(sprite:THREE.Sprite)=>focusOpacity(focusView,player.position,player.scale,sprite.position,sprite.scale);
@@ -201,7 +207,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       ? new THREE.Mesh(new THREE.IcosahedronGeometry(1,2),new THREE.MeshStandardMaterial({color:'#d9a66d',flatShading:true}))
       : null;
     if(sandCloud){sandCloud.visible=false;sandCloud.scale.set(.9,.24,.72);scene.add(sandCloud);runCleanups.push(()=>disposeObject(sandCloud));}
-    const cameraTarget=new THREE.Vector3(0,terrainHeight(0,0)+player.scale.y*.5,0);
+    const cameraTarget=new THREE.Vector3(0,standHeight(0,0)+player.scale.y*.5,0);
     const environmentMaps=new Map<number,THREE.Texture>(),decor:THREE.Sprite[]=[];
     const environmentSprite=(index:number,width:number,height:number)=>{let map=environmentMaps.get(index);if(!map){map=new THREE.TextureLoader().load('/assets/environment-v2.png');map.colorSpace=THREE.SRGBColorSpace;map.magFilter=THREE.NearestFilter;map.minFilter=THREE.NearestFilter;map.generateMipmaps=false;map.repeat.set(.25,.5);map.offset.set((index%4)*.25,(1-Math.floor(index/4))*.5);environmentMaps.set(index,map);}const obj=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,alphaTest:.1,depthWrite:false}));obj.scale.set(width,height,1);return obj;};
     const scenery=(index:number,x:number,z:number,w:number,h:number)=>{const obj=environmentSprite(index,w,h);if(MAP.scenery.tint!=='#ffffff')obj.material.color.set(MAP.scenery.tint);obj.position.set(x,terrainHeight(x,z)+h*.45,z);scene.add(obj);decor.push(obj);return obj;};
@@ -241,7 +247,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const altarColors=['#cbd5e1','#4cda83','#5daafa','#bb78f3','#ffcb55'];
     const altarRarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
     const allEvents=[...eventDefs.filter(e=>e.id!=='altar').map(e=>({...e,altarTier:undefined as number|undefined})),...Array.from({length:8},(_,i)=>{const tier=i<5?i:Math.floor(Math.random()*5);return {id:'altar-'+i,name:'Altar · '+(tier===0?'Normal':altarRarities[tier]),x:0,z:0,icon:'🛕',sprite:11,altarTier:tier};})];
-    const events=allEvents.map(def=>{const gate=def.id==='guardian-seal';const obj=environmentSprite(gate?4:def.id==='ichiraku'?5:def.id==='trader'?7:6,gate?5.6:def.id==='ichiraku'?4:3.2,gate?5:def.id==='ichiraku'?3.4:3.2);if(def.id==='slot'||def.id==='arsenal'||def.id==='shikamaru'||def.id==='ebisu'||def.id==='iruka'||def.id==='sapos-sabios'){obj.material.dispose();obj.material=heroMaterial(def.id==='slot'?'tsunade':def.id==='arsenal'?'tenten':def.id);}if(def.id==='orochimaru'){obj.material.dispose();obj.material=heroMaterial('orochimaru');obj.scale.set(2.2,3.1,1);}if(def.altarTier!==undefined){obj.material=obj.material.clone();obj.material.color.set(altarColors[def.altarTier]);}obj.scale.multiplyScalar(ACTOR_SCALE);obj.position.set(def.x,terrainHeight(def.x,def.z)+obj.scale.y*.45,def.z);obj.visible=false;scene.add(obj);return { ...def, obj, discovered:false, uses:0, active:true };});
+    const events=allEvents.map(def=>{const gate=def.id==='guardian-seal';const obj=environmentSprite(gate?4:def.id==='ichiraku'?5:def.id==='trader'?7:6,gate?5.6:def.id==='ichiraku'?4:3.2,gate?5:def.id==='ichiraku'?3.4:3.2);if(def.id==='slot'||def.id==='arsenal'||def.id==='shikamaru'||def.id==='ebisu'||def.id==='iruka'||def.id==='sapos-sabios'){obj.material.dispose();obj.material=heroMaterial(def.id==='slot'?'tsunade':def.id==='arsenal'?'tenten':def.id);}if(def.id==='orochimaru'){obj.material.dispose();obj.material=heroMaterial('orochimaru');obj.scale.set(2.2,3.1,1);}if(def.altarTier!==undefined){obj.material=obj.material.clone();obj.material.color.set(altarColors[def.altarTier]);}obj.scale.multiplyScalar(ACTOR_SCALE);obj.position.set(def.x,standHeight(def.x,def.z)+obj.scale.y*.45,def.z);obj.visible=false;scene.add(obj);return { ...def, obj, discovered:false, uses:0, active:true };});
     const occluders=[...decor,...events.filter(event=>['ichiraku','trader','guardian-seal'].includes(event.id)).map(event=>event.obj)];
     const ichiraku=events.find(event=>event.id==='ichiraku')!;
     const teuchi=makeHero('teuchi');
@@ -262,7 +268,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
           if(spots.every(p=>Math.hypot(p.x-x,p.z-z)>8)&&solids.isFree(x,z,e.id.startsWith('altar')?5:COLLISION_RULES.placementMargin))break;
         }
         spots.push({x,z});e.x=x;e.z=z;e.active=true;e.uses=0;e.discovered=false;
-        e.obj.visible=false;e.obj.position.set(x,terrainHeight(x,z)+e.obj.scale.y*.45,z);if(e===ichiraku)placeTeuchi();
+        e.obj.visible=false;e.obj.position.set(x,standHeight(x,z)+e.obj.scale.y*.45,z);if(e===ichiraku)placeTeuchi();
       }
     }
     scatterEvents();
@@ -838,7 +844,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     }
     const onKeyDown=(e:KeyboardEvent)=>{const rawKey=e.key.toLowerCase(),key=rawKey==='escape'||rawKey==='tab'?rawKey:translateKey(rawKey);if(!key)return; if(e.target instanceof HTMLElement&&e.target.matches('input,select,textarea'))return;if(e.repeat&&['m','tab','p','e','r','g','y','h'].includes(key))return;if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright',' ','tab'].includes(key))e.preventDefault();if(!enabledRef.current||defeated||victory||debugOpenRef.current)return;if(document.querySelector('.game-panel-backdrop.over-choice')){if(key==='escape'||key==='p')onPanelRef.current(null);return;}if(key==='p'&&(sealing||choiceData||roulette)){if(sealing?.phase!=='sealing')onPanelRef.current('sheet');return;}if(roulette)return;/* Roleta aberta: TsunadeRoulette.tsx trata E/Esc/F/X. */if(sealing){if(key==='e'&&sealing.phase==='ready'&&sealing.account){sealing.phase='sealing';sealTimer=knownItems['Shuriken Selo da Tenten']?2.7:0;eventToast='O selo está prendendo o chakra do shinobi…';playSfx('ultimate');}else if(key==='g'&&sealing.phase==='ready'&&sealing.account){const lost=sealing.target;nextSeal();eventToast=lost+' escapou: não foi desbloqueado na conta.';}else if(key==='e'&&sealing.phase==='ready'){if(hasAllyFamily(sealing.heroId)){eventToast=sealing.target+' já está na equipe: G para receber um item.';return;}if(allyActors.length>=stats.supportSlots){openReplace(sealing);return;}sealing.phase='sealing';sealTimer=knownItems['Shuriken Selo da Tenten']?2.7:0;eventToast='O selo está prendendo o chakra do inimigo…';playSfx('ultimate');}else if(key==='g'&&sealing.phase==='ready'){spawnPickup('sealDrop',player.position.x,player.position.z);nextSeal();eventToast='Selamento recusado: siga a luz verde do pergaminho para escolher um item';}else if((key==='enter'||key==='e')&&sealing.phase==='complete'){nextSeal();if(!sealing&&!replaceCandidate)eventToast='Shinobi selado e adicionado à equipe desta missão';}recaptureAfterChoice();return;}if(choiceData){if(key==='escape'){if(choiceLevel===-8&&!document.querySelector('.game-panel-backdrop')){rewardAction('skip');recaptureAfterChoice();}else onPanelRef.current(null);return;}if(e.repeat||pausedRef.current&&document.querySelector('.game-panel-backdrop'))return;if(!choiceArmed())return;if(key==='v')sellLoot();else if(key==='e'&&choiceLevel===-9)chooseLevelOffer(0);else if(key==='f')rewardAction('reroll');else if(key==='x')rewardAction('skip');else if(key==='z')rewardAction('ban');else if(/^[1-9]$/.test(key))chooseLevelOffer(Number(key)-1);recaptureAfterChoice();return;}if(key==='m'){quickMapHeld=false;if(mapPanel==='map'){mapPanel=null;suppressUnlockPause();onPanelRef.current(null);return;}mapPanel='map';onPanelRef.current('map');return;}if(key==='tab'){if(!pausedRef.current){if(mapPanel==='quickmap'){mapPanel=null;quickMapHeld=false;suppressUnlockPause();onPanelRef.current(null);return;}quickMapHeld=true;mapPanel='quickmap';onPanelRef.current('quickmap');}return;}if(key==='p'){quickMapHeld=false;mapPanel=null;onPanelRef.current(pausedRef.current?null:'sheet');return;}if(key==='escape'&&quickMapHeld){quickMapHeld=false;mapPanel=null;suppressUnlockPause();onPanelRef.current(null);return;}if(pausedRef.current){if(key==='escape'){if(mapPanel)mapPanel=null;suppressUnlockPause();onPanelRef.current(null);}return;}if(key==='g'){/* G marca 📍 aqui sem rota; se a rota era um ping, ela é substituída. */if(route?.kind==='ping')clearRoute();currentPing={x:player.position.x,z:player.position.z};return;}if(key==='e'){interact();return;}if(key==='escape'){onPanelRef.current('pause');return;}if(!testPointer&&!pointerLocked())captureGamePointer();if(key==='h'){setHiddenEffects(!hiddenEffects);return;}if(key==='y'){onToggleAuto();return;}if(key==='r'){castUltimate();return;}if(key===' '){if(sandCloud)keys.add(' ');if(!e.repeat&&!jumpTime&&!slideTime){jumpTime=jumpDuration;sandGlideLeft=sandCloud ? .9 : 0;}return;}if(key==='shift'){if(!e.repeat&&!jumpTime&&!slideRecovery){readMovement(dashHeading);if(dashHeading.lengthSq())dashHeading.normalize();else dashHeading.copy(heading);slideTime=slideDuration;slideRecovery=.9;invulnerability=Math.max(invulnerability,.14);}return;}keys.add(key);};
     // Ultimate automática: tecla Y ou clique no selo AUTO do botão R (evento shinobi-toggle-auto-ult).
-    function onToggleAuto(){if(enabledRef.current&&!defeated&&!victory)autoUlt=!autoUlt;}window.addEventListener('shinobi-toggle-auto-ult',onToggleAuto);
+    // Rodada 88 (pedido do usuário: "Se no ultimo jogo eu deixei a ultimate automática, na próxima partida, ela já começa automática"):
+    // a troca na partida fica salva nas Configurações (Ultimate automática ao começar).
+    function onToggleAuto(){if(!enabledRef.current||defeated||victory)return;autoUlt=!autoUlt;const saved=readSettings();if(saved.autoUltimate!==autoUlt)saveSettings({...saved,autoUltimate:autoUlt});}window.addEventListener('shinobi-toggle-auto-ult',onToggleAuto);
     const onKeyUp=(e:KeyboardEvent)=>{const raw=e.key.toLowerCase(),key=raw==='tab'?'tab':translateKey(raw)||raw;keys.delete(key);keys.delete(raw);if(key==='tab'&&quickMapHeld){quickMapHeld=false;mapPanel=null;suppressUnlockPause();onPanelRef.current(null);}};
     let lastPointer: { x:number; y:number }|undefined;
     const resetPointer=()=>{lastPointer=undefined;};
@@ -1003,7 +1011,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(!elite)return false;
       const enemy=spawnEnemy(false,true,false,versionForEncounter(elite,zone,mission));
       // Rodada 63: com conjuração, o Mega Elite surge à vista (à frente do jogador, dentro da tela) e faz os selos.
-      if(w.cast){const spot=solids.freeSpot(THREE.MathUtils.clamp(player.position.x+v1.x*CAST_DISTANCE,-WORLD_LIMIT,WORLD_LIMIT),THREE.MathUtils.clamp(player.position.z+v1.z*CAST_DISTANCE,-WORLD_LIMIT,WORLD_LIMIT));enemy.sprite.position.set(spot.x,terrainHeight(spot.x,spot.z)+enemy.sprite.scale.y*.46,spot.z);enemy.seen=true;}
+      if(w.cast){const spot=solids.freeSpot(THREE.MathUtils.clamp(player.position.x+v1.x*CAST_DISTANCE,-WORLD_LIMIT,WORLD_LIMIT),THREE.MathUtils.clamp(player.position.z+v1.z*CAST_DISTANCE,-WORLD_LIMIT,WORLD_LIMIT));enemy.sprite.position.set(spot.x,standHeight(spot.x,spot.z)+enemy.sprite.scale.y*.46,spot.z);enemy.seen=true;}
       const {x,z}=enemy.sprite.position;
       weatherEvent={id,until:elapsed+WEATHER_EVENT_DURATION+(w.cast?.seconds??0),elite:enemy.heroId!,x,z,castEnd:w.cast?elapsed+w.cast.seconds:undefined};
       weather=w.name;applyWeather();eventToast=w.cast?w.cast.line:w.name+' · encontre o Mega Elite';snapshotTimer=0;
@@ -1028,7 +1036,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     /** FINAL SWARM: segundos sobrevividos depois que o relógio da zona zerou (0 = relógio ainda correndo; arena não tem swarm). */
     function overtimeNow(){return arena?0:Math.max(0,zoneElapsed()-ZONE_SECONDS);}
     const guardianHpNow=(hp=threatNow().hp)=>guardianVitality(hp,elapsed,zoneElapsed(),overtimeNow(),zone);
-    function summonGuardian(){if(guardianSpawned||arena||portal)return null;guardianSpawned=true;const seal=events.find(e=>e.id==='guardian-seal');if(seal)seal.active=false;const g=spawnEnemy(false,true,true);if(seal){g.sprite.position.set(seal.x,terrainHeight(seal.x,seal.z)+g.sprite.scale.y*.46,seal.z);addRing(g.sprite.position,'#ffd07c',2.3);}eventToast='Guardião invocado! '+HERO_BY_ID[g.heroId!].name+' · HP ×'+(g.hpMultiplier??1).toFixed(2)+(shikamaruPlans?' · Plano do Shikamaru '+shikamaruPlans+'/'+GUARDIAN_RULES.shikamaruMaxPlans:'');return g;}
+    function summonGuardian(){if(guardianSpawned||arena||portal)return null;guardianSpawned=true;const seal=events.find(e=>e.id==='guardian-seal');if(seal)seal.active=false;const g=spawnEnemy(false,true,true);if(seal){g.sprite.position.set(seal.x,standHeight(seal.x,seal.z)+g.sprite.scale.y*.46,seal.z);addRing(g.sprite.position,'#ffd07c',2.3);}eventToast='Guardião invocado! '+HERO_BY_ID[g.heroId!].name+' · HP ×'+(g.hpMultiplier??1).toFixed(2)+(shikamaruPlans?' · Plano do Shikamaru '+shikamaruPlans+'/'+GUARDIAN_RULES.shikamaruMaxPlans:'');return g;}
     const gamabuntaSheet=new THREE.TextureLoader().load('/assets/gamabunta-oil-v1.png');
     gamabuntaSheet.colorSpace=THREE.SRGBColorSpace;
     gamabuntaSheet.minFilter=gamabuntaSheet.magFilter=THREE.NearestFilter;
@@ -1180,7 +1188,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
           xp+=collectedXp(drop.value,stats.xpGain,tune().xpGain);
         }
       }
-      clearZone();zoneStart=elapsed;player.position.set(0,terrainHeight(0,0)+player.scale.y*.5,0);revealAround(0,0);
+      clearZone();zoneStart=elapsed;player.position.set(0,standHeight(0,0)+player.scale.y*.5,0);revealAround(0,0);
       invulnerability=2;
       if(kind==='arena'){
         arena=true;weatherEvent=undefined;weather='Arena da Bijuu';scene.background=new THREE.Color('#282441');scene.fog=new THREE.Fog('#282441',15,55);
@@ -1402,7 +1410,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(dashing){dir.copy(dashHeading);slideTime=Math.max(0,slideTime-dt);}
       moving=dir.lengthSq()>0;if(moving){heading.copy(dir).normalize();
         player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);if(!arena){/* Rodada 70: dash atravessa; ao terminar dentro de algo, sai pela frente. */if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}}revealAround(player.position.x,player.position.z);}
-      player.position.y=terrainHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight;
+      player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight;
       const threat=threatNow();
       if(tune().enemyHp!==appliedEnemyHp){const ratio=tune().enemyHp/Math.max(.01,appliedEnemyHp);for(const e of enemyList){e.hp*=ratio;if(e.maxHp)e.maxHp*=ratio;bossCombat.rescale(e,ratio);}appliedEnemyHp=tune().enemyHp;}
       if(!arena)updateTotem(dt);
@@ -1482,7 +1490,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           }else if(!ranged&&enemy.attackPoint&&Math.hypot(player.position.x-enemy.attackPoint.x,player.position.z-enemy.attackPoint.z)<radius&&invulnerability<=0){
             damagePlayer(10*(enemy.dmgMult??1)*threat.damage,enemy);
           }if(enemy.marker){scene.remove(enemy.marker);enemy.marker.geometry.dispose();(enemy.marker.material as THREE.Material).dispose();enemy.marker=undefined;}enemy.windup=undefined;enemy.hitTimer=(ranged?2.25:.9)/threat.attackRate;}
-        }else{enemy.hitTimer-=dt;if(distance>reach){enemy.sprite.position.addScaledVector(enemyTravel,enemy.speed*threat.speed*(enemy.slow?.75:1)*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(!arena&&!enemy.bijuu)solids.resolveBig(enemy.sprite.position);enemy.sprite.position.y=terrainHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
+        }else{enemy.hitTimer-=dt;if(distance>reach){enemy.sprite.position.addScaledVector(enemyTravel,enemy.speed*threat.speed*(enemy.slow?.75:1)*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(!arena&&!enemy.bijuu)solids.resolveBig(enemy.sprite.position);enemy.sprite.position.y=standHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
           else if(enemy.hitTimer<=0){enemy.windup=Math.max(.28,.65/Math.sqrt(threat.attackRate));enemy.attackPoint=player.position.clone();/* Aviso no chão desenhado em lote (enemyRenderer); o Mesh é só dado. */const marker=enemyRenderer.marker(ranged?.7:enemy.megaElite?1.7:1);marker.position.set(enemy.attackPoint.x,terrainHeight(enemy.attackPoint.x,enemy.attackPoint.z)+.2,enemy.attackPoint.z);enemy.marker=marker;}
         }
         if(motion){
@@ -1616,7 +1624,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           // Rodada 63: durante os selos a névoa engrossa aos poucos (névoa aberta → névoa do evento).
           if(scene.fog instanceof THREE.Fog){const distance=camera.position.distanceTo(player.position),range=blendFog(active,castProgress(elapsed,weatherEvent?.castEnd,active.cast?.seconds??0));scene.fog.color.set(active.sky);scene.fog.near=distance+range.near;scene.fog.far=distance+range.far;}
         }else scene.fog=null;
-      }const targetHeight=terrainHeight(player.position.x,player.position.z)+player.scale.y*.5;
+      }const targetHeight=standHeight(player.position.x,player.position.z)+player.scale.y*.5;
       // O centro permanece no jogador, mesmo durante a rotação e a interpolação do zoom.
       cameraTarget.set(player.position.x,targetHeight,player.position.z);
       const orbitDistance=perspective?perspectiveDistance(zoom):zoom*1.65+10;
@@ -1689,14 +1697,14 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(s.merchant)Object.assign(merchant,{...s.merchant,stock:s.merchant.stock.map(name=>name===null?null:currentItemName(name))});
       rouletteItems.push(...(s.rouletteItems??[]).map(prize=>typeof prize==='string'?currentItemName(prize):prize));
       roulette=s.rouletteSession?{...s.rouletteSession,pending:s.rouletteSession.pending.map(prize=>prize.item?{...prize,item:currentItemName(prize.item)}:prize)}:null;rouletteSeq=roulette?.pending.at(-1)?.seq??0;
-      for(const point of camp?.locations??[]){const e=events.find(e=>e.id===point.id);if(e){e.x=point.x;e.z=point.z;e.obj.position.set(e.x,terrainHeight(e.x,e.z)+e.obj.scale.y*.45,e.z);}}
+      for(const point of camp?.locations??[]){const e=events.find(e=>e.id===point.id);if(e){e.x=point.x;e.z=point.z;e.obj.position.set(e.x,standHeight(e.x,e.z)+e.obj.scale.y*.45,e.z);}}
       if(camp?.pickups){for(const p of pickups)scene.remove(p.mesh);pickups.length=0;for(const p of camp.pickups){spawnPickup(p.kind,p.x,p.z);pickups.at(-1)!.discovered=p.discovered||p.kind==='sealDrop';}}
       for(const entry of camp?.fallenMegas??[]){const shinobi=HERO_BY_ID[entry.heroId];if(shinobi)fallenMegas.push({candidate:{heroId:shinobi.id,target:shinobi.name,phase:'ready',account:entry.account},body:layFallenShinobi(shinobi.id,entry.x,entry.z,!!entry.account,level,true)});}
       if(camp?.portal)openPortal(camp.portal.kind,camp.portal.x,camp.portal.z);
-      if(weatherEvent&&weatherEvent.until>elapsed&&!arena){const event=weatherEvent;const elite=spawnEnemy(false,true,false,event.elite);elite.sprite.position.set(event.x,terrainHeight(event.x,event.z)+elite.sprite.scale.y*.5,event.z);weather=WEATHER_EVENTS[event.id].name;}else weatherEvent=undefined;
+      if(weatherEvent&&weatherEvent.until>elapsed&&!arena){const event=weatherEvent;const elite=spawnEnemy(false,true,false,event.elite);elite.sprite.position.set(event.x,standHeight(event.x,event.z)+elite.sprite.scale.y*.5,event.z);weather=WEATHER_EVENTS[event.id].name;}else weatherEvent=undefined;
       if(arena){weather='Arena da Bijuu';for(const e of events)e.obj.visible=false;if(camp?.boss)spawnBijuu(camp.boss.id,camp.boss);}placeTeuchi();
       refreshStats();for(const id of s.allies)recruitAlly(id);Object.assign(allyAffinity,s.allyAffinity);refreshStats();hp=Math.min(stats.maxHp,s.hp);if(!roulette)showRouletteItem();
-      player.position.set(s.player.x,terrainHeight(s.player.x,s.player.z)+player.scale.y*.5,s.player.z);player.material.dispose();player.material=heroMaterial(heroId,level);invulnerability=3;eventToast='Missão retomada de onde parou.';}
+      player.position.set(s.player.x,standHeight(s.player.x,s.player.z)+player.scale.y*.5,s.player.z);player.material.dispose();player.material=heroMaterial(heroId,level);invulnerability=3;eventToast='Missão retomada de onde parou.';}
     if(resume&&resume.heroId===heroId)restoreRun(resume);
     let configuredZoom=currentSettings().cameraDistance,configuredFx=currentSettings().hideMyAttacks;
     const onSettings=()=>{const S=currentSettings();
@@ -1719,7 +1727,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
     const onPageHide=()=>saveRun();window.addEventListener('pagehide',onPageHide);window.addEventListener('beforeunload',onPageHide);
     const onSaveEvent=()=>saveRun();window.addEventListener('shinobi-save',onSaveEvent);
     const onForfeit=()=>{if(defeated||victory)return;hp=0;defeated=true;eventToast='Você desistiu da missão.';};window.addEventListener('shinobi-forfeit',onForfeit);
-    const onStuck=()=>{const len=Math.hypot(player.position.x,player.position.z)||1,step=Math.min(8,len);player.position.x-=player.position.x/len*step;player.position.z-=player.position.z/len*step;player.position.y=terrainHeight(player.position.x,player.position.z)+player.scale.y*.5;invulnerability=Math.max(invulnerability,2);eventToast='Preso? Você foi movido para uma área livre.';};window.addEventListener('shinobi-stuck',onStuck);
+    const onStuck=()=>{const len=Math.hypot(player.position.x,player.position.z)||1,step=Math.min(8,len);player.position.x-=player.position.x/len*step;player.position.z-=player.position.z/len*step;player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5;invulnerability=Math.max(invulnerability,2);eventToast='Preso? Você foi movido para uma área livre.';};window.addEventListener('shinobi-stuck',onStuck);
     runCleanups.push(()=>{window.clearInterval(autosave);window.removeEventListener('pagehide',onPageHide);window.removeEventListener('beforeunload',onPageHide);window.removeEventListener('shinobi-save',onSaveEvent);window.removeEventListener('shinobi-forfeit',onForfeit);window.removeEventListener('shinobi-stuck',onStuck);});    if(import.meta.env.DEV&&new URLSearchParams(location.search).has('test'))debugWindow.__shinobiTest={
       finishMission:()=>{victory=true;snapshotTimer=0;eventToast='Missão concluída!';return victory;},
       dropShowcase:()=>{const p=player.position;const list:[Drop['type'],number][]=[['xp',8],['xp',25],['xp',100],['chakra',9],['ryu',3],['onigiri',RAMEN_DROP.heal],['pill',1],['item',1]];list.forEach(([type,value],n)=>{const at=new THREE.Vector3(p.x-5.6+n*1.6,0,p.z+3.2);addDrop(at,type,value,type==='pill'?Object.keys(knownPills)[0]||'':'');});return drops.length;},
@@ -1734,9 +1742,9 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       learn:(name:string)=>{skillLevels[name]=1;},clearEnemies:()=>{for(const e of [...enemyList]){scene.remove(e.sprite);if(e.marker)scene.remove(e.marker);bossCombat.dispose(e);}enemyList.length=0;},
       setTime:(n:number)=>{elapsed=n;},
       // Perfil de desempenho: horda de N inimigos comuns num disco ao redor do jogador (HP alto para sobreviverem aos golpes) e leitura do quadro.
-      horde:(n:number,radius=14,hpEach=1e6,move=true)=>{for(let k=0;k<n;k++){const e=spawnEnemy(),a=Math.random()*Math.PI*2,r=2+Math.sqrt(Math.random())*radius,x=player.position.x+Math.cos(a)*r,z=player.position.z+Math.sin(a)*r;e.sprite.position.set(x,terrainHeight(x,z)+e.sprite.scale.y*.46,z);e.hp=hpEach;e.maxHp=hpEach;if(!move)e.speed=0;}return enemyList.length;},
+      horde:(n:number,radius=14,hpEach=1e6,move=true)=>{for(let k=0;k<n;k++){const e=spawnEnemy(),a=Math.random()*Math.PI*2,r=2+Math.sqrt(Math.random())*radius,x=player.position.x+Math.cos(a)*r,z=player.position.z+Math.sin(a)*r;e.sprite.position.set(x,standHeight(x,z)+e.sprite.scale.y*.46,z);e.hp=hpEach;e.maxHp=hpEach;if(!move)e.speed=0;}return enemyList.length;},
       perf:(reset=false)=>{const out={...perfMonitor.read(),fpsHud:fps,calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,geometries:renderer.info.memory.geometries,textures:renderer.info.memory.textures,programs:renderer.info.programs?.length??0,sceneChildren:scene.children.length,instances:enemyRenderer.stats(),numberCache:damageNumbers.stats(),elites:enemyList.filter(e=>e.elite).length,enemies:enemyList.length,effects:effects.length,visuals:visuals.length,particles:particles.stats(),susanoo:susanoo.active(),numbers:numbers.length,drops:drops.length,shots:shots.length,heap:(performance as unknown as {memory?:{usedJSHeapSize:number}}).memory?.usedJSHeapSize??0};if(reset)perfMonitor.reset();return out;},
-      teleport:(x:number,z:number)=>{player.position.set(x,terrainHeight(x,z)+player.scale.y*.5,z);},
+      teleport:(x:number,z:number)=>{player.position.set(x,standHeight(x,z)+player.scale.y*.5,z);},
       setMoney:(n:number)=>{runMoney=n;},pickup:(kind:MapPickup['kind'])=>spawnPickup(kind,player.position.x,player.position.z),bodyAmbush:()=>{const wave=enemyList.filter(e=>e.bodyAmbush===activeBody&&activeBody);return wave.length;},defeatBodyAmbush:()=>{for(const e of [...enemyList])if(activeBody&&e.bodyAmbush===activeBody)removeEnemy(e);},dismiss:()=>{choiceData=null;sealing=null;xp=0;},
       addXp:(n:number)=>{xp+=n;},setChakra:()=>{chakra=100;},setHp:(n:number)=>{hp=n;},
       target:(distance=2)=>{const e=spawnEnemy();e.sprite.position.copy(player.position).add(new THREE.Vector3(distance,0,0));e.hp=10000;e.speed=0;return enemyList.length;},
@@ -1813,8 +1821,8 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         discover:(id?:string)=>{let n=0;for(const e of events)if(!id||e.id===id){e.discovered=true;e.obj.visible=true;if(e===ichiraku)placeTeuchi();n++;}return n;},
         discovered:()=>events.filter(e=>e.discovered).map(e=>e.id),
         consume:(id:string)=>{const e=events.find(e=>e.id===id);if(e)e.active=false;return !!e;},
-        near:(id:string,d=6)=>{const t=findRouteTarget(id)??events.find(e=>e.id===id);if(!t)return null;const x=THREE.MathUtils.clamp(t.x+d,-WORLD_LIMIT,WORLD_LIMIT),z=t.z;player.position.set(x,terrainHeight(x,z)+player.scale.y*.5,z);return routeDistance(t);},
-        step:(dx:number,dz:number)=>{const x=THREE.MathUtils.clamp(player.position.x+dx,-WORLD_LIMIT,WORLD_LIMIT),z=THREE.MathUtils.clamp(player.position.z+dz,-WORLD_LIMIT,WORLD_LIMIT);player.position.set(x,terrainHeight(x,z)+player.scale.y*.5,z);return route?routeDistance(route):null;},
+        near:(id:string,d=6)=>{const t=findRouteTarget(id)??events.find(e=>e.id===id);if(!t)return null;const x=THREE.MathUtils.clamp(t.x+d,-WORLD_LIMIT,WORLD_LIMIT),z=t.z;player.position.set(x,standHeight(x,z)+player.scale.y*.5,z);return routeDistance(t);},
+        step:(dx:number,dz:number)=>{const x=THREE.MathUtils.clamp(player.position.x+dx,-WORLD_LIMIT,WORLD_LIMIT),z=THREE.MathUtils.clamp(player.position.z+dz,-WORLD_LIMIT,WORLD_LIMIT);player.position.set(x,standHeight(x,z)+player.scale.y*.5,z);return route?routeDistance(route):null;},
         god:(on=true)=>{debugState.god=on;},
         megaSeen:(id:string,x?:number,z?:number)=>{const e=spawnEnemy(false,true,false,id);e.seen=true;e.speed=0;e.control='Paralisar';e.controlTime=1e9;if(x!==undefined&&z!==undefined)e.sprite.position.set(x,terrainHeight(x,z)+1.6,z);return 'mega-'+e.uid;},
         kill:(markerId:string)=>{const e=enemyList.find(e=>'mega-'+e.uid===markerId);if(!e)return false;removeEnemy(e);sealing=null;pendingSeals.length=0;return true;},

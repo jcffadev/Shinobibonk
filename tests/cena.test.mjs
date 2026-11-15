@@ -259,3 +259,22 @@ test('mapas com o nome da obra e zonas dentro da vila (rodada 87)', async () => 
   const zones = Object.values(MAP_BY_ID).flatMap(m => m.zones.map(z => z.name));
   assert.ok(!zones.some(z => /Kannabi|Tazuna/.test(z)), 'Ponte Kannabi (País da Grama) e Ponte de Tazuna (País das Ondas) não ficam nas vilas');
 });
+
+test('pé do personagem nunca afunda no chão, em todos os mapas e personagens (rodada 88)', async () => {
+  const { footHeight, FOOT_RADIUS } = await load('/src/scene/heightField.ts');
+  const { groundHeight } = await load('/src/scene/terrainArt.ts');
+  assert.equal(footHeight(() => 2, 3, 4), 2, 'no plano não muda nada');
+  const step = (x) => (x > .2 ? 1.2 : 0);
+  assert.equal(footHeight(step, 0, 0), 1.2, 'na beira do degrau fica no nível de cima');
+  for (const map of ['folha', 'areia', 'pedra', 'nevoa']) {
+    for (let x = -60; x <= 60; x += 3.7) for (let z = -60; z <= 60; z += 4.1) {
+      const stand = footHeight((a, b) => groundHeight(map, a, b), x, z);
+      for (const [dx, dz] of [[FOOT_RADIUS, 0], [-FOOT_RADIUS, 0], [0, FOOT_RADIUS], [0, -FOOT_RADIUS]])
+        assert.ok(groundHeight(map, x + dx, z + dz) <= stand + 1e-9, `${map} ${x},${z}: chão acima do pé`);
+    }
+  }
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(!/terrainHeight\([^()]*\)\+\w+(?:\.\w+)*\.scale\.y\*/.test(canvas), 'todo personagem usa standHeight');
+  assert.ok((canvas.match(/standHeight\(/g) ?? []).length >= 18);
+  assert.ok(canvas.includes('groundLook.material.polygonOffset=true'), 'o chão recua na profundidade');
+});

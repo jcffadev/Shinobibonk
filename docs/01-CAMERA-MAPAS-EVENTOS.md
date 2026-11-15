@@ -133,3 +133,46 @@ Esc fecha a pausa e permite continuar a simulação sem clique extra; a captura 
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 Os cinco graus de altar usam cinza, verde, azul, roxo e dourado na estrutura e no círculo. A bênção entra ao concluir a defesa e sorteia atributos da ficha. O morro de bolinhos continua coletável com E e gera o bolinho de cura além do Ryu e do ímã.
+
+## Mapas — estado em 15/11/2026 e próximos passos (passagem para outro agente)
+
+Pedido do usuário (rodada 88): "Deixar anotado tudo que você tem sobre… os mapas". O padrão completo (onde fica cada coisa, regras de terreno, câmera, visual de cada vila, passo a passo e erros) está na skill [`criar-mapa-shinobibonk`](../skills/criar-mapa-shinobibonk/SKILL.md). Esta seção guarda só o estado e a fila.
+
+### Feito
+
+- **Rodada 77:** ninja do tamanho do monstro comum; câmera mais perto (zoom 12, faixa 8–22).
+- **Rodada 85:**
+  - Terreno em terraços baixos (degraus de ~1,2 m, máximo ~3,5 m dentro do mapa), montanhas só no horizonte e centro plano.
+  - Encostas pintadas como pedra.
+  - Câmera em perspectiva por padrão; a ortográfica fica nas Configurações.
+- **Rodada 86:** chão plano sob as construções da Folha (`LEAF_PLACES`); skill de mapas.
+- **Rodada 87:** nomes da obra (Konohagakure, Sunagakure, Iwagakure, Kirigakure · Vila Oculta da …); zonas fora da vila trocadas; horizonte de cada vila (`horizonProfile`).
+- **Rodada 88:** pé dos personagens nunca abaixo do chão (`footHeight` + recuo de profundidade do chão).
+
+### Fila
+
+1. **Arte das construções de cada vila** (referências do usuário descritas na skill, §5), pela skill `criar-arte-shinobibonk`:
+   - **Konoha:** portão com 忍, barraca de lámen, torre do Hokage, casas com caixa-d'água e os rostos do Monte Hokage no horizonte.
+   - **Suna:** casas redondas de adobe, cúpula do Kazekage com 風 e passarelas.
+   - **Iwa:** torres de pedra em cone e a torre do Tsuchikage.
+   - **Kiri:** torres de tijolo com vegetação no topo e a torre do Mizukage.
+   - **Para todas:** áreas planas sob cada construção, como `LEAF_PLACES`.
+2. **Fundo pintado (skybox ou cartões ao longe)**, com os picos, cachoeiras e névoa de cada vila. Hoje o horizonte é só relevo.
+3. **Fenda** (evento novo, desenhado a partir de vídeos de referência; os números ficam a definir pelo usuário):
+   - Um aviso abre um portal por um tempo curto.
+   - Ao entrar, a arena é separada (tigela cercada de paredões) e o relógio da zona para.
+   - Ondas numeradas, com uma onda de elites, e o botão "chamar a próxima onda".
+   - Depois da última onda vem o chefe, com tempo limite. A raridade da fenda (Comum → Lendária) aumenta as ondas e o tempo.
+   - **Recompensa:** itens e a escolha de **1 relíquia entre 2, ou nenhuma**, para o resto da partida. São **3 vagas**.
+   - **Relíquia:** raridade + 1 atributo principal + 1 **subpassiva** com nome. Exemplos de forma: onda de choque periódica; bônus de dano por inimigos próximos; dano extra em inimigos com status.
+4. **Névoa do Zabuza**:
+   - branca e densa, cobrindo tudo, como gelo e névoa do anime;
+   - enquanto estiver ativa, os alvos a até 2 m aparecem.
+5. **Árvores bloqueando** andar e dash; hoje o dash atravessa.
+6. **PENDENTE DE VALIDAÇÃO E2E (sem navegador para os agentes):**
+   - degraus e encostas;
+   - construções no chão;
+   - horizonte de cada vila;
+   - câmera em perspectiva: rotação, zoom, barra de vida e números de dano;
+   - pés sobre o chão nas encostas;
+   - FPS com a malha 340 × 340.

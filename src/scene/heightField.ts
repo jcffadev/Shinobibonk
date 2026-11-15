@@ -15,3 +15,14 @@ export function createHeightField(exact: (x: number, z: number) => number, half:
     return a + (b - a) * tz;
   };
 }
+
+/** Rodada 88: raio do pé dos personagens e recuo de profundidade do chão (ver `footHeight`). */
+export const FOOT_RADIUS = .45;
+export const GROUND_DEPTH_OFFSET = { factor: 2, units: 4 } as const;
+/**
+ * Altura onde um personagem fica de pé: o ponto mais alto do chão no centro e a `FOOT_RADIUS` nas 4 direções. Assim o pé
+ * nunca afunda na encosta de um terraço (o chão logo à frente, mais alto, escondia os pés). No plano é igual a `ground`.
+ */
+export function footHeight(ground: (x: number, z: number) => number, x: number, z: number, radius = FOOT_RADIUS) {
+  return Math.max(ground(x, z), ground(x + radius, z), ground(x - radius, z), ground(x, z + radius), ground(x, z - radius));
+}

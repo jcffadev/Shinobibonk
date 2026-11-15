@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 15/11/2026 · Ultimate automática lembrada, pés sobre o chão e anotações de fusões e mapas (Rodada 88)
+
+- **Pedidos do usuário:**
+  - "Se no ultimo jogo eu deixei a ultimate automática, na próxima partida, ela já começa automática, o mesmo para a configuração de selamento".
+  - "as vezes o pé do personagem está indo para abaixo do solo… corrigir em todos os mapas… todos os personagens".
+  - "Deixar anotado tudo que você tem sobre as fusões, para outro agente continuar depois… também sobre os mapas".
+- **Ultimate automática:** trocar na partida (tecla Y ou selo AUTO) agora salva em Configurações → "Ultimate automática ao começar", e a próxima partida já começa assim.
+- **Selamento direto:** já era salvo. A tela principal partia de uma cópia velha das configurações e podia desfazer outra opção ao salvar. Agora sempre parte do que está salvo e acompanha o que a partida salva.
+- **Pés sobre o chão** (`footHeight` em `src/scene/heightField.ts`):
+  - Todo personagem (jogador, aliados, inimigos, elites, guardiões, NPCs) fica de pé no ponto mais alto do chão sob os pés (raio de 0,45 m). As 18 posições do `GameCanvas` usam `standHeight`.
+  - O chão recua um pouco na profundidade, para a encosta não cortar a base dos sprites.
+- **Anotações para outro agente:**
+  - fusões em `docs/10` (estado, decisões, lista de receitas proposta, soma de atributos, cartão novo, passo a passo);
+  - mapas em `docs/01` (feito, fila: construções de cada vila, fundo pintado, Fenda, névoa do Zabuza, árvores, E2E).
+- **Testes:**
+  - 2 testes novos. O mínimo subiu para 162.
+  - 2 mutações novas, verificadas à mão: acusadas.
+  - **PENDENTE DE VALIDAÇÃO E2E:** pés nas encostas e a Ultimate automática continuando na partida seguinte.
+
 ## 15/11/2026 · Nomes da obra nos mapas e horizonte de cada vila (Rodada 87)
 
 - **Pedidos do usuário:** "Coloque os nomes corretos nos mapas" e "Mapas primeiro", com imagens e vídeos de Konoha, Sunagakure, Iwagakure e Kirigakure como referência.

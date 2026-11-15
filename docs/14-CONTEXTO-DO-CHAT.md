@@ -2267,3 +2267,20 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Cada vila ganhou um horizonte próprio, seguindo as referências enviadas.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 88 · 15/11/2026 — Ultimate automática lembrada, pés sobre o chão e anotações
+
+> Se no ultimo jogo eu deixei a ultimate automática, na próxima partida, ela já começa automática, o mesmo para a configuração de selamento...
+
+> Corrigir no mapa que as vezes o pé do personagem está indo para abaixo do solo... corrigir em todos os mapas, mapa todos os personagens... esse "bug" visual não deve ocorrer.
+
+> Deixar anotado tudo que você tem sobre as fusões, para outro agente continuar depois se for preciso, também sobre os mapas.
+
+**Resposta.**
+
+- A Ultimate automática trocada na partida fica salva para a próxima. O selamento direto já ficava salvo, e a tela não desfaz mais uma opção ao salvar outra.
+- Todo personagem fica de pé no ponto mais alto do chão sob os pés, em todos os mapas.
+- Fusões anotadas em `docs/10` e mapas em `docs/01`, para outro agente continuar.
+- Pedido novo anotado na fila: selos de mão aleatórios para todos os personagens ao soltar técnicas.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

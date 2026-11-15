@@ -63,3 +63,88 @@ Status: PROPOSTA DE DESIGN — não implementada nem validada no jogo.
 ## Oficina atual · 07/11/2026
 
 Fundir e Combinar aparecem em abas separadas, com ícones dos dois ataques, lista de pares e acesso à ficha. Uma união válida consome o único uso compartilhado da zona. Fechar ou trocar a aba preserva esse uso. A run salva o número da zona consumida. A zona seguinte libera outra operação. Não é possível reutilizar uma técnica já incorporada em outra união. A fusão começa no nível 1 com ×2 da média de dano e afixos somados. A combinação mantém os dois ataques no mesmo espaço, cada um com ×1,5 de dano.
+
+## Fusões — estado em 15/11/2026 e plano para continuar (passagem para outro agente)
+
+Pedido do usuário (rodada 88): "Deixar anotado tudo que você tem sobre as fusões, para outro agente continuar depois se for preciso".
+
+### O que existe no código
+
+- **Regras** em `src/game/techniqueMerge.ts`:
+  - `KEKKEI_RECIPES`: 8 Kekkei Genkai por par de naturezas. Valem para dois Ninjutsu, um de cada natureza: Hyōton, Mokuton, Yōton, Futton, Ranton, Shakuton, Jiton e Bakuton.
+  - `HERO_KEKKEI` + `fusionBonus`: +15% de dano para a mesma natureza ou para a Kekkei Genkai da linhagem do shinobi.
+  - `mergedTechnique({kind:'fuse'|'combine', names})`:
+    - Fundir com receita dá a técnica da receita: dano (A+B) × bônus, maior alcance, maior recarga.
+    - Fundir sem receita dá "Fusão · A / B": forma Área, afixos de A e B somados.
+    - Combinar dá ×1,5 por técnica + 1 atributo do par (`combineBonus`).
+  - Sem fusão de fusão (`isMergedName`). Teto de nível da fusão: `FUSION_LEVEL_CAP` = 7.
+  - `fusionCatalog(pool, family)` (rodada 81) lista toda fusão possível com o pool. `fusionDisplayName` e `fusionRecipeText` montam "A + B = Nome".
+- **Planejamento** em `src/ui/BuildPlanner.tsx`:
+  - A aba Fusões abre com o catálogo, Kekkei Genkai primeiro. Ele cresce ao selar shinobis.
+  - Um clique planeja a fusão, até 4; outro clique tira (rodada 82). O par manual fica em "Montar o par à mão".
+  - `FusionCard` compara fundir × combinar.
+  - A aba Habilidades mostra a receita na técnica de uma fusão planejada.
+- **Na partida**, a Oficina dos Sapos Sábios (`src/ui/SagesWorkshop.tsx`) funde ou combina, 1 vez por zona. O `GameCanvas.tsx` aplica as fusões.
+- **Testes:** `tests/fusoes.test.mjs`; mutações em `scripts/mutation-check.mjs` (Kekkei no topo, clique planeja).
+
+### Decisões do usuário (15/11/2026)
+
+1. **Só receitas** (aprovado): par sem receita só pode ser **Combinado**, não fundido. A "Fusão · A / B" genérica deixa de existir.
+2. **Lista de receitas** (proposta montada pela Narutopedia, **aguardando aprovação** do usuário):
+   - **Kekkei Genkai**, um Ninjutsu de cada natureza: as 8 atuais.
+   - **Comuns**, dois Ninjutsu da mesma natureza:
+
+     | Natureza | Fusão |
+     |---|---|
+     | Fogo | Katon: Gōka Mekkyaku |
+     | Água | Suiton: Daibakufu |
+     | Vento | Fūton: Shinkū Taigyoku |
+     | Terra | Doton: Doryū Taiga |
+     | Raio | Raiton: Kirin |
+     | Areia | Ryūsa Bakuryū |
+
+   - **Específicas** (têm prioridade sobre as comuns):
+
+     | Ingredientes | Fusão |
+     |---|---|
+     | Rasengan + qualquer Ninjutsu de Vento | Fūton: Rasenshuriken |
+     | Kage Bunshin + Rasengan | Ōdama Rasengan |
+     | Kage Bunshin + Shuriken | Shuriken Kage Bunshin |
+     | Óleo Flamejante + qualquer Ninjutsu de Fogo | Katon: Gamayu Endan |
+     | Amaterasu + Susanoo | Enton: Espada de Kagutsuchi |
+     | Bijūdama + Rasenshuriken | Bijūdama Rasenshuriken |
+     | Chidori + Chuva de Senbon | Chidori Senbon |
+
+   - **Opcional**, para cobrir Taijutsu e Genjutsu: 2 Taijutsu = Kage Buyō; 2 Genjutsu = Magen: Narakumi. O usuário ainda não escolheu.
+   - **Cobertura medida (114 versões):**
+     - sem as opcionais: 63 sem fusão só com o próprio pool e 47 sem fusão com todos selados, quase todos de Taijutsu e Genjutsu;
+     - exemplos: Kakashi 6, Madara Seis Caminhos 4–6, Naruto 1–4.
+3. **Atributos somados** (pedido de 15/11): "os buffs que as antes da fusão tem, se somam e criam uma habilidade forte com aquele adicional de bônus".
+   - A fusão soma **todos** os atributos das duas técnicas: dano, área, alcance, projéteis, quantidade, duração, chance e tipos de status, queimadura, veneno e gravidade.
+   - Depois aplica o bônus combinado: +15% de mesma natureza ou linhagem, além do fator da fusão.
+   - **Sem raridade**: nada de "Fusão · Épico" ou "Combinação · Raro".
+4. **Cartão novo**, no modelo da imagem enviada pelo usuário. Hoje o `FusionCard` é uma tabela simples.
+   - Nome da fusão e "Fusão assinatura", com etiquetas "A + B".
+   - Natureza, escola e forma.
+   - Descrição curta.
+   - **Como funciona**: as partes da técnica, cada uma com seu tipo (zona persistente, onda de choque, projétil, invocação…).
+   - **Quais melhorias afetam**: o que Área, Duração e +Projéteis/Contagem mudam em cada parte, e o que não ajuda.
+   - A lista do catálogo usa o mesmo estilo.
+5. **Ficha ao passar o mouse**: efeito, condição, dano base, dano final, recarga, chance de status e tudo o mais.
+
+### Como continuar (passo a passo sugerido)
+
+1. Confirmar com o usuário a lista de receitas e as opcionais de Taijutsu e Genjutsu.
+2. Em `techniqueMerge.ts`:
+   - trocar `KEKKEI_RECIPES` por `FUSION_RECIPES`, com tipo kekkei, mesma natureza ou específica, ingredientes por natureza, nome de técnica ou escola, e `parts` (partes da técnica, para o cartão);
+   - `mergedTechnique` só funde se houver receita, e a soma de atributos segue o item 3;
+   - `kekkeiFusion` vira a busca da receita pelo nome, porque é usada em `SkillIcon`, `techniqueVisualProfiles`, `SagesWorkshop` e `GameCanvas`.
+3. Atualizar `fusionCatalog`: lista só receitas; o catálogo vazio mostra o aviso de selar mais shinobis.
+4. Cartão e ficha ao passar o mouse, em `BuildPlanner.tsx`, e a Oficina na partida, em `SagesWorkshop.tsx`.
+5. Testes em `tests/fusoes.test.mjs`:
+   - par sem receita não funde;
+   - a específica vence a comum;
+   - todos os atributos somados;
+   - sem raridade no texto;
+   - cobertura mínima por versão.
+6. Ícones e efeitos das receitas novas: `SkillIcon`, `techniqueVisualProfiles` e a skill `animar-jutsu-webgl`.

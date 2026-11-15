@@ -114,7 +114,9 @@ function App() {
   const [settings, setSettings] = useState<GameSettings>(readSettings);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [musicBlocked, setMusicBlocked] = useState(false);
-  const updateSettings = (patch: Partial<GameSettings>) => { const next = { ...settings, ...patch }; setSettings(next); saveSettings(next); };
+  // Rodada 88: parte sempre do que está salvo (a partida também salva, ex.: Ultimate automática), para uma opção não desfazer outra.
+  const updateSettings = (patch: Partial<GameSettings>) => { const next = { ...readSettings(), ...patch }; setSettings(next); saveSettings(next); };
+  useEffect(() => { const sync = () => setSettings(readSettings()); window.addEventListener('shinobi-settings', sync); return () => window.removeEventListener('shinobi-settings', sync); }, []);
   const [profile, setProfile] = useState(readLocalProfile);
   const displayName=profileDisplayName(profile,settings.playerName);
   const leagueIdentity=useMemo(()=>({id:profile.id,name:displayName}),[profile.id,displayName]);
