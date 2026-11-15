@@ -218,6 +218,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Mega Elite e Shinobi para selar caídos mostram a área de captura (raio do E, 10 m) no chão e um facho de luz.
 - Todo pergaminho de recompensa grátis (G, Guardião, desafio) tem farol verde de 30 m e aparece sempre no minimapa, no Tab e no M.
 
+### Rodada 74 · 15/11/2026
+
+- Caça-Níquel: cada combo de 3 iguais mostra o retrato do personagem (Tsunade, Jiraiya, Hiruzen, Hidan, Kakuzu) via `SLOT_HEROES` e `HeroPortrait`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

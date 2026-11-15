@@ -62,6 +62,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 23 | **DECISÃO PENDENTE:** liberar no pool as naturezas da obra (hoje 18/72 famílias têm 2+). Natureza fora da obra nunca entra. Opções e dados que faltam em [DECISAO-KEKKEI-GENKAI.md](development/DECISAO-KEKKEI-GENKAI.md) | AGUARDA O USUÁRIO |
 | 24 | **NOVO:** Jūzō "travado" ao andar (jogador e ajudante). A arte da corrida de frente e de costas tem as pernas paradas em `corrida-23.png`. **Pedido de arte ao Codex** em [PEDIDO-ARTE-JUZO-CORRIDA.md](development/PEDIDO-ARTE-JUZO-CORRIDA.md) | PENDENTE (arte) |
 | 25 | **NOVO (rodada 73):** área de captura (10 m) e facho de luz no Mega Elite caído; farol verde de 30 m e marcação no minimapa, Tab e M para todo pergaminho grátis (G, Guardião, desafio). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
+| 26 | **NOVO (rodada 74):** retratos de Tsunade, Jiraiya, Hiruzen, Hidan e Kakuzu nas casas de combo do Caça-Níquel (antes 3 eram emoji). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
 ## Rodada 53 · Estado e próximos passos

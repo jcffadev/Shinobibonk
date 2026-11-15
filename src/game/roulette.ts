@@ -93,6 +93,12 @@ export const SLOT_COMBOS = {
   kakuzu: { name: 'Tesouro de Kakuzu', ryuBase: 120 },
 } as const;
 export type SlotComboId = keyof typeof SLOT_COMBOS;
+/**
+ * Rodada 74 (pedido: "Ajuste as imagens do caça-níquel de acordo com a roleta e os personagens que rodam com as regras"):
+ * cada casa de combo mostra o retrato do PRÓPRIO personagem jogável (HeroPortrait), a mesma imagem do elenco.
+ * Antes Hiruzen, Hidan e Kakuzu apareciam como emoji e Tsunade/Jiraiya vinham de recortes fixos do atlas.
+ */
+export const SLOT_HEROES: Record<SlotComboId, string> = { tsunade: 'tsunade', jiraiya: 'jiraiya', hiruzen: 'hiruzen', hidan: 'hidan', kakuzu: 'kakuzu' };
 /** Bônus de Ryu do combo 3 Kakuzus (sorte + dificuldade/pressão do jogo). */
 export function slotKakuzuRyu(luck: number, pressure: number) {
   return Math.round(SLOT_COMBOS.kakuzu.ryuBase * luckFactor(luck) * (1 + Math.max(0, pressure)));

@@ -57,3 +57,9 @@ li.kind-bom i,li.kind-bom em{color:#7fe0a5}li.kind-ruim i,li.kind-ruim em{color:
 .tr-casa-icon.catalog-icon{display:inline-block;width:30px;height:30px;vertical-align:middle;background-repeat:no-repeat}
 .tr-odds .tr-casa-icon.catalog-icon,.tr-stats .tr-casa-icon.catalog-icon{width:20px;height:20px}
 .tr-slot .tr-casa-icon.catalog-icon{width:46px;height:46px}
+/* Rodada 74: retrato do personagem nas casas de combo (mesmo recorte dos marcadores do mapa). */
+.tr-casa-hero{display:inline-block;position:relative;width:30px;height:30px;vertical-align:middle;overflow:hidden;border-radius:50%;background:#3a2a18;box-shadow:inset 0 0 0 2px #d9a441}
+.tr-odds .tr-casa-hero,.tr-stats .tr-casa-hero{width:20px;height:20px}
+.tr-slot .tr-casa-hero{width:46px;height:46px}
+.tr-casa-hero .hero-sprite,.tr-face-portrait .hero-sprite{display:block;width:100%!important;height:118%!important;margin:0!important;position:static;transform:translateY(6%);filter:none;background-repeat:no-repeat}
+.tr-face-portrait{overflow:hidden}

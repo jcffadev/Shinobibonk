@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 15/11/2026 · Caça-Níquel: retrato de cada personagem das combinações (Rodada 74)
+
+- **Pedido do usuário:** "Ajuste as imagens do caça-níquel de acordo coma roleta e os personagens que rodam com as regras, acredito que temos todos, me confirme."
+- **Confirmado:** os 5 personagens das combinações de 3 iguais são jogáveis e têm retrato no jogo: Tsunade, Jiraiya, Hiruzen, Hidan e Kakuzu.
+- **Antes:**
+  - Hiruzen, Hidan e Kakuzu apareciam como emoji (🏮 🦇 💰) nos rolos, na tabela de chances e no histórico.
+  - Tsunade e Jiraiya usavam recortes fixos do atlas `shinobi-roster-v2.png` (corretos, mas fora da regra única).
+- **Agora:** `SLOT_HEROES` em `src/game/roulette.ts` liga cada combo ao personagem, e o caça-níquel usa `HeroPortrait`, o mesmo retrato do elenco, com o recorte dos marcadores do mapa. O rosto da Tsunade no topo também.
+- As outras 10 casas (kunai, shuriken, Ryu, item, Sorte Grande, bênção, dívida, azar, credores, vazia) já tinham imagem e não mudaram.
+- **Testes:**
+  - 1 teste novo em `tests/recompensas.test.mjs` (todo combo tem personagem jogável com o nome da casa, e a tela usa o retrato); o mínimo subiu para 130.
+  - **PASSOU:** tsc, 130/130 com cobertura e build.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver os retratos nos rolos, na tabela e no histórico.
+
 ## 15/11/2026 · Luz e área no Mega Elite caído; farol do pergaminho de boss (Rodada 73)
 
 - **Pedidos do usuário:**

@@ -2083,3 +2083,15 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - O "amuleto" dos bosses é o Pergaminho de recompensa grátis (`sealDrop`): cai no G, no Guardião e no desafio. Todos ganharam farol verde de 30 m e marcação fixa no minimapa, no Tab e no M.
 - **Testes:** **PASSOU** tsc, 129/129 com cobertura e build; 2 mutações acusadas. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 74 · 15/11/2026 — imagens do Caça-Níquel
+
+> Ajuste as imagens do caça-níquel de acordo coma roleta e os personagens que rodam com as regras, acredito que temos todos, me confirme.
+
+**Resposta.**
+
+- Confirmado: os 5 personagens das combinações (Tsunade, Jiraiya, Hiruzen, Hidan, Kakuzu) existem no jogo com retrato.
+- Hiruzen, Hidan e Kakuzu apareciam como emoji. Agora as 5 casas usam o retrato do elenco (`SLOT_HEROES` + `HeroPortrait`).
+- As outras 10 casas já tinham imagem.
+- **Testes:** **PASSOU** tsc, 130/130 com cobertura e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

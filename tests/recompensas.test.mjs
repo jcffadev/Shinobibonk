@@ -92,3 +92,17 @@ test('golpes extras: projéteis−1, parte fracionária vira chance, Ultimate n�
   for (let i = 0; i < RUNS; i++) hits += extraStrikes(1, .25, false, rng);
   assert.ok(Math.abs(hits / RUNS - .25) < .03, `chance de 25% observada: ${(hits / RUNS).toFixed(3)}`);
 });
+
+test('caça-níquel: cada personagem das combinações tem retrato do elenco (rodada 74)', async () => {
+  const { SLOT_COMBOS, SLOT_HEROES, ROULETTE_BY_ID } = await import('../src/game/roulette.ts');
+  const { HERO_BY_ID } = await import('../src/game/heroes.ts');
+  const fs = await import('node:fs');
+  assert.deepEqual(Object.keys(SLOT_HEROES).sort(), Object.keys(SLOT_COMBOS).sort(), 'todo combo tem personagem');
+  for (const [casa, hero] of Object.entries(SLOT_HEROES)) {
+    assert.ok(HERO_BY_ID[hero], casa + ' precisa ser personagem jogável');
+    assert.ok(HERO_BY_ID[hero].name.startsWith(ROULETTE_BY_ID[casa].label), 'casa ' + casa + ' = ' + HERO_BY_ID[hero].name);
+  }
+  const ui = fs.readFileSync(new URL('../src/ui/TsunadeRoulette.tsx', import.meta.url), 'utf8');
+  assert.match(ui, /if \(hero\) return <span[^>]*tr-casa-hero"><HeroPortrait id=\{hero\} decorative \/>/, 'a casa usa o retrato do personagem');
+  assert.doesNotMatch(ui, /rosterCell|TSUNADE_FACE/, 'sem recorte fixo de atlas');
+});

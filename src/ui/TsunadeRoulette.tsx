@@ -1,7 +1,7 @@
-import { ItemIcon } from './RunSheet';
+import { HeroPortrait, ItemIcon } from './RunSheet';
 import { BuffText } from './BuffText';
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
-import { ROULETTE_CASAS, ROULETTE_RULES, badChance, goodChance, type RouletteCasa, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
+import { ROULETTE_CASAS, ROULETTE_RULES, SLOT_HEROES, badChance, goodChance, type RouletteCasa, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
 import { itemArt } from '../game/inventoryArt';
 import { compactNumber } from '../game/format';
 import '../tsunade-roulette.css';
@@ -37,19 +37,15 @@ function buildStrip(targetIndex: number, repeats: number): RouletteCasa[] {
   return strip;
 }
 
-// ───── Retratos no atlas do elenco (shinobi-roster-v2.png, grade 5×5) ─────
-const ROSTER = '/assets/shinobi-roster-v2.png';
-const rosterCell = (col: number, row: number): CSSProperties => ({ backgroundImage: `url(${ROSTER})`, backgroundSize: '500% 500%', backgroundPosition: `${col * 25}% ${row * 25}%` });
-const TSUNADE_FACE = rosterCell(4, 1); // índice 9 do roster (col 4, row 1)
-
-/** Ícones das casas no atlas novo do inventário (inventoryArt.ts); combos de 3 iguais usam o roster ou símbolo. */
+/** Ícones das casas no atlas novo do inventário (inventoryArt.ts); combos de 3 iguais usam o retrato do personagem (SLOT_HEROES). */
 const CASA_ART: Partial<Record<RouletteCasaId, () => CSSProperties | undefined>> = {
   kunai: () => itemArt('swift-kunai'), shuriken: () => itemArt('tenten'), ryu: () => itemArt('coins'),
   item: () => itemArt('forbidden-scroll'), jackpot: () => itemArt('ryo-nugget'), buff: () => itemArt('life'), lose: () => itemArt('gold-tooth'),
   debuff: () => itemArt('red-moon'), ambush: () => itemArt('kubikiribocho'),
-  tsunade: () => TSUNADE_FACE, jiraiya: () => rosterCell(0, 2),
 };
 function CasaIcon({ id, fallback, label }: { id: RouletteCasaId; fallback: string; label: string }) {
+  const hero = (SLOT_HEROES as Partial<Record<RouletteCasaId, string>>)[id];
+  if (hero) return <span role="img" aria-label={label} className="tr-casa-icon tr-casa-hero"><HeroPortrait id={hero} decorative /></span>;
   const style = CASA_ART[id]?.();
   return style ? <span role="img" aria-label={label} className="catalog-icon tr-casa-icon" style={style} /> : <>{fallback}</>;
 }
@@ -149,7 +145,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
       <button className="tr-close" onClick={exit} aria-label="Sair e receber">×</button>
       <header className="tr-head">
         <div className={`tr-face${mood ? ' ' + mood.cls : ''}`} aria-label={`Tsunade ${mood ? mood.word : 'aguardando'}`}>
-          <span className="tr-face-portrait" style={TSUNADE_FACE} aria-hidden />
+          <span className="tr-face-portrait" aria-hidden><HeroPortrait id="tsunade" decorative /></span>
           {mood && <span className="tr-face-badge" aria-hidden>{mood.badge}</span>}
         </div>
         <div className="tr-head-copy">
