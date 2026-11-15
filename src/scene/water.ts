@@ -11,6 +11,18 @@ export type WaterBody =
   | { kind: 'lake'; x: number; z: number; rx: number; rz: number }
   | { kind: 'river'; width: number; from: number; to: number; at: (z: number) => number };
 
+/**
+ * Rodada 91 (pedido do usuário: "personagem ao pisar na água deve fazer a água mexer… deve ter um efeito dos pés de chakra,
+ * azulzinho… igual no naruto anime"): ondas circulares onde o ninja pisa (até `RIPPLES.max` ao mesmo tempo, somem em
+ * `RIPPLES.life` s) e um brilho azul de chakra sob os pés enquanto ele está sobre a água.
+ * PARA O CODEX APRIMORAR: respingos em partículas ao correr/dash, ondas de aliados e inimigos, anel de chakra pulsando no
+ * ritmo dos passos e arte própria do brilho (hoje é um disco aditivo procedural).
+ */
+export const RIPPLES = { max: 8, life: 1.6, speed: 2.4, step: .32 } as const;
+
+/** Raio da frente da onda `age` segundos depois do passo (0 quando já sumiu). */
+export const rippleRadius = (age: number) => age < 0 || age > RIPPLES.life ? 0 : .15 + age * RIPPLES.speed;
+
 /** Superfície da água, profundidade máxima do leito e largura da margem (m, em coordenadas do mundo). */
 export const WATER = { level: -.35, bed: 1.3, bank: 5, shore: .12 } as const;
 
@@ -78,10 +90,12 @@ export function waterSurfaceAt(map: MapId, x: number, z: number) {
  */
 export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, z: number) => number) {
   const meshes: THREE.Mesh[] = [];
-  const uniforms = { waterTime: { value: 0 } };
+  const uniforms = { waterTime: { value: 0 }, waterRipples: { value: Array.from({ length: RIPPLES.max }, () => new THREE.Vector4(0, 0, -99, 0)) } };
+  let nextRipple = 0;
   const material = new THREE.MeshStandardMaterial({ color: '#3f9bc4', roughness: .18, metalness: .05, transparent: true, depthWrite: false });
   material.onBeforeCompile = shader => {
     shader.uniforms.waterTime = uniforms.waterTime;
+    shader.uniforms.waterRipples = uniforms.waterRipples;
     shader.vertexShader = `
       attribute float waterDepth;
       uniform float waterTime;
@@ -95,6 +109,7 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
     `);
     shader.fragmentShader = `
       uniform float waterTime;
+      uniform vec4 waterRipples[${RIPPLES.max}];
       varying float vWaterDepth;
       varying vec2 vWaterXZ;
     ` + shader.fragmentShader.replace('#include <map_fragment>', `
@@ -109,7 +124,17 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
       water = floor(water * 9.0) / 9.0;
       float foam = 1.0 - smoothstep(${WATER.shore.toFixed(2)}, ${(WATER.shore * 2.6).toFixed(2)}, vWaterDepth + ripple * .03);
       float sparkle = step(.985, fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453 + waterTime * .25));
-      diffuseColor.rgb = mix(water + band * .07, vec3(.93, .98, 1.0), max(foam, sparkle * .8));
+      // Ondas dos passos: anel claro que cresce e some (x, z, início, força).
+      float rings = 0.0;
+      for (int i = 0; i < ${RIPPLES.max}; i++) {
+        vec4 r = waterRipples[i];
+        float age = waterTime - r.z;
+        if (age < 0.0 || age > ${RIPPLES.life.toFixed(2)}) continue;
+        float front = .15 + age * ${RIPPLES.speed.toFixed(2)};
+        float d = length(cell - r.xy);
+        rings += r.w * (1.0 - age / ${RIPPLES.life.toFixed(2)}) * (1.0 - smoothstep(.0, .22, abs(d - front)));
+      }
+      diffuseColor.rgb = mix(water + band * .07, vec3(.93, .98, 1.0), clamp(max(max(foam, sparkle * .8), rings * .85), 0.0, 1.0));
       diffuseColor.a = mix(.62, .9, smoothstep(.0, .8, vWaterDepth)) + foam * .1;
     `);
   };
@@ -130,6 +155,30 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
   }
   return {
     update(time: number) { uniforms.waterTime.value = time; },
+    /** Onda circular a partir de (x, z) agora; `strength` 0–1 (passo .6, pouso de pulo 1). */
+    ripple(x: number, z: number, strength = .6) { uniforms.waterRipples.value[nextRipple].set(x, z, uniforms.waterTime.value, strength); nextRipple = (nextRipple + 1) % RIPPLES.max; },
     dispose() { for (const mesh of meshes) { scene.remove(mesh); mesh.geometry.dispose(); } material.dispose(); },
+  };
+}
+
+/** Brilho azul de chakra sob os pés do ninja enquanto ele está sobre a água (disco aditivo pulsando). */
+export function createChakraFeet(scene: THREE.Scene) {
+  const material = new THREE.MeshBasicMaterial({ color: '#6fd8ff', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+  const mesh = new THREE.Mesh(new THREE.RingGeometry(.12, .42, 24), material);
+  mesh.rotation.x = -Math.PI / 2; mesh.renderOrder = 2; mesh.visible = false;
+  scene.add(mesh);
+  let glow = 0;
+  return {
+    /** `onWater`: pés na superfície; `time` em segundos para o pulso. */
+    update(x: number, z: number, onWater: boolean, time: number, dt: number) {
+      glow = THREE.MathUtils.damp(glow, onWater ? 1 : 0, 10, dt);
+      mesh.visible = glow > .02;
+      if (!mesh.visible) return;
+      mesh.position.set(x, WATER.level + .03, z);
+      const pulse = 1 + .12 * Math.sin(time * 9);
+      mesh.scale.setScalar(pulse);
+      material.opacity = .55 * glow;
+    },
+    dispose() { scene.remove(mesh); mesh.geometry.dispose(); material.dispose(); },
   };
 }

@@ -2309,3 +2309,22 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - O personagem pisca vermelho vivo, e o golpe tem um baque grave e dissonante.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E:** ver e ouvir na partida.
 - **Publicado no GitHub.**
+
+## Rodadas 91 e 92 · 15/11/2026 — água que mexe, pergaminhos variados e Pedra Memorial
+
+> personagem ao pisar na água deve fazer a água mexer… deve ter um efeito dos pés de chakra, azulzinho… Sei que isso quem vai fazer é o codex, mas já prepare em código o que conseguir e deixe anotado para o codex aprimorar depois
+
+> Aprenda vários tipos de pergaminhos para colocar os pergaminhos no chão, serem diferentes, só o sprite mesmo...
+
+> Fazer a pedra memorial em konoha, uma área para ela
+
+> (anotado para depois) melhorar a performance sem perder nada… carregamento… menus, cliques, totalmente responsivo
+
+**Resposta.**
+
+- Ondas onde o ninja pisa e brilho de chakra azul nos pés. O que o Codex pode aprimorar ficou anotado em `water.ts` e no docs/13.
+- 8 desenhos de pergaminho no chão, inspirados nos da obra.
+- Pedra Memorial numa clareira da Folha.
+- Desempenho anotado no docs/13 (item 40) para depois da fila.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

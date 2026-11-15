@@ -168,8 +168,52 @@ function drawScrollShape(g: CanvasRenderingContext2D) {
   for (const x of [34, 94]) { const rod = g.createLinearGradient(x - 7, 0, x + 7, 0); rod.addColorStop(0, '#7a2d0e'); rod.addColorStop(.5, '#e0703a'); rod.addColorStop(1, '#5a1f08'); g.fillStyle = rod; g.fillRect(x - 7, 26, 14, 74); g.strokeStyle = '#3a1205'; g.lineWidth = 2; g.strokeRect(x - 7, 26, 14, 74); }
   g.fillStyle = '#c0392b'; g.font = '900 26px "Noto Sans JP","Yu Gothic","Meiryo",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('忍', 64, 64);
 }
-function drawKunai(g: CanvasRenderingContext2D) { glow(g, 'rgba(255,190,90,.5)', 58); drawScrollShape(g); }
-function drawKunaiFree(g: CanvasRenderingContext2D) { glow(g, 'rgba(90,255,150,.6)', 62); drawScrollShape(g); g.fillStyle = '#5bff9a'; g.font = '900 22px sans-serif'; g.textAlign = 'center'; g.fillText('✦', 98, 34); }
+/**
+ * Rodada 92 (pedido do usuário: "Aprenda vários tipos de pergaminhos para colocar os pergaminhos no chão, serem diferentes,
+ * só o sprite mesmo... para ficar mais bonito o jogo"): estilos inspirados nos pergaminhos da obra (imagens enviadas pelo
+ * usuário). Só visual: todos continuam sendo o mesmo pergaminho de recompensa. O estilo 0 é o pergaminho original.
+ */
+export type ScrollStyle = { name: string; open: boolean; paper: string; border: string; rod: string; rodEnd: string; kanji: string; ink: string; band?: string };
+export const SCROLL_STYLES: readonly ScrollStyle[] = [
+  { name: 'Pergaminho ninja', open: true, paper: '#fff3d8', border: '#6b3a12', rod: '#e0703a', rodEnd: '#5a1f08', kanji: '忍', ink: '#c0392b' },
+  { name: 'Pergaminho de selamento', open: true, paper: '#f7f4ec', border: '#2b2b34', rod: '#c8423a', rodEnd: '#2a2a33', kanji: '封', ink: '#1d1d24' },
+  { name: 'Pergaminho de invocação', open: true, paper: '#efe2c4', border: '#5c6e8a', rod: '#8b2c2c', rodEnd: '#1f1f26', kanji: '口寄', ink: '#2c2c36' },
+  { name: 'Pergaminho dos Sapos', open: true, paper: '#f1ead2', border: '#3f8a46', rod: '#d8c28c', rodEnd: '#b03a2e', kanji: '蝦', ink: '#2f6b35' },
+  { name: 'Pergaminho do Céu', open: false, paper: '#2f5fae', border: '#16294d', rod: '#e9eef6', rodEnd: '#16294d', kanji: '天', ink: '#16294d', band: '#f2f4f8' },
+  { name: 'Pergaminho da Terra', open: false, paper: '#f2f0ea', border: '#3b3b44', rod: '#2f5fae', rodEnd: '#16294d', kanji: '地', ink: '#2b2b33', band: '#2f5fae' },
+  { name: 'Pergaminho de técnica secreta', open: true, paper: '#cfe3b8', border: '#4d7a3c', rod: '#c9b27a', rodEnd: '#6e5a2e', kanji: '秘術', ink: '#2c4a22' },
+  { name: 'Pergaminho Proibido', open: false, paper: '#e9dcc0', border: '#4a3a28', rod: '#7a2d0e', rodEnd: '#2a160a', kanji: '禁', ink: '#7a1f12', band: '#3a2a1c' },
+];
+/** Estilo de um pergaminho no chão (sorteado ao nascer; o mesmo índice sempre dá o mesmo desenho). */
+export const scrollStyle = (variant: number) => SCROLL_STYLES[((Math.floor(variant) % SCROLL_STYLES.length) + SCROLL_STYLES.length) % SCROLL_STYLES.length];
+
+function drawStyledScroll(g: CanvasRenderingContext2D, style: ScrollStyle) {
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  const jp = '"Noto Sans JP","Yu Gothic","Meiryo",sans-serif';
+  if (style.open) { // aberto: papel entre dois rolos
+    g.fillStyle = style.paper; g.fillRect(40, 32, 48, 62);
+    g.strokeStyle = style.border; g.lineWidth = 4; g.strokeRect(42, 34, 44, 58);
+    g.strokeStyle = style.border + '66'; g.lineWidth = 1.4;
+    for (const y of [44, 84]) { g.beginPath(); g.moveTo(48, y); g.lineTo(80, y); g.stroke(); }
+    for (const x of [34, 94]) {
+      const rod = g.createLinearGradient(x - 7, 0, x + 7, 0); rod.addColorStop(0, style.rodEnd); rod.addColorStop(.5, style.rod); rod.addColorStop(1, style.rodEnd);
+      g.fillStyle = rod; g.fillRect(x - 7, 26, 14, 74); g.fillStyle = style.rodEnd; g.fillRect(x - 8, 24, 16, 6); g.fillRect(x - 8, 96, 16, 6);
+      g.strokeStyle = '#1a0d05'; g.lineWidth = 2; g.strokeRect(x - 7, 26, 14, 74);
+    }
+    g.fillStyle = style.ink; g.font = `900 ${style.kanji.length > 1 ? 18 : 26}px ${jp}`;
+    if (style.kanji.length > 1) { g.fillText(style.kanji[0], 64, 54); g.fillText(style.kanji[1], 64, 74); } else g.fillText(style.kanji, 64, 64);
+    return;
+  }
+  // fechado: rolo deitado com faixa e kanji (como os pergaminhos do Céu e da Terra do exame Chunin)
+  const body = g.createLinearGradient(0, 40, 0, 92); body.addColorStop(0, style.paper); body.addColorStop(.5, '#ffffff33'); body.addColorStop(1, style.border);
+  g.fillStyle = style.paper; g.fillRect(24, 44, 80, 42); g.fillStyle = body; g.fillRect(24, 44, 80, 42);
+  g.strokeStyle = '#120a05'; g.lineWidth = 2.6; g.strokeRect(24, 44, 80, 42);
+  for (const x of [18, 104]) { g.fillStyle = style.rodEnd; g.fillRect(x, 48, 6, 34); g.fillStyle = style.rod; g.fillRect(x + 1, 52, 4, 26); }
+  if (style.band) { g.fillStyle = style.band; g.fillRect(50, 44, 28, 42); g.strokeStyle = '#120a05'; g.lineWidth = 1.6; g.strokeRect(50, 44, 28, 42); }
+  g.fillStyle = style.ink; g.font = `900 24px ${jp}`; g.fillText(style.kanji, 64, 66);
+}
+function drawKunai(g: CanvasRenderingContext2D, variant = 0) { glow(g, 'rgba(255,190,90,.5)', 58); if (variant) drawStyledScroll(g, scrollStyle(variant)); else drawScrollShape(g); }
+function drawKunaiFree(g: CanvasRenderingContext2D, variant = 0) { glow(g, 'rgba(90,255,150,.6)', 62); if (variant) drawStyledScroll(g, scrollStyle(variant)); else drawScrollShape(g); g.fillStyle = '#5bff9a'; g.font = '900 22px sans-serif'; g.textAlign = 'center'; g.fillText('✦', 98, 34); }
 function drawShurikenShape(g: CanvasRenderingContext2D) {
   g.save(); g.translate(64, 64);
   const steel = g.createRadialGradient(-6, -6, 2, 0, 0, 44); steel.addColorStop(0, '#ffffff'); steel.addColorStop(.6, '#aab6c4'); steel.addColorStop(1, '#4d5866');
@@ -202,17 +246,21 @@ function drawEnemyKunai(g: CanvasRenderingContext2D) {
   g.fillStyle = '#0c0e12'; g.beginPath(); g.arc(64, 107, 3, 0, Math.PI * 2); g.fill();
 }
 
-const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, coin: drawCoin, onigiri: drawOnigiriDrop, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed, enemyKunai: drawEnemyKunai, enemyShuriken: drawShurikenShape, enemyShurikenFuma: drawShurikenShape };
+const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D, variant?: number) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, coin: drawCoin, onigiri: drawOnigiriDrop, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed, enemyKunai: drawEnemyKunai, enemyShuriken: drawShurikenShape, enemyShurikenFuma: drawShurikenShape };
 
-export function dropTexture(kind: DropVisual) {
-  let texture = cache.get(kind);
+const isScroll = (kind: DropVisual) => kind === 'kunai' || kind === 'kunaiFree';
+const cacheKey = (kind: DropVisual, variant: number) => (isScroll(kind) && variant ? `${kind}:${variant}` : kind) as DropVisual;
+
+export function dropTexture(kind: DropVisual, variant = 0) {
+  const key = cacheKey(kind, variant);
+  let texture = cache.get(key);
   if (!texture) {
     const { c, g } = canvas();
-    DRAW[kind](g);
+    DRAW[kind](g, variant);
     texture = new THREE.CanvasTexture(c);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 4;
-    cache.set(kind, texture);
+    cache.set(key, texture);
   }
   return texture;
 }
@@ -228,14 +276,16 @@ export function dropScale(kind: DropVisual, value: number) {
 
 const materials = new Map<DropVisual, THREE.SpriteMaterial>();
 /** Material COMPARTILHADO por tipo (performance: centenas de drops sem criar/descartar materiais). Nunca descarte. */
-function dropMaterial(kind: DropVisual) {
-  let m = materials.get(kind);
-  if (!m) { m = new THREE.SpriteMaterial({ map: dropTexture(kind), transparent: true, depthWrite: false }); materials.set(kind, m); }
+function dropMaterial(kind: DropVisual, variant = 0) {
+  const key = cacheKey(kind, variant);
+  let m = materials.get(key);
+  if (!m) { m = new THREE.SpriteMaterial({ map: dropTexture(kind, variant), transparent: true, depthWrite: false }); materials.set(key, m); }
   return m;
 }
 
-export function makeDropSprite(kind: DropVisual, value: number) {
-  const sprite = new THREE.Sprite(dropMaterial(kind));
+/** `variant`: estilo do pergaminho (só kunai/kunaiFree); por padrão sorteia um dos SCROLL_STYLES. */
+export function makeDropSprite(kind: DropVisual, value: number, variant = isScroll(kind) ? Math.floor(Math.random() * SCROLL_STYLES.length) : 0) {
+  const sprite = new THREE.Sprite(dropMaterial(kind, variant));
   const s = dropScale(kind, value);
   sprite.scale.set(s, s, 1);
   sprite.userData.baseScale = s;

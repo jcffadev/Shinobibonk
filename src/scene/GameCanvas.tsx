@@ -26,8 +26,9 @@ import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } f
 import { createEnemyRenderer, ENEMY_FRAME } from './enemyRenderer';
 import { focusOpacity, setFocusView } from './playerFocus';
 import { createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightField';
-import { createWater, waterDistance, waterSurfaceAt } from './water';
+import { createChakraFeet, createWater, RIPPLES, waterDistance, waterSurfaceAt } from './water';
 import { createLandscape } from './landscape';
+import { createMemorialSprite } from './memorialStone';
 import { createDamageNumbers } from './damageNumbers';
 import { BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
@@ -189,6 +190,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const ground=new THREE.Mesh(terrainGeometry,groundLook.material);
     ground.rotation.x=-Math.PI/2;scene.add(ground);
     const water=createWater(scene,MAP.id,terrainHeight);runCleanups.push(()=>water.dispose());
+    // Rodada 91: ondas dos passos e brilho de chakra nos pés sobre a água.
+    const chakraFeet=createChakraFeet(scene);runCleanups.push(()=>chakraFeet.dispose());let rippleTimer=0,wasAirborne=false;
     // Rodada 89: paisagem de fundo pintada (panorama da vila) em volta do mapa.
     const landscape=createLandscape(scene,MAP.id);runCleanups.push(()=>landscape.dispose());
     const texture = new THREE.TextureLoader().load('/assets/shinobi-sprites-atlas.png'); texture.colorSpace = THREE.SRGBColorSpace; texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter; texture.generateMipmaps = false;const orochimaruTexture=new THREE.TextureLoader().load('/assets/orochimaru-sprite.svg');orochimaruTexture.colorSpace=THREE.SRGBColorSpace;orochimaruTexture.magFilter=THREE.NearestFilter;orochimaruTexture.minFilter=THREE.NearestFilter;
@@ -232,6 +235,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         landmark.scale.set(w,h,1);landmark.center.set(.5,.03);landmark.position.set(x,terrainHeight(x,z)-.14,z);scene.add(landmark);decor.push(landmark);solids.addBuilding(x,z,w);
       }
       for(const [x,z] of [[-9,-15],[8,-17],[-10,-22],[9,-25]]){scenery(5,x,z,5,5);solids.addBuilding(x,z,5);}
+      // Rodada 92: Pedra Memorial numa clareira plana, cercada de árvores.
+      {const [x,z]=[-38,-26],memorial=createMemorialSprite();memorial.position.set(x,terrainHeight(x,z)-.08,z);scene.add(memorial);decor.push(memorial);solids.addBuilding(x,z,4);
+        for(const [dx,dz] of [[-7,-2],[7,-2],[-6,5],[6,5],[0,-8]])scenery(0,x+dx,z+dz,3.4,3.8);}
     }else{
       const row={areia:0,pedra:1,nevoa:2}[MAP.id];
       for(const {x,z,w,h,column} of REGIONAL_PLACES){
@@ -1417,6 +1423,9 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       moving=dir.lengthSq()>0;if(moving){heading.copy(dir).normalize();
         player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);if(!arena){/* Rodada 70: dash atravessa; ao terminar dentro de algo, sai pela frente. */if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}}revealAround(player.position.x,player.position.z);}
       player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight;
+      {const onWater=waterSurfaceAt(MAP.id,player.position.x,player.position.z)>-Infinity,airborne=jumpHeight>.05;
+        if(onWater&&!airborne){rippleTimer-=dt;if(wasAirborne){water.ripple(player.position.x,player.position.z,1);rippleTimer=RIPPLES.step;}else if(moving&&rippleTimer<=0){water.ripple(player.position.x,player.position.z,.6);rippleTimer=RIPPLES.step;}}
+        wasAirborne=airborne;chakraFeet.update(player.position.x,player.position.z,onWater&&!airborne,performance.now()/1000,dt);}
       const threat=threatNow();
       if(tune().enemyHp!==appliedEnemyHp){const ratio=tune().enemyHp/Math.max(.01,appliedEnemyHp);for(const e of enemyList){e.hp*=ratio;if(e.maxHp)e.maxHp*=ratio;bossCombat.rescale(e,ratio);}appliedEnemyHp=tune().enemyHp;}
       if(!arena)updateTotem(dt);

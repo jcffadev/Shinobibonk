@@ -319,3 +319,43 @@ test('paisagem de fundo com a cara de cada vila e câmera que mostra o horizonte
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.ok(canvas.includes('const landscape=createLandscape(scene,MAP.id)'), 'paisagem na cena');
 });
+
+test('água mexe onde o ninja pisa e os pés brilham com chakra azul (rodada 91)', async () => {
+  const { RIPPLES, rippleRadius } = await load('/src/scene/water.ts');
+  assert.equal(rippleRadius(-1), 0); assert.equal(rippleRadius(RIPPLES.life + .01), 0, 'a onda some');
+  assert.ok(rippleRadius(1) > rippleRadius(.2), 'a onda cresce');
+  assert.ok(RIPPLES.step > .15 && RIPPLES.step < .6, 'uma onda por passo');
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('if(wasAirborne){water.ripple(player.position.x,player.position.z,1)'), 'pouso do pulo faz onda forte');
+  assert.ok(canvas.includes('else if(moving&&rippleTimer<=0){water.ripple('), 'andar faz ondas');
+  assert.ok(canvas.includes('chakraFeet.update(player.position.x,player.position.z,onWater&&!airborne'), 'brilho só com os pés na água');
+  const water = (await import('node:fs')).readFileSync(new URL('../src/scene/water.ts', import.meta.url), 'utf8');
+  assert.ok(water.includes("color: '#6fd8ff'") && water.includes('AdditiveBlending'), 'brilho azul de chakra');
+  assert.ok(water.includes('PARA O CODEX APRIMORAR'), 'anotado o que falta');
+});
+
+test('pergaminhos no chão com vários desenhos da obra (rodada 92)', async () => {
+  const D = await load('/src/scene/dropSprites.ts');
+  assert.ok(D.SCROLL_STYLES.length >= 6, 'vários estilos');
+  const names = new Set(D.SCROLL_STYLES.map(s => s.name)), kanji = new Set(D.SCROLL_STYLES.map(s => s.kanji));
+  assert.equal(names.size, D.SCROLL_STYLES.length); assert.equal(kanji.size, D.SCROLL_STYLES.length, 'cada um com seu kanji');
+  assert.ok(D.SCROLL_STYLES.some(s => !s.open) && D.SCROLL_STYLES.some(s => s.open), 'abertos e fechados');
+  assert.ok(['天', '地'].every(k => kanji.has(k)), 'Céu e Terra do exame Chunin');
+  assert.equal(D.scrollStyle(D.SCROLL_STYLES.length + 2), D.SCROLL_STYLES[2], 'índice dá a volta');
+  const a = D.makeDropSprite('kunai', 1, 3), b = D.makeDropSprite('kunai', 1, 3), c = D.makeDropSprite('kunai', 1, 4);
+  assert.equal(a.material, b.material, 'mesmo estilo compartilha material');
+  assert.notEqual(a.material, c.material, 'estilos diferentes, desenhos diferentes');
+  assert.equal(D.makeDropSprite('item', 5).material, D.makeDropSprite('item', 5).material, 'outros drops não mudam');
+});
+
+test('Pedra Memorial de Konoha numa clareira plana (rodada 92)', async () => {
+  const { MEMORIAL } = await load('/src/scene/memorialStone.ts');
+  const { groundHeight, LEAF_BUILDINGS } = await load('/src/scene/terrainArt.ts');
+  const { waterDistance } = await load('/src/scene/water.ts');
+  assert.ok(LEAF_BUILDINGS.some(([x, z]) => x === MEMORIAL.x && z === MEMORIAL.z), 'na lista de construções (chão plano)');
+  const h = groundHeight('folha', MEMORIAL.x, MEMORIAL.z);
+  for (const [dx, dz] of [[6, 0], [-6, 0], [0, 6], [0, -6]]) assert.ok(Math.abs(groundHeight('folha', MEMORIAL.x + dx, MEMORIAL.z + dz) - h) < .02, 'clareira plana');
+  assert.ok(waterDistance('folha', MEMORIAL.x, MEMORIAL.z).outside > 10 && Math.hypot(MEMORIAL.x, MEMORIAL.z) > 20, 'longe da água e do começo');
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('memorial=createMemorialSprite()') && canvas.includes('[x,z]=[-38,-26]'), 'a pedra está na Folha');
+});

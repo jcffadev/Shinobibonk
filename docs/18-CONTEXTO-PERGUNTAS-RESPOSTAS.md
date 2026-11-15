@@ -305,6 +305,12 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 - Dano: `DAMAGE_FEEDBACK` (mín. .5, teto 1), `HURT_BLINK`/`hurtColor` em `src/game/damageFeedback.ts`, `HURT_SOUND` em `src/audio/sfx.ts`.
 
+### Rodadas 91 e 92 · 15/11/2026
+
+- Água: `RIPPLES`, `ripple()` e `createChakraFeet` em `src/scene/water.ts`.
+- Pergaminhos: `SCROLL_STYLES`/`scrollStyle` em `src/scene/dropSprites.ts` (`makeDropSprite(kind, value, variant)`).
+- Pedra Memorial: `src/scene/memorialStone.ts`, área plana em `LEAF_PLACES`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

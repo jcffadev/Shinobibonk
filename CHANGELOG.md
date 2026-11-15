@@ -1,5 +1,35 @@
 # CHANGELOG
 
+## 15/11/2026 · Pergaminhos variados e Pedra Memorial de Konoha (Rodada 92)
+
+- **Pedidos do usuário:**
+  - "Aprenda vários tipos de pergaminhos para colocar os pergaminhos no chão, serem diferentes, só o sprite mesmo... para ficar mais bonito o jogo" (com imagens de pergaminhos da obra).
+  - "Fazer a pedra memorial em konoha, uma área para ela" (com uma cena do anime).
+- **Pergaminhos no chão** (`SCROLL_STYLES` em `src/scene/dropSprites.ts`). Só visual: a recompensa é a mesma. 8 desenhos, sorteados ao nascer:
+  - ninja (o original);
+  - selamento 封;
+  - invocação 口寄;
+  - dos Sapos 蝦;
+  - Céu 天 e Terra 地 (os rolos fechados do exame Chunin);
+  - técnica secreta 秘術;
+  - Proibido 禁.
+- **Pedra Memorial** (`src/scene/memorialStone.ts`):
+  - Clareira plana na Folha (−38, −26), cercada de árvores.
+  - Pedra negra polida com nomes gravados e topo em ponta, lajes laterais, piso de tijolos com juntas azuladas e buquê de flores. Tudo desenhado em pixel art no próprio jogo.
+- **Testes:** 2 testes novos (o mínimo subiu para 168) e mutações novas, verificadas à mão: acusadas. **PENDENTE DE VALIDAÇÃO E2E:** ver os pergaminhos e a Pedra Memorial na partida.
+
+## 15/11/2026 · Água que mexe e pés de chakra (Rodada 91)
+
+- **Pedido do usuário:** "personagem ao pisar na água deve fazer a água mexer, em naruto eles andam acima da água, mas deve ter um efeito dos pés de chakra, azulzinho… igual no naruto anime? Sei que isso quem vai fazer é o codex, mas já prepare em código o que conseguir e deixe anotado para o codex aprimorar depois".
+- **Ondas:** cada passo na água abre uma onda circular clara que cresce e some em 1,6 s, até 8 ao mesmo tempo. O pouso de um pulo faz uma onda mais forte. Fica no shader da água, em `src/scene/water.ts`.
+- **Pés de chakra:** um brilho azul pulsante sob os pés enquanto o ninja está sobre a água (`createChakraFeet`).
+- **Anotado para o Codex aprimorar** (comentário "PARA O CODEX APRIMORAR" em `water.ts`):
+  - respingos em partículas ao correr e no dash;
+  - ondas de aliados e inimigos;
+  - anel de chakra no ritmo dos passos;
+  - arte própria do brilho.
+- **Testes:** 1 teste novo. **PENDENTE DE VALIDAÇÃO E2E:** ver as ondas e o brilho andando, correndo e pulando na água.
+
 ## 15/11/2026 · Dano bem visível e audível (Rodada 90)
 
 - **Relato do usuário:** "O piscar da tela em vermelho quando recebemos dano, ainda não esta visivel, ta piscando o personagem, precisa fazer algum som meio negativo de dano e pelo menos piscar com mais enfase o personagem".

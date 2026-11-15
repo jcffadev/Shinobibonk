@@ -73,9 +73,11 @@ function rollingBase(x: number, z: number) {
 export const LEAF_PLACES = [
   {x:0,z:-18.5,rx:13.5,rz:11},{x:-10,z:18,rx:3.5,rz:3.5},{x:12,z:19,rx:3.5,rz:3.5},
   {x:30,z:24,rx:4,rz:4},{x:53,z:24,rx:4,rz:4},{x:0,z:-52,rx:11,rz:11},
+  // Rodada 92: clareira da Pedra Memorial (memorialStone.ts).
+  {x:-38,z:-26,rx:7,rz:7},
 ] as const;
 /** Construções e estátuas da Folha (as mesmas coordenadas do GameCanvas). */
-export const LEAF_BUILDINGS = [[0,-12],[-7,-17],[7,-18],[-10,18],[12,19],[-9,-15],[8,-17],[-10,-22],[9,-25],[30,24],[53,24],[0,-52]] as const;
+export const LEAF_BUILDINGS = [[0,-12],[-7,-17],[7,-18],[-10,18],[12,19],[-9,-15],[8,-17],[-10,-22],[9,-25],[30,24],[53,24],[0,-52],[-38,-26]] as const;
 const leafPlaceHeight = new Map<number, number>();
 
 export function groundHeight(map: GameMap['id'], x: number, z: number) {
