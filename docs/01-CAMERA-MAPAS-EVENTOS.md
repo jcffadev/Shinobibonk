@@ -353,6 +353,18 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 - Ficam até o fim da partida.
 - Sugestão de 3 vagas, como as relíquias do jogo de referência; o usuário confirma.
 
+**Limite de 3 ferramentas e troca** (pedido do usuário: "no máximo podemos ter 3 dessas ferramentas… o jogador pode trocar entre ferramentas durante a partida"):
+- **Com menos de 3:** clicar numa ferramenta do pool **acrescenta** ao conjunto.
+- **Com as 3:** depois de escolher no pool, aparece a pergunta "Manter?", com a ferramenta nova e as 3 que ele já tem.
+  - Clicar na **nova** a dispensa: o conjunto fica como está.
+  - Clicar numa que ele **já tem** troca essa pela nova.
+
+**Recarga da chave por modo:**
+- **Clássico:** depois de derrotar o **chefe da zona** (guardião), as chaves **param de recarregar** naquela zona, para não ficar repetindo hordas e Mega Elite só para pegar ferramentas.
+- **Sobrevivência:** as chaves continuam recarregando sempre (anotado a pedido do usuário).
+
+**Na HUD do personagem:** os sprites das ferramentas aparecem em 3 quadradinhos **abaixo do nível e do XP** no cartão do personagem (retrato, nome, nível, barra de vida, barra de XP). Os vazios ficam com contorno apagado.
+
 **Itens do pool do evento** (buscar a forma no material de referência arquivado, fora do projeto):
 - um item que **aumenta a quantidade** de opções no pool da recompensa (+1 carta);
 - um item que **melhora a qualidade** (raridade) das opções.
