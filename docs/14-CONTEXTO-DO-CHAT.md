@@ -1946,3 +1946,14 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - A restrição de navegador foi estendida a Codex e Qwen na política e no AGENTS.md, mas em 14/11 o usuário decidiu "por enquanto só no claude".
 - docs/18 §2 ("Próximos passos") ainda cita o Kankuro como urgente, o que já está resolvido.
 - docs/26 ainda diz "11 arquivos, 80 testes"; hoje são 13 arquivos e 104 testes.
+
+## Rodada 69 · 15/11/2026 — cabeça desproporcional ao começar a andar
+
+> A cabeça dos personagens ao iniciar o movimento, estava ficando desproporcional ao personagem e a ele parado, corrija isso.
+> Precisamos publicar depois no github
+
+**Resposta.**
+- **Causa:** a troca de folha igualava a altura da silhueta; correndo, o corpo inclinado é mais baixo, então o desenho inteiro crescia e a cabeça junto. Medido em 2.280 células: cabeça 20% maior na mediana, até 80% em 5% dos quadros.
+- **Correção:** a proporção agora iguala a largura da cabeça (60–135%), com piso de 70% da altura do corpo. Resultado: mediana 1,00.
+- **PASSOU:** tsc, build, 110/110. **PENDENTE DE VALIDAÇÃO E2E:** ver na tela.
+- **Publicado no GitHub.**

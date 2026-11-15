@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 15/11/2026 · Cabeça do mesmo tamanho ao começar a andar (Rodada 69)
+
+- **Pedido do usuário:** "A cabeça dos personagens ao iniciar o movimento, estava ficando desproporcional ao personagem e a ele parado, corrija isso."
+- **Causa:** ao trocar de folha (parado → correndo), o controlador igualava a **altura da silhueta** do quadro à do repouso. Na corrida com os braços para trás o corpo é inclinado e mais baixo, então o desenho inteiro crescia até 35% e a cabeça junto. Medido nas 2.280 células de corrida das 114 versões: cabeça **20% maior** na mediana e **80% maior** em 5% dos quadros; 110 versões passavam de 15%.
+- **Correção** (`src/scene/playerMotion.ts`): a proporção agora iguala a **largura da cabeça** (mediana das linhas do topo 28% da silhueta, medida em 64×64), entre 60% e 135%, com piso de 70% da altura parada para o corpo não encolher demais. Fórmula pura `headProportion`. Vale para todas as folhas (corrida, ataque, pulo, dash), jogador, ajudantes e Mega Elites.
+- **Resultado medido:** cabeça correndo ÷ parada com mediana **1,00** (antes 1,20); 90% dos quadros até +25% (antes até +80% em 5%).
+- **Testes:** `tests/proporcao.test.mjs` (6 testes; lê os PNG reais no Node), mínimo 110, 2 mutações novas acusadas. **PASSOU:** tsc, build, 110/110. A prova por mutação completa não foi rodada desta vez (≈45 min de CPU); só as 2 novas, isoladamente. **PENDENTE DE VALIDAÇÃO E2E:** ver na tela a troca parado → andando.
+
 ## 15/11/2026 · Glossário e saldo na inicial
 
 - Glossário pesquisável por assunto e por termo, com explicações e exemplos sobre dano, críticos, tempo entre golpes, projéteis, status, defesa, economia e aliados.

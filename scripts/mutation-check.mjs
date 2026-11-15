@@ -41,6 +41,8 @@ const MUTATIONS = [
   { regra: 'sem quadrados brancos de inimigos (névoa do Zabuza)', arquivo: 'src/scene/enemyRenderer.ts', de: ' sprite.material.visible = false; },', para: ' },' },
   { regra: 'névoa só esconde depois dos selos', arquivo: 'src/game/weatherCast.ts', de: "elapsed >= (event.castEnd ?? 0)", para: 'true' },
   { regra: 'Zabuza parado durante os selos', arquivo: 'src/scene/GameCanvas.tsx', de: 'const stunned=channeling||', para: 'const stunned=' },
+  { regra: 'cabeça do mesmo tamanho ao começar a andar', arquivo: 'src/scene/playerMotion.ts', de: 'const propTarget = headProportion(idleFrac, cellFrac, idleHead, cellHead);', para: 'const propTarget = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;' },
+  { regra: 'proporção iguala a cabeça', arquivo: 'src/scene/playerMotion.ts', de: 'Math.max(.6, idleHead / cellHead)', para: 'Math.max(.6, idleHeight / cellHeight)' },
   { regra: 'cone desenhado = cone do acerto', arquivo: 'src/scene/GameCanvas.tsx', de: 'dot(direction)>CONE_COS', para: 'dot(direction)>.5' },
 ];
 

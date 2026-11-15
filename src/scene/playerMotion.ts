@@ -68,6 +68,52 @@ const alphaFracOf = (map: THREE.Texture, px: number, py: number, pw: number, ph:
   return frac;
 };
 
+/**
+ * Rodada 69 (pedido do usuário: "A cabeça dos personagens ao iniciar o movimento, estava ficando desproporcional ao
+ * personagem e a ele parado"). Igualar a ALTURA da silhueta fazia o desenho inteiro crescer na corrida (o corpo inclinado
+ * é mais baixo): medido nas 2.280 células de corrida, a cabeça ficava 20% maior na mediana e 80% maior em 5% dos quadros.
+ * Agora a proporção iguala a LARGURA DA CABEÇA (mediana das linhas do topo 28% da silhueta, em 64×64), com piso de 70%
+ * da altura parada para o corpo não encolher demais. Fórmula pura em headProportion (testada em tests/).
+ */
+const HEAD_BAND = .28, HEAD_SAMPLE = 64;
+const headFracCache = new Map<string, number>();
+const headFracOf = (map: THREE.Texture, px: number, py: number, pw: number, ph: number): number => {
+  const key = map.uuid + ':' + px + ':' + py + ':' + pw + ':' + ph;
+  const hit = headFracCache.get(key);
+  if (hit !== undefined) return hit;
+  const img = map.image as { width?: number; height?: number } | undefined;
+  if (!img || !img.width || !img.height) return 0;
+  const S = HEAD_SAMPLE, cv = document.createElement('canvas');
+  cv.width = S; cv.height = S;
+  const ctx = cv.getContext('2d', { willReadFrequently: true });
+  if (!ctx) return 0;
+  ctx.clearRect(0, 0, S, S);
+  ctx.drawImage(img as CanvasImageSource, px, py, pw, ph, 0, 0, S, S);
+  let data: Uint8ClampedArray;
+  try { data = ctx.getImageData(0, 0, S, S).data; } catch { return 0; }
+  const widths: number[] = []; let top = S, bottom = -1;
+  for (let y = 0; y < S; y++) {
+    let left = -1, right = -1;
+    for (let x = 0; x < S; x++) if (data[(y * S + x) * 4 + 3] > 24) { if (left < 0) left = x; right = x; }
+    widths.push(left < 0 ? 0 : right - left + 1);
+    if (left >= 0) { if (y < top) top = y; bottom = y; }
+  }
+  if (bottom < 0) return 0;
+  const band = widths.slice(top, top + Math.max(2, Math.round((bottom - top + 1) * HEAD_BAND))).sort((a, b) => a - b);
+  const frac = band[band.length >> 1] / S;
+  headFracCache.set(key, frac);
+  return frac;
+};
+/**
+ * Fator de proporção da célula em uso em relação ao repouso: iguala a cabeça (60%–135%), mas o corpo nunca fica abaixo de
+ * 70% da altura parada. Sem medida de cabeça, cai na regra antiga (altura, 85%–135%).
+ */
+export function headProportion(idleHeight: number, cellHeight: number, idleHead: number, cellHead: number) {
+  if (!(idleHeight > 0 && cellHeight > 0)) return 1;
+  if (!(idleHead > 0 && cellHead > 0)) return Math.min(1.35, Math.max(.85, idleHeight / cellHeight));
+  return Math.max(Math.min(1.35, Math.max(.6, idleHead / cellHead)), .7 * idleHeight / cellHeight);
+}
+
 const CHILD_FORMS:Record<string,readonly number[]>={
   naruto:[1,10],sasuke:[1],sakura:[1],gaara:[1],choji:[1],lee:[1],neji:[1],hinata:[1],tenten:[1],
   temari:[1],kankuro:[1],shikamaru:[1],hanabi:[1],kiba:[1],ino:[1],shino:[1],obito:[1],
@@ -153,7 +199,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
     return texture;
   };
   let attack = 0, attackDuration = .22, hurt = 0, stepTime = 0, lastHp = -1, lastMax = -1;
-  let idleFrac = 0, visualSize = 1; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
+  let idleFrac = 0, idleHead = 0, visualSize = 1; // Rodada 39: fração alfa do repouso, medida dinamicamente a cada frame idle (autoconsistente por nível).
   let propCur = 1; // Rodada 45: fator de proporção SUAVIZADO (lerp exponencial) — elimina o 'pulo' de tamanho/altura na troca de folha.
   let queued: Strike | undefined;
   let frameShown = 0, strideShown = 0, walkAttack = false, walkLean=0, rowShown = -1;
@@ -361,7 +407,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       // Rodada 39 — proporção idêntica em qualquer movimento: compensa quadros menores/maiores que o repouso.
       // A âncora nos pés se mantém porque a posição y usa a escala final. Choji (Jutsu de Expansão, fase 7)
       // seguirá a mesma regra: o repouso dele é medido na forma expandida, então o fator continua ≈ 1.
-      let cellFrac = 0;
+      let cellFrac = 0, cellHead = 0;
       const cellMap = sprite.material.map;
       if (cellMap) {
         const cellImg = cellMap.image as { width?: number; height?: number } | undefined;
@@ -374,20 +420,21 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
           const cw = Math.min(W - cx, Math.max(2, Math.round(rw * W)));
           const cy = cellMap.flipY ? Math.round((1 - (v0 + rh)) * H) : Math.round(v0 * H);
           const ch = Math.min(H - cy, Math.max(2, Math.round(rh * H)));
-          if (cw > 0 && ch > 0 && cy >= 0 && cx >= 0) cellFrac = alphaFracOf(cellMap, cx, cy, cw, ch);
+          if (cw > 0 && ch > 0 && cy >= 0 && cx >= 0) { cellFrac = alphaFracOf(cellMap, cx, cy, cw, ch); cellHead = headFracOf(cellMap, cx, cy, cw, ch); }
         }
       }
       const idleCell=idleMap?.image as {width:number;height:number}|undefined;
       if(!idleFrac&&idleMap&&idleCell){
         const w=idleCell.width*idleMap.repeat.x,h=idleCell.height*idleMap.repeat.y;
         idleFrac=alphaFracOf(idleMap,idleCell.width*idleMap.offset.x,idleCell.height*(1-idleMap.offset.y)-h,w,h);
+        idleHead=headFracOf(idleMap,idleCell.width*idleMap.offset.x,idleCell.height*(1-idleMap.offset.y)-h,w,h);
       }
-      if (state === 'idle' && !usesSheet && cellFrac > 0) idleFrac = cellFrac;
+      if (state === 'idle' && !usesSheet && cellFrac > 0) { idleFrac = cellFrac; if (cellHead > 0) idleHead = cellHead; }
       if(idleFrac>0){
         const target=Math.max(.9,Math.min(2.4,bodyHeight*ACTOR_SCALE/(height*idleFrac)));
         visualSize+=(target-visualSize)*(1-Math.exp(-dt*18));
       }
-      const propTarget = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;
+      const propTarget = headProportion(idleFrac, cellFrac, idleHead, cellHead);
       // Rodada 45 — suaviza o fator de proporção (lerp exponencial): antes, o fator era aplicado de uma vez e o personagem 'pulava' de tamanho (e de altura, pois position.y segue a escala) nas trocas repouso <-> andar <-> ataque. Agora a transição é fluida (~0,15 s) e os pés seguem ancorados. Choji (cresce), Gaara e Pain (flutuam) mantêm a âncora porque ela usa a escala final.
       propCur += (propTarget - propCur) * (1 - Math.exp(-dt * 14));
       bodyScale+=(targetBodyScale-bodyScale)*(1-Math.exp(-dt*10));

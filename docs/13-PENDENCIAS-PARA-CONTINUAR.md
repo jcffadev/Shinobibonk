@@ -4,7 +4,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 ## Prioridades atuais · 15/11/2026
 
-1. Validação visual em partida das 114 poses e dos retratos em três quartos, HUD invertido, câmera e oclusão do terreno, som e flash ao perder HP, cursor nos menus, planejador e oficina. Política E2E vigente.
+1. Validação visual em partida das 114 poses (inclusive a proporção da cabeça ao começar a andar, corrigida na rodada 69) e dos retratos em três quartos, HUD invertido, câmera e oclusão do terreno, som e flash ao perder HP, cursor nos menus, planejador e oficina. Política E2E vigente.
 2. Fechar revisão de jutsus um a um por referência da obra. Cobrir Ultimates e efeitos de inimigos, ajudantes e eventos. Confirmar a folha de selos de cada versão e os dōjutsu no jogo.
 3. Conferir em partida o GPS atualizado e verificar a curva de XP das zonas posteriores após o ajuste.
 4. Provisionar ranking público, conferir e-mail e deploy real, integração dos modos e placar co-op. Validar replay ou simulação autoritativa antes de competição.
