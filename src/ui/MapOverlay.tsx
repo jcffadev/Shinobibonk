@@ -68,7 +68,7 @@ export function MinimapMarkers({ world }: { world: WorldSnapshot }) {
   const r = world.route, t = r ? at(r.x, r.z, 42) : null;
   return <>
     {r && t && <svg className="mini-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="50" y1="50" x2={t.x} y2={t.y} /></svg>}
-    {world.pickups.filter(pk => dist(world, pk.x, pk.z) < 30).map((pk, i) => { const q = at(pk.x, pk.z); return <i key={pk.id ?? 'pk' + i} className="mini-marker" title={pk.name ?? PICKUP_LABEL[pk.kind]} style={{ left: `${q.x}%`, top: `${q.y}%` }}><PickupIcon p={pk} size="mini" /></i>; })}
+    {world.pickups.filter(pk => pk.kind === 'sealDrop' || dist(world, pk.x, pk.z) < 30).map((pk, i) => { const q = at(pk.x, pk.z); return <i key={pk.id ?? 'pk' + i} className="mini-marker" title={pk.name ?? PICKUP_LABEL[pk.kind]} style={{ left: `${q.x}%`, top: `${q.y}%` }}><PickupIcon p={pk} size="mini" /></i>; })}
     {world.events.map(m => { const q = at(m.x, m.z); return <i key={m.id} className={`mini-marker${q.edge ? ' edge' : ''}${r?.id === m.id ? ' routed' : ''}`} title={`${m.name} · ${meters(dist(world, m.x, m.z))}`} style={{ left: `${q.x}%`, top: `${q.y}%` }}><MarkerIcon m={m} size="mini" /></i>; })}
     {world.ping && (() => { const q = at(world.ping.x, world.ping.z); return <i className="map-ping" title="Ping" style={{ left: `${q.x}%`, top: `${q.y}%` }}>📍</i>; })()}
     {r && t && <i className={`mini-target${t.edge ? ' edge' : ''}`} style={{ left: `${t.x}%`, top: `${t.y}%` }} title={`Rota: ${r.name} · ${meters(r.distance)}`} />}

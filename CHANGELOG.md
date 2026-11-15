@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 15/11/2026 · Luz e área no Mega Elite caído; farol do pergaminho de boss (Rodada 73)
+
+- **Pedidos do usuário:**
+  - "Colocar uma luz nos Mega ELites mortos e uma área ao redor deles pra indicar que estão mortos".
+  - "se apertar G, aparecer um pergaminho brilhando com uma luz que mostra no mapa todo, inclusive no tab e no M pra indentificar drop de boss, fazer isso para todos amuletos que dropam dos bosses do jogo".
+- **Mega Elite e Shinobi para selar caídos** (`src/scene/fallenShinobi.ts`):
+  - **Área de captura no chão:** círculo com o raio do E (10 m, `FALLEN_AREA`), na cor do contorno (vermelho ou ciano), com preenchimento fraco e borda marcada, acompanhando o relevo. Pulsa devagar; no modo H fica fixo.
+  - **Facho de luz** mais forte e mais alto (de 3,6 m para 6 m), sem estourar. O halo pequeno de antes continua.
+- **Pergaminho de recompensa grátis** (`sealDrop`), em todos os casos: o do G (selamento recusado), os do Guardião (boss da zona) e o do desafio.
+  - **Farol** (`src/scene/rewardBeacon.ts`): facho verde de 30 m, sem névoa, visível de longe; brilho em volta do pergaminho e halo no chão. No modo H o facho fica, mais fraco e fixo.
+  - **Mapas:** aparece no minimapa (a qualquer distância, preso na borda), no Tab e no M desde que cai, sem precisar ter sido visto. O ícone verde pulsa com brilho. O save restaurado mantém a marcação.
+  - O aviso do G agora diz "siga a luz verde do pergaminho".
+- **Testes:**
+  - 4 testes novos em `tests/cena.test.mjs`; o mínimo subiu para 129.
+  - 2 mutações novas (raio da área e altura do farol), as duas acusadas.
+  - **PASSOU:** tsc, 129/129 com cobertura e build.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver a área e os fachos na partida, no minimapa, no Tab e no M.
+
 ## 15/11/2026 · Jūzō travado: pedido de arte
 
 - **Pedido do usuário:** "Revisar animações do Juzo ingame, está travado, como ajudante tbm."

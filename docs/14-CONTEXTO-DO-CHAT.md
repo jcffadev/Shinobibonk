@@ -2070,3 +2070,16 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 
 - Pedido registrado em `docs/development/PEDIDO-ARTE-JUZO-CORRIDA.md` e no item 24 do docs/13.
 - **Publicado no GitHub.**
+
+## Rodada 73 · 15/11/2026 — luz no Mega Elite caído e farol do drop de boss
+
+> Colocar uma luz nos Mega ELites mortos e uma área ao redor deles pra indicar que estão mortos
+
+> se apertar G, aparecer um pergaminho brilhando com uma luz que mostra no mapa todo, inclusive no tab e no M pra indentificar drop de boss, fazer isso para todos amuletos que dropam dos bosses do jogo
+
+**Resposta.**
+
+- O corpo caído já tinha um halo pequeno e um facho fraco. Ganhou o círculo da área de captura (10 m, o alcance do E) e um facho mais forte.
+- O "amuleto" dos bosses é o Pergaminho de recompensa grátis (`sealDrop`): cai no G, no Guardião e no desafio. Todos ganharam farol verde de 30 m e marcação fixa no minimapa, no Tab e no M.
+- **Testes:** **PASSOU** tsc, 129/129 com cobertura e build; 2 mutações acusadas. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

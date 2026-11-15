@@ -16,6 +16,11 @@ import * as THREE from 'three';
  * intensidade (mistura normal, sem aditivo → não estoura nem gera bloom), sem névoa (fog:false) para ser visto
  * de longe e na névoa; um feixe vertical bem fraco ajuda a achar o corpo à distância. No modo H (efeitos
  * reduzidos) fica só o anel, fixo e mais fraco, sem feixe nem pulsação.
+ *
+ * Rodada 73 (pedido: "Colocar uma luz nos Mega Elites mortos e uma área ao redor deles pra indicar que estão mortos"):
+ * - Facho de luz mais forte e mais alto (6 m), visível de longe; continua sem aditivo e some no modo H.
+ * - Área de captura: círculo no chão com o raio do E (`areaRadius`, 10 m), na cor do contorno, preenchimento
+ *   bem fraco e borda marcada, acompanhando o relevo. Pulsa devagar; no modo H fica fixo.
  */
 export const FALLEN_TIMING = { stagger: .4, fall: .95, settle: 1.25 } as const;
 
@@ -23,7 +28,7 @@ export type FallenBody = {
   /** Centro do corpo deitado no chão (fixo no mundo). */
   readonly position: THREE.Vector3;
   update(dt: number, hidden: boolean): void;
-  debug(): { phase: 'stagger' | 'fall' | 'settle' | 'down'; angle: number; halo: number; beam: number; x: number; z: number };
+  debug(): { phase: 'stagger' | 'fall' | 'settle' | 'down'; angle: number; halo: number; beam: number; area: number; areaRadius: number; x: number; z: number };
   dispose(): void;
 };
 
@@ -43,7 +48,12 @@ type Options = {
   /** Posição do jogador: o corpo cai para o lado oposto. */
   awayFrom?: THREE.Vector3;
   instant?: boolean;
+  /** Raio da área de captura desenhada no chão (o alcance do E). Padrão: FALLEN_AREA.radius. */
+  areaRadius?: number;
 };
+
+/** Rodada 73: área de captura ao redor do corpo caído (mesmo raio do E em GameCanvas). */
+export const FALLEN_AREA = { radius: 10, opacity: .5, hiddenOpacity: .4 } as const;
 
 const textureCache = new Map<string, THREE.CanvasTexture>();
 function radialTexture(key: string, paint: (ctx: CanvasRenderingContext2D, size: number) => void) {
@@ -65,6 +75,16 @@ const haloTexture = () => radialTexture('halo', (ctx, s) => {
   g.addColorStop(.55, 'rgba(255,255,255,.30)');
   g.addColorStop(.78, 'rgba(255,255,255,.85)');
   g.addColorStop(.88, 'rgba(255,255,255,.45)');
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, s, s);
+});
+/** Área de captura: interior quase transparente e borda nítida perto do raio. */
+const areaTexture = () => radialTexture('area', (ctx, s) => {
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  g.addColorStop(0, 'rgba(255,255,255,.05)');
+  g.addColorStop(.8, 'rgba(255,255,255,.12)');
+  g.addColorStop(.93, 'rgba(255,255,255,.35)');
+  g.addColorStop(.97, 'rgba(255,255,255,1)');
   g.addColorStop(1, 'rgba(255,255,255,0)');
   ctx.fillStyle = g; ctx.fillRect(0, 0, s, s);
 });
@@ -139,15 +159,21 @@ export function createFallenBody(o: Options): FallenBody {
   halo.renderOrder = 1; shadow.renderOrder = 0;
   const beam = new THREE.Sprite(new THREE.SpriteMaterial({ map: beamTexture(), color: haloColor, transparent: true, opacity: 0, depthWrite: false, fog: false, toneMapped: false }));
   beam.center.set(.5, 0);
-  beam.scale.set(.95, 3.6, 1);
+  beam.scale.set(1.3, 6, 1);
   beam.position.set(rest.x, restY + .05, rest.z);
   beam.renderOrder = 1;
   const dust = new THREE.Mesh(new THREE.RingGeometry(.55, .8, 28), new THREE.MeshBasicMaterial({ color: '#d9c7a4', transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }));
   dust.rotation.x = -Math.PI / 2; dust.position.set(rest.x, restY + .12, rest.z); dust.visible = false;
-  scene.add(shadow, halo, outline, body, beam, dust);
+  const areaRadius = o.areaRadius ?? FALLEN_AREA.radius;
+  const area = new THREE.Mesh(groundDisc(areaRadius, rest.x, rest.z, restY, ground, .06),
+    new THREE.MeshBasicMaterial({ map: areaTexture(), color: haloColor, transparent: true, opacity: 0, depthWrite: false, fog: false, toneMapped: false,
+      polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 }));
+  area.position.copy(rest);
+  area.renderOrder = 0;
+  scene.add(area, shadow, halo, outline, body, beam, dust);
 
   let t = o.instant ? FALLEN_TIMING.settle + 1 : 0;
-  let angle = 0, haloShown = 0, beamShown = 0;
+  let angle = 0, haloShown = 0, beamShown = 0, areaShown = 0;
   let phase: 'stagger' | 'fall' | 'settle' | 'down' = 'stagger';
   const tint = new THREE.Color();
 
@@ -193,7 +219,9 @@ export function createFallenBody(o: Options): FallenBody {
     shadow.material.opacity = .42 * grounded;
     const pulse = .5 + .5 * Math.sin(t * Math.PI * 2 / 2.6);
     haloShown = hidden ? .45 * grounded : (.52 + .2 * pulse) * grounded;
-    beamShown = hidden ? 0 : (.15 + .08 * pulse) * grounded;
+    beamShown = hidden ? 0 : (.32 + .13 * pulse) * grounded;
+    areaShown = hidden ? FALLEN_AREA.hiddenOpacity * grounded : (FALLEN_AREA.opacity + .15 * pulse) * grounded;
+    area.material.opacity = areaShown;
     halo.material.opacity = haloShown;
     beam.material.opacity = beamShown;
     beam.visible = !hidden && beamShown > .001;
@@ -207,9 +235,10 @@ export function createFallenBody(o: Options): FallenBody {
   return {
     position: rest,
     update(dt: number, hidden: boolean) { t += dt; place(hidden); },
-    debug: () => ({ phase, angle: +angle.toFixed(3), halo: +haloShown.toFixed(3), beam: +beamShown.toFixed(3), x: +rest.x.toFixed(2), z: +rest.z.toFixed(2) }),
+    debug: () => ({ phase, angle: +angle.toFixed(3), halo: +haloShown.toFixed(3), beam: +beamShown.toFixed(3), area: +areaShown.toFixed(3), areaRadius, x: +rest.x.toFixed(2), z: +rest.z.toFixed(2) }),
     dispose() {
-      for (const object of [shadow, halo, outline, body, beam, dust]) object.removeFromParent();
+      for (const object of [area, shadow, halo, outline, body, beam, dust]) object.removeFromParent();
+      area.geometry.dispose(); area.material.dispose();
       halo.geometry.dispose(); shadow.geometry.dispose(); dust.geometry.dispose();
       halo.material.dispose(); shadow.material.dispose(); beam.material.dispose(); dust.material.dispose();
       body.material.dispose(); outline.material.dispose();

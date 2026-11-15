@@ -12,6 +12,7 @@ installCanvasStub();
 globalThis.localStorage ??= memoryStorage();
 const F = await load('/src/scene/fallenShinobi.ts');
 const A = await load('/src/scene/techniqueAreas.ts');
+const B = await load('/src/scene/rewardBeacon.ts');
 
 const flat = () => 0;
 function body(extra = {}) {
@@ -47,6 +48,53 @@ test('luz no modo H (efeitos reduzidos): continua visível, fixa e sem facho', (
   run(b, F.FALLEN_TIMING.settle + 1, true);
   assert.ok(b.debug().halo >= .4, `halo mínimo com H: ${b.debug().halo}`);
   assert.equal(b.debug().beam, 0);
+});
+
+test('área de captura do corpo caído: raio do E (10 m), aparece no chão, pulsa e não estoura', () => {
+  const { b } = body();
+  assert.equal(b.debug().area, 0, 'sem área enquanto está em pé');
+  assert.equal(b.debug().areaRadius, 10, 'mesmo raio do E');
+  run(b, F.FALLEN_TIMING.settle + .1);
+  let min = 1, max = 0, beam = 0;
+  for (let i = 0; i < 400; i++) { b.update(1 / 60, false); const d = b.debug(); min = Math.min(min, d.area); max = Math.max(max, d.area); beam = Math.max(beam, d.beam); }
+  assert.ok(min >= .45, `área sempre visível (mín ${min})`);
+  assert.ok(max <= .7, `área sem estourar (máx ${max})`);
+  assert.ok(beam >= .4 && beam <= .5, `facho de luz forte e sem estourar (${beam})`);
+  assert.equal(body({ areaRadius: 6 }).b.debug().areaRadius, 6);
+});
+
+test('área de captura no modo H: fica visível e fixa', () => {
+  const { b } = body();
+  run(b, F.FALLEN_TIMING.settle + 1, true);
+  const a = b.debug().area;
+  b.update(.7, true);
+  assert.ok(a >= .35, `área com H: ${a}`);
+  assert.equal(b.debug().area, a, 'sem pulsação');
+});
+
+test('farol do pergaminho grátis (drop de boss / G): facho alto, visível desde que cai, pulsa e não estoura', () => {
+  const scene = new THREE.Scene();
+  const b = B.createRewardBeacon(scene, 4, 2, flat, .7);
+  assert.ok(b.debug().height >= 25, `facho alto para ser visto no mapa todo: ${b.debug().height}`);
+  assert.ok(b.debug().beam >= .4, 'aceso desde o primeiro quadro');
+  let min = 1, max = 0;
+  for (let i = 0; i < 300; i++) { b.update(1 / 60, false); const d = b.debug(); min = Math.min(min, d.beam); max = Math.max(max, d.beam); assert.ok(d.glow > 0 && d.glow <= .85); }
+  assert.ok(max <= .6, `sem estourar (máx ${max})`);
+  assert.ok(max - min > .05, 'pulsa');
+  b.update(1 / 60, true);
+  assert.ok(b.debug().beam >= .25, 'modo H mantém o facho');
+  assert.equal(b.debug().glow, 0, 'modo H sem brilho extra');
+  b.dispose();
+  assert.equal(scene.children.length, 0, 'dispose limpa a cena');
+});
+
+test('pergaminho grátis: farol e marcação no minimapa, no Tab e no M sem precisar ser visto', async () => {
+  const fs = await import('node:fs');
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.match(canvas, /if\(kind==='sealDrop'\)\{const pickup=pickups\.at\(-1\)!;pickup\.discovered=true;beacons\.set\(pickup,createRewardBeacon\(/);
+  assert.match(canvas, /discovered=p\.discovered\|\|p\.kind==='sealDrop'/, 'save restaurado mantém a marcação');
+  const overlay = fs.readFileSync(new URL('../src/ui/MapOverlay.tsx', import.meta.url), 'utf8');
+  assert.match(overlay, /pk\.kind === 'sealDrop' \|\| dist\(world, pk\.x, pk\.z\) < 30/, 'minimapa mostra o pergaminho a qualquer distância');
 });
 
 test('corpo cai para longe do jogador e fica dentro do alcance de captura (10 m)', () => {

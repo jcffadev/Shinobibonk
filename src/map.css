@@ -13,6 +13,9 @@
 .tone-elite{--mk:#ff4d6d}.tone-guardian{--mk:#ff2b2b}.tone-totem{--mk:#ffb34d}.tone-pickup{--mk:#d9d9d9}.mk.free{--mk:#61ffa8}
 .tone-guardian.mk,.tone-elite.mk{animation:mk-pulse 1.4s ease-in-out infinite}
 @keyframes mk-pulse{50%{box-shadow:0 0 14px var(--mk)}}
+/* Rodada 73: pergaminho de recompensa grátis (drop de boss/G) brilha no minimapa, no Tab e no M. */
+.mk.free{animation:mk-free 1.1s ease-in-out infinite;box-shadow:0 0 8px var(--mk)}
+@keyframes mk-free{50%{box-shadow:0 0 18px 4px var(--mk)}}
 
 /* Minimapa */
 .minimap .mini-marker{position:absolute;z-index:3;transform:translate(-50%,-50%);font-style:normal}
