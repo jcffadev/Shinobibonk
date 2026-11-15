@@ -245,6 +245,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Área, Órbita e corpo a corpo acertam um círculo no alvo (`aimedCenter`); só puxão, Modo Sábio e Ultimates ficam no usuário.
 - Órbitas lançadas (`LAUNCHED_ORBITS`) alcançam 4,5 m; as de contato, 1,7.
 
+### Rodada 79 · 15/11/2026
+
+- Skill `simular-partida` (`skills/simular-partida/SKILL.md`): todos os agentes usam o simulador de partidas antes e depois de mexer em balanceamento.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

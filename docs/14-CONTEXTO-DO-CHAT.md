@@ -2151,3 +2151,13 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Agora Área, Órbita e corpo a corpo acertam no alvo. Órbitas lançadas alcançam 4,5 m; as de contato pedem chegar perto. Visual, área marcada, Susanoo e prévia acompanham.
 - **Testes:** **PASSOU** tsc, 142/142 com cobertura e build; 2 mutações acusadas. **PENDENTE DE VALIDAÇÃO E2E**.
 - **Publicado no GitHub.**
+
+## Rodada 79 · 15/11/2026 — skill do simulador de partidas
+
+> Fazer um skill .md para todos os agentes usarem simulador de partida quando precisar
+
+**Resposta.**
+
+- Criada a skill `skills/simular-partida/SKILL.md` (atalho em `.claude/skills/`): quando usar, comandos, parâmetros, o que o modelo cobre e não cobre, relatório em `artifacts/` (não versionado), sem navegador.
+- Citada no `AGENTS.md` e em `skills/contexto-e-decisao/SKILL.md`.
+- **Publicado no GitHub.**

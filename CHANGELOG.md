@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 15/11/2026 · Skill do simulador de partidas para todos os agentes (Rodada 79)
+
+- **Pedido do usuário:** "Fazer um skill .md para todos os agentes usarem simulador de partida quando precisar".
+- **Nova skill** `skills/simular-partida/SKILL.md` (com atalho em `.claude/skills/simular-partida/`):
+  - quando usar, comandos, parâmetros e o que o modelo cobre e não cobre;
+  - o relatório sai em `artifacts/` (não versionado);
+  - roda sem navegador.
+- Citada no `AGENTS.md` e na lista de skills de `skills/contexto-e-decisao/SKILL.md`.
+- Nenhuma regra de jogo mudou.
+
 ## 15/11/2026 · Técnicas miram o alvo, nunca o pé do jogador (Rodada 78)
 
 - **Pedido do usuário:** "Ataques ou devem ser meele, chegar perto para acertar, mas mirando os alvos ou arremessados/lançados, nunca usados no pé do jogador, igual o madara seis caminhos… Revise todas as habilidades que funcionam igual e altere."
