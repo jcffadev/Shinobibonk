@@ -1,6 +1,8 @@
 # Ficha, HUD, estatísticas e ranking
 
 ## HUD em partida
+
+O cartão de HP indica **Protegido** durante a invulnerabilidade temporária e **Debug** durante o God mode. Golpes que tiram vida mostram um número vermelho com sinal de menos, além do flash do personagem e do som de dano, mesmo se uma cura repuser o HP no quadro. O número respeita a configuração de números de dano e a tecla H.
 HP, XP, nível, Chakra/recarga da Ultimate, tempo, abates individuais, inimigos vivos, mapa/bioma, dificuldade, dinheiro da partida, slots 1–4, R, aliados 3/5, minimapa, evento ativo, meta Top 1 e colocação dinâmica. A meta deve comparar a run atual inclusive com recordes **do próprio jogador** salvos localmente. Ranking global entre jogadores exige servidor e validação antitrapaça; não alegar online quando apenas local.
 
 - **Cores de ganho e perda (IMPLEMENTADO em 06/11/2026, pedido do usuário)**: `src/ui/BuffText.tsx` pinta os textos de efeito dos cards em **verde** (+%, ×1,x, ganho, cura, ressurreição, descontos/"custa menos") e **vermelho** (−%, perda, custo, dívida, emboscada). Vale para cartas de level-up, recompensa e NPC, troca de ajudante, passivas dos ajudantes, prêmios da roleta, ficha, Bolsa da Missão e Plano de build.

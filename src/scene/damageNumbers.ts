@@ -37,9 +37,11 @@ export function createDamageNumbers(scene: THREE.Scene) {
   }
   return {
     /** Sprite pronto (na cena) com o número; o chamador posiciona e controla a vida. */
-    spawn(amount: number, tier: number) {
-      const label = damageLabel(amount) + (tier === 2 ? '!!' : tier === 1 ? '!' : '');
-      const map = acquire(label, tier === 2 ? '#ff8bdd' : tier === 1 ? '#ffe269' : '#ffffff', false);
+    spawn(amount: number, tier: number, received = false) {
+      const label = damageLabel(amount);
+      const text = received ? '−' + (label === '0' ? '1' : label) : label + (tier === 2 ? '!!' : tier === 1 ? '!' : '');
+      const color = received ? '#ff605b' : tier === 2 ? '#ff8bdd' : tier === 1 ? '#ffe269' : '#ffffff';
+      const map = acquire(text, color, false);
       let sprite = pool.pop();
       if (sprite) { sprite.material.map = map; sprite.material.opacity = 1; sprite.visible = true; sprite.scale.set(2, 1, 1); }
       else { sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map, transparent: true, depthTest: false })); sprite.scale.set(2, 1, 1); }

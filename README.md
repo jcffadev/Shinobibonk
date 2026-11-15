@@ -47,6 +47,7 @@ O [contexto permanente de perguntas e respostas](docs/18-CONTEXTO-PERGUNTAS-RESP
   - `maps.ts`: 4 mapas temáticos (Folha, Areia, Pedra, Névoa Oculta).
   - `unlockMissions.ts`: missões de desbloqueio, Lendários e cadeia das versões (`playWith`).
   - `enemyTiers.ts`: inimigo normal, elite amarelo, Mega Elite e Shinobi para selar. O primeiro Mega Elite da partida tem no máximo 3.000 HP.
+  - `movementInput.ts`: mantém WASD e setas pressionados durante escolhas, Treinamento e contato com obstáculos.
   - `synergy.ts`: sinergias de vila e organização entre herói e ajudantes.
   - `roulette.ts`: Caça-Níquel da Tsunade (ex-"Roleta da Tsunade").
   - `settings.ts`: configurações do jogador.

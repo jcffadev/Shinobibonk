@@ -118,6 +118,20 @@ test('o jogo usa as funções testadas (GameCanvas, sfx, Configurações e CSS)'
   assert.match(css, /rgba\(150,0,14,0\) 48%/, 'centro transparente: só bordas e cantos');
 });
 
+test('proteção de nível continua e só o HP perdido produz número vermelho', async () => {
+  const { calculateStats, incomingDamage } = await import('../src/game/progression.ts');
+  const stats = calculateStats('naruto', 53);
+  assert.ok(incomingDamage(7, stats.armor) >= 1, 'a armadura do Nv. 53 reduz, mas não zera a shuriken');
+  const canvas = read('../src/scene/GameCanvas.tsx');
+  assert.match(canvas, /if\(xp>=xpNext\|\|pendingLevels>0\)\{[^\n]+openLevelReward\(\);invulnerability=3;/);
+  assert.match(canvas, /if\(invulnerability>0\|\|defeated\|\|debugState\.god\)return false/);
+  assert.match(canvas, /if\(hit\)damagePlayer\(shot\.damage\)/);
+  assert.match(canvas, /if\(hp<hpBefore\)\{\s*playerMotion\.hurt\(\);\s*damageNumber\(player\.position,hpBefore-hp,0,true\);/);
+  assert.match(canvas, /protection:debugState\.god\?'debug':invulnerability>\.25\?'temporary'/);
+  assert.match(read('../src/main.tsx'), /world\.protection&&<span className="run-protection"/);
+  assert.match(read('../src/scene/damageNumbers.ts'), /const color = received \? '#ff605b'/);
+});
+
 test('dano bem visível e audível: vinheta forte, personagem pisca vermelho e baque dissonante (rodada 90)', async () => {
   const fs = await import('node:fs');
   const css = fs.readFileSync(new URL('../src/style.css', import.meta.url), 'utf8');

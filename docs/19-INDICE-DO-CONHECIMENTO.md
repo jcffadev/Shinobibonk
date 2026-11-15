@@ -28,6 +28,7 @@
 | **Mapas e eventos** (4 mapas, zonas, clima, construções) | `docs/01` · [20](20-SCALING-E-REGULAS.md) §11 | `maps.ts` · `worldScale.ts` · `terrainArt.ts` · skill [`criar-mapa-shinobibonk`](../skills/criar-mapa-shinobibonk/SKILL.md) |
 | **Selamento e suportes** (ajudantes, sinergias, altares) | `docs/03` | `allies.ts` · `synergy.ts` |
 | **Arte e spritesheets** (atlas, pack, identidade chibi 2.5D) | skill `criar-arte-shinobibonk` · `docs/arte-atlas-2026-11-07.json` | `directionalArt.ts` · `inventoryArt.ts` · `assets/` |
+| **Entrada de movimento** (WASD, setas, tecla remapeada, foco, escolhas e Treinamento) | [docs/12](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md) § Fluxo de execução | `src/game/movementInput.ts` · `src/scene/GameCanvas.tsx` |
 | **Animações e movimento** (folhas, walk/action; fluidez da caminhada + proporção ao atacar — rodada 45; **follow amortecido dos aliados/Ninjas Selados + dead zone de orientação — rodada 46**) | skill `movimentar-shinobi` · `docs/14` (rodadas 38/39/45/46) | `src/scene/playerMotion.ts` (controlador compartilhado: `propCur` · `strideShown` · `stepTime`) · `src/scene/GameCanvas.tsx` (loop de aliados + Kuri, ~linhas 1249–1285) |
 | **Ranking de temporada e clãs** | [Regras e proposta online](development/RANKING-E-CLAS.md) | `src/game/league.ts` · `src/ui/League.tsx` |
 | **HUD, ficha, ranking** | `docs/02` | `src/main.tsx` · `src/ui/*` |

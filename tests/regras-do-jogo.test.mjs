@@ -70,5 +70,5 @@ test('cena usa a coleta de XP antes da limpeza da zona, o raio do altar e o reto
   assert.match(canvas, /if \(xpCollectedAtPortal\(drop.type,drop.magnet,distance,stats.pickup\)\)[\s\S]*?xp\+=collectedXp[\s\S]*?clearZone\(\);zoneStart=elapsed/);
   assert.match(canvas, /RingGeometry\(ALTAR_RULES.radius-\.28,ALTAR_RULES.radius,48\)/);
   // Rodada 83: o retorno de dano efetivo virou piscar nas bordas + som de hit recebido (game/damageFeedback.ts).
-  assert.match(canvas, /if\(hp<hpBefore\)\s*\{\s*playerMotion.hurt\(\);\s*registerHit\(damageFlash,performance\.now\(\),hpBefore-hp,stats\.maxHp\);\s*playHurt\(/);
+  assert.match(canvas, /if\(hp<hpBefore\)\s*\{\s*playerMotion\.hurt\(\);\s*damageNumber\(player\.position,hpBefore-hp,0,true\);\s*snapshotTimer=0;\s*registerHit\(damageFlash,performance\.now\(\),hpBefore-hp,stats\.maxHp\);\s*playHurt\(/);
 });

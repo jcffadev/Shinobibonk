@@ -333,6 +333,12 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - **Implementado.** Chute Giratório tem o desenho próprio nas interfaces que usam `SkillIcon`.
 - **Fila.** Recriar os mapas a partir das quatro artes de seleção, aprimorar água, revisar os jutsus com prioridade para o Susanoo e implementar Juventude e Hagoromo. Queda ajoelhada de todo o elenco como Mega Elite fica para depois. Ver a passagem em [docs/01](01-CAMERA-MAPAS-EVENTOS.md) e a [fila atual](13-PENDENCIAS-PARA-CONTINUAR.md).
 
+### Entrada de movimento, dano e mapas · 15/11/2026
+
+- **Implementado.** WASD e setas permanecem ativos até soltar a tecla ou perder foco. Durante escolhas o jogo pausa, e ao voltar usa as teclas ainda pressionadas. Pool esgotado em level-up, rerrolagem ou banimento aplica Treinamento com o painel fechado.
+- **Confirmado.** Preservar a invulnerabilidade após subir de nível (3 s). O cartão mostra a proteção ou God mode, e HP perdido aparece em vermelho.
+- **Confirmado.** Preservar câmera e deslocamento no chão na reforma dos mapas. Obstáculos devem permitir escalada caminhando. Mostrar capturas das vilas novas antes de aplicá-las à versão de teste.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

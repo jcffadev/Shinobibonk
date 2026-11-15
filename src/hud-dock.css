@@ -126,6 +126,7 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .inventory-corner.expanded{max-width:min(470px,48vw);max-height:min(62vh,520px)}
 .inventory-corner.expanded .inv-icon{width:30px;height:30px}
 .level-choice-card .choice-art{height:clamp(75px,12vh,112px)}
+.run-protection{display:inline-flex;margin-left:6px;padding:0 4px;border-radius:4px;background:#263c52;color:#e7f6ff;font-size:10px;font-weight:800;white-space:nowrap}
 .level-choice-card .choice-art>.skill-art,.level-choice-card .choice-art>.catalog-icon{width:clamp(46px,8vh,72px);height:clamp(46px,8vh,72px)}
 .level-choice-card .choice-copy h2{line-height:1.16;text-wrap:balance}
 @media(max-width:700px){.skill-dock>.ability-bar button{min-width:43px}.skill-dock>.ability-bar .ultimate{min-width:51px}.inventory-corner{max-width:110px}}

@@ -89,6 +89,8 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 
 ## Fluxo de execução e estado
 
+`movementInput.ts` acompanha as teclas direcionais físicas por código, com ordem de pressão e remapeamento. A entrada é independente das teclas de ação limpas pelas escolhas. O `GameCanvas` suspende a simulação ao abrir diálogos, mas retém as direções até a tecla ser solta ou a janela perder foco. `openLevelReward` resolve cartas de nível e encaminha o pool vazio para Treinamento com a escolha fechada.
+
 1. `index.html` carrega `src/main.tsx`.
 2. `App` escolhe a página: `home`, `characters`, `attacks`, `build`, `passives`, `items`, `missions`, `preview` ou `game`.
 3. Ao iniciar a missão, `App` cria um `GameCanvas` novo (chave `runId`) com herói, dificuldade, pool de itens e preparação (`permanent`, técnicas e pílulas arquivadas).

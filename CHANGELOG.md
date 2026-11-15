@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 15/11/2026 · WASD contínuo, Treinamento sem cartas e dano recebido
+
+- O movimento acompanha o teclado físico separado das ações limpas pela interface. Segurar WASD ou uma direção remapeada mantém a ordem das teclas ao concluir uma escolha ou Treinamento. A colisão pode bloquear o avanço enquanto a passada permanece ativa. Perda de foco limpa a entrada.
+- O pool esgotado aplica Treinamento com o painel fechado, inclusive após atualizar ou banir a última opção. Cada nível concede seu bônus; o texto flutuante tem intervalo de 0,4 s entre avisos.
+- A invulnerabilidade de 3 s por nível permanece. O cartão de HP mostra **Protegido** ou **Debug** conforme a fonte. Dano confirmado mostra número vermelho, flash do personagem e som de acerto mesmo se o HP for recuperado rapidamente.
+- **PASSOU:** 185 de 185 testes por código, TypeScript e build (perfil equilibrado).
+- **PENDENTE DE VALIDAÇÃO E2E**: manter movimento em nível alto com 300+ inimigos, verificar ataque à distância durante e depois da proteção e legibilidade de HP em tela estreita. Alterações de mapa ficam para apresentação em capturas antes de entrar na versão de teste.
+
 ## 15/11/2026 · Primeiro Mega Elite e ícone do Chute Giratório
 
 - Primeiro Mega Elite da partida limitado a **3.000 HP** em todas as dificuldades. Aplica ao primeiro encontro natural ou de clima e persiste na retomada. A escala dos próximos continua por tempo da zona e ameaça. O teto permanece ao usar o plano do Shikamaru.

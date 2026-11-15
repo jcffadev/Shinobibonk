@@ -33,6 +33,8 @@ Em 15/11, o primeiro Mega Elite da partida passou a ter no máximo 3.000 HP. O C
 
 ## Decisões vigentes do usuário (CONFIRMADO)
 
+O WASD retém as teclas que permanecem pressionadas ao passar por escolhas e Treinamento. Subir de nível continua dando 3 s de invulnerabilidade. A HUD indica a proteção e mostra em vermelho as perdas reais de HP. A câmera e a movimentação de chão serão preservadas na reforma dos mapas, que será mostrada em capturas antes de entrar na versão de teste.
+
 - Shinobi e inimigos em pixel art numa cena 3D. Mover o mouse gira e inclina a câmera. Clique direito fixa o alvo e o scroll controla o zoom.
 - Missões nomeiam a dificuldade como Genin, Chunin, Jonin e Kage.
 - Teclas: M abre o mapa completo; Tab o mapa rápido; P a ficha; G o ping “Aqui”; E interage.

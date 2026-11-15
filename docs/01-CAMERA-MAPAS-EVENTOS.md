@@ -296,6 +296,8 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 - Junto com a foto, use as referências de anime e de vídeo descritas na skill `criar-mapa-shinobibonk` §5.
 
 **2. Tudo é obstáculo, e dá para subir.**
+
+Confirmação do usuário em 15/11: preservar a câmera e a movimentação atuais. Obstáculos incluem casas, paredes, árvores e pedras e devem permitir caminhar sobre a superfície ao escalar. Enquanto segurar a tecla contra a base de um obstáculo, a animação de deslocamento continua. As capturas dos mapas novos devem ser enviadas ao usuário antes de aplicá-los à versão de teste.
 - Casas, árvores, pedras e construções bloqueiam a passagem. O personagem contorna, sobe ou **anda na parede**.
 - **Proposta de mecânica:**
   - Encostar numa parede e apertar **Pulo** gruda o ninja nela. Ele anda na parede com a mesma folha de caminhada, girada 90° e encostada na superfície. Apertar Pulo de novo salta e solta.

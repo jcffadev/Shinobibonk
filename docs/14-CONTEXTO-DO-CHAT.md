@@ -2401,3 +2401,22 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Chute giratório ainda precisa de ícone...
 
 **Resposta.** A cópia oficial e a branch principal estavam na mesma revisão (`7f21c2c`). A passagem recente está em `docs/01` e a fila retomada em `docs/13`. Primeiro Mega Elite da partida limitado a 3.000 HP nas quatro dificuldades. Os seguintes continuam escalando. Chute Giratório usa o PNG existente nas telas que renderizam `SkillIcon`. As imagens da seleção servem de referência para recriar as vilas em 3D. A queda ajoelhada foi anotada para depois. Testes sem navegador passaram e a inspeção em partida permanece pendente.
+
+## 15/11/2026 — movimento contínuo, Treinamento, dano e revisão dos mapas
+
+> Estou level 53 e parece que nao tomo mais dano, mesmo parado e vindo shurikens dos monstros, isso está errado, pior que está fazendo um somzinho que nao sei se é o mesmo do dano... mas o personagem não pisca vermelho referente ao estar tomando dano... isso precisa ser ajustado também...
+> Como eu to parado, independente do level, está vindo ataques no meu personagem e nao to tomando dano?
+>
+> Mas, essa invulnerabilidade é pra existir mesmo...
+
+> Beleza, mas sobre as alterações dos mapas em 3D, você viu como a camera e os personagens estão andando agora no jogo, ne? isso é pra se MANTER...
+> E todas as casas, cenário, as coisas é pra serem obstaculos, mas deve ser possivel escalar paredes/arvores/casas igual no anime, no caso caminhar...
+
+> As vezes ao estar andando level alto com 300+ monstros eu to segurando qualquer tecla de movimentação, o personagem simplesmente para de andar, eu tenho que soltar o botão e pressionar novamente, corrija isso, faça ele tentar andar mesmo que tenhaobstaculo na frente ele fique andando parado, mas parar de andar é inaceitavel.
+>
+> Como está o processo de fazer os mapas/terrenos/paisagens/skills/eventos ai?
+
+> Talvez o treinamento esteja bugando... sei la, o jogo pensa que tem pool de escolha pra abrir, nao tem, ai vai travando nesse ciclo, sei la... enfim, reveja ai e eu testo.
+> Antes de aplicar os mapas, me mande print's de como ficou os mapas novos.
+
+**Resposta.** A entrada física do WASD permanece ativa através do Treinamento, dos diálogos e da colisão. O pool de level-up vazio vai para Treinamento e não deixa painel de cartas aberto, inclusive após atualizar ou banir. A invulnerabilidade de 3 s foi preservada. O cartão sinaliza a proteção, e o dano real mostra um número vermelho. Layout das vilas, obstáculos, escalada, água, Susanoo e os dois eventos seguem na fila. O usuário verá capturas dos mapas novos antes de serem aplicados à versão de teste.

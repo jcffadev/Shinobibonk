@@ -64,7 +64,7 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 - **Sorte**: `floor(n/3)` + bônus; sorte efetiva em loot: `luck × (0,2 + 0,8 × min(1, tempo/150s))` (pleno aos 2,5 min).
 - **Coleta (ímã)**: raio `2,5 × (1 + pickup) + flat + Magnetismo×0,6`.
 - **Vagas de suporte**: `3 + (até 1 de item) + (1 permanente)`.
-- **Armadura**: `base × (1+1%/nível) + 0,25×n` + bônus; dano recebido = `bruto × 100/(100 + armadura)`.
+- **Armadura**: `base × (1+1%/nível) + 0,25×n` + bônus; um golpe elegível tira no mínimo 1 HP, conforme `max(1, bruto × 100/(100 + armadura))`. Subir de nível ativa 3 s de invulnerabilidade, também no treinamento automático. A HUD sinaliza a proteção e o dano efetivo aparece em vermelho.
 - **EXP por nível** (`xpToLevelUp`): nível 1 = 30; depois `18 + 6n + 0,08n²/(1+n/250)`:
 
   | Nível | 10 | 25 | 50 | 100 | 150 |
