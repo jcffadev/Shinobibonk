@@ -315,6 +315,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 - Shinra Tensei: `SHINRA` em `src/game/shinraTensei.ts` (levitação 1,5 m por 2,6 s, 4 ondas a 45% com atordoamento de 1,1 s).
 
+### Divisão de trabalho · 15/11/2026
+
+- Claude Code: desempenho. Codex: mapas, cenário, itens, selos de mão, fusões e o resto. Passagem em `docs/01`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

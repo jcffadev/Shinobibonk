@@ -194,3 +194,62 @@ Para as vilas ficarem com a cara das referências, faltam estes sprites. Todos n
 4. **Iwa · torre em cone esculpida na rocha:** cinza, com janelas pequenas, telhadinho roxo ou laranja no topo e cabos saindo para os lados.
 5. **Kiri · torre cilíndrica de tijolo rosado:** fileiras de janelas e vegetação no topo; uma versão baixa e outra alta.
 6. **Suna · passarela sobre pilares** de adobe, para ligar casas.
+
+## Passagem para o Codex · 15/11/2026 — tudo de mapa, cenário e itens feito pelo Claude Code nesta sessão
+
+Pedido do usuário: "pause e anote tudo que você fez de mapa/cenario/itens nessa sessão, você vai trabalhar em desempenho, no código... e o codex vai trabalhar no resto".
+
+**Divisão a partir de agora:**
+- **Claude Code:** desempenho (docs/13, item 40).
+- **Codex:** mapas, cenário, itens, selos de mão, fusões e o resto da fila.
+
+Antes de mexer, leia a skill [`criar-mapa-shinobibonk`](../skills/criar-mapa-shinobibonk/SKILL.md). Ela tem o padrão, os alvos medidos e os erros que não podem voltar.
+
+### O que foi feito (rodada, arquivo, o que conferir)
+
+| Rodada | O quê | Onde no código | Testes |
+|---|---|---|---|
+| 77 | Ninja do tamanho do monstro comum; câmera mais perto (zoom 12, faixa 8–22) | `worldScale.ts` (`PLAYER_SIZE`), `settings.ts` (`CAMERA_ZOOM`) | `colisao`, `configuracoes` |
+| 81–82 | Catálogo de fusões; receita na aba Habilidades; modelo salvo no planejamento; 1 clique planeja | `techniqueMerge.ts` (`fusionCatalog`), `BuildPlanner.tsx` | `fusoes` |
+| 84 | Missão só sorteia itens da bolsa (bolsa vazia = pool completo) | `catalog.ts` (`missionItemPool`), `main.tsx` | `recompensas` |
+| 85 | Terreno em terraços (~1,2 m), montanhas só no horizonte, câmera em perspectiva (vista antiga nas Configurações) | `terrainArt.ts` (`TERRAIN`, `terrace`), `settings.ts` (`CAMERA_VIEW`, `cameraProjection`), `GameCanvas.tsx` | `cena`, `configuracoes` |
+| 86 | Chão plano sob construções da Folha; skill de mapas | `terrainArt.ts` (`LEAF_PLACES`, `LEAF_BUILDINGS`) | `cena` |
+| 87 | Nomes da obra nos mapas; zonas dentro da vila; horizonte de cada vila | `maps.ts`, `terrainArt.ts` (`horizonProfile`) | `cena` |
+| 88 | Pés nunca abaixo do chão (todos os personagens); Ultimate automática lembrada | `heightField.ts` (`footHeight`), `standHeight` no `GameCanvas` | `cena`, `configuracoes` |
+| 89 | Água cavada e animada; paisagem de fundo pintada; câmera 60° / 0,46 rad | `water.ts`, `landscape.ts` | `cena` |
+| 90 | Dano visível: vinheta forte, personagem pisca vermelho, baque dissonante | `damageFeedback.ts`, `playerMotion.ts`, `sfx.ts`, `style.css` | `vinheta-de-dano` |
+| 91 | Ondas na água onde o ninja pisa; brilho de chakra azul nos pés | `water.ts` (`RIPPLES`, `createChakraFeet`) | `cena` |
+| 92 | 8 desenhos de pergaminho no chão; Pedra Memorial de Konoha (−38, −26) | `dropSprites.ts` (`SCROLL_STYLES`), `memorialStone.ts` | `cena` |
+| 93 | Shinra Tensei: Pain levita e solta 4 ondas que ferem, empurram e atordoam | `shinraTensei.ts`, `castUltimate` | `shinra-tensei` |
+
+Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENTE DE VALIDAÇÃO E2E** (docs/13, itens 28–43).
+
+### Fila que fica com o Codex
+
+1. **Arte das construções de cada vila:** os pedidos, com descrição pronta para o gerador de arte, estão acima, em "Pedidos de arte para o gerador do usuário". Toda construção nova precisa de área plana (`LEAF_PLACES` / `REGIONAL_PLACES`) e entra no teste de chão plano.
+2. **Água:** respingos em partículas ao correr e no dash, ondas de aliados e inimigos, anel de chakra no ritmo dos passos e arte própria do brilho (comentário "PARA O CODEX APRIMORAR" em `water.ts`).
+3. **Selos de mão** (pedido do usuário: "Posições de mãos que todos os personagens devem fazer… aleatoriamente para soltar as habilidades… Se você souber… para determinada jutsu… ótimo… TODOS os personagens"). **Plano já desenhado, nada implementado:**
+   - **Os 12 selos:** Rato 子, Boi 丑, Tigre 寅, Coelho 卯, Dragão 辰, Serpente 巳, Cavalo 午, Carneiro 未, Macaco 申, Pássaro 酉, Cachorro 戌, Javali 亥.
+   - **Todos os personagens:** um selo flutuando acima da cabeça com o kanji do animal e o nome em português, mostrando a sequência um a um, cerca de 0,1 s por selo.
+     - Aparece ao lançar Ninjutsu ou Genjutsu, no máximo a cada ~2,5 s, porque as técnicas são automáticas e o selo não pode virar ruído. Na Ultimate aparece sempre. Taijutsu não tem selo.
+     - Ponto de entrada: `castTechnique(...)` no `GameCanvas` (`ally=false` para o jogador; aliados e companheiros também passam por ele).
+   - **Corpo fazendo o selo:** só o Naruto e o Zabuza têm folha (`handSealArt` em `directionalArt.ts`, layout 4 × 4). Os outros precisam de arte nova, no mesmo layout.
+   - **Sequências da obra** (conferir na Narutopedia antes de fixar):
+
+     | Técnica | Sequência |
+     |---|---|
+     | Grande Bola de Fogo | Serpente → Carneiro → Macaco → Javali → Cavalo → Tigre |
+     | Fênix de Fogo | Rato → Tigre → Cachorro → Boi → Coelho → Tigre |
+     | Chidori e Raikiri | Boi → Coelho → Macaco |
+     | Invocação | Javali → Cachorro → Pássaro → Macaco → Carneiro |
+     | Parede de Terra | Tigre → Coelho → Javali → Cachorro |
+     | Dragão de Água | começa com Boi → Macaco → Coelho → Rato → Javali → Pássaro |
+
+     O Kage Bunshin usa o selo em cruz próprio, e as demais técnicas sorteiam de 2 a 4 selos.
+4. **Fusões:** plano completo em `docs/10` (só receitas; lista proposta aguardando aprovação; atributos somados; sem raridade; cartão novo e ficha ao passar o mouse).
+5. **Névoa do Zabuza:** branca e densa, cobrindo tudo; os alvos a até 2 m aparecem.
+6. **Árvores bloqueando** andar e dash.
+7. **Velocidade:** elite um pouco mais rápido que o monstro comum; Mega e chefe mais rápidos ainda.
+8. **Orochimaru Sannin** com bandana da Folha e colete verde.
+9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
+10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).

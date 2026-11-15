@@ -2338,3 +2338,9 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - O Pain levita em toda Ultimate e solta 4 ondas que ferem, empurram e atordoam.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela. Fila em seguida: selos de mão, fusões, desempenho.
 - **Publicado no GitHub.**
+
+## 15/11/2026 — passagem para o Codex
+
+> pause e anote tudo que você fez de mapa/cenario/itens nessa sessão, você vai trabalhar em desemepenho, no código... e o codex vai trabalhar no resto
+
+**Resposta.** Tudo o que foi feito nesta sessão (rodadas 77–93), onde fica no código, os testes e a fila restante, com o plano dos selos de mão que não chegou a ser implementado, está em `docs/01` → "Passagem para o Codex · 15/11/2026". O Claude Code passa a cuidar só do desempenho (docs/13, item 40).

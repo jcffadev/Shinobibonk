@@ -80,6 +80,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 41 | **NOVO (rodada 91):** ondas na água onde o ninja pisa e brilho de chakra azul nos pés. **Para o Codex aprimorar:** respingos, ondas de aliados/inimigos, anel no ritmo dos passos, arte do brilho (ver `water.ts`) | PENDENTE DE VALIDAÇÃO E2E |
 | 42 | **NOVO (rodada 92):** 8 desenhos de pergaminho no chão e a Pedra Memorial de Konoha (clareira em −38, −26) | PENDENTE DE VALIDAÇÃO E2E |
 | 43 | **NOVO (rodada 93):** Shinra Tensei do Pain: levita e solta 4 ondas que ferem, empurram e atordoam. Conferir o balanceamento no simulador | PENDENTE DE VALIDAÇÃO E2E |
+| 44 | **DIVISÃO (15/11):** Claude Code fica com **desempenho** (item 40). O Codex fica com mapas, cenário, itens, selos de mão, fusões e o resto. Passagem completa em `docs/01` → "Passagem para o Codex · 15/11/2026" (inclui o plano dos selos de mão) | EM ANDAMENTO |
 | 33 | **NOVO (rodada 83):** tela pisca vermelho nas bordas ao levar dano + som de hit recebido. Ver em partida: o vermelho fica só nas bordas e cantos (centro limpo); golpe forte pisca mais que golpe leve; some em ~0,4 s; com muitos monstros batendo não vira estroboscópio; abaixo de 30% de vida fica uma vinheta fraca pulsando devagar; o som respeita o volume de efeitos e não empilha; desligar a opção em Gráficos tira a vinheta (o som continua). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
