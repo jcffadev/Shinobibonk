@@ -311,6 +311,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Pergaminhos: `SCROLL_STYLES`/`scrollStyle` em `src/scene/dropSprites.ts` (`makeDropSprite(kind, value, variant)`).
 - Pedra Memorial: `src/scene/memorialStone.ts`, área plana em `LEAF_PLACES`.
 
+### Rodada 93 · 15/11/2026
+
+- Shinra Tensei: `SHINRA` em `src/game/shinraTensei.ts` (levitação 1,5 m por 2,6 s, 4 ondas a 45% com atordoamento de 1,1 s).
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

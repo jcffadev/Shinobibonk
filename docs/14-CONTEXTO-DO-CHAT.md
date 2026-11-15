@@ -2328,3 +2328,13 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Desempenho anotado no docs/13 (item 40) para depois da fila.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 93 · 15/11/2026 — Shinra Tensei
+
+> Fazer o Pain Levitar enquanto ulta... e sairá um dano em ondas repetitivas que vai dar stun e dano e sempre que ele ultar ele vai levitar, fazer isso. Shinra Tensei é a habilidade. Depois seguir sua ordem
+
+**Resposta.**
+
+- O Pain levita em toda Ultimate e solta 4 ondas que ferem, empurram e atordoam.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela. Fila em seguida: selos de mão, fusões, desempenho.
+- **Publicado no GitHub.**

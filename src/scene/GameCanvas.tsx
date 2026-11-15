@@ -29,6 +29,7 @@ import { createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightFiel
 import { createChakraFeet, createWater, RIPPLES, waterDistance, waterSurfaceAt } from './water';
 import { createLandscape } from './landscape';
 import { createMemorialSprite } from './memorialStone';
+import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type ShinraState } from '../game/shinraTensei';
 import { createDamageNumbers } from './damageNumbers';
 import { BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
@@ -211,6 +212,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const heading=new THREE.Vector3(0,0,-1),dashHeading=new THREE.Vector3();
     const jumpDuration=.54,slideDuration=.24;
     let jumpTime=0,jumpHeight=0,slideTime=0,slideRecovery=0;
+    /** Rodada 93: Shinra Tensei do Pain em andamento (levitação + ondas repetidas). */
+    let shinra:ShinraState|null=null,shinraTech:Technique|null=null,shinraRadius=0;
     let sandGlideLeft=0;
     const sandCloud=familyOf(heroId)==='gaara'&&formAt(heroId).level>=15
       ? new THREE.Mesh(new THREE.IcosahedronGeometry(1,2),new THREE.MeshStandardMaterial({color:'#d9a66d',flatShading:true}))
@@ -1385,6 +1388,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           if(t.secondaryElement)particles.cast({...t,element:t.secondaryElement},player.position,aim,player.position,ultRadius,ultRadius,ultRadius*.3);
           if(hasSignatureVisual(t,false)){const object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(player.position);object.scale.multiplyScalar(2.8);scene.add(object);visuals.push({object,life:.7});}}}
       for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<4.2*Math.sqrt(stats.area))hit(enemy,t,NO_GROWTH,player.position);
+      if(repulsion){shinra=startShinra();shinraTech={...t,power:t.power*SHINRA.pulsePower};shinraRadius=ultRadius;}
       if(t.name===SEXY_JUTSU.name){const charm=SEXY_JUTSU.radius*Math.sqrt(stats.area);for(const enemy of enemyList)if(!enemy.bijuu&&!enemy.totem&&Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<charm){enemy.control='Atordoar';enemy.controlTime=Math.max(enemy.controlTime??0,(enemy.guardian||enemy.megaElite?SEXY_JUTSU.bossStun:SEXY_JUTSU.stun)*stats.duration);}if(!hiddenEffects)for(const [color,size] of [['#ffffff',.35],['#ffd1e8',.65],['#ff8fc7',1]] as const)addRing(player.position,color,charm*size);eventToast='Jutsu Sexy! Inimigos atordoados.';}}
     const frame=(now:number)=>{choiceArmed();{const ui=overlayUi();if(pointerLocked()&&!cameraCanMove()&&!ui)document.exitPointerLock();cursor.setActive(pointerLocked()&&ui);}if(debugOpenRef.current)keys.clear();const fpsCap=currentSettings().fpsLimit;if(fpsCap>0&&now-lastFrameAt<1000/fpsCap-1)return;lastFrameAt=now;const perfT0=performance.now();const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;
       yaw=THREE.MathUtils.damp(yaw,targetYaw,24,dt);
@@ -1422,7 +1426,13 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(dashing){dir.copy(dashHeading);slideTime=Math.max(0,slideTime-dt);}
       moving=dir.lengthSq()>0;if(moving){heading.copy(dir).normalize();
         player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);if(!arena){/* Rodada 70: dash atravessa; ao terminar dentro de algo, sai pela frente. */if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}}revealAround(player.position.x,player.position.z);}
-      player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight;
+      // Rodada 93: Shinra Tensei — o Pain levita e solta ondas de repulsão que empurram, ferem e atordoam.
+      let shinraHeight=0;
+      if(shinra&&shinraTech){const waves=advanceShinra(shinra,dt);shinraHeight=shinraLift(shinra.elapsed);
+        for(let w=0;w<waves;w++){if(!hiddenEffects){const object=techniqueVisual(shinraTech);object.position.copy(player.position);object.position.y=terrainHeight(player.position.x,player.position.z)+.32;object.scale.set(shinraRadius,2,shinraRadius);scene.add(object);visuals.push({object,life:.55});}addRing(player.position,'#e1eaff',shinraRadius);
+          for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<shinraRadius){hit(enemy,shinraTech,NO_GROWTH,player.position);if(enemyList.includes(enemy)&&!enemy.bijuu){enemy.control='Atordoar';enemy.controlTime=Math.max(enemy.controlTime||0,SHINRA.stunSeconds);}}}
+        if(shinraDone(shinra)){shinra=null;shinraTech=null;}}
+      player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight+shinraHeight;
       {const onWater=waterSurfaceAt(MAP.id,player.position.x,player.position.z)>-Infinity,airborne=jumpHeight>.05;
         if(onWater&&!airborne){rippleTimer-=dt;if(wasAirborne){water.ripple(player.position.x,player.position.z,1);rippleTimer=RIPPLES.step;}else if(moving&&rippleTimer<=0){water.ripple(player.position.x,player.position.z,.6);rippleTimer=RIPPLES.step;}}
         wasAirborne=airborne;chakraFeet.update(player.position.x,player.position.z,onWater&&!airborne,performance.now()/1000,dt);}

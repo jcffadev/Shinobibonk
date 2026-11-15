@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 15/11/2026 · Shinra Tensei: o Pain levita e solta ondas (Rodada 93)
+
+- **Pedido do usuário:** "Fazer o Pain Levitar enquanto ulta... e sairá um dano em ondas repetitivas que vai dar stun e dano e sempre que ele ultar ele vai levitar… Shinra Tensei é a habilidade".
+- **Agora** (`src/game/shinraTensei.ts` + `castUltimate` no `GameCanvas`):
+  - Toda Ultimate do Pain o faz **levitar** (sobe ~1,5 m, flutua e desce suave em 2,6 s).
+  - Além do golpe inicial, saem **4 ondas de repulsão**, uma a cada 0,5 s. Cada onda causa 45% do dano da Ultimate, **empurra** e **atordoa** por 1,1 s quem estiver no raio (bestas com cauda não são atordoadas).
+- **Balanceamento:** a Ultimate do Pain ficou mais forte (+180% de dano somando as ondas). Conferir com a skill `simular-partida` se ele sair da média.
+- **Testes:** `tests/shinra-tensei.test.mjs` com 3 testes (o mínimo subiu para 171) e 2 mutações novas, verificadas à mão: acusadas. **PENDENTE DE VALIDAÇÃO E2E:** ver o Pain levitando e as ondas.
+
 ## 15/11/2026 · Pergaminhos variados e Pedra Memorial de Konoha (Rodada 92)
 
 - **Pedidos do usuário:**
