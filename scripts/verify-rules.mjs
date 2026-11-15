@@ -198,14 +198,14 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const R=await import('../src/game/roulette.ts');const sum=w=>Object.values(w).reduce((a,b)=>a+b,0);
  const w0=R.rouletteWeights(0,0),wLuck=R.rouletteWeights(200,0),wMax=R.rouletteWeights(100000,0),wCurse=R.rouletteWeights(200,R.roulettePressure(1.2,3,'Kage'));
  for(const w of [w0,wLuck,wMax,wCurse])assert.ok(Math.abs(sum(w)-1)<1e-9);
- assert.ok(R.goodChance(wLuck)>R.goodChance(w0),'sorte aumenta casas boas');assert.ok(wLuck.item>w0.item*2.5,'sorte favorece casas premium');
+ assert.ok(R.goodChance(wLuck)>R.goodChance(w0),'sorte aumenta casas boas');assert.ok(wLuck.hiruzen>w0.hiruzen*2,'sorte favorece casas premium');
  assert.ok(R.badChance(wMax)>=R.ROULETTE_RULES.minBad-1e-9,'nunca 100% bom');assert.ok(R.goodChance(wMax)<.9);
  assert.ok(R.badChance(wCurse)>R.badChance(wLuck),'dificuldade/Maldição compensa a sorte');assert.ok(R.badChance(R.rouletteWeights(0,50))<=R.ROULETTE_RULES.maxBad+1e-9);
  const rr=R.seededRng(77);let bad=0;for(let i=0;i<40000;i++)bad+=Number(R.ROULETTE_BY_ID[R.rollRoulette(wMax,rr)].kind==='ruim');assert.ok(Math.abs(bad/40000-R.badChance(wMax))<.01,'amostragem bate com a chance exibida de casas ruins');
- assert.ok(Math.abs(R.goodChance(w0)-.3088)<.002,'rodada 37 (5 combos): Sorte 0 → ~30,9% de casas boas');
+ assert.ok(Math.abs(R.goodChance(w0)-.4)<1e-9,'sem Sorte, o limite de Hidan deixa 40% para as demais casas');
  for(const [id,kind] of [['tsunade','bom'],['jiraiya','bom'],['hiruzen','bom'],['hidan','ruim'],['kakuzu','bom']])assert.equal(R.ROULETTE_BY_ID[id].kind,kind,'combo de 3 iguais existe com a classe certa');
  assert.equal(R.slotKakuzuRyu(0,0),120,'3 Kakuzus: base 120 Ryu sem sorte/pressão');assert.equal(R.slotKakuzuRyu(100,0),240,'Sorte 100 dobra o tesouro');assert.equal(R.slotKakuzuRyu(100,1),480,'pressão do jogo multiplica o tesouro');
- {const wNoPill=R.rouletteWeights(0,0);assert.equal(wNoPill.pill,0);assert.ok(Math.abs(sum(wNoPill)-1)<1e-9);const r2=R.seededRng(5);for(let i=0;i<20000;i++)assert.notEqual(R.rollRoulette(wNoPill,r2),'pill','casa excluída nunca é sorteada');}
+ assert.deepEqual(Object.keys(w0),['tsunade','hiruzen','kakuzu','jiraiya','hidan']);
  // Economia expansiva (rodada 37): ×1,70 por giro, ×1,15 por minuto inteiro de run, +25% por zona acima da 1.
  assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),251);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
  assert.equal(R.rouletteCost(0,0,59),30,'inflação só por minuto inteiro');assert.equal(R.rouletteCost(0,0,600),121);assert.ok(R.rouletteCost(40,0,1800)>1e6,'fim de run: milhões');

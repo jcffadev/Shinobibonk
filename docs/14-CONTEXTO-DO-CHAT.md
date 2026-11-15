@@ -2420,3 +2420,29 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Antes de aplicar os mapas, me mande print's de como ficou os mapas novos.
 
 **Resposta.** A entrada física do WASD permanece ativa através do Treinamento, dos diálogos e da colisão. O pool de level-up vazio vai para Treinamento e não deixa painel de cartas aberto, inclusive após atualizar ou banir. A invulnerabilidade de 3 s foi preservada. O cartão sinaliza a proteção, e o dano real mostra um número vermelho. Layout das vilas, obstáculos, escalada, água, Susanoo e os dois eventos seguem na fila. O usuário verá capturas dos mapas novos antes de serem aplicados à versão de teste.
+
+## 15/11/2026 — Emboscada da Akatsuki, roleta e Guardião
+
+> Altar do Desafio, vai ter que mudar esse evento... o sprite dele... coloque os membros da Akatsuki te emboscando, todos os membros da Akatsuki, ao derrota-los dropa 3 pergaminhos grátis, a dificuldade do evento é igual a %dificuldade do estado da partida/zona, o ícone do evento no mapa será a nuvem da akatsuki
+> Para ativar o evento, faça o sprite do Zetsu saindo do chão, ao clicar nele começa a emboscada e o evento.
+
+> Deve sair da roleta e eu ja te falei isso...
+> Kunai
+> Casa Vazia
+> Shuriken
+> Benção de Tsunade
+> Divida de jogo
+> Recompensa de item
+> Credores
+> Sorte grande
+>
+> O que deve ficar são
+> Tsunade
+> Hiruzen
+> Kakuzu
+> Jiraya
+> HIdan
+
+> Cade o Mega Elite do portal do guardião? o que libera a próxima zona
+
+**Resposta.** Zetsu emerge ao se aproximar. A nuvem vermelha indica a Emboscada da Akatsuki, acionada com clique ou E, com três pergaminhos grátis depois de derrotar as 13 versões da organização registradas no jogo. A roleta usa somente os cinco personagens solicitados. Para avançar a zona, use E no Portal do Guardião · Myōjinmon e vença o Guardião. A Akatsuki ocupa o espaço do Altar do Desafio.

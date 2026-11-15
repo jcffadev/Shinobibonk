@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'roleta só tem as cinco casas de personagem', arquivo: 'src/game/roulette.ts', de: "{ id: 'tsunade', label: 'Tsunade'", para: "{ id: 'kunai', label: 'Tsunade'" },
+  { regra: 'emboscada da Akatsuki rende três pergaminhos', arquivo: 'src/game/akatsukiAmbush.ts', de: 'rewards: 3', para: 'rewards: 1' },
   { regra: 'level-up não solta o WASD pressionado', arquivo: 'src/scene/GameCanvas.tsx', de: 'openLevelReward();invulnerability=3;', para: 'openLevelReward();invulnerability=3;movementInput.clear();' },
   { regra: 'primeiro Mega Elite limitado a 3.000 HP', arquivo: 'src/game/enemyTiers.ts', de: 'Math.min(hp, OPENING_MEGA_MAX_HP)', para: 'hp' },
   { regra: 'status inicia no teto de 10%', arquivo: 'src/game/combat.ts', de: 'const initial = Math.min(base, .1);', para: 'const initial = base;' },

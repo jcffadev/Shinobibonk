@@ -130,3 +130,17 @@ test('nenhum item, pílula ou técnica com o mesmo nome (rodada 96: a técnica B
   assert.deepEqual(clash, [], 'nomes repetidos: ' + clash.join(', '));
   assert.equal(c.currentItemName('Bomba de Fumaça'), 'Esfera de Fumaça', 'partida salva com o nome antigo do item continua valendo');
 });
+
+test('Caça-Níquel só sorteia as cinco casas de combo e normaliza a chance exibida', async () => {
+  const { ROULETTE_CASAS, rouletteWeights, rollRoulette, seededRng } = await import('../src/game/roulette.ts');
+  const allowed = ['tsunade', 'hiruzen', 'kakuzu', 'jiraiya', 'hidan'];
+  assert.deepEqual(ROULETTE_CASAS.map(casa => casa.id), allowed);
+  for (const [luck, pressure] of [[0, 0], [350, 1], [200, 20]]) {
+    const weights = rouletteWeights(luck, pressure);
+    assert.deepEqual(Object.keys(weights), allowed);
+    assert.ok(Math.abs(Object.values(weights).reduce((sum, weight) => sum + weight, 0) - 1) < 1e-12);
+    const rng = seededRng(73);
+    const seen = new Set(Array.from({ length: 2000 }, () => rollRoulette(weights, rng)));
+    assert.deepEqual([...seen].sort(), [...allowed].sort());
+  }
+});

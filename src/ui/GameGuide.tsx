@@ -33,14 +33,14 @@ const fieldEvents=[
   ['Emboscadas e corpos shinobi','Emboscadas podem começar conforme o tempo passa. Investigar um corpo no chão provoca uma emboscada. Derrote todos os atacantes para ganhar um nível.'],
   ['Shuriken Amaldiçoada','Pegue a shuriken para ganhar +8% de dano total em troca de enfrentar uma emboscada.'],
   ['Altares de defesa','Entre no círculo e permaneça até concluir a defesa. Escolha uma de três bênçãos. A raridade altera a força da recompensa.'],
-  ['Altar de desafio','Interaja para chamar uma horda. Derrote-a para receber uma kunai grátis.'],
+  ['Emboscada da Akatsuki','Ao se aproximar da nuvem vermelha no mapa, Zetsu emerge. Clique nele ou aperte E para enfrentar a Akatsuki na dificuldade atual. Derrote o grupo inteiro para ganhar três pergaminhos grátis.'],
   ['Mega Elites e Shinobis para selar','Procure o contorno vermelho dos Mega Elites e o ciano dos encontros de conta. Derrote o alvo, aproxime-se e interaja. Vermelho recruta na missão. Ciano desbloqueia na conta.'],
   ['Portal do Guardião','Invoque o guardião quando estiver pronto. Ele escala com a missão e a espera. Derrote-o e atravesse o portal. A terceira zona leva à arena da Bijū.'],
   ['Horda final','Quando o relógio zera, a horda fica mais forte e o tempo extra começa a contar. Você ainda pode enfrentar o guardião e avançar.'],
 ] as const;
 
 const npcs=[
-  {id:'tsunade',name:'Tsunade · Caça-Níquel',summary:'Pague Ryu para girar três rolos. Cada giro encarece o próximo. Sorte favorece os prêmios, enquanto zona, dificuldade e maldição aumentam a pressão. Confira as chances no painel. As casas podem dar prêmios, dívidas, penalidades ou emboscadas.'},
+  {id:'tsunade',name:'Tsunade · Caça-Níquel',summary:'Pague Ryu para girar três rolos. Cada giro encarece o próximo. Sorte favorece os prêmios, enquanto zona, dificuldade e maldição aumentam a pressão. Confira as chances no painel. Os rolos têm Tsunade, Hiruzen, Kakuzu, Jiraiya e Hidan. Os combos são entregues ao sair.'},
   {id:'iruka',name:'Iruka · Aula da Academia',summary:'Escolha uma opção por zona: lição grátis de '+pctText(NPC_RULES.irukaLesson.min)+' a '+pctText(NPC_RULES.irukaLesson.max)+', pergaminho lendário com perda de '+pctText(NPC_RULES.irukaLegendaryCost)+' em outro atributo ou recrutamento. Como ajudante, Iruka ocupa uma vaga e dá +'+pctText(NPC_RULES.irukaAllyExp)+' de XP na afinidade máxima, antes do multiplicador de suporte.'},
   {id:'ebisu',name:'Ebisu · Treino de Elite',summary:'Escolha uma troca de atributos entre três ofertas. O ganho varia de '+pctText(NPC_RULES.ebisu.min)+' a '+pctText(NPC_RULES.ebisu.max)+'. O custo em outro atributo é '+pctText(NPC_RULES.ebisu.costFactor-1)+' maior que o ganho. A troca vale até o fim da partida.'},
   {id:'teuchi',name:'Teuchi · Barraca Ichiraku',summary:'Use Ryu para esquecer uma técnica ou pílula e abrir espaço para outra escolha. O preço aumenta conforme o nível e a última técnica fica protegida.'},

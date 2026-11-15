@@ -339,6 +339,12 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - **Confirmado.** Preservar a invulnerabilidade após subir de nível (3 s). O cartão mostra a proteção ou God mode, e HP perdido aparece em vermelho.
 - **Confirmado.** Preservar câmera e deslocamento no chão na reforma dos mapas. Obstáculos devem permitir escalada caminhando. Mostrar capturas das vilas novas antes de aplicá-las à versão de teste.
 
+### Roleta, Akatsuki e Guardião · 15/11/2026
+
+- **Confirmado e implementado.** A roleta sorteia só Tsunade, Hiruzen, Kakuzu, Jiraiya e Hidan. Giros antigos já pagos são honrados.
+- **Confirmado e implementado.** Emboscada da Akatsuki substitui o Altar do Desafio. Zetsu surge do chão e inicia por clique ou E. Dificuldade acompanha a partida e a zona. O grupo completo derrotado dá três pergaminhos grátis.
+- **Guardião.** O Myōjinmon continua sendo o ponto de invocação com E. O portal que avança a zona abre ao derrotar o Guardião.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

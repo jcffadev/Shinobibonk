@@ -9,43 +9,26 @@ import { runInflation } from './itemTrade.ts';
  */
 export type RouletteKind = 'bom' | 'ruim' | 'neutro';
 export type RouletteCasaId = 'kunai' | 'shuriken' | 'pill' | 'ryu' | 'buff' | 'item' | 'jackpot' | 'lose' | 'debuff' | 'ambush' | 'empty' | 'tsunade' | 'jiraiya' | 'hiruzen' | 'hidan' | 'kakuzu';
-export type RouletteCasa = { id: RouletteCasaId; label: string; icon: string; kind: RouletteKind; weight: number; premium?: boolean; description: string };
+export type RouletteCasa = { id: SlotComboId; label: string; icon: string; kind: RouletteKind; weight: number; premium?: boolean; description: string };
 
-/** Casas na ordem em que aparecem nos rolos (alternando boas/ruins para a animação ficar legível). */
+/** Cinco casas em todos os giros novos. IDs antigos continuam válidos apenas nos prêmios já salvos. */
 export const ROULETTE_CASAS: RouletteCasa[] = [
-  { id: 'kunai', label: 'Kunai', icon: '🗡', kind: 'bom', weight: 6, description: '+1 kunai no contador da missão.' },
-  { id: 'lose', label: 'Dívida de jogo', icon: '💸', kind: 'ruim', weight: 12, description: 'Perde Ryu igual ao custo do giro (ao sair).' },
-  { id: 'empty', label: 'Casa vazia', icon: '·', kind: 'neutro', weight: 25, description: 'Nada acontece.' },
-  { id: 'ryu', label: 'Ryu de volta', icon: '🪙', kind: 'bom', weight: 5, description: 'Recebe o dobro do custo do giro.' },
-  { id: 'debuff', label: 'Azar da Lendária Perdedora', icon: '🌧', kind: 'ruim', weight: 10, description: '−10% de dano e −8% de movimento por 45 s.' },
-  { id: 'item', label: 'Recompensa de item', icon: '🎁', kind: 'bom', weight: 2.5, premium: true, description: '+1 escolha de item (como uma kunai).' },
-  { id: 'shuriken', label: 'Shuriken', icon: '🌀', kind: 'bom', weight: 6, description: '+1 shuriken no contador da missão.' },
-  { id: 'ambush', label: 'Credores da Tsunade', icon: '⚔️', kind: 'ruim', weight: 9, description: 'Emboscada leve ao sair do caça-níquel.' },
-  { id: 'buff', label: 'Bênção de Tsunade', icon: '✚', kind: 'bom', weight: 4, description: 'Buff temporário de 90 s (dano, velocidade de ataque ou vitalidade).' },
-  { id: 'jackpot', label: 'Sorte Grande', icon: '🎰', kind: 'bom', weight: .5, premium: true, description: '+1 escolha de item e o triplo do custo em Ryu.' },
-  // ───── Combos de 3 iguais (rodada 37, specs do usuário) — premium (Sorte favorece) ─────
   { id: 'tsunade', label: 'Tsunade', icon: '👑', kind: 'bom', weight: .9, premium: true, description: 'Combo 3 Tsunades → "Sorte da Tsunade": +10% de dificuldade e +10% de monstros até o fim da run (mais XP e Ryu).' },
-  { id: 'jiraiya', label: 'Jiraiya', icon: '📖', kind: 'bom', weight: .9, premium: true, description: 'Combo 3 Jirayas → 1 item Raro ou superior ao sair.' },
   { id: 'hiruzen', label: 'Hiruzen', icon: '🏮', kind: 'bom', weight: 1.2, premium: true, description: 'Combo 3 Hiruzens → 4 escolhas de item ao sair (E pega · V vende).' },
-  { id: 'hidan', label: 'Hidan', icon: '🦇', kind: 'ruim', weight: 6, description: 'Combo 3 Hidan → −5% do HP total (não mata) e +5% de dificuldade/monstros até o fim da run.' },
   { id: 'kakuzu', label: 'Kakuzu', icon: '💰', kind: 'bom', weight: .7, premium: true, description: 'Combo 3 Kakuzus → bônus de Ryu condicionado à sua Sorte e à dificuldade do jogo.' },
+  { id: 'jiraiya', label: 'Jiraiya', icon: '📖', kind: 'bom', weight: .9, premium: true, description: 'Combo 3 Jirayas → 1 item Raro ou superior ao sair.' },
+  { id: 'hidan', label: 'Hidan', icon: '🦇', kind: 'ruim', weight: 6, description: 'Combo 3 Hidan → −5% do HP total (não mata) e +5% de dificuldade/monstros até o fim da run.' },
 ];
-export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, c])) as Record<RouletteCasaId, RouletteCasa>;
+export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, c])) as Record<SlotComboId, RouletteCasa>;
 
 /**
  * Fórmula (documentada aqui e usada em toda parte):
  * - fatorSorte = 1 + min(luckCap, max(0, sorte) / luckDivisor). Casas boas × fatorSorte; casas premium × fatorSorte².
  * - pressão = (curse − 1) × curseWeight + (zona − 1) × zoneWeight + missionWeight[dificuldade]. Casas ruins × (1 + pressão).
- * - Casa vazia não muda. Depois de normalizar, a soma das casas ruins fica presa em [minBad, maxBad]
- *   (nunca 100% bom; nunca mais de 60% ruim).
- * - Casas indisponíveis (ex.: Pílula quando todas as pílulas elegíveis estão no limite) saem do sorteio ANTES de normalizar:
- *   as porcentagens exibidas são exatamente as usadas no giro.
+ * - Depois de normalizar as cinco casas, a chance de Hidan fica em [minBad, maxBad].
+ *   A tabela exibe as mesmas probabilidades do sorteio.
  * Custo (economia expansiva, rodada 37): round(baseCost × costGrowth^(giros na run) × inflação por minuto de run (itemTrade.ts) × (1 + (zona−1) × zoneCostWeight) × (1 − min(maxDiscount, desconto))).
  * Não reseta por zona.
- */
-/**
- * Nerf 2 (pedido do usuário, 06/11/2026: "vem muita coisa boa"): Sorte 0 → boas ≈ 34,9% (antes 48,4%), ruins ≈ 36%, vazia ≈ 29%.
- * Pesos: kunai/shuriken 6, Ryu 5, bênção 4, item 2,5, Sorte Grande 0,5 · dívida 12, azar 10, credores 9 · vazia 25.
  */
 export const ROULETTE_RULES = {
   baseCost: 30,
@@ -110,9 +93,9 @@ export function roulettePressure(curse: number, zone: number, mission: Difficult
 export function luckFactor(luck: number) { return 1 + Math.min(ROULETTE_RULES.luckCap, Math.max(0, luck) / ROULETTE_RULES.luckDivisor); }
 
 /** Probabilidade (0–1) de cada casa para a sorte e a pressão de dificuldade atuais. */
-export function rouletteWeights(luck: number, pressure: number, exclude: readonly RouletteCasaId[] = []): Record<RouletteCasaId, number> {
-  const f = luckFactor(luck), raw: Record<string, number> = { pill: 0 };
-  for (const c of ROULETTE_CASAS) raw[c.id] = exclude.includes(c.id) ? 0 : c.kind === 'bom' ? c.weight * f * (c.premium ? f : 1) : c.kind === 'ruim' ? c.weight * (1 + Math.max(0, pressure)) : c.weight;
+export function rouletteWeights(luck: number, pressure: number): Record<SlotComboId, number> {
+  const f = luckFactor(luck), raw: Record<string, number> = {};
+  for (const c of ROULETTE_CASAS) raw[c.id] = c.kind === 'bom' ? c.weight * f * (c.premium ? f : 1) : c.weight * (1 + Math.max(0, pressure));
   const total = Object.values(raw).reduce((a, b) => a + b, 0);
   const out: Record<string, number> = {};
   for (const id of Object.keys(raw)) out[id] = raw[id] / total;
@@ -122,16 +105,16 @@ export function rouletteWeights(luck: number, pressure: number, exclude: readonl
     const rest = 1 - bad, scaleBad = target / bad, scaleRest = (1 - target) / rest;
     for (const c of ROULETTE_CASAS) out[c.id] *= c.kind === 'ruim' ? scaleBad : scaleRest;
   }
-  return out as Record<RouletteCasaId, number>;
+  return out as Record<SlotComboId, number>;
 }
-export function badChance(w: Record<RouletteCasaId, number>) { return ROULETTE_CASAS.filter(c => c.kind === 'ruim').reduce((s, c) => s + w[c.id], 0); }
-export function goodChance(w: Record<RouletteCasaId, number>) { return ROULETTE_CASAS.filter(c => c.kind === 'bom').reduce((s, c) => s + w[c.id], 0); }
+export function badChance(w: Record<SlotComboId, number>) { return w.hidan; }
+export function goodChance(w: Record<SlotComboId, number>) { return 1 - badChance(w); }
 
-export function rollRoulette(w: Record<RouletteCasaId, number>, rng: () => number = Math.random): RouletteCasaId {
+export function rollRoulette(w: Record<SlotComboId, number>, rng: () => number = Math.random): SlotComboId {
   let roll = rng();
   for (const c of ROULETTE_CASAS) { if (!(w[c.id] > 0)) continue; roll -= w[c.id]; if (roll < 0) return c.id; }
-  // Arredondamento: última casa com peso > 0 (nunca uma casa excluída).
-  return [...ROULETTE_CASAS].reverse().find(c => w[c.id] > 0)?.id ?? 'empty';
+  // Diferenças de arredondamento caem na última casa da tabela.
+  return ROULETTE_CASAS[ROULETTE_CASAS.length - 1].id;
 }
 
 export function rouletteCost(spins: number, discount: number, runSeconds = 0, zone = 1) {
@@ -155,4 +138,4 @@ export function spendBonuses(items: Record<string, number>, spent: number): Bonu
 }
 
 export type RoulettePrize = { seq: number; id: RouletteCasaId; label: string; icon: string; kind: RouletteKind; detail: string; cost: number; /** Ryu (ryu/lose/jackpot), inimigos (ambush) ou NÍVEIS de pílula (pill). */ amount?: number; pill?: string; item?: string; blessing?: number; /** Raridade sorteada da pílula (define os níveis). */ rarity?: string; /** Casa Pílula com tudo no máximo: +1 nível de Treino (powerlevel). */ training?: boolean };
-export type RouletteView = { cost: number; spins: number; sessionSpins: number; sessionSpent: number; ryuSpent: number; discount: number; money: number; luck: number; pressure: number; weights: Record<RouletteCasaId, number>; pending: RoulettePrize[] };
+export type RouletteView = { cost: number; spins: number; sessionSpins: number; sessionSpent: number; ryuSpent: number; discount: number; money: number; luck: number; pressure: number; weights: Record<SlotComboId, number>; pending: RoulettePrize[] };

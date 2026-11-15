@@ -13,6 +13,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 | Jutsus | Revisar cada técnica e animação, incluindo preparo, selos, trajetória, hit e dissipação. Começar pelo acabamento do Susanoo com as artes e o rig do projeto. [Auditoria](24-AUDITORIA-DE-EFEITOS.md). |
 | Eventos | Implementar Treinamento da Juventude (#47) e Treinamento do Hagoromo (#48) no fluxo da partida. |
 | Queda de Mega Elites (depois) | Para todos os shinobis que podem aparecer como Mega Elite: cambalear, ajoelhar, perder o apoio e cair até ficar deitado para selamento. Preservar o traje da versão, ponto de contato com o chão e interação com E. A queda atual em `fallenShinobi.ts` continua até este item ser executado. |
+| Roleta e emboscada da Akatsuki | **IMPLEMENTADO.** Cinco personagens na roleta. Zetsu substitui o Altar do Desafio. Validar em partida o surgimento, acionamento, combate, três pergaminhos, rolos e chances. |
 | Desempenho | Em andamento com o Claude Code. |
 
 ## Prioridades anteriores · 15/11/2026

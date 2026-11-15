@@ -60,7 +60,7 @@ test('primeiro Mega Elite tem teto de 3.000 HP em toda dificuldade, e os seguint
 test('Mega Elite natural e de clima compartilham o primeiro encontro, inclusive ao retomar', () => {
   const canvas = src('scene/GameCanvas.tsx');
   assert.match(canvas, /accountSeal=false,openingMega=!openingMegaSpawned/);
-  assert.match(canvas, /const isMegaEncounter=tier==='mega'&&!guardian;\s*if\(isMegaEncounter\)openingMegaSpawned=true/);
+  assert.match(canvas, /const isMegaEncounter=tier==='mega'&&!guardian&&!akatsuki;\s*if\(isMegaEncounter\)openingMegaSpawned=true/);
   assert.match(canvas, /megaEliteHp\([^\n]+,Math\.random,openingMega\)/);
   assert.match(canvas, /weatherEvent=\{id,until:[^\n]+openingMega:enemy\.openingMega/);
   assert.match(canvas, /campaign:\{openingMegaSpawned,/);

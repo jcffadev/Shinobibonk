@@ -248,8 +248,8 @@ checks.push('Movimento do mouse deita a câmera até o piso (0.05 rad) sem botã
 await debug('setMoney',10000);
 await page.evaluate(()=>{
  const r=window.__shinobiTest.roulette;
- const view=r.open();if(view.weights.pill!==0)throw Error('Roleta ainda sorteia pílula');
- r.spin(2,'item');r.exit();
+ const view=r.open();if(Object.keys(view.weights).join(',')!=='tsunade,hiruzen,kakuzu,jiraiya,hidan')throw Error('Casas inesperadas no caça-níquel');
+ r.spin(1,'hiruzen');r.exit();
 });
 const prize=page.getByRole('dialog',{name:'Prêmio da Tsunade'});
 await prize.waitFor();
@@ -258,6 +258,7 @@ await prize.getByRole('button',{name:/Vender/}).click();
 await page.waitForFunction(()=>window.__shinobiTest.inspect().choice?.[0]?.kind==='item');
 assert.deepEqual((await state()).pills,beforePrizes.pills);
 await page.keyboard.press('e');
+while (await prize.isVisible()) await prize.getByRole('button',{name:/Vender/}).click();
 await prize.waitFor({state:'hidden'});
 assert.deepEqual((await state()).pills,beforePrizes.pills);
 assert.equal(Object.values((await state()).items).reduce((n,k)=>n+k,0),1);

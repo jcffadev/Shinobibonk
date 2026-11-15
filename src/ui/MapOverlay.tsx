@@ -19,7 +19,7 @@ const NPC_PORTRAIT: Record<string, string> = { arsenal: 'tenten', shikamaru: 'sh
 /** Ícone/cor por tipo de evento. tone → classe CSS (map.css). */
 const EVENT_STYLE: Record<string, { glyph: string; tone: string }> = {
   arsenal: { glyph: '🗡️', tone: 'npc' }, shikamaru: { glyph: '♟️', tone: 'npc' }, slot: { glyph: '🎰', tone: 'npc' }, ebisu: { glyph: '🕶', tone: 'npc' }, iruka: { glyph: '📚', tone: 'npc' },
-  orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: 'guardian-bijuu', tone: 'guardian' }, challenge: { glyph: '⛩️', tone: 'challenge' }, altar: { glyph: '🛕', tone: 'altar' },
+  orochimaru: { glyph: '🐍', tone: 'curse' }, 'guardian-seal': { glyph: 'guardian-bijuu', tone: 'guardian' }, challenge: { glyph: 'akatsuki-cloud', tone: 'akatsuki' }, altar: { glyph: '🛕', tone: 'altar' },
   trader: { glyph: '⚖️', tone: 'shop' }, ichiraku: { glyph: '🍜', tone: 'shop' }, 'sapos-sabios':{glyph:'🐸',tone:'shop'},
 };
 const PICKUP_LABEL: Record<string, string> = { kunai: 'Pergaminho (pago em Ryu)', shuriken: 'Pergaminho (pago em Ryu)', ryu: 'Morro de bolinhos de arroz', sealDrop: 'Pergaminho de recompensa grátis', cursedShuriken:'Shuriken Amaldiçoada', ninjaBody:'Corpo de ninja' };
@@ -43,8 +43,8 @@ export function MarkerIcon({ m, size }: { m: Marker; size: 'map' | 'mini' }) {
   const portrait = m.portrait ?? NPC_PORTRAIT[m.id];
   const glyph = EVENT_STYLE[m.id]?.glyph ?? m.icon;
   return <span className={`mk mk-${size} tone-${markerTone(m)}${portrait ? ' has-portrait' : ''}${m.active === false ? ' used' : ''}`}>
-    {portrait ? <HeroPortrait id={portrait} /> : glyph === 'bijuu-portal'||glyph==='guardian-bijuu'
-      ? <img src={glyph==='guardian-bijuu'?'/assets/icons/guardian-bijuu.svg':'/assets/icons/bijuu-portal.svg'} alt="" />
+    {portrait ? <HeroPortrait id={portrait} /> : ['bijuu-portal','guardian-bijuu','akatsuki-cloud'].includes(glyph)
+      ? <img src={'/assets/icons/'+glyph+'.svg'} alt="" />
       : <em>{glyph}</em>}
     {portrait && <sup>{glyph}</sup>}
   </span>;

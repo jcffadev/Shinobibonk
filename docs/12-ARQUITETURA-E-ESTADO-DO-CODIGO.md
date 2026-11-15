@@ -198,6 +198,8 @@ O primeiro Mega Elite da partida usa o teto de 3.000 HP de `enemyTiers.ts`. O `G
 
 ### Run, recompensas e eventos
 
+A Emboscada da Akatsuki preserva o identificador histórico `challenge` para saves. `akatsukiAmbush.ts` determina o elenco e a escala do HP. O `GameCanvas` guarda os membros vivos em `campaign.akatsukiAmbush` e solta três pergaminhos ao acabar.
+
 - **Cartas de recompensa** (level-up):
   - Só técnicas e pílulas; itens nunca aparecem no level-up.
   - `skillTarget = max(min(2, técnicas elegíveis), total − pílulas elegíveis)`: entram até 2 técnicas, depois pílulas diferentes (as 18 de `pills.ts`, até 10 cada, via `grantPill`), e técnicas completam se faltarem pílulas.

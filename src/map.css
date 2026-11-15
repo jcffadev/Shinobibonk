@@ -9,7 +9,7 @@
 .mk sup{position:absolute;right:-6px;bottom:-5px;display:grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#1e1611;border:1px solid var(--mk,#f9d55b);font-size:11px;line-height:1}
 .mk-mini sup{display:none}
 .mk.used{filter:grayscale(1) brightness(.65);opacity:.7}
-.tone-npc{--mk:#6fe0ff}.tone-event{--mk:#f9d55b}.tone-danger{--mk:#ff5a5a}.tone-challenge{--mk:#ff9a3d}.tone-altar{--mk:#ffe98c}.tone-shop{--mk:#7dffb0}.tone-curse{--mk:#b86bff}
+.tone-npc{--mk:#6fe0ff}.tone-event{--mk:#f9d55b}.tone-danger{--mk:#ff5a5a}.tone-akatsuki{--mk:#e25961}.tone-altar{--mk:#ffe98c}.tone-shop{--mk:#7dffb0}.tone-curse{--mk:#b86bff}
 .tone-elite{--mk:#ff4d6d}.tone-guardian{--mk:#ff2b2b}.tone-totem{--mk:#ffb34d}.tone-pickup{--mk:#d9d9d9}.mk.free{--mk:#61ffa8}
 .tone-guardian.mk,.tone-elite.mk{animation:mk-pulse 1.4s ease-in-out infinite}
 @keyframes mk-pulse{50%{box-shadow:0 0 14px var(--mk)}}

@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 15/11/2026 · Emboscada da Akatsuki e cinco casas na roleta
+
+- O Altar do Desafio deu lugar à Emboscada da Akatsuki. Zetsu emerge usando a arte do elenco e a nuvem vermelha aparece no mapa. Clique no Zetsu ou use E perto dele.
+- As 13 versões da organização registradas no elenco entram no encontro, com suas técnicas e HP multiplicado pela ameaça atual, incluindo a zona e o Final Swarm. Derrotar o último deixa três pergaminhos grátis. Uma emboscada em andamento guarda os participantes vivos no save.
+- Caça-Níquel com Tsunade, Hiruzen, Kakuzu, Jiraiya e Hidan. Rolos e painel de chances usam a mesma tabela. Pesos dos cinco preservados e renormalizados; pagamentos de giros pendentes em saves antigos seguem válidos.
+- O Portal do Guardião · Myōjinmon invoca o Guardião com E e a vitória libera a passagem. Atualizada a referência do fluxo na documentação.
+- **PASSOU:** 189 de 189 testes por código, TypeScript e build (perfil equilibrado).
+- **PENDENTE DE VALIDAÇÃO E2E:** emergência e clique no Zetsu, combate, recompensa, nuvem nos mapas, rolos e pagamento na saída.
+
 ## 15/11/2026 · WASD contínuo, Treinamento sem cartas e dano recebido
 
 - O movimento acompanha o teclado físico separado das ações limpas pela interface. Segurar WASD ou uma direção remapeada mantém a ordem das teclas ao concluir uma escolha ou Treinamento. A colisão pode bloquear o avanço enquanto a passada permanece ativa. Perda de foco limpa a entrada.
