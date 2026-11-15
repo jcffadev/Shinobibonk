@@ -15,6 +15,8 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
+- **IMPLEMENTADO** — ranking de temporada no hub, Top 100, filtros, clãs e fichas com builds e missões, entre os perfis do navegador. [Detalhes e proposta online](development/RANKING-E-CLAS.md).
+
 - **IMPLEMENTADO em 14/11** — as 114 versões têm corrida com os braços para trás no deslocamento normal, em cinco vistas. Jogador, ajudantes e Mega Elites compartilham o atlas da versão.
 
 - **IMPLEMENTADO em 14/11** — câmera suavizada, prioridade visual do jogador, fade dos inimigos sobrepostos, retrato em perfil compartilhado na ficha e atualização de Hanzō, Haku e Zabuza. Os 114 jogáveis têm cinco vistas de caminhada registradas na [matriz](development/COBERTURA-DE-VISTAS.md).

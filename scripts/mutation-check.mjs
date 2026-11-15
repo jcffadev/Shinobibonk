@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'ranking usa a melhor missão por região', arquivo: 'src/game/league.ts', de: 'if (!previous || compareRun(run, previous) < 0) best.set(run.map, run);', para: 'if (!previous || compareRun(run, previous) > 0) best.set(run.map, run);' },
   { regra: 'portal conserva XP atraído', arquivo: 'src/game/drops.ts', de: '(magnet || distance < pickupRadius)', para: 'distance < pickupRadius' },
   { regra: 'marco grande não bloqueia além de 3 m', arquivo: 'src/scene/collision.ts', de: 'buildingMaxRadius: 3,', para: 'buildingMaxRadius: 7,' },
   { regra: 'Comum/Incomum sem projétil no altar', arquivo: 'src/game/altarRewards.ts', de: 'ALTAR_PROJECTILES=[0,0,1,2,3]', para: 'ALTAR_PROJECTILES=[0,1,1,2,3]' },

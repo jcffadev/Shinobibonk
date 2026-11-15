@@ -2,7 +2,7 @@ const KEY = 'shinobibonk.profiles.v1';
 type Progress = Record<string, string>;
 type Account = { id: number; login: string; email: string; salt: string; verifier: string };
 type Profiles = { next: number; guest: number; active: number; accounts: Account[] };
-export type LocalProfile = { name: string; signedIn: boolean; email?: string };
+export type LocalProfile = { id: number; name: string; signedIn: boolean; email?: string };
 
 function readProfiles(): Profiles {
   const raw = localStorage.getItem(KEY);
@@ -11,13 +11,13 @@ function readProfiles(): Profiles {
 
 function visibleProfile(state: Profiles): LocalProfile {
   const account = state.accounts.find(a => a.id === state.active);
-  return account ? { name: account.login, email: account.email, signedIn: true }
-    : { name: 'Guest' + String(state.guest).padStart(3, '0'), signedIn: false };
+  return account ? { id: account.id, name: account.login, email: account.email, signedIn: true }
+    : { id: state.guest, name: 'Guest' + String(state.guest).padStart(3, '0'), signedIn: false };
 }
 
 export function readLocalProfile() {
   try { return visibleProfile(readProfiles()); }
-  catch { return { name: 'Guest001', signedIn: false } as LocalProfile; }
+  catch { return { id: 1, name: 'Guest001', signedIn: false } as LocalProfile; }
 }
 
 function archiveKey(id: number) { return KEY + '.save.' + id; }

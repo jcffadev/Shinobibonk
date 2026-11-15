@@ -1,8 +1,8 @@
-import type { MapId } from './maps';
+import { MAPS, type MapId } from './maps.ts';
 import type { Difficulty } from './progression';
 
 const KEY = 'sb_local_ranking_v1';
-const TOP_COUNT = 25;
+const TOP_COUNT = 100;
 
 export type RankedRun = {
   heroId: string;
@@ -21,11 +21,24 @@ function compare(a: Entry, b: Entry) {
     || (a.victory ? a.elapsed - b.elapsed : b.elapsed - a.elapsed) || b.totalDamage - a.totalDamage;
 }
 
-export function recordLocalRun(map: MapId, mission: Difficulty, run: RankedRun): LocalRank {
+function readRankBoard(): Record<string, Entry[]> {
+  try { return JSON.parse(localStorage.getItem(KEY) || '{}') ?? {}; } catch { return {}; }
+}
+
+export function readLocalRankHistory() {
+  const board = readRankBoard();
+  const difficulties: Difficulty[] = ['Genin', 'Chunin', 'Jonin', 'Kage'];
+  return MAPS.flatMap(({ id: map }) => difficulties.flatMap(difficulty => {
+    const history = board[`${map}:${difficulty}`];
+    return Array.isArray(history) ? history.map(run => ({ ...run, map, difficulty })).filter(run =>
+      Number.isFinite(run.finishedAt) && Number.isFinite(run.kills)) : [];
+  }));
+}
+
+export function recordLocalRun(map: MapId, mission: Difficulty, run: RankedRun, finishedAt = Date.now()): LocalRank {
   const key = `${map}:${mission}`;
-  let board: Record<string, Entry[]> = {};
-  try { board = JSON.parse(localStorage.getItem(KEY) || '{}') ?? {}; } catch { /* Primeiro registro. */ }
-  const entry = { ...run, finishedAt: Date.now() };
+  const board = readRankBoard();
+  const entry = { ...run, finishedAt };
   const previous = Array.isArray(board[key]) ? board[key] : [];
   const sorted = [...previous, entry].sort(compare);
   board[key] = sorted.slice(0, TOP_COUNT);

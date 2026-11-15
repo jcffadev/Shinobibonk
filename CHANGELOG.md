@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 14/11/2026 — temporada, ranking e clãs no hub
+
+- A inicial mostra a prévia da temporada e a posição pessoal. A aba Ranking lista até 100 perfis, com pódio e filtros de região, dificuldade e shinobi.
+- Clãs locais podem ser criados, acessados e deixados. A ficha do perfil mostra estatísticas, builds usadas por shinobi e missões recentes. Resultados antigos são migrados com as informações que já guardavam.
+- O placar usa os perfis deste navegador. [Proposta para publicação online](docs/development/RANKING-E-CLAS.md). Validação em partida pendente.
+
 ## 14/11/2026 — corrida com os braços para trás no elenco
 
 - As 114 versões usam a corrida no deslocamento normal em WASD, com cinco vistas, quatro fases por vista e espelhamento à esquerda. São 2.280 quadros em 57 atlas. Ajudantes e Mega Elites usam a folha da versão. A velocidade e os comandos de ação seguem os parâmetros da missão.

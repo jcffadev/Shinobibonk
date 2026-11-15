@@ -48,7 +48,8 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 | `src/game/worldScale.ts` | (Codex) Escala do mundo: mapa de 160 m, limite, duração de zona (600 s), escala dos atores e alcance de ataques. |
 | `src/game/bijuu.ts` + `public/assets/bijuu-atlas-v1.png` + `public/assets/bijuu/` | Dados das nove bijū e texturas. Chōmei e Gyūki têm texturas próprias. Os outros sete continuam no atlas 3×3. |
 | `src/game/powerlevel.ts` | (Codex) Recompensa extra por nível quando não há upgrades elegíveis (+0,8% conforme relatório do Codex); recalibração de atributos até o nível 50 pendente. |
-| `src/game/ranking.ts` | (Codex) Ranking local por mapa/dificuldade (`sb_local_ranking_v1`, top 25). |
+| `src/game/ranking.ts` | Histórico pessoal por mapa e dificuldade (`sb_local_ranking_v1`, até 100 resultados por categoria). |
+| `src/game/league.ts` + `src/ui/League.tsx` | Temporada e Top 100 entre os perfis do navegador, clãs, filtros e fichas com builds e missões. [Regras e proposta online](development/RANKING-E-CLAS.md). |
 | `src/game/itemTrade.ts` + `src/ui/ItemTradeDialog.tsx` | (Codex) Compra/venda de itens por raridade na run. |
 | `src/game/inventoryArt.ts` + `scripts/generate-inventory-icons.mjs` + `public/assets/inventory*` , `pills-v3.png` | (Codex) Atlas de ícones de itens e pílulas, com layout fixo por ID. |
 | `public/assets/shinobi-folha-v3.png`, `sakura-genin-v1.png`, `naruto-academia-*-v1.png`, `leaf-landmarks-v1.png`, `map-previews-v1.png` | (Codex) Artes novas: elenco da Folha, Sakura Genin, caminhada/diagonal/arremesso do Naruto Academia, marcos da Folha e prévias dos mapas. Integração parcial (ver docs/13). |

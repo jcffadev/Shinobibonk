@@ -16,7 +16,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 1. Limitar técnicas fundidas ao Nv. 7. Aplicar o teto nas ofertas, escolha, ficha e restauração de saves.
 2. Mover ícones de itens para o canto inferior esquerdo. Colocar habilidades e pílulas no canto inferior direito.
-3. Modo ranking com cartão de temporada e colocação no lado direito, sequência de abates em tempo real e total da missão. O ranking atual é local e a versão compartilhada depende de persistência no servidor.
+3. Ranking na inicial, Top 100, clãs e fichas já integrados localmente. Faltam o cartão de temporada dentro da missão, o contador de sequência em tempo real e a publicação da classificação em servidor. A barra já mostra o total de abates da missão. [Proposta online](development/RANKING-E-CLAS.md).
 4. Aprimorar a indicação de direção e distância do ponto fixado no mapa.
 
 ## Fila do usuário · 14/11/2026 (uma tarefa por vez, nesta ordem)

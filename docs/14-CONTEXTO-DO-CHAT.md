@@ -1881,3 +1881,18 @@ Os quatro pedidos foram colocados na fila para priorizar a corrida. O padrão at
 **Resposta da rodada**
 
 As 114 versões receberam corrida com braços para trás no WASD. São 57 atlas, cinco vistas por versão e 2.280 quadros. O controlador orienta a folha pelo movimento e compartilha o recorte com os ajudantes e Mega Elites da mesma versão. Pulo, dash, ataques, selos e Ultimate continuam nas folhas próprias. O padrão de arte inclui frente e costas retas, perfil, diagonais, identidade do traje, alinhamento dos pés e margens transparentes. Inspeção dos atlas feita fora do navegador. Os 93 testes, a verificação de tipos e o build passaram. Revisão em partida pendente. Fusões nível 7, inversão da HUD inferior, cartão de temporada com contadores e GPS seguem em fila.
+
+## Rodada 67 · 14/11/2026 — ranking, clãs e publicação online
+
+> Continue, crie na página inicial a sessão de ranking, vou te passar referências
+> Sistema de clãs
+> Sistema de Ranking mostra até o TOP100 na listagem
+> Ao clicar no personagem, mostra o perfil, builds, missões... enfim, crie baseado no nosso tema.
+>
+> Então, quando publicarmos o jogo, disponibilizar, vai ser necessário salvar isso em algum banco de dados, né?
+> Como sugere fazermos, banco de dados ou outra coisa?
+> Como o jogo de referência faz?
+
+**Resposta da rodada**
+
+O hub ganhou um cartão de temporada, Top 100, clãs e uma ficha acessível pelo retrato. A ficha mostra a última build usada por shinobi e as missões recentes. As classificações desta versão pertencem aos perfis do mesmo navegador. Para publicação compartilhada, a proposta é PostgreSQL com Supabase Auth e uma API autenticada com validação de resultados. A política oficial da referência descreve armazenamento no servidor, dados públicos da ficha e revisão de partidas. O produto de banco usado por ela não foi divulgado nessa fonte. [Regras e proposta online](development/RANKING-E-CLAS.md).

@@ -114,6 +114,8 @@ O usuário exige vistas distintas para todas as versões. W e S usam costas e fr
 
 ## 4. Registro cronológico de P/R (todas as rodadas)
 
+**Rodada 67 (14/11)** — ranking na inicial, Top 100, clãs e fichas com builds e missões foram integrados entre os perfis do navegador. O usuário perguntou pela publicação compartilhada. PostgreSQL, Supabase Auth e API autenticada são [proposta](development/RANKING-E-CLAS.md). O jogo de referência informa que guarda os registros no servidor, sem especificar o produto de banco em sua política pública.
+
 **Rodada 66 (14/11)** — corrida com braços para trás integrada às 114 versões, com cinco vistas e quatro passos por vista. A skill foi alinhada ao padrão de W/S, margens, enquadramento e identidade da versão. Fusões até Nv. 7, HUD invertida, ranking de temporada, contadores e GPS foram colocados em fila. Validação visual em partida pendente.
 
 **Rodada 65 (14/11)** — corrida com braços para trás em todas as versões é viável com o controlador comum. Até 2.280 quadros com cinco vistas e quatro fases. Usar como animação de WASD foi sugerido. **PROPOSTO.**

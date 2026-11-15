@@ -6,6 +6,8 @@ Repositório: https://github.com/jcffadev/Shinobibonk
 
 As 114 versões do elenco usam a corrida com braços para trás no deslocamento normal. São cinco vistas e quatro quadros por vista. A ficha e a seleção compartilham o retrato em perfil. [Matriz por versão](docs/development/COBERTURA-DE-VISTAS.md).
 
+O hub inclui ranking local de temporada, Top 100, clãs e fichas com builds e missões. [Regras do ranking e proposta de publicação online](docs/development/RANKING-E-CLAS.md).
+
 ## Começar
 
 Requisitos: Node.js compatível com Vite 8 (testado com Node 24.22) e pnpm.
