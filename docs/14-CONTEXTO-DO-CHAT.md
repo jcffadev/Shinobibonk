@@ -2054,3 +2054,19 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - O Qwen Code só carrega o `QWEN.md` por padrão. Por isso foram criados o `QWEN.md` e o `.qwen/settings.json`, que carrega também o `AGENTS.md`.
 - O `AGENTS.md` ganhou a orientação de onde cada IA lê as instruções.
 - **Publicado no GitHub.**
+
+## 15/11/2026 — Jūzō travado
+
+> Revisar animações do Juzo ingame, está travado, como ajudante tbm
+
+**Resposta.**
+
+- As folhas e o código são escolhidos igual aos de Kabuto, Kisame e Mangetsu.
+- A silhueta da corrida mostrou o defeito: de frente e de costas, as pernas são um toco igual nos 4 quadros, então ele desliza sem dar passos.
+
+> Pedir arte nova
+
+**Resposta.**
+
+- Pedido registrado em `docs/development/PEDIDO-ARTE-JUZO-CORRIDA.md` e no item 24 do docs/13.
+- **Publicado no GitHub.**

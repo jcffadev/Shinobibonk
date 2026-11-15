@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 15/11/2026 · Jūzō travado: pedido de arte
+
+- **Pedido do usuário:** "Revisar animações do Juzo ingame, está travado, como ajudante tbm."
+- **Diagnóstico:** o código escolhe as folhas igual aos outros personagens. O defeito está no desenho da corrida de frente e de costas em `corrida-23.png`, onde as pernas ficam paradas nos 4 quadros.
+- **Decisão do usuário:** pedir arte nova, sem paliativo no código.
+- **Pedido para o Codex:** `docs/development/PEDIDO-ARTE-JUZO-CORRIDA.md`. Nenhum código foi alterado.
+
 ## 15/11/2026 · Qwen encontra o programa de testes
 
 - `QWEN.md` novo, porque o Qwen Code só carrega esse arquivo por padrão. Ele aponta para o `AGENTS.md` e para a política de testes.
