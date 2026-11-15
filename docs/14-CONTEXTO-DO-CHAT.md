@@ -2368,3 +2368,9 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Anotações para o Codex: … a foto dos mapas… fazer aquela foto ser jogável como um mapa do jogo… Casas, árvores, pedras, construções, tudo devem ser obstaculos… andando na parede para subir…
 
 **Resposta.** Tudo corrigido, conforme o CHANGELOG da rodada 96. As anotações para o Codex ficaram em `docs/01`. **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
+
+## 15/11/2026 — anotações para o Codex: Treinamento do Hagoromo
+
+> Anotações para o Codex. Como ficou a configuração do que no [jogo de referência] é fenda? No nosso jogo podemos chamar de Treinamento do Hagoromo… Ao matarmos X quantidade de mobs, pode ser de 500 em 500, teremos 1 chave/tentativa… Botão de acionamento: C… comum: 3 hordas com 50 monstros… lendario: 7 hordas com 400 monstros… recompensa: Pool com 3 seleções… Divida por igual esses 9… 2, 2, 2, 2, 1… as armas ninjas de Hagoromo serão as recompensas… Crie esse evento
+
+**Resposta.** A especificação completa ficou em `docs/01` → "Evento Treinamento do Hagoromo", com as 9 ferramentas, atributos e subefeitos propostos e onde mexer no código. Fila: `docs/13`, item 48 (Codex).

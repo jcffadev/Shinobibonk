@@ -308,3 +308,66 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 - **Cada obstáculo precisa de uma altura** de topo para "subir em cima": construção pela altura do sprite, árvore pela copa, rocha pela altura.
 
 **3. Base para tudo:** leia a passagem acima, o `docs/10` (fusões), a skill de mapas e o `CONTEXTO-COMPLETO.md` da pasta arquivada de referência (fora do projeto, ver skill `referencia-externa`). Nada do jogo de referência entra no repositório.
+
+### Evento Treinamento do Hagoromo — especificação para o Codex (pedido do usuário, 15/11/2026)
+
+É a versão do ShinobiBonk da "Fenda" descrita na fila acima (o equivalente do jogo de referência). O usuário pediu: "Anotações para o Codex… No nosso jogo podemos chamar de Treinamento do Hagoromo… Crie esse evento". As imagens enviadas foram uma clareira de treino cercada de floresta, com três troncos e a Pedra Memorial (o Campo de Treinamento 3 do anime), e a lista das ferramentas do Sábio dos Seis Caminhos.
+
+**Chave (tentativa):**
+- A cada **500 abates** o jogador ganha **1 chave**. Ela aparece ao lado dos itens na HUD.
+- Acumula **até 3**.
+- **Monstros das hordas do evento não contam** para recarregar a chave.
+
+**Ativação:** tecla **C**. Respeita o remapeamento de teclas: acrescentar a ação em `KeyAction` / `DEFAULT_KEYS` (`src/game/settings.ts`); hoje C está livre.
+
+**Raridade sorteada a cada ativação:**
+
+| Raridade | Hordas | Monstros por horda |
+|---|---|---|
+| Comum | 3 | 50 |
+| Incomum | 4 | 100 |
+| Raro | 5 | 150 |
+| Épico | 6 | 200 |
+| Lendário | 7 | 400 |
+
+**Como funciona (solo):**
+1. O jogador é **teletransportado** para a arena do Hagoromo: clareira de grama com manchas de terra, cercada de floresta densa, com três troncos de treino e um círculo de pedra.
+   - Pode reaproveitar `arena` (já existe para a Bijuu, `arena=true`).
+   - O relógio da zona fica parado lá dentro.
+2. As hordas nascem **em volta** do jogador, uma depois da outra. Aproveitar o anel da armadilha (`trapRing` em `src/game/fallenTrap.ts`). Um botão "Chamar a próxima horda" é opcional.
+3. Derrotadas todas as hordas, aparece um **Mega Elite**.
+4. **Dificuldade** das hordas e do Mega Elite:
+   - acompanha a zona, mais os buffs ativos do jogador de %inimigos e %dificuldade;
+   - também entra o **Final Swarm** pelo tempo sobrevivido: quanto mais tarde, mais difícil, até quase impossível. Isso é intencional.
+5. Vencendo, o jogador recebe a recompensa e volta ao mapa, no mesmo ponto.
+
+**Recompensa:**
+- Escolha de **1 entre 3** ferramentas, ou nenhuma, cada uma com a sua raridade (Comum, Incomum, Raro, Épico ou Lendário).
+- Ficam até o fim da partida.
+- Sugestão de 3 vagas, como as relíquias do jogo de referência; o usuário confirma.
+
+**Itens do pool do evento** (buscar a forma no material de referência arquivado, fora do projeto):
+- um item que **aumenta a quantidade** de opções no pool da recompensa (+1 carta);
+- um item que **melhora a qualidade** (raridade) das opções.
+
+**As 9 ferramentas do Sábio dos Seis Caminhos** (nomes da lista do usuário):
+- **Divisão por raridade:** 2 Comum, 2 Incomum, 2 Raro, 2 Épico, 1 Lendário.
+- Cada uma dá **1 atributo da ficha** e **1 subefeito**. Os valores escalam com a raridade e são uma proposta para balancear no simulador.
+
+| Raridade | Ferramenta | Atributo | Subefeito (proposta) |
+|---|---|---|---|
+| Comum | Amuleto de Selamento | +8% de HP máximo | A cada 100 abates, um selo explode em volta do jogador e paralisa os inimigos a 6 m por 1 s |
+| Comum | Partículas Polares | +6% de área | Abates por técnica de área deixam partículas que puxam drops (Ryu, XP) a 4 m |
+| Incomum | Shakujō | +10% de duração de status | Cada 5º golpe que aplica status espalha o mesmo status para 2 inimigos próximos |
+| Incomum | Espada | +12% de dano físico (Taijutsu) | Crítico abre um corte em linha que atravessa 3 inimigos com 50% do dano |
+| Raro | Bashōsen (leque) | +1 projétil | A cada 8 s, uma rajada de vento empurra e corta tudo a 8 m na direção do movimento |
+| Raro | Kōkinjō (corda dourada) | +15% de dano em elites e Mega Elites | Ao acertar elite, prende com a corda por 1,5 s (atordoa); no máximo 1 a cada 10 s por alvo |
+| Épico | Benihisago (cabaça vermelha) | +15% de Ryu e +10% de XP | Ao derrotar 100 monstros, recebe uma grande quantidade de Ryu (escala com a zona) |
+| Épico | Kohaku no Jōhei (jarro de âmbar) | +12% de chance crítica | Crítico estoura uma bomba de fumaça shinobi: lentidão e cegueira (inimigos erram golpes) a 4 m por 2 s |
+| Lendário | Shichiseiken (Espada de Sete Estrelas) | +25% de dano total | A cada 7 s, sete lâminas de luz caem sobre os 7 inimigos mais fortes a 15 m |
+
+**Onde mexer (sugestão):**
+- **Regras puras** num módulo novo, `src/game/hagoromoTraining.ts`: chaves, raridade, hordas, pool e ferramentas. Testes em `tests/`.
+- **Partida:** `GameCanvas.tsx`. Teletransporte e arena como a Bijuu, `spawnEnemy` para as hordas e o Mega Elite, e a recompensa no mesmo fluxo de escolha das cartas.
+- **Arte:** ícones das 9 ferramentas pela skill `criar-arte-shinobibonk`. A arena segue a skill `criar-mapa-shinobibonk`.
+- **Regra do projeto:** nenhum nome do jogo de referência no código, nos textos ou nos commits.
