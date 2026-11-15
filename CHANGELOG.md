@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 15/11/2026 · Água de verdade e paisagem de fundo das vilas (Rodada 89)
+
+- **Pedido do usuário:** "Ainda em terrenos, precisamos melhoras MUITO a qualidade da água, não está de acordo com o nosso jogo. E a paisagem do jogo, não existe, né? Você precisa conseguir fazer essa paisagem...". Ordem pedida: arte das vilas + água, selos de mão, fusões; "bigbrain" = usar tudo o que o projeto sabe para um bom resultado.
+- **Água** (`src/scene/water.ts`). Antes, o rio da Folha era só pintado no chão. Agora:
+  - lagos e rios **cavados no terreno**, com margem de areia e leito escuro;
+  - superfície animada em pixel art: ondas, cor pela profundidade, espuma na margem e brilhos;
+  - os ninjas **andam sobre a água**, como na obra;
+  - por mapa: Folha (rio e lago), Suna (oásis), Iwa (lagos de montanha) e Kiri (três lagos de pântano).
+- **Paisagem de fundo** (`src/scene/landscape.ts`): panorama pintado em pixel art em volta do mapa, com o fundo de cada vila.
+  - Konoha: montanhas azuladas, colinas de floresta e o Monte Hokage.
+  - Suna: mesas de topo reto com estratos e dunas.
+  - Iwa: picos cinza pontudos com cachoeiras e névoa.
+  - Kiri: agulhas de pedra na névoa.
+  - Com névoa de clima, o fundo fica mais apagado.
+- **Câmera:** campo de visão de 50° para 60°, inclinação de ~29° para ~26°. O topo da tela passa um pouco do horizonte e mostra a paisagem. O zoom no ninja não muda.
+- **Construções:** a arte atual está boa e no estilo do jogo. A arte que falta (torre do Hokage, portão de Konoha, torres de Iwa e Kiri) está listada em `docs/01` para o gerador de arte do usuário.
+- **Testes:**
+  - 2 testes novos (água em todos os mapas, longe do começo e das construções, de pé na superfície; forma da paisagem de cada vila e câmera que mostra o horizonte). O mínimo subiu para 164.
+  - 2 mutações novas, verificadas à mão: acusadas.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver a água (ondas, espuma, transparência), andar sobre ela, a paisagem de cada vila, a câmera nova e o FPS.
+
 ## 15/11/2026 · Ultimate automática lembrada, pés sobre o chão e anotações de fusões e mapas (Rodada 88)
 
 - **Pedidos do usuário:**

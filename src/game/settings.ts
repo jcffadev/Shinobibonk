@@ -47,8 +47,11 @@ const MUSIC_DEFAULT = .1, OLD_MUSIC_DEFAULT = .7, SETTINGS_VERSION = 3;
  * 10–32 → 8–22. `oldDefault`: quem salvou exatamente o padrão antigo passa ao novo (migração v2 → v3).
  */
 export const CAMERA_ZOOM = { default: 12, min: 8, max: 22, step: 1.2, oldDefault: 19 } as const;
-/** Rodada 85: perspectiva com campo de visão vertical de 50° e inclinação inicial de ~29° (horizonte e montanhas ao fundo). */
-export const CAMERA_VIEW = { fov: 50, pitch: .5 } as const;
+/**
+ * Rodada 85: perspectiva com horizonte. Rodada 89 (paisagem de fundo): campo de visão 50° → 60° e inclinação ~29° → ~26°,
+ * para o topo da tela passar um pouco do horizonte e mostrar o panorama da vila (o zoom no ninja não muda).
+ */
+export const CAMERA_VIEW = { fov: 60, pitch: .46 } as const;
 /** Distância da câmera ao ninja para a altura visível no ponto do ninja ser `zoom` (mesmo zoom nas duas projeções). */
 export const perspectiveDistance = (zoom: number, fov = CAMERA_VIEW.fov) => zoom / (2 * Math.tan(fov * Math.PI / 360));
 export const clampZoom = (value: number) => Math.min(CAMERA_ZOOM.max, Math.max(CAMERA_ZOOM.min, Number.isFinite(value) ? value : CAMERA_ZOOM.default));

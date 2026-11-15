@@ -2284,3 +2284,17 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Pedido novo anotado na fila: selos de mão aleatórios para todos os personagens ao soltar técnicas.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 89 · 15/11/2026 — água e paisagem de fundo
+
+> Ainda em terrenos, precisamos melhoras MUITO a qualidade da água, não está de acordo com o nosso jogo. E a paisagem do jogo, não existe, né? Você precisa conseguir fazer essa paisagem... Sua ordem será: Arte das vilas + água dos mapas, Selos de Mão, Fusões, Bigbrain
+
+> bigbrain é pra você ser esperto, usar tudo que temos e sabemos do nosso projeto e referencias ao nosso favor para termos um resultado bom
+
+**Resposta.**
+
+- Água cavada no terreno e animada em todos os mapas; os ninjas andam sobre ela.
+- Paisagem de fundo pintada para cada vila, e a câmera mostra o horizonte no topo da tela.
+- Construções: a arte atual foi aproveitada. A arte nova que falta ficou listada em `docs/01` para o gerador do usuário.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

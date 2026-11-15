@@ -50,6 +50,8 @@ const MUTATIONS = [
   { regra: 'paredão de Suna com topo reto', arquivo: 'src/scene/terrainArt.ts', de: '(17 + 1.5 * Math.sin(3 * angle)) * wall', para: '(17 + 9 * Math.sin(3 * angle)) * wall' },
   { regra: 'pé do personagem sobre o chão', arquivo: 'src/scene/heightField.ts', de: 'export const FOOT_RADIUS = .45;', para: 'export const FOOT_RADIUS = 0;' },
   { regra: 'Ultimate automática salva entre partidas', arquivo: 'src/scene/GameCanvas.tsx', de: 'if(saved.autoUltimate!==autoUlt)saveSettings', para: 'if(false)saveSettings' },
+  { regra: 'ninja de pé sobre a água', arquivo: 'src/scene/GameCanvas.tsx', de: 'Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z))', para: 'Math.max(footHeight(terrainHeight,x,z),-Infinity)' },
+  { regra: 'Suna com mesas de topo reto no fundo', arquivo: 'src/scene/landscape.ts', de: 'far: u => Math.round((.5 + .22 * s(u, 4, .7) + .1 * s(u, 9)) * 5) / 5,', para: 'far: u => .5 + .22 * s(u, 4, .7) + .1 * s(u, 9),' },
   { regra: 'farol do pergaminho grátis é alto', arquivo: 'src/scene/rewardBeacon.ts', de: 'height: 30,', para: 'height: 4,' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },

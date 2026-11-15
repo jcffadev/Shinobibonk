@@ -278,3 +278,44 @@ test('pé do personagem nunca afunda no chão, em todos os mapas e personagens (
   assert.ok((canvas.match(/standHeight\(/g) ?? []).length >= 18);
   assert.ok(canvas.includes('groundLook.material.polygonOffset=true'), 'o chão recua na profundidade');
 });
+
+test('água: lagos e rios cavados em todos os mapas, longe do começo e das construções, e o ninja anda sobre ela (rodada 89)', async () => {
+  const { WATER, WATER_BODIES, waterSurfaceAt, waterDistance } = await load('/src/scene/water.ts');
+  const { groundHeight, LEAF_BUILDINGS, REGIONAL_PLACES } = await load('/src/scene/terrainArt.ts');
+  const { MAP_SIZE } = await load('/src/game/worldScale.ts');
+  for (const map of ['folha', 'areia', 'pedra', 'nevoa']) {
+    assert.ok(WATER_BODIES[map].length >= 2, `${map}: tem água`);
+    let under = 0;
+    for (let x = -76; x <= 76; x += 1) for (let z = -76; z <= 76; z += 1) if (groundHeight(map, x, z) < WATER.level) {
+      under++;
+      assert.equal(waterSurfaceAt(map, x, z), WATER.level, `${map} ${x},${z}: chão abaixo da água tem superfície`);
+    }
+    assert.ok(under > 60, `${map}: ${under} m² de água`);
+    assert.ok(waterDistance(map, 0, 0).outside > 15, `${map}: o começo fica longe da água`);
+    const spots = map === 'folha' ? LEAF_BUILDINGS : REGIONAL_PLACES.map(p => [p.x, p.z]);
+    for (const [x, z] of spots) assert.ok(waterDistance(map, x, z).outside > 8, `${map}: construção em ${x},${z} longe da água`);
+    for (const body of WATER_BODIES[map]) if (body.kind === 'lake') assert.ok(Math.abs(body.x) + body.rx < MAP_SIZE / 2 - 4 && Math.abs(body.z) + body.rz < MAP_SIZE / 2 - 4, 'lago dentro do mapa');
+  }
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z))'), 'de pé na superfície');
+  assert.ok(canvas.includes('const water=createWater(scene,MAP.id,terrainHeight)'), 'malha da água na cena');
+  assert.ok(canvas.includes('waterDistance(MAP.id,x,z).outside<1.5)continue;'), 'sem árvore dentro da água');
+});
+
+test('paisagem de fundo com a cara de cada vila e câmera que mostra o horizonte (rodada 89)', async () => {
+  const { LANDSCAPE, LANDSCAPE_SHAPES } = await load('/src/scene/landscape.ts');
+  const { CAMERA_VIEW } = await load('/src/game/settings.ts');
+  const sample = f => Array.from({ length: 720 }, (_, i) => f(i / 720));
+  const spread = v => Math.max(...v) - Math.min(...v);
+  const distinct = v => new Set(v.map(x => x.toFixed(3))).size;
+  assert.ok(distinct(sample(LANDSCAPE_SHAPES.areia.far)) <= 6, 'Suna: mesas de topo reto (poucos níveis)');
+  assert.ok(spread(sample(LANDSCAPE_SHAPES.pedra.far)) > spread(sample(LANDSCAPE_SHAPES.folha.far)), 'Iwa mais pontuda que Konoha');
+  const kiri = sample(LANDSCAPE_SHAPES.nevoa.far), base = Math.min(...kiri);
+  assert.ok(kiri.filter(v => v > base + .3).length < kiri.length * .2, 'Kiri: agulhas finas');
+  for (const map of Object.keys(LANDSCAPE_SHAPES)) for (const v of [...sample(LANDSCAPE_SHAPES[map].far), ...sample(LANDSCAPE_SHAPES[map].near)]) assert.ok(v >= 0 && v <= 1.2, map + ' dentro da faixa');
+  assert.ok(Math.abs(LANDSCAPE_SHAPES.pedra.far(0) - LANDSCAPE_SHAPES.pedra.far(1)) < 1e-9, 'dá a volta sem emenda');
+  assert.ok(LANDSCAPE.radius > 200 && LANDSCAPE.radius < 300, 'atrás do relevo da borda e dentro do far da câmera');
+  assert.ok(CAMERA_VIEW.fov / 2 * Math.PI / 180 > CAMERA_VIEW.pitch, 'o topo da tela passa do horizonte');
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('const landscape=createLandscape(scene,MAP.id)'), 'paisagem na cena');
+});

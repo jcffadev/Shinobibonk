@@ -37,7 +37,9 @@ Siga também, na mesma tarefa:
 | Construções e marcos | `GameCanvas.tsx` (`landmarks`, `REGIONAL_PLACES`, `solids.addBuilding`) | sprites com `center (.5,.03)` na altura do chão |
 | Árvores e rochas | `scenery()` em `GameCanvas.tsx`, atlas `environment-v2.png` | `MAP.scenery.weights` (árvore, pinheiro, bambu, rocha) e `tint` |
 | Colisão | `src/scene/collision.ts` (`COLLISION_RULES`) | raios medidos no desenho; `prune` tira cenário dentro de construção |
-| Câmera | `src/game/settings.ts` (`CAMERA_ZOOM`, `CAMERA_VIEW`, `perspectiveDistance`) | perspectiva padrão, ortográfica nas Configurações |
+| Câmera | `src/game/settings.ts` (`CAMERA_ZOOM`, `CAMERA_VIEW`, `perspectiveDistance`) | perspectiva padrão (60°, 0,46 rad: o topo passa do horizonte), ortográfica nas Configurações |
+| Água | `src/scene/water.ts` (`WATER_BODIES`, `carveWater`, `createWater`) | lagos e rios cavados; malha com ondas, cor por profundidade, espuma; os ninjas andam na superfície |
+| Paisagem de fundo | `src/scene/landscape.ts` (`LANDSCAPE_SHAPES`, `paintLandscape`) | panorama em pixel art pintado em canvas num cilindro (raio 240) em volta do mapa |
 | Escala | `src/game/worldScale.ts` (`MAP_SIZE` 160, `PLAYER_SIZE`, `ACTOR_SCALE`) | não mude por mapa |
 
 ## 3. Regras de terreno (o padrão que funciona)
@@ -53,6 +55,12 @@ Siga também, na mesma tarefa:
 6. **Malha fina.** Com degraus de ~1,2 m, a malha do chão precisa de ~1 m por célula (340 × 340), senão os degraus viram rampas serrilhadas.
 7. **Caminho livre.** Árvores e rochas nunca no começo (raio 6) nem na trilha (`trailX`), e o `prune` remove cenário dentro de construção.
 8. **Desempenho.** `groundHeight` é a função exata e pode ser cara. O jogo usa a grade (`createHeightField`) para inimigos, drops e projéteis. Não chame `groundHeight` por quadro.
+
+## 3.1 Água e paisagem
+
+- Água sempre cavada no terreno (`carveWater`), com margem baixando até o nível 0 em 5 m: nunca uma superfície flutuando sobre terraço. Longe do começo (> 15 m), da trilha e das construções (> 8 m); o teste confere.
+- Árvores e rochas não nascem a menos de 1,5 m da água. O chão sob a água é leito escuro e a margem é areia.
+- A paisagem de fundo tem uma forma por vila em `LANDSCAPE_SHAPES` (camada longe e perto) e detalhes pintados (Monte Hokage, cachoeiras, estratos, névoa). Mapa novo = nova entrada nos dois e na paleta.
 
 ## 4. Câmera
 

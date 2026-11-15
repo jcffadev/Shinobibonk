@@ -26,6 +26,8 @@ import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } f
 import { createEnemyRenderer, ENEMY_FRAME } from './enemyRenderer';
 import { focusOpacity, setFocusView } from './playerFocus';
 import { createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightField';
+import { createWater, waterDistance, waterSurfaceAt } from './water';
+import { createLandscape } from './landscape';
 import { createDamageNumbers } from './damageNumbers';
 import { BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
@@ -169,7 +171,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Rodada 88 (pedido do usuário: "as vezes o pé do personagem está indo para abaixo do solo… corrigir em todos os mapas…
     // todos os personagens"): personagens ficam de pé no ponto MAIS ALTO do chão sob os pés (raio FOOT_RADIUS). Na encosta
     // de um terraço o chão logo à frente é mais alto que o centro e escondia os pés.
-    const standHeight=(x:number,z:number)=>footHeight(terrainHeight,x,z);
+    // Rodada 89: sobre lagos e rios os personagens andam na superfície da água (como os ninjas com chakra na obra).
+    const standHeight=(x:number,z:number)=>Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z));
     const solids=createSolids();
     // Partículas das técnicas (natureza × forma) e Susanoo procedural: pools fixos, só visual (particleFx.ts / susanooFx.ts).
     const particles=createParticleFx(scene,terrainHeight),susanoo=createSusanooFx(scene,particles,terrainHeight);particles.setHidden(hiddenEffects);
@@ -185,6 +188,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     groundLook.material.polygonOffset=true;groundLook.material.polygonOffsetFactor=GROUND_DEPTH_OFFSET.factor;groundLook.material.polygonOffsetUnits=GROUND_DEPTH_OFFSET.units;
     const ground=new THREE.Mesh(terrainGeometry,groundLook.material);
     ground.rotation.x=-Math.PI/2;scene.add(ground);
+    const water=createWater(scene,MAP.id,terrainHeight);runCleanups.push(()=>water.dispose());
+    // Rodada 89: paisagem de fundo pintada (panorama da vila) em volta do mapa.
+    const landscape=createLandscape(scene,MAP.id);runCleanups.push(()=>landscape.dispose());
     const texture = new THREE.TextureLoader().load('/assets/shinobi-sprites-atlas.png'); texture.colorSpace = THREE.SRGBColorSpace; texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter; texture.generateMipmaps = false;const orochimaruTexture=new THREE.TextureLoader().load('/assets/orochimaru-sprite.svg');orochimaruTexture.colorSpace=THREE.SRGBColorSpace;orochimaruTexture.magFilter=THREE.NearestFilter;orochimaruTexture.minFilter=THREE.NearestFilter;
     // Inimigos comuns/elite: o Sprite vira só dado (posição/escala/cor de acerto) e é desenhado em lote instanciado (enemyRenderer.ts).
     const enemyRenderer=createEnemyRenderer(scene),damageNumbers=createDamageNumbers(scene);const ELITE_TINT=new THREE.Color('#ffb969'),WHITE_TINT=new THREE.Color('#ffffff');
@@ -214,7 +220,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     /** Rodada 70: sprite de cada árvore/rocha, para remover junto com o sólido quando ficar dentro de uma construção. */
     const sceneryBySolid=new Map<object,THREE.Sprite>();
     // Keep paths and the spawn clearing open; scatter foliage across hills.
-    const sceneryWeights=MAP.scenery.weights,sceneryTotal=sceneryWeights.reduce((a,b)=>a+b,0);for(let i=0;i<Math.round(MAP.scenery.count*1.65);i++){const x=(Math.random()-.5)*(MAP_SIZE-8),z=(Math.random()-.5)*(MAP_SIZE-8);if(Math.hypot(x,z)<6||Math.abs(x-trailX(z))<2.5)continue;let roll=Math.random()*sceneryTotal,kind=0;while(kind<3&&roll>=sceneryWeights[kind]){roll-=sceneryWeights[kind];kind++;}sceneryBySolid.set(solids.add(x,z,COLLISION_RULES.scenery[kind]),scenery(kind,x,z,kind===3?2.4:3.2,kind===3?1.8:4.2));}
+    const sceneryWeights=MAP.scenery.weights,sceneryTotal=sceneryWeights.reduce((a,b)=>a+b,0);for(let i=0;i<Math.round(MAP.scenery.count*1.65);i++){const x=(Math.random()-.5)*(MAP_SIZE-8),z=(Math.random()-.5)*(MAP_SIZE-8);if(Math.hypot(x,z)<6||Math.abs(x-trailX(z))<2.5||waterDistance(MAP.id,x,z).outside<1.5)continue;let roll=Math.random()*sceneryTotal,kind=0;while(kind<3&&roll>=sceneryWeights[kind]){roll-=sceneryWeights[kind];kind++;}sceneryBySolid.set(solids.add(x,z,COLLISION_RULES.scenery[kind]),scenery(kind,x,z,kind===3?2.4:3.2,kind===3?1.8:4.2));}
     if(MAP.id==='folha'){scenery(4,0,-12,7,6);for(const [x,z] of [[-7,-17],[7,-18],[-10,18],[12,19]]){scenery(7,x,z,5.5,5.5);solids.addBuilding(x,z,5.5);}}
     if(MAP.id==='folha'){
       const landmarks=[{x:0,z:-52,w:22,h:15},{x:30,z:24,w:6.6,h:10},{x:53,z:24,w:6.6,h:10}];
@@ -1676,7 +1682,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       }else{
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=true;
         enemyRenderer.sync(enemyList,enemyOpacity,dt);
-      }const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
+      }water.update(performance.now()/1000);landscape.setFogged(!!scene.fog);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
     };
     // V-Sync (Gráficos): LIGADO = requestAnimationFrame (um quadro por quadro do monitor). DESLIGADO = spin loop acima da taxa do monitor
     // (melhor esforço no navegador — ele ainda pode limitar; no .exe a sincronização sai direto do motor).

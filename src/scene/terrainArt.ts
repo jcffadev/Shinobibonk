@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { GameMap } from '../game/maps';
 import { MAP_SIZE } from '../game/worldScale';
+import { carveWater, waterDistance, WATER } from './water';
 
 export const RENDERED_GROUND_SIZE = MAP_SIZE + 180;
 export const trailX = (z: number) => Math.sin(z * .09) * 5;
@@ -78,6 +79,11 @@ export const LEAF_BUILDINGS = [[0,-12],[-7,-17],[7,-18],[-10,18],[12,19],[-9,-15
 const leafPlaceHeight = new Map<number, number>();
 
 export function groundHeight(map: GameMap['id'], x: number, z: number) {
+  // Rodada 89: lagos e rios cavados por cima do relevo (src/scene/water.ts).
+  return carveWater(map, x, z, placedGroundHeight(map, x, z));
+}
+
+function placedGroundHeight(map: GameMap['id'], x: number, z: number) {
   if (map !== 'folha') return rawGroundHeight(map, x, z);
   let height = rawGroundHeight(map, x, z);
   for (let i = 0; i < LEAF_PLACES.length; i++) {
@@ -165,7 +171,7 @@ export function groundArt(map: GameMap) {
   const surfaces = new Uint8Array(size * size * 4);
   const grass = rgb(map.terrain.low), dirt = rgb(map.terrain.trail), rock = rgb(map.terrain.high);
   const plaza = rgb(map.id === 'folha' ? '#a3967d' : map.terrain.accent);
-  const water = rgb('#4d8392');
+  const water = rgb('#4b5d4c'), sand = rgb('#d4bf8b');
   const seed = (x: number, z: number) => ((Math.imul(x + 215, 73428767) ^ Math.imul(z + 311, 912931)) >>> 0) % 1021 / 1021;
   for (let j = 0; j < size; j++) {
     const z = (j / size - .5) * RENDERED_GROUND_SIZE;
@@ -174,23 +180,25 @@ export function groundArt(map: GameMap) {
       const fleck = seed(i, j), patch = Math.sin(x * .5 + Math.sin(z * .3)) * Math.cos(z * .63);
       const onPath = Math.abs(x - trailX(z)) < 2.25 + patch * .45;
       const inPlaza = Math.abs(x) < 9 && z > -22 && z < -11;
-      const river = map.id === 'folha' && Math.abs(x - 41.5 - Math.sin(z * .13) * 2) < 3.1 && z > 12;
+      // Rodada 89: a água tem malha própria (water.ts); o chão embaixo dela é leito escuro e a margem é areia.
+      const h0 = groundHeight(map.id, x, z), shoreDistance = waterDistance(map.id, x, z).outside;
+      const river = h0 < WATER.level + .02, shore = !river && shoreDistance < 1.4;
       // Rodada 85: pedra nas encostas dos terraços (inclinação alta), com estrias horizontais como paredão de rocha.
-      const h0 = groundHeight(map.id, x, z), slope = Math.hypot(groundHeight(map.id, x + .5, z) - h0, groundHeight(map.id, x, z + .5) - h0) / .5;
-      const stone = slope > .55 || h0 > 4.2;
-      const color = river ? water : inPlaza ? plaza : onPath ? dirt : stone ? rock : grass;
+      const slope = Math.hypot(groundHeight(map.id, x + .5, z) - h0, groundHeight(map.id, x, z + .5) - h0) / .5;
+      const stone = !shore && (slope > .55 || h0 > 4.2);
+      const color = river ? water : shore ? sand : inPlaza ? plaza : onPath ? dirt : stone ? rock : grass;
       let shade = .88 + .18 * fleck + .08 * patch;
       if (inPlaza && !river) {
         const row = Math.floor(j / 6);
         const joint = j % 6 === 0 || (i + (row % 2) * 4) % 8 === 0;
         shade *= joint ? .72 : .93 + seed(Math.floor(i / 8), row) * .16;
       } else if (river) {
-        shade += Math.sin(x * 2 + z * 6) > .94 ? .25 : 0;
+        shade *= .78 + .22 * fleck;
       } else if (stone) {
         shade *= (h0 * 4.2) % 1 < .5 ? .84 : 1.02;
       } else if (!onPath && fleck > .94) shade += .14;
       const offset = 4 * (j * size + i);
-      if (!river) surfaces[4 * ((size - 1 - j) * size + i) + (inPlaza ? 3 : onPath ? 1 : stone ? 2 : 0)] = 255;
+      if (!river) surfaces[4 * ((size - 1 - j) * size + i) + (inPlaza ? 3 : onPath || shore ? 1 : stone ? 2 : 0)] = 255;
       for (let channel = 0; channel < 3; channel++) pixels.data[offset + channel] = color[channel] * shade;
       pixels.data[offset + 3] = 255;
     }

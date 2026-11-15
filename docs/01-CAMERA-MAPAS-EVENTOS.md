@@ -151,6 +151,7 @@ Pedido do usuário (rodada 88): "Deixar anotado tudo que você tem sobre… os m
 
 ### Fila
 
+0. **Feito na rodada 89:** água cavada e animada (`water.ts`), paisagem de fundo de cada vila (`landscape.ts`), câmera 60° / 0,46 rad.
 1. **Arte das construções de cada vila** (referências do usuário descritas na skill, §5), pela skill `criar-arte-shinobibonk`:
    - **Konoha:** portão com 忍, barraca de lámen, torre do Hokage, casas com caixa-d'água e os rostos do Monte Hokage no horizonte.
    - **Suna:** casas redondas de adobe, cúpula do Kazekage com 風 e passarelas.
@@ -176,3 +177,20 @@ Pedido do usuário (rodada 88): "Deixar anotado tudo que você tem sobre… os m
    - câmera em perspectiva: rotação, zoom, barra de vida e números de dano;
    - pés sobre o chão nas encostas;
    - FPS com a malha 340 × 340.
+
+### Pedidos de arte para o gerador do usuário (rodada 89)
+
+O atlas atual cobre a parte principal:
+- Suna: prédio do Kazekage com 風, portão do cânion e casas de adobe.
+- Iwa: torre do Tsuchikage com 土, ponte de pedra e torres gêmeas.
+- Kiri: torre do Mizukage com 水, ponte e casas sobre palafitas.
+- Folha: o Monte Hokage, as estátuas, o torii, a barraca de lámen e a casa.
+
+Para as vilas ficarem com a cara das referências, faltam estes sprites. Todos no mesmo estilo do atlas: pixel art em três quartos, contorno escuro, fundo transparente, célula de 512 px, base reta para assentar no chão.
+
+1. **Konoha · portão principal:** dois pilares de madeira com portas verdes abertas e os kanji 阿 e 吽 em vermelho, travessa com a placa 忍 e o símbolo da Folha.
+2. **Konoha · torre do Hokage:** cilindro vermelho em andares, com telhados de telhas douradas, emblema 火 num disco branco, base branca e antenas.
+3. **Konoha · casa com caixa-d'água:** casa redonda de reboco claro, telhado de telhas vermelhas e caixa-d'água cilíndrica de madeira no telhado.
+4. **Iwa · torre em cone esculpida na rocha:** cinza, com janelas pequenas, telhadinho roxo ou laranja no topo e cabos saindo para os lados.
+5. **Kiri · torre cilíndrica de tijolo rosado:** fileiras de janelas e vegetação no topo; uma versão baixa e outra alta.
+6. **Suna · passarela sobre pilares** de adobe, para ligar casas.
