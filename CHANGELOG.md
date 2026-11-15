@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 15/11/2026 · Dificuldades na mesma proporção (Rodada 80)
+
+- **Decisão do usuário:** "podem ser iguais nas suas proporções de dificuldade, como falei os erros do jogador vão decretar sua partida e o scale dos monstros tem que ser sentido de uma diferença para a outra". Antes: "se o jogador for bom, isso é normal, mais mobs, mais dinheiro, mais exp, mais level".
+- **Resultado:** o Kage render mais XP, Ryu e nível para quem sobrevive é **intencional** (risco e recompensa). O item 29 do docs/13 foi encerrado sem mudar regra.
+- **O que fica protegido:** cada degrau (Genin→Chunin→Jonin→Kage) sobe a vida do comum em ao menos 1,2× e o dano em ao menos 1,3×, com degraus proporcionais entre si (diferença ≤ 15%). Teto de vivos, nascimentos, ritmo de ataque e velocidade nunca caem ao subir de dificuldade. Medido: vida 1,23–1,79× e dano 1,36–1,52× por degrau.
+- **Testes:** 1 teste novo em `tests/balanceamento.test.mjs`; mínimo 143.
+
 ## 15/11/2026 · Skill do simulador de partidas para todos os agentes (Rodada 79)
 
 - **Pedido do usuário:** "Fazer um skill .md para todos os agentes usarem simulador de partida quando precisar".

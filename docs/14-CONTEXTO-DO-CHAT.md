@@ -2161,3 +2161,15 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Criada a skill `skills/simular-partida/SKILL.md` (atalho em `.claude/skills/`): quando usar, comandos, parâmetros, o que o modelo cobre e não cobre, relatório em `artifacts/` (não versionado), sem navegador.
 - Citada no `AGENTS.md` e em `skills/contexto-e-decisao/SKILL.md`.
 - **Publicado no GitHub.**
+
+## Rodada 80 · 15/11/2026 — dificuldades na mesma proporção
+
+> Mas, acho que se o jogador for bom, isso é normal, mais mobs, mais dinheiro, mais exp, mais level, mais status bonus de treinamento... o scale é maior... parece irônico, mas é meio que isso kkk
+
+> Acredito que podem ser iguais nas suas proporções de dificuldade, como falei os erros do jogador vão decretar sua partida e o scale dos monstros tem que ser sentido de uma diferença para a outra.
+
+**Resposta.**
+
+- As correções propostas (Final Swarm mais rápido nas difíceis) foram canceladas; o Kage render mais a quem sobrevive é intencional.
+- Medido: cada degrau sobe a vida do comum 1,23–1,79× e o dano 1,36–1,52×, com degraus parecidos entre si. Um teste novo protege isso.
+- **Testes:** ver CHANGELOG. **Publicado no GitHub.**

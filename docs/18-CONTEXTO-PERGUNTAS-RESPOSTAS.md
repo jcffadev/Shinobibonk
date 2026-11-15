@@ -249,6 +249,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 - Skill `simular-partida` (`skills/simular-partida/SKILL.md`): todos os agentes usam o simulador de partidas antes e depois de mexer em balanceamento.
 
+### Rodada 80 · 15/11/2026
+
+- Dificuldades na mesma proporção: o Kage dar mais XP/nível a quem sobrevive é intencional. Teste garante que cada degrau pesa (vida ≥1,2×, dano ≥1,3×) e que os degraus são proporcionais.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

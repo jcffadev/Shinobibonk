@@ -6,7 +6,7 @@ import { damageLabel } from '../src/game/format.ts';
 import { HEROES, SHAPE_COOLDOWN, SHAPE_POWER } from '../src/game/heroes.ts';
 import { attackCooldown, techniqueCooldownScale } from '../src/game/combat.ts';
 import { ENEMY_TIERS, xpLoot, lootScale } from '../src/game/enemyTiers.ts';
-import { MISSION_TIER, MISSION_HP, normalHpFactor, AMBUSH_RULES, SPAWN_RING, finalSwarmFactor, xpToLevelUp, XP_RULES } from '../src/game/progression.ts';
+import { MISSION_TIER, MISSION_HP, normalHpFactor, difficultyAt, AMBUSH_RULES, SPAWN_RING, finalSwarmFactor, xpToLevelUp, XP_RULES } from '../src/game/progression.ts';
 import { simulateRun } from '../scripts/simulate-run.mjs';
 
 const src = file => fs.readFileSync(new URL('../src/' + file, import.meta.url), 'utf8');
@@ -69,4 +69,22 @@ test('simulador: reproduzível pela semente e abertura do Genin calma (≤ 12 vi
   assert.ok(minute.alive <= 12, `vivos no 1º minuto: ${minute.alive}`);
   assert.ok(minute.kills > 10, `abates no 1º minuto: ${minute.kills}`);
   assert.ok(!a.dead, 'Naruto não morre no começo do Genin');
+});
+
+// Rodada 80 — decisão do usuário: "podem ser iguais nas suas proporções de dificuldade, como falei os erros do jogador vão
+// decretar sua partida e o scale dos monstros tem que ser sentido de uma diferença para a outra". Mais monstros dando mais XP no
+// Kage é intencional (risco e recompensa); o que se protege é cada degrau de dificuldade pesar e os degraus serem proporcionais.
+test('cada dificuldade escala os monstros de forma sentida e na mesma proporção (Genin→Chunin→Jonin→Kage)', () => {
+  const ranks = ['Genin', 'Chunin', 'Jonin', 'Kage'];
+  for (const [minutes, overtime] of [[1, 0], [5, 0], [15, 0], [28, 0], [30, 180]]) {
+    const t = ranks.map(r => difficultyAt(r, minutes * 60, 1, overtime));
+    const hp = t.map((x, i) => x.hp * normalHpFactor(ranks[i]));
+    const steps = values => values.slice(1).map((v, i) => v / values[i]);
+    for (const [name, values, min] of [['vida do comum', hp, 1.2], ['dano', t.map(x => x.damage), 1.3]]) {
+      const s = steps(values);
+      for (const step of s) assert.ok(step >= min, `${name} sobe ao menos ${min}× por degrau (min ${minutes}, +${overtime}s): ${step.toFixed(2)}`);
+      assert.ok(Math.max(...s) / Math.min(...s) <= 1.15, `degraus de ${name} proporcionais (min ${minutes}): ${s.map(x => x.toFixed(2))}`);
+    }
+    for (const key of ['cap', 'spawnPerSecond', 'attackRate', 'speed']) for (const step of steps(t.map(x => x[key]))) assert.ok(step >= 1, `${key} nunca cai ao subir a dificuldade`);
+  }
 });
