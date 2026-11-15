@@ -10,6 +10,8 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 4. Aplicar a [skill de jutsus WebGL](../skills/animar-jutsu-webgl/SKILL.md) às técnicas que ainda usam efeitos genéricos. [Auditoria](24-AUDITORIA-DE-EFEITOS.md).
 5. Validar em partida também os itens históricos pendentes e consultar as decisões abertas de projéteis da fila.
 
+**Proposta da rodada 65.** Corrida no estilo do anime, com braços para trás, para todo o elenco. A decisão aberta é quando mostrar a pose. Shift já executa o dash. [Pergunta e resposta](14-CONTEXTO-DO-CHAT.md#rodada-65--14112026--corrida-com-os-braços-para-trás).
+
 ## Fila do usuário · 14/11/2026 (uma tarefa por vez, nesta ordem)
 
 Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e dois novos, o 13 e o 14. Pedido integral em docs/14. "E2E" = ver na tela; o navegador está suspenso para Claude Code, Qwen e Codex (docs/development/TESTING_POLICY.md §A).

@@ -1841,3 +1841,13 @@ A mensagem também trouxe a passagem do Claude com as entregas das rodadas anter
 **Resposta da rodada**
 
 As folhas foram repaginadas pelas margens reais do desenho após a inspeção visual dos atlas detectar recortes com fragmentos da fileira anterior. Todas as 114 versões receberam cinco vistas de caminhada e quatro quadros por vista, com W/S em costas/frente, A/D em perfil e as combinações em diagonal. Ajudantes e Mega Elites usam as folhas da versão; quatro modelos de inimigos comuns têm perfil na perseguição. A ficha usa o retrato em perfil da seleção. Câmera, foco e fade dos inimigos foram implementados. Hanzō e Haku receberam roupas e atlas revisados e Zabuza recebeu a folha de selos. A altura usa o sprite visível, com faixas infantil e adulta e tamanho próprio para Zabuza. Abertura Genin começa com teto 12 e retorna à densidade anterior aos 60 s. Colisão, borda do altar e feedback de dano foram corrigidos. O portal conserva XP dos orbes atraídos ou próximos. Tipos, build e 93 testes passaram no Node. A [matriz](development/COBERTURA-DE-VISTAS.md) registra o caminho de cada vista e a [fila](13-PENDENCIAS-PARA-CONTINUAR.md) aponta os passos seguintes. A direção e o espelho do dash acompanham a entrada, com arte de quatro fases dianteiras e traseiras. Faltam as poses laterais/diagonais dedicadas na maioria das versões e a aprovação visual em partida. As imagens e o vídeo de referência foram tratados fora da publicação.
+
+## Rodada 65 · 14/11/2026 — corrida com os braços para trás
+
+> Agora seria muito completo você fazer os personagens, TODOS eles, terem a animação de correr com as mãos para trás? igual no anime?
+>
+> complexo*
+
+**Resposta da rodada**
+
+É viável. O controlador de direção é compartilhado, mas a pose precisa de arte por versão. Com cinco vistas e quatro fases, são até 2.280 quadros para os 114 jogáveis, espelhando as vistas para a esquerda. A opção mais direta é usar a corrida com braços para trás como animação do deslocamento normal em WASD, com a mesma velocidade e Shift para o dash. Ajudantes e Mega Elites podem reutilizar as folhas. Os quatro modelos comuns exigem arte própria se forem incluídos. Sugestão de padrão: tronco inclinado, braços para trás, pés ancorados e transições para parada, ataque, pulo e dash. Proposta registrada, sem implementação nesta rodada.

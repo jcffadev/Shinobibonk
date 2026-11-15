@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 14/11/2026 — avaliação da animação de corrida
+
+- Registrada a proposta de corrida com braços para trás em todas as versões, com reaproveitamento do controlador de cinco vistas. A alteração é documental.
+
 ## 14/11/2026 — cinco vistas de caminhada em todas as versões
 
 - As 114 versões têm quatro quadros para cada uma das cinco vistas de caminhada. W e S selecionam costas e frente; A e D, perfil; as combinações de teclas, três quartos. Ajudantes e Mega Elites compartilham os recortes. Quatro modelos de inimigos comuns também receberam fileiras laterais.
