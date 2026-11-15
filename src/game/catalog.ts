@@ -147,6 +147,16 @@ export function availableItems(unlocked:readonly string[], archived:readonly str
   return ITEMS.filter(i=>!archived.includes(i.id)&&(allForPrototype||i.rarity==='Comum'||unlocked.includes(i.id)));
 }
 /**
+ * Itens que a missão pode sortear (baús, mercador, roleta, eventos). Rodada 84 (relato do usuário: "Eu escolhi o Arsenal de
+ * Kushina para o Madara, mas está aparecendo itens que eu tenho 100% de certeza que não levei na Bolsa para a Missão"; decisão:
+ * só os da bolsa): com algum item na bolsa ninja (itens planejados), a missão só sorteia esses; com a bolsa vazia vale o pool
+ * completo (desbloqueados menos os deixados em casa).
+ */
+export function missionItemPool(unlocked:readonly string[], archived:readonly string[], bag:readonly string[]) {
+  const all=availableItems(unlocked,archived,false), packed=all.filter(i=>bag.includes(i.id));
+  return packed.length?packed:all;
+}
+/**
  * Pesos por raridade (Comum, Incomum, Raro, Épico, Lendário). Recalibrado em 06/11/2026 (pedido do usuário: a Sorte quase não
  * mudava as cartas). bonus = Sorte/50 (até 6). Raro ou melhor: Sorte 0 ≈ 0,7% · 20 ≈ 6% · 50 ≈ 15% · 100 ≈ 26%.
  */

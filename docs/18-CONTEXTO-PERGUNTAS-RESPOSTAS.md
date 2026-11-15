@@ -269,6 +269,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - O seletor de modelo salvo de itens (`ArsenalControls`) fica no Plano de missão (`BuildPlanner`), acima de Táticas salvas; não fica mais na escolha do shinobi.
 - No catálogo de fusões, um clique planeja e outro tira do plano.
 
+### Rodada 84 · 15/11/2026
+
+- Pool de itens da missão = itens da bolsa ninja (planejados), quando há algum; senão, desbloqueados menos os deixados em casa (`missionItemPool` em `src/game/catalog.ts`).
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

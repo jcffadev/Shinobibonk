@@ -2214,3 +2214,15 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - No catálogo de fusões, um clique já planeja; outro clique tira.
 - **Testes:** verificados numa cópia limpa, primeiro só com estas mudanças e depois junto com a Rodada 83, que foi publicada no mesmo commit (6cdc579) porque as duas sessões montaram o commit ao mesmo tempo. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 84 · 15/11/2026 — a missão só sorteia os itens da bolsa
+
+> Eu escolhi o Arsenal de Kushina para o Madara, mas está aparecendo itens que eu tenhon 100% de certeza que não levei na Bolsa para a MIssão
+
+Respostas do usuário às perguntas: os itens apareceram **durante a missão**; regra escolhida: **só os da bolsa**.
+
+**Resposta.**
+
+- Antes, a bolsa só dava preferência e a missão sorteava todo o pool. Agora, com itens na bolsa, só eles aparecem; bolsa vazia mantém o pool completo.
+- **Testes:** verificados numa cópia limpa. **PENDENTE DE VALIDAÇÃO E2E** jogando.
+- **Publicado no GitHub.**

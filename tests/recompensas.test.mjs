@@ -106,3 +106,17 @@ test('caça-níquel: cada personagem das combinações tem retrato do elenco (ro
   assert.match(ui, /if \(hero\) return <span[^>]*tr-casa-hero"><HeroPortrait id=\{hero\} decorative \/>/, 'a casa usa o retrato do personagem');
   assert.doesNotMatch(ui, /rosterCell|TSUNADE_FACE/, 'sem recorte fixo de atlas');
 });
+
+test('bolsa ninja: com itens na bolsa a missão só sorteia esses; bolsa vazia = pool completo (rodada 84)', async () => {
+  const { missionItemPool, availableItems, ITEMS } = await import('../src/game/catalog.ts');
+  const fs = await import('node:fs');
+  const unlocked = ITEMS.map(i => i.id), home = [ITEMS[0].id];
+  const bag = [ITEMS[1].id, ITEMS[2].id, ITEMS[0].id];
+  assert.deepEqual(missionItemPool(unlocked, home, bag).map(i => i.id), [ITEMS[1].id, ITEMS[2].id], 'só a bolsa, sem o que ficou em casa');
+  assert.deepEqual(missionItemPool(unlocked, home, []), availableItems(unlocked, home, false), 'bolsa vazia: pool completo');
+  const locked = ITEMS.find(i => i.rarity !== 'Comum');
+  assert.equal(missionItemPool([], [], [locked.id]).length, availableItems([], [], false).length, 'item bloqueado na bolsa não esvazia o pool');
+  const main = fs.readFileSync(new URL('../src/main.tsx', import.meta.url), 'utf8');
+  assert.ok(main.includes("missionItemPool(unlocked,archived,bagKey?bagKey.split('|'):[])"), 'a partida recebe o pool da bolsa');
+  assert.ok(main.includes('itemPool={pool}'));
+});

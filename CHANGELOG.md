@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 15/11/2026 · A missão só sorteia os itens da bolsa (Rodada 84)
+
+- **Relato do usuário:** "Eu escolhi o Arsenal de Kushina para o Madara, mas está aparecendo itens que eu tenhon 100% de certeza que não levei na Bolsa para a MIssão".
+- **Causa:** a missão sorteava todos os itens desbloqueados menos os deixados em casa. A bolsa ninja (itens planejados) só dava preferência.
+- **Decisão do usuário:** "Só os da bolsa".
+- **Agora** (`missionItemPool` em `src/game/catalog.ts`):
+  - Com algum item na bolsa ninja, baús, mercador, roleta e eventos só sorteiam os itens da bolsa (menos os deixados em casa).
+  - Com a bolsa vazia, vale o pool completo, como antes.
+  - Item bloqueado na bolsa não conta.
+- **Testes:** 1 teste novo em `tests/recompensas.test.mjs` (mínimo 156) e 1 mutação nova, verificada à mão: acusada.
+- **PENDENTE DE VALIDAÇÃO E2E:** jogar com um modelo salvo carregado e conferir que só aparecem os itens da bolsa.
+
 ## 15/11/2026 · Tela pisca vermelho nas bordas ao levar dano + som do hit (Rodada 83)
 
 - **Pedido do usuário:** "A questão da tela piscando vermelho tipo... em jogo de FPS, que os cantos da tela da umas piscadas em vermelho... sabe? Mais o som do hit recebido pelo personagem principal."

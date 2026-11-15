@@ -22,7 +22,7 @@ import './style.css';
 import './sealing.css';
 import './run-ui.css';
 import './hud-dock.css';
-import { ITEMS as items, ITEM_BY_NAME, availableItems } from './game/catalog';
+import { ITEMS as items, ITEM_BY_NAME, missionItemPool } from './game/catalog';
 import { ItemIcon, HeroPortrait, RunSheet, RunSheetButton } from './ui/RunSheet';
 import { InventoryCorner } from './ui/InventoryCorner';
 import { RunSummary } from './ui/RunSummary';
@@ -364,7 +364,8 @@ function App() {
   const playEntry = () => { playYooo(); setPage(profile.signedIn ? 'missions' : 'characters'); };
   const missionSelect = () => setPage('missions');
   const beginMission = () => {armRankedRun(heroId,mapId,mission);writeByHero('sb_planned_by_hero_v1',heroId,planned);if(!new URLSearchParams(location.search).has('test')||new URLSearchParams(location.search).get('pointer')==='real')captureGamePointer();playYooo();startRun(familyOf(hero.id));setResumeRun(null);setWorld(emptySnapshot);setGamePanel(null);setRunId(n=>n+1);setPage('game');};
-  const pool=useMemo(()=>availableItems(unlocked,archived,false),[unlocked,archived]);
+  const bagKey=currentPlannedItems.join('|');
+  const pool=useMemo(()=>missionItemPool(unlocked,archived,bagKey?bagKey.split('|'):[]),[unlocked,archived,bagKey]);
   // Lamens por desempenho: credita UMA vez por run (guarda o runId já pago), na vitória ou na derrota.
   const creditedRun=useRef<number|null>(null);
   const [runReward,setRunReward]=useState<{runId:number;reward:LamenReward;rank:LocalRank}|null>(null);
