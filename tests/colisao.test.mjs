@@ -10,7 +10,17 @@ const { COLLISION_RULES, createSolids } = await load('/src/scene/collision.ts');
 const { PLAYER_SIZE } = await load('/src/game/worldScale.ts');
 const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
 
-test('o corpo do jogador acompanha o tamanho desenhado (40%)', () => {
+test('jogador do tamanho do monstro comum (rodada 77: "aumente os ninja para ficar do tamanho dos monstros")', async () => {
+  const { MONSTER_VISIBLE_HEIGHT } = await load('/src/game/worldScale.ts');
+  const motion = fs.readFileSync(new URL('../src/scene/playerMotion.ts', import.meta.url), 'utf8');
+  const adult = Number(/return family==='zabuza'\?[\d.]+:([\d.]+);/.exec(motion)[1]);
+  assert.ok(Math.abs(adult * PLAYER_SIZE - MONSTER_VISIBLE_HEIGHT) < .03, `ninja ${(adult * PLAYER_SIZE).toFixed(2)} × monstro ${MONSTER_VISIBLE_HEIGHT}`);
+  assert.ok(PLAYER_SIZE > .6, 'não volta a ficar minúsculo');
+  assert.match(canvas, /makeHero\(heroId,1,PLAYER_SIZE\)/);
+  assert.match(canvas, /createPlayerMotion\(scene,player,heroId,true,PLAYER_SIZE\)/);
+});
+
+test('o corpo do jogador cabe no tamanho desenhado', () => {
   assert.ok(COLLISION_RULES.playerRadius <= .42 * PLAYER_SIZE + .01, `raio ${COLLISION_RULES.playerRadius}`);
   assert.ok(COLLISION_RULES.playerRadius >= .12, 'ainda tem corpo');
 });

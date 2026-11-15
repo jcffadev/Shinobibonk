@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 15/11/2026 · Ninja do tamanho do monstro e câmera mais perto (Rodada 77)
+
+- **Pedidos do usuário:**
+  - "Ninja extramamente pequeno, revise todos, ache os ninjas que estão com esse problema" e "aumente os ninja para ficar do tamanho dos monstros".
+  - "Diminuir mais o zoom padrão do jogo, se o usuário quiser pode subir com certo limite, mas o inicial está MUITO distante".
+- **Causa do ninja pequeno:** `PLAYER_SIZE = .4` (pedido antigo de reduzir 50% e depois mais 20%) valia para todos os personagens jogáveis. Aliados, clones e Mega Elites já usavam o tamanho normal.
+- **Agora:**
+  - `PLAYER_SIZE ≈ .72`, calculado a partir da arte: a figura do monstro comum ocupa 83% da célula do atlas de inimigos e o ninja adulto tem 2,32 de altura visível de base.
+  - O ninja passa de ~0,63 m para ~1,13 m de altura visível, igual ao monstro comum.
+  - O raio de colisão (andar livre, Rodada 70) não mudou.
+- **Câmera** (`CAMERA_ZOOM` em `src/game/settings.ts`):
+  - Padrão 19 → **12** (mais perto).
+  - Limites da roda do mouse e do controle nas Configurações: 10–32 → **8–22**.
+  - Migração: quem tinha o padrão antigo (19) salvo vai para 12; outra escolha do jogador fica, dentro da faixa nova.
+  - Corrigido junto: a migração antiga da música (v1 → v2) não roda de novo para quem já está na v2.
+- **Testes:**
+  - 2 testes novos (tamanho do ninja e câmera); o mínimo subiu para 132.
+  - 2 mutações novas, a do tamanho verificada à mão (acusada).
+  - tsc **PASSOU**; testes e build verificados numa cópia limpa do commit (ver docs/14).
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver o tamanho do ninja e o zoom inicial na partida.
+
 ## 15/11/2026 · Medição: tempo para matar um monstro com a primeira técnica (Rodada 75)
 
 - **Pedido do usuário:** "faça um teste, em todos os personagens, quanto em média em todas as dificuldades os personagens demoram para matar um monstro usando a primeira skill? Estamos buscando balanceamento de CD."

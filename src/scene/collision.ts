@@ -8,7 +8,7 @@ export const COLLISION_RULES = {
   enabled: true,
   /**
    * Raio do corpo do jogador e dos inimigos, em metros. Rodada 70 (pedido do usuário: "Verifique ainda as paredes
-   * invisíveis e os blocks invisíveis no caminhar do personagem"): o jogador foi reduzido a 40% (PLAYER_SIZE), mas o
+   * invisíveis e os blocks invisíveis no caminhar do personagem"): o jogador foi reduzido a 40% (PLAYER_SIZE; desde a rodada 77 é ~72%, do tamanho do monstro comum), mas o
    * corpo continuava com 0,42 m — quase o dobro do desenho (~0,45 m de largura). Agora 0,42 × 0,4 ≈ 0,17 m.
    */
   playerRadius: .17, enemyRadius: .35,

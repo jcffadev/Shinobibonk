@@ -2106,3 +2106,18 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Média: Genin 21,2 s · Chunin 36,7 s · Jonin 61,2 s · Kage 105,3 s. Spread entre personagens de cerca de 4×.
 - A recarga não é individual: depende só da forma da técnica. O balanceamento de CD aguarda a decisão do usuário.
 - **Publicado no GitHub.**
+
+## Rodada 77 · 15/11/2026 — ninja do tamanho do monstro e câmera mais perto
+
+> Ninja extramamente pequeno, revise todos, ache os ninjas que estão com esse problema, temos um padrão...
+
+> Parece que o Codex fez para todos, não pode.... aumente os ninja para ficar do tamanho dos monstros
+
+> Diminuir mais o zoom padrão do jogo, se o usuário quiser pode subir com certo limite, mas o inicial está MUITO distante
+
+**Resposta.**
+
+- A redução (`PLAYER_SIZE = .4`) valia para todo personagem controlado. Agora é ~.72, medido na arte para igualar a altura visível do monstro comum.
+- Câmera: começa em 12 (antes 19) e afasta no máximo até 22. O padrão antigo salvo migra sozinho.
+- **Testes:** tsc **PASSOU**; testes e build rodados numa cópia limpa só com estas mudanças, porque a pasta tinha o balanceamento de outra sessão em andamento. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

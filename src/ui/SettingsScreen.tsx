@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { DEFAULT_KEYS, DEFAULT_SETTINGS, KEY_LABELS, keyName, rebind, type GameSettings, type KeyAction } from '../game/settings';
+import { CAMERA_ZOOM, DEFAULT_KEYS, DEFAULT_SETTINGS, KEY_LABELS, keyName, rebind, type GameSettings, type KeyAction } from '../game/settings';
 import { resetAccount } from '../game/account';
 import '../settings.css';
 
@@ -105,7 +105,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
         {category === 'controles' && <>
           <Card title="Sensibilidade do mouse" hint="Velocidade do giro da câmera (1:1, sem aceleração; padrão mais calmo e simétrico desde a rodada 44). Se a câmera parecer rápida no Windows, deixe a velocidade do ponteiro do sistema em 6/11 — o multiplicador do Windows pode somar ao movimento do mouse."><Slider value={settings.mouseSensitivity} min={.2} max={3} step={.05} format={(v) => v.toFixed(2)} onChange={(v) => set({ mouseSensitivity: v })} /></Card>
           <Card title="Inverter eixo Y"><Toggle value={settings.invertY} onChange={(v) => set({ invertY: v })} /></Card>
-          <Card title="Distância da câmera" hint="Também com a roda do mouse"><Slider value={settings.cameraDistance} min={10} max={32} step={.5} format={(v) => v.toFixed(1)} onChange={(v) => set({ cameraDistance: v })} /></Card>
+          <Card title="Distância da câmera" hint="Também com a roda do mouse"><Slider value={settings.cameraDistance} min={CAMERA_ZOOM.min} max={CAMERA_ZOOM.max} step={.5} format={(v) => v.toFixed(1)} onChange={(v) => set({ cameraDistance: v })} /></Card>
           <Card title="Ultimate automática ao começar" hint="Y (ou o selo AUTO) continua alternando na partida"><Toggle value={settings.autoUltimate} onChange={(v) => set({ autoUltimate: v })} /></Card>
           <Card title="Card e animação de captura" hint="Desligado: o shinobi é selado direto com um aviso; equipe cheia ainda abre a troca"><Toggle value={settings.sealAnimation} onChange={(v) => set({ sealAnimation: v })} /></Card>
           <Card title="Mira manual e controle (gamepad)" hint="Em breve" />

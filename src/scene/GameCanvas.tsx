@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { activeTuning, dropChance, tuneThreat } from '../game/tuning';
 import { createBossCombat, BIJUU_SIZE, type BossState } from './bossCombat';
 import { makeDropSprite } from './dropSprites';
-import { currentSettings, translateKey, pixelRatioFor } from '../game/settings';
+import { currentSettings, translateKey, pixelRatioFor, CAMERA_ZOOM } from '../game/settings';
 import { ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, ENEMY_XP_MULTIPLIER, lootScale, xpDropValue, eliteHpRamp, megaEliteHp, rollMegaSchedule, type EnemyTier } from '../game/enemyTiers';
 import { sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain, RESEARCH_RULES } from '../game/account';
 import { createTotemBar } from './narutoTotem';
@@ -900,7 +900,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       turnCamera(e.clientX-previous.x,e.clientY-previous.y);
     };
     const onUp=(e:PointerEvent)=>{if(!pointerLocked()&&e.button===2&&Math.hypot(e.clientX-rightDownX,e.clientY-rightDownY)<6)toggleTargetLock();};const onContext=(e:MouseEvent)=>e.preventDefault();
-    const onWheel=(e:WheelEvent)=>{if(!cameraCanMove())return;targetZoom=THREE.MathUtils.clamp(targetZoom+Math.sign(e.deltaY)*1.6,10,32);};
+    const onWheel=(e:WheelEvent)=>{if(!cameraCanMove())return;targetZoom=THREE.MathUtils.clamp(targetZoom+Math.sign(e.deltaY)*CAMERA_ZOOM.step,CAMERA_ZOOM.min,CAMERA_ZOOM.max);};
     const onLockedWheel=(e:WheelEvent)=>{if(pointerLocked())onWheel(e);};
     document.addEventListener('wheel',onLockedWheel,{passive:true});runCleanups.push(()=>document.removeEventListener('wheel',onLockedWheel));
     const onPing=(event:Event)=>{const p=(event as CustomEvent<{x:number;z:number}>).detail;if(p&&Number.isFinite(p.x)&&Number.isFinite(p.z))setPingRoute(p.x,p.z);};window.addEventListener('shinobi-ping',onPing);

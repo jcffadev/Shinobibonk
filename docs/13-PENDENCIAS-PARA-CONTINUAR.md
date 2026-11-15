@@ -64,6 +64,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 25 | **NOVO (rodada 73):** área de captura (10 m) e facho de luz no Mega Elite caído; farol verde de 30 m e marcação no minimapa, Tab e M para todo pergaminho grátis (G, Guardião, desafio). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 26 | **NOVO (rodada 74):** retratos de Tsunade, Jiraiya, Hiruzen, Hidan e Kakuzu nas casas de combo do Caça-Níquel (antes 3 eram emoji). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 27 | **DECISÃO PENDENTE (rodada 75):** balanceamento de recarga (CD) da 1ª técnica. Medição em `scripts/balance-first-skill.mjs`: média de Genin 21 s a Kage 105 s para matar 1 monstro, spread de cerca de 4× entre personagens; hoje a recarga depende só da forma da técnica | PENDENTE |
+| 28 | **NOVO (rodada 77):** ninja do jogador do tamanho do monstro comum (PLAYER_SIZE .4 → .72) e câmera inicial mais perto (zoom 19 → 12, faixa 8–22). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
 ## Rodada 53 · Estado e próximos passos

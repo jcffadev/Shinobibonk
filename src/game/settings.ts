@@ -36,13 +36,20 @@ export type GameSettings = {
   settingsVersion: number;
 };
 /** Rodada 55 (pedido do usuário: "abaixar a música na configuração padrão… cerca de 10%"): padrão da música 0,7 → 0,1. */
-const MUSIC_DEFAULT = .1, OLD_MUSIC_DEFAULT = .7, SETTINGS_VERSION = 2;
+const MUSIC_DEFAULT = .1, OLD_MUSIC_DEFAULT = .7, SETTINGS_VERSION = 3;
+/**
+ * Zoom da câmera = altura do mundo visível na tela (unidades). Rodada 77 (pedido do usuário: "Diminuir mais o zoom padrão do
+ * jogo, se o usuário quiser pode subir com certo limite, mas o inicial está MUITO distante"): padrão 19 → 12 e faixa
+ * 10–32 → 8–22. `oldDefault`: quem salvou exatamente o padrão antigo passa ao novo (migração v2 → v3).
+ */
+export const CAMERA_ZOOM = { default: 12, min: 8, max: 22, step: 1.2, oldDefault: 19 } as const;
+export const clampZoom = (value: number) => Math.min(CAMERA_ZOOM.max, Math.max(CAMERA_ZOOM.min, Number.isFinite(value) ? value : CAMERA_ZOOM.default));
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
   volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: MUSIC_DEFAULT, voiceLanguage: 'pt', muteInBackground: true,
   quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true,
   resolution: 'auto', renderer: 'directx',
-  mouseSensitivity: 1, invertY: false, cameraDistance: 19, autoUltimate: false,
+  mouseSensitivity: 1, invertY: false, cameraDistance: CAMERA_ZOOM.default, autoUltimate: false,
   keys: { ...DEFAULT_KEYS },
   hudScale: 1, hudOpacity: 1, minimap: true, minimapScale: 1, toasts: true,
   playerName: 'Shinobi',
@@ -58,7 +65,10 @@ function load(): GameSettings {
     if (keys.sheet === 'tab') { keys.sheet = 'p'; keys.quickMap = 'tab'; }
     // Migração v1 → v2: quem salvou a música exatamente no padrão antigo (70%) passa ao novo padrão (10%);
     // qualquer outro valor salvo é escolha do jogador e fica como está.
-    if ((parsed.settingsVersion ?? 1) < SETTINGS_VERSION && parsed.musicVolume === OLD_MUSIC_DEFAULT) parsed.musicVolume = MUSIC_DEFAULT;
+    if ((parsed.settingsVersion ?? 1) < 2 && parsed.musicVolume === OLD_MUSIC_DEFAULT) parsed.musicVolume = MUSIC_DEFAULT;
+    // Migração v2 → v3: câmera no padrão antigo (19) vai ao novo padrão; qualquer valor fica dentro da faixa nova.
+    if ((parsed.settingsVersion ?? 1) < 3 && parsed.cameraDistance === CAMERA_ZOOM.oldDefault) parsed.cameraDistance = CAMERA_ZOOM.default;
+    if (parsed.cameraDistance !== undefined) parsed.cameraDistance = clampZoom(parsed.cameraDistance);
     return { ...DEFAULT_SETTINGS, ...parsed, keys, settingsVersion: SETTINGS_VERSION };
   } catch { return { ...DEFAULT_SETTINGS, keys: { ...DEFAULT_KEYS } }; }
 }

@@ -51,3 +51,19 @@ test('demais preferências salvas sobrevivem à migração', async () => {
 test('"Mostrar áreas das técnicas" vem ligado por padrão', async () => {
   assert.equal((await withSaved(undefined)).DEFAULT_SETTINGS.showTechniqueAreas, true);
 });
+
+test('câmera mais perto por padrão, com limite para afastar (rodada 77: "o inicial está MUITO distante")', async () => {
+  const fresh = await withSaved(undefined);
+  assert.equal(fresh.readSettings().cameraDistance, 12, 'padrão novo');
+  assert.ok(fresh.CAMERA_ZOOM.max <= 22 && fresh.CAMERA_ZOOM.min >= 8, 'faixa limitada');
+  const old = await withSaved({ cameraDistance: 19, settingsVersion: 2 });
+  assert.equal(old.readSettings().cameraDistance, 12, 'padrão antigo 19 migra para 12');
+  const chosen = await withSaved({ cameraDistance: 15, settingsVersion: 2 });
+  assert.equal(chosen.readSettings().cameraDistance, 15, 'escolha do jogador fica');
+  const far = await withSaved({ cameraDistance: 32, settingsVersion: 2 });
+  assert.equal(far.readSettings().cameraDistance, 22, 'longe demais volta ao limite');
+  const music = await withSaved({ musicVolume: .7, settingsVersion: 2 });
+  assert.equal(music.readSettings().musicVolume, .7, 'migração da música não roda de novo na v2');
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.match(canvas, /CAMERA_ZOOM\.min,CAMERA_ZOOM\.max/, 'a roda do mouse respeita o limite');
+});

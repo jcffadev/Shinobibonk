@@ -227,6 +227,11 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Medição do tempo para matar 1 monstro com a 1ª técnica: `node scripts/balance-first-skill.mjs`. Média de Genin 21,2 s, Chunin 36,7 s, Jonin 61,2 s e Kage 105,3 s; spread de cerca de 4× entre personagens.
 - A recarga vem só da forma da técnica; o balanceamento de CD está pendente de decisão (docs/13, item 27).
 
+### Rodada 77 · 15/11/2026
+
+- O ninja controlado tem a mesma altura visível do monstro comum (`PLAYER_SIZE` derivado de `MONSTER_VISIBLE_HEIGHT` em `src/game/worldScale.ts`).
+- Câmera: padrão 12, faixa 8–22 (`CAMERA_ZOOM` em `src/game/settings.ts`), com migração do padrão antigo.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
