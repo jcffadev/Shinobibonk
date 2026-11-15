@@ -4,6 +4,8 @@ Atualizado em 11/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Mapa de arquivos
 
+`src/game/runningArt.ts` indexa as folhas de corrida por ID da versão jogável. `playerMotion` seleciona uma das cinco vistas e a primeira fileira da versão. A textura carrega no primeiro deslocamento. Ações específicas continuam nos atlas de combate e acrobacia.
+
 **Atualização de 14/11/2026.** `cardinalWalkArt` fornece W/S, `lateralWalkArt` fornece A/D e as folhas direcionais fornecem as diagonais. `playerMotion` escolhe a vista e conserva a fase. O jogador, os Mega Elites e os ajudantes usam esse controlador e a base da câmera. `playerFocus.ts` calcula sobreposição, e `enemyRenderer.ts` separa as poucas entidades translúcidas em lotes. A seleção e a ficha compartilham o `CardPortrait`, que usa a fileira de perfil. [Cobertura das vistas](development/COBERTURA-DE-VISTAS.md).
 
 `directionalArt.ts` registra as folhas por shinobi e nível da forma. Os 24 shinobis jogáveis têm caminhada com quatro quadros de frente e quatro de costas por forma, com espelhamento em X. A pose parada continua usando o sprite de `portraitRegion`, referência para a caminhada. Nas folhas que reúnem formas, `firstRow` aponta para o primeiro quadro de frente da dupla de fileiras. A textura é carregada e reutilizada por caminho durante a missão. `terrainArt.ts` define a cadeia de montanhas fora da área jogável e o céu em gradiente. `choiceCount` concentra o teto de quatro ofertas. A lista da roleta exclui pílulas dos novos giros.

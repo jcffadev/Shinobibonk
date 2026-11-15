@@ -15,6 +15,8 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
+- **IMPLEMENTADO em 14/11** — as 114 versões têm corrida com os braços para trás no deslocamento normal, em cinco vistas. Jogador, ajudantes e Mega Elites compartilham o atlas da versão.
+
 - **IMPLEMENTADO em 14/11** — câmera suavizada, prioridade visual do jogador, fade dos inimigos sobrepostos, retrato em perfil compartilhado na ficha e atualização de Hanzō, Haku e Zabuza. Os 114 jogáveis têm cinco vistas de caminhada registradas na [matriz](development/COBERTURA-DE-VISTAS.md).
 
 - **IMPLEMENTADO** — cinco folhas novas de ação para Sasuke Rinnegan, Itachi Akatsuki e as três versões de Madara. As 56 versões têm caminhada direcional. Veja a cobertura de ataque, pulo e dash na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).

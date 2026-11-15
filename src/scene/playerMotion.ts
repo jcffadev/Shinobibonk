@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { ASUMA_ATLAS, formAt } from '../game/evolution';
 import { createPlayerPose } from './playerPose';
 import { actionArt, acrobaticsArt, cardinalWalkArt, directionalArt, handSealArt, lateralWalkArt } from '../game/directionalArt';
+import { runningArt, runningRow } from '../game/runningArt';
 import { ACTOR_SCALE } from '../game/worldScale';
 import { familyOf } from '../game/heroes';
 
@@ -80,6 +81,7 @@ export function actorVisibleHeight(family:string,form:number) {
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true, sizeMultiplier=1) {
   // Versões usam as folhas da família na forma da versão (ex.: naruto-shippuden → folhas do Naruto no nível 25).
   const family = familyOf(heroId);
+  const runningSheet = runningArt(heroId);
   const hasWalkAtlas = family === 'naruto' && formAt(heroId, 1).level === 1;
   const pose = createPlayerPose();
   const bodyHeight = actorVisibleHeight(family,formAt(heroId).level)*sizeMultiplier;
@@ -243,14 +245,17 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       const sideDash=state==='dash'&&lateralInput&&cardinalSheet?.dashSide!==undefined;
       const sideWalk=state==='walk'&&lateralInput&&sideSheet?.row!==undefined;
       const verticalWalk=state==='walk'&&!diagonalInput&&!lateralInput&&!!cardinalSheet;
-      const exactMap=sideWalk?sideMap:cardinalMap;
-      const exactSheet=sideWalk?sideSheet:cardinalSheet;
-      const exactRow=sideWalk?sideSheet?.row:sideDash?cardinalSheet?.dashSide:
+      const runningMap = state === 'walk' && runningSheet ? sheetTexture(runningSheet.path) : undefined;
+      const useRun = !!runningMap?.image && !!runningSheet;
+      const exactMap = useRun ? runningMap : sideWalk ? sideMap : cardinalMap;
+      const exactSheet = useRun ? runningSheet : sideWalk ? sideSheet : cardinalSheet;
+      const exactRow = useRun ? runningSheet.firstRow + runningRow(backwardView, diagonalInput, lateralInput)
+        : sideWalk ? sideSheet?.row : sideDash ? cardinalSheet?.dashSide :
         verticalWalk?(backwardView?cardinalSheet?.back:cardinalSheet?.front):undefined;
       const useExact=!!exactMap?.image&&!!exactSheet&&exactRow!==undefined;
       if(useExact&&exactMap&&exactSheet&&exactRow!==undefined){
         const frame=sideDash?Math.min(3,Math.floor(slideProgress*4)):Math.floor(stepTime*10)%4;
-        const flip=(sideDash||sideWalk||verticalWalk)&&leftward;
+        const flip=(useRun||sideDash||sideWalk||verticalWalk)&&leftward;
         frameShown=frame;rowShown=Number(backwardView);
         exactMap.repeat.set(flip?-.25:.25,1/exactSheet.rows);
         exactMap.offset.set((frame+Number(flip))/4,(exactSheet.rows-1-exactRow)/exactSheet.rows);
@@ -343,7 +348,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if (!usesSheet) frameShown = 0;
       pose.apply(sprite.material, strideShown, proceduralMotion ? lift : 0,
         usesSheet ? 0 : reach, usesSheet ? 0 : guard, !usesSheet && mirror);
-      const leanTarget=state==='walk'&&diagonalInput?(leftward?.09:-.09):0;
+      const leanTarget=state==='walk'&&!useRun&&diagonalInput?(leftward?.09:-.09):0;
       walkLean+=(leanTarget-walkLean)*(1-Math.exp(-dt*18));
       sprite.material.rotation = !proceduralMotion ? walkLean : state === 'dash' ? (mirror ? .34 : -.34)
         : state === 'hurt' ? (mirror ? -.1 : .1) : state === 'walk' && backwardView ? (mirror ? .05 : -.05) : 0;

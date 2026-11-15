@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 14/11/2026 — corrida com os braços para trás no elenco
+
+- As 114 versões usam a corrida no deslocamento normal em WASD, com cinco vistas, quatro fases por vista e espelhamento à esquerda. São 2.280 quadros em 57 atlas. Ajudantes e Mega Elites usam a folha da versão. A velocidade e os comandos de ação seguem os parâmetros da missão.
+- Atualizado o padrão de criação e revisada a orientação antiga de W/S. A arte foi inspecionada em folhas de contato e submetida a verificação de transparência e quadros únicos. Os 93 testes por código, os tipos e o build passaram. Validação em partida pendente.
+- Fusões até Nv. 7, inversão do HUD, ranking com contadores e GPS registrados na fila a pedido do usuário.
+
 ## 14/11/2026 — avaliação da animação de corrida
 
 - Registrada a proposta de corrida com braços para trás em todas as versões, com reaproveitamento do controlador de cinco vistas. A alteração é documental.

@@ -15,6 +15,10 @@
 - **Zero rastro do jogo de referência:** nada com o nome dele no projeto. O teste em `tests/regras-do-jogo.test.mjs` verifica os arquivos e o conteúdo dos .zip.
 - `TEST_UNLOCK_ALL = true` (`src/game/account.ts`) deixa o elenco liberado para teste. Voltar a `false` antes de versão pública.
 
+## Estado após a rodada 66
+
+- Corrida com os braços para trás para as 114 versões. A próxima rodada deve seguir os novos pedidos de fusões, HUD, ranking e navegação em [docs/13](13-PENDENCIAS-PARA-CONTINUAR.md).
+
 ## Estado após a rodada 64
 
 - Caminhada em cinco vistas nas 114 versões. A seleção e a ficha usam o mesmo perfil. Ajudantes e Mega Elites compartilham as folhas. Os quatro modelos comuns têm vista em perfil na perseguição lateral. Consulte a [matriz](development/COBERTURA-DE-VISTAS.md).

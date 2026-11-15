@@ -24,7 +24,7 @@ Leia `AGENTS.md`, `src/scene/GameCanvas.tsx`, `src/scene/playerMotion.ts` e `src
 
 - Use Naruto Academia como padrão de caminhada, dash, pulo e recuperação para quase todo o elenco. Preserve o sprite e a roupa de cada versão jogável. Lee e Guy usam poses próprias de soco e chute. Gaara usa gestos próprios de areia, com palma aberta no Caixão e na Ultimate.
 - Use o selo cruzado do Naruto em conjuração onde a técnica pede selo. A folha tem quatro colunas: preparação e selo vistos de frente, preparação e selo vistos de costas. Arremessos reais e Taijutsu usam a pose do golpe. Gaara tem pose de palma aberta para o Caixão de Areia e a Ultimate.
-- **PADRÃO ÚNICO DE CAMINHADA (pedido do usuário, 14/11/2026: "Preciso de um padrão para TODOS, respeitando a folha de movimentação"):** a caminhada de frente e a de costas são desenhadas de **TRÊS QUARTOS, viradas para a DIREITA** (~45°), como `naruto-academia-walk-v1.png` e `kakashi-walk-v1.png`; o jogo espelha para a esquerda. **Nunca** desenhar a caminhada reta para a câmera nem reta de costas. As 58 folhas `*-roster-v1.png` das rodadas 53–54 fugiram disso nas fileiras 1–2; pedido de correção em `docs/development/PEDIDO-ARTE-CAMINHADA-PADRAO.md`. Antes de integrar folha nova, rode `node scripts/audit-walk-sheets.mjs` e compare com uma folha do padrão olhando a imagem.
+- **Padrão de cinco vistas:** W mostra as costas retas, S a frente reta, A/D o perfil e as diagonais as vistas em três quartos. O jogo espelha as vistas voltadas à esquerda. Abra cada fileira para conferir o desenho antes de integrar. A assimetria da silhueta auxilia a revisão e não determina sozinha o ângulo.
 - Use a forma atual do personagem. A caminhada do Naruto Academia usa quatro quadros por fileira, com frente em cima e costas embaixo. Espelhe em X para a esquerda. Use uma folha diagonal com a mesma ordem e o mesmo ponto de apoio.
 - Cadastre a folha por ID do shinobi e nível da forma em `src/game/directionalArt.ts`. Os recortes de caminhada são 4×2. Em folhas 4×3, a terceira linha pode ter os quadros de conjuração. A pose parada continua vindo do sprite estático que orientou a arte.
 - A entrega de um novo jogável ou evolução inclui quadros próprios de caminhada, ataque, pulo e dash/esquiva. Teste cada ação depois de trocar de forma. Use `actionArt` quando os quadros de ação estiverem em folha separada.
@@ -76,6 +76,12 @@ Use `acrobaticsArt` quando a versão já tiver ataque aprovado e precisar soment
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 Ao verificar o atlas, exija uma folha em todos os estados animados e fileiras de caminhada distintas para frente e costas. Na matriz de teste, use o chute de Lee e o soco de Guy como no controlador em jogo. Para uma folha 4×4, ataque de costas usa a segunda fileira e pulo/dash de costas usam a quarta. A inspeção de recorte e semelhança com o repouso continua separada da suíte.
+
+## Corrida com os braços para trás
+
+Use a fileira específica da versão durante o deslocamento normal em WASD. A pose tem tronco inclinado, ombros adiantados e braços estendidos para trás. Mantenha a fase do ciclo e o ponto de apoio dos pés. Nas cinco vistas, alterne quatro fases das pernas sem perder a identidade do traje. Nas vistas retas, mostre os braços encurtados pela perspectiva.
+
+Registre o atlas por ID da versão em `src/game/runningArt.ts`. Cada versão ocupa cinco fileiras na ordem frente, costas, perfil direito, diagonal frontal direita e diagonal traseira direita. Cada fileira tem quatro colunas. Aplique ao jogador, aos ajudantes e aos Mega Elites que usam a versão. Use as poses próprias de pulo, dash, ataque, selos e Ultimate quando a ação estiver ativa. A corrida muda a pose e usa a velocidade do deslocamento normal.
 
 ## Direções e tamanho · padrão do elenco em 14/11
 

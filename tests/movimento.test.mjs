@@ -9,6 +9,7 @@ import { load } from './helpers/load.mjs';
 // O teste lê os PNGs direto do disco. O canvas de proporção do sprite é dispensável.
 globalThis.document ??= { createElement: () => ({ getContext: () => null, width: 0, height: 0 }) };
 const M = await load('/src/scene/playerMotion.ts');
+const { runningArt } = await load('/src/game/runningArt.ts');
 const { HEROES, portraitRegion } = await load('/scripts/motion-review-entry.ts');
 
 const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
@@ -80,8 +81,10 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
     return images.get(path);
   };
   t.mock.method(THREE.TextureLoader.prototype, 'load', (path) => {
-    const { width, height } = getImage(path);
-    return new THREE.Texture({ width, height, path });
+    const fd = fs.openSync('public' + path, 'r');
+    const header = Buffer.alloc(24);
+    try { fs.readSync(fd, header, 0, header.length, 0); } finally { fs.closeSync(fd); }
+    return new THREE.Texture({ width: header.readUInt32BE(16), height: header.readUInt32BE(20), path });
   });
   const inspect = (map, label) => {
     const { path, width, height } = map.image;
@@ -94,7 +97,7 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
     if (!cells.has(cell)) {
       const img = getImage(path);
       cells.set(cell, !cellShape(img, left, top, w, h).empty);
-      if (/\/walk-(cardinal|side)-\d+\.png$/.test(path)) {
+      if (/\/(?:walk-(?:cardinal|side)|corrida)-\d+\.png$/.test(path)) {
         const margin = 12;
         for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
           if (x >= margin && x < w - margin && y >= margin && y < h - margin) continue;
@@ -103,7 +106,7 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
       }
     }
     assert.ok(cells.get(cell), label);
-    return { cell, row: map.offset.y };
+    return { cell, row: Math.floor((top + .5) / h), path };
   };
   assert.ok(HEROES.length >= 114);
   const scene = new THREE.Scene();
@@ -111,6 +114,8 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
   const dashFrameCounts = {};
   const jumpFrameCounts = {};
   const actors = [...HEROES, { id: 'akamaru' }, { id: 'kuri' }];
+  const runSlots = new Set();
+  const runView = { S: 0, W: 1, D: 2, A: 2, SD: 3, SA: 3, WD: 4, WA: 4 };
   for (const hero of actors) {
     const portrait = portraitRegion(hero.id);
     const idle = new THREE.TextureLoader().load(portrait.path);
@@ -119,6 +124,11 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: idle }));
     const motion = M.createPlayerMotion(scene, sprite, hero.id, false);
     const walks = {}, dashes = {}, jumps = {};
+    const runner = runningArt(hero.id);
+    if (HEROES.includes(hero)) {
+      assert.ok(runner, hero.id + ' tem atlas de corrida');
+      runSlots.add(runner.path + ':' + runner.firstRow);
+    }
     for (const [keys, [vertical, horizontal]] of Object.entries(dirs)) {
       const { back, left, diagonal } = M.movementFacing(vertical, horizontal);
       walks[keys] = [];
@@ -129,7 +139,12 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
         update(.08, true, 0, false, 0);
         const map = sprite.material.map;
         assert.equal(map.repeat.x < 0, left, hero.id + ' caminhada ' + keys);
-        walks[keys].push(inspect(map, hero.id + ' caminhada ' + keys));
+        const step = inspect(map, hero.id + ' caminhada ' + keys);
+        if (runner) {
+          assert.equal(step.path, runner.path, hero.id + ' atlas de corrida ' + keys);
+          assert.equal(step.row, runner.firstRow + runView[keys], hero.id + ' vista de corrida ' + keys);
+        }
+        walks[keys].push(step);
       }
       assert.equal(new Set(walks[keys].map((sample) => sample.cell)).size, 4, hero.id + ' ciclo ' + keys);
       dashes[keys] = [.1, .35, .6, .85].map((progress) => {
@@ -144,7 +159,8 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
       });
       motion.attack(false, left, true, hero.family === 'lee' ? 'kick' : undefined, false, back);
       update(.2, false, 0, false, 0);
-      inspect(sprite.material.map, hero.id + ' ataque ' + keys);
+      const strike = inspect(sprite.material.map, hero.id + ' ataque ' + keys);
+      assert.notEqual(strike.path, runner?.path, hero.id + ' ataque usa folha própria');
       update(.6, false, 0, false, 0);
     }
     assert.notEqual(walks.W[0].cell, walks.S[0].cell, hero.id + ' frente e costas');
@@ -166,10 +182,13 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
     const dashFrames = new Set(dashes.S.map((sample) => sample.cell)).size;
     dashFrameCounts[dashFrames] = (dashFrameCounts[dashFrames] ?? 0) + 1;
     if (dashes.W.every((sample, i) => sample.cell === dashes.S[i].cell)) missingRearDash.push(hero.id);
+    assert.ok(Object.values(dashes).flat().every(s => s.path !== runner?.path), hero.id + ' dash dedicado');
+    assert.ok(Object.values(jumps).flat().every(s => s.path !== runner?.path), hero.id + ' pulo dedicado');
     motion.dispose();
     idle.dispose();
     sprite.material.dispose();
   }
+  assert.equal(runSlots.size, HEROES.length, 'cada versão possui recorte próprio de corrida');
   t.diagnostic('Quadros distintos de pulo por quantidade de versões: ' + JSON.stringify(jumpFrameCounts));
   t.diagnostic('Quadros distintos de dash por quantidade de versões: ' + JSON.stringify(dashFrameCounts));
   assert.deepEqual(missingRearDash, [], 'cada forma precisa de dash traseiro próprio');

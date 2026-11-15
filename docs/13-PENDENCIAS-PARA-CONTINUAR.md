@@ -10,7 +10,14 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 4. Aplicar a [skill de jutsus WebGL](../skills/animar-jutsu-webgl/SKILL.md) às técnicas que ainda usam efeitos genéricos. [Auditoria](24-AUDITORIA-DE-EFEITOS.md).
 5. Validar em partida também os itens históricos pendentes e consultar as decisões abertas de projéteis da fila.
 
-**Proposta da rodada 65.** Corrida no estilo do anime, com braços para trás, para todo o elenco. A decisão aberta é quando mostrar a pose. Shift já executa o dash. [Pergunta e resposta](14-CONTEXTO-DO-CHAT.md#rodada-65--14112026--corrida-com-os-braços-para-trás).
+**Rodada 66.** Corrida com os braços para trás integrada às 114 versões. Pendente de validação E2E: conferir em partida os ângulos, a transição de repouso, corrida, ataque, pulo e dash, e a mesma pose em aliados e Mega Elites.
+
+**Próximos pedidos do usuário, em fila**
+
+1. Limitar técnicas fundidas ao Nv. 7. Aplicar o teto nas ofertas, escolha, ficha e restauração de saves.
+2. Mover ícones de itens para o canto inferior esquerdo. Colocar habilidades e pílulas no canto inferior direito.
+3. Modo ranking com cartão de temporada e colocação no lado direito, sequência de abates em tempo real e total da missão. O ranking atual é local e a versão compartilhada depende de persistência no servidor.
+4. Aprimorar a indicação de direção e distância do ponto fixado no mapa.
 
 ## Fila do usuário · 14/11/2026 (uma tarefa por vez, nesta ordem)
 

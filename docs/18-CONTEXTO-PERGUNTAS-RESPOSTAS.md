@@ -114,6 +114,8 @@ O usuário exige vistas distintas para todas as versões. W e S usam costas e fr
 
 ## 4. Registro cronológico de P/R (todas as rodadas)
 
+**Rodada 66 (14/11)** — corrida com braços para trás integrada às 114 versões, com cinco vistas e quatro passos por vista. A skill foi alinhada ao padrão de W/S, margens, enquadramento e identidade da versão. Fusões até Nv. 7, HUD invertida, ranking de temporada, contadores e GPS foram colocados em fila. Validação visual em partida pendente.
+
 **Rodada 65 (14/11)** — corrida com braços para trás em todas as versões é viável com o controlador comum. Até 2.280 quadros com cinco vistas e quatro fases. Usar como animação de WASD foi sugerido. **PROPOSTO.**
 
 **Rodada 64 (14/11)** — integrou cinco vistas de caminhada e retratos em perfil nas 114 versões, com o mesmo controlador para ajudantes e Mega Elites. Quatro inimigos comuns receberam perfil. A revisão dos 26 atlas eliminou vazamentos de quadros vizinhos. Atualizou Hanzō, Haku, Zabuza, altura do elenco, foco e câmera. Tipos, build e 93 testes passaram. Arte de pulo/dash em ângulos adicionais e validação em partida seguem na [fila](13-PENDENCIAS-PARA-CONTINUAR.md). Pedido completo em [docs/14](14-CONTEXTO-DO-CHAT.md) e vistas por versão na [matriz](development/COBERTURA-DE-VISTAS.md).

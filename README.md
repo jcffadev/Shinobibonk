@@ -4,7 +4,7 @@ Protótipo jogável de um survivor roguelite inspirado no universo ninja. A base
 
 Repositório: https://github.com/jcffadev/Shinobibonk
 
-As 114 versões do elenco têm cinco vistas de caminhada, com quatro quadros por vista. A ficha e a seleção compartilham o retrato em perfil. [Matriz por versão](docs/development/COBERTURA-DE-VISTAS.md).
+As 114 versões do elenco usam a corrida com braços para trás no deslocamento normal. São cinco vistas e quatro quadros por vista. A ficha e a seleção compartilham o retrato em perfil. [Matriz por versão](docs/development/COBERTURA-DE-VISTAS.md).
 
 ## Começar
 

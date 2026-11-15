@@ -6,6 +6,10 @@ Os Mega Elites e os ajudantes que usam essas versões consultam as mesmas folhas
 
 O dash acompanha o vetor e o lado das oito direções, com quatro fases de frente e de costas. A arte de perfil dedicada do dash está no Naruto Academia. Para as demais versões o dash e o pulo continuam apoiados nas vistas frontal e traseira. A aprovação visual dos ângulos, poses e transições em partida está pendente conforme a [política de testes](TESTING_POLICY.md).
 
+A corrida é a animação do deslocamento normal das 114 versões. As mesmas entradas escolhem as cinco vistas dos atlas `corrida-01.png` a `corrida-57.png` em `public/assets/shinobi-motion`. A associação por versão fica em `src/game/runningArt.ts`. A tabela abaixo indica as folhas de caminhada usadas como referência de identidade e disponíveis durante o carregamento.
+
+As imagens de corrida foram geradas com ImageGen usando retrato e quadros do próprio jogo como modelos. O pedido por dupla de versões foi uma grade 4 × 10 transparente, com tronco inclinado, braços para trás e quatro fases das pernas, preservando traje, cabelos e acessórios nas cinco vistas. Após a seleção, cada quadro foi recortado a partir dos vãos da folha original e ancorado pela base.
+
 Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros, o espelho e a margem transparente das células dos 26 atlas dedicados. Os atlas foram repaginados a partir dos originais para evitar recorte e vazamento da fileira vizinha.
 
 | Versão | S/W · frente/costas | A/D · perfil | Diagonais · frente/costas |

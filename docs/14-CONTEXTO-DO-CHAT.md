@@ -1851,3 +1851,33 @@ As folhas foram repaginadas pelas margens reais do desenho após a inspeção vi
 **Resposta da rodada**
 
 É viável. O controlador de direção é compartilhado, mas a pose precisa de arte por versão. Com cinco vistas e quatro fases, são até 2.280 quadros para os 114 jogáveis, espelhando as vistas para a esquerda. A opção mais direta é usar a corrida com braços para trás como animação do deslocamento normal em WASD, com a mesma velocidade e Shift para o dash. Ajudantes e Mega Elites podem reutilizar as folhas. Os quatro modelos comuns exigem arte própria se forem incluídos. Sugestão de padrão: tronco inclinado, braços para trás, pés ancorados e transições para parada, ataque, pulo e dash. Proposta registrada, sem implementação nesta rodada.
+
+## Rodada 66 · 14/11/2026 — corrida do elenco e mudanças de HUD em fila
+
+> Habilidades "fusão/fundidas", só podem upar até o Lv7.
+> Corrija isto, as habilidades.
+>
+> Inverta:
+> - Itens com ícones canto esquerdo
+> - Habilidades e pílulas lado direito
+>
+> Montando o modo ranking:
+> Veja como ele é montado no jogo de referência e faça igual!
+> - Note do lado direito o card da temporada, mostrando informações do ranking, colocação.
+> - Contador de sequência em tempo real
+> - Contador de abates totais
+> Trabalhar melhor no "GPS" que aparece ao fixarmos um lugar no mapa, ele fica meio "perdido"
+>
+> Na realidade poe isso a fazer...
+> Faça as animações 114, correndo com os braços pra trás
+>
+> Pergunta: Voce atualizou toda nossa concepção de arte para padronizar as coisas?
+> Vou ainda verificar se agora realmente esta certo
+
+**Resposta durante o trabalho**
+
+Os quatro pedidos foram colocados na fila para priorizar a corrida. O padrão atual abrange cinco vistas, retrato em perfil e margens transparentes. A instrução antiga sobre W/S foi alinhada às vistas retas.
+
+**Resposta da rodada**
+
+As 114 versões receberam corrida com braços para trás no WASD. São 57 atlas, cinco vistas por versão e 2.280 quadros. O controlador orienta a folha pelo movimento e compartilha o recorte com os ajudantes e Mega Elites da mesma versão. Pulo, dash, ataques, selos e Ultimate continuam nas folhas próprias. O padrão de arte inclui frente e costas retas, perfil, diagonais, identidade do traje, alinhamento dos pés e margens transparentes. Inspeção dos atlas feita fora do navegador. Os 93 testes, a verificação de tipos e o build passaram. Revisão em partida pendente. Fusões nível 7, inversão da HUD inferior, cartão de temporada com contadores e GPS seguem em fila.

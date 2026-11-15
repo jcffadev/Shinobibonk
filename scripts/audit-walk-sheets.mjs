@@ -1,9 +1,8 @@
 // Auditoria das folhas de caminhada (SEM navegador). Uso: node scripts/audit-walk-sheets.mjs [--json]
 //
-// Padrão do projeto (Naruto Academia, Kakashi e os primeiros shinobis): a caminhada de FRENTE e a de COSTAS são
-// desenhadas de TRÊS QUARTOS, viradas para a DIREITA; o jogo espelha para andar para a esquerda. Folhas que desenham o
-// personagem reto para a câmera destoam (pedido do usuário em 14/11: "os primeiros… estão andando com uma animação…
-// e os últimos que criamos estão andando de outro. Preciso de um padrão para TODOS").
+// Este auditor examina as fileiras de três quartos registradas em directionalArt.
+// W e S usam vistas retas. A/D usam perfil, com espelho para a esquerda.
+// Os atlas de corrida ativos são exercitados por tests/movimento.test.mjs.
 //
 // Como mede: lê o PNG (sem dependências), separa as células de caminhada da folha registrada em directionalArt e calcula
 // a ASSIMETRIA da silhueta de cada quadro (máscara alfa espelhada sobre o próprio centro). Personagem reto de frente é
