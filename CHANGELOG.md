@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 15/11/2026 · Medição: tempo para matar um monstro com a primeira técnica (Rodada 75)
+
+- **Pedido do usuário:** "faça um teste, em todos os personagens, quanto em média em todas as dificuldades os personagens demoram para matar um monstro usando a primeira skill? Estamos buscando balanceamento de CD."
+- **Novo script sem navegador:** `scripts/balance-first-skill.mjs` usa as fórmulas do jogo (`calculateStats`, `difficultyAt`, `attackCooldown`, `techniqueCritical`). Gera `artifacts/first-skill-ttk.json` (não versionado).
+- **Hipóteses:**
+  - zona 1, monstro comum;
+  - sem itens, pílulas, bônus permanentes ou ajudantes;
+  - técnica no Nv 1 sem afixos;
+  - crítico pela média e 1 acerto por inimigo por uso;
+  - 3 cenários: min 0 no Nv 1, min 5 no Nv 10, min 10 no Nv 20 (os níveis são suposição).
+- **Resultado (114 personagens):**
+  - Média por dificuldade nos 3 cenários: Genin 21,2 s · Chunin 36,7 s · Jonin 61,2 s · Kage 105,3 s.
+  - No início (min 0), em Genin: 12,8 s em média, cerca de 6,6 usos; nenhum personagem mata com 1 uso.
+  - Spread entre personagens de cerca de 4×: do Madara Seis Caminhos (25,6 s) ao Shikamaru Genin (99,5 s).
+- **Achado sobre a recarga:** ela não é individual. Sai só da forma da técnica (Corpo a corpo 1,2 · Área 2 · demais 1,5), × 1,55 no Nv 1, dividida pela velocidade de ataque. A diferença entre personagens vem do poder da técnica e dos multiplicadores de escola.
+- Nenhuma regra de jogo mudou.
+
 ## 15/11/2026 · Caça-Níquel: retrato de cada personagem das combinações (Rodada 74)
 
 - **Pedido do usuário:** "Ajuste as imagens do caça-níquel de acordo coma roleta e os personagens que rodam com as regras, acredito que temos todos, me confirme."

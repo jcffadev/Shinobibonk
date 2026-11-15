@@ -2095,3 +2095,14 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - As outras 10 casas já tinham imagem.
 - **Testes:** **PASSOU** tsc, 130/130 com cobertura e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 75 · 15/11/2026 — tempo para matar com a primeira técnica
+
+> Agora faça um teste, em todos os personagens, quanto em média em todas as dificuldades os personagens demoram para matar um monstro usando a primeira skill? Estamos buscando balanceamento de CD.
+
+**Resposta.**
+
+- Script `scripts/balance-first-skill.mjs`, sem navegador, com as fórmulas do jogo, para os 114 personagens, 4 dificuldades e 3 cenários.
+- Média: Genin 21,2 s · Chunin 36,7 s · Jonin 61,2 s · Kage 105,3 s. Spread entre personagens de cerca de 4×.
+- A recarga não é individual: depende só da forma da técnica. O balanceamento de CD aguarda a decisão do usuário.
+- **Publicado no GitHub.**
