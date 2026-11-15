@@ -1961,3 +1961,24 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 > Está para todas as IAs
 
 **Resposta.** Decisão registrada: a restrição de navegador vale para Claude Code, Codex, Qwen e qualquer outra IA, até nova autorização explícita. A política central e o AGENTS.md já diziam isso; foram acrescentados o registro da confirmação (TESTING_POLICY §A e docs/18 §3, substituindo a decisão de 14/11) e a correção da contagem de testes em docs/26.
+
+## Rodada 70 · 15/11/2026 — paredes invisíveis e dash atravessando
+
+> Verifique ainda as paredes invisiveis e os blocks invisiveis no caminhar do personagem
+
+> Precisamos andar livre, o máximoq que pode ter é travar ao esbarrar, mas ao dar dash conseguir passar.
+
+**Resposta.**
+
+- Encontrei três causas:
+  - O corpo do jogador não foi reduzido junto com o desenho (0,42 m de raio para um sprite de ~0,45 m de largura).
+  - O tronco da árvore tinha o dobro do desenhado.
+  - Árvores e rochas podiam nascer escondidas atrás ou dentro de casas e monumentos.
+- Correções:
+  - Corpo do jogador agora com 0,17 m; troncos e rochas medidos no atlas.
+  - O cenário colado em construção é removido.
+  - Ao esbarrar o jogador só trava e desliza.
+  - O dash atravessa tudo e, se terminar dentro de algo, sai pela frente.
+- Testes: `tests/colisao.test.mjs` (7 testes), 4 mutações acusadas, 117/117, tsc e build **PASSOU**.
+- **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

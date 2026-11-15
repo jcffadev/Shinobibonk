@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## 15/11/2026 · Andar livre: sem paredes invisíveis e dash atravessa (Rodada 70)
+
+- **Pedidos do usuário:** "Verifique ainda as paredes invisiveis e os blocks invisiveis no caminhar do personagem" e "Precisamos andar livre, o máximo que pode ter é travar ao esbarrar, mas ao dar dash conseguir passar."
+- **Causas encontradas:**
+  - O corpo do jogador continuava com 0,42 m de raio quando o desenho foi reduzido a 40%, ou seja, quase o dobro do sprite (~0,45 m de largura).
+  - O tronco da árvore tinha 0,5 m de raio, mas o desenho mede ~0,57 m de largura.
+  - Árvores e rochas eram espalhadas antes das casas e monumentos e podiam ficar escondidas atrás ou dentro deles, bloqueando sem aparecer.
+- **Correção** (`src/scene/collision.ts`, `src/scene/GameCanvas.tsx`):
+  - Novos raios: jogador 0,17 m (0,42 × 0,4); árvore 0,3, pinheiro 0,25, bambu 0,55, rocha 0,85.
+  - Novo `solids.prune` remove a árvore ou rocha a menos de 1 m de uma construção, junto com o sprite.
+  - Ao esbarrar o jogador só trava e desliza pela borda.
+  - Durante o dash não há colisão com cenário nem construções. Se o dash acabar dentro de algo, `solids.exitAlong` tira o jogador pela frente, nunca de volta.
+  - Inimigos continuam contornando só as construções.
+- **Testes:**
+  - `tests/colisao.test.mjs` com 7 testes; o mínimo subiu para 117.
+  - 4 mutações novas em `scripts/mutation-check.mjs`, as 4 acusadas isoladamente.
+  - **PASSOU:** tsc, 117/117 com cobertura, build.
+  - A prova por mutação completa não foi rodada (pesada).
+  - **PENDENTE DE VALIDAÇÃO E2E:** andar pela Folha e pelos mapas regionais rente a casas, árvores e monumentos, e dar dash atravessando.
+
 ## 15/11/2026 · Cabeça do mesmo tamanho ao começar a andar (Rodada 69)
 
 - **Pedido do usuário:** "A cabeça dos personagens ao iniciar o movimento, estava ficando desproporcional ao personagem e a ele parado, corrija isso."

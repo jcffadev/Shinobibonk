@@ -199,9 +199,11 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const cameraTarget=new THREE.Vector3(0,terrainHeight(0,0)+player.scale.y*.5,0);
     const environmentMaps=new Map<number,THREE.Texture>(),decor:THREE.Sprite[]=[];
     const environmentSprite=(index:number,width:number,height:number)=>{let map=environmentMaps.get(index);if(!map){map=new THREE.TextureLoader().load('/assets/environment-v2.png');map.colorSpace=THREE.SRGBColorSpace;map.magFilter=THREE.NearestFilter;map.minFilter=THREE.NearestFilter;map.generateMipmaps=false;map.repeat.set(.25,.5);map.offset.set((index%4)*.25,(1-Math.floor(index/4))*.5);environmentMaps.set(index,map);}const obj=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,alphaTest:.1,depthWrite:false}));obj.scale.set(width,height,1);return obj;};
-    const scenery=(index:number,x:number,z:number,w:number,h:number)=>{const obj=environmentSprite(index,w,h);if(MAP.scenery.tint!=='#ffffff')obj.material.color.set(MAP.scenery.tint);obj.position.set(x,terrainHeight(x,z)+h*.45,z);scene.add(obj);decor.push(obj);};
+    const scenery=(index:number,x:number,z:number,w:number,h:number)=>{const obj=environmentSprite(index,w,h);if(MAP.scenery.tint!=='#ffffff')obj.material.color.set(MAP.scenery.tint);obj.position.set(x,terrainHeight(x,z)+h*.45,z);scene.add(obj);decor.push(obj);return obj;};
+    /** Rodada 70: sprite de cada árvore/rocha, para remover junto com o sólido quando ficar dentro de uma construção. */
+    const sceneryBySolid=new Map<object,THREE.Sprite>();
     // Keep paths and the spawn clearing open; scatter foliage across hills.
-    const sceneryWeights=MAP.scenery.weights,sceneryTotal=sceneryWeights.reduce((a,b)=>a+b,0);for(let i=0;i<Math.round(MAP.scenery.count*1.65);i++){const x=(Math.random()-.5)*(MAP_SIZE-8),z=(Math.random()-.5)*(MAP_SIZE-8);if(Math.hypot(x,z)<6||Math.abs(x-trailX(z))<2.5)continue;let roll=Math.random()*sceneryTotal,kind=0;while(kind<3&&roll>=sceneryWeights[kind]){roll-=sceneryWeights[kind];kind++;}scenery(kind,x,z,kind===3?2.4:3.2,kind===3?1.8:4.2);solids.add(x,z,COLLISION_RULES.scenery[kind]);}
+    const sceneryWeights=MAP.scenery.weights,sceneryTotal=sceneryWeights.reduce((a,b)=>a+b,0);for(let i=0;i<Math.round(MAP.scenery.count*1.65);i++){const x=(Math.random()-.5)*(MAP_SIZE-8),z=(Math.random()-.5)*(MAP_SIZE-8);if(Math.hypot(x,z)<6||Math.abs(x-trailX(z))<2.5)continue;let roll=Math.random()*sceneryTotal,kind=0;while(kind<3&&roll>=sceneryWeights[kind]){roll-=sceneryWeights[kind];kind++;}sceneryBySolid.set(solids.add(x,z,COLLISION_RULES.scenery[kind]),scenery(kind,x,z,kind===3?2.4:3.2,kind===3?1.8:4.2));}
     if(MAP.id==='folha'){scenery(4,0,-12,7,6);for(const [x,z] of [[-7,-17],[7,-18],[-10,18],[12,19]]){scenery(7,x,z,5.5,5.5);solids.addBuilding(x,z,5.5);}}
     if(MAP.id==='folha'){
       const landmarks=[{x:0,z:-52,w:22,h:15},{x:30,z:24,w:6.6,h:10},{x:53,z:24,w:6.6,h:10}];
@@ -228,6 +230,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         structure.position.set(x,terrainHeight(x,z)-.1,z);scene.add(structure);decor.push(structure);solids.addBuilding(x,z,w);
       }
     }
+    // Rodada 70: sem árvore/rocha escondida dentro de construção (bloqueava o caminho sem aparecer).
+    solids.prune(COLLISION_RULES.sceneryClearance,solid=>{const obj=sceneryBySolid.get(solid);if(!obj)return;scene.remove(obj);obj.material.dispose();decor.splice(decor.indexOf(obj),1);sceneryBySolid.delete(solid);});
     const eventDefs=[{id:'shikamaru',name:'Plano do Shikamaru',x:14,z:8,icon:'♟️',sprite:8},{id:'guardian-seal',name:'Portal do Guardião · Myōjinmon',x:2,z:-12,icon:'⛩️',sprite:4},{id:'challenge',name:'Altar de desafio',x:-14,z:9,icon:'⛩️',sprite:9},{id:'orochimaru',name:'Maldição de Orochimaru',x:9,z:-18,icon:'🐍',sprite:10},{id:'altar',name:'Altar para proteger',x:-17,z:-13,icon:'🛕',sprite:11},{id:'trader',name:'Mercador de itens',x:-3,z:18,icon:'🥷',sprite:8},{id:'slot',name:'Caça-Níquel da Tsunade',x:5,z:18,icon:'🎰',sprite:8},{id:'arsenal',name:'Arsenal da Tenten',x:-21,z:-1,icon:'🗡️',sprite:8},{id:'sapos-sabios',name:'Sapos Sábios · Monte Myōboku',x:-25,z:18,icon:'🐸',sprite:8},{id:'ichiraku',name:'Barraca Ichiraku',x:13,z:21,icon:'🍜',sprite:8},{id:'ebisu',name:'Treino de Elite do Ebisu',x:25,z:5,icon:'🕶',sprite:8},{id:'iruka',name:'Aula do Iruka',x:-24,z:14,icon:'📚',sprite:8}];
     const altarColors=['#cbd5e1','#4cda83','#5daafa','#bb78f3','#ffcb55'];
     const altarRarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
@@ -1384,7 +1388,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       const dashing=slideTime>0;
       if(dashing){dir.copy(dashHeading);slideTime=Math.max(0,slideTime-dt);}
       moving=dir.lengthSq()>0;if(moving){heading.copy(dir).normalize();
-        player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);if(!arena)solids.resolve(player.position);revealAround(player.position.x,player.position.z);}
+        player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);if(!arena){/* Rodada 70: dash atravessa; ao terminar dentro de algo, sai pela frente. */if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}}revealAround(player.position.x,player.position.z);}
       player.position.y=terrainHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight;
       const threat=threatNow();
       if(tune().enemyHp!==appliedEnemyHp){const ratio=tune().enemyHp/Math.max(.01,appliedEnemyHp);for(const e of enemyList){e.hp*=ratio;if(e.maxHp)e.maxHp*=ratio;bossCombat.rescale(e,ratio);}appliedEnemyHp=tune().enemyHp;}

@@ -56,7 +56,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 17 | **NOVO:** névoa do Zabuza com quadrados brancos (print) | FEITO (rodada 62) e TESTADO por código · E2E pendente |
 | 18 | **NOVO:** Zabuza fazendo os selos antes da Névoa Oculta | FEITO (rodada 63), TESTADO por código; E2E pendente; arte pendente (Codex) |
 | 19 | **NOVO (tester):** XP parou na zona 2 (nível 582) e barra de XP não sobe em late game | PENDENTE — próximo · passagem completa em docs/26 |
-| 20 | **NOVO (tester):** paredes invisíveis / colisão travando onde não há nada | PENDENTE |
+| 20 | **NOVO (tester):** paredes invisíveis / colisão travando onde não há nada | FEITO (rodada 70): corpo na escala do desenho, cenário escondido removido, dash atravessa · TESTADO por código · E2E pendente |
 | 21 | **NOVO (tester):** borda do círculo do altar mais grossa (sem aumentar o raio) | PENDENTE |
 | 22 | **NOVO (tester):** feedback visual/sonoro ao levar dano | PENDENTE |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |

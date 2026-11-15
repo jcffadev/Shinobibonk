@@ -194,6 +194,10 @@ O menu inicial tem Guia do jogo com navegação e busca. O conteúdo descreve co
 
 Glossário ampliado em 15/11 com exemplos de todos os atributos, busca e filtro por assunto. O saldo de Lamens fica entre Arquivo Shinobi e o perfil, e a prévia estática do Naruto saiu da tela inicial.
 
+### Rodada 70 · 15/11/2026
+
+Andar livre (decisão do usuário): ao esbarrar o jogador só trava e desliza; o **dash atravessa** árvores, rochas e construções e, se terminar dentro de algo, sai pela frente. Corpo do jogador 0,17 m (escala do desenho de 40%); troncos do tamanho desenhado; árvore/rocha a menos de 1 m de construção é removida.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
