@@ -57,6 +57,12 @@ const MUTATIONS = [
   { regra: 'cabeça do mesmo tamanho ao começar a andar', arquivo: 'src/scene/playerMotion.ts', de: 'const propTarget = headProportion(idleFrac, cellFrac, idleHead, cellHead);', para: 'const propTarget = idleFrac > 0 && cellFrac > 0 ? Math.min(1.35, Math.max(.85, idleFrac / cellFrac)) : 1;' },
   { regra: 'proporção iguala a cabeça', arquivo: 'src/scene/playerMotion.ts', de: 'Math.max(.6, idleHead / cellHead)', para: 'Math.max(.6, idleHeight / cellHeight)' },
   { regra: 'cone desenhado = cone do acerto', arquivo: 'src/scene/GameCanvas.tsx', de: 'dot(direction)>CONE_COS', para: 'dot(direction)>.5' },
+  { regra: 'corpo a corpo recarrega em 0,6 s no Nv. 1', arquivo: 'src/game/heroes.ts', de: "'Corpo a corpo':.6,", para: "'Corpo a corpo':1.2," },
+  { regra: 'Nv. 1 sem penalidade de recarga', arquivo: 'src/game/combat.ts', de: ' return 1-COOLDOWN_GROWTH.atMax*', para: ' return 1.55-COOLDOWN_GROWTH.atMax*' },
+  { regra: 'vida do monstro comum 13', arquivo: 'src/game/enemyTiers.ts', de: 'normal: { hp: 13,', para: 'normal: { hp: 22,' },
+  { regra: 'XP por abate igual em todas as dificuldades', arquivo: 'src/game/enemyTiers.ts', de: 'return loot / missionLootFactor(missionTier);', para: 'return loot;' },
+  { regra: 'emboscada só aos 2:30', arquivo: 'src/game/progression.ts', de: 'first: 150,', para: 'first: 30,' },
+  { regra: 'chefe desconta o poder por forma', arquivo: 'src/scene/bossCombat.ts', de: 'power = technique.power / (SHAPE_POWER[technique.shape] ?? 1);', para: 'power = technique.power;' },
 ];
 
 const originals = new Map();

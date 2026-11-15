@@ -1,0 +1,72 @@
+// Rodada 76 — balanceamento por forma de técnica, abertura calma, curva de XP, Final Swarm por dificuldade e simulador de partidas.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { damageLabel } from '../src/game/format.ts';
+import { HEROES, SHAPE_COOLDOWN, SHAPE_POWER } from '../src/game/heroes.ts';
+import { attackCooldown, techniqueCooldownScale } from '../src/game/combat.ts';
+import { ENEMY_TIERS, xpLoot, lootScale } from '../src/game/enemyTiers.ts';
+import { MISSION_TIER, MISSION_HP, normalHpFactor, AMBUSH_RULES, SPAWN_RING, finalSwarmFactor, xpToLevelUp, XP_RULES } from '../src/game/progression.ts';
+import { simulateRun } from '../scripts/simulate-run.mjs';
+
+const src = file => fs.readFileSync(new URL('../src/' + file, import.meta.url), 'utf8');
+const close = (a, b, eps = 1e-9) => Math.abs(a - b) < eps;
+
+test('números de dano curtos: 50, 1K, 123.1K, 1M, 1B, 1T, 1Q (pedido do usuário)', () => {
+  const cases = [[50, '50'], [100, '100'], [999.4, '999'], [999.6, '1K'], [1000, '1K'], [1050, '1.1K'], [10000, '10K'], [123148, '123.1K'], [999950, '1M'], [1e6, '1M'], [1.25e7, '12.5M'], [1e9, '1B'], [1e12, '1T'], [1e15, '1Q'], [4.6e21, '4.6Sx'], [3e36, '3e36']];
+  for (const [value, label] of cases) assert.equal(damageLabel(value), label, String(value));
+  assert.match(src('scene/damageNumbers.ts'), /const label = damageLabel\(amount\)/, 'os números flutuantes usam o formato curto');
+});
+
+test('recarga por forma no Nv. 1 (0,6 corpo a corpo … 2 área) e −35% no Nv. 9', () => {
+  assert.deepEqual({ ...SHAPE_COOLDOWN }, { 'Corpo a corpo': .6, 'Projétil': .8, 'Órbita': 1, 'Cone': 1.2, 'Linha': 1.5, 'Onda': 1.5, 'Em V': 1.5, 'Área': 2, 'Buff': 1 });
+  assert.equal(techniqueCooldownScale(1), 1, 'o Nv. 1 não é mais punido (antes ×1,55)');
+  assert.ok(close(techniqueCooldownScale(9), .65) && close(techniqueCooldownScale(20), .65));
+  for (const hero of HEROES) for (const t of hero.techniques) {
+    if (t.setup) continue;
+    const expected = t.name === 'Invocação do Sapo' ? 2.6 : SHAPE_COOLDOWN[t.shape];
+    assert.ok(close(attackCooldown(t, 1), expected), `${hero.id} · ${t.name}`);
+  }
+});
+
+test('poder por forma: 1 alvo recebe o maior reforço, área o menor; chefes descontam o fator', () => {
+  assert.ok(SHAPE_POWER['Projétil'] > SHAPE_POWER['Linha'] && SHAPE_POWER['Linha'] > SHAPE_POWER['Área']);
+  assert.ok(SHAPE_POWER['Corpo a corpo'] > SHAPE_POWER['Cone']);
+  assert.match(src('scene/bossCombat.ts'), /power = technique\.power \/ \(SHAPE_POWER\[technique\.shape\] \?\? 1\)/, 'o golpe do chefe não fica mais forte');
+});
+
+test('vida do monstro comum 13 e por dificuldade 1/1,3/1,6/2 (elites e chefes iguais)', () => {
+  assert.equal(ENEMY_TIERS.normal.hp, 13);
+  assert.equal(ENEMY_TIERS.elite.hp, 95);
+  assert.deepEqual({ ...MISSION_HP }, { Genin: 1, Chunin: 1.3, Jonin: 1.6, Kage: 2 });
+  for (const rank of Object.keys(MISSION_TIER)) assert.ok(close(normalHpFactor(rank) * MISSION_TIER[rank], MISSION_HP[rank]));
+  assert.match(src('scene/GameCanvas.tsx'), /hpBase\*threat\.hp\*\(tier==='normal'&&!challenge\?normalHpFactor\(mission\):1\)/);
+});
+
+test('emboscada aos 2:30 e a cada 50–80 s; comuns nascem a 16–24 m nos 2 primeiros min', () => {
+  assert.deepEqual({ ...AMBUSH_RULES }, { first: 150, min: 50, spread: 30 });
+  assert.deepEqual([...SPAWN_RING.opening], [16, 24]);
+  const canvas = src('scene/GameCanvas.tsx');
+  assert.doesNotMatch(canvas, /ambushTimer=30\b|ambushTimer=18\+/);
+  assert.match(canvas, /ambushTimer=AMBUSH_RULES\.min\+Math\.random\(\)\*AMBUSH_RULES\.spread/);
+  assert.match(canvas, /zoneElapsed\(\)<SPAWN_RING\.openingSeconds\?SPAWN_RING\.opening\[0\]/);
+});
+
+test('XP: igual por dificuldade, ×5 entre o Nv. 10 e o 60; Final Swarm compõe mais rápido no Kage', () => {
+  for (const rank of Object.keys(MISSION_TIER)) assert.ok(close(xpLoot(lootScale('normal', 0, 0, MISSION_TIER[rank]), MISSION_TIER[rank]), 1));
+  assert.match(src('scene/GameCanvas.tsx'), /xpDropValue\(xpLoot\(loot,MISSION_TIER\[mission\]\)/);
+  assert.equal(xpToLevelUp(1), 30);
+  assert.ok(close(xpToLevelUp(XP_RULES.to) / xpToLevelUp(XP_RULES.from), (18 + 6 * 59 + .08 * 59 ** 2 / (1 + 59 / 250)) * XP_RULES.scale / (18 + 6 * 9 + .08 * 81 / (1 + 9 / 250)), 1e-6));
+  assert.equal(finalSwarmFactor(0, 'Kage'), 1);
+  assert.ok(finalSwarmFactor(600, 'Kage') > finalSwarmFactor(600, 'Genin') * 2, '10 min de Final Swarm pesam bem mais no Kage');
+});
+
+test('simulador: reproduzível pela semente e abertura do Genin calma (≤ 12 vivos no 1º minuto)', () => {
+  const a = simulateRun({ heroId: 'naruto', mission: 'Genin', minutes: 3, seed: 7, record: 30 });
+  const b = simulateRun({ heroId: 'naruto', mission: 'Genin', minutes: 3, seed: 7, record: 30 });
+  assert.deepEqual(a.timeline, b.timeline);
+  const minute = a.timeline.find(p => p.min >= 1);
+  assert.ok(minute.alive <= 12, `vivos no 1º minuto: ${minute.alive}`);
+  assert.ok(minute.kills > 10, `abates no 1º minuto: ${minute.kills}`);
+  assert.ok(!a.dead, 'Naruto não morre no começo do Genin');
+});

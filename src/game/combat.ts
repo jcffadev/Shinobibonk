@@ -96,8 +96,16 @@ export const SENJUTSU={chance:.25,multiplier:1.5,label:'Senjutsu (modo sábio)',
 export function hasSenjutsu(t:Technique,sageInfused:boolean){return !t.setup&&t.school==='Ninjutsu'&&(t.element==='Sábio'||sageInfused);}
 export function senjutsuText(level=1){return `${SENJUTSU.label}: ${Math.round(techniqueProc(SENJUTSU.chance,level)*100)}% de chance por acerto de causar dano adicional de ${String(SENJUTSU.multiplier).replace('.',',')}× o dano normal.`;}
 
-/** Multiplicador de recarga da técnica aprendida. O Nv. 1 é deliberadamente mais lento. */
+/**
+ * Multiplicador de recarga da técnica aprendida. Rodada 76: o Nv. 1 deixou de ser punido (antes ×1,55); a recarga mostrada no
+ * Nv. 1 é a base da forma (SHAPE_COOLDOWN) e cai ~4,4% por nível até −35% no Nv. 9.
+ */
+export const COOLDOWN_GROWTH={atMax:.35,levels:8};
 export function techniqueCooldownScale(level:number){
+ return 1-COOLDOWN_GROWTH.atMax*Math.min(1,Math.max(0,level-1)/COOLDOWN_GROWTH.levels);
+}
+/** Técnicas de buff (setup) mantêm a escala anterior à rodada 76: ×1,55 no Nv. 1 até ×0,9 no Nv. 9. */
+export function setupCooldownScale(level:number){
  return 1.55-.65*Math.min(1,Math.max(0,level-1)/8);
 }
 export function attackCooldown(t:Technique,level:number,g:SkillGrowth=NO_GROWTH,speed=1){
@@ -105,7 +113,7 @@ export function attackCooldown(t:Technique,level:number,g:SkillGrowth=NO_GROWTH,
 }
 /** Valores efetivos de um setup com os afixos de level-up (força, recarga, duração). */
 export function setupNumbers(t:Technique,g:SkillGrowth=NO_GROWTH,level=1){
- const s=t.setup!;const cooldown=s.cooldown*techniqueCooldownScale(level)/(1+g.haste),duration=s.duration*(1+g.duration);
+ const s=t.setup!;const cooldown=s.cooldown*setupCooldownScale(level)/(1+g.haste),duration=s.duration*(1+g.duration);
  const bonuses:Bonuses={};for(const [k,v] of Object.entries(s.bonuses))bonuses[k as StatKey]=(v as number)*(1+g.damage);
  // Sem acúmulo, reativar só renova: tempo ativo = duração/recarga (limitado a 100%).
  return {cooldown,duration,bonuses,stack:s.stack,sage:!!s.sage,uptime:Math.min(1,duration/cooldown)};

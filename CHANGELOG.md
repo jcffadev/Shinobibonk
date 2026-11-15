@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## 15/11/2026 · Balanceamento por forma de técnica, abertura calma, curva de XP e simulador de partidas (Rodada 76)
+
+- **Pedidos do usuário:**
+  - "4s de cooldown para uma skill é MUITA coisa… ataques meele 0.5 ou 0.7, projeteis que acertam mais de 1 cerca de 1,5 e area 2s".
+  - "Diminuir também um pouco a velocidade de respawn nos primeiros níveis, ir nascendo 1 monstro por segundo no começo… um pouquinho mais longe… as emboscadas também devem ser eventos com maiores intervalos".
+  - "você precisa balancear as outras dificuldades também, considerando que nosso Kage é o Nightmare deles… Faça a ferramenta que precisa e faça várias simulações".
+  - Números de dano curtos: "123148, seria 123.1K".
+- **Números de dano:** `damageLabel` (`src/game/format.ts`) mostra 50, 999, 1K, 123.1K, 1M, 1B, 1T, 1Q, Qi, Sx… e depois notação curta (3e36). Os números flutuantes usam esse formato.
+- **Recarga por forma, mostrada no Nv 1** (`SHAPE_COOLDOWN`, `src/game/heroes.ts`):
+  - corpo a corpo 0,6 s · projétil de 1 alvo 0,8 · órbita 1,0 · cone 1,2 · linha, onda e Em V 1,5 · área 2,0 · Invocação do Sapo 2,6;
+  - o Nv 1 deixou de ser punido (antes ×1,55); a recarga cai até −35% no Nv 9;
+  - técnicas de buff mantêm a escala antiga (`setupCooldownScale`).
+- **Poder por forma** (`SHAPE_POWER`): corpo a corpo ×1,5 · projétil ×1,6 · órbita ×1,3 · cone ×1,35 · linha e onda ×1,45 · Em V ×1,4 · área ×1,4. Os chefes descontam esse fator e batem como antes (`bossCombat.ts`).
+- **Vida do monstro comum:** 22 → 13, e por dificuldade 1 / 1,3 / 1,6 / 2 (Genin a Kage) em vez de 1 / 1,4 / 1,9 / 2,6 (`MISSION_HP`, `normalHpFactor`). Elites, Mega Elites e chefes não mudam.
+- **Abertura calma** (`OPENING`, `difficultyAt`):
+  - nascem 1 / 1,3 / 1,6 / 2 monstros por s no início (Genin a Kage) e a curva se mistura à antiga até os 4 min, quando volta a ser igual;
+  - teto de vivos (8 + 10 × min) × fator da dificuldade na abertura;
+  - o termo extra de vida das dificuldades altas só começa depois de 2 min e chega ao máximo em 6 min (`HP_RAMP`).
+- **Nascimento e emboscadas:** nos 2 primeiros min de cada zona os comuns nascem a 16–24 m (antes 10–18); a 1ª emboscada vem aos 2:30 e depois a cada 50–80 s (antes 30 s e 18–30 s) (`SPAWN_RING`, `AMBUSH_RULES`).
+- **Curva longa (calibrada pelo simulador):**
+  - XP pedida ×1 até o Nv 10, subindo até ×5 no Nv 60 (`XP_RULES`);
+  - XP por abate igual em todas as dificuldades (`xpLoot`); Ryu e chakra continuam maiores nas difíceis;
+  - Final Swarm compõe +10%/min × fator da dificuldade (`SWARM_COMPOUND`).
+- **Simulador de partidas sem navegador:**
+  - `scripts/simulate-run.mjs`: modelo passo a passo de 1 s com as fórmulas do jogo (ameaça, vida, XP, cartas, kunais, Mega Elites, Guardião, Final Swarm, recarga). O desvio do jogador é um parâmetro (casual, médio, bom); a evasão entra à parte.
+  - `scripts/simulate-batch.mjs`: 114 personagens × 4 dificuldades × sementes × contas. Gera `artifacts/simulate-<rótulo>.json` (não versionado).
+- **Resultado simulado (desvio médio, 2.736 partidas):**
+  - antes: cerca de 10% das partidas morriam no 1º minuto; quem passava disparava até 120 min com Nv 5.000–13.000;
+  - depois do pacote e da curva: morte mediana da conta máxima entre 46 e 73 min, melhores partidas até 106–120 min; conta nova entre 38 e 73 min; parede do Final Swarm aos ~28–30 min.
+- **Limites:** é um modelo, sem posição, obstáculos, ultimate, aliados nem procs de item. A ordem entre dificuldades ainda não é estável (às vezes o Chunin dura mais que o Genin, porque mais monstros dão mais XP).
+- **Testes:**
+  - 7 testes novos em `tests/balanceamento.test.mjs`; 2 testes de `tests/progressao.test.mjs` e a faixa do Guardião em `scripts/verify-rules.mjs` atualizados para as novas regras; mínimo 139.
+  - 6 mutações novas, todas acusadas.
+  - **PASSOU:** tsc, 139/139 com cobertura e build.
+  - **PENDENTE DE VALIDAÇÃO E2E:** sentir a abertura, as recargas e as emboscadas na partida.
+
 ## 15/11/2026 · Ninja do tamanho do monstro e câmera mais perto (Rodada 77)
 
 - **Pedidos do usuário:**

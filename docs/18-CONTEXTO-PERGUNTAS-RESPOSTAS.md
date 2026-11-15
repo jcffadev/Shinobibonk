@@ -232,6 +232,14 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - O ninja controlado tem a mesma altura visível do monstro comum (`PLAYER_SIZE` derivado de `MONSTER_VISIBLE_HEIGHT` em `src/game/worldScale.ts`).
 - Câmera: padrão 12, faixa 8–22 (`CAMERA_ZOOM` em `src/game/settings.ts`), com migração do padrão antigo.
 
+### Rodada 76 · 15/11/2026
+
+- Recarga por forma mostrada no Nv 1 (corpo a corpo 0,6 · projétil 0,8 · órbita 1 · cone 1,2 · linha/onda/Em V 1,5 · área 2) e −35% no Nv 9; poder por forma ×1,3–1,6 (chefes descontam).
+- Vida do comum 13, por dificuldade 1/1,3/1,6/2; abertura de 1 a 2 monstros/s até 4 min; nascimento a 16–24 m nos 2 primeiros min; emboscada aos 2:30 e a cada 50–80 s.
+- XP ×5 entre o Nv 10 e o 60, igual em todas as dificuldades; Final Swarm compõe +10%/min × dificuldade.
+- Números de dano curtos (1K, 123.1K, 1M…).
+- Simulador de partidas: `node scripts/simulate-run.mjs <herói> <dificuldade> <min> <semente> <novo|maximo> <casual|medio|bom>` e `node scripts/simulate-batch.mjs <rótulo>`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

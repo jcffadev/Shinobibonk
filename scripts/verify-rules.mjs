@@ -124,7 +124,8 @@ const hpLate=guardianVitality(difficultyAt('Genin',runSeconds,1,overtime).hp,run
 // Rodada 47 — faixa atualizada: o usuário pediu early game +200% (hpBase 1,6→3,2 em ENEMY_SCALING; dano do herói ×0,55→×0,41).
 // O HP tardio do guardião é proporcional a hpBase (1,17^min amplifica ~81× aos 28 min): 1,06e9 → ≈1,23e9. Se o usuário
 // ajustar o scale da dificuldade, atualize esta faixa junto com ENEMY_SCALING (progression.ts) e a nota na docs/14.
-assert.ok(hpLate>=1.1e9&&hpLate<1.35e9,`HP tardio do guardião: ${hpLate}`);
+// Rodada 76: no Final Swarm a ameaça também compõe +10%/min × MISSION_HP (SWARM_COMPOUND): ×1,1^18 ≈ ×5,56 → ≈6,8e9.
+assert.ok(hpLate>=6.1e9&&hpLate<7.5e9,`HP tardio do guardião: ${hpLate}`);
 assert.ok(guardianDefense(runSeconds)>.85&&guardianDefense(runSeconds,true)>guardianDefense(runSeconds));
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);
 // Rodada 50 — base 9.500 ±5% por nascimento (rng fixo 0,5 = variação neutra = 9.500).

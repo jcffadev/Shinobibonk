@@ -2121,3 +2121,22 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Câmera: começa em 12 (antes 19) e afasta no máximo até 22. O padrão antigo salvo migra sozinho.
 - **Testes:** tsc **PASSOU**; testes e build rodados numa cópia limpa só com estas mudanças, porque a pasta tinha o balanceamento de outra sessão em andamento. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 76 · 15/11/2026 — recargas, abertura, curva longa e simulador de partidas
+
+> 4s de cooldown para uma skill é MUITA coisa... Muita mesmo pode por ataques meele 0.5 ou 0.7, projeteis que acertam mais de 1 cerca de 1,5 e area 2s
+
+> Claro, você precisa balancear as outras dificuldades também, considerando que nosso Kage é o Nightmare deles. Quero que você simule partidas parecidas... Faça a ferramenta que precisa e faça várias simulações
+
+> os números de dano na tela... E não o numero tipo 123148, seria 123.1K
+
+> A relação de acerto... deve depender da inteligencia e skill do jogador... A não ser que a % de evasão faça esquivar...
+
+**Resposta.**
+
+- Recarga e poder por forma de técnica, vida do comum por dificuldade, abertura calma, nascimento mais longe e emboscadas mais espaçadas, como combinado.
+- Simulador de partidas sem navegador (`scripts/simulate-run.mjs` e `scripts/simulate-batch.mjs`). O acerto dos monstros depende do desvio do jogador, que é um parâmetro (casual, médio, bom); a evasão entra à parte.
+- O simulador mostrou que o nível disparava e que o Kage sobrevivia mais que o Genin (mais XP por monstro). Ajustes: XP ×5 entre o Nv 10 e o 60, XP igual em todas as dificuldades, Final Swarm compondo mais rápido nas difíceis.
+- Números de dano curtos (1K, 123.1K, 1M, 1B…).
+- **Testes:** **PASSOU** tsc, 139/139 com cobertura e build; 6 mutações novas acusadas. **PENDENTE DE VALIDAÇÃO E2E**.
+- **Publicado no GitHub.**

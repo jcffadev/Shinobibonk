@@ -2,7 +2,7 @@
 // Importa os módulos direto (TypeScript nativo do Node), sem Vite nem navegador.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { xpToLevelUp, heroHpScale, HP_GROWTH, calculateStats, difficultyAt, zoneThreat, zoneCurse, ZONE_DIFFICULTY, ENEMY_SCALING, FINAL_SWARM, MISSION_TIER } from '../src/game/progression.ts';
+import { xpToLevelUp, heroHpScale, HP_GROWTH, calculateStats, difficultyAt, zoneThreat, zoneCurse, ZONE_DIFFICULTY, ENEMY_SCALING, FINAL_SWARM, MISSION_TIER, MISSION_HP } from '../src/game/progression.ts';
 import { lootScale, xpDropValue } from '../src/game/enemyTiers.ts';
 import { HEROES } from '../src/game/heroes.ts';
 import { close } from './helpers/load.mjs';
@@ -114,17 +114,22 @@ test('XP por abate usa o relógio total e a curva continua nas trocas de zona', 
   const samples = [0, 599, 600, 1199, 1200, 1799];
   const normalXp = samples.map(elapsed => xpDropValue(lootScale('normal', 0, 0, MISSION_TIER.Genin), 1, elapsed));
   assert.deepEqual(normalXp, [4, 7, 7, 10, 10, 13]);
-  assert.deepEqual([100, 300, 582].map(level => Math.ceil(xpToLevelUp(level))), [1174, 5069, 11629]);
+  // Rodada 76: a XP pedida fica igual até o Nv. 10 e chega a ×5 no Nv. 60 (XP_RULES); antes 1174 · 5069 · 11629.
+  assert.deepEqual([100, 300, 582].map(level => Math.ceil(xpToLevelUp(level))), [5869, 25345, 58142]);
   assert.equal(xpDropValue(3, 1.25, 600), 25, 'bônus da zona ativa é aplicado antes do arredondamento');
 });
 
-test('abertura mais espaçada e densidade recuperada ao final do primeiro minuto', () => {
+// Rodada 76 (pedido: "ir nascendo 1 monstro por segundo no começo"): abertura calma por dificuldade (OPENING) que se mistura à
+// curva antiga com peso (min/4)²; dos 4 min em diante a curva é a mesma de antes (26/s e teto 304 no Genin aos 4 min).
+test('abertura calma: 1 monstro/s no Genin, 2 no Kage, e curva antiga a partir de 4 min', () => {
   const base=difficultyAt('Genin',0);
-  assert.equal(base.cap,12);
-  assert.ok(close(base.spawnPerSecond,.544));
-  assert.ok(close(difficultyAt('Genin',60).spawnPerSecond,8));
+  assert.equal(base.cap,8);
+  assert.ok(close(base.spawnPerSecond,1));
+  assert.ok(difficultyAt('Genin',60).spawnPerSecond<2.5,'1º minuto continua calmo');
   for(const rank of Object.keys(MISSION_TIER)) {
-    assert.ok(close(difficultyAt(rank,0).spawnPerSecond,.544*Math.sqrt(MISSION_TIER[rank])));
-    assert.ok(close(difficultyAt(rank,60).spawnPerSecond,8*Math.sqrt(MISSION_TIER[rank])));
+    assert.ok(close(difficultyAt(rank,0).spawnPerSecond,MISSION_HP[rank]));
+    assert.ok(close(difficultyAt(rank,240).spawnPerSecond,26*Math.sqrt(MISSION_TIER[rank])));
   }
+  assert.equal(difficultyAt('Kage',0).cap,16);
+  assert.equal(difficultyAt('Genin',240).cap,304);
 });

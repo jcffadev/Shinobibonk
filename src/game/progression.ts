@@ -30,9 +30,16 @@ export function heroHpScale(level:number) {
 export function effectiveLootLuck(luck:number, elapsed:number) {
   return luck*(.2+.8*Math.min(1,Math.max(0,elapsed)/150));
 }
+/**
+ * Rodada 76 (simulador de partidas, scripts/simulate-run.mjs): o nível disparava (Nv 67 aos 5 min no Genin; Nv 10.000–25.000 em 2 h)
+ * e o dano do jogador passava a vida dos monstros em centenas de vezes. A XP pedida fica igual até o Nv 10 (abertura) e sobe
+ * linearmente até ×XP_RULES.scale no Nv 60, mantendo esse fator depois.
+ */
+export const XP_RULES={from:10,to:60,scale:5};
+export const xpCurveScale=(level:number)=>1+(XP_RULES.scale-1)*Math.min(1,Math.max(0,(level-XP_RULES.from)/(XP_RULES.to-XP_RULES.from)));
 export function xpToLevelUp(level:number) {
   const levels=Math.max(0,level-1);
-  return level<=1?30:18+6*levels+.08*levels**2/(1+levels/250);
+  return level<=1?30:(18+6*levels+.08*levels**2/(1+levels/250))*xpCurveScale(level);
 }
 export function calculateStats(heroId:string,level:number,items:Record<string,number>={},pills:Record<string,number>={},bonusHp=0,permanent:Record<string,number>={},runBuffs:Bonuses={},powerlevel:Powerlevel={},pillQuality:Record<string,number>={}):Stats {
   const base=HERO_BASE[heroId]??HERO_BASE.naruto,n=Math.max(0,level-1),b:Bonuses={...HERO_BY_ID[heroId]?.bonuses};
@@ -64,6 +71,22 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
 }
 /** Escala das missões sobre a base Genin (o que é salvo no debug vale como Genin e é multiplicado por isto). */
 export const MISSION_TIER:Record<Difficulty,number>={Genin:1,Chunin:1.4,Jonin:1.9,Kage:2.6};
+/**
+ * Rodada 76 (pedido do usuário: "balancear as outras dificuldades também, considerando que nosso Kage é o Nightmare deles"):
+ * vida do MONSTRO COMUM por dificuldade (Kage ≈ 2× o Genin, como o material de referência mostrou) e abertura de nascimentos
+ * por dificuldade. O MISSION_TIER continua valendo para dano, velocidade, elites, Mega Elites e chefes.
+ */
+export const MISSION_HP:Record<Difficulty,number>={Genin:1,Chunin:1.3,Jonin:1.6,Kage:2};
+/** Fator da vida do comum sobre a ameaça da missão (a ameaça já traz o MISSION_TIER). */
+export const normalHpFactor=(rank:Difficulty)=>MISSION_HP[rank]/MISSION_TIER[rank];
+/** Abertura calma (Rodada 76): nascimentos por s e teto de vivos começam baixos e se misturam à curva normal com peso (min/minutes)². */
+export const OPENING={minutes:4,perMinute:.5,capBase:8,capPerMinute:10};
+/** Termo extra de vida por dificuldade: só começa depois de `delay` min e chega ao teto em `spread` min (antes: do 0 ao teto em 2,1 min). */
+export const HP_RAMP={delay:2,spread:4};
+/** Rodada 76 (pedido: "talvez eles estarem um pouquinho mais longe… as emboscadas também devem ser eventos com maiores intervalos"):
+ * nos 2 primeiros min de cada zona os comuns nascem a 16–24 m (antes 10–18 m); emboscada a partir de 2:30 e a cada 50–80 s (antes 30 s e 18–30 s). */
+export const SPAWN_RING = { openingSeconds: 120, opening: [16, 24] as const };
+export const AMBUSH_RULES = { first: 150, min: 50, spread: 30 };
 /**
  * Escala dos inimigos com o tempo DA ZONA (Rodada 55: reinicia do minuto 0 a cada zona — antes era o tempo total da run).
  * `seconds` = zoneElapsed no GameCanvas; ZONE_DIFFICULTY, missão e +% de inimigos/ameaça entram por cima. Valores provisórios; o debug multiplica por cima.
@@ -118,9 +141,11 @@ export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
  */
 export const FINAL_SWARM={multiplier:3,growthPerMinute:.25,maxArmor:.85,maxEnemies:1600,rampMinutes:7,ramp800Cap:800,ramp800Seconds:240,rampSeconds:420,refillSeconds:4,spawnRing:[14,28] as const};
 /** Multiplicador do FINAL SWARM para `overtimeSeconds` sobrevividos após o relógio zerar (1 = fora do swarm). */
-export function finalSwarmFactor(overtimeSeconds:number){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60):1;}
+export function finalSwarmFactor(overtimeSeconds:number,rank:Difficulty='Genin'){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60)*(1+SWARM_COMPOUND.perMinute*MISSION_HP[rank])**(overtimeSeconds/60):1;}
+/** Rodada 76: no Final Swarm a ameaça também compõe por minuto, mais rápido nas dificuldades altas (Genin +perMinute, Kage +2×perMinute). */
+export const SWARM_COMPOUND={perMinute:.1};
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
-  const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds);
+  const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds,rank);
   // Revisão 11/11/2026: sem desconto de early game em nenhum rank — cada dificuldade escala em sua devida proporção (tier).
   const opening=.34+.66*Math.min(1,minutes);
   const baseCap=Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*opening));
@@ -129,11 +154,13 @@ export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeco
   // até 1600 (teto absoluto) a +7 min (420 s). Fora do swarm o teto normal (máx. 1600) se aplica.
   const cap=swarm>1?(()=>{const base=Math.min(baseCap,FINAL_SWARM.ramp800Cap);if(overtimeSeconds<=FINAL_SWARM.ramp800Seconds)return base;const t=Math.min(1,(overtimeSeconds-FINAL_SWARM.ramp800Seconds)/Math.max(1,FINAL_SWARM.rampSeconds-FINAL_SWARM.ramp800Seconds));return Math.min(FINAL_SWARM.maxEnemies,Math.floor(base+(FINAL_SWARM.maxEnemies-base)*t));})():baseCap;
   const baseSpawn=Math.min(S.maxSpawnPerSecond,(S.spawnBase+S.spawnPerMinute*minutes)*Math.sqrt(tier)*opening*(.8+.2*Math.min(1,minutes)))*(swarm>1?1+(swarm-1)*swarmRamp:1);
-  const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):baseSpawn;
-  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,minutes/1.5)*.19*(tier-1)/.4)*curse*swarm,damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
+  const opened=swarm>1?1:Math.min(1,(minutes/OPENING.minutes)**2);
+  const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):MISSION_HP[rank]*(1+OPENING.perMinute*minutes)*(1-opened)+baseSpawn*opened;
+  const openCap=swarm>1?cap:Math.max(1,Math.round((OPENING.capBase+OPENING.capPerMinute*minutes)*MISSION_HP[rank]*(1-opened)+cap*opened));
+  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,Math.max(0,minutes-HP_RAMP.delay)*1.4/HP_RAMP.spread)*.19*(tier-1)/.4)*curse*swarm,damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm,
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08)*curse,
     spawnPerSecond,spawnInterval:1/spawnPerSecond,
-    cap,
+    cap:openCap,
     armor:swarm>1?Math.min(FINAL_SWARM.maxArmor,minutes*S.armorPerMinute*swarm):Math.min(S.maxArmor,minutes*S.armorPerMinute),swarm};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}

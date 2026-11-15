@@ -19,7 +19,15 @@ export type Setup={cooldown:number;duration:number;bonuses:Bonuses;stack:boolean
  */
 export type Hero={id:string;name:string;village:string;color:string;passive:string;bonuses:Bonuses;base:{hp:number;damage:number;armor:number;speed:number;crit:number;regen:number};skills:string[];techniques:Technique[];ultimate:string;build:string;atlas?:number;family?:string;form?:number;title?:string};
 const colors:Record<Element,string>={Neutro:'#d7e6ff',Fogo:'#ff7c45',Água:'#5fb6ef',Vento:'#8de8ca',Terra:'#c7a16c',Raio:'#b3c5ff',Madeira:'#8bd464',Areia:'#ddae70',Sombra:'#ad84e8',Sábio:'#f5da86'};
-const t=(name:string,school:School,element:Element,shape:Shape,power=1):Technique=>({name,school,element,shape,color:colors[element],power,range:shape==='Corpo a corpo'?1.6:shape==='Cone'?2.8:shape==='Órbita'?1.7:4.5,cooldown:shape==='Corpo a corpo'?1.2:shape==='Área'?2:1.5,slow:element==='Sombra',burn:element==='Fogo',poison:/Venenos[ao]|Tóxic[ao]|Corrosiv[ao]/.test(name),status:school==='Genjutsu'?(name.includes('Corvo')?'Dormir':name.includes('Tsukuyomi')?'Atordoar':'Paralisar'):element==='Raio'?'Paralisar':element==='Vento'?'Empurrar':element==='Madeira'||element==='Areia'?'Lentidão':shape==='Corpo a corpo'?'Atordoar':undefined,statusChance:school==='Genjutsu'?.3:.12,unlockLevel:1});
+/**
+ * Rodada 76 — recarga e poder por FORMA da técnica (pedido do usuário: "ataques meele 0.5 ou 0.7, projeteis que acertam mais de 1
+ * cerca de 1,5 e area 2s"; "skills que acertam só monstro precisam de um buff considerável… área buffadas, mas não tanto… projéteis
+ * que acertam mais de um, também, mas não tanto"). A recarga é a mostrada no Nv. 1 (techniqueCooldownScale(1) = 1) e cai até −35% no
+ * Nv. 9. O poder multiplica o poder base da técnica; os chefes descontam este fator (bossCombat.ts) e batem como antes.
+ */
+export const SHAPE_COOLDOWN:Record<Shape,number>={'Corpo a corpo':.6,'Projétil':.8,'Órbita':1,'Cone':1.2,'Linha':1.5,'Onda':1.5,'Em V':1.5,'Área':2,'Buff':1};
+export const SHAPE_POWER:Record<Shape,number>={'Corpo a corpo':1.5,'Projétil':1.6,'Órbita':1.3,'Cone':1.35,'Linha':1.45,'Onda':1.45,'Em V':1.4,'Área':1.4,'Buff':1};
+const t=(name:string,school:School,element:Element,shape:Shape,power=1):Technique=>({name,school,element,shape,color:colors[element],power:power*SHAPE_POWER[shape],range:shape==='Corpo a corpo'?1.6:shape==='Cone'?2.8:shape==='Órbita'?1.7:4.5,cooldown:SHAPE_COOLDOWN[shape],slow:element==='Sombra',burn:element==='Fogo',poison:/Venenos[ao]|Tóxic[ao]|Corrosiv[ao]/.test(name),status:school==='Genjutsu'?(name.includes('Corvo')?'Dormir':name.includes('Tsukuyomi')?'Atordoar':'Paralisar'):element==='Raio'?'Paralisar':element==='Vento'?'Empurrar':element==='Madeira'||element==='Areia'?'Lentidão':shape==='Corpo a corpo'?'Atordoar':undefined,statusChance:school==='Genjutsu'?.3:.12,unlockLevel:1});
 /** Cria uma técnica de setup. Valores provisórios. */
 const s=(name:string,school:School,element:Element,setup:Setup):Technique=>({name,school,element,shape:'Buff',color:colors[element],power:0,range:9,cooldown:setup.cooldown,statusChance:0,unlockLevel:1,setup});
 const SAGE_MODE:Setup={cooldown:16,duration:7,bonuses:{damage:.15,area:.2},stack:false,sage:true,summary:'Entra no Modo Sábio: +dano e +área; aplica o elemento Sábio, dá Senjutsu ao Ninjutsu e faz o taijutsu corpo a corpo acertar em área ao redor.'};

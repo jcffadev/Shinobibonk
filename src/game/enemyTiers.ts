@@ -10,7 +10,7 @@
  */
 export type EnemyTier = 'normal' | 'elite' | 'mega' | 'account';
 export const ENEMY_TIERS: Record<EnemyTier, { hp: number; damage: number; defense: number; speed: number; loot: number }> = {
-  normal: { hp: 22, damage: 1, defense: 0, speed: 1, loot: 1 },
+  normal: { hp: 13, damage: 1, defense: 0, speed: 1, loot: 1 }, // Rodada 76: 22 → 13 (só o comum; elites/mega/chefes iguais)
   elite: { hp: 95, damage: 1.6, defense: .3, speed: 1.25, loot: 3 },
   mega: { hp: 420, damage: 2.6, defense: .55, speed: .95, loot: 9 },
   account: { hp: 180, damage: 1.5, defense: .25, speed: 1, loot: 0 },
@@ -22,6 +22,8 @@ export const eliteSpawnChance = (rate = 1, bonus = 0) => Math.min(1, Math.max(0,
 export const BASE_LOOT = { xp: 5, ryu: 3, chakra: 9, ryuChance: .72, chakraChance: .28 }; // Rodada 48 — XP por mob alta (8→5), pedido do usuário; drop por abate segue garantido
 /** Peso da dificuldade da missão no tamanho dos drops: tier^0,5 (Genin 1, Chunin 1,18, Jonin 1,38, Kage 1,61). */
 export function missionLootFactor(tier: number) { return Math.sqrt(Math.max(1, tier)); }
+/** Rodada 76: a XP por abate não cresce com a dificuldade (o Kage subia de nível mais rápido e sobrevivia MAIS que o Genin); Ryu e chakra seguem com missionLootFactor. */
+export function xpLoot(loot: number, missionTier: number) { return loot / missionLootFactor(missionTier); }
 /**
  * Multiplicador de saque de um tier: base do tier × peso do HP real (HP atual do inimigo ÷ HP de um normal no mesmo momento)^0,35
  * × dificuldade da missão. O expoente baixo faz o HP pesar sem explodir os valores.

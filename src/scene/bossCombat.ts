@@ -2,7 +2,7 @@ import { techniqueProc } from '../game/combat';
 import * as THREE from 'three';
 import { compactNumber } from '../game/format';
 import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, BIJUU_BACK_SHEETS, beastPhase, bijuuFacesAway, bijuuSheetCell } from '../game/bijuu';
-import { HERO_BY_ID, ultimateBase, type Technique } from '../game/heroes';
+import { HERO_BY_ID, SHAPE_POWER, ultimateBase, type Technique } from '../game/heroes';
 import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techniqueEffects';
 
 /**
@@ -145,7 +145,8 @@ export function createBossCombat(ctx: BossContext) {
       const available = hero.techniques.slice(0, state.guardian ? 4 : Math.min(4, 1 + ctx.zone())).filter((t) => !t.setup);
       technique = available[state.next % Math.max(1, available.length)] ?? hero.techniques[0];
       state.next = Math.floor(Math.random() * 1000);
-      shape = shapeOf(technique); power = technique.power;
+      // Rodada 76: o reforço de poder por forma é só do jogador; o chefe desconta e bate como antes.
+      shape = shapeOf(technique); power = technique.power / (SHAPE_POWER[technique.shape] ?? 1);
       range = shape === 'circle' ? (technique.gravity==='pull'?technique.range:technique.shape === 'Corpo a corpo' ? 2.6 : 2.4) : shape === 'cone' ? 6 : shape === 'ring' ? (technique.shape === 'Onda' ? 4.4 : 3.2) : 10;
     }
     else return;
