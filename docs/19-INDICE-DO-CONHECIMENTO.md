@@ -88,3 +88,5 @@ A [auditoria dos efeitos](24-AUDITORIA-DE-EFEITOS.md) inventaria o caminho visua
 [Guia de ranking e clãs](development/RANKING-E-CLAS.md), [skill compartilhada de publicação](../skills/proteger-publicacao/SKILL.md) e [auditoria de jutsus](24-AUDITORIA-DE-EFEITOS.md). As receitas ficam em src/game/techniqueMerge.ts e os dōjutsu em src/game/dojutsu.ts.
 
 O guia visível ao jogador fica em src/ui/GameGuide.tsx. Revise suas descrições quando mudar controles, clima, NPCs ou recompensas de evento.
+
+Definições para o jogador em src/game/glossary.ts. Revise o verbete e o exemplo ao mudar o significado de um campo de Stats.

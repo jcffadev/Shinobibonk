@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 15/11/2026 · Glossário e saldo na inicial
+
+- Glossário pesquisável por assunto e por termo, com explicações e exemplos sobre dano, críticos, tempo entre golpes, projéteis, status, defesa, economia e aliados.
+- O saldo de Lamens aparece entre Arquivo Shinobi e o perfil. A entrada de prévia estática do Naruto saiu da tela inicial.
+
+- Build, verificação de todos os atributos, busca renderizada em Node e 104 testes por código passaram. Validação visual do hub e do guia pendente.
+
 ## 15/11/2026 · Guia do jogo
 
 - A tela inicial abre um guia com controles configurados, progressão de missão, eventos com condição e duração, funcionamento dos NPCs e glossário pesquisável.

@@ -385,3 +385,5 @@ O cliente usa src/game/onlineRanking.ts e a função Netlify em netlify/function
 ### Guia do jogo
 
 A rota de hub guide monta GameGuide com as teclas em uso. A página reaproveita maps.ts para fases do clima, npcs.ts para regras de Iruka, Ebisu e Totem e roulette.ts para as casas da Tsunade. A origem do tempo de espera do clima é WEATHER_WAIT em maps.ts. Na descrição de mecânicas, consulte os pontos de entrada de GameCanvas.
+
+O glossário usa src/game/glossary.ts como catálogo pesquisável. A verificação de regras exige cobertura de todos os campos públicos de Stats. O GameGuide renderiza assuntos e exemplos. A barra superior do hub exibe o saldo de Lamens e a rota de prévia estática saiu de Page.

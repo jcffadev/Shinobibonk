@@ -156,3 +156,5 @@ A Home tenta iniciar a trilha ao carregar. Táticas de Missão e Arsenal de Miss
 O ranking usa armazenamento local por padrão. A [integração Netlify/PostgreSQL](docs/development/RANKING-E-CLAS.md) pode ser habilitada ao provisionar o serviço. O planejador mostra fusões elementais elegíveis, o tipo e a progressão de cada técnica. Consulte o [changelog](CHANGELOG.md) para o HUD e o balanceamento.
 
 O botão **Guia do jogo** na inicial reúne controles, progresso, eventos da missão, NPCs e glossário pesquisável.
+
+Na aba **Glossário**, filtre por assunto ou busque o nome de um atributo, como chance crítica, projétil ou duração de status. O saldo de Lamens fica ao lado do perfil, na barra superior.

@@ -60,7 +60,7 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 
 - **HP** (Rodada 55, **PROPOSTO**): `(46 + 0,085×min(215, hp base)) × heroHpScale(nível) + vida plana + bônus` × `(1 + healthPct)`, com `heroHpScale = 1 + 0,04n/(1+n/150)` (`HP_GROWTH`; teto assintótico ×7). Antes (rodada 54): `1 + 0,032n + 0,00022n²`. Naruto sem itens: Nv. 1 **57** · 10 **76** (era 74) · 50 **141** (era 176) · 100 **193** (era 361) · 200 **252** (era 917) · 415 **308** (era 2.961).
 - **Velocidade de ataque**: `1 + 0,008×n + % + Agilidade×2%` (mín. 0,2).
-- **Crítico**: base + `0,0015×n` + bônus; **dano crítico 2,5×** (com sorte alta, tier 2 = 3,0×).
+- **Crítico**: base + `0,0015×n` + bônus; **dano crítico 2,5×** (a chance crítica acima de 100% dá chance de tier 2, que soma +0,5× ao multiplicador).
 - **Sorte**: `floor(n/3)` + bônus; sorte efetiva em loot: `luck × (0,2 + 0,8 × min(1, tempo/150s))` (pleno aos 2,5 min).
 - **Coleta (ímã)**: raio `2,5 × (1 + pickup) + flat + Magnetismo×0,6`.
 - **Vagas de suporte**: `3 + (até 1 de item) + (1 permanente)`.
@@ -133,3 +133,5 @@ Bênção do altar: valores base da Rodada 51 de 5/8/12/18/25% por raridade e mu
 - **Projétil/golpe da bênção** (`src/game/altarRewards.ts`): sai `projectileChance` do altar. `projectiles` inteiro por raridade: Comum 0 · Incomum 0 · **Raro +1 · Épico +2 · Lendário +3** (sem escala de Sorte). Nas técnicas sem projétil (corpo a corpo, cone, linha, área), cada projétil além do 1º repete o acerto 0,14 s depois (Ultimate fora; teto 11 extras). Konan/Tenten (afinidade) e a sinergia da Folha continuam com chance fracionária.
 - **Escala por zona:** `difficultyAt(missão, zoneElapsed, ZONE_DIFFICULTY[zona] × planos × (1+threat), overtime)` — HP/dano/vivos/spawn/armadura/Final Swarm recomeçam do minuto 0 em cada zona; densidade `×(1+enemyCount)` por cima. HP do Mega Elite (`megaEliteHp`), defesa do Mega Elite e fração de inimigos à distância também usam o tempo da zona. Guardião (resistência por tempo total) e bijū (HP pela run inteira) mantidos.
 - **Ímã do morro:** todo drop no chão (XP, Ryu, chakra, cura, pílula) entra no ímã global de 10 s e voa com velocidade ≥ distância/1,2 s — chega em ~1,2 s de qualquer ponto do mapa.
+
+Exemplos para o jogador ficam no Guia do jogo, em src/game/glossary.ts. Sincronize-os com as mudanças das regras nesta seção.

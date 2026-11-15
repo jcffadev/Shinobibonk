@@ -1,3 +1,4 @@
+import { glossary } from '../src/game/glossary.ts';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { ROSTER_EXPANSION } from '../src/game/rosterExpansion.ts';
@@ -102,6 +103,12 @@ const {itemAttribute}=await import('../src/game/combat.ts');
 assert.equal(ITEMS.filter(i=>i.rarity==='Raro'&&itemAttribute(i)==='Chance crítica').length,1);
 for(const id of ['damage','life','sandals','experience','coins','luck','pickup','bandana','critical','speed','clone','cooldown','tenten','recruit'])assert.ok(ITEMS.some(i=>i.id===id),'ícone da árvore sem item: '+id);
 const n1=calculateStats('naruto',1),n2=calculateStats('naruto',2);
+const glossaryStats=glossary.flatMap(section=>section.entries.flatMap(entry=>entry.stat??[]));
+assert.deepEqual(glossaryStats.sort(),Object.keys(n1).filter(key=>key!=='extra').sort(),'todo atributo da missão tem explicação no glossário');
+const hubSource=fs.readFileSync('src/main.tsx','utf8');
+const header=hubSource.slice(hubSource.indexOf('<header className="home-topbar">'),hubSource.indexOf('<section className="hub-body">'));
+assert.ok(/Arquivo Shinobi.*account-lamens.*account-badge/.test(header),'saldo entre Arquivo Shinobi e perfil');
+assert.ok(!hubSource.includes('Ver Naruto no cenário'),'prévia antiga retirada da inicial');
 assert.ok(n2.damage/n1.damage>1.09&&n2.damage/n1.damage<1.12);assert.equal(n1.maxHp,57);for(const hero of HEROES){const s=calculateStats(hero.id,1);assert.ok(s.maxHp>=50&&s.maxHp<=68,hero.id+" HP inicial "+s.maxHp);assert.ok(calculateStats(hero.id,25).maxHp>s.maxHp*1.65);}
 assert.equal(heroDamageScale(1),.74);assert.ok(heroDamageScale(50)>14&&heroDamageScale(50)<15);
 // Rodada 55 (PROPOSTO): HP por nível desacelera — 1 + 0,04n/(1+n/150); Nv. 415 ≈ ×5,4 (antes ×52, ~2.960 HP sem itens).

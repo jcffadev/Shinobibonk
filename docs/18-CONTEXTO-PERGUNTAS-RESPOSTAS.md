@@ -191,6 +191,8 @@ As fichas usam a foto em três quartos e centralizam a silhueta. Apelido, avatar
 
 O menu inicial tem Guia do jogo com navegação e busca. O conteúdo descreve controles, eventos por tempo, NPCs e glossário a partir da implementação vigente.
 
+Glossário ampliado em 15/11 com exemplos de todos os atributos, busca e filtro por assunto. O saldo de Lamens fica entre Arquivo Shinobi e o perfil, e a prévia estática do Naruto saiu da tela inicial.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

@@ -221,7 +221,7 @@ kbd{font-family:var(--fonte-texto)}
 .home-copy{color:#efdfc0}
 /* Botões: selo vermelho (principal) e placa de madeira (secundário). */
 .primary-button{border:3px solid var(--selo-borda);border-radius:8px;background:var(--bg-selo);box-shadow:0 0 0 2px var(--ouro),0 5px 0 rgba(0,0,0,.45)}
-.secondary-button,.preview-button{border:2px solid var(--madeira-borda);border-radius:8px;background:var(--bg-placa);box-shadow:var(--sombra-placa)}
+.secondary-button{border:2px solid var(--madeira-borda);border-radius:8px;background:var(--bg-placa);box-shadow:var(--sombra-placa)}
 .button b{font-family:var(--fonte-titulo);font-weight:400;font-size:15px}
 .button small{color:#f6e2bd}
 .button-icon{background:rgba(29,20,16,.55);color:#ffe08a}
@@ -422,3 +422,12 @@ kbd{font-family:var(--fonte-texto)}
    texto branco do .button. Agora usa a mesma placa de madeira do perfil ao lado. */
 .account-area .archive-button{background:var(--bg-placa);color:#f7e6c0;border:2px solid var(--madeira-borda);border-radius:8px;box-shadow:var(--sombra-placa);font-weight:800;white-space:nowrap}
 .account-area .archive-button:hover{filter:brightness(1.12)}
+
+.account-area .account-lamens{display:flex;flex:none;align-items:center;gap:6px;padding:5px 8px;border-color:#be9254;border-radius:8px;background:#271a12;color:#ffe196;line-height:1.2}
+.account-lamens small,.account-lamens b{display:block;white-space:nowrap}
+.account-lamens small{color:#eccfaf;font-size:10px}
+.account-lamens b{font-variant-numeric:tabular-nums}
+@media(max-width:900px){.home-topbar .account-area{gap:6px}.account-area .account-lamens{padding:4px 6px}.account-lamens>span:first-child{display:none}}
+@media(max-width:1240px){.home-topbar .hub-nav{min-width:0;overflow-x:auto;scrollbar-width:thin}}
+@media(max-width:900px){.home-topbar{height:auto;flex-basis:auto;flex-wrap:wrap;padding-block:6px}.home-topbar .hub-nav{order:3;flex-basis:100%;margin-left:0}.home-topbar .account-badge{display:flex;padding:4px}.home-topbar .account-badge>span{display:none}}
+@media(max-width:680px){.account-lamens small>span,.home-topbar .language-chip>span{display:none}}

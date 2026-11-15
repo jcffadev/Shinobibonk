@@ -28,3 +28,8 @@
 .guide-roulette dt{font-weight:800}
 .guide-roulette dd{margin:0}
 @media(max-width:720px){.guide-grid{grid-template-columns:1fr}.guide-panel{padding:12px}.guide-nav button{padding:8px 10px}}
+
+.glossary-topic{display:flex;align-items:center;gap:10px;margin:0 0 18px;flex-wrap:wrap;font-weight:800}
+.glossary-topic select{max-width:100%;padding:7px 11px;border:1px solid #bb9967;border-radius:8px;background:#f5e8cd;color:#2b1e15;font:inherit}
+.guide-glossary .glossary-example{margin-top:9px;padding:8px 10px;border-left:3px solid #a35236;background:#fff4d97a;border-radius:0 6px 6px 0}
+.guide-glossary .glossary-example b{display:block;color:#7b3423}

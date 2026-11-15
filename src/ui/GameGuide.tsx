@@ -1,3 +1,4 @@
+import { glossary } from '../game/glossary';
 import { useEffect, useState } from 'react';
 import { MAPS, WEATHER_BY_MAP, WEATHER_EVENTS, WEATHER_EVENT_DURATION, WEATHER_WAIT, type WeatherEventId } from '../game/maps';
 import { GUARDIAN_RULES } from '../game/missions';
@@ -50,24 +51,6 @@ const npcs=[
   {id:'',name:'Mercador de itens',summary:'Compre pelo preço da oferta atual em Ryu. Se quiser outro estoque, pague para roletar. Reabrir mostra as mesmas ofertas. Raridade, tempo e compras anteriores influenciam os preços dos novos itens.'},
 ] as const;
 
-const glossary=[
-  ['XP (experiência)','Orbes roxos dão experiência. Ao avançar de nível, escolha uma técnica ou pílula para aprender ou melhorar.'],
-  ['HP e armadura','HP é a vida. A armadura reduz o dano recebido. Bolinhos de arroz recuperam HP e a regeneração cura com o tempo.'],
-  ['Ryu','Moeda gasta durante a partida, por exemplo no mercador, Ichiraku, caça-níquel e recompensas do mapa.'],
-  ['Lamens','Recompensa de conta pelo desempenho. Desbloqueia passivas permanentes e itens para o pool.'],
-  ['Chakra e Ultimate','Orbes azuis ajudam a carregar a técnica especial. Com a carga completa, use o comando de Ultimate ou ligue a Ultimate automática.'],
-  ['Taijutsu','Técnicas físicas de combate, como golpes e algumas ferramentas ninja.'],
-  ['Ninjutsu','Técnicas executadas com chakra, como transformações elementais, clones e invocações.'],
-  ['Genjutsu','Ilusões e técnicas que interferem nos sentidos.'],
-  ['Senjutsu','Técnicas com energia natural. O Modo Sábio também pode infundir Ninjutsu enquanto está ativo.'],
-  ['Dōjutsu','Técnica ocular associada a olhos como Sharingan, Rinnegan e Byakugan.'],
-  ['Kekkei Genkai','Traço hereditário da obra. No jogo, pares elementais compatíveis podem desbloquear uma técnica de fusão.'],
-  ['Status, crítico e duração','Status inclui efeitos como congelamento e queimadura. Crítico aumenta o dano do golpe. Duração determina por quanto tempo um efeito fica ativo.'],
-  ['Pool, planejado e banido','Pool é o conjunto de ofertas elegíveis. Planejar dá prioridade à opção. Banir a remove da partida em todas as raridades.'],
-  ['Afinidade e sinergia','Afinidade fortalece o ajudante. Vínculos como vila, clã e organização podem ativar bônus de equipe.'],
-  ['Final Swarm','Horda final que surge quando acaba o tempo da zona. A missão continua no tempo extra.'],
-] as const;
-
 export function GameGuide({keys,onBack}:{keys:GameSettings['keys'];onBack:()=>void}){
   const [tab,setTab]=useState<Tab>('Como jogar');
   const [search,setSearch]=useState('');
@@ -76,8 +59,8 @@ export function GameGuide({keys,onBack}:{keys:GameSettings['keys'];onBack:()=>vo
     window.addEventListener('keydown',back);
     return()=>window.removeEventListener('keydown',back);
   },[onBack]);
-  const sections=tab==='Eventos'?fieldEvents:glossary;
-  const entries=sections.filter(([name,body])=>matchesSearch(name+' '+body,search));
+  const entries=fieldEvents.filter(([name,body])=>matchesSearch(name+' '+body,search));
+
   const npcMatches=npcs.filter(npc=>matchesSearch(npc.name+' '+npc.summary,search));
   const climates=(Object.keys(WEATHER_EVENTS) as WeatherEventId[]).filter(id=>matchesSearch(WEATHER_EVENTS[id].name+' '+climateNotes[id],search));
 
@@ -104,6 +87,25 @@ export function GameGuide({keys,onBack}:{keys:GameSettings['keys'];onBack:()=>vo
       <header className="guide-npc-heading">{npc.id&&<HeroPortrait id={npc.id}/>}<h2>{npc.name}</h2></header><p>{npc.summary}</p>
       {npc.id==='tsunade'&&<details className="guide-roulette"><summary>Ver casas e combinações</summary><p>O giro base começa em {ROULETTE_RULES.baseCost} Ryu.</p><dl>{ROULETTE_CASAS.map(casa=><div key={casa.id}><dt>{casa.label}</dt><dd>{casa.description}</dd></div>)}</dl></details>}
     </article>)}{!npcMatches.length&&<p>Nenhum NPC encontrado.</p>}</div>}
-    {tab==='Glossário'&&<dl className="guide-grid guide-glossary">{entries.map(([name,body])=><div className="guide-panel" key={name}><dt>{name}</dt><dd>{body}</dd></div>)}{!entries.length&&<div><dt>Nenhum termo encontrado.</dt><dd>Tente outro termo.</dd></div>}</dl>}
+    {tab==='Glossário'&&<GameGlossary search={search}/>}
   </section>;
+}
+
+export function GameGlossary({search}:{search:string}) {
+  const [topic,setTopic]=useState('');
+  const words=search.trim().split(/\s+/);
+  const terms=glossary.filter(group=>!topic||group.title===topic).map(group=>({
+    ...group, entries: group.entries.filter(entry=>words.every(word=>matchesSearch([group.title,entry.term,entry.detail,entry.example,entry.keywords].join(' '),word))),
+  })).filter(group=>group.entries.length);
+  return <>
+    <label className="glossary-topic"><span>Assunto</span><select value={topic} onChange={e=>setTopic(e.target.value)}>
+      <option value="">Todos os assuntos</option>{glossary.map(group=><option key={group.title}>{group.title}</option>)}
+    </select></label>
+    {terms.map(group=><section className="guide-event-group" key={group.title}><h2>{group.title}</h2>
+      <dl className="guide-grid guide-glossary">{group.entries.map(entry=><div className="guide-panel" key={entry.term}>
+        <dt>{entry.term}</dt><dd><p>{entry.detail}</p>{entry.example&&<p className="glossary-example"><b>Exemplo</b> {entry.example}</p>}</dd>
+      </div>)}</dl>
+    </section>)}
+    {!terms.length&&<p>Nenhum termo encontrado neste assunto.</p>}
+  </>;
 }

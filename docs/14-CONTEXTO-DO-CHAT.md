@@ -1920,3 +1920,9 @@ O hub ganhou um cartão de temporada, Top 100, clãs e uma ficha acessível pelo
 **Pedido.** “Colocar um botão na tela inicial explicando como funciona o jogo, eventos ativos durante as runs, eventos por tempo como zabuza, gaara... e o glossário. Como funciona a Tsunade, Iruka... enfim.”
 
 **Resposta.** O botão Guia do jogo abre Como jogar, Eventos, NPCs e Glossário. A busca encontra os eventos e os termos; o guia lê as teclas configuradas, as regras dos NPCs e os mapas de cada evento de clima.
+
+## Glossário e saldo na inicial · 15/11/2026
+
+**Pedidos.** “Glossário tem que explicar tudo que faz os tipos de dano, crítico, dano básico, velocidade de ataque, projétil.. chance de status, tudo, tudo explicadinho, mastigado.” “Tirar essa opção Ver Naruto no cenário, não precisamos mais disso.” “Colocar o Lamens disponíveis do lado do perfil do jogador entre arquivo shinobi ali”.
+
+**Resposta.** Guia ampliado por assunto, com exemplos de atributos e busca por várias palavras. O saldo de Lamens fica entre Arquivo Shinobi e o perfil. A entrada de prévia estática saiu da inicial.

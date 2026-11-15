@@ -418,3 +418,5 @@ Cada fase: implementar → `tsc -b` + `vite build` + `verify-rules` (+`verify-ru
 2. Revisar os 56 shinobis e seus ajudantes em jogo para verificar qualidade de poses, ícones, transições e proporções. O teste de atlas cobre estados e folhas, e a aprovação visual é uma etapa separada.
 3. Comparar as formas roxa do Sasuke e vermelha do Itachi com o novo Susano’o do Madara e criar seus próprios quadros se a direção visual for aprovada. Os rigs atuais já têm as armas por personagem.
 4. Validar a jogabilidade no PC do usuário, inclusive a política de áudio do navegador, a legibilidade do HP, as cores dos altares e a escala dos drops. Deploy externo segue a fila existente.
+
+**15/11 · Glossário e topo do hub.** Pendente de validação visual do filtro, dos exemplos e da posição do saldo em telas estreitas.
