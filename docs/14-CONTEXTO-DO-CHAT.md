@@ -1982,3 +1982,38 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Testes: `tests/colisao.test.mjs` (7 testes), 4 mutações acusadas, 117/117, tsc e build **PASSOU**.
 - **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 71 · 15/11/2026 — fusões e Kekkei Genkai
+
+> Fez a questão dos kekkei genkais nas fusões? Como esta as questões das fusões? Todas do jogo
+
+**Resposta.**
+
+- As 6 receitas, o teto no Nv 7 e o planejador já funcionavam.
+- Faltavam três coisas da lista de 11/11:
+  - o bônus de +15%;
+  - o atributo extra do Combinar;
+  - as receitas Jiton e Bakuton.
+
+> Sim, implementar
+>
+> Lembrando que as fusões/kekkei genkais tem que funcionar para TODOS os personagens que conseguem pegar + de 1 elemento
+>
+> Não deve ser possível unir 2 fusões, ou fusão + skill.
+
+**Resposta.**
+
+- **Feito:**
+  - 8 receitas, com Jiton (Vento + Terra) e Bakuton (Terra + Raio).
+  - +15% na fusão de mesma natureza ou da Kekkei Genkai da linhagem.
+  - O Combinar ganha um atributo do par.
+  - O bloqueio de fusão sobre fusão agora está na regra pura.
+- **Achado:** só 11 famílias tinham 2 ou mais naturezas no pool, e Hashirama e Haku não alcançavam a própria Kekkei Genkai.
+  - As naturezas da linhagem entraram em `allowedElements`.
+  - Agora são 18 famílias, todas alcançando cada receita das suas naturezas, com teste que percorre todos os personagens.
+  - O Gaara ficou fora da lista de linhagem para respeitar a regra de elemento base.
+- **Testes:**
+  - `tests/fusoes.test.mjs` (8 testes) e 5 mutações, todas acusadas.
+  - **PASSOU:** tsc, 125/125 com cobertura e build.
+  - **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

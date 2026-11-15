@@ -166,7 +166,7 @@ export const glossary: Section[] = [
       { term:'Pool, planejado e banido',
         detail:'Pool é o conjunto de escolhas elegíveis. Planejar sinaliza a opção para a missão. Arquivar retira a opção do planejamento aplicável. Banir durante a missão retira opções daquele nome em todos os níveis e raridades.' },
       { term:'Kekkei Genkai, fusão e combinação',
-        detail:'Certos pares elementais formam uma técnica especial quando fundidos. A fusão cria uma técnica nova no Nv. 1 que pode chegar ao Nv. 7. Combinar preserva as duas técnicas no mesmo espaço.' },
+        detail:'Dois Ninjutsus de naturezas que formam uma Kekkei Genkai (Hyōton, Mokuton, Yōton, Futton, Ranton, Shakuton, Jiton ou Bakuton) viram uma técnica especial quando fundidos, para qualquer shinobi que tenha as duas naturezas. A fusão cria uma técnica nova no Nv. 1 que pode chegar ao Nv. 7, com o dano somado. Fundir duas técnicas da mesma natureza, ou a Kekkei Genkai da própria linhagem (por exemplo Haku com Hyōton), dá +15% de dano. Combinar preserva as duas técnicas no mesmo espaço, com ×1,5 de dano e um atributo extra do par. Fusões e combinações não entram em outra fusão.' },
       { term:'Dōjutsu',
         detail:'Técnica ocular associada a olhos como Sharingan, Rinnegan e Byakugan. O card informa a escola e o efeito, como ilusão, atração ou repulsão.' },
     ],

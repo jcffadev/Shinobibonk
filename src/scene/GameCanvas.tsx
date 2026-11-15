@@ -18,7 +18,7 @@ import { createPlayerMotion, movementFacing, stableFacing } from './playerMotion
 import { createFallenBody, type FallenBody } from './fallenShinobi';
 import { createPerfMonitor } from './perfMonitor';
 import { recentStreak, extendStreak, type KillStreak } from '../game/killStreak';
-import { kekkeiFusion, mergedTechnique, techniqueLevelCap, type TechniqueMerge } from '../game/techniqueMerge';
+import { combineBonus, combinedPart, fusionBonus, isMergedName, kekkeiFusion, mergedTechnique, techniqueLevelCap, type TechniqueMerge } from '../game/techniqueMerge';
 import { createAtlasEffect } from './atlasEffects';
 import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from './gamabunta';
 import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } from './kuroari';
@@ -537,24 +537,25 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let sagesKind:TechniqueMerge['kind']='fuse',sagesUsedZone=0;
     function openSages(kind:TechniqueMerge['kind']=sagesKind){
       sagesKind=kind;
-      const learned=techniques.filter(t=>skillLevels[t.name]&&!t.setup&&!merges.has(t.name));
+      const learned=techniques.filter(t=>skillLevels[t.name]&&!t.setup&&!merges.has(t.name)&&!isMergedName(t.name));
       choiceLevel=-6;choiceData=[];banning=false;keys.clear();snapshotTimer=0;
       if(sagesUsedZone===zone)return;
       for(let i=0;i<learned.length;i++)for(let j=i+1;j<learned.length;j++){
         const a=learned[i],b=learned[j];
         { const kind=sagesKind;
           const merge:TechniqueMerge={kind,names:[a.name,b.name]};
-          const result=mergedTechnique(merge,techniques);
+          const result=mergedTechnique(merge,techniques,familyOf(heroId));
+          const clan=kind==='fuse'&&fusionBonus(a,b,familyOf(heroId))>0?' · +15% de dano ('+(a.element===b.element?'mesma natureza':'Kekkei Genkai da linhagem')+')':'';
           if(!result||merges.has(result.name))continue;
           const recipe=kekkeiFusion(result.name);
           choiceData.push({id:kind+'-'+i+'-'+j,kind:'stat',rarity:kind==='fuse'?'Épico':'Raro',icon:kind==='fuse'?'✦':'⛓',
             name:recipe?result.name:(kind==='fuse'?'Fundir':'Combinar')+' · '+a.name+' / '+b.name,merge,
-            description:recipe?recipe.summary:kind==='fuse'?`${a.element} + ${b.element} · técnica nova no nível 1, ×2 de dano sobre a média e afixos somados.`:'As duas técnicas atacam juntas no mesmo espaço. Cada uma causa ×1,5 de dano.'});
+            description:(recipe?recipe.summary:kind==='fuse'?`${a.element} + ${b.element} · técnica nova no nível 1, ×2 de dano sobre a média e afixos somados.`:'As duas técnicas atacam juntas no mesmo espaço. Cada uma causa ×1,5 de dano e ganha '+combineBonus(a,b).label+'.')+clan});
         }
       }
     }
     function applyMerge(merge:TechniqueMerge){
-      const merged=mergedTechnique(merge,techniques);
+      const merged=mergedTechnique(merge,techniques,familyOf(heroId));
       if(sagesUsedZone===zone||!merged||merges.has(merged.name)||merge.names.some(name=>!skillLevels[name]||merges.has(name)))return;
       sagesUsedZone=zone;
       const [a,b]=merge.names.map(name=>growth[name]??NO_GROWTH);
@@ -1284,7 +1285,9 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
     function castTechnique(t:Technique,origin:THREE.Vector3,g:SkillGrowth,ally=false,instant=false,allyMotion?:ReturnType<typeof createPlayerMotion>,part=false,casterId=heroId,effectLevel?:number):boolean{
       const merge=!part&&merges.get(t.name);
       if(merge&&merge.kind==='combine'){
-        const casts=merge.names.map(name=>{const source=techniques.find(tech=>tech.name===name);const base=growth[name]??NO_GROWTH;return source&&castTechnique({...source,power:source.power*1.5},origin,{damage:g.damage+base.damage,area:g.area+base.area,haste:g.haste+base.haste,duration:g.duration+base.duration},ally,instant,allyMotion,true,casterId,skillLevels[t.name]||1);});
+        const sources=merge.names.map(name=>techniques.find(tech=>tech.name===name));
+        const extra=sources[0]&&sources[1]?combineBonus(sources[0],sources[1]):undefined;
+        const casts=merge.names.map((name,index)=>{const source=sources[index];const base=growth[name]??NO_GROWTH;return source&&extra&&castTechnique(combinedPart(source,extra),origin,{damage:g.damage+base.damage,area:g.area+base.area,haste:g.haste+base.haste,duration:g.duration+base.duration},ally,instant,allyMotion,true,casterId,skillLevels[t.name]||1);});
         return casts.some(Boolean);
       }
       if(t.setup)return ally?false:activateSetup(t,g);

@@ -1,5 +1,40 @@
 # CHANGELOG
 
+## 15/11/2026 · Fusões e Kekkei Genkai completas (Rodada 71)
+
+- **Pedidos do usuário:**
+  - "Sim, implementar", sobre as pendências de fusão da lista de 11/11.
+  - "as fusões/kekkei genkais tem que funcionar para TODOS os personagens que conseguem pegar + de 1 elemento".
+  - "Não deve ser possível unir 2 fusões, ou fusão + skill."
+- **Duas Kekkei Genkai novas**, com os pares da Narutopedia:
+  - **Jiton: Areia Magnética** (Vento + Terra): onda com 40% de lentidão.
+  - **Bakuton: Argila Explosiva** (Terra + Raio): área com queimadura e 30% de atordoar.
+  - Agora são 8 receitas, uma por par de naturezas.
+- **+15% de dano na fusão** (`FUSION_KEKKEI_BONUS`) em dois casos:
+  - fusão de duas técnicas da mesma natureza (Neutro não conta);
+  - fusão da Kekkei Genkai da própria linhagem (`HERO_KEKKEI`).
+- **Linhagens cadastradas:**
+  - Haku: Hyōton.
+  - Hashirama, Yamato, Madara e Obito: Mokuton.
+  - Mei: Yōton e Futton.
+  - Rasa: Jiton.
+  - Deidara: Bakuton.
+  - O Gaara ficou de fora: o jogo já converte o Jiton dele em Areia, e a regra de elemento base impede que ele aprenda Vento.
+- **Naturezas da linhagem no pool:** `allowedElements` passa a incluir as naturezas da Kekkei Genkai da linhagem. Antes, Hashirama não alcançava o Mokuton e Haku não alcançava o Hyōton.
+- **Combinar** ganha, além do ×1,5, um atributo do par: +10% de dano, +15% de alcance, −10% de recarga ou +5 pontos de chance de status.
+  - O status só entra no sorteio se uma das técnicas aplica status.
+  - O sorteio é fixo por par, então o planejador mostra o mesmo atributo que a Oficina dá.
+- **Bloqueio:** uma fusão ou combinação não entra em outra fusão, nem com uma técnica comum (`isMergedName` na regra pura).
+  - Antes o bloqueio existia só na lista da partida e podia falhar ao restaurar uma partida salva.
+- **Telas atualizadas:** a Oficina dos Sapos e as cartas do planejador mostram o bônus e o atributo. O glossário e o guia também foram atualizados.
+- **Alcance medido:** 18 das 72 famílias chegam a 2 ou mais naturezas no pool. Todas alcançam cada Kekkei Genkai das suas naturezas.
+- **Testes:**
+  - `tests/fusoes.test.mjs` (8 testes); o mínimo subiu para 125.
+  - 5 mutações novas, todas acusadas isoladamente.
+  - **PASSOU:** tsc, 125/125 com cobertura e build.
+  - A prova por mutação completa não foi rodada.
+  - **PENDENTE DE VALIDAÇÃO E2E:** Oficina dos Sapos e cartas do planejador na tela.
+
 ## 15/11/2026 · Andar livre: sem paredes invisíveis e dash atravessa (Rodada 70)
 
 - **Pedidos do usuário:** "Verifique ainda as paredes invisiveis e os blocks invisiveis no caminhar do personagem" e "Precisamos andar livre, o máximo que pode ter é travar ao esbarrar, mas ao dar dash conseguir passar."

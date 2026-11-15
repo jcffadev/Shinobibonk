@@ -7,10 +7,10 @@ import { ITEMS, ITEM_BY_NAME, type Rarity } from '../game/catalog';
 import { PILL_NAMES, PILL_MAX, pillDescription } from '../game/pills';
 import { pillStatPreview } from '../game/pillPreview';
 import { PillStatPreview } from './PillStatPreview';
-import { techniquePool, HERO_BY_ID, heroAffinity, type PoolTechnique, type Technique } from '../game/heroes';
+import { techniquePool, HERO_BY_ID, heroAffinity, familyOf, type PoolTechnique, type Technique } from '../game/heroes';
 import { sealedHeroes, researchProgress } from '../game/account';
 import { PRESET_LIMIT } from '../game/missionBag';
-import { kekkeiFusion, kekkeiRecipe, mergedTechnique } from '../game/techniqueMerge';
+import { combineBonus, fusionBonus, isMergedName, kekkeiFusion, kekkeiRecipe, mergedTechnique } from '../game/techniqueMerge';
 /** Origem da técnica no pool (regra do usuário: 1–2 únicas por shinobi; compartilhadas por vila/elemento; únicas de outros só após selar). */
 function sourceText(t:PoolTechnique){const who=HERO_BY_ID[t.origin]?.name??t.origin;if(t.source==='kit')return 'Kit próprio.';if(t.source==='basica')return 'Básica da Academia (sempre disponível).';if(t.source==='vila')return 'Compartilhada · mesma vila ('+who+').';if(t.source==='elemento')return 'Compartilhada · mesmo elemento '+t.element+' ('+who+').';return t.locked?'Única de '+who+' · bloqueada até selar '+who+' pela 1ª vez.':'Única de '+who+' (selado).';}
 import { attackCooldown,setupNumbers,itemSchools,itemElement,itemAttribute,techniqueCritical,techniqueDetail,techniqueSchool,techniqueStatusText } from '../game/combat';
@@ -48,7 +48,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  const inFusion=(name:string)=>fusionPlan.some(p=>p.includes(name));
  // Rodada 39 — Fusões: candidatos seguem a regra da Oficina dos Sapos Sábios (sem setup, sem bloqueio).
  // A execução continua na run (1 uso por zona); aqui apenas planeja o par e marca o pool da run com ⚗.
- const fusionOptions=techniques.filter(t=>!t.setup&&!t.locked&&!archivedSkills.includes(t.name));
+ const fusionOptions=techniques.filter(t=>!t.setup&&!t.locked&&!archivedSkills.includes(t.name)&&!isMergedName(t.name));
  const [fusionSearch,setFusionSearch]=useState('');
  const suggested=new Map<string,[string,string]>();
  if(tab==='Fusões')for(const [i,a] of fusionOptions.entries())for(const b of fusionOptions.slice(i+1)){
@@ -58,7 +58,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  const candidate:[string,string]=[fusionA,fusionB];
  const canPreview=fusionOptions.some(t=>t.name===fusionA)&&fusionOptions.some(t=>t.name===fusionB)&&fusionA!==fusionB;
  const duplicate=fusionPlan.some(pair=>pair.includes(fusionA)&&pair.includes(fusionB));
- const fusionName=(pair:[string,string])=>mergedTechnique({kind:'fuse',names:pair},techniques)?.name??pair.join(' / ');
+ const fusionName=(pair:[string,string])=>mergedTechnique({kind:'fuse',names:pair},techniques,familyOf(hero.id))?.name??pair.join(' / ');
  const techniqueByName=new Map(techniques.map(t=>[t.name,t]));
  const categories=['Habilidades','Pílulas','Fusões','Itens'];
  const plannedByCategory:Record<string,string[]>={
@@ -174,7 +174,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
 }
 
 function FusionCard({heroId,pair,kind,pool}:{heroId:string;pair:[string,string];kind:'fuse'|'combine';pool:readonly Technique[]}){
- const result=mergedTechnique({kind,names:pair},pool);
+ const result=mergedTechnique({kind,names:pair},pool,familyOf(heroId));
  const [first,second]=pair.map(name=>pool.find(technique=>technique.name===name));
  if(!result||!first||!second)return <div className="planner-fusion-card"><p>Par indisponível no pool atual.</p></div>;
  const recipe=kekkeiFusion(result.name);
@@ -190,7 +190,7 @@ function FusionCard({heroId,pair,kind,pool}:{heroId:string;pair:[string,string];
    {[...new Set(parts.flatMap(t=>[t.school,t.shape]))].map(label=><span key={label}>{label}</span>)}
   </div>
   <dl>
-   <div><dt>Dano</dt><dd>{fused?'2× a média · afixos somados':'1,5× por técnica'}</dd></div>
+   <div><dt>Dano</dt><dd>{fused?'2× a média · afixos somados'+(fusionBonus(first,second,familyOf(heroId))>0?' · +15% ('+(first.element===second.element?'mesma natureza':'Kekkei Genkai da linhagem')+')':''):'1,5× por técnica · '+combineBonus(first,second).label}</dd></div>
    <div><dt>Recarga no Nv. 1</dt><dd>{attackCooldown(result,1).toLocaleString('pt-BR',{maximumFractionDigits:2})} s</dd></div>
    {effects.some(Boolean)&&<div><dt>Efeitos</dt><dd>{fused?techniqueStatusText(result):[...new Set(effects.filter(Boolean))].join(' · ')}</dd></div>}
    <div><dt>Melhorias</dt><dd>Dano, área, recarga{effects.some(Boolean)?', duração de status':''}{projectiles?', projéteis':''}</dd></div>

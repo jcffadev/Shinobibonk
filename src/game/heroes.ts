@@ -1,5 +1,6 @@
 import type { Bonuses } from './catalog';
 import { EXPANSION_BY_ID, ROSTER_EXPANSION } from './rosterExpansion.ts';
+import { lineageNatures } from './techniqueMerge.ts';
 export type School='Taijutsu'|'Ninjutsu'|'Genjutsu';
 export type Element='Neutro'|'Fogo'|'Água'|'Vento'|'Terra'|'Raio'|'Madeira'|'Areia'|'Sombra'|'Sábio';
 export type Shape='Projétil'|'Corpo a corpo'|'Cone'|'Onda'|'Em V'|'Linha'|'Área'|'Órbita'|'Buff';
@@ -312,7 +313,8 @@ export function uniqueTechniques(heroId:string){return (HERO_BY_ID[heroId]?.tech
  * todas as naturezas só viriam com o Modo Sábio dos Seis Caminhos, que o jogo não tem) + Sábio para usuários do Modo Sábio
  * (+ os elementos do próprio kit). Elemento fora disso nunca entra no pool, mesmo que seja da mesma vila.
  */
-export function allowedElements(heroId:string){const set=new Set<Element>(['Neutro',heroAffinity(heroId)]);if(SAGE_USERS.has(heroId))set.add('Sábio');for(const tech of HERO_BY_ID[heroId]?.techniques??[])set.add(tech.element);return set;}
+/** Rodada 71: inclui as naturezas da Kekkei Genkai da linhagem (lineageNatures), para quem a tem na obra conseguir fundi-la. */
+export function allowedElements(heroId:string){const set=new Set<Element>(['Neutro',heroAffinity(heroId),...lineageNatures(familyOf(heroId))]);if(SAGE_USERS.has(heroId))set.add('Sábio');for(const tech of HERO_BY_ID[heroId]?.techniques??[])set.add(tech.element);return set;}
 /** Bônus de dano de técnicas do elemento natural (afinidade) do shinobi. */
 export const NATURE_BONUS=1.5;
 export type PoolSource='kit'|'basica'|'vila'|'elemento'|'única';

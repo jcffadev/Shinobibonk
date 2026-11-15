@@ -12,6 +12,11 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
   { regra: 'status inicia no teto de 10%', arquivo: 'src/game/combat.ts', de: 'const initial = Math.min(base, .1);', para: 'const initial = base;' },
+  { regra: "bônus de Kekkei Genkai é +15%", arquivo: "src/game/techniqueMerge.ts", de: "FUSION_KEKKEI_BONUS = .15;", para: "FUSION_KEKKEI_BONUS = 0;" },
+  { regra: "fusão não entra em outra fusão", arquivo: "src/game/techniqueMerge.ts", de: "a.setup||b.setup||isMergedName(a.name)||isMergedName(b.name))return;", para: "a.setup||b.setup)return;" },
+  { regra: "Jiton é Vento + Terra", arquivo: "src/game/techniqueMerge.ts", de: "natures:['Vento','Terra'],name:'Jiton", para: "natures:['Vento','Raio'],name:'Jiton" },
+  { regra: "linhagem recebe as naturezas da Kekkei Genkai", arquivo: "src/game/heroes.ts", de: "heroAffinity(heroId),...lineageNatures(familyOf(heroId))]);", para: "heroAffinity(heroId)]);" },
+  { regra: "combinação mantém ×1,5", arquivo: "src/game/techniqueMerge.ts", de: "power:source.power*1.5*(", para: "power:source.power*(" },
   { regra: 'fusão não ultrapassa o nível 7', arquivo: 'src/game/techniqueMerge.ts', de: 'FUSION_LEVEL_CAP = 7', para: 'FUSION_LEVEL_CAP = 12' },
   { regra: 'ranking usa a melhor missão por região', arquivo: 'src/game/league.ts', de: 'if (!previous || compareRun(run, previous) < 0) best.set(run.map, run);', para: 'if (!previous || compareRun(run, previous) > 0) best.set(run.map, run);' },
   { regra: 'portal conserva XP atraído', arquivo: 'src/game/drops.ts', de: '(magnet || distance < pickupRadius)', para: 'distance < pickupRadius' },

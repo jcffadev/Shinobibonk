@@ -198,6 +198,17 @@ Glossário ampliado em 15/11 com exemplos de todos os atributos, busca e filtro 
 
 Andar livre (decisão do usuário): ao esbarrar o jogador só trava e desliza; o **dash atravessa** árvores, rochas e construções e, se terminar dentro de algo, sai pela frente. Corpo do jogador 0,17 m (escala do desenho de 40%); troncos do tamanho desenhado; árvore/rocha a menos de 1 m de construção é removida.
 
+### Rodada 71 · 15/11/2026
+
+Fusões (decisões do usuário):
+
+- Kekkei Genkai valem para todo personagem que tenha as duas naturezas no pool.
+- Uma fusão ou combinação não entra em outra fusão, nem com uma técnica comum.
+- +15% de dano na fusão de mesma natureza ou da Kekkei Genkai da linhagem.
+- Combinar dá ×1,5 e um atributo do par, sorteado de forma fixa por par.
+- São 8 receitas, com Jiton e Bakuton.
+- As naturezas da linhagem entram no pool do personagem.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
