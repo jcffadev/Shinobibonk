@@ -239,3 +239,5 @@ As 114 versões jogáveis usam quatro quadros por vista para caminhada, pulo e d
 - Fase 5 restante: sequência em tempo real, card de temporada, glossário e layout dos blocos de combate. Continuam pendentes a run completa com GPU real, a publicação externa e as propostas de escala de mapas.
 
 Em 15/11 o plano de missão passou a mostrar fusão e combinação lado a lado. O jogador pode personalizar o avatar e a moldura que aparecem no ranking. A partida solo online depende de configurar o serviço.
+
+Em 15/11 entrou o **Guia do jogo** na inicial. A seção de eventos reúne clima por mapa, Totem, emboscadas, altares, selamento e guardiões. A seção de NPCs mostra as opções e custos conhecidos, e o glossário explica os termos da missão.

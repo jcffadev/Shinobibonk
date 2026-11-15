@@ -154,3 +154,5 @@ A Home tenta iniciar a trilha ao carregar. Táticas de Missão e Arsenal de Miss
 ### Ajustes de 15/11/2026
 
 O ranking usa armazenamento local por padrão. A [integração Netlify/PostgreSQL](docs/development/RANKING-E-CLAS.md) pode ser habilitada ao provisionar o serviço. O planejador mostra fusões elementais elegíveis, o tipo e a progressão de cada técnica. Consulte o [changelog](CHANGELOG.md) para o HUD e o balanceamento.
+
+O botão **Guia do jogo** na inicial reúne controles, progresso, eventos da missão, NPCs e glossário pesquisável.

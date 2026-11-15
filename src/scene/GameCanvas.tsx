@@ -38,7 +38,7 @@ import { ITEM_BY_NAME, currentItemName, rollItems, type Item, type Rarity, type 
 import { HEROES, HERO_BY_ID, familyOf, versionForEncounter, DETERMINATION, skillPool, heroAffinity, isProjectileUltimate, NATURE_BONUS, sandSynergy, ultimateBase, type Technique, type Control } from '../game/heroes';
 import { activeSynergies, synergyBonuses, type ActiveSynergy } from '../game/synergy';
 import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVitality, guardianDefense } from '../game/missions';
-import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DURATION, type WeatherEventId } from '../game/maps';
+import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DURATION, weatherWait, type WeatherEventId } from '../game/maps';
 import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
 import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, type SkillGrowth } from '../game/combat';
@@ -153,7 +153,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let portal:{kind:PortalKind;x:number;z:number;mesh:THREE.Group}|null=null;
     let totalDamage=0,hiddenEffects=currentSettings().hideMyAttacks,victory=false,zone=1,ambushTimer=30,guardianSpawned=false,shikamaruPlans=0,defenseTime=0,defenseActive=false,defenseDone=false;
     const config=preparationRef.current,permanent={...config.permanent},uses=choiceUses(permanent),banned=new Set<string>();let banning=false,paidWeapons=0;
-    const MAP=MAP_BY_ID[mapId]??MAP_BY_ID.folha,ZONES=MAP.zones.map((z,i)=>({...BASE_ZONES[i],...z}));const weatherDef=MAP.weathers.find(w=>w.name==='Sol do deserto')??MAP.weathers[0];let weather=weatherDef.name,nextWeatherAt=65+Math.random()*55;const sky=createSky();const applyWeather=()=>{sky.update(weatherDef.sky);scene.background=sky.texture;};const scene = new THREE.Scene();applyWeather();
+    const MAP=MAP_BY_ID[mapId]??MAP_BY_ID.folha,ZONES=MAP.zones.map((z,i)=>({...BASE_ZONES[i],...z}));const weatherDef=MAP.weathers.find(w=>w.name==='Sol do deserto')??MAP.weathers[0];let weather=weatherDef.name,nextWeatherAt=weatherWait();const sky=createSky();const applyWeather=()=>{sky.update(weatherDef.sky);scene.background=sky.texture;};const scene = new THREE.Scene();applyWeather();
     const camera = new THREE.OrthographicCamera(-12, 12, 7, -7, .1, 240);
     // Placa de vídeo: o jogador escolhe em Gráficos (powerPreference do contexto). Trocar em tempo real recria o contexto (onSettings).
     const GPU_PREF = { auto: 'default', desempenho: 'high-performance', integrada: 'low-power' } as const;
@@ -983,7 +983,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const tier:EnemyTier=accountSeal?'account':guardian?'mega':megaElite?'mega':elite?'elite':'normal',T=ENEMY_TIERS[tier];const e=megaElite?makeHero(id,Math.max(1,level)):makeSprite(Math.floor(Math.random()*4),elite?1.9:1.55,elite?2.5:2);if(megaElite)e.scale.multiplyScalar(1.4);e.position.set(x,terrainHeight(x,z)+(megaElite?1.6:1),z);if(elite)addOutline(e,'#ffd21f');else if(accountSeal)addOutline(e,'#5ff0ff');else if(megaElite&&!guardian)addOutline(e,'#ff4d6d');scene.add(e);const threat=threatNow();const hpBase=accountSeal?T.hp*t.accountHp:elite?T.hp*t.eliteHp*eliteHpRamp(tier,zoneElapsed()):challenge?30:T.hp;const enemy:Enemy={sprite:e,hp:guardian?guardianHpNow(threat.hp):megaElite&&!accountSeal?megaEliteHp(zoneElapsed(),t.megaHp*t.enemyHp*MISSION_TIER[mission]*zoneDifficulty*(1+.33*shikamaruPlans)*Math.max(.2,1+ex('threat'))):Math.round(hpBase*threat.hp),speed:megaElite?2.6:elite?3.8:2.8+Math.random()*.8,hitTimer:.2,challenge,megaElite,elite,guardian,heroId:megaElite?id:undefined,tier,account:accountSeal,defense:guardian?guardianDefense(elapsed):Math.min(.85,T.defense*(tier==='elite'?t.eliteDefense:tier==='mega'&&!guardian?t.megaDefense*(.60+.40*Math.min(1,zoneElapsed()/480)):1)+(threat.armor??0)),dmgMult:guardian?2.2:T.damage*(tier==='elite'?t.eliteDamage:tier==='mega'?t.megaDamage:1)};if(guardian){enemy.hpMultiplier=guardianHpMultiplier(zoneElapsed());enemy.shikamaruPlans=shikamaruPlans;enemy.guardianZone=zone;}enemy.maxHp=enemy.hp;if(tier==='normal'&&!challenge&&Math.random()<.07+.13*Math.min(1,zoneElapsed()/300))enemy.ranged=Math.floor(Math.random()*enemyWeapons.length);enemy.moveAfter=elapsed+3+Math.random()*5;if(megaElite){enemy.uid=++megaUid;enemy.motionLevel=level;enemy.motion=createPlayerMotion(scene,e,id,false,1.4);}enemyList.push(enemy);if(megaElite&&!accountSeal)bossCombat.attach(enemy,enemy.hp,guardian);return enemy;}
     // Guardião (chefe final da zona): 1 por zona. Invocado pelo jogador no Selo do guardião (E).
     let weatherEvent:{id:WeatherEventId;until:number;elite:string;x:number;z:number;castEnd?:number}|undefined;
-    function scheduleWeather(){nextWeatherAt=elapsed+65+Math.random()*55;}
+    function scheduleWeather(){nextWeatherAt=elapsed+weatherWait();}
     function startWeather(id:WeatherEventId){
       if(weatherEvent||arena||enemyList.length>=ENEMY_SCALING.maxEnemies)return false;
       const w=WEATHER_EVENTS[id];

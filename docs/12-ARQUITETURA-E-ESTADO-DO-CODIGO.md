@@ -381,3 +381,7 @@ Continuam pendentes: inspeção visual dos quatro mapas, prévias/efeitos em com
 ## 15/11/2026 · Ranking online, casting e fusões
 
 O cliente usa src/game/onlineRanking.ts e a função Netlify em netlify/functions/ranking.mjs. PostgreSQL contém registros validados e projeções transitórias. No jogo, src/game/combat.ts centraliza chance por nível, src/game/techniqueMerge.ts define receitas e src/game/dojutsu.ts identifica o olho usado em cada fase. GameCanvas integra gravidade, VFX e acertos. A câmera mantém a inclinação comandada e o relevo pode encobrir o jogador pela profundidade.
+
+### Guia do jogo
+
+A rota de hub guide monta GameGuide com as teclas em uso. A página reaproveita maps.ts para fases do clima, npcs.ts para regras de Iruka, Ebisu e Totem e roulette.ts para as casas da Tsunade. A origem do tempo de espera do clima é WEATHER_WAIT em maps.ts. Na descrição de mecânicas, consulte os pontos de entrada de GameCanvas.

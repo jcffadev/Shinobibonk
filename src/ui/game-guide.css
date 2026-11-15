@@ -1,0 +1,30 @@
+.game-guide{width:min(1180px,100%);margin-inline:auto;color:#f9e8c6}
+.guide-nav{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 16px}
+.guide-nav button{background:#38271dea;border:1px solid #94784e;border-radius:8px;padding:9px 16px;color:#f7e4bb;font:inherit;font-weight:800;cursor:pointer}
+.guide-nav button[aria-pressed=true]{background:#9a3527;border-color:#efc270;color:#fff1d2;box-shadow:0 2px 0 #3f1a13}
+.guide-nav button:focus-visible,.guide-search input:focus-visible,.guide-roulette summary:focus-visible{outline:2px solid #ffce73;outline-offset:2px}
+.guide-search{display:flex;align-items:center;gap:10px;margin:0 0 16px;flex-wrap:wrap;font-weight:800}
+.guide-search input{min-width:160px;flex:1;min-height:38px;padding:7px 11px;border:1px solid #bb9967;border-radius:8px;background:#f5e8cd;color:#2b1e15;font:inherit}
+.guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}
+.guide-panel{min-width:0;padding:15px 17px;border:1px solid #c49e66;border-radius:12px;background:linear-gradient(140deg,#f5e8c9,#e2c99b);color:#2a1d16;box-shadow:0 4px 0 #24160fcc}
+.guide-panel h2,.guide-panel h3,.guide-event-group h2,.guide-glossary dt{margin:0 0 6px;font-weight:900;line-height:1.23}
+.guide-panel p,.guide-panel dd,.guide-panel li,.guide-event-group>p{margin:4px 0;line-height:1.48}
+.guide-panel ol{display:grid;gap:8px;margin:8px 0;padding-left:20px}
+.guide-keys{display:grid;gap:4px;margin:0}
+.guide-keys>div{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:4px 0;border-bottom:1px solid #79563740}
+.guide-keys dd{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px;margin:0;white-space:nowrap}
+.guide-keys kbd{min-width:22px;padding:2px 5px;background:#403125;color:#fff1d7;border-radius:5px;font-size:12px;text-align:center}
+.guide-event-group{margin:0 0 18px}
+.guide-event-group>p{max-width:76ch;margin:0 0 10px}
+.guide-weather{background:linear-gradient(140deg,#f6ebd7,#d8d2c0)}
+.guide-villages{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.guide-villages span{border-radius:12px;background:#31444a;color:#fff6df;font-size:12px;font-weight:800;padding:3px 8px}
+.guide-npc-heading{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.guide-npc-heading>.hero-sprite{flex:none;width:42px;height:52px;margin:0}
+.guide-npc-heading h2{margin:0;font-size:18px}
+.guide-roulette{margin-top:8px;border-top:1px solid #79563740;padding-top:5px}
+.guide-roulette summary{cursor:pointer;font-weight:800}
+.guide-roulette dl{display:grid;gap:7px;margin:8px 0 0}
+.guide-roulette dt{font-weight:800}
+.guide-roulette dd{margin:0}
+@media(max-width:720px){.guide-grid{grid-template-columns:1fr}.guide-panel{padding:12px}.guide-nav button{padding:8px 10px}}

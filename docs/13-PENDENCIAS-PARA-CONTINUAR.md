@@ -12,6 +12,8 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 Validação por código concluída com 104 testes, TypeScript e builds. PostgreSQL local e gateway com servidor simulado também passaram. Pendente de validação E2E conforme a política do projeto.
 
+Guia na inicial entregue em 15/11. Pendente de validação visual: abertura, navegação entre as quatro seções, busca e leitura em tela pequena.
+
 ## Registro anterior · 14/11/2026
 
 1. Validar em partida as cinco vistas integradas das 114 versões, o enquadramento em perfil e as transições. Completar artes dedicadas de dash e pulo nos ângulos ainda cobertos pelas duas vistas. Conferir os quatro inimigos comuns, ajudantes e bijū. [Matriz por versão](development/COBERTURA-DE-VISTAS.md).

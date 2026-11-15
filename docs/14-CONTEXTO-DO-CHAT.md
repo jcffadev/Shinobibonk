@@ -1914,3 +1914,9 @@ O hub ganhou um cartão de temporada, Top 100, clãs e uma ficha acessível pelo
 **Pedidos complementares.** A barra de HP nos pés ficou oculta após o ajuste do terreno. Colocar o botão vermelho “Esquecer” no Ichiraku. Refinar a posição do GPS.
 
 **Resposta.** A barra usa a altura legível em tela e fica visível com o shinobi em linha de visão. O card do Ichiraku destaca a ação em vermelho. A seta do GPS usa margens proporcionais à tela e indica distância, com o nome separado no cartão fixo.
+
+## Guia do jogo · 15/11/2026
+
+**Pedido.** “Colocar um botão na tela inicial explicando como funciona o jogo, eventos ativos durante as runs, eventos por tempo como zabuza, gaara... e o glossário. Como funciona a Tsunade, Iruka... enfim.”
+
+**Resposta.** O botão Guia do jogo abre Como jogar, Eventos, NPCs e Glossário. A busca encontra os eventos e os termos; o guia lê as teclas configuradas, as regras dos NPCs e os mapas de cada evento de clima.

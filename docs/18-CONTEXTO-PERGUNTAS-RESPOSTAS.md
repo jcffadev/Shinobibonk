@@ -189,6 +189,8 @@ Resumo de cada rodada com o estado. Texto integral dos pedidos e respostas: [14-
 
 As fichas usam a foto em três quartos e centralizam a silhueta. Apelido, avatar e moldura escolhidos aparecem no ranking. O jogador tem 40% do tamanho visual original, com oclusão pelo terreno; o flash vermelho cobre a cena. A barra de HP aparece aos pés enquanto a visão estiver livre e o Ichiraku destaca a ação Esquecer em vermelho. Bolinhos e XP foram recalibrados e a abertura das zonas tem surgimento mais lento em todos os ranks. Fusões elementais seguem referências de Kekkei Genkai, com ingredientes, efeitos e teto Nv. 7. A pose de selos durante a conjuração é regra permanente para todos os papéis. A comparação com a obra segue na auditoria de jutsus.
 
+O menu inicial tem Guia do jogo com navegação e busca. O conteúdo descreve controles, eventos por tempo, NPCs e glossário a partir da implementação vigente.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

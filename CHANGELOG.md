@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 15/11/2026 · Guia do jogo
+
+- A tela inicial abre um guia com controles configurados, progressão de missão, eventos com condição e duração, funcionamento dos NPCs e glossário pesquisável.
+- O guia usa as mesmas janelas de clima, lista de regiões, opções do caça-níquel e limites de Iruka e dos Sapos Sábios que o jogo. TypeScript, build, renderização em Node e 14 testes de clima e regras passaram. Validação visual no navegador pendente.
+
+
 ## 15/11/2026 · Jutsus, preparo de missão, HUD e ranking
 
 - Banshō Ten’in atrai em onda circular, Chibaku Tensei puxa para o núcleo e Shinra Tensei repele. Chance de status e queimadura no Nv. 1 até 10% antes de buffs; crítico e dano crítico próprios sobem por nível. Cartas mostram a escola e as chances efetivas.

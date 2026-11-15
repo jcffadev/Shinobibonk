@@ -78,6 +78,8 @@ export const DIFFICULTY_ORDER: Difficulty[] = ['Genin', 'Chunin', 'Jonin', 'Kage
 
 export type WeatherEventId = 'mist' | 'snow' | 'sand';
 export const WEATHER_EVENT_DURATION = 60;
+export const WEATHER_WAIT = { min: 65, max: 120 } as const;
+export const weatherWait = () => WEATHER_WAIT.min + Math.random() * (WEATHER_WAIT.max - WEATHER_WAIT.min);
 export const WEATHER_EVENTS: Record<WeatherEventId, MapWeather & { elites: string[]; cast?: WeatherCast }> = {
   // Rodada 63: Zabuza faz os selos à vista do jogador antes da névoa (src/game/weatherCast.ts).
   mist: { name:'Névoa do Zabuza',sky:'#27313b',near:3,far:11,elites:['zabuza'],cast:{seconds:2.6,line:'Zabuza: Ninpō · Kirigakure no Jutsu!'} },
