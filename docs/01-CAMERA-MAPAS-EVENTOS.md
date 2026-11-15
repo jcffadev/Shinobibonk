@@ -318,6 +318,13 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 - Acumula **até 3**.
 - **Monstros das hordas do evento não contam** para recarregar a chave.
 
+**Botão na HUD** (pedido do usuário: "botão, coloque o ícone/foto do hagoromo e a tecla de acionamento ao pequeno embaixo e 3 bolinhas para serem preenchidas em cima do icone"):
+- **Ícone:** retrato do Hagoromo em pixel art, no estilo dos retratos do jogo, a partir da imagem do anime que o usuário enviou: cabelo claro espetado com os chifres, Rinnegan, o tomoe vermelho na testa e o manto branco de gola alta. A imagem do anime não entra no projeto.
+- **Tecla:** pequena, embaixo do ícone (C, ou a tecla remapeada).
+- **Chaves:** 3 bolinhas em cima do ícone, preenchidas conforme as chaves acumuladas (0–3).
+- **Recarga:** com 0 chaves, o ícone fica apagado e mostra o progresso até os próximos 500 abates.
+- **Lugar:** ao lado dos itens na HUD, junto do botão da Ultimate.
+
 **Ativação:** tecla **C**. Respeita o remapeamento de teclas: acrescentar a ação em `KeyAction` / `DEFAULT_KEYS` (`src/game/settings.ts`); hoje C está livre.
 
 **Raridade sorteada a cada ativação:**
