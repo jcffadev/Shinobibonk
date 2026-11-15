@@ -264,6 +264,11 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Som de hit recebido (`playHurt`): tons graves + estalo que cresce com o golpe, volume geral × efeitos, no máximo um a cada 0,32 s.
 - Opção "Tela vermelha ao levar dano" em Configurações → Gráficos, ligada por padrão. Visual PENDENTE DE VALIDAÇÃO E2E.
 
+### Rodada 82 · 15/11/2026
+
+- O seletor de modelo salvo de itens (`ArsenalControls`) fica no Plano de missão (`BuildPlanner`), acima de Táticas salvas; não fica mais na escolha do shinobi.
+- No catálogo de fusões, um clique planeja e outro tira do plano.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

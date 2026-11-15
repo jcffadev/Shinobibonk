@@ -18,6 +18,23 @@
   - tsc, `scripts/run-tests.mjs` (154/154) e build: PASSOU.
   - **PENDENTE DE VALIDAÇÃO E2E:** ver em partida o piscar só nas bordas, a diferença entre golpe leve e forte, a ausência de estroboscópio com muitos monstros, a vinheta de vida baixa, o som e a opção desligada.
 
+## 15/11/2026 · Modelo salvo no planejamento e fusão com um clique (Rodada 82)
+
+- **Pedidos do usuário:**
+  - "Colocar essa parte na parte do preparar missão, faz mais sentido, ao carregar o modelo que está salvo... exemplo eu salvei da Kushina, já vai aparecer os itens."
+  - "A opção ainda está ali do que está na bolsa do personagem... Deveria ficar acima de taticas salvas..."
+  - "Ao clicar na fusão, ela já fica selecionada."
+- **Modelo salvo:**
+  - O seletor (Configuração atual / modelos salvos, Salvar, Duplicar, Excluir) saiu da tela de escolha do shinobi.
+  - Agora fica no Plano de missão, logo acima de **Táticas salvas**. Carregar um modelo coloca os itens dele no plano e em casa, como antes.
+  - O antigo "Salvar arsenal da conta" dentro de Táticas salvas saiu, porque o seletor já salva.
+- **Fusões:** um clique numa fusão do catálogo já planeja (até 4). Clicar de novo tira do plano.
+- **Testes:**
+  - 1 teste novo e 1 conferência a mais no teste do planejador (`tests/fusoes.test.mjs`). O mínimo sobe 1.
+  - 1 mutação nova (clique planeja).
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver o seletor acima de Táticas salvas e o clique no catálogo.
+- **Aviso de publicação:** duas sessões montaram o commit ao mesmo tempo na mesma pasta. O código desta rodada saiu no commit 6cdc579 junto com a Rodada 83 (borda vermelha e som ao levar dano), e estes textos e o mínimo de testes (155 = 154 + 1) saíram no commit seguinte. O conjunto foi testado de novo numa cópia limpa.
+
 ## 15/11/2026 · Fusões que o shinobi pode aprender (Rodada 81)
 
 - **Pedido do usuário:** "nas fusões, é pra aparecer já as fusões que o ninja pode aprender… Quando for liberando ninja na conta, vai aparecer mais habilidades que ele pode aprender e vai aparecer, mais fusões também... ele vai selecionar a fusão que ele sabe e ai, na aba de Habilidades, vai aparecer que ele precisa por exemplo, shuriken + vento = Rasenshuriken Fuuton".

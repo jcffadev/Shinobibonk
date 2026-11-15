@@ -2199,3 +2199,18 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Nova opção em Configurações → Gráficos: "Tela vermelha ao levar dano", ligada por padrão. O som continua com ela desligada.
 - **Testes:** 9 testes novos de lógica pura (`tests/vinheta-de-dano.test.mjs`); tsc, testes (154/154) e build passaram. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 82 · 15/11/2026 — modelo salvo no planejamento e fusão com um clique
+
+> Colocar essa parte na parte do preparar missão, faz mais sentido, ao carregar o modelo que está salvo... exemplo eu salvei da Kushina, já vai aparecer os itens.
+
+> A opção ainda está ali do que está na bolsa do personagem... Deveria ficar acima de taticas salvas...
+
+> Ao clicar na fusão, ela já fica selecionada.
+
+**Resposta.**
+
+- O seletor de modelo salvo saiu da escolha do shinobi e fica no Plano de missão, acima de Táticas salvas. Carregar um modelo traz os itens dele.
+- No catálogo de fusões, um clique já planeja; outro clique tira.
+- **Testes:** verificados numa cópia limpa, primeiro só com estas mudanças e depois junto com a Rodada 83, que foi publicada no mesmo commit (6cdc579) porque as duas sessões montaram o commit ao mesmo tempo. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**
