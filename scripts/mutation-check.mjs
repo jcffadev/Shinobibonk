@@ -44,6 +44,8 @@ const MUTATIONS = [
   { regra: 'catálogo de fusões com Kekkei Genkai no topo', arquivo: 'src/game/techniqueMerge.ts', de: 'Number(b.kekkei)-Number(a.kekkei)||', para: '' },
   { regra: 'um clique no catálogo planeja a fusão', arquivo: 'src/ui/BuildPlanner.tsx', de: 'else addFusionPair(...f.pair);', para: 'else {}' },
   { regra: 'missão só sorteia os itens da bolsa', arquivo: 'src/game/catalog.ts', de: 'return packed.length?packed:all;', para: 'return all;' },
+  { regra: 'montanhas só no horizonte, baixas', arquivo: 'src/scene/terrainArt.ts', de: 'ridge: .4,', para: 'ridge: .9,' },
+  { regra: 'câmera em perspectiva por padrão', arquivo: 'src/game/settings.ts', de: "cameraProjection: 'perspectiva', autoUltimate", para: "cameraProjection: 'ortografica', autoUltimate" },
   { regra: 'farol do pergaminho grátis é alto', arquivo: 'src/scene/rewardBeacon.ts', de: 'height: 30,', para: 'height: 4,' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },

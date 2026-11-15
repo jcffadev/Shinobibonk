@@ -67,3 +67,17 @@ test('câmera mais perto por padrão, com limite para afastar (rodada 77: "o ini
   const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.match(canvas, /CAMERA_ZOOM\.min,CAMERA_ZOOM\.max/, 'a roda do mouse respeita o limite');
 });
+
+test('câmera em perspectiva por padrão, com a ortográfica antiga nas Configurações (rodada 85)', async () => {
+  const s = await withSaved(undefined);
+  assert.equal(s.readSettings().cameraProjection, 'perspectiva');
+  const d = s.perspectiveDistance(s.CAMERA_ZOOM.default);
+  assert.ok(Math.abs(2 * d * Math.tan(s.CAMERA_VIEW.fov * Math.PI / 360) - s.CAMERA_ZOOM.default) < 1e-9, 'mesmo zoom nas duas vistas');
+  assert.ok(s.CAMERA_VIEW.pitch < s.CAMERA_VIEW.fov * Math.PI / 360 + .1, 'horizonte perto do topo da tela');
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  const screen = fs.readFileSync(new URL('../src/ui/SettingsScreen.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes("const perspective=currentSettings().cameraProjection!=='ortografica';"));
+  assert.ok(canvas.includes('new THREE.PerspectiveCamera(CAMERA_VIEW.fov'));
+  assert.ok(canvas.includes('const orbitDistance=perspective?perspectiveDistance(zoom):zoom*1.65+10;'));
+  assert.ok(screen.includes("set({ cameraProjection: v })"));
+});

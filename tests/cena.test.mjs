@@ -205,3 +205,25 @@ test('barra de HP pode aparecer sobre o chão e desaparecer quando uma encosta c
   assert.equal(terrainOccludesActor(0,.45,0,Math.PI,.11,20,hill),false);
   assert.equal(terrainOccludesActor(0,.45,0,0,.90,20,hill),false);
 });
+
+test('terreno em terraços baixos, plano no centro, montanhas só no horizonte (rodada 85)', async () => {
+  const { groundHeight, TERRAIN, terrace } = await load('/src/scene/terrainArt.ts');
+  const { MAP_SIZE } = await load('/src/game/worldScale.ts');
+  assert.equal(terrace(TERRAIN.step * 1.3), TERRAIN.step, 'meio do degrau é platô');
+  assert.ok(terrace(TERRAIN.step * .99) > TERRAIN.step * .9, 'a encosta sobe até o próximo nível');
+  for (const map of ['folha', 'outro']) {
+    let max = 0, flat = 0, steep = 0, raised = 0, n = 0;
+    const half = MAP_SIZE / 2 - 4;
+    for (let x = -half; x <= half; x += 2) for (let z = -half; z <= half; z += 2) {
+      const h = groundHeight(map, x, z), slope = Math.hypot(groundHeight(map, x + .5, z) - h, groundHeight(map, x, z + .5) - h) / .5;
+      n++; max = Math.max(max, h); if (slope < .05) flat++; if (slope > .55) steep++; if (h > .5) raised++;
+    }
+    let horizon = 0;
+    for (let a = 0; a < 6.28; a += .1) for (let r = 84; r < 140; r += 3) horizon = Math.max(horizon, groundHeight(map, Math.cos(a) * r, Math.sin(a) * r));
+    assert.ok(max < 5, `${map}: sem montanha grande dentro do mapa (${max.toFixed(2)} m)`);
+    assert.ok(flat / n > .6 && steep / n > .015, `${map}: platôs ${(flat / n * 100).toFixed(0)}% e encostas ${(steep / n * 100).toFixed(1)}%`);
+    assert.ok(raised / n > .3, `${map}: terraços acima do chão em ${(raised / n * 100).toFixed(0)}%`);
+    assert.ok(horizon > max && horizon < 8, `${map}: horizonte ${horizon.toFixed(1)} m`);
+    assert.ok(Math.abs(groundHeight(map, 0, 0)) < .05 && Math.abs(groundHeight(map, 6, 6) - groundHeight(map, 0, 0)) < .05, 'o ninja começa no plano');
+  }
+});

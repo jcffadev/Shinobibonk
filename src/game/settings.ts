@@ -10,6 +10,8 @@ export type GpuChoice = 'auto' | 'desempenho' | 'integrada';
 /** Renderizador escolhido pelo jogador (Tela). No .exe/patch o jogador escolhe DirectX ou OpenGL; na web a renderização é sempre WebGL (melhor esforço do navegador). */
 export type Renderer = 'directx' | 'opengl';
 export type PickupFx = 'completos' | 'simples' | 'nenhum';
+/** Rodada 85: perspectiva (padrão, horizonte visível) ou a vista ortográfica antiga. Vale a partir da próxima missão. */
+export type CameraProjection = 'perspectiva' | 'ortografica';
 /** Ações remapeáveis. O valor é a tecla (event.key em minúsculas; ' ' = Espaço). Esc não é remapeável. */
 export type KeyAction = 'up' | 'down' | 'left' | 'right' | 'jump' | 'slide' | 'interact' | 'ultimate' | 'autoUlt' | 'bigMap' | 'quickMap' | 'sheet' | 'ping' | 'hideFx' | 'reroll' | 'skip' | 'ban';
 export const DEFAULT_KEYS: Record<KeyAction, string> = { up: 'w', down: 's', left: 'a', right: 'd', jump: ' ', slide: 'shift', interact: 'e', ultimate: 'r', autoUlt: 'y', bigMap: 'm', quickMap: 'tab', sheet: 'p', ping: 'g', hideFx: 'h', reroll: 'f', skip: 'x', ban: 'z' };
@@ -27,7 +29,7 @@ export type GameSettings = {
   // Tela
   resolution: Resolution; renderer: Renderer;
   // Controles
-  mouseSensitivity: number; invertY: boolean; cameraDistance: number; autoUltimate: boolean;
+  mouseSensitivity: number; invertY: boolean; cameraDistance: number; cameraProjection: CameraProjection; autoUltimate: boolean;
   // Teclas
   keys: Record<KeyAction, string>;
   // Interface
@@ -45,13 +47,17 @@ const MUSIC_DEFAULT = .1, OLD_MUSIC_DEFAULT = .7, SETTINGS_VERSION = 3;
  * 10–32 → 8–22. `oldDefault`: quem salvou exatamente o padrão antigo passa ao novo (migração v2 → v3).
  */
 export const CAMERA_ZOOM = { default: 12, min: 8, max: 22, step: 1.2, oldDefault: 19 } as const;
+/** Rodada 85: perspectiva com campo de visão vertical de 50° e inclinação inicial de ~29° (horizonte e montanhas ao fundo). */
+export const CAMERA_VIEW = { fov: 50, pitch: .5 } as const;
+/** Distância da câmera ao ninja para a altura visível no ponto do ninja ser `zoom` (mesmo zoom nas duas projeções). */
+export const perspectiveDistance = (zoom: number, fov = CAMERA_VIEW.fov) => zoom / (2 * Math.tan(fov * Math.PI / 360));
 export const clampZoom = (value: number) => Math.min(CAMERA_ZOOM.max, Math.max(CAMERA_ZOOM.min, Number.isFinite(value) ? value : CAMERA_ZOOM.default));
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
   volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: MUSIC_DEFAULT, voiceLanguage: 'pt', muteInBackground: true,
   quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true, damageFlash: true,
   resolution: 'auto', renderer: 'directx',
-  mouseSensitivity: 1, invertY: false, cameraDistance: CAMERA_ZOOM.default, autoUltimate: false,
+  mouseSensitivity: 1, invertY: false, cameraDistance: CAMERA_ZOOM.default, cameraProjection: 'perspectiva', autoUltimate: false,
   keys: { ...DEFAULT_KEYS },
   hudScale: 1, hudOpacity: 1, minimap: true, minimapScale: 1, toasts: true,
   playerName: 'Shinobi',

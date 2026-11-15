@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { activeTuning, dropChance, tuneThreat } from '../game/tuning';
 import { createBossCombat, BIJUU_SIZE, type BossState } from './bossCombat';
 import { makeDropSprite } from './dropSprites';
-import { currentSettings, translateKey, pixelRatioFor, CAMERA_ZOOM } from '../game/settings';
+import { currentSettings, translateKey, pixelRatioFor, CAMERA_ZOOM, CAMERA_VIEW, perspectiveDistance } from '../game/settings';
 import { ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, ENEMY_XP_MULTIPLIER, lootScale, xpDropValue, xpLoot, eliteHpRamp, megaEliteHp, rollMegaSchedule, type EnemyTier } from '../game/enemyTiers';
 import { sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain, RESEARCH_RULES } from '../game/account';
 import { createTotemBar } from './narutoTotem';
@@ -156,7 +156,10 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let totalDamage=0,hiddenEffects=currentSettings().hideMyAttacks,victory=false,zone=1,ambushTimer=AMBUSH_RULES.first,guardianSpawned=false,shikamaruPlans=0,defenseTime=0,defenseActive=false,defenseDone=false;
     const config=preparationRef.current,permanent={...config.permanent},uses=choiceUses(permanent),banned=new Set<string>();let banning=false,paidWeapons=0;
     const MAP=MAP_BY_ID[mapId]??MAP_BY_ID.folha,ZONES=MAP.zones.map((z,i)=>({...BASE_ZONES[i],...z}));const weatherDef=MAP.weathers.find(w=>w.name==='Sol do deserto')??MAP.weathers[0];let weather=weatherDef.name,nextWeatherAt=weatherWait();const sky=createSky();const applyWeather=()=>{sky.update(weatherDef.sky);scene.background=sky.texture;};const scene = new THREE.Scene();applyWeather();
-    const camera = new THREE.OrthographicCamera(-12, 12, 7, -7, .1, 240);
+    // Rodada 85 (pedido do usuário: câmera e cenário "ainda muito precários"): perspectiva por padrão, com horizonte;
+    // a ortográfica antiga continua nas Configurações (Vista da câmera). A escolha vale para a missão inteira.
+    const perspective=currentSettings().cameraProjection!=='ortografica';
+    const camera:THREE.OrthographicCamera|THREE.PerspectiveCamera = perspective?new THREE.PerspectiveCamera(CAMERA_VIEW.fov,16/9,.3,700):new THREE.OrthographicCamera(-12, 12, 7, -7, .1, 240);
     // Placa de vídeo: o jogador escolhe em Gráficos (powerPreference do contexto). Trocar em tempo real recria o contexto (onSettings).
     const GPU_PREF = { auto: 'default', desempenho: 'high-performance', integrada: 'low-power' } as const;
     const createRenderer = () => { const r = new THREE.WebGLRenderer({ antialias: false, powerPreference: GPU_PREF[currentSettings().gpu] }); r.setPixelRatio(pixelRatioFor(currentSettings())); r.outputColorSpace = THREE.SRGBColorSpace; return r; };
@@ -170,7 +173,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Rodada 55: contorno + preenchimento das áreas reais das técnicas do jogador (só visual; src/scene/techniqueAreas.ts).
     const areas=createTechniqueAreas(scene,terrainHeight);runCleanups.push(()=>areas.dispose());
     const groundLook=createGroundMaterial(MAP);
-    const terrainGeometry=new THREE.PlaneGeometry(RENDERED_GROUND_SIZE,RENDERED_GROUND_SIZE,224,224);
+    const terrainGeometry=new THREE.PlaneGeometry(RENDERED_GROUND_SIZE,RENDERED_GROUND_SIZE,340,340);
     const terrainPositions=terrainGeometry.attributes.position;
     for(let i=0;i<terrainPositions.count;i++)terrainPositions.setZ(i,terrainHeight(terrainPositions.getX(i),-terrainPositions.getY(i)));
     terrainGeometry.computeVertexNormals();
@@ -735,7 +738,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(banning){if(offer.kind==='stat'){eventToast='Vitalidade é a opção de reserva e não pode ser banida.';return;}banned.add(offer.name);uses.ban--;banning=false;eventToast=offer.name+' banido da run em todos os níveis e raridades';const cards=choiceLevel===0?rollMegaLoot():rollLevelOffers();choiceData=cards?.length?cards:null;snapshotTimer=0;return;}if(offer.kind==='skill'){if(familyOf(heroId)==='naruto'&&offer.name==='Invocação do Sapo'&&!skillLevels[offer.name]&&!hiddenEffects)showGamabunta(player.position,player.position.clone().add(heading),true);if(!hero.skills.includes(offer.name))addResearch(offer.name,researchGain(skillLevels[offer.name]?RESEARCH_RULES.perLevel:RESEARCH_RULES.perLearn,permanent['Pesquisa']||0));skillLevels[offer.name]=Math.min(techniqueLevelCap(offer,ex('skillCap')),(skillLevels[offer.name]||0)+1);const previous=growth[offer.name]??{...NO_GROWTH};for(const key of Object.keys(NO_GROWTH) as (keyof SkillGrowth)[])previous[key]+=offer.growth?.[key]||0;growth[offer.name]=previous;}if(offer.kind==='pill'&&grantPill(knownPills,offer.name,ex('pillCap')))pillQuality[offer.name]=(pillQuality[offer.name]||0)+PILL_RARITY_POWER[offer.rarity]-1;if(offer.kind==='item')grantItem(offer.name);if(offer.kind==='stat'&&offer.bonus){for(const key of Object.keys(offer.bonus) as (keyof Bonuses)[])runBuffs[key]=(runBuffs[key]||0)+(offer.bonus[key]||0);}refreshStats(true);choiceData=null;keys.clear();}
     let streak: KillStreak = { count:0, lastAt:0 };
     const countKill = () => { kills += 1; streak = extendStreak(streak, elapsed); };
-    let yaw=Math.PI/4, targetYaw=yaw, pitch=.55, targetPitch=pitch, zoom=currentSettings().cameraDistance, spawnTimer=1,megaSchedule=rollMegaSchedule(),megaElitesSpawned=0,accountEncounters=0,snapshotTimer=0,chakra=0,hp=stats.maxHp,level=1,xp=0,xpNext=30,kills=0,runMoney=0,frames=0,fps=0,fpsTimer=0,autoUlt=currentSettings().autoUltimate,last=performance.now(),elapsed=0,eventToast='',zoneDifficulty=1,xpMultiplier=1,lootMultiplier=1;
+    let yaw=Math.PI/4, targetYaw=yaw, pitch=perspective?CAMERA_VIEW.pitch:.55, targetPitch=pitch, zoom=currentSettings().cameraDistance, spawnTimer=1,megaSchedule=rollMegaSchedule(),megaElitesSpawned=0,accountEncounters=0,snapshotTimer=0,chakra=0,hp=stats.maxHp,level=1,xp=0,xpNext=30,kills=0,runMoney=0,frames=0,fps=0,fpsTimer=0,autoUlt=currentSettings().autoUltimate,last=performance.now(),elapsed=0,eventToast='',zoneDifficulty=1,xpMultiplier=1,lootMultiplier=1;
     const enemyWeapons=['Kunai','Shuriken','Shuriken Fūma'] as const;
     const enemyShots:{object:THREE.Object3D;direction:THREE.Vector3;life:number;speed:number;damage:number;radius:number}[]=[];
     const shadowClones:{sprite:THREE.Sprite;motion:ReturnType<typeof createPlayerMotion>;target:Enemy;life:number;technique:Technique;growth:SkillGrowth;ally:boolean;level:number}[]=[];
@@ -918,7 +921,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     window.addEventListener('keydown',onKeyDown);window.addEventListener('keyup',onKeyUp);window.addEventListener('blur',onBlur);
     container.addEventListener('pointerdown',onDown);container.addEventListener('pointermove',onMove);container.addEventListener('pointerup',onUp);container.addEventListener('pointercancel',resetPointer);container.addEventListener('pointerleave',resetPointer);container.addEventListener('contextmenu',onContext);container.addEventListener('wheel',onWheel,{passive:true});
     let aspect=1;
-    const projectCamera=()=>{camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();};
+    const projectCamera=()=>{if(camera instanceof THREE.PerspectiveCamera){camera.aspect=aspect;camera.updateProjectionMatrix();return;}camera.left=-zoom*aspect/2;camera.right=zoom*aspect/2;camera.top=zoom/2;camera.bottom=-zoom/2;camera.updateProjectionMatrix();};
     const resize=()=>{const w=container.clientWidth||window.innerWidth,h=container.clientHeight||window.innerHeight;aspect=w/h;projectCamera();renderer.setSize(w,h);};resize();const observer=new ResizeObserver(resize);observer.observe(container);
     const v1=new THREE.Vector3(),v2=new THREE.Vector3(),dir=new THREE.Vector3(),enemyTravel=new THREE.Vector3(),offset=new THREE.Vector3();
     let moveVertical=0,moveHorizontal=0;
@@ -1616,7 +1619,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       }const targetHeight=terrainHeight(player.position.x,player.position.z)+player.scale.y*.5;
       // O centro permanece no jogador, mesmo durante a rotação e a interpolação do zoom.
       cameraTarget.set(player.position.x,targetHeight,player.position.z);
-      const orbitDistance=zoom*1.65+10;
+      const orbitDistance=perspective?perspectiveDistance(zoom):zoom*1.65+10;
       const ox=Math.sin(yaw),oz=Math.cos(yaw);
       // O jogador pode rotacionar a câmera para encontrar uma linha de visão livre.
       const viewPitch=pitch;
@@ -1626,7 +1629,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       const near=Math.min(-70,orbitDistance-(zoom*.5+4)/Math.sin(viewPitch));
       // Rodada 55: com a câmera bem deitada o chão visível no topo vai além de 240 m — o far acompanha (sem cortar o chão).
       const far=Math.max(240,orbitDistance+(zoom*.5+4)/Math.sin(viewPitch)+20);
-      if(Math.abs(camera.near-near)>.05||Math.abs(camera.far-far)>.5){camera.near=near;camera.far=far;camera.updateProjectionMatrix();}
+      if(!perspective&&(Math.abs(camera.near-near)>.05||Math.abs(camera.far-far)>.5)){camera.near=near;camera.far=far;camera.updateProjectionMatrix();}
       camera.position.copy(cameraTarget).add(offset);
       // Rodada 55: sem a trava "câmera ≥ chão+1,2" — na ortográfica a posição só ancora o raio de visão (near negativo já
       // desenha o que fica atrás dela); a trava inclinava a vista sempre que havia morro atrás da câmera.
@@ -1651,7 +1654,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       player.material.depthTest=true;
       player.renderOrder=28;
       const playerOccluded=terrainOccludesActor(player.position.x,player.position.y,player.position.z,yaw,viewPitch,orbitDistance,terrainHeight);
-      playerMotion.fitHealthBar((camera.top-camera.bottom)/camera.zoom/Math.max(1,renderer.domElement.clientHeight),!playerOccluded);
+      playerMotion.fitHealthBar(zoom/Math.max(1,renderer.domElement.clientHeight),!playerOccluded);
       if(sandCloud){sandCloud.visible=jumpHeight>0&&!defeated&&keys.has(' ')&&sandGlideLeft>0&&jumpTime<=jumpDuration*.5;sandCloud.position.set(player.position.x,player.position.y-player.scale.y*.5-.18,player.position.z);}
       if(portal)portal.mesh.rotation.y=yaw;
       sageAura.sprite.visible=enabledRef.current&&!hiddenEffects&&(sageModeActive()||heroId==='kabuto-sabio')&&!defeated;

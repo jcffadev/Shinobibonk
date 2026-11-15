@@ -320,7 +320,8 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
   assert.ok(gcSrc.includes('const viewPitch=pitch;')&&gcSrc.includes('player.material.depthTest=true;'),'o terreno oculta o jogador sem alterar a inclinação da câmera (rodada 68)');
   const { DEFAULT_SETTINGS } = await import('../src/game/settings.ts');
   assert.equal(DEFAULT_SETTINGS.musicVolume,.1,'música padrão em 10% (rodada 55)');
-  assert.ok(gcSrc.includes('pitch=.55, targetPitch=pitch'),'início da partida com câmera mais deitada (0.55 rad, rodada 44)');
+  // Rodada 85: a vista ortográfica antiga mantém 0.55 rad; a perspectiva (padrão) começa em CAMERA_VIEW.pitch.
+  assert.ok(gcSrc.includes('pitch=perspective?CAMERA_VIEW.pitch:.55, targetPitch=pitch'),'início da partida: 0.55 rad na ortográfica (rodada 44) e CAMERA_VIEW.pitch na perspectiva (rodada 85)');
   const stSrc=fs.readFileSync('src/ui/SettingsScreen.tsx','utf8');
   assert.ok(stSrc.includes('6/11'),'dica do multiplicador do ponteiro do Windows no slider de sensibilidade (rodada 44)');
 }

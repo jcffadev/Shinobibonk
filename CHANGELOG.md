@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 15/11/2026 · Terreno em terraços e câmera em perspectiva (Rodada 85)
+
+- **Pedidos do usuário:** "A nossa câmera, nosso cenário ainda está muito precário... Precisamos corrigir mais isso, as montanhas do mapa ainda estão muito grandes, e o terreno deveria ter vários locais para pular, esse terreno todo plano com umas montanhas está bem esquisito"; com 3 vídeos de partida do jogo de referência: "mapeie o mapa… e modifique o nosso para ficar semelhante em nível de terreno/camera".
+- **Terreno** (`src/scene/terrainArt.ts`):
+  - O relevo virou **terraços**: platôs planos em degraus de ~1,2 m, ligados por encostas curtas. São lugares para subir e pular de um nível para o outro.
+  - Sem montanha grande dentro do mapa: o ponto mais alto passou de ~5,8 m para ~3,5 m (~4,7 m no monumento da Folha).
+  - As montanhas da borda ficaram só no horizonte e com metade da altura (~7 m).
+  - O começo da partida (até ~6 m do centro) é plano.
+  - As encostas dos degraus são pintadas como paredão de pedra com estrias. A malha do chão ficou mais fina (340 × 340) para os degraus aparecerem.
+- **Câmera:**
+  - Agora é em **perspectiva**, com campo de visão de 50° e inclinação inicial de ~29°: aparecem o horizonte e as montanhas ao fundo.
+  - O zoom continua igual (padrão 12, faixa 8–22) e mede a mesma altura visível no ponto do ninja.
+  - A vista antiga (ortográfica) continua em **Configurações → Controles → Vista da câmera**. A troca vale a partir da próxima missão.
+- **Testes:**
+  - 2 testes novos (terraços, centro plano, horizonte; perspectiva padrão e zoom igual). O mínimo subiu para 158.
+  - 2 mutações novas, verificadas à mão: acusadas.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver os terraços, as construções da Folha sobre o relevo novo, a câmera em perspectiva (rotação, zoom, barra de vida, números de dano) e o desempenho.
+
 ## 15/11/2026 · A missão só sorteia os itens da bolsa (Rodada 84)
 
 - **Relato do usuário:** "Eu escolhi o Arsenal de Kushina para o Madara, mas está aparecendo itens que eu tenhon 100% de certeza que não levei na Bolsa para a MIssão".

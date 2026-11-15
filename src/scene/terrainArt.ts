@@ -16,6 +16,33 @@ export const REGIONAL_PLACES = [
 const mound = (x: number, z: number, cx: number, cz: number, rx: number, rz: number, height: number) =>
   height * Math.exp(-(((x - cx) / rx) ** 2 + ((z - cz) / rz) ** 2));
 
+/**
+ * Rodada 85 (pedido do usuário: "as montanhas do mapa ainda estão muito grandes, e o terreno deveria ter vários locais para
+ * pular, esse terreno todo plano com umas montanhas está bem esquisito"): o relevo vira TERRAÇOS baixos — platôs em degraus
+ * de `TERRAIN.step` m com encosta curta (`TERRAIN.riser` da altura de cada degrau), bons para pular de um nível ao outro.
+ * Montanhas altas só fora da área de jogo, no horizonte (`TERRAIN.ridge`).
+ */
+export const TERRAIN = { step: 2, riser: .22, ridge: .4, maxInside: 6.2 } as const;
+/** Degrau: platô plano e encosta curta e suave (sem quina vertical, para andar e pular). */
+export function terrace(height: number, step = TERRAIN.step, riser = TERRAIN.riser) {
+  if (height <= 0) return height;
+  const level = Math.floor(height / step), part = height / step - level;
+  const t = Math.min(1, Math.max(0, (part - (1 - riser)) / riser));
+  return (level + t * t * (3 - 2 * t)) * step;
+}
+/** Relevo de base suave (antes dos degraus): colinas espalhadas, todas abaixo de `TERRAIN.maxInside`. */
+function rollingBase(x: number, z: number) {
+  return .9 + .7 * Math.sin(x * .07 + 1.3) * Math.cos(z * .06 - .4) + .45 * Math.sin((x + z) * .11)
+    + mound(x, z, -24, -12, 20, 15, 1.6)
+    + mound(x, z, 25, 11, 18, 16, 1.8)
+    + mound(x, z, -49, 32, 19, 15, 2.6)
+    + mound(x, z, 53, -37, 18, 20, 2.9)
+    + mound(x, z, -44, -42, 15, 17, 2.8)
+    + mound(x, z, -35, 8, 6, 4.5, 1.2)
+    + mound(x, z, 28, -13, 5.5, 5, 1.1)
+    + mound(x, z, 49, 28, 6, 4.8, 1.3);
+}
+
 export function groundHeight(map: GameMap['id'], x: number, z: number) {
   const edge = Math.max(Math.abs(x), Math.abs(z));
   let ridge = 0;
@@ -26,18 +53,11 @@ export function groundHeight(map: GameMap['id'], x: number, z: number) {
     const blend = Math.min(1, (edge - MAP_SIZE / 2) / 17);
     ridge = peaks * Math.exp(-((edge - center) ** 2) / 340) * blend ** 2;
   }
-  const hills = .36 * Math.sin(x * .14) * Math.cos(z * .12)
-    + mound(x, z, -24, -12, 18, 14, 2.4)
-    + mound(x, z, 25, 11, 17, 15, 2.6)
-    + mound(x, z, -49, 32, 19, 15, 7.4)
-    + mound(x, z, 53, -37, 18, 20, 9.6)
-    + mound(x, z, -44, -42, 15, 17, 10)
-    + mound(x, z, -35, 8, 5, 3.5, 1.6)
-    + mound(x, z, 28, -13, 4.5, 4, 1.3)
-    + mound(x, z, 49, 28, 5, 3.8, 1.8)
-    + ridge * .77;
+  // Terraços dentro do mapa; perto do centro (onde o ninja começa) o chão fica plano.
+  const calm = THREE.MathUtils.smoothstep(Math.hypot(x, z), 6, 18);
+  const hills = terrace(Math.min(TERRAIN.maxInside, rollingBase(x, z) * 1.3) * calm) + ridge * TERRAIN.ridge;
   if (map !== 'folha') {
-    let height=hills+mound(x,z,3,-26,22,11,4.8);
+    let height=hills+terrace(mound(x,z,3,-26,22,11,2.2));
     for(const place of REGIONAL_PLACES) {
       const distance=Math.max(Math.abs(x-place.x),Math.abs(z-place.z));
       const edge=place.w*.46;
@@ -46,7 +66,7 @@ export function groundHeight(map: GameMap['id'], x: number, z: number) {
     }
     return height * .58;
   }
-  const monument = mound(x, z, 0, -45, 22, 17, 10);
+  const monument = terrace(mound(x, z, 0, -45, 22, 17, 4.4));
   // Perto das estátuas, mantenha um topo largo sob toda a base do sprite.
   const pedestal = (center: number) =>
     mound(center + Math.sign(x - center) * Math.max(0, Math.abs(x - center) - 3.5),
@@ -109,7 +129,9 @@ export function groundArt(map: GameMap) {
       const onPath = Math.abs(x - trailX(z)) < 2.25 + patch * .45;
       const inPlaza = Math.abs(x) < 9 && z > -22 && z < -11;
       const river = map.id === 'folha' && Math.abs(x - 41.5 - Math.sin(z * .13) * 2) < 3.1 && z > 12;
-      const stone = groundHeight(map.id, x, z) > 2.9 + patch;
+      // Rodada 85: pedra nas encostas dos terraços (inclinação alta), com estrias horizontais como paredão de rocha.
+      const h0 = groundHeight(map.id, x, z), slope = Math.hypot(groundHeight(map.id, x + .5, z) - h0, groundHeight(map.id, x, z + .5) - h0) / .5;
+      const stone = slope > .55 || h0 > 4.2;
       const color = river ? water : inPlaza ? plaza : onPath ? dirt : stone ? rock : grass;
       let shade = .88 + .18 * fleck + .08 * patch;
       if (inPlaza && !river) {
@@ -118,6 +140,8 @@ export function groundArt(map: GameMap) {
         shade *= joint ? .72 : .93 + seed(Math.floor(i / 8), row) * .16;
       } else if (river) {
         shade += Math.sin(x * 2 + z * 6) > .94 ? .25 : 0;
+      } else if (stone) {
+        shade *= (h0 * 4.2) % 1 < .5 ? .84 : 1.02;
       } else if (!onPath && fleck > .94) shade += .14;
       const offset = 4 * (j * size + i);
       if (!river) surfaces[4 * ((size - 1 - j) * size + i) + (inPlaza ? 3 : onPath ? 1 : stone ? 2 : 0)] = 255;

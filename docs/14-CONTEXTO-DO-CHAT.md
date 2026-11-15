@@ -2226,3 +2226,17 @@ Respostas do usuário às perguntas: os itens apareceram **durante a missão**; 
 - Antes, a bolsa só dava preferência e a missão sorteava todo o pool. Agora, com itens na bolsa, só eles aparecem; bolsa vazia mantém o pool completo.
 - **Testes:** verificados numa cópia limpa. **PENDENTE DE VALIDAÇÃO E2E** jogando.
 - **Publicado no GitHub.**
+
+## Rodada 85 · 15/11/2026 — terreno em terraços e câmera em perspectiva
+
+> A nossa câmera, nosso cenário ainda está muito precário... as montanhas do mapa ainda estão muito grandes, e o terreno deveria ter vários locais para pular, esse terreno todo plano com umas montanhas está bem esquisito
+
+> Aprenda tudo que conseguir com esses 3 vídeos, mapeie o mapa… e modifique o nosso para ficar semelhante em nível de terreno/camera... Tem parte de fendas para você entender melhor, se conseguir criar o mesmo sistema…
+
+**Resposta.**
+
+- Os 3 vídeos foram estudados e o aprendido foi anotado fora do projeto, como manda a regra do material de referência.
+- Terreno em terraços baixos com encostas de pedra, montanhas só no horizonte e câmera em perspectiva; a vista antiga fica nas Configurações.
+- **Fenda:** o funcionamento foi mapeado (portal, arena separada com o relógio parado, ondas com "chamar a próxima", chefe com tempo, relíquias com atributo e subpassiva em 3 vagas). Fica como próxima tarefa grande.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**
