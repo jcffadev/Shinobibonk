@@ -142,8 +142,9 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
 
   function attack(rig: Rig) {
     const [core, mid, edge] = colsOf(rig.style), o = rig.root.position, g = ground(o.x, o.z), R = rig.radius, d = rig.dir;
-    const ox = rig.owner.x, oz = rig.owner.z;
-    // Anel no chão do tamanho real da área atingida (Órbita/Ultimate ao redor do usuário).
+    // Rodada 78: o golpe do Susanoo cai NO ALVO (sx/sz = usuário, de onde sai a estocada); só a Ultimate envolve o usuário.
+    const sx = rig.owner.x, sz = rig.owner.z, ox = rig.ultimate ? sx : rig.target.x, oz = rig.ultimate ? sz : rig.target.z;
+    // Anel no chão do tamanho real da área atingida (no alvo; na Ultimate, ao redor do usuário).
     fx.emitRaw(true, ox, ground(ox, oz) + .08, oz, 0, 0, 0, .45, R * .6, R * 2.5, core, .9, edge, 0, 5, 2, 0);
     if (rig.style === 'madara' || rig.style === 'kakashi') {
       // Dois cortes horizontais girando ao redor (lâminas kris), deixando chamas azuis no chão.
@@ -154,9 +155,9 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       for (let i = 0; i < 22; i++) { const a = Math.random() * 6.283, r = R * (.6 + Math.random() * .45); fx.emitRaw(true, ox + Math.cos(a) * r, ground(ox + Math.cos(a) * r, oz + Math.sin(a) * r) + .15, oz + Math.sin(a) * r, 0, 1.2 + Math.random(), 0, .6, .3, .1, mid, .9, edge, 0, FLAME, 0, .05 + Math.random() * .15); }
     } else if (rig.style === 'itachi') {
       // Estocada da Espada de Totsuka até o alvo + redemoinho de selamento.
-      const tx = rig.target.x, tz = rig.target.z, mx = (ox + tx) / 2, mz = (oz + tz) / 2, y = g + 1.4;
-      fx.emitRaw(true, mx, y, mz, 0, 0, 0, .3, .22, .12, core, 1, mid, 0, STREAK, 1, 0); setAxis(fx, tx - ox, -.8, tz - oz);
-      fx.emitRaw(true, mx, y, mz, 0, 0, 0, .38, .7, .4, mid, .45, edge, 0, STREAK, 1, 0); setAxis(fx, tx - ox, -.8, tz - oz);
+      const tx = rig.target.x, tz = rig.target.z, mx = (sx + tx) / 2, mz = (sz + tz) / 2, y = g + 1.4;
+      fx.emitRaw(true, mx, y, mz, 0, 0, 0, .3, .22, .12, core, 1, mid, 0, STREAK, 1, 0); setAxis(fx, tx - sx, -.8, tz - sz);
+      fx.emitRaw(true, mx, y, mz, 0, 0, 0, .38, .7, .4, mid, .45, edge, 0, STREAK, 1, 0); setAxis(fx, tx - sx, -.8, tz - sz);
       for (let i = 0; i < 26; i++) { const a = Math.random() * 6.283, r = R * Math.random(); fx.emitRaw(true, ox + Math.cos(a) * r, g + .3, oz + Math.sin(a) * r, -Math.sin(a) * 5, 1 + Math.random() * 1.5, Math.cos(a) * 5, .5, .28, .08, core, .9, edge, 0, FLAME, 0, Math.random() * .15); }
       fx.emitRaw(true, tx, ground(tx, tz) + .6, tz, 0, 0, 0, .25, .5, 1.6, core, 1, mid, 0, SPARK, 0, .05);
     } else {

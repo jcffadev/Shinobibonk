@@ -561,7 +561,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
       case 'Cone': cone(t, p, origin.x, oy, origin.z, dx, dz, range); break;
       case 'Linha': line(t, p, origin.x, oy, origin.z, dx, dz, range, half); break;
       case 'Área': area(t, p, center.x, center.y, center.z, radius); break;
-      case 'Órbita': orbit(t, p, origin.x, oy, origin.z, radius); break;
+      case 'Órbita': orbit(t, p, center.x, center.y, center.z, radius); break; // Rodada 78: no alvo, nunca no pé do usuário
       case 'Corpo a corpo': melee(t, p, origin.x, oy, origin.z, dx, dz, range); break;
       case 'Buff': aura(t, origin, true); break;
       default: area(t, p, center.x, center.y, center.z, radius);

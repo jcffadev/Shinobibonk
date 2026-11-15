@@ -66,6 +66,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 27 | Balanceamento de recarga (CD): **FEITO na rodada 76** (recarga e poder por forma, vida do comum e por dificuldade, abertura calma, curva de XP, Final Swarm por dificuldade, simulador `scripts/simulate-run.mjs`) | PENDENTE DE VALIDAÇÃO E2E |
 | 28 | **NOVO (rodada 77):** ninja do jogador do tamanho do monstro comum (PLAYER_SIZE .4 → .72) e câmera inicial mais perto (zoom 19 → 12, faixa 8–22). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 29 | **AJUSTE SEGUINTE (rodada 76):** ordem entre dificuldades no fim da partida ainda instável no simulador (mais monstros dão mais XP, e às vezes o Chunin dura mais que o Genin); conta nova morre na entrada do Final Swarm (~30 min). Rodar `node scripts/simulate-batch.mjs <rótulo>` depois de cada ajuste | PENDENTE |
+| 30 | **NOVO (rodada 78):** técnicas em Órbita e corpo a corpo acertam no alvo, nunca no pé do jogador (Susanoo, Limbo, Esferas, Kaiten…); Órbitas lançadas alcançam 4,5 m. Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
 ## Rodada 53 · Estado e próximos passos

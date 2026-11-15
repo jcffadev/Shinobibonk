@@ -2140,3 +2140,14 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - Números de dano curtos (1K, 123.1K, 1M, 1B…).
 - **Testes:** **PASSOU** tsc, 139/139 com cobertura e build; 6 mutações novas acusadas. **PENDENTE DE VALIDAÇÃO E2E**.
 - **Publicado no GitHub.**
+
+## Rodada 78 · 15/11/2026 — técnicas miram o alvo
+
+> Ataques ou devem ser meele, chegar perto para acertar, mas mirando os alvos ou arremessados/lançados, nunca usados no pé do jogador, igual o madara seis caminhos, o que está acontecendo e qual o problema? O monstro tem que chega perto, ai ele joga a habilidade em cima do Madara, não faz sentido, o Madara tem que focar o alvo, não ele mesmo... Revise todas as habilidades que funcionam igual e altere.
+
+**Resposta.**
+
+- O problema: as técnicas em Órbita (14, incluindo Limbo, Esferas da Busca da Verdade e Susanoo do Madara) acertavam um círculo no próprio shinobi, e o corpo a corpo também acertava em volta dele.
+- Agora Área, Órbita e corpo a corpo acertam no alvo. Órbitas lançadas alcançam 4,5 m; as de contato pedem chegar perto. Visual, área marcada, Susanoo e prévia acompanham.
+- **Testes:** **PASSOU** tsc, 142/142 com cobertura e build; 2 mutações acusadas. **PENDENTE DE VALIDAÇÃO E2E**.
+- **Publicado no GitHub.**

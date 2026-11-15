@@ -61,7 +61,8 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
     const effect=frog?.group??puppet?.group??sage?.sprite??techniqueVisual(technique);
     scene.add(effect);
     const travel=movingClone||(!technique.gravity&&['Projétil','Em V','Onda'].includes(technique.shape));
-    const anchored=technique.gravity==='pull'||technique.setup||['Órbita','Cone','Linha','Corpo a corpo'].includes(technique.shape);
+    // Rodada 78: a Órbita acerta no alvo (como a Área); cone, linha e golpe de contato saem do shinobi.
+    const anchored=technique.gravity==='pull'||technique.setup||['Cone','Linha','Corpo a corpo'].includes(technique.shape);
     const resize=()=>{
       const w=Math.max(1,box.clientWidth),h=Math.max(1,box.clientHeight),ratio=w/h;
       camera.left=-3.05*ratio;camera.right=3.05*ratio;camera.updateProjectionMatrix();

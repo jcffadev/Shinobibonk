@@ -62,6 +62,8 @@ const MUTATIONS = [
   { regra: 'vida do monstro comum 13', arquivo: 'src/game/enemyTiers.ts', de: 'normal: { hp: 13,', para: 'normal: { hp: 22,' },
   { regra: 'XP por abate igual em todas as dificuldades', arquivo: 'src/game/enemyTiers.ts', de: 'return loot / missionLootFactor(missionTier);', para: 'return loot;' },
   { regra: 'emboscada só aos 2:30', arquivo: 'src/game/progression.ts', de: 'first: 150,', para: 'first: 30,' },
+  { regra: 'Órbita acerta no alvo, não no pé do jogador', arquivo: 'src/game/combat.ts', de: "t.shape==='Área'||t.shape==='Órbita'||t.shape==='Corpo a corpo'?'target'", para: "t.shape==='Área'?'target'" },
+  { regra: 'partículas da Órbita no alvo', arquivo: 'src/scene/particleFx.ts', de: "case 'Órbita': orbit(t, p, center.x, center.y, center.z, radius)", para: "case 'Órbita': orbit(t, p, origin.x, oy, origin.z, radius)" },
   { regra: 'chefe desconta o poder por forma', arquivo: 'src/scene/bossCombat.ts', de: 'power = technique.power / (SHAPE_POWER[technique.shape] ?? 1);', para: 'power = technique.power;' },
 ];
 

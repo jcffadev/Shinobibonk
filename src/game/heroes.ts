@@ -27,7 +27,13 @@ const colors:Record<Element,string>={Neutro:'#d7e6ff',Fogo:'#ff7c45',Água:'#5fb
  */
 export const SHAPE_COOLDOWN:Record<Shape,number>={'Corpo a corpo':.6,'Projétil':.8,'Órbita':1,'Cone':1.2,'Linha':1.5,'Onda':1.5,'Em V':1.5,'Área':2,'Buff':1};
 export const SHAPE_POWER:Record<Shape,number>={'Corpo a corpo':1.5,'Projétil':1.6,'Órbita':1.3,'Cone':1.35,'Linha':1.45,'Onda':1.45,'Em V':1.4,'Área':1.4,'Buff':1};
-const t=(name:string,school:School,element:Element,shape:Shape,power=1):Technique=>({name,school,element,shape,color:colors[element],power:power*SHAPE_POWER[shape],range:shape==='Corpo a corpo'?1.6:shape==='Cone'?2.8:shape==='Órbita'?1.7:4.5,cooldown:SHAPE_COOLDOWN[shape],slow:element==='Sombra',burn:element==='Fogo',poison:/Venenos[ao]|Tóxic[ao]|Corrosiv[ao]/.test(name),status:school==='Genjutsu'?(name.includes('Corvo')?'Dormir':name.includes('Tsukuyomi')?'Atordoar':'Paralisar'):element==='Raio'?'Paralisar':element==='Vento'?'Empurrar':element==='Madeira'||element==='Areia'?'Lentidão':shape==='Corpo a corpo'?'Atordoar':undefined,statusChance:school==='Genjutsu'?.3:.12,unlockLevel:1});
+/**
+ * Rodada 78 (pedido do usuário: "Ataques ou devem ser meele, chegar perto para acertar, mas mirando os alvos ou arremessados/lançados,
+ * nunca usados no pé do jogador, igual o madara seis caminhos"): a Órbita e o corpo a corpo acertam um círculo NO ALVO (aimedCenter).
+ * As Órbitas lançadas alcançam como um projétil (4,5); as de contato (Kaiten, Palmas, espadas) seguem curtas: é preciso chegar perto.
+ */
+export const LAUNCHED_ORBITS=new Set(['Susanoo','Limbo','Esferas da Busca da Verdade','Corvos Ilusórios','Tornado Cortante','Espelhos Demoníacos de Gelo']);
+const t=(name:string,school:School,element:Element,shape:Shape,power=1):Technique=>({name,school,element,shape,color:colors[element],power:power*SHAPE_POWER[shape],range:shape==='Corpo a corpo'?1.6:shape==='Cone'?2.8:shape==='Órbita'?(LAUNCHED_ORBITS.has(name)?4.5:1.7):4.5,cooldown:SHAPE_COOLDOWN[shape],slow:element==='Sombra',burn:element==='Fogo',poison:/Venenos[ao]|Tóxic[ao]|Corrosiv[ao]/.test(name),status:school==='Genjutsu'?(name.includes('Corvo')?'Dormir':name.includes('Tsukuyomi')?'Atordoar':'Paralisar'):element==='Raio'?'Paralisar':element==='Vento'?'Empurrar':element==='Madeira'||element==='Areia'?'Lentidão':shape==='Corpo a corpo'?'Atordoar':undefined,statusChance:school==='Genjutsu'?.3:.12,unlockLevel:1});
 /** Cria uma técnica de setup. Valores provisórios. */
 const s=(name:string,school:School,element:Element,setup:Setup):Technique=>({name,school,element,shape:'Buff',color:colors[element],power:0,range:9,cooldown:setup.cooldown,statusChance:0,unlockLevel:1,setup});
 const SAGE_MODE:Setup={cooldown:16,duration:7,bonuses:{damage:.15,area:.2},stack:false,sage:true,summary:'Entra no Modo Sábio: +dano e +área; aplica o elemento Sábio, dá Senjutsu ao Ninjutsu e faz o taijutsu corpo a corpo acertar em área ao redor.'};

@@ -167,3 +167,15 @@ export function techniqueDetail(t:Technique,g:SkillGrowth=NO_GROWTH,sageInfused=
  else if(t.school==='Ninjutsu'&&sageModeKnown)parts.push(`${SENJUTSU.label} durante o Modo Sábio.`);
  return parts.join(' · ');
 }
+
+/**
+ * Rodada 78 — onde o golpe acerta. Área, Órbita e corpo a corpo acertam um círculo centrado NO ALVO (nunca no pé do jogador);
+ * a gravidade de puxar (Bansho Tenin) continua no usuário e cone/linha partem dele na direção do alvo. Exceção: o Modo Sábio
+ * faz o taijutsu corpo a corpo girar em volta do usuário (regra própria do buff).
+ */
+export function aimedCenter(t:{shape:string;gravity?:string},sageArea=false):'target'|'origin'{
+ if(t.gravity==='pull'||sageArea)return 'origin';
+ return t.shape==='Área'||t.shape==='Órbita'||t.shape==='Corpo a corpo'?'target':'origin';
+}
+/** Raio do círculo do corpo a corpo no alvo: 60% do alcance (mínimo 0,6 m), para acertar o alvo e quem está colado nele. */
+export const MELEE_IMPACT={share:.6,min:.6};

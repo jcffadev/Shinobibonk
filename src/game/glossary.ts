@@ -71,7 +71,7 @@ export const glossary: Section[] = [
         detail:'Alcance é a distância que o golpe cobre. Formato é a região onde pode acertar, como linha, cone, círculo ou órbita. O bônus de área aumenta as medidas dos golpes compatíveis.',
         example:'Num golpe circular, a aplicação da raiz quadrada do bônus de área faz 144% de área virar 120% do raio original. Um círculo de 2 m chega a 2,4 m.' },
       { term:'Contato, disparo e ataque em área', keywords:'aoe forma trajetoria colisao',
-        detail:'Golpes de contato acertam perto do shinobi. Disparos percorrem uma trajetória e podem atingir quem está no caminho. Um ataque em área acerta a região marcada, que pode ficar no alvo ou ao redor do conjurador. A escola do golpe é definida à parte.' },
+        detail:'Golpes de contato acertam perto do shinobi. Disparos percorrem uma trajetória e podem atingir quem está no caminho. Um ataque em área ou em órbita acerta a região marcada no alvo, nunca no pé do shinobi. Só a Ultimate e técnicas que puxam os inimigos (como o Bansho Tenin) ficam ao redor do conjurador. A escola do golpe é definida à parte.' },
       { term:'Preparação, recarga e duração do buff', keywords:'setup acumulavel buff tempo ativo',
         detail:'Uma preparação é uma técnica que dá um bônus temporário, como Modo Sábio ou Portões, quando as condições de ativação são atendidas. Recarga indica quando pode ativar de novo. Duração indica quanto tempo o bônus permanece.',
         example:'Uma preparação de 5 s com recarga de 10 s fica ativa até metade do tempo se for reativada assim que puder. O card informa se ela acumula.' },

@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 15/11/2026 · Técnicas miram o alvo, nunca o pé do jogador (Rodada 78)
+
+- **Pedido do usuário:** "Ataques ou devem ser meele, chegar perto para acertar, mas mirando os alvos ou arremessados/lançados, nunca usados no pé do jogador, igual o madara seis caminhos… Revise todas as habilidades que funcionam igual e altere."
+- **Causa:** as 14 técnicas em Órbita (Susanoo, Limbo, Esferas da Busca da Verdade, Corvos Ilusórios, Kaiten, Palmas Protetoras, Espelhos de Gelo e outras) acertavam um círculo centrado no próprio shinobi; o corpo a corpo também acertava em volta dele.
+- **Agora** (`aimedCenter`, `src/game/combat.ts`):
+  - Área, Órbita e corpo a corpo acertam um círculo **no alvo**. O corpo a corpo usa 60% do alcance (mínimo 0,6 m): é preciso chegar perto, mas o golpe vai no inimigo.
+  - Órbitas lançadas (Susanoo, Limbo, Esferas da Busca da Verdade, Corvos Ilusórios, Tornado Cortante, Espelhos Demoníacos de Gelo) alcançam 4,5 m, como um projétil (`LAUNCHED_ORBITS`). As de contato (Kaiten, Palmas, estilos de espada) seguem curtas, 1,7.
+  - Cone e linha continuam saindo do shinobi na direção do alvo. Ficam no usuário só o puxão (Bansho Tenin), o Modo Sábio (taijutsu girando em volta) e as Ultimates.
+- **Visual:** a área marcada, as partículas da Órbita, o golpe do Susanoo e a prévia da técnica também vão para o alvo. O glossário foi atualizado.
+- **Testes:**
+  - 3 testes novos em `tests/mira.test.mjs`; mínimo 142.
+  - 2 mutações novas, as duas acusadas.
+  - **PASSOU:** tsc, 142/142 com cobertura e build.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver o Madara Seis Caminhos e as demais técnicas em Órbita acertando o inimigo.
+
 ## 15/11/2026 · Balanceamento por forma de técnica, abertura calma, curva de XP e simulador de partidas (Rodada 76)
 
 - **Pedidos do usuário:**

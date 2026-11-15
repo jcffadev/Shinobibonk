@@ -42,7 +42,7 @@ import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVita
 import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DURATION, weatherWait, type WeatherEventId } from '../game/maps';
 import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
-import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, type SkillGrowth } from '../game/combat';
+import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
 import type { Bonuses } from '../game/catalog';
 import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSignatureVisual, disposeObject } from './techniqueEffects';
 import { createParticleFx } from './particleFx';
@@ -1321,7 +1321,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         if(academyThrow&&!instant)pendingHits.push({time:.12,run:launch});
         else launch();
       }
-      else{const center=t.shape==='Área'?target.sprite.position.clone():t.gravity==='pull'?origin.clone():origin,radius=t.shape==='Área'||t.shape==='Órbita'?ATTACK_SCALE*(t.shape==='Área'?1.2:1.7)*Math.sqrt(stats.area*(1+g.area)):range;
+      else{const center=aimedCenter(t,sageArea)==='target'?target.sprite.position.clone():origin.clone(),radius=t.shape==='Área'||t.shape==='Órbita'?ATTACK_SCALE*(t.shape==='Área'?1.2:1.7)*Math.sqrt(stats.area*(1+g.area)):t.shape==='Corpo a corpo'&&!sageArea?Math.max(MELEE_IMPACT.min,range*MELEE_IMPACT.share):range;
         // Golpes e lançamentos sem projétil têm um preparo curto até o acerto, reduzido pela velocidade de projétil.
         let areaTelegraphed=false;
         const resolve=()=>{
