@@ -29,7 +29,7 @@ Siga também, na mesma tarefa:
 | Ficha do mapa | `src/game/maps.ts` (`MAPS`, `GameMap`) | id, nome, país, símbolo, cores do chão e do terreno, pesos do cenário, climas, 3 zonas com guardiões |
 | Relevo | `src/scene/terrainArt.ts` → `groundHeight(map, x, z)` | função exata; o jogo usa a grade de `createHeightField` (passo 0,5 m) |
 | Terraços | `TERRAIN` e `terrace()` em `terrainArt.ts` | degrau `step` 2 × 0,58 ≈ 1,2 m, encosta `riser` 22% do degrau, teto `maxInside` |
-| Horizonte | `ridge` em `groundHeight` × `TERRAIN.ridge` (0,4) | montanhas só fora de `MAP_SIZE/2`, ~7 m |
+| Horizonte | `horizonProfile(map, ângulo, distância)` em `terrainArt.ts`, × `TERRAIN.ridge` (0,4) | montanhas só fora de `MAP_SIZE/2`, < 8 m; uma forma por vila (seção 5) |
 | Áreas planas | `LEAF_PLACES` (Folha) e `REGIONAL_PLACES` (outros mapas) | chão plano sob construção, com 4–5 m de transição |
 | Pintura do chão | `groundArt` em `terrainArt.ts` | grama, trilha, pedra nas encostas (inclinação > 0,55) com estrias, praça e rio |
 | Texturas do chão | `public/assets/ground-materials-v1.png` (Folha) e `ground-<id>-v2.png` | atlas 2×2 por superfície |
@@ -83,7 +83,7 @@ Cuidado com lugares fora da vila: a Ponte Kannabi fica no País da Grama, e a Po
 2. Ficha em `maps.ts`: id, nome canônico, país, símbolo, cores (`terrain.low`, `trail`, `high`, `accent`), pesos e tinta do cenário, 2 climas e 3 zonas com guardiões da obra.
 3. Relevo: reaproveite `rollingBase` e `terrace`. Varie só os montes de base (posição e altura) para mudar o desenho do mapa, dentro dos alvos da seção 3.
 4. Construções: defina a lista de pontos e a área plana de cada uma (ou uma praça) antes de pôr os sprites. Adicione a coordenada ao teste de chão plano.
-5. Horizonte: ajuste `ridge` (forma dos picos por ângulo) para lembrar o fundo da vila (picos pontudos em Iwa e Kiri, paredão em Suna, montes verdes e o Monte Hokage em Konoha).
+5. Horizonte: acrescente um caso em `horizonProfile` com a forma do fundo da vila. Já existem: Konoha (montes arredondados), Suna (paredão de platô com topo reto e borda íngreme), Iwa (picos altos e pontudos, os mais altos), Kiri (agulhas finas). O teste confere a forma de cada um.
 6. Arte (atlas de chão, marcos, fundo): siga `criar-arte-shinobibonk`. Nenhum arquivo de referência entra no repositório.
 7. Testes sem navegador (`docs/development/TESTING_POLICY.md`): estenda `tests/cena.test.mjs` com os alvos do mapa novo (altura, platôs, horizonte, chão plano sob construções) e acrescente uma mutação em `scripts/mutation-check.mjs`.
 8. Rode o perfil EQUILIBRADO (`TESTAR_JOGO.bat`: tipos, testes, build). O que só se vê na tela fica como **PENDENTE DE VALIDAÇÃO E2E**, dizendo o que olhar (degraus, construções no chão, horizonte, câmera, FPS).

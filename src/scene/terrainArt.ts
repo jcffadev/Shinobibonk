@@ -30,6 +30,28 @@ export function terrace(height: number, step = TERRAIN.step, riser = TERRAIN.ris
   const t = Math.min(1, Math.max(0, (part - (1 - riser)) / riser));
   return (level + t * t * (3 - 2 * t)) * step;
 }
+/**
+ * Rodada 87: horizonte com a cara de cada vila (referências de anime enviadas pelo usuário). `offset` = distância ao eixo da
+ * cordilheira. Folha: montes arredondados. Areia: paredão de platô com topo reto em volta do vale. Pedra: picos altos e
+ * pontudos. Névoa: agulhas de pedra finas.
+ */
+export function horizonProfile(map: GameMap['id'], angle: number, offset: number) {
+  if (map === 'areia') {
+    const wall = 1 - THREE.MathUtils.smoothstep(Math.abs(offset), 11, 15);
+    return (17 + 1.5 * Math.sin(3 * angle)) * wall;
+  }
+  if (map === 'pedra') {
+    const spires = 11 + 12 * Math.abs(Math.sin(9 * angle)) ** 3 + 5 * Math.abs(Math.sin(23 * angle)) ** 4;
+    return spires * Math.exp(-(offset ** 2) / 150);
+  }
+  if (map === 'nevoa') {
+    const needles = 9 + 17 * Math.abs(Math.sin(13 * angle)) ** 6 + 5 * Math.abs(Math.sin(31 * angle)) ** 8;
+    return needles * Math.exp(-(offset ** 2) / 110);
+  }
+  const hills = 13 + 6 * Math.sin(3 * angle) ** 2 + 3 * Math.cos(7 * angle) ** 2;
+  return hills * Math.exp(-(offset ** 2) / 420);
+}
+
 /** Relevo de base suave (antes dos degraus): colinas espalhadas, todas abaixo de `TERRAIN.maxInside`. */
 function rollingBase(x: number, z: number) {
   return .9 + .7 * Math.sin(x * .07 + 1.3) * Math.cos(z * .06 - .4) + .45 * Math.sin((x + z) * .11)
@@ -74,9 +96,8 @@ function rawGroundHeight(map: GameMap['id'], x: number, z: number) {
   if (edge > MAP_SIZE / 2) {
     const angle = Math.atan2(z, x);
     const center = 111 + 7 * Math.sin(5 * angle) + 4 * Math.sin(11 * angle);
-    const peaks = 15 + 8 * Math.sin(7 * angle) ** 2 + 4 * Math.cos(13 * angle) ** 2;
     const blend = Math.min(1, (edge - MAP_SIZE / 2) / 17);
-    ridge = peaks * Math.exp(-((edge - center) ** 2) / 340) * blend ** 2;
+    ridge = horizonProfile(map, angle, edge - center) * blend ** 2;
   }
   // Terraços dentro do mapa; perto do centro (onde o ninja começa) o chão fica plano.
   const calm = THREE.MathUtils.smoothstep(Math.hypot(x, z), 6, 18);

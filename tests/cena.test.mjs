@@ -211,7 +211,8 @@ test('terreno em terraços baixos, plano no centro, montanhas só no horizonte (
   const { MAP_SIZE } = await load('/src/game/worldScale.ts');
   assert.equal(terrace(TERRAIN.step * 1.3), TERRAIN.step, 'meio do degrau é platô');
   assert.ok(terrace(TERRAIN.step * .99) > TERRAIN.step * .9, 'a encosta sobe até o próximo nível');
-  for (const map of ['folha', 'outro']) {
+  const horizons = {};
+  for (const map of ['folha', 'areia', 'pedra', 'nevoa']) {
     let max = 0, flat = 0, steep = 0, raised = 0, n = 0;
     const half = MAP_SIZE / 2 - 4;
     for (let x = -half; x <= half; x += 2) for (let z = -half; z <= half; z += 2) {
@@ -224,8 +225,16 @@ test('terreno em terraços baixos, plano no centro, montanhas só no horizonte (
     assert.ok(flat / n > .6 && steep / n > .015, `${map}: platôs ${(flat / n * 100).toFixed(0)}% e encostas ${(steep / n * 100).toFixed(1)}%`);
     assert.ok(raised / n > .3, `${map}: terraços acima do chão em ${(raised / n * 100).toFixed(0)}%`);
     assert.ok(horizon > max && horizon < 8, `${map}: horizonte ${horizon.toFixed(1)} m`);
+    horizons[map] = horizon;
     assert.ok(Math.abs(groundHeight(map, 0, 0)) < .05 && Math.abs(groundHeight(map, 6, 6) - groundHeight(map, 0, 0)) < .05, 'o ninja começa no plano');
   }
+  // Rodada 87: cada vila com seu horizonte — Pedra mais alta e pontuda; Areia em paredão de topo reto.
+  const { horizonProfile } = await load('/src/scene/terrainArt.ts');
+  const ring = map => Array.from({ length: 360 }, (_, i) => horizonProfile(map, i * Math.PI / 180, 0));
+  const spread = v => Math.max(...v) - Math.min(...v);
+  assert.ok(horizons.pedra > horizons.areia && horizons.pedra > horizons.folha, 'Iwagakure tem os picos mais altos');
+  assert.ok(spread(ring('areia')) < 4 && spread(ring('pedra')) > 15 && spread(ring('nevoa')) > 15, 'Suna: platô reto; Iwa e Kiri: picos');
+  assert.ok(horizonProfile('areia', 0, 10) > horizonProfile('areia', 0, 0) * .99 && horizonProfile('areia', 0, 16) === 0, 'paredão de Suna com topo largo e borda íngreme');
 });
 
 test('chão plano sob as construções da Folha, mesmo com terraços (rodada 86)', async () => {
@@ -239,4 +248,14 @@ test('chão plano sob as construções da Folha, mesmo com terraços (rodada 86)
     for (const [dx, dz] of [[3, 0], [-3, 0], [0, 3], [0, -3], [2, 2]])
       assert.ok(Math.abs(groundHeight('folha', x + dx, z + dz) - center) < .02, `construção em ${x},${z} sem desnível`);
   }
+});
+
+test('mapas com o nome da obra e zonas dentro da vila (rodada 87)', async () => {
+  const { MAP_BY_ID } = await load('/src/game/maps.ts');
+  assert.equal(MAP_BY_ID.folha.name, 'Konohagakure · Vila Oculta da Folha');
+  assert.equal(MAP_BY_ID.areia.name, 'Sunagakure · Vila Oculta da Areia');
+  assert.equal(MAP_BY_ID.pedra.name, 'Iwagakure · Vila Oculta da Pedra');
+  assert.equal(MAP_BY_ID.nevoa.name, 'Kirigakure · Vila Oculta da Névoa');
+  const zones = Object.values(MAP_BY_ID).flatMap(m => m.zones.map(z => z.name));
+  assert.ok(!zones.some(z => /Kannabi|Tazuna/.test(z)), 'Ponte Kannabi (País da Grama) e Ponte de Tazuna (País das Ondas) não ficam nas vilas');
 });

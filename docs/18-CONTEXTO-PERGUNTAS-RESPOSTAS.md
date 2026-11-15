@@ -283,6 +283,11 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Skill `skills/criar-mapa-shinobibonk/SKILL.md`: padrão de mapas (terraços, horizonte, câmera, vila canônica, construções sem desnível).
 - `LEAF_PLACES` e `LEAF_BUILDINGS` em `src/scene/terrainArt.ts`: áreas planas da Folha sob construções e estátuas.
 
+### Rodada 87 · 15/11/2026
+
+- Mapas com nome da obra (Konohagakure, Sunagakure, Iwagakure, Kirigakure · Vila Oculta da …); `village` dos personagens inalterado.
+- `horizonProfile` em `src/scene/terrainArt.ts`: horizonte por vila.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

@@ -6,6 +6,8 @@ import type { WeatherCast } from './weatherCast';
  * As 3 zonas de 200 s e o guardião aos 160 s de cada zona são iguais em todos os mapas (ZONES em missions.ts).
  * Progressão por mapa: Chunin libera ao vencer o Genin daquele mapa, Jonin ao vencer o Chunin e Kage ao vencer o Jonin.
  * Cenário: o atlas de ambiente tem árvore (0), pinheiro (1), bambu (2) e rocha (3); cada mapa pesa e tinge esses tipos.
+ * Rodada 87 (pedido do usuário: "Coloque os nomes corretos nos mapas"): nome da obra (Narutopedia) — vila oculta + nome
+ * em japonês. Zonas sem lugar de fora da vila (Ponte Kannabi fica no País da Grama; a Ponte de Tazuna no País das Ondas).
  */
 export type MapId = 'folha' | 'areia' | 'pedra' | 'nevoa';
 export type MapWeather = { name: string; sky: string; near: number; far: number; slow?: number };
@@ -21,7 +23,7 @@ export type GameMap = {
 
 export const MAPS: GameMap[] = [
   {
-    id: 'folha', name: 'Vila da Folha', country: 'País do Fogo', symbol: '木', color: '#6fbf5a',
+    id: 'folha', name: 'Konohagakure · Vila Oculta da Folha', country: 'País do Fogo', symbol: '木', color: '#6fbf5a',
     description: 'Florestas densas, trilhas de treino e o portão de Konoha.',
     ground: { base: '#b7c698', flecks: ['#91a778', '#c5d4ad', '#acbd91', '#7f996a'] },
     terrain: { low: '#568c42', trail: '#98613d', high: '#555566', accent: '#db682f' },
@@ -34,7 +36,7 @@ export const MAPS: GameMap[] = [
     ],
   },
   {
-    id: 'areia', name: 'Vila da Areia', country: 'País do Vento', symbol: '砂', color: '#e0a85a',
+    id: 'areia', name: 'Sunagakure · Vila Oculta da Areia', country: 'País do Vento', symbol: '砂', color: '#e0a85a',
     description: 'Dunas escaldantes, cânions de arenito e tempestades de areia.',
     ground: { base: '#e3c48c', flecks: ['#d4ad6f', '#f0d9a8', '#c99a5c', '#e8cf9a'] },
     terrain: { low: '#d9b072', trail: '#b98546', high: '#a5703f', accent: '#f1d08e' },
@@ -47,7 +49,7 @@ export const MAPS: GameMap[] = [
     ],
   },
   {
-    id: 'pedra', name: 'Vila da Pedra', country: 'País da Terra', symbol: '岩', color: '#9a8f86',
+    id: 'pedra', name: 'Iwagakure · Vila Oculta da Pedra', country: 'País da Terra', symbol: '岩', color: '#9a8f86',
     description: 'Montanhas rochosas, pontes de pedra e pedreiras abandonadas.',
     ground: { base: '#a39a90', flecks: ['#8c8379', '#b8afa4', '#7a726a', '#c2b9ad'] },
     terrain: { low: '#7f776d', trail: '#6b5440', high: '#4f4a52', accent: '#c06a3a' },
@@ -55,19 +57,19 @@ export const MAPS: GameMap[] = [
     weathers: [{ name: 'Ventania das montanhas', sky: '#9aa3ad', near: 22, far: 66 }, { name: 'Poeira de pedreira', sky: '#8a7f73', near: 16, far: 52 }],
     zones: [
       { name: 'Pedreira de Iwa', description: 'Terreno irregular · rochas, armas e altares escondidos.', guardians: ['sakura', 'neji', 'tenten'] },
-      { name: 'Ponte de Kannabi', description: 'Campo de batalha da guerra · elites resistentes.', guardians: ['jiraiya', 'kakashi', 'tsunade'] },
+      { name: 'Desfiladeiros de Iwa', description: 'Paredões de pedra e cachoeiras · elites resistentes.', guardians: ['jiraiya', 'kakashi', 'tsunade'] },
       { name: 'Pico do Tsuchikage', description: 'Pressão máxima no topo da montanha.', guardians: ['minato', 'madara', 'pain'] },
     ],
   },
   {
-    id: 'nevoa', name: 'Vila da Névoa Oculta', country: 'País da Água', symbol: '霧', color: '#6fa9b8',
+    id: 'nevoa', name: 'Kirigakure · Vila Oculta da Névoa', country: 'País da Água', symbol: '霧', color: '#6fa9b8',
     description: 'Pântanos enevoados, lagos frios e a ponte inacabada.',
     ground: { base: '#7f9a96', flecks: ['#6b8783', '#93aeaa', '#5f7a77', '#a3bcb7'] },
     terrain: { low: '#4f6f69', trail: '#5d5a4c', high: '#3f4f5a', accent: '#5a9bb0' },
     scenery: { weights: [4, 3, 2, 1], tint: '#9fc4c4', count: 140 },
     weathers: [{ name: 'Névoa Oculta', sky: '#8fa6a8', near: 8, far: 34 }, { name: 'Garoa fria', sky: '#6f8790', near: 14, far: 48 }],
     zones: [
-      { name: 'Ponte de Tazuna', description: 'Névoa densa · os inimigos surgem de perto. Kunais pelo pântano.', guardians: ['kakashi', 'hinata', 'shikamaru'] },
+      { name: 'Pântano da Névoa', description: 'Névoa densa · os inimigos surgem de perto. Kunais pelo pântano.', guardians: ['kakashi', 'hinata', 'shikamaru'] },
       { name: 'Lago Sangrento', description: 'A Névoa Sangrenta · elites rápidos e emboscadas.', guardians: ['itachi', 'guy', 'tobirama'] },
       { name: 'Torre do Mizukage', description: 'Pressão máxima dentro da névoa.', guardians: ['tobirama', 'itachi', 'madara'] },
     ],

@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 15/11/2026 · Nomes da obra nos mapas e horizonte de cada vila (Rodada 87)
+
+- **Pedidos do usuário:** "Coloque os nomes corretos nos mapas" e "Mapas primeiro", com imagens e vídeos de Konoha, Sunagakure, Iwagakure e Kirigakure como referência.
+- **Nomes (Narutopedia):**
+  - Os mapas passam a se chamar "Konohagakure · Vila Oculta da Folha", "Sunagakure · Vila Oculta da Areia", "Iwagakure · Vila Oculta da Pedra" e "Kirigakure · Vila Oculta da Névoa".
+  - O campo de vila dos personagens não mudou, porque é ele que divide técnicas entre ninjas da mesma vila.
+- **Zonas fora da vila trocadas:**
+  - "Ponte de Kannabi" (País da Grama) → **Desfiladeiros de Iwa**.
+  - "Ponte de Tazuna" (País das Ondas) → **Pântano da Névoa**.
+- **Horizonte de cada vila** (`horizonProfile` em `src/scene/terrainArt.ts`), sempre fora da área de jogo e abaixo de 8 m:
+  - Konoha: montes arredondados.
+  - Suna: paredão de platô com topo reto em volta do vale.
+  - Iwa: picos altos e pontudos.
+  - Kiri: agulhas de pedra finas.
+- **Skill de mapas** atualizada com o `horizonProfile`.
+- **Testes:**
+  - 1 teste novo (nomes e zonas) e o teste de terreno estendido às quatro vilas e à forma do horizonte. O mínimo subiu para 160.
+  - 1 mutação nova, verificada à mão: acusada.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver o horizonte de cada vila e os nomes nas telas de mapa.
+- **Próximo nos mapas:** arte das construções de cada vila (torre do Hokage, barraca de lámen, portão; cúpula do Kazekage e casas de adobe; torres de pedra de Iwa; torres de tijolo de Kiri).
+
 ## 15/11/2026 · Skill de mapas e chão plano sob as construções da Folha (Rodada 86)
 
 - **Pedido do usuário:** "Crie um skill com tudo que está aprendendo sobre mapas, desde as alterações que fez em konoha, para que em novos mapas esse .md, já crie com expertise suficiente para um bom trabalho".

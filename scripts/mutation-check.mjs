@@ -47,6 +47,7 @@ const MUTATIONS = [
   { regra: 'montanhas só no horizonte, baixas', arquivo: 'src/scene/terrainArt.ts', de: 'ridge: .4,', para: 'ridge: .9,' },
   { regra: 'câmera em perspectiva por padrão', arquivo: 'src/game/settings.ts', de: "cameraProjection: 'perspectiva', autoUltimate", para: "cameraProjection: 'ortografica', autoUltimate" },
   { regra: 'chão plano sob as construções da Folha', arquivo: 'src/scene/terrainArt.ts', de: 'if (distance >= 4) continue;', para: 'if (distance >= 0) continue;' },
+  { regra: 'paredão de Suna com topo reto', arquivo: 'src/scene/terrainArt.ts', de: '(17 + 1.5 * Math.sin(3 * angle)) * wall', para: '(17 + 9 * Math.sin(3 * angle)) * wall' },
   { regra: 'farol do pergaminho grátis é alto', arquivo: 'src/scene/rewardBeacon.ts', de: 'height: 30,', para: 'height: 4,' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },

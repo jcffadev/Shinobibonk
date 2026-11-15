@@ -2253,3 +2253,17 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Corrigido junto: construções da Folha na beira dos degraus novos agora ficam em chão plano.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 87 · 15/11/2026 — nomes da obra e horizonte de cada vila
+
+> Iwagakure (iwa) é Vila Oculta da Pedra, certo? Esta no Naruto Wiki isso? Coloque os nomes corretos nos mapas.
+
+> Mapas primeiro
+
+**Resposta.**
+
+- Sim: Iwagakure é a Vila Oculta da Pedra, do País da Terra, na Narutopedia. Os quatro mapas agora usam o nome da obra.
+- Duas zonas eram lugares fora da vila e foram trocadas.
+- Cada vila ganhou um horizonte próprio, seguindo as referências enviadas.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**
