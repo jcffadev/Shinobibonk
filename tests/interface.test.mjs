@@ -4,6 +4,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { load } from './helpers/load.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -51,4 +54,13 @@ test('botões do topo do hub têm fundo próprio (sem texto branco sobre fundo b
     assert.ok(bodies.length, selector + ' tem regra CSS');
     assert.ok(bodies.some(body => /background\s*:/.test(body)), selector + ' sem background');
   }
+});
+
+
+test('Chute Giratório renderiza o PNG dedicado no componente compartilhado', async () => {
+  const { SkillIcon } = await load('/src/ui/SkillIcon.tsx');
+  const markup = renderToStaticMarkup(createElement(SkillIcon, { heroId: 'naruto', name: 'Chute Giratório' }));
+  assert.match(markup, /aria-label="Chute Giratório"/);
+  assert.match(markup, /\/assets\/inventory\/skill-chute-giratorio-v1\.png/);
+  assert.ok(fs.existsSync(new URL('../public/assets/inventory/skill-chute-giratorio-v1.png', import.meta.url)));
 });

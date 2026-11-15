@@ -2,7 +2,19 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
-## Prioridades atuais · 15/11/2026
+## Retomada do Codex · 15/11/2026
+
+| Frente | Estado |
+|---|---|
+| Primeiro Mega Elite e Chute Giratório | **IMPLEMENTADO E TESTADO POR CÓDIGO.** Teto de 3.000 HP no primeiro natural ou de clima, e PNG dedicado do Chute Giratório nas interfaces. Validação em partida pendente. |
+| Mapas e obstáculos | Recriar a composição das quatro imagens da seleção em mapas 3D jogáveis, com marcos, ruas, eventos, personagens e paisagens próprias. Escalada e pedidos por vila em [docs/01](01-CAMERA-MAPAS-EVENTOS.md) (§ Anotações para o Codex). |
+| Água | Refinar leito, margens, ondas, respingos e chakra nos pés, incluindo os atores que atravessam água. Base e próximos passos em [docs/01](01-CAMERA-MAPAS-EVENTOS.md). |
+| Jutsus | Revisar cada técnica e animação, incluindo preparo, selos, trajetória, hit e dissipação. Começar pelo acabamento do Susanoo com as artes e o rig do projeto. [Auditoria](24-AUDITORIA-DE-EFEITOS.md). |
+| Eventos | Implementar Treinamento da Juventude (#47) e Treinamento do Hagoromo (#48) no fluxo da partida. |
+| Queda de Mega Elites (depois) | Para todos os shinobis que podem aparecer como Mega Elite: cambalear, ajoelhar, perder o apoio e cair até ficar deitado para selamento. Preservar o traje da versão, ponto de contato com o chão e interação com E. A queda atual em `fallenShinobi.ts` continua até este item ser executado. |
+| Desempenho | Em andamento com o Claude Code. |
+
+## Prioridades anteriores · 15/11/2026
 
 1. Validação visual em partida das 114 poses (inclusive a proporção da cabeça ao começar a andar, corrigida na rodada 69) e dos retratos em três quartos, HUD invertido, câmera e oclusão do terreno, som e flash ao perder HP, cursor nos menus, planejador e oficina. Política E2E vigente.
 2. Fechar revisão de jutsus um a um por referência da obra. Cobrir Ultimates e efeitos de inimigos, ajudantes e eventos. Confirmar a folha de selos de cada versão e os dōjutsu no jogo.

@@ -91,7 +91,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
   const maxSkills = permanent['Quarta técnica'] ? 4 : 3;
   const s = { t: 0, zone: 1, zoneT: 0, level: 1, xp: 0, kills: 0, ryu: 0, paid: 0, kunaisLeft: CROWD.kunaisPerZone, alive: 0, damage: 0,
     items: {}, pills: {}, powerlevel: {}, skills: {}, growth: {}, revives: 0, hp: 0, dead: false, victory: false, megaKills: 0, guardians: 0, ambushAt: AMBUSH_RULES.first };
-  let stats, megaPlan = rollMegaSchedule(rnd), guardian = null, dirty = true;
+  let stats, megaPlan = rollMegaSchedule(rnd), openingMega = true, guardian = null, dirty = true;
   const techs = () => hero.techniques.filter(t => s.skills[t.name]);
   const refresh = () => { stats = calculateStats(heroId, s.level, s.items, s.pills, 0, permanent, {}, s.powerlevel); dirty = false; };
   refresh(); s.hp = stats.maxHp; s.revives = (stats.extra.revive35 || 0) + (stats.extra.revive60 || 0);
@@ -176,7 +176,8 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     // Mega Elites: se a técnica de 1 alvo derruba dentro do limite, ganha 1 item grátis.
     if (megaPlan.length && s.zoneT >= megaPlan[0]) {
       megaPlan.shift();
-      const hp = megaEliteHp(s.zoneT, MISSION_TIER[mission] * ZONE_DIFFICULTY[s.zone] * Math.max(.2, 1 + ex('threat')), rnd);
+      const hp = megaEliteHp(s.zoneT, MISSION_TIER[mission] * ZONE_DIFFICULTY[s.zone] * Math.max(.2, 1 + ex('threat')), rnd, openingMega);
+      openingMega = false;
       const megaDef = Math.min(.85, ENEMY_TIERS.mega.defense * (.6 + .4 * Math.min(1, s.zoneT / 480)) + threat.armor);
       if (hp / Math.max(1e-9, singleDps(megaDef) * (1 + ex('eliteDamage'))) <= policy.bossFightLimit) { s.megaKills++; pickItem(); s.xp += xpDropValue(xpLoot(lootScale('mega', 0, 0, MISSION_TIER[mission]), MISSION_TIER[mission]), 1, s.t) * stats.xpGain; }
     }

@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import { damageLabel } from '../src/game/format.ts';
 import { HEROES, SHAPE_COOLDOWN, SHAPE_POWER } from '../src/game/heroes.ts';
 import { attackCooldown, techniqueCooldownScale } from '../src/game/combat.ts';
-import { ENEMY_TIERS, xpLoot, lootScale } from '../src/game/enemyTiers.ts';
+import { ENEMY_TIERS, xpLoot, lootScale, megaEliteHp, capMegaEliteHp } from '../src/game/enemyTiers.ts';
 import { MISSION_TIER, MISSION_HP, normalHpFactor, difficultyAt, AMBUSH_RULES, SPAWN_RING, finalSwarmFactor, xpToLevelUp, XP_RULES } from '../src/game/progression.ts';
 import { simulateRun } from '../scripts/simulate-run.mjs';
 
@@ -41,6 +41,36 @@ test('vida do monstro comum 13 e por dificuldade 1/1,3/1,6/2 (elites e chefes ig
   assert.deepEqual({ ...MISSION_HP }, { Genin: 1, Chunin: 1.3, Jonin: 1.6, Kage: 2 });
   for (const rank of Object.keys(MISSION_TIER)) assert.ok(close(normalHpFactor(rank) * MISSION_TIER[rank], MISSION_HP[rank]));
   assert.match(src('scene/GameCanvas.tsx'), /hpBase\*threat\.hp\*\(tier==='normal'&&!challenge\?normalHpFactor\(mission\):1\)/);
+});
+
+test('primeiro Mega Elite tem teto de 3.000 HP em toda dificuldade, e os seguintes escalam', () => {
+  for (const tier of Object.values(MISSION_TIER)) {
+    for (const seconds of [42, 55, 68, 600]) for (const roll of [0, .5, .999]) {
+      assert.equal(megaEliteHp(seconds, tier, () => roll, true), 3000);
+    }
+  }
+  assert.equal(megaEliteHp(55, .2, () => .5, true), 1900, 'é um teto, não um piso');
+  assert.equal(capMegaEliteHp(3000 * 1.33, true), 3000);
+  assert.equal(capMegaEliteHp(3000 * 1.33, false), 3990);
+  assert.equal(megaEliteHp(55, 1, () => .5), 9500);
+  assert.ok(megaEliteHp(200, MISSION_TIER.Kage, () => .5) > megaEliteHp(200, MISSION_TIER.Genin, () => .5));
+  assert.ok(megaEliteHp(200, 1, () => .5) > megaEliteHp(55, 1, () => .5));
+});
+
+test('Mega Elite natural e de clima compartilham o primeiro encontro, inclusive ao retomar', () => {
+  const canvas = src('scene/GameCanvas.tsx');
+  assert.match(canvas, /accountSeal=false,openingMega=!openingMegaSpawned/);
+  assert.match(canvas, /const isMegaEncounter=tier==='mega'&&!guardian;\s*if\(isMegaEncounter\)openingMegaSpawned=true/);
+  assert.match(canvas, /megaEliteHp\([^\n]+,Math\.random,openingMega\)/);
+  assert.match(canvas, /weatherEvent=\{id,until:[^\n]+openingMega:enemy\.openingMega/);
+  assert.match(canvas, /campaign:\{openingMegaSpawned,/);
+  assert.match(canvas, /openingMegaSpawned=camp\?\.openingMegaSpawned\?\?/);
+  assert.match(canvas, /spawnEnemy\(false,true,false,event\.elite,false,event\.openingMega\)/);
+  assert.match(canvas, /const maxHp = capMegaEliteHp\(enemy\.maxHp \* ratio, !!enemy\.openingMega\)/);
+  assert.match(canvas, /for\(const enemy of enemyList\)rescaleEnemyHp\(enemy,ratio\)/);
+  assert.match(canvas, /for\(const e of enemyList\)rescaleEnemyHp\(e,ratio\)/);
+  const simulator = fs.readFileSync(new URL('../scripts/simulate-run.mjs', import.meta.url), 'utf8');
+  assert.match(simulator, /megaEliteHp\([^\n]+, rnd, openingMega\);\s+openingMega = false;/);
 });
 
 test('emboscada aos 2:30 e a cada 50–80 s; comuns nascem a 16–24 m nos 2 primeiros min', () => {

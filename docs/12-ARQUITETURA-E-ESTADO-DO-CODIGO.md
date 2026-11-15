@@ -174,6 +174,8 @@ O fluxo de movimento usa `playerMotion.ts` para selecionar poses conforme o esta
 
 ## Mecânicas no código atual
 
+O primeiro Mega Elite da partida usa o teto de 3.000 HP de `enemyTiers.ts`. O `GameCanvas` guarda se o encontro já ocorreu junto ao estado da campanha e conserva a identificação se o primeiro for de clima. O Chute Giratório resolve a arte dedicada em `src/ui/SkillIcon.tsx`.
+
 ### Hub pré-run
 
 - **Conta e carteira**:

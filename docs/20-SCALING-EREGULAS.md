@@ -46,7 +46,7 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 ## 5. Elite / Mega Elite — `tuning.ts` (valores base do painel F9)
 
 - Elite amarelo: chance base **8%**, defesa base **30%** (IMPLEMENTADO; o painel F9 multiplica por cima).
-- Mega Elite: defesa base **55%** (IMPLEMENTADO) · **HP base 9.500** (Rodada 50; era 20.000) com **variação aleatória ±5% por nascimento** (9.025–9.975) + rampa `2^((seconds−55)/80)` × ameaça da missão — `megaEliteHp` em `enemyTiers.ts` (**PROPOSTO — o usuário testa e ajusta**).
+- Mega Elite: o **primeiro da partida** tem **no máximo 3.000 HP**, seja natural ou de clima, em qualquer dificuldade. O limite também vale ao aplicar o Plano do Shikamaru ou alterar a vida dos inimigos no debug. Guardiões, bijū e Shinobis de desbloqueio usam suas próprias regras. Os próximos Mega Elites usam base **9.500** com **±5% por nascimento** × `2^(max(0, segundosDaZona−55)/80)` × ameaça da missão. A defesa base continua em **55%**. Fórmula em `enemyTiers.ts` (`megaEliteHp`).
 - Shinobi para selar: HP próprio (campo `accountHp` do F9).
 - Versão da família que vira Mega Elite/ajudante por dificuldade: Genin → inicial, Chunin → v.1, Jonin → v.2, Kage → última (`heroes.ts`).
 

@@ -17,7 +17,7 @@ const enemies=[0,2,5,10,18,30].map(minutes=>{
  return {minutes,normalHp:Math.round(22*d.hp),megaHp,megaDefense,megaEffectiveHp:megaHp/(1-megaDefense),guardianHp,guardianDefense:defense,guardianEffectiveHp:guardianHp/(1-defense),spawnPerSecond:d.spawnPerSecond,cap:d.cap};
 });
 const report={date:new Date().toISOString(),kind:'formula-snapshot',
- assumptions:{hero:'naruto (Academia)',mission:'Genin',zone:1,curse:1,items:[],pills:[],permanent:[],powerlevel:[],debug:'padrão',timing:'Permanece na zona 1; Final Swarm após 600 s',scope:'Fórmulas atuais, não uma run medida. Dano base não é DPS nem dano final de uma técnica.'},
+ assumptions:{hero:'naruto (Academia)',mission:'Genin',zone:1,curse:1,items:[],pills:[],permanent:[],powerlevel:[],debug:'padrão',timing:'Permanece na zona 1; Final Swarm após 600 s',scope:'Fórmulas atuais, não uma run medida. A coluna megaHp representa os Mega Elites posteriores ao primeiro, limitado a 3.000 HP. Dano base não é DPS nem dano final de uma técnica.'},
  levels,enemies};
 fs.mkdirSync('artifacts',{recursive:true});
 fs.writeFileSync('artifacts/balance-baseline.json',JSON.stringify(report,null,2)+'\n');

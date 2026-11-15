@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 15/11/2026 · Primeiro Mega Elite e ícone do Chute Giratório
+
+- Primeiro Mega Elite da partida limitado a **3.000 HP** em todas as dificuldades. Aplica ao primeiro encontro natural ou de clima e persiste na retomada. A escala dos próximos continua por tempo da zona e ameaça. O teto permanece ao usar o plano do Shikamaru.
+- Chute Giratório usa a arte dedicada já presente no projeto, centralizada em `SkillIcon` para recompensas, planejamento, ficha e HUD.
+- Simulador: 36 partidas pareadas de cinco minutos, sementes 7, 23 e 47, conta nova, desvio médio, Naruto Academia, Kushina e Pain nas quatro dificuldades. Para Naruto em Kage, os abates de Mega Elites somados foram de 1 para 5, com 2 mortes antes e 1 depois. Trata-se de uma estimativa do modelo, que não simula clima nem efeitos de arte.
+- **PASSOU:** perfil equilibrado do HP (180 testes, tipos e build), mais 5 testes de interface, tipos e build com o ícone. **PENDENTE DE VALIDAÇÃO E2E:** conferir o HP e a aparência do ícone em partida.
+- Retomada e fila de mapas, água, animações e eventos registradas em `docs/13`; a queda ajoelhada de todos os Mega Elites fica para um lote posterior.
+
 ## 15/11/2026 · Zabuza, eventos sorteados por zona, armadilha do ninja caído, nomes repetidos e testers (Rodada 96)
 
 - **Pedidos do usuário:**

@@ -2374,3 +2374,30 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Anotações para o Codex. Como ficou a configuração do que no [jogo de referência] é fenda? No nosso jogo podemos chamar de Treinamento do Hagoromo… Ao matarmos X quantidade de mobs, pode ser de 500 em 500, teremos 1 chave/tentativa… Botão de acionamento: C… comum: 3 hordas com 50 monstros… lendario: 7 hordas com 400 monstros… recompensa: Pool com 3 seleções… Divida por igual esses 9… 2, 2, 2, 2, 1… as armas ninjas de Hagoromo serão as recompensas… Crie esse evento
 
 **Resposta.** A especificação completa ficou em `docs/01` → "Evento Treinamento do Hagoromo", com as 9 ferramentas, atributos e subefeitos propostos e onde mexer no código. Fila: `docs/13`, item 48 (Codex).
+
+## 15/11/2026 — retomada do Codex, vida do primeiro Mega Elite e Chute Giratório
+
+> Ola Codex
+>
+> Leia toda a documentação, .md, skills, tudo...
+> Temos anotações para você que o Claude deixou preparado, temos muito trabalho a fazer.
+>
+> Tambem tem coisas referente as mudanças de mapa/terreno/paisagem/habilidades animações...
+>
+> Outra coisa que vou pedir agora, o primeiro mega deve ter no máximo 3K de vida o restante pode ir escalando com a dificuldade
+
+> Fazer animação do personagem caindo mais bonitinha, ele meio ajoelhando e caindo, isso para todos os megas que podem aparecer, que no caso serão todos os shinobis do projeto.
+> Mas, coloque isso anotado para fazermos depois.
+>
+> O que eu quero saber... é se você consegue pegar as fotos da seleção do mapa e transformar elas em mapas jogáveis, com obstáculos, paisagens ao fundo, colocar nossos eventos nas ruas, nossos personagens.
+>
+> Usar seus melhores recursos e tudo que você sabe sobre a qualidade que queremos no projeto, usar seus skills, para aprimorarmos a água que o claude deixou...
+> Pegar todas as habilidades e suas animações e revisar, por exemplo o Susano'o, nós ja fizemos e temos referencias dele... o claude montou a animação dele via codigo, mas você tem que fazer uma animação dela mais bonitinha, aquilo é só esboço
+>
+> Fazer os eventos que falei e colocar para rodar no jogo.
+>
+> Enquanto isso vou testando o scale/balanceamento
+
+> Chute giratório ainda precisa de ícone...
+
+**Resposta.** A cópia oficial e a branch principal estavam na mesma revisão (`7f21c2c`). A passagem recente está em `docs/01` e a fila retomada em `docs/13`. Primeiro Mega Elite da partida limitado a 3.000 HP nas quatro dificuldades. Os seguintes continuam escalando. Chute Giratório usa o PNG existente nas telas que renderizam `SkillIcon`. As imagens da seleção servem de referência para recriar as vilas em 3D. A queda ajoelhada foi anotada para depois. Testes sem navegador passaram e a inspeção em partida permanece pendente.

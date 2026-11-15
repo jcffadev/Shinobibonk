@@ -25,6 +25,8 @@ const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:1
 export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:number;name:string}){
   // Versões (naruto-shippuden…) usam a arte da família.
   const heroId=familyOf(versionId);
+  if (name === 'Chute Giratório') return <span className="skill-art" role="img" aria-label={name}
+    style={{background:'url(/assets/inventory/skill-chute-giratorio-v1.png) center 118% / 130% auto no-repeat',imageRendering:'pixelated'}}/>;
   const recipe=kekkeiFusion(name);
   if(recipe){
     const i=recipe.icon;
