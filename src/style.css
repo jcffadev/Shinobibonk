@@ -124,6 +124,6 @@ button { font: inherit; }
 
 .game-level .xp-counter { font-variant-numeric: tabular-nums; }
 
-.player-damage-vignette { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; background:radial-gradient(ellipse at center,rgba(150,0,14,0) 48%,rgba(170,6,20,.32) 66%,rgba(205,14,30,.72) 84%,rgba(232,24,42,.95) 100%); }
+.player-damage-vignette { position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; background:radial-gradient(ellipse at center,rgba(150,0,14,0) 48%,rgba(190,6,22,.62) 64%,rgba(215,14,30,.9) 80%,rgba(240,24,42,1) 100%); }
 /* Rodada 83: vinheta só nas bordas e cantos (centro transparente, sem pegar cliques); opacidade vem de game/damageFeedback.ts. */
-@media (prefers-reduced-motion: reduce) { .player-damage-vignette { display:none; } }
+/* Rodada 90: a vinheta não some mais com "animações reduzidas" do sistema (escondia o piscar para quem tinha a opção ligada). */

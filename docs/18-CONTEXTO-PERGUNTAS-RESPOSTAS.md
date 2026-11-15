@@ -301,6 +301,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - `CAMERA_VIEW` = 60° / 0,46 rad.
 - Ordem do usuário: arte das vilas + água → selos de mão → fusões. "Bigbrain" = usar tudo o que o projeto sabe.
 
+### Rodada 90 · 15/11/2026
+
+- Dano: `DAMAGE_FEEDBACK` (mín. .5, teto 1), `HURT_BLINK`/`hurtColor` em `src/game/damageFeedback.ts`, `HURT_SOUND` em `src/audio/sfx.ts`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

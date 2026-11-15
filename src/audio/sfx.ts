@@ -55,12 +55,27 @@ export function playSfx(kind: Sound) {
  * que cresce com a força do golpe (`intensity` 0–1, a mesma do piscar vermelho). Respeita volume geral × efeitos e o
  * limite de frequência de `hurtSoundAllowed` (vários monstros batendo não empilham sons).
  */
+/** Rodada 90: baque de dano — duas serras desafinadas (dissonância) descendo em `seconds`. */
+export const HURT_SOUND = { seconds: .2, gain: .09, tones: [[246, 72], [262, 76]] as const } as const;
+
 export function playHurt(intensity: number) {
   const S = currentSettings(); if (S.muteInBackground && document.hidden) return;
   const vol = sfxGain(S); if (vol <= .001) return;
   if (!hurtSoundAllowed(lastHurt, performance.now())) return;
   playSfx('hurt');
-  sweep(1100, 220, .11, (.05 + .09 * Math.min(1, Math.max(0, intensity))) * vol, true);
+  const force = Math.min(1, Math.max(0, intensity));
+  sweep(1100, 220, .11, (.07 + .1 * force) * vol, true);
+  // Rodada 90 ("som meio negativo de dano"): baque grave dissonante — duas serras desafinadas descendo, com filtro abafado.
+  const ctx = audio(); if (!ctx) return;
+  const now = ctx.currentTime, filter = ctx.createBiquadFilter(), gain = ctx.createGain();
+  filter.type = 'lowpass'; filter.frequency.setValueAtTime(1400, now); filter.frequency.exponentialRampToValueAtTime(260, now + HURT_SOUND.seconds);
+  gain.gain.setValueAtTime(.0001, now); gain.gain.exponentialRampToValueAtTime((HURT_SOUND.gain + .05 * force) * vol, now + .015); gain.gain.exponentialRampToValueAtTime(.0001, now + HURT_SOUND.seconds);
+  filter.connect(gain); gain.connect(ctx.destination);
+  for (const [from, to] of HURT_SOUND.tones) {
+    const osc = ctx.createOscillator(); osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(from, now); osc.frequency.exponentialRampToValueAtTime(to, now + HURT_SOUND.seconds);
+    osc.connect(filter); osc.start(now); osc.stop(now + HURT_SOUND.seconds + .02);
+  }
 }
 
 let lastVoice = -Infinity;

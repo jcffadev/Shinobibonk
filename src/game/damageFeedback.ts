@@ -1,4 +1,7 @@
 /**
+ * Rodada 90 (pedido do usuário: "O piscar da tela em vermelho… ainda não está visível… precisa fazer algum som meio negativo
+ * de dano e pelo menos piscar com mais ênfase o personagem"): vinheta mais forte (mínimo .5, teto 1) e visível sempre.
+ *
  * Retorno de dano no jogador (rodada 83, pedido do usuário: "a tela piscando vermelho… em jogo de FPS, que os cantos da
  * tela dão umas piscadas em vermelho… mais o som do hit recebido pelo personagem principal").
  *
@@ -16,10 +19,10 @@ export const DAMAGE_FEEDBACK = {
   /** Intervalo mínimo entre o início de dois piscares (ms). */
   minGapMs: 360,
   /** Opacidade mínima de um golpe qualquer e teto do piscar. */
-  minStrength: .3,
-  maxStrength: .9,
+  minStrength: .5,
+  maxStrength: 1,
   /** Quanto cada fração da vida máxima perdida soma à opacidade (10% da vida → +0,24). */
-  damageScale: 2.4,
+  damageScale: 3,
   /** Abaixo desta fração da vida a vinheta fraca e contínua aparece. */
   lowHpRatio: .3,
   /** Opacidade da vinheta de vida baixa: no limite (`lowHpMin`) e quase sem vida (`lowHpMax`). */
@@ -92,3 +95,7 @@ export const sfxGain = (settings: { volume: number; sfxVolume: number }) => clam
 
 /** Anti-spam do som de "hit recebido": libera se passou `sfxGapMs` desde o último. */
 export const hurtSoundAllowed = (lastAt: number, now: number) => now - lastAt >= DAMAGE_FEEDBACK.sfxGapMs;
+
+/** Rodada 90: piscar de dano do personagem — duração, ritmo e cores (vermelho vivo e rosa forte alternando). */
+export const HURT_BLINK = { seconds: .36, period: .06, on: '#ff2b2b', off: '#ff9a9a' } as const;
+export const hurtColor = (hurt: number) => hurt <= 0 ? '#ffffff' : Math.floor(hurt / HURT_BLINK.period) % 2 === 0 ? HURT_BLINK.on : HURT_BLINK.off;

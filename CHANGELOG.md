@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 15/11/2026 · Dano bem visível e audível (Rodada 90)
+
+- **Relato do usuário:** "O piscar da tela em vermelho quando recebemos dano, ainda não esta visivel, ta piscando o personagem, precisa fazer algum som meio negativo de dano e pelo menos piscar com mais enfase o personagem".
+- **Causas da borda vermelha quase invisível:**
+  - as bordas chegavam a ~10% de opacidade num golpe comum;
+  - a vinheta sumia por completo quando o sistema estava com "animações reduzidas".
+- **Agora:**
+  - **Vinheta:** bordas bem mais fortes (golpe fraco a partir de 50% de força, teto 100%), centro da tela continua limpo, e ela aparece mesmo com animações reduzidas.
+  - **Personagem:** pisca **vermelho vivo ↔ rosa forte** a cada 0,06 s por 0,36 s (antes: rosa claro fixo por 0,23 s).
+  - **Som:** além do estalo, um **baque grave dissonante** (duas serras desafinadas descendo, abafadas), mais forte quanto maior o golpe.
+- **Testes:** 1 teste novo (o mínimo subiu para 165) e 1 mutação nova, verificada à mão: acusada (o teste foi reforçado para exigir o pico em vermelho vivo). **PENDENTE DE VALIDAÇÃO E2E:** ver e ouvir o golpe na partida.
+- **Anotado para depois** (docs/13 item 40): revisão de desempenho de carregamento, menus e cliques, sem perder qualidade.
+
 ## 15/11/2026 · Água de verdade e paisagem de fundo das vilas (Rodada 89)
 
 - **Pedido do usuário:** "Ainda em terrenos, precisamos melhoras MUITO a qualidade da água, não está de acordo com o nosso jogo. E a paisagem do jogo, não existe, né? Você precisa conseguir fazer essa paisagem...". Ordem pedida: arte das vilas + água, selos de mão, fusões; "bigbrain" = usar tudo o que o projeto sabe para um bom resultado.

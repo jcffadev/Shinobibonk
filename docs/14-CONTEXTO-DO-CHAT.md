@@ -2298,3 +2298,14 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Construções: a arte atual foi aproveitada. A arte nova que falta ficou listada em `docs/01` para o gerador do usuário.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 90 · 15/11/2026 — dano bem visível e audível
+
+> O piscar da tela em vermelho quando recebemos dano, ainda não esta visivel, ta piscando o personagem, precisa fazer algum som meio negativo de dano e pelo menos piscar com mais enfase o personagem
+
+**Resposta.**
+
+- A vinheta era fraca demais e sumia com "animações reduzidas" do sistema. Agora é forte nas bordas e sempre aparece.
+- O personagem pisca vermelho vivo, e o golpe tem um baque grave e dissonante.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E:** ver e ouvir na partida.
+- **Publicado no GitHub.**

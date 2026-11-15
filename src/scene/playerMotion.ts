@@ -5,6 +5,7 @@ import { actionArt, acrobaticsArt, cardinalWalkArt, directionalArt, handSealArt,
 import { runningArt, runningRow } from '../game/runningArt';
 import { ACTOR_SCALE } from '../game/worldScale';
 import { familyOf } from '../game/heroes';
+import { HURT_BLINK, hurtColor } from '../game/damageFeedback';
 
 export function movementFacing(vertical:number,horizontal:number){
   return { back: vertical > .001, left: horizontal < -.001, diagonal: Math.abs(vertical) > .32 && Math.abs(horizontal) > .32 };
@@ -233,7 +234,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       /** Rodada 55: fileira da folha em uso (0 = frente, 1 = costas, −1 = sem folha direcional/repouso), espelho e folha. */
       row: rowShown, flip: (sprite.material.map?.repeat.x ?? 1) < 0, atlas: posePath }),
     atlas: () => posePath,
-    hurt: () => { hurt = .23; },
+    hurt: () => { hurt = HURT_BLINK.seconds; },
     setBodyScale(scale:number){targetBodyScale=scale;},
     update(dt: number, floor: number, hp: number, maxHp: number, walkingInput: boolean, backwardView: boolean, leftward: boolean, level: number, jumpHeight: number, sliding: boolean, diagonalInput: boolean, jumpProgress: number, slideProgress: number, lateralInput = false) {
       if (!animatedMaps.has(sprite.material.map)) idleMap = sprite.material.map;
@@ -455,7 +456,8 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
           ghost.scale.copy(sprite.scale);
         });
       }
-      sprite.material.color.set(hurt>0 ? '#ffc0be' : '#ffffff');
+      // Rodada 90: pisca vermelho vivo ↔ rosa a cada HURT_BLINK.period s enquanto dura o dano (antes: rosa claro fixo).
+      sprite.material.color.set(hurtColor(hurt));
       if(!health)return;
       const {bar,paint,map}=health;
       bar.position.set(sprite.position.x,floor+jumpHeight-.09,sprite.position.z);
@@ -481,7 +483,7 @@ export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, her
       if(!health)return;
       health.bar.visible=visible;
       const width=Math.max(2.05,106*unitsPerPixel);
-      const pulse=1+.12*hurt/.23;
+      const pulse=1+.12*hurt/HURT_BLINK.seconds;
       health.bar.scale.set(width*pulse,width*.151*pulse,1);
     },
     dispose(){trail?.forEach(ghost=>{scene.remove(ghost);ghost.material.dispose();});if(health){scene.remove(health.bar);health.map.dispose();health.bar.material.dispose();}walk?.dispose();diagonal?.dispose();throwing?.dispose();asuma?.dispose();directionTextures.forEach(t=>t.dispose());},

@@ -117,3 +117,19 @@ test('o jogo usa as funções testadas (GameCanvas, sfx, Configurações e CSS)'
   assert.match(css, /pointer-events:none/);
   assert.match(css, /rgba\(150,0,14,0\) 48%/, 'centro transparente: só bordas e cantos');
 });
+
+test('dano bem visível e audível: vinheta forte, personagem pisca vermelho e baque dissonante (rodada 90)', async () => {
+  const fs = await import('node:fs');
+  const css = fs.readFileSync(new URL('../src/style.css', import.meta.url), 'utf8');
+  assert.ok(!/prefers-reduced-motion[^}]*player-damage-vignette[^}]*display:\s*none/.test(css), 'não some com animações reduzidas');
+  assert.ok(F.minStrength >= .5 && F.maxStrength === 1, 'golpe fraco já aparece');
+  const { HURT_BLINK, hurtColor } = await import('../src/game/damageFeedback.ts');
+  assert.equal(hurtColor(0), '#ffffff');
+  const colors = new Set(Array.from({ length: 6 }, (_, i) => hurtColor(HURT_BLINK.seconds - i * HURT_BLINK.period - .001)));
+  assert.ok(colors.has(HURT_BLINK.on) && colors.has(HURT_BLINK.off), 'alterna vermelho vivo e rosa');
+  assert.ok(HURT_BLINK.seconds >= .3, 'pisca por tempo suficiente para ver');
+  assert.ok(HURT_BLINK.on !== HURT_BLINK.off && parseInt(HURT_BLINK.on.slice(1, 3), 16) > 220 && parseInt(HURT_BLINK.on.slice(3, 5), 16) < 80, 'pico em vermelho vivo');
+  const sfx = fs.readFileSync(new URL('../src/audio/sfx.ts', import.meta.url), 'utf8');
+  assert.match(sfx, /tones: \[\[246, 72\], \[262, 76\]\]/, 'duas serras desafinadas (dissonância)');
+  assert.ok(sfx.includes("osc.type = 'sawtooth'"));
+});
