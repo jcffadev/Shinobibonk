@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 15/11/2026 · Skill de mapas e chão plano sob as construções da Folha (Rodada 86)
+
+- **Pedido do usuário:** "Crie um skill com tudo que está aprendendo sobre mapas, desde as alterações que fez em konoha, para que em novos mapas esse .md, já crie com expertise suficiente para um bom trabalho".
+- **Skill nova** `skills/criar-mapa-shinobibonk/SKILL.md` (com o atalho em `.claude/skills/`, citada no AGENTS.md e no docs/19). Ela reúne:
+  - onde fica cada parte do mapa no código;
+  - as regras de terreno em terraços e os alvos medidos;
+  - a câmera;
+  - o visual canônico das quatro vilas (imagens de anime de Iwagakure, Kirigakure e Sunagakure e vídeos de Konoha e Sunagakure enviados pelo usuário, só como guia de estilo);
+  - o passo a passo de um mapa novo e os erros que já aconteceram.
+- **Correção da Rodada 85:** com os terraços, algumas casas e estátuas da Folha ficavam na beira de um degrau (até 1,2 m de desnível sob elas). Agora o chão é plano sob todas: a praça central cobre as casas do centro, e as outras têm área própria (`LEAF_PLACES` em `src/scene/terrainArt.ts`).
+- **Testes:** 1 teste novo (chão plano sob cada construção da Folha; o mínimo subiu para 159) e 1 mutação nova, verificada à mão: acusada. **PENDENTE DE VALIDAÇÃO E2E:** ver as construções da Folha assentadas no chão.
+
 ## 15/11/2026 · Terreno em terraços e câmera em perspectiva (Rodada 85)
 
 - **Pedidos do usuário:** "A nossa câmera, nosso cenário ainda está muito precário... Precisamos corrigir mais isso, as montanhas do mapa ainda estão muito grandes, e o terreno deveria ter vários locais para pular, esse terreno todo plano com umas montanhas está bem esquisito"; com 3 vídeos de partida do jogo de referência: "mapeie o mapa… e modifique o nosso para ficar semelhante em nível de terreno/camera".

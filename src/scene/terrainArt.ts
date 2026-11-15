@@ -43,7 +43,32 @@ function rollingBase(x: number, z: number) {
     + mound(x, z, 49, 28, 6, 4.8, 1.3);
 }
 
+/**
+ * Rodada 86: áreas planas da Folha sob construções e estátuas (retângulo de meia-largura rx × rz, +4 m de transição), na
+ * altura do centro — com terraços, uma casa na beira do degrau flutuava. A praça central cobre todas as casas do centro.
+ */
+export const LEAF_PLACES = [
+  {x:0,z:-18.5,rx:13.5,rz:11},{x:-10,z:18,rx:3.5,rz:3.5},{x:12,z:19,rx:3.5,rz:3.5},
+  {x:30,z:24,rx:4,rz:4},{x:53,z:24,rx:4,rz:4},{x:0,z:-52,rx:11,rz:11},
+] as const;
+/** Construções e estátuas da Folha (as mesmas coordenadas do GameCanvas). */
+export const LEAF_BUILDINGS = [[0,-12],[-7,-17],[7,-18],[-10,18],[12,19],[-9,-15],[8,-17],[-10,-22],[9,-25],[30,24],[53,24],[0,-52]] as const;
+const leafPlaceHeight = new Map<number, number>();
+
 export function groundHeight(map: GameMap['id'], x: number, z: number) {
+  if (map !== 'folha') return rawGroundHeight(map, x, z);
+  let height = rawGroundHeight(map, x, z);
+  for (let i = 0; i < LEAF_PLACES.length; i++) {
+    const place = LEAF_PLACES[i], distance = Math.max(0, Math.abs(x - place.x) - place.rx, Math.abs(z - place.z) - place.rz);
+    if (distance >= 4) continue;
+    let center = leafPlaceHeight.get(i);
+    if (center === undefined) { center = rawGroundHeight(map, place.x, place.z); leafPlaceHeight.set(i, center); }
+    height = THREE.MathUtils.lerp(center, height, THREE.MathUtils.smoothstep(distance, 0, 4));
+  }
+  return height;
+}
+
+function rawGroundHeight(map: GameMap['id'], x: number, z: number) {
   const edge = Math.max(Math.abs(x), Math.abs(z));
   let ridge = 0;
   if (edge > MAP_SIZE / 2) {

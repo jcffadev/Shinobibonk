@@ -278,6 +278,11 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Terreno em terraços (`TERRAIN` e `terrace` em `src/scene/terrainArt.ts`): degrau de 2 × 0,58 ≈ 1,2 m, máximo ~3,5 m dentro do mapa, montanhas da borda ×0,4, centro plano até ~6 m.
 - Câmera: `cameraProjection` (perspectiva padrão; ortográfica nas Configurações), `CAMERA_VIEW` (50°, inclinação 0,5 rad) e `perspectiveDistance` em `src/game/settings.ts`.
 
+### Rodada 86 · 15/11/2026
+
+- Skill `skills/criar-mapa-shinobibonk/SKILL.md`: padrão de mapas (terraços, horizonte, câmera, vila canônica, construções sem desnível).
+- `LEAF_PLACES` e `LEAF_BUILDINGS` em `src/scene/terrainArt.ts`: áreas planas da Folha sob construções e estátuas.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

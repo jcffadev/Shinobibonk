@@ -2240,3 +2240,16 @@ Respostas do usuário às perguntas: os itens apareceram **durante a missão**; 
 - **Fenda:** o funcionamento foi mapeado (portal, arena separada com o relógio parado, ondas com "chamar a próxima", chefe com tempo, relíquias com atributo e subpassiva em 3 vagas). Fica como próxima tarefa grande.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 86 · 15/11/2026 — skill de mapas
+
+> Crie um skill com tudo que está aprendendo sobre mapas, desde as alterações que fez em konoha, para que em novos mapas esse .md, já crie com expertise suficiente para um bom trabalho
+
+O usuário também mandou imagens de anime de Iwagakure e Kirigakure como referência para os mapas, e perguntou se Iwagakure é a Vila Oculta da Pedra (é, pela Narutopedia), pedindo os nomes corretos nos mapas.
+
+**Resposta.**
+
+- Skill `criar-mapa-shinobibonk` criada, com o padrão de terreno, câmera, construções e o visual canônico de cada vila.
+- Corrigido junto: construções da Folha na beira dos degraus novos agora ficam em chão plano.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

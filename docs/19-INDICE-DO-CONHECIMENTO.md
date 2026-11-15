@@ -25,7 +25,7 @@
 | **Economia e progressão** (Ryu, EXP, roleta, inflação) | `docs/09` · `docs/10` · [20](20-SCALING-E-REGULAS.md) §9 | `itemTrade.ts` · `roulette.ts` · `progression.ts` |
 | **Missões e desbloqueios** | `docs/10` · `docs/11` | `missions.ts` · `unlockMissions.ts` · `missionBag.ts` · `preparation.ts` |
 | **Inimigos e chefes** (tiers, elites, megas, bijuu, boss) | [20](20-SCALING-E-REGULAS.md) §2–5 | `enemyTiers.ts` · `bijuu.ts` · `src/scene/bossCombat.ts` |
-| **Mapas e eventos** (4 mapas, zonas, clima, construções) | `docs/01` · [20](20-SCALING-E-REGULAS.md) §11 | `maps.ts` · `worldScale.ts` · `terrainArt.ts` |
+| **Mapas e eventos** (4 mapas, zonas, clima, construções) | `docs/01` · [20](20-SCALING-E-REGULAS.md) §11 | `maps.ts` · `worldScale.ts` · `terrainArt.ts` · skill [`criar-mapa-shinobibonk`](../skills/criar-mapa-shinobibonk/SKILL.md) |
 | **Selamento e suportes** (ajudantes, sinergias, altares) | `docs/03` | `allies.ts` · `synergy.ts` |
 | **Arte e spritesheets** (atlas, pack, identidade chibi 2.5D) | skill `criar-arte-shinobibonk` · `docs/arte-atlas-2026-11-07.json` | `directionalArt.ts` · `inventoryArt.ts` · `assets/` |
 | **Animações e movimento** (folhas, walk/action; fluidez da caminhada + proporção ao atacar — rodada 45; **follow amortecido dos aliados/Ninjas Selados + dead zone de orientação — rodada 46**) | skill `movimentar-shinobi` · `docs/14` (rodadas 38/39/45/46) | `src/scene/playerMotion.ts` (controlador compartilhado: `propCur` · `strideShown` · `stepTime`) · `src/scene/GameCanvas.tsx` (loop de aliados + Kuri, ~linhas 1249–1285) |

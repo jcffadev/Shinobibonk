@@ -227,3 +227,16 @@ test('terreno em terraços baixos, plano no centro, montanhas só no horizonte (
     assert.ok(Math.abs(groundHeight(map, 0, 0)) < .05 && Math.abs(groundHeight(map, 6, 6) - groundHeight(map, 0, 0)) < .05, 'o ninja começa no plano');
   }
 });
+
+test('chão plano sob as construções da Folha, mesmo com terraços (rodada 86)', async () => {
+  const { groundHeight, LEAF_PLACES, LEAF_BUILDINGS } = await load('/src/scene/terrainArt.ts');
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  for (const [x, z] of LEAF_BUILDINGS) {
+    assert.ok(canvas.includes(`${x},${z}`) || canvas.includes(`x:${x},z:${z}`), `${x},${z} é um ponto de construção do jogo`);
+    const place = LEAF_PLACES.find(p => Math.abs(x - p.x) + 3 <= p.rx && Math.abs(z - p.z) + 3 <= p.rz);
+    assert.ok(place, `${x},${z} dentro de uma área plana`);
+    const center = groundHeight('folha', x, z);
+    for (const [dx, dz] of [[3, 0], [-3, 0], [0, 3], [0, -3], [2, 2]])
+      assert.ok(Math.abs(groundHeight('folha', x + dx, z + dz) - center) < .02, `construção em ${x},${z} sem desnível`);
+  }
+});

@@ -14,6 +14,7 @@ Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs
 
 ## Skills de arte e movimento
 - Para criar ou integrar arte, siga `skills/criar-arte-shinobibonk/SKILL.md`; para movimento, pulo, dash e animação dos shinobis, siga `skills/movimentar-shinobi/SKILL.md`.
+- Para criar ou reformar um mapa (terreno, horizonte, câmera, construções, vila canônica), siga `skills/criar-mapa-shinobibonk/SKILL.md`.
 - Para medir ou calibrar balanceamento (vida, dano, nascimentos, XP, recargas, itens, Final Swarm), siga `skills/simular-partida/SKILL.md`: simule partidas sem navegador (`scripts/simulate-run.mjs`, `scripts/simulate-batch.mjs`) antes e depois da mudança.
 - Todo novo shinobi jogável entra com repouso, caminhada direcional, ataque, pulo e dash/esquiva testados em cada versão. O deslocamento em WASD usa a corrida com braços para trás, em cinco vistas com quatro quadros cada. Seleção, ficha e ranking compartilham o retrato em três quartos da versão. Ajuste o centro pela silhueta do quadro. Para efeitos siga `skills/animar-jutsu-webgl/SKILL.md`. Use a arte estática da forma e as técnicas do personagem como referências. Na revisão do elenco existente, preserve Naruto Academia e Manto da Kurama conforme pedido do usuário.
 - Claude Code e Codex trabalham no mesmo repositório: antes de começar, rode `git status`/`git pull` e leia `docs/13-PENDENCIAS-PARA-CONTINUAR.md` (fila em andamento). Ao terminar, documente e faça commit + push para o outro agente continuar na mesma página.
