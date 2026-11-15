@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 15/11/2026 · Qwen encontra o programa de testes
+
+- `QWEN.md` novo, porque o Qwen Code só carrega esse arquivo por padrão. Ele aponta para o `AGENTS.md` e para a política de testes.
+- `.qwen/settings.json` (`context.fileName`) faz o Qwen carregar também o `AGENTS.md`.
+- O `AGENTS.md` diz onde cada IA lê as instruções. O programa de testes é o mesmo para Claude Code, Codex e Qwen.
+
 ## 15/11/2026 · Decisão sobre naturezas e Kekkei Genkai (Rodada 72)
 
 - **Decisão do usuário:** "Se ele não tem natureza, igual no anime/obra/mangá, wiki não liberar."

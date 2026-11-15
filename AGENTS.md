@@ -19,6 +19,12 @@ Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs
 
 ## Política de testes
 
+**Mesmo programa para todas as IAs (Claude Code, Codex, Qwen):** `TESTAR_JOGO.bat` (leve · equilibrado · profundo), que roda `scripts/run-tests.mjs` e `scripts/mutation-check.mjs`, sem navegador. Onde ler as instruções:
+
+- **Codex:** lê este `AGENTS.md` sozinho.
+- **Claude Code:** lê o `CLAUDE.md`, que aponta para cá.
+- **Qwen Code:** por padrão só carrega o `QWEN.md`. O `QWEN.md` aponta para cá, e `.qwen/settings.json` (`context.fileName`) faz o Qwen carregar também este `AGENTS.md`. Se o Qwen não achar as regras, rode `/memory refresh` ou abra-o na pasta do projeto.
+
 Antes de executar testes, consulte:
 `docs/development/TESTING_POLICY.md`
 

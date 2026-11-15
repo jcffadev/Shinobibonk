@@ -2041,3 +2041,16 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - A decisão e as opções ficaram em `docs/development/DECISAO-KEKKEI-GENKAI.md`.
 - Expliquei o funcionamento das Kekkei Genkai.
 - **Publicado no GitHub.**
+
+## 15/11/2026 — programa de testes para o Qwen
+
+> você ta usando o programa de testes automatizados igual o codex, era pro codex deixar explicito pra voce, qwen usarem também
+>
+> porque o qwen nao encontra? ele deveria, coloque uma orientação...
+
+**Resposta.**
+
+- Sim, todas as IAs usam o mesmo programa: `TESTAR_JOGO.bat`, `scripts/run-tests.mjs` e `scripts/mutation-check.mjs`.
+- O Qwen Code só carrega o `QWEN.md` por padrão. Por isso foram criados o `QWEN.md` e o `.qwen/settings.json`, que carrega também o `AGENTS.md`.
+- O `AGENTS.md` ganhou a orientação de onde cada IA lê as instruções.
+- **Publicado no GitHub.**
