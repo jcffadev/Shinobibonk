@@ -7,6 +7,7 @@ import fs from 'node:fs';
 import { HEROES, ACADEMY, techniquePool, allowedElements, familyOf } from '../src/game/heroes.ts';
 import {
   KEKKEI_RECIPES, HERO_KEKKEI, FUSION_KEKKEI_BONUS, kekkeiRecipe, mergedTechnique, fusionBonus, combineBonus, combinedPart, isMergedName,
+  fusionCatalog, fusionRecipeText,
 } from '../src/game/techniqueMerge.ts';
 
 // Medido na Rodada 71: 21 versões com 2+ naturezas no pool e 7 receitas alcançáveis pelas naturezas do kit (a linhagem tem teste próprio).
@@ -128,4 +129,33 @@ test('a partida e o planejador usam as regras (família, bloqueio e atributo da 
   assert.match(canvas, /castTechnique\(combinedPart\(source,extra\),/);
   assert.match(planner, /!archivedSkills\.includes\(t\.name\)&&!isMergedName\(t\.name\)\);/);
   assert.match(planner, /mergedTechnique\(\{kind,names:pair\},pool,familyOf\(heroId\)\)/);
+});
+
+test('catálogo: a aba Fusões lista as fusões que o shinobi pode aprender e cresce ao selar (rodada 81)', () => {
+  const own = techniquePool('naruto', new Set()), all = techniquePool('naruto', new Set(HEROES.map(h => h.id)));
+  const few = fusionCatalog(own, familyOf('naruto')), many = fusionCatalog(all, familyOf('naruto'));
+  assert.ok(few.length > 0, 'já começa com fusões');
+  assert.ok(many.length > few.length, `selar libera mais: ${few.length} → ${many.length}`);
+  for (const f of many) {
+    const [a, b] = f.pair.map(n => all.find(t => t.name === n));
+    assert.ok(a && b && !a.setup && !b.setup && !a.locked && !b.locked, 'só técnicas do pool, sem buff nem bloqueio');
+    assert.ok(!isMergedName(a.name) && !isMergedName(b.name), 'nunca funde uma fusão');
+  }
+  assert.equal(new Set(many.map(f => f.result.name)).size, many.length, 'cada fusão aparece uma vez');
+  const kakashi = fusionCatalog(techniquePool('kakashi', new Set()), familyOf('kakashi'));
+  const firstPlain = kakashi.findIndex(f => !f.kekkei);
+  assert.ok(kakashi.some(f => f.kekkei) && kakashi.slice(firstPlain).every(f => !f.kekkei), 'Kekkei Genkai no topo');
+  assert.equal(fusionRecipeText(['Shuriken', 'Técnica de Vento'], 'Rasenshuriken'), 'Shuriken + Técnica de Vento = Rasenshuriken');
+});
+
+test('planejador: abre com o catálogo e a aba Habilidades mostra a receita da fusão planejada', () => {
+  const planner = read('src/ui/BuildPlanner.tsx');
+  for (const wired of [
+    "const catalog=tab==='Fusões'?fusionCatalog(fusionOptions,familyOf(hero.id)):[];",
+    'Fusões que você pode aprender · {catalog.length}',
+    'onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);}}',
+    'fusionPlan.filter(pair=>pair.includes(name)).map(pair=>fusionRecipeText(pair,fusionName(pair)))',
+    '{technique&&fusionRecipes(e.name).map(',
+    '{fusionRecipes(focused.name).map(',
+  ]) assert.ok(planner.includes(wired), wired);
 });

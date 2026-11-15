@@ -10,7 +10,7 @@ import { PillStatPreview } from './PillStatPreview';
 import { techniquePool, HERO_BY_ID, heroAffinity, familyOf, type PoolTechnique, type Technique } from '../game/heroes';
 import { sealedHeroes, researchProgress } from '../game/account';
 import { PRESET_LIMIT } from '../game/missionBag';
-import { combineBonus, fusionBonus, isMergedName, kekkeiFusion, kekkeiRecipe, mergedTechnique } from '../game/techniqueMerge';
+import { combineBonus, fusionBonus, fusionCatalog, fusionDisplayName, fusionRecipeText, isMergedName, kekkeiFusion, mergedTechnique } from '../game/techniqueMerge';
 /** Origem da técnica no pool (regra do usuário: 1–2 únicas por shinobi; compartilhadas por vila/elemento; únicas de outros só após selar). */
 function sourceText(t:PoolTechnique){const who=HERO_BY_ID[t.origin]?.name??t.origin;if(t.source==='kit')return 'Kit próprio.';if(t.source==='basica')return 'Básica da Academia (sempre disponível).';if(t.source==='vila')return 'Compartilhada · mesma vila ('+who+').';if(t.source==='elemento')return 'Compartilhada · mesmo elemento '+t.element+' ('+who+').';return t.locked?'Única de '+who+' · bloqueada até selar '+who+' pela 1ª vez.':'Única de '+who+' (selado).';}
 import { attackCooldown,setupNumbers,itemSchools,itemElement,itemAttribute,techniqueCritical,techniqueDetail,techniqueSchool,techniqueStatusText } from '../game/combat';
@@ -45,20 +45,20 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  const preview=tab==='Habilidades'?techniques.find(t=>t.name===focused?.name&&!t.locked):undefined;
  const base=calculateStats(hero.id,1);
  const estado=(e:{unlocked:boolean;archived:boolean})=>!e.unlocked?(tab==='Habilidades'?'Precisa pesquisar/selar':'Precisa desbloquear'):e.archived?(tab==='Habilidades'?'Deixar em casa':'Em casa'):'No pool';
- const inFusion=(name:string)=>fusionPlan.some(p=>p.includes(name));
  // Rodada 39 — Fusões: candidatos seguem a regra da Oficina dos Sapos Sábios (sem setup, sem bloqueio).
  // A execução continua na run (1 uso por zona); aqui apenas planeja o par e marca o pool da run com ⚗.
  const fusionOptions=techniques.filter(t=>!t.setup&&!t.locked&&!archivedSkills.includes(t.name)&&!isMergedName(t.name));
  const [fusionSearch,setFusionSearch]=useState('');
- const suggested=new Map<string,[string,string]>();
- if(tab==='Fusões')for(const [i,a] of fusionOptions.entries())for(const b of fusionOptions.slice(i+1)){
-   const recipe=kekkeiRecipe(a,b);
-   if(recipe&&!suggested.has(recipe.name)&&matchesSearch(recipe.name+' '+a.name+' '+b.name,fusionSearch))suggested.set(recipe.name,[a.name,b.name]);
- }
+ // Rodada 81 (pedido do usuário: "é pra aparecer já as fusões que o ninja pode aprender… quando for liberando ninja na
+ // conta… vai aparecer mais fusões também"): a aba abre com o catálogo de fusões do pool atual; o par manual fica opcional.
+ const catalog=tab==='Fusões'?fusionCatalog(fusionOptions,familyOf(hero.id)):[];
+ const shownCatalog=catalog.filter(f=>matchesSearch(f.name+' '+f.pair.join(' '),fusionSearch));
  const candidate:[string,string]=[fusionA,fusionB];
  const canPreview=fusionOptions.some(t=>t.name===fusionA)&&fusionOptions.some(t=>t.name===fusionB)&&fusionA!==fusionB;
  const duplicate=fusionPlan.some(pair=>pair.includes(fusionA)&&pair.includes(fusionB));
- const fusionName=(pair:[string,string])=>mergedTechnique({kind:'fuse',names:pair},techniques,familyOf(hero.id))?.name??pair.join(' / ');
+ const fusionName=(pair:[string,string])=>fusionDisplayName(mergedTechnique({kind:'fuse',names:pair},techniques,familyOf(hero.id))?.name??pair.join(' / '));
+ // Receita na aba Habilidades: "Shuriken + Técnica de Vento = Nome da fusão" para cada fusão planejada que usa a técnica.
+ const fusionRecipes=(name:string)=>fusionPlan.filter(pair=>pair.includes(name)).map(pair=>fusionRecipeText(pair,fusionName(pair)));
  const techniqueByName=new Map(techniques.map(t=>[t.name,t]));
  const categories=['Habilidades','Pílulas','Fusões','Itens'];
  const plannedByCategory:Record<string,string[]>={
@@ -122,6 +122,21 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
          onClick={()=>{addFusionPair(...candidate);setFusionA('');setFusionB('');}}>{duplicate?'Par já planejado':'Planejar fusão'} ({fusionPlan.length}/4)</button>
      </div>
      <label className="fusion-search"><span>Buscar técnica ou fusão</span><input type="search" value={fusionSearch} onChange={e=>setFusionSearch(e.target.value)} placeholder="Ex. Gelo, Raio, Circo Laser"/></label>
+     <h3>Fusões que você pode aprender · {catalog.length}</h3>
+     <p className="planner-fusion-hint">Saem das técnicas do pool deste shinobi. Selar mais shinobis traz técnicas novas e libera mais fusões.</p>
+     <div className="planner-fusion-catalog" aria-label="Fusões disponíveis">
+       {shownCatalog.map(f=>{const done=fusionPlan.some(p=>p.includes(f.pair[0])&&p.includes(f.pair[1]));return <button type="button" key={f.result.name} className={'fusion-catalog-entry'+(f.kekkei?' is-kekkei':'')} aria-pressed={f.pair.includes(fusionA)&&f.pair.includes(fusionB)} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);}}>
+         <SkillIcon heroId={hero.id} name={f.result.name}/><span><b>{f.name}</b><small>{fusionRecipeText(f.pair,f.kekkei?'Kekkei Genkai':'Fusão')}</small>{done&&<small className="fusion-catalog-planned">Planejada</small>}</span>
+       </button>;})}
+     </div>
+     {!catalog.length&&<p className="planner-empty">Este pool ainda não tem duas técnicas que se fundem. Sele mais shinobis para liberar fusões.</p>}
+     {catalog.length>0&&!shownCatalog.length&&<p className="planner-empty">Nenhuma fusão com essa busca.</p>}
+     {canPreview&&<div className="fusion-comparison">
+       <FusionCard heroId={hero.id} pair={candidate} kind="fuse" pool={techniques}/>
+       <FusionCard heroId={hero.id} pair={candidate} kind="combine" pool={techniques}/>
+     </div>}
+     <details className="fusion-manual">
+     <summary>Montar o par à mão</summary>
      <h3>{fusionA&&!fusionB?'Escolha a segunda técnica':'Escolha as duas técnicas'}</h3>
      <div className="fusion-ingredient-grid" aria-label="Técnicas para fundir">
        {fusionOptions.filter(t=>matchesSearch(t.name+' '+t.element+' '+techniqueSchool(t),fusionSearch)||t.name===fusionA||t.name===fusionB).map(t=><button type="button" className="fusion-ingredient" key={t.name} aria-pressed={t.name===fusionA||t.name===fusionB}
@@ -133,11 +148,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
          <small>{techniqueStatusText(t)}</small></span>
        </button>)}
      </div>
-     {!canPreview&&suggested.size>0&&<><h3>Kekkei Genkai disponíveis para planejar</h3><div className="planner-kekkei-grid">{Array.from(suggested,([name,pair])=><div key={name}><FusionCard heroId={hero.id} pair={pair} kind="fuse" pool={techniques}/><button className="planner-fusion-save" type="button" onClick={()=>{setFusionA(pair[0]);setFusionB(pair[1]);}}>Ver o par</button></div>)}</div></>}
-     {canPreview&&<div className="fusion-comparison">
-       <FusionCard heroId={hero.id} pair={candidate} kind="fuse" pool={techniques}/>
-       <FusionCard heroId={hero.id} pair={candidate} kind="combine" pool={techniques}/>
-     </div>}
+     </details>
      <div className="planner-fusion-grid">
       {fusionPlan.map((pair,i)=><article className="planner-saved-fusion" key={pair.join(' / ')}>
        <header><b>{fusionName(pair)}</b><button type="button" aria-label={`Remover o par ${pair[0]} e ${pair[1]}`} onClick={()=>removeFusionPair(i)}>✕</button></header>
@@ -147,7 +158,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
        </div>
       </article>)}
      </div>
-     {!fusionPlan.length&&!canPreview&&<p className="planner-empty">Selecione duas técnicas para ver o resultado.</p>}
+     {!fusionPlan.length&&!canPreview&&catalog.length>0&&<p className="planner-empty">Escolha uma fusão da lista para ver o resultado e planejar.</p>}
     </section>
    : <>
     <div className="build-view-filters"><button aria-pressed={view==='all'} onClick={()=>setView('all')}>Todos</button><button aria-pressed={view==='planned'} onClick={()=>setView('planned')}>Planejado</button>{tab==='Itens'&&<button aria-pressed={view==='archived'} onClick={()=>setView('archived')}>Arquivados</button>}{tab==='Habilidades'&&<><button aria-pressed={view==='archived'} onClick={()=>setView('archived')}>Deixar em casa</button><small>{trained.length}/{trainingSlots} treinadas · {archivedSkills.length}/{archiveLimit} bloqueadas</small></>}</div>
@@ -161,13 +172,13 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
               {e.icon}<span><b>{e.name}</b><small>{technique?`Aprende no Nv. ${technique.unlockLevel} · ${techniqueSchool(technique)} · ${technique.element} · ${technique.shape}`:tab==='Itens'?<><PlannerRarity rarity={ITEM_BY_NAME[e.name].rarity} max={ITEM_BY_NAME[e.name].max}/></>:estado(e)}</small></span>
             </button>
             {technique?<small className="planner-option-state">{e.archived?'Em casa':e.rarity}{trained.includes(e.name)?' · +15% de dano':''}<span className="planner-option-effect">{techniqueStatusText(technique)}</span></small>:<p><BuffText text={e.description}/></p>}
-            {technique&&inFusion(e.name)&&<b className="fusion-badge planner-fusion-requirement">Requisito para Fusão</b>}
+            {technique&&fusionRecipes(e.name).map(recipe=><b key={recipe} className="fusion-badge planner-fusion-requirement" title="Requisito para Fusão">⚗ {recipe}</b>)}
             {entryActions(e)}
           </article>;
         })}
       </div>
      </div>
-     <aside className="build-detail" aria-label="Detalhes da opção">{focused?<><header className="planner-detail-heading">{focused.icon}<h2>{focused.name}</h2></header><p><BuffText text={focused.description}/></p>{tab==='Itens'&&<PlannerRarity rarity={ITEM_BY_NAME[focused.name].rarity} max={ITEM_BY_NAME[focused.name].max}/>}{tab==='Pílulas'&&<PillStatPreview title="No Nv. 1 do shinobi, com 1 nível da pílula" lines={pillStatPreview(focused.name,base,hero.id,1)}/>}{preview&&<><dl className="technique-base-data"><div><dt>Nível para aprender</dt><dd>{preview.unlockLevel} na missão</dd></div><div><dt>Status da técnica</dt><dd>{techniqueStatusText(preview)}</dd></div><div><dt>Chance crítica inicial</dt><dd>{preview.setup?'—':Math.round((base.crit+techniqueCritical(preview).chance)*100)+'%'}</dd></div><div><dt>Dano crítico inicial</dt><dd>{preview.setup?'—':Math.round((base.critDamage+techniqueCritical(preview).damage)*100)+'%'}</dd></div><div><dt>Recarga base</dt><dd>{(preview.setup?setupNumbers(preview).cooldown:attackCooldown(preview,1)).toLocaleString('pt-BR')} s</dd></div></dl><TechniquePreview technique={preview} heroId={hero.id}/><small>Prévia em alvos de treino</small></>}{planned.includes(focused.name)&&!focused.archived&&<b>Planejado</b>}{inFusion(focused.name)&&<b className="fusion-badge">Requisito para Fusão</b>}</>:<p>Nenhuma opção com estes filtros.</p>}</aside>
+     <aside className="build-detail" aria-label="Detalhes da opção">{focused?<><header className="planner-detail-heading">{focused.icon}<h2>{focused.name}</h2></header><p><BuffText text={focused.description}/></p>{tab==='Itens'&&<PlannerRarity rarity={ITEM_BY_NAME[focused.name].rarity} max={ITEM_BY_NAME[focused.name].max}/>}{tab==='Pílulas'&&<PillStatPreview title="No Nv. 1 do shinobi, com 1 nível da pílula" lines={pillStatPreview(focused.name,base,hero.id,1)}/>}{preview&&<><dl className="technique-base-data"><div><dt>Nível para aprender</dt><dd>{preview.unlockLevel} na missão</dd></div><div><dt>Status da técnica</dt><dd>{techniqueStatusText(preview)}</dd></div><div><dt>Chance crítica inicial</dt><dd>{preview.setup?'—':Math.round((base.crit+techniqueCritical(preview).chance)*100)+'%'}</dd></div><div><dt>Dano crítico inicial</dt><dd>{preview.setup?'—':Math.round((base.critDamage+techniqueCritical(preview).damage)*100)+'%'}</dd></div><div><dt>Recarga base</dt><dd>{(preview.setup?setupNumbers(preview).cooldown:attackCooldown(preview,1)).toLocaleString('pt-BR')} s</dd></div></dl><TechniquePreview technique={preview} heroId={hero.id}/><small>Prévia em alvos de treino</small></>}{planned.includes(focused.name)&&!focused.archived&&<b>Planejado</b>}{fusionRecipes(focused.name).map(recipe=><b key={recipe} className="fusion-badge" title="Requisito para Fusão">⚗ Requisito para Fusão: {recipe}</b>)}</>:<p>Nenhuma opção com estes filtros.</p>}</aside>
     </div>
    </>}
  </div>;

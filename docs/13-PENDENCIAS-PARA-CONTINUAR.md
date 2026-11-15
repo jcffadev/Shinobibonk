@@ -67,6 +67,7 @@ Lista reenviada pelo usuário em 14/11, com os itens 1–12 (lote de 13/11) e do
 | 28 | **NOVO (rodada 77):** ninja do jogador do tamanho do monstro comum (PLAYER_SIZE .4 → .72) e câmera inicial mais perto (zoom 19 → 12, faixa 8–22). Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 29 | ~~Ordem entre dificuldades no fim da partida~~ **ENCERRADO (rodada 80):** decisão do usuário — mais monstros dando mais XP/nível no Kage é intencional; os erros do jogador decidem a partida. Protegido por teste: cada degrau de dificuldade pesa (vida ≥1,2×, dano ≥1,3×) e os degraus são proporcionais. Segue aberto só o muro da conta nova na entrada do Final Swarm (~30 min) | FEITO |
 | 30 | **NOVO (rodada 78):** técnicas em Órbita e corpo a corpo acertam no alvo, nunca no pé do jogador (Susanoo, Limbo, Esferas, Kaiten…); Órbitas lançadas alcançam 4,5 m. Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
+| 31 | **NOVO (rodada 81):** aba Fusões abre com as fusões que o shinobi pode aprender (cresce ao selar); a aba Habilidades mostra a receita "A + B = Fusão" das fusões planejadas. Feito e testado sem navegador | PENDENTE DE VALIDAÇÃO E2E |
 | 16 | Skill de jutsus em WebGL a partir dos 3 links do usuário (pedido de 11/11, interrompido pelo limite) | PENDENTE |
 
 ## Rodada 53 · Estado e próximos passos

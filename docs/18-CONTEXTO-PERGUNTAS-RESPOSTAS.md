@@ -253,6 +253,11 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 - Dificuldades na mesma proporção: o Kage dar mais XP/nível a quem sobrevive é intencional. Teste garante que cada degrau pesa (vida ≥1,2×, dano ≥1,3×) e que os degraus são proporcionais.
 
+### Rodada 81 · 15/11/2026
+
+- A aba Fusões do planejamento lista as fusões possíveis com o pool do shinobi (`fusionCatalog` em `src/game/techniqueMerge.ts`), Kekkei Genkai primeiro; selar shinobis aumenta a lista.
+- A aba Habilidades mostra a receita (`fusionRecipeText`: "A + B = Fusão") nas técnicas das fusões planejadas.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

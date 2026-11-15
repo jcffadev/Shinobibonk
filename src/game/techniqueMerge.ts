@@ -80,6 +80,29 @@ export function combinedPart(source:Technique,bonus:CombineBonus):Technique{
   };
 }
 
+export type FusionEntry = { name:string; pair:[string,string]; kekkei:boolean; result:Technique };
+/**
+ * Rodada 77 (pedido do usuário: "nas fusões, é pra aparecer já as fusões que o ninja pode aprender… quando for liberando
+ * ninja na conta, vai aparecer mais habilidades… e mais fusões também"): catálogo de TODAS as fusões possíveis com as
+ * técnicas do pool do shinobi (sem buff, sem bloqueio, sem resultado de outra fusão). Kekkei Genkai primeiro, depois as
+ * demais em ordem alfabética; cada resultado aparece uma vez (o 1º par que o forma).
+ */
+export function fusionCatalog(pool:readonly Technique[], family?:string):FusionEntry[] {
+  const options=pool.filter(t=>!t.setup&&!(t as {locked?:boolean}).locked&&!isMergedName(t.name));
+  const out=new Map<string,FusionEntry>();
+  for(let i=0;i<options.length;i++)for(let j=i+1;j<options.length;j++){
+    const pair:[string,string]=[options[i].name,options[j].name];
+    const result=mergedTechnique({kind:'fuse',names:pair},options,family);
+    if(!result||out.has(result.name))continue;
+    out.set(result.name,{name:fusionDisplayName(result.name),pair,kekkei:!!kekkeiFusion(result.name),result});
+  }
+  return [...out.values()].sort((a,b)=>Number(b.kekkei)-Number(a.kekkei)||a.name.localeCompare(b.name,'pt-BR'));
+}
+/** Nome mostrado: a Kekkei Genkai pelo nome próprio; as demais como "Fusão · A / B". */
+export const fusionDisplayName = (name:string) => kekkeiFusion(name)?.name ?? name;
+/** Texto da receita para a aba Habilidades: "A + B = Nome da fusão". */
+export const fusionRecipeText = (pair:readonly [string,string], name:string) => `${pair[0]} + ${pair[1]} = ${name}`;
+
 export const FUSION_LEVEL_CAP = 7;
 export const techniqueLevelCap = (t: {name:string}, extra = 0) => t.name.startsWith('Fusão · ') ? FUSION_LEVEL_CAP : 9 + extra;
 

@@ -2173,3 +2173,15 @@ Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
 - As correções propostas (Final Swarm mais rápido nas difíceis) foram canceladas; o Kage render mais a quem sobrevive é intencional.
 - Medido: cada degrau sobe a vida do comum 1,23–1,79× e o dano 1,36–1,52×, com degraus parecidos entre si. Um teste novo protege isso.
 - **Testes:** ver CHANGELOG. **Publicado no GitHub.**
+
+## Rodada 81 · 15/11/2026 — fusões que o shinobi pode aprender
+
+> Você/Codex/Qwen entenderam ao contrário, nas fusões, é pra aparecer já as fusões que o ninja pode aprender… Quando for liberando ninja na conta, vai aparecer mais habilidades que ele pode aprender e vai aparecer, mais fusões também... No caso, ele vai selecionar a fusão que ele sabe e ai, na aba de Habilidades, vai aparecer que ele precisa por exemplo, shuriken + vento = Rasenshuriken Fuuton, sei la entendeu?
+
+**Resposta.**
+
+- A aba Fusões abre com a lista das fusões que o shinobi pode aprender, Kekkei Genkai no topo. Ela cresce ao selar shinobis.
+- Clicar numa fusão mostra o resultado e permite planejar. A montagem manual do par ficou opcional.
+- Na aba Habilidades, as técnicas de uma fusão planejada mostram a receita "A + B = Fusão".
+- **Testes:** tsc, testes e build rodados numa cópia limpa só com estas mudanças (outra sessão tinha trabalho em andamento na pasta). **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**

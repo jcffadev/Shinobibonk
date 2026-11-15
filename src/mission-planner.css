@@ -171,3 +171,14 @@
 .planner-kekkei-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr));gap:12px;margin:12px 0}
 .planner-kekkei-grid>div{display:flex;flex-direction:column;gap:8px}
 .planner-kekkei-grid>div>.planner-fusion-card{height:100%}
+/* Rodada 81 — catálogo de fusões que o shinobi pode aprender */
+.planner-fusion-hint{margin:2px 0 8px;opacity:.75;font-size:13px}
+.planner-fusion-catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:6px;max-height:320px;overflow:auto;padding:2px}
+.fusion-catalog-entry{display:flex;gap:8px;align-items:center;text-align:left;padding:6px 8px}
+.fusion-catalog-entry>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.fusion-catalog-entry small{opacity:.8;overflow-wrap:anywhere}
+.fusion-catalog-entry.is-kekkei b{color:#d9c8ff}
+.fusion-catalog-entry[aria-pressed="true"]{outline:2px solid #7b63a8}
+.fusion-catalog-planned{color:#9fe0a0;opacity:1!important}
+.fusion-manual{margin:10px 0}
+.fusion-manual>summary{cursor:pointer;margin-bottom:6px}

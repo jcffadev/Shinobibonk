@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 15/11/2026 · Fusões que o shinobi pode aprender (Rodada 81)
+
+- **Pedido do usuário:** "nas fusões, é pra aparecer já as fusões que o ninja pode aprender… Quando for liberando ninja na conta, vai aparecer mais habilidades que ele pode aprender e vai aparecer, mais fusões também... ele vai selecionar a fusão que ele sabe e ai, na aba de Habilidades, vai aparecer que ele precisa por exemplo, shuriken + vento = Rasenshuriken Fuuton".
+- **Aba Fusões do planejamento (`src/ui/BuildPlanner.tsx`):**
+  - Abre com a lista **"Fusões que você pode aprender"**, montada com as técnicas do pool do shinobi (`fusionCatalog` em `src/game/techniqueMerge.ts`): Kekkei Genkai no topo, depois as demais em ordem alfabética.
+  - A lista cresce ao selar shinobis, porque o pool ganha técnicas novas. Técnicas deixadas em casa, buffs, técnicas bloqueadas e resultados de outra fusão não entram.
+  - Clicar numa fusão mostra o resultado (fundir × combinar) e libera **Planejar fusão** (até 4).
+  - Escolher as duas técnicas à mão continua possível, em **"Montar o par à mão"** (fechado por padrão).
+- **Aba Habilidades:** cada técnica de uma fusão planejada mostra a receita, por exemplo "Shuriken + Técnica de Vento = Nome da fusão", no cartão e no painel de detalhes. Antes aparecia só "Requisito para Fusão".
+- **Testes:**
+  - 2 testes novos em `tests/fusoes.test.mjs` (catálogo cresce ao selar, Kekkei no topo, sem buff/bloqueio/fusão de fusão; a tela liga o catálogo e a receita). O mínimo subiu para 145.
+  - 1 mutação nova (Kekkei no topo), verificada à mão: acusada.
+  - **PENDENTE DE VALIDAÇÃO E2E:** ver a aba Fusões e a receita na aba Habilidades.
+
 ## 15/11/2026 · Dificuldades na mesma proporção (Rodada 80)
 
 - **Decisão do usuário:** "podem ser iguais nas suas proporções de dificuldade, como falei os erros do jogador vão decretar sua partida e o scale dos monstros tem que ser sentido de uma diferença para a outra". Antes: "se o jogador for bom, isso é normal, mais mobs, mais dinheiro, mais exp, mais level".
