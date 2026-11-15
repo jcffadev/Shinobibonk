@@ -1926,3 +1926,23 @@ O hub ganhou um cartão de temporada, Top 100, clãs e uma ficha acessível pelo
 **Pedidos.** “Glossário tem que explicar tudo que faz os tipos de dano, crítico, dano básico, velocidade de ataque, projétil.. chance de status, tudo, tudo explicadinho, mastigado.” “Tirar essa opção Ver Naruto no cenário, não precisamos mais disso.” “Colocar o Lamens disponíveis do lado do perfil do jogador entre arquivo shinobi ali”.
 
 **Resposta.** Guia ampliado por assunto, com exemplos de atributos e busca por várias palavras. O saldo de Lamens fica entre Arquivo Shinobi e o perfil. A entrada de prévia estática saiu da inicial.
+
+## Revisão de contexto · 15/11/2026 (Claude Code)
+
+> Veja tudo que temos em todas as documentações, contextos, skills, markdowns e entenda o que estavamos fazendo
+
+**Resposta.** Lidos AGENTS.md, CLAUDE.md, TESTING_POLICY.md, docs/13, docs/14, docs/18, docs/26, CHANGELOG, as 8 skills e os documentos de docs/development. Entre a passagem (9c77d43) e 5790c30, outros agentes publicaram 11 commits:
+- corrida com os braços para trás e cinco vistas nas 114 versões;
+- folhas de costas das bijū e selos do Zabuza;
+- itens 19–22 do tester (XP no portal, colisão 18%/3 m, borda do altar, flash e som de dano);
+- jutsus, fusões até Nv. 7 e Kekkei Genkai;
+- HUD invertido;
+- ranking, clãs, perfis e base online (Netlify/PostgreSQL);
+- guia e glossário.
+
+Testes por código: PASSOU (104/104, tsc). Validação E2E segue pendente.
+
+**Divergências apontadas ao usuário:**
+- A restrição de navegador foi estendida a Codex e Qwen na política e no AGENTS.md, mas em 14/11 o usuário decidiu "por enquanto só no claude".
+- docs/18 §2 ("Próximos passos") ainda cita o Kankuro como urgente, o que já está resolvido.
+- docs/26 ainda diz "11 arquivos, 80 testes"; hoje são 13 arquivos e 104 testes.
