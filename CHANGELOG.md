@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 15/11/2026 · Desempenho: carregamento do mapa ~0,7 s mais rápido (Rodada 95)
+
+- **Pedido do usuário:** "melhorar a performance sem perder nada, desempenho para carregar os mapas… o carregamento esta meio lento, demora alguns segundos algumas coisas". Divisão: o Claude Code fica com o desempenho e o Codex com o resto.
+- **Medido sem navegador**, no Node, com o mesmo código do jogo:
+  - a **pintura do chão** levava ~1,0 s em toda partida: 3 alturas pela fórmula exata em cada um dos ~1 milhão de pixels;
+  - grade de alturas, malha e água ficavam em ~30 ms cada.
+- **Agora** (`paintGround` em `src/scene/terrainArt.ts`):
+  - A pintura lê a grade de alturas que o jogo já monta, estendida para cobrir todo o chão desenhado.
+  - **Antes:** ~1.010 ms. **Agora:** ~295 ms (grade 133 + pintura 161), ~70% a menos.
+  - O chão pintado do último mapa fica guardado: jogar de novo o mesmo mapa não repinta.
+  - O desenho é o mesmo: o teste compara com a fórmula exata (> 99,5% das superfícies iguais e diferença de cor média < 2 de 255).
+- **Testes:** 1 teste novo (o mínimo subiu para 172) e 1 mutação nova, verificada à mão: acusada.
+  - **NÃO MENSURÁVEL** sem navegador: o tempo total de carregamento na tela, que inclui compilar os shaders e carregar as texturas.
+  - **PENDENTE DE VALIDAÇÃO E2E:** sentir o carregamento mais rápido.
+
 ## 15/11/2026 · Shinra Tensei: o Pain levita e solta ondas (Rodada 93)
 
 - **Pedido do usuário:** "Fazer o Pain Levitar enquanto ulta... e sairá um dano em ondas repetitivas que vai dar stun e dano e sempre que ele ultar ele vai levitar… Shinra Tensei é a habilidade".

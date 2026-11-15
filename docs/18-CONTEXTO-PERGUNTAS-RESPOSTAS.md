@@ -319,6 +319,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 - Claude Code: desempenho. Codex: mapas, cenário, itens, selos de mão, fusões e o resto. Passagem em `docs/01`.
 
+### Rodada 95 · 15/11/2026
+
+- Desempenho: `paintGround(map, ground)` pinta o chão pela grade de alturas (`createHeightField` cobre `RENDERED_GROUND_SIZE/2`); cache do último mapa em `groundArt`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

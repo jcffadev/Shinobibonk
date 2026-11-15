@@ -164,12 +164,14 @@ export function createSky() {
 
 const rgb = (hex: string) => [1, 3, 5].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
 
-/** Textura ortográfica: trilha e materiais usam as mesmas coordenadas do terreno. */
-export function groundArt(map: GameMap) {
-  const canvas = document.createElement('canvas');
-  const size = canvas.width = canvas.height = 1024;
-  const context = canvas.getContext('2d')!;
-  const pixels = context.createImageData(size, size);
+/**
+ * Pinta o chão (cores e máscara de superfícies) sem DOM. Rodada 95 (desempenho do carregamento, pedido do usuário: "o
+ * carregamento esta meio lento, demora alguns segundos"): `ground` é a grade de alturas já pronta do jogo
+ * (createHeightField), não a fórmula exata — antes eram 3 alturas exatas por pixel (~3 milhões de cálculos, ~0,9 s por
+ * partida). O desenho é o mesmo (o teste compara com a fórmula exata).
+ */
+export function paintGround(map: GameMap, ground: (x: number, z: number) => number = (x, z) => groundHeight(map.id, x, z), size = 1024) {
+  const pixels = { data: new Uint8ClampedArray(size * size * 4) };
   const surfaces = new Uint8Array(size * size * 4);
   const grass = rgb(map.terrain.low), dirt = rgb(map.terrain.trail), rock = rgb(map.terrain.high);
   const plaza = rgb(map.id === 'folha' ? '#a3967d' : map.terrain.accent);
@@ -183,10 +185,10 @@ export function groundArt(map: GameMap) {
       const onPath = Math.abs(x - trailX(z)) < 2.25 + patch * .45;
       const inPlaza = Math.abs(x) < 9 && z > -22 && z < -11;
       // Rodada 89: a água tem malha própria (water.ts); o chão embaixo dela é leito escuro e a margem é areia.
-      const h0 = groundHeight(map.id, x, z), shoreDistance = waterDistance(map.id, x, z).outside;
+      const h0 = ground(x, z), shoreDistance = waterDistance(map.id, x, z).outside;
       const river = h0 < WATER.level + .02, shore = !river && shoreDistance < 1.4;
       // Rodada 85: pedra nas encostas dos terraços (inclinação alta), com estrias horizontais como paredão de rocha.
-      const slope = Math.hypot(groundHeight(map.id, x + .5, z) - h0, groundHeight(map.id, x, z + .5) - h0) / .5;
+      const slope = Math.hypot(ground(x + .5, z) - h0, ground(x, z + .5) - h0) / .5;
       const stone = !shore && (slope > .55 || h0 > 4.2);
       const color = river ? water : shore ? sand : inPlaza ? plaza : onPath ? dirt : stone ? rock : grass;
       let shade = .88 + .18 * fleck + .08 * patch;
@@ -205,7 +207,23 @@ export function groundArt(map: GameMap) {
       pixels.data[offset + 3] = 255;
     }
   }
-  context.putImageData(pixels, 0, 0);
+  return { data: pixels.data, surfaces };
+}
+
+/** Rodada 95: o chão pintado do último mapa fica guardado — jogar de novo o mesmo mapa não repinta. */
+let paintedGround: { id: GameMap['id']; size: number; data: Uint8ClampedArray; surfaces: Uint8Array } | null = null;
+
+/** Textura ortográfica: trilha e materiais usam as mesmas coordenadas do terreno. */
+export function groundArt(map: GameMap, ground?: (x: number, z: number) => number) {
+  const size = 1024;
+  if (!paintedGround || paintedGround.id !== map.id || paintedGround.size !== size) paintedGround = { id: map.id, size, ...paintGround(map, ground, size) };
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const context = canvas.getContext('2d')!;
+  const image = context.createImageData(size, size);
+  image.data.set(paintedGround.data);
+  context.putImageData(image, 0, 0);
+  const surfaces = paintedGround.surfaces.slice();
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.magFilter = THREE.NearestFilter;
@@ -215,8 +233,8 @@ export function groundArt(map: GameMap) {
 
 
 /** Alta resolução local mesmo quando a máscara tem o tamanho da região inteira. */
-export function createGroundMaterial(map: GameMap) {
-  const { texture, surfaces, size } = groundArt(map);
+export function createGroundMaterial(map: GameMap, ground?: (x: number, z: number) => number) {
+  const { texture, surfaces, size } = groundArt(map, ground);
   const mask = new THREE.DataTexture(surfaces, size, size);
   mask.minFilter = mask.magFilter = THREE.LinearFilter;
   mask.needsUpdate = true;

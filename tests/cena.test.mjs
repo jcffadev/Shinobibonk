@@ -359,3 +359,22 @@ test('Pedra Memorial de Konoha numa clareira plana (rodada 92)', async () => {
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.ok(canvas.includes('memorial=createMemorialSprite()') && canvas.includes('[x,z]=[-38,-26]'), 'a pedra está na Folha');
 });
+
+test('carregamento: chão pintado pela grade de alturas fica igual à fórmula exata e bem mais rápido (rodada 95)', async () => {
+  const { paintGround, groundHeight, RENDERED_GROUND_SIZE } = await load('/src/scene/terrainArt.ts');
+  const { createHeightField } = await load('/src/scene/heightField.ts');
+  const { MAP_BY_ID } = await load('/src/game/maps.ts');
+  for (const id of ['folha', 'nevoa']) {
+    const map = MAP_BY_ID[id], size = 256;
+    const grid = createHeightField((x, z) => groundHeight(id, x, z), RENDERED_GROUND_SIZE / 2);
+    let t = performance.now(); const exact = paintGround(map, undefined, size); const exactMs = performance.now() - t;
+    t = performance.now(); const fast = paintGround(map, grid, size); const fastMs = performance.now() - t;
+    let same = 0; for (let i = 0; i < exact.surfaces.length; i++) if (exact.surfaces[i] === fast.surfaces[i]) same++;
+    let color = 0; for (let i = 0; i < exact.data.length; i++) color += Math.abs(exact.data[i] - fast.data[i]);
+    assert.ok(same / exact.surfaces.length > .995, `${id}: superfícies iguais em ${(same / exact.surfaces.length * 100).toFixed(2)}%`);
+    assert.ok(color / exact.data.length < 2, `${id}: cor média difere ${(color / exact.data.length).toFixed(2)}`);
+    assert.ok(fastMs < exactMs, `${id}: grade ${fastMs.toFixed(0)} ms × exata ${exactMs.toFixed(0)} ms`);
+  }
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('createGroundMaterial(MAP,terrainHeight)') && canvas.includes(',RENDERED_GROUND_SIZE/2);'), 'o jogo usa a grade');
+});

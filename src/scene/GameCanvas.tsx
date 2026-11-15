@@ -169,7 +169,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const createRenderer = () => { const r = new THREE.WebGLRenderer({ antialias: false, powerPreference: GPU_PREF[currentSettings().gpu] }); r.setPixelRatio(pixelRatioFor(currentSettings())); r.outputColorSpace = THREE.SRGBColorSpace; return r; };
     let renderer = createRenderer(); container.appendChild(renderer.domElement); let activeGpu = currentSettings().gpu;
     scene.add(new THREE.HemisphereLight('#d4e9ff', '#35402d', 2.4)); const sun = new THREE.DirectionalLight('#ffe6b0', 3); sun.position.set(-8, 18, 7); scene.add(sun);
-    const terrainHeight=createHeightField((x:number,z:number)=>groundHeight(MAP.id,x,z),MAP_SIZE/2);
+    // Rodada 95: a grade cobre todo o chão desenhado (não só a área de jogo): pintura do chão, malha e água leem dela.
+    const terrainHeight=createHeightField((x:number,z:number)=>groundHeight(MAP.id,x,z),RENDERED_GROUND_SIZE/2);
     // Rodada 88 (pedido do usuário: "as vezes o pé do personagem está indo para abaixo do solo… corrigir em todos os mapas…
     // todos os personagens"): personagens ficam de pé no ponto MAIS ALTO do chão sob os pés (raio FOOT_RADIUS). Na encosta
     // de um terraço o chão logo à frente é mais alto que o centro e escondia os pés.
@@ -181,7 +182,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     runCleanups.push(()=>{susanoo.dispose();particles.dispose();});
     // Rodada 55: contorno + preenchimento das áreas reais das técnicas do jogador (só visual; src/scene/techniqueAreas.ts).
     const areas=createTechniqueAreas(scene,terrainHeight);runCleanups.push(()=>areas.dispose());
-    const groundLook=createGroundMaterial(MAP);
+    const groundLook=createGroundMaterial(MAP,terrainHeight);
     const terrainGeometry=new THREE.PlaneGeometry(RENDERED_GROUND_SIZE,RENDERED_GROUND_SIZE,340,340);
     const terrainPositions=terrainGeometry.attributes.position;
     for(let i=0;i<terrainPositions.count;i++)terrainPositions.setZ(i,terrainHeight(terrainPositions.getX(i),-terrainPositions.getY(i)));

@@ -58,6 +58,7 @@ const MUTATIONS = [
   { regra: "Pedra Memorial na Folha", arquivo: 'src/scene/terrainArt.ts', de: "  {x:-38,z:-26,rx:7,rz:7},\n", para: "  {x:-38,z:-26,rx:1,rz:1},\n" },
   { regra: "Pain levita na Ultimate", arquivo: 'src/game/shinraTensei.ts', de: "seconds: 2.6, lift: 1.5,", para: "seconds: 2.6, lift: 0," },
   { regra: "ondas do Shinra Tensei atordoam", arquivo: 'src/scene/GameCanvas.tsx', de: "enemy.control='Atordoar';enemy.controlTime=Math.max(enemy.controlTime||0,SHINRA.stunSeconds);", para: "" },
+  { regra: 'chão pintado pela grade de alturas', arquivo: 'src/scene/GameCanvas.tsx', de: 'createGroundMaterial(MAP,terrainHeight)', para: 'createGroundMaterial(MAP)' },
   { regra: 'farol do pergaminho grátis é alto', arquivo: 'src/scene/rewardBeacon.ts', de: 'height: 30,', para: 'height: 4,' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },

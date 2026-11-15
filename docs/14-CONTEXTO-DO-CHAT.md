@@ -2344,3 +2344,13 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > pause e anote tudo que você fez de mapa/cenario/itens nessa sessão, você vai trabalhar em desemepenho, no código... e o codex vai trabalhar no resto
 
 **Resposta.** Tudo o que foi feito nesta sessão (rodadas 77–93), onde fica no código, os testes e a fila restante, com o plano dos selos de mão que não chegou a ser implementado, está em `docs/01` → "Passagem para o Codex · 15/11/2026". O Claude Code passa a cuidar só do desempenho (docs/13, item 40).
+
+## Rodada 95 · 15/11/2026 — desempenho: carregamento do mapa
+
+> Sim, carregamento
+
+**Resposta.**
+
+- Medi as etapas de montagem do mapa. A pintura do chão levava ~1,0 s por partida e agora leva ~0,3 s, com o mesmo desenho. Repetir o mapa não repinta.
+- **Testes:** tipos, testes e build. **NÃO MENSURÁVEL** sem navegador: o tempo total na tela.
+- **Publicado no GitHub.**
