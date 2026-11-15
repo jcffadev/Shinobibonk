@@ -57,8 +57,9 @@ export function researchGain(base: number, pesquisaLevel: number) { return base 
 const MAP_PROGRESS_KEY = 'sb_map_progress_v1';
 const ORDER = ['Genin', 'Chunin', 'Jonin', 'Kage'];
 export function mapProgress(): Record<string, string[]> { return read<Record<string, string[]>>(MAP_PROGRESS_KEY, {}); }
+/** Rodada 96 (pedido do usuário: "Deixar todas as dificuldades/mapas liberados para tester's"): com TEST_UNLOCK_ALL, mapas e dificuldades também ficam liberados. */
 export function isDifficultyUnlocked(mapId: string, difficulty: string) {
-  if (allUnlockedOverride || testMode()) return true;
+  if (TEST_UNLOCK_ALL || allUnlockedOverride || testMode()) return true;
   if (!isMapUnlocked(mapId)) return false;
   const index = ORDER.indexOf(difficulty); if (index <= 0) return true;
   return (mapProgress()[mapId] ?? []).includes(ORDER[index - 1]);
@@ -66,7 +67,7 @@ export function isDifficultyUnlocked(mapId: string, difficulty: string) {
 /** Ordem dos mapas: o seguinte só libera ao vencer o Genin do anterior (Folha → Areia → Pedra → Névoa). */
 export const MAP_ORDER = ['folha', 'areia', 'pedra', 'nevoa'];
 export function isMapUnlocked(mapId: string) {
-  if (allUnlockedOverride || testMode()) return true;
+  if (TEST_UNLOCK_ALL || allUnlockedOverride || testMode()) return true;
   const index = MAP_ORDER.indexOf(mapId); if (index <= 0) return true;
   return (mapProgress()[MAP_ORDER[index - 1]] ?? []).includes('Genin');
 }

@@ -84,10 +84,27 @@ export const WEATHER_WAIT = { min: 65, max: 120 } as const;
 export const weatherWait = () => WEATHER_WAIT.min + Math.random() * (WEATHER_WAIT.max - WEATHER_WAIT.min);
 export const WEATHER_EVENTS: Record<WeatherEventId, MapWeather & { elites: string[]; cast?: WeatherCast }> = {
   // Rodada 63: Zabuza faz os selos à vista do jogador antes da névoa (src/game/weatherCast.ts).
-  mist: { name:'Névoa do Zabuza',sky:'#27313b',near:3,far:11,elites:['zabuza'],cast:{seconds:2.6,line:'Zabuza: Ninpō · Kirigakure no Jutsu!'} },
+  // Rodada 96: névoa BRANCA e densa ("parecendo gelo/névoa mesmo igual no anime"); os personagens só aparecem a até 3 m
+  // (game/zabuzaMist.ts).
+  mist: { name:'Névoa do Zabuza',sky:'#e3eaee',near:.5,far:6,elites:['zabuza'],cast:{seconds:2.6,line:'Zabuza: Ninpō · Kirigakure no Jutsu!'} },
   snow: { name:'Nevasca do Haku',sky:'#a5becf',near:18,far:42,elites:['haku'] },
   sand: { name:'Tempestade de areia',sky:'#b08259',near:15,far:46,slow:.73,elites:['gaara','rasa'] },
 };
+/**
+ * Rodada 96 (pedido do usuário: "os eventos que temos no jogo que mudam o cenário, devem acontecer aleatoriamente por partida,
+ * pode ter partida que acontecem e podem ter partidas que não, os eventos são por zona, pode acontecer 2 Zabuzas 1 em cada
+ * zona? Sim"): no começo de cada zona, cada evento do mapa tem `chance` de acontecer UMA vez, num momento sorteado entre
+ * `from` e `to` s da zona; dois eventos da mesma zona ficam separados por `gap` s (não se sobrepõem).
+ */
+export const WEATHER_ZONE = { chance: .5, from: 45, to: 510, gap: WEATHER_EVENT_DURATION + 30 } as const;
+export type WeatherPlan = { id: WeatherEventId; at: number }[];
+export function planZoneWeather(events: readonly WeatherEventId[], zoneStart: number, rng: () => number = Math.random): WeatherPlan {
+  const plan: WeatherPlan = [];
+  for (const id of events) if (rng() < WEATHER_ZONE.chance) plan.push({ id, at: WEATHER_ZONE.from + rng() * (WEATHER_ZONE.to - WEATHER_ZONE.from) });
+  plan.sort((a, b) => a.at - b.at);
+  for (let i = 1; i < plan.length; i++) plan[i].at = Math.max(plan[i].at, plan[i - 1].at + WEATHER_ZONE.gap);
+  return plan.filter(p => p.at <= WEATHER_ZONE.to + WEATHER_ZONE.gap).map(p => ({ id: p.id, at: zoneStart + p.at }));
+}
 export const WEATHER_BY_MAP: Record<MapId, WeatherEventId[]> = {
   folha:['mist','snow'], areia:['sand'], pedra:['snow'], nevoa:['mist','snow'],
 };

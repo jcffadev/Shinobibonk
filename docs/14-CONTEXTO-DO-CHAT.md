@@ -2354,3 +2354,17 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Medi as etapas de montagem do mapa. A pintura do chão levava ~1,0 s por partida e agora leva ~0,3 s, com o mesmo desenho. Repetir o mapa não repinta.
 - **Testes:** tipos, testes e build. **NÃO MENSURÁVEL** sem navegador: o tempo total na tela.
 - **Publicado no GitHub.**
+
+## Rodada 96 · 15/11/2026 — Zabuza, eventos por zona, armadilha, nomes repetidos, testers e anotações para o Codex
+
+> Você ainda não ajeitou o que falei do Zabuza, né? … todos precisam ter o mesmo tamanho, tirando as versões que são Genin/Academia… Evento Zabuza: … todos os personagem a 3m do jogador. Não é possível colocar target… os eventos… devem acontecer aleatoriamente por partida… por zona… Corrija.
+
+> Ao clicar nos eventos dos ninjas caídos, na armadilha aumentar 5% de inimigos da partida toda e aparecer 10 inimigos a 10m em redor do nosso personagem
+
+> o Jutsu bomba de fumaça, quando selecionado, adiciona um item na lista pool também… isso nunca deve acontecer.
+
+> Deixar todas as dificuldades/mapas liberados para tester's
+
+> Anotações para o Codex: … a foto dos mapas… fazer aquela foto ser jogável como um mapa do jogo… Casas, árvores, pedras, construções, tudo devem ser obstaculos… andando na parede para subir…
+
+**Resposta.** Tudo corrigido, conforme o CHANGELOG da rodada 96. As anotações para o Codex ficaram em `docs/01`. **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**

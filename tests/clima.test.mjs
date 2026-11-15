@@ -72,3 +72,36 @@ test('GameCanvas: Zabuza surge à vista, faz selos, névoa engrossa e só depois
   assert.match(canvas, /blendFog\(active,castProgress\(elapsed,weatherEvent\?\.castEnd/, 'névoa engrossando');
   assert.ok(!/weatherEvent\?\.id==='mist'/.test(canvas), 'toda verificação de névoa passa por mistHides');
 });
+
+test('névoa do Zabuza: branca e densa, todos aparecem a até 3 m e não dá para fixar alvo (rodada 96)', async () => {
+  const { ZABUZA_MIST, mistVisibility, canLockTarget } = await import('../src/game/zabuzaMist.ts');
+  const { WEATHER_EVENTS } = await import('../src/game/maps.ts');
+  assert.equal(ZABUZA_MIST.reveal, 3);
+  assert.equal(mistVisibility(2.9), 1); assert.equal(mistVisibility(ZABUZA_MIST.reveal + ZABUZA_MIST.fade), 0);
+  assert.ok(mistVisibility(ZABUZA_MIST.reveal + ZABUZA_MIST.fade / 2) > 0 && mistVisibility(ZABUZA_MIST.reveal + ZABUZA_MIST.fade / 2) < 1, 'some suave');
+  assert.equal(canLockTarget(true), false); assert.equal(canLockTarget(false), true);
+  const mist = WEATHER_EVENTS.mist, rgb = [1, 3, 5].map(i => parseInt(mist.sky.slice(i, i + 2), 16));
+  assert.ok(rgb.every(c => c > 200), 'névoa branca'); assert.ok(mist.far <= 6, 'densa: ofusca tudo');
+  assert.match(canvas, /const near=enemyList\.filter\(e=>Math\.hypot\([^)]*\)<ZABUZA_MIST\.reveal\+ZABUZA_MIST\.fade\);/, 'todos os personagens perto aparecem');
+  assert.ok(canvas.includes("if(!canLockTarget(zabuzaMistActive)){eventToast='Névoa do Zabuza: não dá para fixar alvo.';return;}"), 'não fixa alvo');
+  assert.ok(canvas.includes("if(lockedTarget&&!canLockTarget(zabuzaMistActive)){lockedTarget=null;"), 'perde o alvo fixado');
+  assert.ok(canvas.includes('zabuzaMistActive=mistHides(weatherEvent,elapsed)&&!!enemyList.find(e=>e.heroId===weatherEvent?.elite);'), 'só com o Zabuza vivo');
+});
+
+test('eventos de clima sorteados por zona: podem não acontecer, podem repetir em outra zona e não se sobrepõem (rodada 96)', async () => {
+  const { planZoneWeather, WEATHER_ZONE, WEATHER_BY_MAP } = await import('../src/game/maps.ts');
+  let none = 0, some = 0;
+  for (let k = 0; k < 400; k++) {
+    let seed = k * 2654435761 % 2147483647 + 1; const rng = () => (seed = seed * 48271 % 2147483647) / 2147483647;
+    const plan = planZoneWeather(WEATHER_BY_MAP.nevoa, 600, rng);
+    if (!plan.length) none++; else some++;
+    for (const p of plan) assert.ok(p.at >= 600 + WEATHER_ZONE.from, 'dentro da zona');
+    for (let i = 1; i < plan.length; i++) assert.ok(plan[i].at - plan[i - 1].at >= WEATHER_ZONE.gap - 1e-6, 'sem sobreposição');
+    assert.ok(new Set(plan.map(p => p.id)).size === plan.length, 'cada evento no máximo 1 vez por zona');
+  }
+  assert.ok(none > 20 && some > 200, `zonas sem evento: ${none}, com evento: ${some}`);
+  assert.deepEqual(planZoneWeather(['mist'], 0, () => 0).map(p => p.id), ['mist'], 'sorteio baixo acontece');
+  assert.deepEqual(planZoneWeather(['mist'], 0, () => .99), [], 'sorteio alto não acontece');
+  assert.ok(canvas.includes('zoneStart=elapsed;weatherPlan=planZoneWeather(WEATHER_BY_MAP[mapId],zoneStart);'), 'novo sorteio a cada zona (pode haver 2 Zabuzas)');
+  assert.ok(canvas.includes('const next=weatherPlan.shift()!;startWeather(next.id);'), 'só o que foi sorteado acontece');
+});

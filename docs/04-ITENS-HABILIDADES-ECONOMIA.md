@@ -172,7 +172,7 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
 - **Mecânicas implementadas** (lidas de `Stats.extra` em `GameCanvas.tsx`):
   - **Dano condicional**:
     - contra elites e chefes (Etiqueta Exorcista);
-    - contra inimigos controlados (Correntes de Selamento);
+    - contra inimigos controlados (Correntes de Contenção — antes "Correntes de Selamento", nome da técnica da Kushina; rodada 96);
     - por status diferente no alvo, até +30% (Selo dos Cinco Elementos);
     - com HP baixo (Fúria da Kyuubi);
     - sem levar golpes, até +40% (Ritmo Ininterrupto);

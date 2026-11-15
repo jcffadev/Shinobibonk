@@ -45,7 +45,8 @@ export const ITEMS:Item[] = [
   // Específicos pedidos: Jutsu Sábio (elemento Sábio) e Genjutsu (escola), no mesmo molde dos pergaminhos de elemento.
   item('el-sage','Pergaminho do Monte Myoboku','Comum',2,ANY,'+28% de dano de técnicas Sábias (Senjutsu) e +3% de dano total.',{elSabio:.28,damage:.03}),
   item('genjutsu-scroll','Pergaminho Genjutsu','Comum',9,ANY,'+28% de dano de técnicas de Genjutsu e +3% de dano total.',{genjutsu:.28,damage:.03}),
-  item('smoke','Bomba de Fumaça','Comum',0,ANY,'+4,5 pontos percentuais de evasão.',{dodge:.045}),
+  // Rodada 96: itens com nome de técnica viravam item na bolsa ao planejar a técnica (bug relatado pelo usuário); nomes próprios.
+  item('smoke','Esfera de Fumaça','Comum',0,ANY,'+4,5 pontos percentuais de evasão.',{dodge:.045}),
   item('exorcist','Etiqueta Exorcista','Comum',1,ANY,'+16% de dano contra elites, mega elites e guardiões.',{eliteDamage:.16}),
   item('wire','Fio de Aço Ninja','Comum',1,5,'4% de chance por acerto de prender o inimigo (Paralisar 1,2 s).',{rootChance:.04}),
   item('pickup','Ímã de Chakra','Comum',5,ANY,'+1,6 m de alcance de coleta.',{pickupFlat:1.6}),
@@ -63,7 +64,7 @@ export const ITEMS:Item[] = [
   item('adrenaline','Selo de Adrenalina','Incomum',5,3,'Ao ser atingido: +20% de movimento e +12% de velocidade de ataque por 3 s.',{rush:1}),
   item('sleep-incense','Incenso do Sono','Incomum',2,3,'2,5% de chance por acerto de fazer o inimigo Dormir por 2 s.',{sleepChance:.025}),
   item('vampire-root','Raiz Vampira','Incomum',13,ANY,'Recupera 3% do dano causado como HP.',{lifesteal:.03}),
-  item('chains','Correntes de Selamento','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
+  item('chains','Correntes de Contenção','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
   item('katon-orb','Esfera Katon','Incomum',7,5,'5% de chance por acerto de queimar e +10% de dano de status (queimadura/veneno).',{burnChance:.05,statusDamage:.1}),
   item('gold-tooth','Dente de Ouro','Incomum',8,3,'O Caça-Níquel da Tsunade e a atualização do Mercador custam 8% menos (até −24%).',{slotDiscount:.08}),
   item('akimichi-box','Marmita Akimichi','Incomum',8,ANY,'+1,2 HP/s de regeneração.',{regen:1.2}),
@@ -140,7 +141,7 @@ export const ITEMS:Item[] = [
   item('forbidden-scroll','Pergaminho Proibido','Lendário',3,1,'Técnicas podem subir mais 2 níveis (até 11).',{skillCap:2}),
   item('lee','Remédio do Rock Lee','Lendário',0,1,'Punho Bêbado: +20% dano, +20% velocidade de ataque, +15% movimento e +10 pontos de evasão.',{damage:.2,attackSpeed:.2,move:.15,dodge:.1}),
 ];
-const LEGACY_ITEM_NAMES:Record<string,string>={'Pergaminho de Ressurreição':'Células de Hashirama','Rinne Tensei':'Chakra de Hagoromo'};
+const LEGACY_ITEM_NAMES:Record<string,string>={'Bomba de Fumaça':'Esfera de Fumaça','Correntes de Selamento':'Correntes de Contenção','Pergaminho de Ressurreição':'Células de Hashirama','Rinne Tensei':'Chakra de Hagoromo'};
 export const currentItemName=(name:string)=>LEGACY_ITEM_NAMES[name]??name;
 export const ITEM_BY_NAME = Object.fromEntries(ITEMS.map(i=>[i.name,i])) as Record<string,Item>;
 export function availableItems(unlocked:readonly string[], archived:readonly string[], allForPrototype:boolean) {

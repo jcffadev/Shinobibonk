@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 15/11/2026 · Zabuza, eventos sorteados por zona, armadilha do ninja caído, nomes repetidos e testers (Rodada 96)
+
+- **Pedidos do usuário:**
+  - "Ele parece um personagem um pouco maior que os demais, ajustar, todos precisam ter o mesmo tamanho, tirando as versões que são Genin/Academia, ai precisam ser ligeramente menores";
+  - "Agora vai aparecer todos os personagem a 3m do jogador. Não é possível colocar target/focar enquanto Zabuza estiver vivo e/ou ao focar e eles entrarem no range da Névoa… perde o target";
+  - "os eventos que temos no jogo que mudam o cenário, devem acontecer aleatoriamente por partida… são por zona, pode acontecer 2 Zabuzas 1 em cada zona";
+  - "Ao clicar nos eventos dos ninjas caídos, na armadilha aumentar 5% de inimigos da partida toda e aparecer 10 inimigos a 10m em redor do nosso personagem";
+  - "o Jutsu bomba de fumaça, quando selecionado, adiciona um item na lista pool também… isso nunca deve acontecer";
+  - "Deixar todas as dificuldades/mapas liberados para tester's".
+- **Tamanho** (`ADULT_HEIGHT` / `CHILD_HEIGHT` em `playerMotion.ts`):
+  - Todo adulto tem a mesma altura (o Zabuza tinha 2,58 contra 2,32), e o aumento de 10% do Gaara como inimigo ou aliado saiu.
+  - Genin e Academia ficam ~10% menores (antes ~17%).
+- **Névoa do Zabuza** (`src/game/zabuzaMist.ts`):
+  - Branca e densa (cor #e3eaee, some a 6 m da câmera).
+  - **Todos** os personagens aparecem só a até 3 m do jogador, sumindo suave até 3,6 m. Antes só o Zabuza aparecia, a 5 m.
+  - Com o Zabuza vivo não dá para fixar alvo, e um alvo fixado é solto.
+- **Eventos de clima sorteados por zona** (`planZoneWeather` / `WEATHER_ZONE` em `maps.ts`):
+  - No começo de cada zona, cada evento do mapa tem 50% de chance de acontecer uma vez, entre 45 s e 510 s da zona, e nunca dois ao mesmo tempo.
+  - Pode haver partida sem evento e dois Zabuzas em zonas diferentes. Antes o evento se repetia a cada 65–120 s.
+- **Armadilha do ninja caído** (`src/game/fallenTrap.ts`): +5% de inimigos até o fim da partida e 10 ninjas num anel de 10 m em volta do jogador. Vencer ainda dá 1 nível.
+- **Nomes repetidos entre item e técnica:**
+  - O item "Bomba de Fumaça" virou **Esfera de Fumaça**, e o item "Correntes de Selamento" virou **Correntes de Contenção**. Planejar a técnica não põe mais o item na bolsa.
+  - Partidas salvas com os nomes antigos continuam valendo.
+  - Um teste impede nomes repetidos daqui em diante.
+- **Testers:** com `TEST_UNLOCK_ALL` (já ligado), todos os mapas e dificuldades ficam liberados. **Voltar para false antes de publicar.**
+- **Anotações do usuário para o Codex** em `docs/01`: transformar a foto de cada mapa da seleção em mapa jogável; tudo como obstáculo, com escalada na parede.
+- **Testes:** 6 testes novos (tamanho, névoa, sorteio por zona, armadilha ×2, nomes) e mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E** de tudo na tela.
+
 ## 15/11/2026 · Desempenho: carregamento do mapa ~0,7 s mais rápido (Rodada 95)
 
 - **Pedido do usuário:** "melhorar a performance sem perder nada, desempenho para carregar os mapas… o carregamento esta meio lento, demora alguns segundos algumas coisas". Divisão: o Claude Code fica com o desempenho e o Codex com o resto.

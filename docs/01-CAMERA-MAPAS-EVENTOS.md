@@ -253,3 +253,58 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 8. **Orochimaru Sannin** com bandana da Folha e colete verde.
 9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
 10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).
+
+### Anotações do usuário para o Codex · 15/11/2026 (rodada 96)
+
+> Anotações para o Codex: Aprimorar com tudo que você sabe, referências, ideias que já implemetamos, cenário, habilidades, tudo que o Claude fez e deixou anotado pra você. Os cenários, você tem a foto dos mapas no próprio jogo ao selecionar, porque você não usou isso para fazer os mapas? é literalmente fazer aquela foto ser jogável como um mapa do jogo... e aplicar para todos os mapas seguindo aquelas fotos que você tem, além disso te dei referência de todos os mapas.
+>
+> Casas, árvores, pedras, construções, tudo devem ser obstaculos, ou seja o personagem pode rodear, subir, fazer animação do personagem andando na parede para subir essas coisas, no desenho também acontece, imagino que é só virar a folha de caminhar no chão ao chegar perto que funciona, ou apertar o botão de pulo para ele grudar e caminhar na parede e apertar novamente faz ele pular e soltar.
+
+**1. As fotos da seleção de mapa viram o mapa jogável.**
+- A arte está em `public/assets/map-previews-v1.png`, 2 × 2: Folha em cima à esquerda, Areia em cima à direita, Pedra embaixo à esquerda, Névoa embaixo à direita.
+- Cada mapa deve reproduzir a sua foto em 3D jogável, com os mesmos lugares, nas mesmas posições relativas:
+  - **Konoha:**
+    - o Monte Hokage com os rostos no fundo;
+    - o prédio do Hokage, vermelho com cúpula, no meio;
+    - a muralha e o portão vermelho com telhado na frente;
+    - a rua de terra subindo até o prédio;
+    - casas de telhado vermelho e amarelo entre árvores densas;
+    - um penhasco cinza na borda.
+  - **Suna:**
+    - a cidade de adobe murada, com a grande cúpula do Kazekage no centro e torres redondas na muralha;
+    - o portão em arco na frente;
+    - arcos de rocha naturais;
+    - mesas em degraus em volta;
+    - dunas e tempestade de areia.
+  - **Iwa:**
+    - a fortaleza redonda no topo de um pico;
+    - casas de pedra em plataformas nos penhascos;
+    - pontes em arco entre os picos;
+    - escadas na rocha;
+    - névoa entre os picos;
+    - montanhas nevadas ao fundo.
+  - **Kiri:**
+    - um canal de água com pontes de madeira em arco;
+    - casas de telhado azul sobre palafitas com lanternas;
+    - cachoeiras saindo de paredões de pedra;
+    - pinheiros e garoa.
+- O que já existe ajuda:
+  - terraços (`terrace`);
+  - água cavada (`water.ts`, que dá para virar canal em Kiri);
+  - horizonte e paisagem por vila (`horizonProfile`, `landscape.ts`);
+  - áreas planas para construções (`LEAF_PLACES` / `REGIONAL_PLACES`).
+- Junto com a foto, use as referências de anime e de vídeo descritas na skill `criar-mapa-shinobibonk` §5.
+
+**2. Tudo é obstáculo, e dá para subir.**
+- Casas, árvores, pedras e construções bloqueiam a passagem. O personagem contorna, sobe ou **anda na parede**.
+- **Proposta de mecânica:**
+  - Encostar numa parede e apertar **Pulo** gruda o ninja nela. Ele anda na parede com a mesma folha de caminhada, girada 90° e encostada na superfície. Apertar Pulo de novo salta e solta.
+  - Ao chegar ao topo, ele sobe e anda por cima (telhado ou topo da rocha).
+  - O dash continua atravessando, como hoje (`exitAlong`).
+- **Onde mexer:**
+  - `src/scene/collision.ts`: `createSolids`, `resolve` e `exitAlong`. Hoje há raio de colisão para árvores e rochas (`COLLISION_RULES.scenery`) e para construções (`addBuilding`), mas "as árvores deveriam ser objeto de bloqueio" ainda está na fila.
+  - Movimento e pulo no `GameCanvas`: `jumpTime` e `standHeight`.
+  - Poses em `playerMotion.ts` e na skill `movimentar-shinobi`.
+- **Cada obstáculo precisa de uma altura** de topo para "subir em cima": construção pela altura do sprite, árvore pela copa, rocha pela altura.
+
+**3. Base para tudo:** leia a passagem acima, o `docs/10` (fusões), a skill de mapas e o `CONTEXTO-COMPLETO.md` da pasta arquivada de referência (fora do projeto, ver skill `referencia-externa`). Nada do jogo de referência entra no repositório.

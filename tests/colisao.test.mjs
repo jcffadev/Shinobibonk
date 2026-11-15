@@ -13,7 +13,7 @@ const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.met
 test('jogador do tamanho do monstro comum (rodada 77: "aumente os ninja para ficar do tamanho dos monstros")', async () => {
   const { MONSTER_VISIBLE_HEIGHT } = await load('/src/game/worldScale.ts');
   const motion = fs.readFileSync(new URL('../src/scene/playerMotion.ts', import.meta.url), 'utf8');
-  const adult = Number(/return family==='zabuza'\?[\d.]+:([\d.]+);/.exec(motion)[1]);
+  const adult = Number(/export const ADULT_HEIGHT = ([\d.]+)/.exec(motion)[1]);
   assert.ok(Math.abs(adult * PLAYER_SIZE - MONSTER_VISIBLE_HEIGHT) < .03, `ninja ${(adult * PLAYER_SIZE).toFixed(2)} × monstro ${MONSTER_VISIBLE_HEIGHT}`);
   assert.ok(PLAYER_SIZE > .6, 'não volta a ficar minúsculo');
   assert.match(canvas, /makeHero\(heroId,1,PLAYER_SIZE\)/);
@@ -69,4 +69,16 @@ test('o jogo liga as regras: poda o cenário e o dash não colide', () => {
   assert.match(canvas, /solids\.prune\(COLLISION_RULES\.sceneryClearance,/);
   assert.match(canvas, /if\(slideTime<=0\)\{if\(dashing\)solids\.exitAlong\(player\.position,heading\);else solids\.resolve\(player\.position\);\}/);
   assert.match(canvas, /sceneryBySolid\.set\(solids\.add\(/);
+});
+
+test('todos os adultos do mesmo tamanho; Genin/Academia um pouco menores (rodada 96)', async () => {
+  const { actorVisibleHeight, ADULT_HEIGHT, CHILD_HEIGHT } = await load('/src/scene/playerMotion.ts');
+  for (const family of ['zabuza', 'kisame', 'gaara', 'naruto', 'pain', 'madara']) assert.equal(actorVisibleHeight(family, 50), ADULT_HEIGHT, family + ' adulto');
+  assert.equal(actorVisibleHeight('zabuza', 1), ADULT_HEIGHT, 'Zabuza não é maior');
+  assert.equal(actorVisibleHeight('naruto', 1), CHILD_HEIGHT, 'Naruto Academia');
+  assert.equal(actorVisibleHeight('naruto', 10), CHILD_HEIGHT, 'Naruto Genin');
+  assert.equal(actorVisibleHeight('gaara', 1), CHILD_HEIGHT, 'Gaara Genin');
+  const ratio = CHILD_HEIGHT / ADULT_HEIGHT;
+  assert.ok(ratio >= .85 && ratio < .95, `ligeiramente menores (${ratio.toFixed(2)})`);
+  assert.ok(!canvas.includes("familyOf(id)==='gaara'?1.1"), 'sem aumento extra do Gaara');
 });

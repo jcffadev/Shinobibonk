@@ -120,3 +120,13 @@ test('bolsa ninja: com itens na bolsa a missão só sorteia esses; bolsa vazia =
   assert.ok(main.includes("missionItemPool(unlocked,archived,bagKey?bagKey.split('|'):[])"), 'a partida recebe o pool da bolsa');
   assert.ok(main.includes('itemPool={pool}'));
 });
+
+
+test('nenhum item, pílula ou técnica com o mesmo nome (rodada 96: a técnica Bomba de Fumaça punha o item na bolsa)', async () => {
+  const h = await import('../src/game/heroes.ts'); const c = await import('../src/game/catalog.ts'); const p = await import('../src/game/pills.ts');
+  const all = new Set(h.HEROES.map(x => x.id)), tech = new Set(h.HEROES.map(x => x.ultimate));
+  for (const hero of h.HEROES) for (const t of h.techniquePool(hero.id, all)) tech.add(t.name);
+  const clash = [...c.ITEMS.map(i => i.name), ...p.PILL_NAMES].filter(n => tech.has(n));
+  assert.deepEqual(clash, [], 'nomes repetidos: ' + clash.join(', '));
+  assert.equal(c.currentItemName('Bomba de Fumaça'), 'Esfera de Fumaça', 'partida salva com o nome antigo do item continua valendo');
+});

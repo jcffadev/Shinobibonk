@@ -119,10 +119,16 @@ const CHILD_FORMS:Record<string,readonly number[]>={
   naruto:[1,10],sasuke:[1],sakura:[1],gaara:[1],choji:[1],lee:[1],neji:[1],hinata:[1],tenten:[1],
   temari:[1],kankuro:[1],shikamaru:[1],hanabi:[1],kiba:[1],ino:[1],shino:[1],obito:[1],
 };
+/**
+ * Rodada 96 (pedido do usuário: "Ele [Zabuza] parece um personagem um pouco maior que os demais, ajustar, todos precisam ter
+ * o mesmo tamanho, tirando as versões que são Genin/Academia, ai precisam ser ligeiramente menores"): uma altura para todo
+ * adulto (o Zabuza tinha 2,58) e Genin/Academia ~10% menores (antes ~17%).
+ */
+export const ADULT_HEIGHT = 2.32, CHILD_HEIGHT = 2.1;
 export function actorVisibleHeight(family:string,form:number) {
   if(family==='akamaru'||family==='kuri')return 1.02;
-  if(CHILD_FORMS[family]?.includes(form))return 1.92;
-  return family==='zabuza'?2.58:2.32;
+  if(CHILD_FORMS[family]?.includes(form))return CHILD_HEIGHT;
+  return ADULT_HEIGHT;
 }
 
 export function createPlayerMotion(scene: THREE.Scene, sprite: THREE.Sprite, heroId: string, healthBar=true, sizeMultiplier=1) {
