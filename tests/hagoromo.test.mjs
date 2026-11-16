@@ -63,7 +63,7 @@ test('a partida liga o evento: tecla C, clareira, hordas, Mega Elite, recompensa
     'if(hagoromoEvent&&!enemy.hagoromo)continue;',
     'if(enemy.guardian){hagoromoBossDown=true;',
     'scheduleWeather();hagoromoBossDown=false;',
-    'if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo){',
+    'if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&',
     'choiceLevel=-11;choiceData=offers.map(tool=>toolCard(tool));',
     'pendingTool=id;choiceLevel=-12;',
     'Object.entries(toolBonuses(hagoromo.tools))',

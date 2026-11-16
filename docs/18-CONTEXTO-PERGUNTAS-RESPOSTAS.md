@@ -359,6 +359,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - Treinamento do Hagoromo: `src/game/hagoromoTraining.ts` (regras), `HAGOROMO_ARENA` em `terrainArt.ts`, evento em `GameCanvas.tsx` (tecla C, choiceLevel −11/−12), `src/ui/HagoromoButton.tsx`.
 - Divisão: Claude Code faz eventos, água e jutsus; o Codex faz os mapas jogáveis das vilas.
 
+### Rodada 98 · 16/11/2026
+
+- Treinamento da Juventude: `src/game/youthTraining.ts`, NPC `youth` (Might Guy em −30, −42) no GameCanvas (choiceLevel −13, evento `shinobi-youth`), painel `src/ui/YouthPanel.tsx`.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## 16/11/2026 · Treinamento da Juventude (Rodada 98)
+
+- **Pedido do usuário** (docs/13 item 47): "Terá Might Guy no Mapa como NPC… Texto: DEIXE A JUVENTUDE EXPLODIR EM SEU CORAÇÃO · Tabela · Esquerda seletor de dificuldade · Fácil, Normal, Difícil · Direita TODOS OS ATRIBUTOS do jogo, eles escalam a porcentagem do buff por dificuldade". Os desafios pedidos foram: locais marcados, abates, não ser acertado, vencer o Guy e vencer o Lee.
+- **Regras** (`src/game/youthTraining.ts`):
+  - **Atributos:** 20 da ficha (HP, dano total, Taijutsu, Ninjutsu, velocidade de ataque, crítico, dano crítico, área, recarga, duração e chance de status, velocidade de projétil, movimento, evasão, armadura, regeneração, XP, Ryu, sorte, coleta). Cada um ganha ×1 no Fácil, ×2 no Normal e ×4 no Difícil (dano total: +3% / +6% / +12%). Valores propostos.
+  - **Desafio sorteado** a cada visita:
+
+    | Desafio | Fácil | Normal | Difícil |
+    |---|---|---|---|
+    | 10 locais marcados no mapa | 90 s | 75 s | 60 s |
+    | Abates | 100 em 120 s | 200 em 150 s | 400 em 180 s |
+    | Sem ser acertado | 30 s | 45 s | 60 s |
+    | Vencer o Might Guy | 120 s | 100 s | 80 s |
+    | Vencer o Rock Lee | 120 s | 100 s | 80 s |
+
+- **Na partida** (`GameCanvas.tsx`):
+  - O Might Guy é um NPC em (−30, −42). O E abre o painel e pausa o jogo; X sai sem gastar.
+  - Começar gasta o Guy na zona. Os locais aparecem como anéis verdes. Um golpe que passa das defesas encerra o desafio "sem ser acertado". O Guy ou o Lee da luta não deixam corpo para selar.
+  - **Vencendo**, todos os atributos ganham o buff até o fim da missão.
+- **Tela:**
+  - painel `src/ui/YouthPanel.tsx`: retrato do Guy, o texto, a dificuldade à esquerda com o desafio de cada uma e a tabela de atributos à direita;
+  - faixa no topo com o progresso e o tempo.
+- **Testes:**
+  - `tests/juventude.test.mjs` com 4 testes. O mínimo subiu para 202.
+  - 3 mutações novas, verificadas à mão.
+  - **PENDENTE DE VALIDAÇÃO E2E:** falar com o Guy, ver o painel, jogar cada desafio e conferir o buff na ficha.
+
 ## 16/11/2026 · Treinamento do Hagoromo (Rodada 97)
 
 - **Pedido do usuário:** continuar o trabalho do Codex ("Entao faça o restante, deixa aquilo pro codex": os mapas jogáveis das vilas ficam com o Codex). Evento especificado em `docs/01` → "Evento Treinamento do Hagoromo".

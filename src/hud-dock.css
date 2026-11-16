@@ -161,3 +161,21 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .sage-tool{width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid #6b5aa8;background:#241b36;font-size:13px}
 .sage-tool.empty{opacity:.35;border-style:dashed}
 .sage-tool.rarity-comum{border-color:#bfbfbf}.sage-tool.rarity-incomum{border-color:#5cd06a}.sage-tool.rarity-raro{border-color:#4aa3ff}.sage-tool.rarity-épico{border-color:#b56cff}.sage-tool.rarity-lendário{border-color:#ffb43a}
+/* Rodada 98 — Treinamento da Juventude: painel do Might Guy (dificuldade à esquerda, atributos à direita) e faixa do desafio */
+.youth-panel{width:min(860px,94vw);max-height:90vh;overflow:auto;background:#1d2a1c;border:2px solid #5fd06f;border-radius:14px;padding:16px;color:#eaffea;box-shadow:0 0 30px #2f8a3a80}
+.youth-heading{display:flex;gap:12px;align-items:center}
+.youth-heading small{color:#9bf0a5;font-weight:800;letter-spacing:.06em}
+.youth-heading h1{margin:2px 0;font-size:clamp(18px,3vw,28px);color:#ffe35a;text-shadow:0 2px 0 #b14a00}
+.youth-challenge{margin:4px 0 0;font-weight:700}
+.youth-body{display:grid;grid-template-columns:minmax(180px,1fr) 2fr;gap:12px;margin-top:12px}
+@media (max-width:640px){.youth-body{grid-template-columns:1fr}}
+.youth-difficulties{display:flex;flex-direction:column;gap:8px}
+.youth-difficulty{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px;border-radius:10px;border:2px solid #3f6b42;background:#243623;color:inherit;cursor:pointer}
+.youth-difficulty[aria-pressed="true"]{border-color:#ffe35a;background:#34502f}
+.youth-difficulty small{opacity:.85;font-size:12px}
+.youth-stats{width:100%;border-collapse:collapse;font-size:13px}
+.youth-stats th,.youth-stats td{padding:4px 8px;border-bottom:1px solid #3f6b4260;text-align:left}
+.youth-stats td:last-child{color:#7dff9a;font-weight:800;text-align:right}
+.youth-note{opacity:.8;font-size:12px}
+.youth-actions{display:flex;gap:10px;justify-content:flex-end}
+.youth-banner{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:5;padding:6px 14px;border-radius:999px;background:#1d2a1ccc;border:1px solid #5fd06f;color:#eaffea;font-weight:800;pointer-events:none}

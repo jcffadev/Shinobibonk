@@ -2488,3 +2488,14 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Feito o Treinamento do Hagoromo inteiro, conforme a especificação: chaves, tecla C, clareira, hordas, Mega Elite, as 9 ferramentas com troca, botão com o retrato e vagas no cartão.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
 - **Publicado no GitHub.**
+
+## Rodada 98 · 16/11/2026 — Treinamento da Juventude
+
+> Sim, Juventude
+
+**Resposta.**
+
+- Might Guy no mapa: o painel mostra a dificuldade à esquerda e os 20 atributos à direita, com o buff de cada dificuldade.
+- Cinco desafios sorteados: locais, abates, sem ser acertado, vencer o Guy e vencer o Lee. Vencer dá o buff em todos os atributos.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
+- **Publicado no GitHub.**
