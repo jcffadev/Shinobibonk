@@ -28,7 +28,7 @@ import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } f
 import { createEnemyRenderer, ENEMY_FRAME } from './enemyRenderer';
 import { focusOpacity, setFocusView } from './playerFocus';
 import { createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightField';
-import { createChakraFeet, createWater, RIPPLES, waterDistance, waterSurfaceAt } from './water';
+import { createChakraFeet, createSplashes, createWater, RIPPLES, SPLASH, waterDistance, waterSurfaceAt } from './water';
 import { createLandscape } from './landscape';
 import { createMemorialSprite } from './memorialStone';
 import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type ShinraState } from '../game/shinraTensei';
@@ -204,6 +204,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const water=createWater(scene,MAP.id,terrainHeight);runCleanups.push(()=>water.dispose());
     // Rodada 91: ondas dos passos e brilho de chakra nos pés sobre a água.
     const chakraFeet=createChakraFeet(scene);runCleanups.push(()=>chakraFeet.dispose());let rippleTimer=0,wasAirborne=false;
+    // Rodada 99: respingos e ondas dos outros atores na água.
+    const splashes=createSplashes(scene);runCleanups.push(()=>splashes.dispose());let othersRippleTimer=0,othersRippleIndex=0;
     // Rodada 89: paisagem de fundo pintada (panorama da vila) em volta do mapa.
     const landscape=createLandscape(scene,MAP.id);runCleanups.push(()=>landscape.dispose());
     const texture = new THREE.TextureLoader().load('/assets/shinobi-sprites-atlas.png'); texture.colorSpace = THREE.SRGBColorSpace; texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter; texture.generateMipmaps = false;const orochimaruTexture=new THREE.TextureLoader().load('/assets/orochimaru-sprite.svg');orochimaruTexture.colorSpace=THREE.SRGBColorSpace;orochimaruTexture.magFilter=THREE.NearestFilter;orochimaruTexture.minFilter=THREE.NearestFilter;
@@ -1663,7 +1665,14 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         if(shinraDone(shinra)){shinra=null;shinraTech=null;}}
       player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight+shinraHeight;
       {const onWater=waterSurfaceAt(MAP.id,player.position.x,player.position.z)>-Infinity,airborne=jumpHeight>.05;
-        if(onWater&&!airborne){rippleTimer-=dt;if(wasAirborne){water.ripple(player.position.x,player.position.z,1);rippleTimer=RIPPLES.step;}else if(moving&&rippleTimer<=0){water.ripple(player.position.x,player.position.z,.6);rippleTimer=RIPPLES.step;}}
+        if(onWater&&!airborne){rippleTimer-=dt;const footY=standHeight(player.position.x,player.position.z);
+          if(wasAirborne){water.ripple(player.position.x,player.position.z,1);splashes.burst(player.position.x,footY,player.position.z,16,1.4);chakraFeet.step();rippleTimer=RIPPLES.step;}
+          else if(slideTime>0&&rippleTimer<=0){water.ripple(player.position.x,player.position.z,.8);splashes.burst(player.position.x,footY,player.position.z,8,1.1);rippleTimer=.1;}
+          else if(moving&&rippleTimer<=0){water.ripple(player.position.x,player.position.z,.6);splashes.burst(player.position.x,footY,player.position.z,6,.7);chakraFeet.step();rippleTimer=RIPPLES.step;}}
+        // Inimigos e aliados perto também mexem a água (poucos por vez, para não pesar).
+        othersRippleTimer-=dt;if(othersRippleTimer<=0){othersRippleTimer=SPLASH.othersEvery;const actors=[...allyActors,...enemyList.map(e=>e.sprite)];let made=0;
+          for(let k=0;k<actors.length&&made<SPLASH.othersMax;k++){const a=actors[(othersRippleIndex+k)%actors.length];if(Math.hypot(a.position.x-player.position.x,a.position.z-player.position.z)>SPLASH.othersRange)continue;if(waterSurfaceAt(MAP.id,a.position.x,a.position.z)===-Infinity)continue;water.ripple(a.position.x,a.position.z,.35);made++;}
+          othersRippleIndex=(othersRippleIndex+SPLASH.othersMax)%Math.max(1,actors.length);}
         wasAirborne=airborne;chakraFeet.update(player.position.x,player.position.z,onWater&&!airborne,performance.now()/1000,dt);}
       const threat=threatNow();
       if(tune().enemyHp!==appliedEnemyHp){const ratio=tune().enemyHp/Math.max(.01,appliedEnemyHp);for(const e of enemyList)rescaleEnemyHp(e,ratio);appliedEnemyHp=tune().enemyHp;}
@@ -1932,7 +1941,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       }else{
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=true;
         enemyRenderer.sync(enemyList,enemyOpacity,dt);
-      }water.update(performance.now()/1000);landscape.setFogged(!!scene.fog);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
+      }water.update(performance.now()/1000);splashes.update(dt);landscape.setFogged(!!scene.fog);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
     };
     // V-Sync (Gráficos): LIGADO = requestAnimationFrame (um quadro por quadro do monitor). DESLIGADO = spin loop acima da taxa do monitor
     // (melhor esforço no navegador — ele ainda pode limitar; no .exe a sincronização sai direto do motor).

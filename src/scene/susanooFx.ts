@@ -56,6 +56,8 @@ type Rig = {
   owner: THREE.Vector3; dir: THREE.Vector3; target: THREE.Vector3; radius: number; ultimate: boolean; fired: boolean; flameAcc: number;
   samples: THREE.Object3D[];
   painted?: THREE.Sprite;
+  /** Rodada 99: segundo sprite da folha pintada, para fundir um quadro no seguinte. */
+  paintedNext?: THREE.Sprite;
 };
 
 function buildRig(style: SusanooStyle): Rig {
@@ -133,6 +135,11 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
         rig.painted = new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthWrite:false}));
         rig.painted.center.set(.5,.07);
         rig.root.add(rig.painted);
+        // Rodada 99: o quadro seguinte aparece por cima enquanto o atual some (fusão em vez de corte seco).
+        const nextMap = map.clone(); nextMap.needsUpdate = true;
+        rig.paintedNext = new THREE.Sprite(new THREE.SpriteMaterial({map:nextMap,transparent:true,depthWrite:false}));
+        rig.paintedNext.center.set(.5,.07);
+        rig.root.add(rig.paintedNext);
       }
     }
     rig.owner = owner; rig.dir.set(dir.x, 0, dir.z).normalize(); rig.target.copy(target); rig.radius = radius; rig.ultimate = ultimate;
@@ -207,15 +214,22 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       const painted = rig.painted;
       const paintedReady = Boolean((painted?.material.map?.image as HTMLImageElement|undefined)?.width);
       if (painted) {
-        const frame = a < .085 ? 0 : a < .155 ? 1 : a < .23 ? 2 : 3;
-        painted.visible = paintedReady;
-        painted.material.map!.offset.set((frame%2)*.5,frame<2?.5:0);
-        painted.material.opacity = fade*.92;
-        painted.position.set(0,.28,-.25);
-        painted.scale.setScalar(5.6);
+        // Rodada 99 (pedido do usuário: "o Susano'o… você tem que fazer uma animação dela mais bonitinha, aquilo é só
+        // esboço"): os 4 quadros (costelas → armadura → lâminas cruzadas → golpe) se fundem um no outro; o Susanoo SOBE do
+        // chão crescendo, respira, avança no golpe e dissolve subindo. O acerto continua em 0,22 s.
+        const look = susanooPaintedLook(a, T);
+        const place = (sprite: THREE.Sprite, frame: number, alpha: number) => {
+          sprite.visible = paintedReady && alpha > .01;
+          sprite.material.map!.offset.set((frame % 2) * .5, frame < 2 ? .5 : 0);
+          sprite.material.opacity = alpha * fade * .95;
+          sprite.position.set(0, look.rise, -.25 + look.lunge);
+          sprite.scale.setScalar(look.size);
+        };
+        place(painted, look.frame, 1 - look.blend);
+        if (rig.paintedNext) place(rig.paintedNext, Math.min(3, look.frame + 1), look.frame < 3 ? look.blend : 0);
       }
       for (const m of rig.mats) {
-        m.uniforms.opacity.value = fade*(paintedReady?.22:1);
+        m.uniforms.opacity.value = fade*(paintedReady?.12:1);
         m.uniforms.time.value = time;
       }
       // Chamas de chakra nas bordas da silhueta.
@@ -229,12 +243,14 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
         fx.emitRaw(true, tmp.x, tmp.y, tmp.z, (Math.random() - .5) * .4, 1.2 + Math.random() * 1.4, (Math.random() - .5) * .4, .45, .45 * s, .12, Math.random() < .3 ? core : mid, .75, edge, 0, FLAME, 0, 0);
       }
       if (a < .05) fx.emitRaw(true, o.x, o.y + .4, o.z, 0, 0, 0, .25, 1.4 * s, 2.4 * s, core, .7, mid, 0, GLOW, 0, 0);
+      // Rodada 99: rajada de chamas de chakra no chão enquanto o Susanoo se forma.
+      if (rig.painted && a < .18) for (let i = 0; i < 3; i++) { const ang = Math.random() * 6.283, r = (.4 + Math.random() * 1.2) * s; fx.emitRaw(true, o.x + Math.cos(ang) * r, ground(o.x, o.z) + .1, o.z + Math.sin(ang) * r, 0, 2.2 + Math.random() * 1.6, 0, .55, .5 * s, .1, Math.random() < .4 ? core : mid, .8, edge, 0, FLAME, 0, 0); }
       void camera;
     }
   }
   function setHidden(v: boolean) { hidden = v; if (v) for (const rig of rigs.values()) { rig.active = false; rig.root.visible = false; } }
   function clear() { for (const rig of rigs.values()) { rig.active = false; rig.root.visible = false; } }
-  function dispose() { for (const rig of rigs.values()) { scene.remove(rig.root); rig.mats.forEach(m => m.dispose()); rig.painted?.material.map?.dispose(); rig.painted?.material.dispose(); } rigs.clear(); }
+  function dispose() { for (const rig of rigs.values()) { scene.remove(rig.root); rig.mats.forEach(m => m.dispose()); rig.painted?.material.map?.dispose(); rig.painted?.material.dispose(); rig.paintedNext?.material.map?.dispose(); rig.paintedNext?.material.dispose(); } rigs.clear(); }
   const active = () => [...rigs.values()].filter(r => r.active).map(r => ({ style: r.style, age: +r.age.toFixed(2), scale: +r.scale.toFixed(2) }));
   return { trigger, update, setHidden, clear, dispose, active };
 }
@@ -242,3 +258,24 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
 // Ajustes na última partícula emitida (o módulo de partículas expõe só emitRaw para o Susanoo).
 function setAxis(fx: ParticleFx, x: number, y: number, z: number) { fx.lastAxis(x, y, z); }
 function setStretch(fx: ParticleFx, v: number) { fx.lastStretch(v); }
+
+/**
+ * Rodada 99: aparência da folha pintada do Susanoo no instante `a` (de `T` s de vida). Lógica pura (testada).
+ * Quadros: 0 costelas · 1 armadura · 2 lâminas cruzadas · 3 golpe. `blend` = quanto do quadro seguinte já aparece.
+ */
+export const SUSANOO_FRAMES = [0, .09, .17, .22] as const;
+export function susanooPaintedLook(a: number, T: number) {
+  const smooth = (v: number) => { const x = Math.min(1, Math.max(0, v)); return x * x * (3 - 2 * x); };
+  let frame = 0;
+  for (let i = SUSANOO_FRAMES.length - 1; i >= 0; i--) if (a >= SUSANOO_FRAMES[i]) { frame = i; break; }
+  const next = SUSANOO_FRAMES[frame + 1];
+  const blend = next === undefined ? 0 : smooth((a - (next - .045)) / .045);
+  const grow = smooth(a / .2), strike = smooth((a - .2) / .12) * (1 - smooth((a - .5) / .25));
+  const leaving = smooth((a - (T - .3)) / .3);
+  return {
+    frame, blend,
+    size: (4.3 + 1.3 * grow) * (1 + .02 * Math.sin(a * 11)) * (1 + .05 * strike),
+    rise: -.7 + .98 * grow + .9 * leaving,
+    lunge: .45 * strike,
+  };
+}

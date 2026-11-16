@@ -378,3 +378,27 @@ test('carregamento: chão pintado pela grade de alturas fica igual à fórmula e
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.ok(canvas.includes('createGroundMaterial(MAP,terrainHeight)') && canvas.includes(',RENDERED_GROUND_SIZE/2);'), 'o jogo usa a grade');
 });
+
+
+test('Susanoo do Madara: quadros se fundem, sobe do chão, avança no golpe e dissolve subindo (rodada 99)', async () => {
+  const { susanooPaintedLook, SUSANOO_FRAMES } = await load('/src/scene/susanooFx.ts');
+  assert.deepEqual([...SUSANOO_FRAMES], [0, .09, .17, .22]);
+  assert.equal(susanooPaintedLook(0, 1).frame, 0); assert.equal(susanooPaintedLook(.3, 1).frame, 3, 'golpe a partir de 0,22 s (acerto)');
+  const before = susanooPaintedLook(.08, 1); assert.ok(before.frame === 0 && before.blend > .5 && before.blend < 1, 'fundindo no quadro seguinte');
+  assert.equal(susanooPaintedLook(.5, 1).blend, 0, 'último quadro sem fusão');
+  assert.ok(susanooPaintedLook(0, 1).rise < susanooPaintedLook(.2, 1).rise, 'sobe do chão');
+  assert.ok(susanooPaintedLook(0, 1).size < susanooPaintedLook(.2, 1).size, 'cresce ao se formar');
+  assert.ok(susanooPaintedLook(.32, 1).lunge > .3 && susanooPaintedLook(.05, 1).lunge === 0, 'avança no golpe');
+  assert.ok(susanooPaintedLook(.98, 1).rise > susanooPaintedLook(.6, 1).rise, 'dissolve subindo');
+});
+
+test('água: respingos, ondas de inimigos e aliados e chakra no ritmo dos passos (rodada 99)', async () => {
+  const { RIPPLES, SPLASH } = await load('/src/scene/water.ts');
+  assert.equal(RIPPLES.max, 16); assert.ok(SPLASH.pool >= 120 && SPLASH.othersMax >= 4);
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('splashes.burst(player.position.x,footY,player.position.z,16,1.4)'), 'respingo forte no pouso');
+  assert.ok(canvas.includes('else if(slideTime>0&&rippleTimer<=0){water.ripple('), 'dash na água');
+  assert.ok(canvas.includes("water.ripple(a.position.x,a.position.z,.35);made++;"), 'outros atores fazem ondas');
+  assert.ok(canvas.includes('chakraFeet.step();'), 'chakra pulsa no passo');
+  assert.ok(canvas.includes('splashes.update(dt);'));
+});

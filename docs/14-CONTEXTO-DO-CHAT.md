@@ -2499,3 +2499,15 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Cinco desafios sorteados: locais, abates, sem ser acertado, vencer o Guy e vencer o Lee. Vencer dá o buff em todos os atributos.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
 - **Publicado no GitHub.**
+
+## Rodada 99 · 16/11/2026 — água e Susanoo
+
+> Sim, água e jutsus
+
+**Resposta.**
+
+- Água com respingos, ondas de inimigos e aliados, chakra no ritmo dos passos e margem molhada.
+- Susanoo do Madara com animação mais bonita: os quadros se fundem, ele sobe do chão, avança no golpe e dissolve subindo.
+- Sasuke e Itachi precisam de arte pintada própria (pedido registrado).
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
+- **Publicado no GitHub.**

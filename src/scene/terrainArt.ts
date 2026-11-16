@@ -209,6 +209,9 @@ export function paintGround(map: GameMap, ground: (x: number, z: number) => numb
         shade *= joint ? .72 : .93 + seed(Math.floor(i / 8), row) * .16;
       } else if (river) {
         shade *= .78 + .22 * fleck;
+      } else if (shore) {
+        // Rodada 99: areia molhada colada à água.
+        shade *= shoreDistance < .6 ? .78 : .97;
       } else if (stone) {
         shade *= (h0 * 4.2) % 1 < .5 ? .84 : 1.02;
       } else if (!onPath && fleck > .94) shade += .14;

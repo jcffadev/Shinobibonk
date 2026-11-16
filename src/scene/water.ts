@@ -18,7 +18,10 @@ export type WaterBody =
  * PARA O CODEX APRIMORAR: respingos em partículas ao correr/dash, ondas de aliados e inimigos, anel de chakra pulsando no
  * ritmo dos passos e arte própria do brilho (hoje é um disco aditivo procedural).
  */
-export const RIPPLES = { max: 8, life: 1.6, speed: 2.4, step: .32 } as const;
+/** Rodada 99: 16 ondas ao mesmo tempo (o jogador, aliados e inimigos que passam pela água). */
+export const RIPPLES = { max: 16, life: 1.6, speed: 2.4, step: .32 } as const;
+/** Rodada 99: respingos (gotas) ao correr, no dash e no pouso; ondas dos outros atores a até `othersRange` m. */
+export const SPLASH = { pool: 180, gravity: 9, life: .7, othersEvery: .45, othersRange: 22, othersMax: 6 } as const;
 
 /** Raio da frente da onda `age` segundos depois do passo (0 quando já sumiu). */
 export const rippleRadius = (age: number) => age < 0 || age > RIPPLES.life ? 0 : .15 + age * RIPPLES.speed;
@@ -167,18 +170,62 @@ export function createChakraFeet(scene: THREE.Scene) {
   const mesh = new THREE.Mesh(new THREE.RingGeometry(.12, .42, 24), material);
   mesh.rotation.x = -Math.PI / 2; mesh.renderOrder = 2; mesh.visible = false;
   scene.add(mesh);
-  let glow = 0;
+  let glow = 0, flash = 0;
   return {
+    /** Rodada 99: pulso a cada passo na água (o anel de chakra acompanha o ritmo dos pés). */
+    step() { flash = 1; },
     /** `onWater`: pés na superfície; `time` em segundos para o pulso. */
     update(x: number, z: number, onWater: boolean, time: number, dt: number) {
       glow = THREE.MathUtils.damp(glow, onWater ? 1 : 0, 10, dt);
       mesh.visible = glow > .02;
       if (!mesh.visible) return;
       mesh.position.set(x, WATER.level + .03, z);
-      const pulse = 1 + .12 * Math.sin(time * 9);
+      flash = Math.max(0, flash - dt * 4);
+      const pulse = (1 + .12 * Math.sin(time * 9)) * (1 + .35 * flash);
       mesh.scale.setScalar(pulse);
-      material.opacity = .55 * glow;
+      material.opacity = Math.min(.9, (.55 + .3 * flash) * glow);
     },
     dispose() { scene.remove(mesh); mesh.geometry.dispose(); material.dispose(); },
+  };
+}
+
+/** Rodada 99: gotas de água (pontos) que saltam e caem; um único objeto para todos os respingos. */
+export function createSplashes(scene: THREE.Scene) {
+  const n = SPLASH.pool, positions = new Float32Array(n * 3), velocity = new Float32Array(n * 3), life = new Float32Array(n);
+  positions.fill(-9999);
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const material = new THREE.PointsMaterial({ color: '#dff6ff', size: .14, transparent: true, opacity: .9, depthWrite: false });
+  const points = new THREE.Points(geometry, material);
+  points.frustumCulled = false; points.renderOrder = 2;
+  scene.add(points);
+  let next = 0, alive = 0;
+  return {
+    /** `count` gotas a partir de (x, y, z); `power` 0–1,5 (passo .6, pouso 1,4). */
+    burst(x: number, y: number, z: number, count: number, power = 1) {
+      for (let k = 0; k < count; k++) {
+        const i = next; next = (next + 1) % n;
+        const angle = Math.random() * Math.PI * 2, out = (.6 + Math.random() * 1.2) * power;
+        positions[i * 3] = x; positions[i * 3 + 1] = y + .05; positions[i * 3 + 2] = z;
+        velocity[i * 3] = Math.cos(angle) * out; velocity[i * 3 + 1] = (1.8 + Math.random() * 1.6) * power; velocity[i * 3 + 2] = Math.sin(angle) * out;
+        if (life[i] <= 0) alive++;
+        life[i] = SPLASH.life * (.7 + Math.random() * .5);
+      }
+      geometry.attributes.position.needsUpdate = true;
+    },
+    update(dt: number) {
+      if (!alive) return;
+      alive = 0;
+      for (let i = 0; i < n; i++) {
+        if (life[i] <= 0) continue;
+        life[i] -= dt;
+        if (life[i] <= 0) { positions[i * 3 + 1] = -9999; continue; }
+        alive++;
+        velocity[i * 3 + 1] -= SPLASH.gravity * dt;
+        positions[i * 3] += velocity[i * 3] * dt; positions[i * 3 + 1] += velocity[i * 3 + 1] * dt; positions[i * 3 + 2] += velocity[i * 3 + 2] * dt;
+      }
+      geometry.attributes.position.needsUpdate = true;
+    },
+    dispose() { scene.remove(points); geometry.dispose(); material.dispose(); },
   };
 }

@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 16/11/2026 · Água com respingos e Susanoo do Madara mais bonito (Rodada 99)
+
+- **Pedido do usuário:** "Sim, água e jutsus". Fila do Codex: refinar a água (respingos, atores que atravessam, chakra nos pés) e revisar as animações, começando pelo Susanoo: "o claude montou a animação dele via código, mas você tem que fazer uma animação dela mais bonitinha, aquilo é só esboço".
+- **Água** (`src/scene/water.ts`):
+  - **Respingos** (`createSplashes`): gotas que saltam e caem, num único objeto. Cada passo dá 6 gotas, o dash 8 a cada 0,1 s e o pouso de um pulo 16, mais fortes.
+  - **Ondas dos outros:** inimigos e aliados a até 22 m que estão na água também fazem ondas (até 6 a cada 0,45 s, para não pesar). Agora são até 16 ondas ao mesmo tempo.
+  - **Chakra no ritmo:** o anel de chakra dos pés pulsa a cada passo.
+  - **Margem:** faixa de areia molhada (mais escura) colada à água.
+- **Susanoo do Madara** (`susanooFx.ts`, `susanooPaintedLook`):
+  - Os 4 quadros da folha pintada (costelas → armadura → lâminas cruzadas → golpe) agora se **fundem** um no outro, em vez de trocar de uma vez.
+  - Ele **sobe do chão crescendo**, com uma rajada de chamas de chakra, respira, **avança no golpe** e **dissolve subindo**.
+  - O esqueleto procedural ficou mais apagado por trás da arte. O momento do acerto (0,22 s) não mudou.
+- **Sasuke e Itachi** continuam com o Susanoo procedural, porque só existe arte pintada do Madara. Pedido de arte: folhas de 4 quadros no mesmo formato de `susanoo-madara-v1.png`:
+  - Sasuke: roxo, com arco e flecha;
+  - Itachi: laranja, com a Espada de Totsuka e o Espelho de Yata.
+- **Testes:** 2 testes novos (o mínimo subiu para 204) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver os respingos e as ondas de outros atores, a margem molhada e o Susanoo do Madara na tela.
+
 ## 16/11/2026 · Treinamento da Juventude (Rodada 98)
 
 - **Pedido do usuário** (docs/13 item 47): "Terá Might Guy no Mapa como NPC… Texto: DEIXE A JUVENTUDE EXPLODIR EM SEU CORAÇÃO · Tabela · Esquerda seletor de dificuldade · Fácil, Normal, Difícil · Direita TODOS OS ATRIBUTOS do jogo, eles escalam a porcentagem do buff por dificuldade". Os desafios pedidos foram: locais marcados, abates, não ser acertado, vencer o Guy e vencer o Lee.
