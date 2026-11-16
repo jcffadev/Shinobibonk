@@ -2452,3 +2452,14 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > As bijuu não estão aparecendo os sprites delas na luta final... precisamos arrumar
 
 **Resposta.** A arena posiciona a entrada na frente da câmera, espera o carregamento do atlas e conserva a opacidade própria da animação. Se a folha falhar, usa a arte de reserva da mesma bijū. A retomada restaura o chefe e seus pontos de vida. As nove folhas foram conferidas por código. A verificação na tela ficou pendente.
+
+
+## 15/11/2026 — entrega das prévias dos mapas
+
+> COmoo ficou a criação dos mapas
+>
+> Me envie os mapas
+>
+> Você fez o mapa igual as fotos de escolha do mapa pra jogar, certo?
+
+**Resposta.** As fotos de seleção foram usadas como referência de composição. As quatro primeiras prévias do terreno e do cenário em 3D foram entregues com comparação lado a lado e um pacote para revisão. A etapa jogável permanece pendente.

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 15/11/2026 · Prévias de composição das quatro vilas
+
+- Montadas quatro cenas isoladas em projeção 3D para Konoha, Suna, Iwa e Kiri, com os atlas do jogo e a imagem de seleção de cada vila como referência de composição. As comparações lado a lado e os renders foram entregues no chat. A integração ao jogo fica para depois da revisão visual.
+- O protótipo usa campo de visão de 60° e zoom 22, com giro e inclinação por enquadramento. Colisões, escalada, eventos e água em movimento ficam para a versão jogável.
+- TypeScript, verificação de regras e build passaram.
+
+
 ## 15/11/2026 · Sprite da bijū na arena final
 
 - A bijū surge a 7 m à frente da câmera e a animação de entrada começa quando a folha está pronta. O fade genérico dos inimigos deixa de escrever na opacidade da bijū. Se o atlas dianteiro falhar, há imagem de reserva da mesma bijū.
