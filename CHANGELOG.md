@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 16/11/2026 · Revisão de jutsus: efeitos próprios no lugar do genérico (Rodada 100)
+
+- **Pedido do usuário:** "Revisar outros jutsus".
+- **Medido:** 39 de 221 técnicas só tinham o efeito genérico do elemento. 16 ganharam o efeito do atlas de batalha que combina com a obra:
+  - **Areia do Gaara** (Agulhas, Garra e Onda de Areia): agora usam o efeito de areia; antes usavam o pó de ouro do Rasa.
+  - **Esferas da Busca da Verdade e Barreira Espaço-Tempo:** vazio.
+  - **Yamata no Jutsu e Serpentes Ocultas:** veneno.
+  - **Possessão em Massa e Agulhas da Sombra:** sombras.
+  - **Punho Gentil e Punhos dos Leões Gêmeos:** palmas.
+  - **Chuva de Senbon:** lâminas.
+  - **Chutes, Combo do Leão e Punho da Folha:** impacto de Taijutsu.
+- O restante e o que ainda falta estão em `docs/24` → "Revisão de 16/11/2026".
+- **Testes:** 1 teste novo (o mínimo subiu para 205) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver os efeitos na partida.
+
 ## 16/11/2026 · Água com respingos e Susanoo do Madara mais bonito (Rodada 99)
 
 - **Pedido do usuário:** "Sim, água e jutsus". Fila do Codex: refinar a água (respingos, atores que atravessam, chakra nos pés) e revisar as animações, começando pelo Susanoo: "o claude montou a animação dele via código, mas você tem que fazer uma animação dela mais bonitinha, aquilo é só esboço".

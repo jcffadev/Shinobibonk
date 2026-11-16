@@ -2511,3 +2511,9 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Sasuke e Itachi precisam de arte pintada própria (pedido registrado).
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
 - **Publicado no GitHub.**
+
+## Rodada 100 · 16/11/2026 — revisão de jutsus
+
+> Revisar outros jutsus
+
+**Resposta.** Das 221 técnicas, 39 só tinham o efeito genérico do elemento. 16 ganharam o efeito do atlas que combina com a obra; as demais já têm código próprio ou o efeito do elemento já é o certo (lista em docs/24). **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

@@ -225,3 +225,18 @@ O catálogo inspecionado contém 221 técnicas de pool distintas e 112 nomes de 
 | Dōjutsu | [Mangekyō](https://naruto.fandom.com/wiki/Mangeky%C5%8D_Sharingan) e [Shisui](https://naruto-official.com/en/news/01_1625) | Tomoe e lâminas próprios de cada usuário. Arte vetorial original no padrão dos ícones. |
 
 Receitas de linhagem não elemental e pares apenas propostos pela wiki ficam para revisão; não surgem automaticamente pelo nome do elemento. A arte da execução usa fases de malha e partículas. Cada animação autoral e folha de selos ainda precisa de conferência visual em missão.
+
+## Revisão de 16/11/2026 (rodada 100)
+
+Medido no código: 221 técnicas no pool, 39 sem efeito com nome (só o genérico do elemento).
+- **Ligadas a um efeito do atlas** (`techniqueVisualProfiles.ts`):
+  - Agulhas, Garra e Onda de Areia: efeito de areia (antes, pó de ouro).
+  - Esferas da Busca da Verdade e Barreira Espaço-Tempo: vazio.
+  - Yamata no Jutsu e Serpentes Ocultas: veneno.
+  - Possessão em Massa e Agulhas da Sombra: sombras.
+  - Punho Gentil e Punhos dos Leões Gêmeos: palmas.
+  - Chuva de Senbon: lâminas.
+  - Chutes, Combo do Leão e Punho da Folha: impacto de Taijutsu.
+- **Já têm código próprio** fora do atlas: Rasengan, Rasenshuriken, Shuriken, Kunai, Kage Bunshin, Substituição, Susanoo, Kuroari e Invocação do Sapo.
+- **Seguem no efeito do elemento:** técnicas de Terra (impacto) e de Raio (relâmpago), cujo efeito do elemento já é o certo, e Agulhas de Cabelo, Agulhas de Karasu e Barras de Chakra.
+- **Arte pendente:** Susanoo de Sasuke e Itachi (folhas pintadas como a do Madara).

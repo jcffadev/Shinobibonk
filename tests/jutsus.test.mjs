@@ -51,3 +51,19 @@ test('o mesmo jutsu usa o dōjutsu correto para fase e shinobi',()=>{
   assert.equal(techniqueEye('Flecha de Indra','sasuke-rinnegan'),'rinnegan-sasuke');
   assert.equal(techniqueEye('Byakugan: Campo Sensorial','ao'),'byakugan');
 });
+
+
+test('jutsus revisados: técnicas sem efeito próprio ganham o efeito do atlas que combina com a obra (rodada 100)', async () => {
+  const v = await import('../src/game/techniqueVisualProfiles.ts');
+  const cell = name => v.battleEffectCell({ name, element: 'Neutro' });
+  for (const [name, expected] of [
+    ['Agulhas de Areia', 7], ['Garra de Areia', 7], ['Onda de Areia', 7],
+    ['Esferas da Busca da Verdade', 16], ['Barreira Espaço-Tempo', 16],
+    ['Yamata no Jutsu', 22], ['Serpentes Ocultas', 22],
+    ['Possessão em Massa', 10], ['Agulhas da Sombra', 10],
+    ['Punho Gentil', 12], ['Punhos dos Leões Gêmeos', 12], ['Chuva de Senbon', 18],
+    ['Chute Ascendente', 9], ['Chute Giratório', 9], ['Combo do Leão', 9], ['Punho da Folha', 9],
+  ]) { assert.equal(cell(name), expected, name); assert.ok(v.hasNamedBattleEffect(name), name + ' tem efeito próprio'); }
+  assert.equal(cell('Muralha de Ouro'), 20, 'ouro do Rasa continua no pó de ouro');
+  assert.equal(cell('Caixão de Areia'), 7);
+});

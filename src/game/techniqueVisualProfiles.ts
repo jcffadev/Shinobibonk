@@ -47,6 +47,15 @@ const profiles:readonly (readonly [RegExp,number])[]=[
   [/Espelhos|Gelo/,17],
   [/Caixão|Sepultamento|Funeral do Deserto|Deserto Imperial/,7],
   [/Pó de Ouro|Muralha de Ouro|Funeral de Ouro/,20],
+  // Rodada 100 (pedido do usuário: "Revisar outros jutsus"): técnicas que só tinham o efeito genérico do elemento ganham o
+  // efeito do atlas que combina com a obra (Narutopedia). A areia do Gaara usava o pó de ouro do Rasa.
+  [/de Areia$/,7],
+  [/Esferas da Busca da Verdade|Barreira Espaço-Tempo/,16],
+  [/Yamata no Jutsu|Serpentes Ocultas/,22],
+  [/Possessão em Massa|Agulhas da Sombra/,10],
+  [/Punho Gentil|Leões Gêmeos/,12],
+  [/Chuva de Senbon/,18],
+  [/^Chute (Ascendente|Giratório)$|Combo do Leão|Punho da Folha/,9],
   [/Palma|Kaiten|Trigramas|Mil Braços|Byakugan/,12],
   [/Corrente|Correntes|Adamantina/,13],
   [/Chōjū Giga|Corvos/,21],
