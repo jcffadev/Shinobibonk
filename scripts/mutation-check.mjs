@@ -77,6 +77,8 @@ const MUTATIONS = [
   { regra: "Susanoo sobe do chão ao se formar", arquivo: 'src/scene/susanooFx.ts', de: "rise: -.7 + .98 * grow + .9 * leaving,", para: "rise: .28 + .9 * leaving," },
   { regra: "respingo forte no pouso na água", arquivo: 'src/scene/GameCanvas.tsx', de: "splashes.burst(player.position.x,footY,player.position.z,16,1.4)", para: "splashes.burst(player.position.x,footY,player.position.z,0,1.4)" },
   { regra: 'areia do Gaara com efeito de areia', arquivo: 'src/game/techniqueVisualProfiles.ts', de: '  [/de Areia$/,7],', para: '' },
+  { regra: "gelo do Haku congela", arquivo: 'src/game/statusProfiles.ts', de: "'Senbon de Gelo': { status: 'Congelar', statusChance: .22 },", para: "'Senbon de Gelo': { status: 'Lentidão', statusChance: .22 }," },
+  { regra: "golpes sem status ganham status", arquivo: 'src/game/statusProfiles.ts', de: "  'Impacto de Sakura': { status: 'Atordoar', statusChance: .3 },\n", para: "" },
   { regra: 'farol do pergaminho grátis é alto', arquivo: 'src/scene/rewardBeacon.ts', de: 'height: 30,', para: 'height: 4,' },
   { regra: 'luz do caído não estoura', arquivo: 'src/scene/fallenShinobi.ts', de: '(.52 + .2 * pulse) * grounded', para: '(1.2 + .2 * pulse) * grounded' },
   { regra: 'piso de fonte de 10px na HUD', arquivo: 'src/hud-dock.css', de: 'font-size:11.5px', para: 'font-size:7px' },

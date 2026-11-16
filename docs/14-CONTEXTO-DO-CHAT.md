@@ -2531,3 +2531,15 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - O cartão completo no modelo de referência fica com a tarefa das fusões.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
 - **Publicado no GitHub.**
+
+## Rodada 102 · 16/11/2026 — equilíbrio dos status
+
+> me liste quantas habilidades temos que da critico, quantas que da algum status de crowd control/status que pode dar dano como veneno, queimadura, congelar.
+
+> Sim, equilibrar
+
+> Técnicas de gelo, igual Haku ou... kekkei genkais, elementos que misturados formariam gelo, podem congelar.
+
+> Nagato/Pain usam magnetismo, então suas habilidades deveriam depender bastante disso
+
+**Resposta.** Contagem: 59 de 216 só davam crítico. Agora só 7 golpes de precisão ficam no crítico; as outras ganharam status da obra, o gelo congela e Pain e Nagato puxam e repelem (tabela no CHANGELOG). **Testes:** tipos, testes e build. **Publicado no GitHub.**

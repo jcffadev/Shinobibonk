@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## 16/11/2026 · Equilíbrio dos status: menos crítico, gelo que congela e magnetismo do Pain (Rodada 102)
+
+- **Pedidos do usuário:**
+  - "Sim, equilibrar" (depois da contagem: 59 de 216 técnicas só davam crítico);
+  - "Técnicas de gelo, igual Haku ou... kekkei genkais, elementos que misturados formariam gelo, podem congelar";
+  - "Nagato/Pain usam magnetismo, então suas habilidades deveriam depender bastante disso".
+- **Perfis de status** (`src/game/statusProfiles.ts`, aplicados uma vez em todas as técnicas, em `heroes.ts`):
+  - **Ficam só no crítico 7 golpes de precisão:** Shuriken, as três Kunais, Espada Kusanagi, Sete Espadas e Bisturi de Chakra.
+  - **As outras 52 ganham o status que combina com a obra:**
+    - Taijutsu de impacto atordoa (Lótus, Impacto de Sakura, Chute Celestial);
+    - os de giro e vento empurram (Kaiten, Furacão da Folha, Palma de Ar);
+    - os Punhos Gentis paralisam;
+    - Água empurra ou deixa lento;
+    - Terra atordoa ou deixa lento;
+    - as cobras do Orochimaru e as marionetes de veneno envenenam;
+    - Bijūdama, Kunai Explosiva e Tigre do Meio-Dia queimam;
+    - Senbon com Sinos faz dormir.
+  - **Gelo congela:** Senbon de Gelo e Espelhos Demoníacos de Gelo, do Haku. A fusão Hyōton (Água + Vento) já congelava.
+  - **Magnetismo do Pain e do Nagato:**
+    - Barras de Chakra e Receptores de Chakra puxam;
+    - Invocação dos Caminhos repele;
+    - continuam Bansho Tenin (puxa), Chibaku Tensei (núcleo) e Shinra Tensei (repele).
+- **Antes → agora:**
+
+  | Status | Antes | Agora |
+  |---|---|---|
+  | Só crítico | 59 | 7 |
+  | Paralisar | 41 | 53 |
+  | Empurrar | 37 | 51 |
+  | Atordoar | 33 | 49 |
+  | Lentidão | 29 | 34 |
+  | Queimadura | 13 | 16 |
+  | Veneno | 3 | 7 |
+  | Dormir | 4 | 5 |
+  | Gravidade | 2 | 5 |
+  | Congelar | 0 | 2 |
+
+- **Testes:** 1 teste novo (o mínimo subiu para 208) e 2 mutações novas, verificadas à mão. Valores propostos, a calibrar no simulador. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 16/11/2026 · Cartões de pílula e item e catálogo de fusões enquadrado (Rodada 101)
 
 - **Pedidos do usuário:**

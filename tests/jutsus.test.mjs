@@ -67,3 +67,18 @@ test('jutsus revisados: técnicas sem efeito próprio ganham o efeito do atlas q
   assert.equal(cell('Muralha de Ouro'), 20, 'ouro do Rasa continua no pó de ouro');
   assert.equal(cell('Caixão de Areia'), 7);
 });
+
+test('equilíbrio dos status: só golpes de precisão ficam no crítico; gelo congela; Pain e Nagato usam magnetismo (rodada 102)', async () => {
+  const { CRIT_ONLY } = await import('../src/game/statusProfiles.ts');
+  const all = new Set(HEROES.map(h => h.id)), seen = new Map();
+  for (const hero of HEROES) for (const t of skillPool(hero.id, all)) if (!seen.has(t.name)) seen.set(t.name, t);
+  const has = t => (t.status && t.statusChance > 0) || (t.secondaryStatus && t.secondaryStatusChance) || t.burn || t.poison || t.gravity;
+  const critOnly = [...seen.values()].filter(t => !t.setup && !has(t)).map(t => t.name).sort();
+  assert.deepEqual(critOnly, [...CRIT_ONLY].sort(), 'só os golpes de precisão sem status');
+  const tech = name => seen.get(name) ?? HEROES.flatMap(h => h.techniques).find(t => t.name === name);
+  assert.equal(tech('Senbon de Gelo').status, 'Congelar'); assert.equal(tech('Espelhos Demoníacos de Gelo').status, 'Congelar');
+  const pain = HERO_BY_ID.pain.techniques.filter(t => t.gravity).length;
+  assert.ok(pain >= 3, 'Pain com magnetismo em 3 técnicas');
+  assert.equal(tech('Receptores de Chakra').gravity, 'pull'); assert.equal(tech('Invocação dos Caminhos').gravity, 'push');
+  assert.ok(tech('Bijūdama').burn && tech('Yamata no Jutsu').poison && tech('Impacto de Sakura').status === 'Atordoar');
+});

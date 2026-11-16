@@ -1,6 +1,7 @@
 import type { Bonuses } from './catalog';
 import { EXPANSION_BY_ID, ROSTER_EXPANSION } from './rosterExpansion.ts';
 import { lineageNatures } from './techniqueMerge.ts';
+import { applyStatusProfile } from './statusProfiles.ts';
 export type School='Taijutsu'|'Ninjutsu'|'Genjutsu';
 export type Element='Neutro'|'Fogo'|'Água'|'Vento'|'Terra'|'Raio'|'Madeira'|'Areia'|'Sombra'|'Sábio';
 export type Shape='Projétil'|'Corpo a corpo'|'Cone'|'Onda'|'Em V'|'Linha'|'Área'|'Órbita'|'Buff';
@@ -462,3 +463,7 @@ export function heroAffinity(heroId:string):Element{const hero=HERO_BY_ID[heroId
 export function sandSynergy(allies:readonly string[]){const families=allies.map(familyOf);return ['gaara','temari','kankuro'].every(id=>families.includes(id));}
 export const NARUTO_FORMS=[{level:1,name:'Academia',file:'naruto-academia'},{level:10,name:'Clássico',file:'naruto-classico'},{level:25,name:'Shippuden',file:'naruto-shippuden'},{level:50,name:'Manto da Kyuubi',file:'naruto-kyuubi'}];
 export function narutoForm(level:number){return [...NARUTO_FORMS].reverse().find(f=>level>=f.level)??NARUTO_FORMS[0];}
+
+// Rodada 102: equilíbrio dos status (src/game/statusProfiles.ts), aplicado uma vez em todas as técnicas do jogo.
+for(const hero of HEROES)for(const technique of hero.techniques)applyStatusProfile(technique);
+for(const technique of ACADEMY)applyStatusProfile(technique);
