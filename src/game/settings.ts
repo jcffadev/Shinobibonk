@@ -13,9 +13,9 @@ export type PickupFx = 'completos' | 'simples' | 'nenhum';
 /** Rodada 85: perspectiva (padrão, horizonte visível) ou a vista ortográfica antiga. Vale a partir da próxima missão. */
 export type CameraProjection = 'perspectiva' | 'ortografica';
 /** Ações remapeáveis. O valor é a tecla (event.key em minúsculas; ' ' = Espaço). Esc não é remapeável. */
-export type KeyAction = 'up' | 'down' | 'left' | 'right' | 'jump' | 'slide' | 'interact' | 'ultimate' | 'autoUlt' | 'bigMap' | 'quickMap' | 'sheet' | 'ping' | 'hideFx' | 'reroll' | 'skip' | 'ban';
-export const DEFAULT_KEYS: Record<KeyAction, string> = { up: 'w', down: 's', left: 'a', right: 'd', jump: ' ', slide: 'shift', interact: 'e', ultimate: 'r', autoUlt: 'y', bigMap: 'm', quickMap: 'tab', sheet: 'p', ping: 'g', hideFx: 'h', reroll: 'f', skip: 'x', ban: 'z' };
-export const KEY_LABELS: Record<KeyAction, string> = { up: 'Avançar', down: 'Recuar', left: 'Mover para a esquerda', right: 'Mover para a direita', jump: 'Pular', slide: 'Deslizar', interact: 'Interagir', ultimate: 'Ultimate', autoUlt: 'Ultimate automática', bigMap: 'Mapa grande', quickMap: 'Mapa rápido', sheet: 'Ficha / pausa', ping: 'Marcar um ponto', hideFx: 'Ocultar efeitos e números', reroll: 'Atualizar (subida de nível)', skip: 'Pular (subida de nível)', ban: 'Banir (subida de nível)' };
+export type KeyAction = 'up' | 'down' | 'left' | 'right' | 'jump' | 'slide' | 'interact' | 'ultimate' | 'autoUlt' | 'bigMap' | 'quickMap' | 'sheet' | 'ping' | 'hideFx' | 'reroll' | 'skip' | 'ban' | 'hagoromo';
+export const DEFAULT_KEYS: Record<KeyAction, string> = { up: 'w', down: 's', left: 'a', right: 'd', jump: ' ', slide: 'shift', interact: 'e', ultimate: 'r', autoUlt: 'y', bigMap: 'm', quickMap: 'tab', sheet: 'p', ping: 'g', hideFx: 'h', reroll: 'f', skip: 'x', ban: 'z', hagoromo: 'c' };
+export const KEY_LABELS: Record<KeyAction, string> = { up: 'Avançar', down: 'Recuar', left: 'Mover para a esquerda', right: 'Mover para a direita', jump: 'Pular', slide: 'Deslizar', interact: 'Interagir', ultimate: 'Ultimate', autoUlt: 'Ultimate automática', bigMap: 'Mapa grande', quickMap: 'Mapa rápido', sheet: 'Ficha / pausa', ping: 'Marcar um ponto', hideFx: 'Ocultar efeitos e números', reroll: 'Atualizar (subida de nível)', skip: 'Pular (subida de nível)', ban: 'Banir (subida de nível)', hagoromo: 'Treinamento do Hagoromo' };
 
 export type GameSettings = {
   /** Card/animação de captura (ritual de selamento). Desligado: sela direto com um aviso. */

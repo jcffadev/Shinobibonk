@@ -1,5 +1,43 @@
 # CHANGELOG
 
+## 16/11/2026 · Treinamento do Hagoromo (Rodada 97)
+
+- **Pedido do usuário:** continuar o trabalho do Codex ("Entao faça o restante, deixa aquilo pro codex": os mapas jogáveis das vilas ficam com o Codex). Evento especificado em `docs/01` → "Evento Treinamento do Hagoromo".
+- **Regras** (`src/game/hagoromoTraining.ts`):
+  - **Chave:** 1 a cada 500 abates, até 3. Abates das hordas do evento não contam. No Clássico, depois do chefe da zona, a chave para de recarregar até a próxima zona.
+  - **Raridade sorteada a cada ativação:** Comum 3×50 · Incomum 4×100 · Raro 5×150 · Épico 6×200 · Lendário 7×400. Os pesos da raridade são uma proposta.
+- **Na partida** (`GameCanvas.tsx`):
+  1. A tecla **C** (remapeável) leva o jogador à **clareira do treinamento**: campo plano cercado de floresta, no mesmo ponto (−56, 56) em todos os mapas.
+  2. Durante o evento:
+     - o relógio da zona para;
+     - o surgimento normal, as emboscadas, os encontros de selamento e o clima pausam;
+     - os inimigos do mapa ficam parados.
+  3. As hordas nascem em anel em volta do jogador. Depois da última vem um **Mega Elite**, que não deixa corpo para selar.
+  4. A dificuldade é a da zona com os buffs ativos, e o Final Swarm continua contando.
+  5. No fim, o jogador volta ao ponto onde estava.
+- **Recompensa:**
+  - Escolha de 1 entre 3 **ferramentas do Sábio dos Seis Caminhos**, ou nenhuma (X).
+  - No máximo 3. Com as 3, aparece "Manter?": clicar na nova a dispensa; clicar numa que já tem troca essa pela nova.
+- **As 9 ferramentas** (2 Comum, 2 Incomum, 2 Raro, 2 Épico, 1 Lendário), cada uma com atributo e subefeito. Valores propostos, a calibrar no simulador:
+  - Amuleto de Selamento
+  - Partículas Polares
+  - Shakujō
+  - Espada
+  - Bashōsen
+  - Kōkinjō
+  - Benihisago
+  - Kohaku no Jōhei
+  - Shichiseiken
+- **HUD** (`src/ui/HagoromoButton.tsx`):
+  - Botão ao lado da Ultimate com o retrato do Hagoromo em pixel art (desenhado no código), 3 bolinhas de chave em cima e a tecla embaixo. Com 0 chaves, ele mostra o progresso até os próximos 500 abates.
+  - As ferramentas aparecem em 3 quadradinhos abaixo do nível e do XP no cartão do personagem. Os ícones das ferramentas são provisórios (emoji) até a arte própria.
+- **Salvar:** chaves, progresso e ferramentas entram na partida salva.
+- **Testes:**
+  - `tests/hagoromo.test.mjs` com 6 testes. O mínimo subiu para 198.
+  - 3 mutações novas, verificadas à mão.
+  - **PENDENTE DE VALIDAÇÃO E2E:** jogar o evento inteiro (C, clareira, hordas, Mega Elite, volta, escolha e troca), ver o botão e as vagas e conferir os subefeitos.
+  - O modo **Sobrevivência** ainda não existe em partida. Quando existir, ligar `hagoromoRecharges('sobrevivencia', …)`.
+
 ## 15/11/2026 · Acesso às vilas nos mapas planejados
 
 - Registrado o plano de conectar os acessos às ruas, praças e eventos de cada vila no próprio mapa da missão. Implementação pendente.

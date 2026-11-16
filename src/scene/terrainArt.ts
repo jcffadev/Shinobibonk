@@ -80,9 +80,20 @@ export const LEAF_PLACES = [
 export const LEAF_BUILDINGS = [[0,-12],[-7,-17],[7,-18],[-10,18],[12,19],[-9,-15],[8,-17],[-10,-22],[9,-25],[30,24],[53,24],[0,-52],[-38,-26]] as const;
 const leafPlaceHeight = new Map<number, number>();
 
+/**
+ * Rodada 97: clareira do Treinamento do Hagoromo (campo de treino cercado de floresta). Plana em todos os mapas, longe do
+ * começo, das construções e da água. O jogador é levado para cá durante o evento.
+ */
+export const HAGOROMO_ARENA = { x: -56, z: 56, r: 16 } as const;
+function flattenArena(x: number, z: number, height: number) {
+  const d = Math.hypot(x - HAGOROMO_ARENA.x, z - HAGOROMO_ARENA.z);
+  if (d >= HAGOROMO_ARENA.r + 5) return height;
+  return THREE.MathUtils.lerp(0, height, THREE.MathUtils.smoothstep(d, HAGOROMO_ARENA.r, HAGOROMO_ARENA.r + 5));
+}
+
 export function groundHeight(map: GameMap['id'], x: number, z: number) {
   // Rodada 89: lagos e rios cavados por cima do relevo (src/scene/water.ts).
-  return carveWater(map, x, z, placedGroundHeight(map, x, z));
+  return carveWater(map, x, z, flattenArena(x, z, placedGroundHeight(map, x, z)));
 }
 
 function placedGroundHeight(map: GameMap['id'], x: number, z: number) {

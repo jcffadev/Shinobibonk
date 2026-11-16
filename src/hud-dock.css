@@ -147,3 +147,17 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .game-shell .skill-dock>.ability-bar .ultimate em{position:absolute;bottom:3px;left:0;right:0;margin:0;text-align:center}
 .game-shell .skill-dock .ultimate-auto-mark{left:50%;right:auto;transform:translateX(-50%)}
 @media(max-width:700px){.game-shell .skill-dock{left:auto;right:8px}.game-shell .inventory-corner{left:7px;right:auto}.game-shell .skill-dock>.ability-bar .ultimate{width:55px;height:55px}}
+/* Rodada 97 — Treinamento do Hagoromo: botão com retrato, 3 bolinhas de chave e tecla; ferramentas no cartão do personagem */
+.hagoromo-button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 6px 4px;border-radius:10px;border:2px solid #6b5aa8;background:#241b36;color:#efe7ff;cursor:pointer;opacity:.62;overflow:hidden}
+.hagoromo-button.ready{opacity:1;border-color:#c9b8ff;box-shadow:0 0 10px #8f78e080}
+.hagoromo-button.active{opacity:1;border-color:#ffd64a}
+.hagoromo-button .hagoromo-portrait{image-rendering:pixelated;border-radius:6px;position:relative;z-index:1}
+.hagoromo-button small{font-size:10px;font-weight:800;position:relative;z-index:1}
+.hagoromo-keys{position:absolute;top:2px;left:0;right:0;display:flex;justify-content:center;gap:4px;z-index:2}
+.hagoromo-keys i{width:6px;height:6px;border-radius:50%;border:1px solid #c9b8ff;background:transparent}
+.hagoromo-keys i.on{background:#c9b8ff;box-shadow:0 0 4px #c9b8ff}
+.hagoromo-charge{position:absolute;left:0;right:0;bottom:0;background:#8f78e033;z-index:0}
+.sage-tool-slots{display:flex;gap:4px;margin-top:4px}
+.sage-tool{width:22px;height:22px;display:grid;place-items:center;border-radius:5px;border:1px solid #6b5aa8;background:#241b36;font-size:13px}
+.sage-tool.empty{opacity:.35;border-style:dashed}
+.sage-tool.rarity-comum{border-color:#bfbfbf}.sage-tool.rarity-incomum{border-color:#5cd06a}.sage-tool.rarity-raro{border-color:#4aa3ff}.sage-tool.rarity-épico{border-color:#b56cff}.sage-tool.rarity-lendário{border-color:#ffb43a}

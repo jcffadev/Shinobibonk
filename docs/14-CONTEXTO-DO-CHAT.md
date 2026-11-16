@@ -2470,3 +2470,21 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Vai dar pra entrar dentro das cidades?
 
 **Resposta.** Sim. A proposta para as quatro vilas inclui atravessar a entrada e continuar a missão nas ruas e praças, com NPCs e eventos. As imagens são prévias e essa navegação ainda está pendente.
+
+## Rodada 97 · 16/11/2026 — continuar o trabalho do Codex: Treinamento do Hagoromo
+
+> Você consegue ver o que o Codex estava fazendo e continuar o trabalho?
+
+> Leia toda a documentação.
+
+> voce consegue por essas prévias para eu jogar e testar?
+
+> Entao faça o restante, deixa aquilo pro codex
+
+**Resposta.**
+
+- O Codex tinha feito: teto de 3.000 HP no primeiro Mega Elite e ícone do Chute Giratório; WASD contínuo e dano visível; Emboscada da Akatsuki e roleta com 5 personagens; bijū na arena final; prévias das vilas.
+- As prévias dos mapas eram imagens no chat do Codex, sem código no projeto. Não dá para jogá-las, e os mapas jogáveis ficam com o Codex.
+- Feito o Treinamento do Hagoromo inteiro, conforme a especificação: chaves, tecla C, clareira, hordas, Mega Elite, as 9 ferramentas com troca, botão com o retrato e vagas no cartão.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E** na tela.
+- **Publicado no GitHub.**
