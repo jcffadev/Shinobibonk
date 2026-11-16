@@ -8,7 +8,8 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 |---|---|
 | Primeiro Mega Elite e Chute Giratório | **IMPLEMENTADO E TESTADO POR CÓDIGO.** Teto de 3.000 HP no primeiro natural ou de clima, e PNG dedicado do Chute Giratório nas interfaces. Validação em partida pendente. |
 | WASD, Treinamento e dano recebido | **IMPLEMENTADO.** Confirmar movimento segurado no nível alto com 300+ inimigos, treinamento sem cartas e shurikens fora da invulnerabilidade. |
-| Mapas e obstáculos | **PRÉVIAS ENTREGUES PARA REVISÃO.** Konoha, Suna, Iwa e Kiri em renders externos com comparação à seleção. Pendente transformar as composições aprovadas em mapas jogáveis, com colisões, escalada, água animada e eventos nas ruas. Preservar câmera e movimento atuais. [docs/01](01-CAMERA-MAPAS-EVENTOS.md). |
+| Mapas e obstáculos | **IMPLEMENTADO NA CÓPIA DE VALIDAÇÃO.** Konoha, Suna, Iwa e Kiri com entradas, ruas, praças, pontos de evento, água, pontes e escalada. `mapas_basicos` preserva a versão anterior e os saves antigos a usam na retomada. Pendente conferir visual, eventos e desempenho em partida antes de mover à versão principal. [Processo para novos mapas](development/CRIAR-MAPAS-JOGAVEIS.md). |
+| Mapa Protótipo | **IMPLEMENTADO NA CÓPIA DE VALIDAÇÃO.** A tela inicial abre Konoha em um modo de comparação entre sprite e Naruto 3D, atlas de 1K/4K e benchmark gráfico até 1.600 instâncias. FPS em hardware real pendente. |
 | Água | Refinar leito, margens, ondas, respingos e chakra nos pés, incluindo os atores que atravessam água. Base e próximos passos em [docs/01](01-CAMERA-MAPAS-EVENTOS.md). |
 | Jutsus | Revisar cada técnica e animação, incluindo preparo, selos, trajetória, hit e dissipação. Começar pelo acabamento do Susanoo com as artes e o rig do projeto. [Auditoria](24-AUDITORIA-DE-EFEITOS.md). |
 | Eventos | Implementar Treinamento da Juventude (#47) e Treinamento do Hagoromo (#48) no fluxo da partida. |

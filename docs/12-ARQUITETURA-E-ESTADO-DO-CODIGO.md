@@ -396,3 +396,6 @@ O cliente usa src/game/onlineRanking.ts e a função Netlify em netlify/function
 A rota de hub guide monta GameGuide com as teclas em uso. A página reaproveita maps.ts para fases do clima, npcs.ts para regras de Iruka, Ebisu e Totem e roulette.ts para as casas da Tsunade. A origem do tempo de espera do clima é WEATHER_WAIT em maps.ts. Na descrição de mecânicas, consulte os pontos de entrada de GameCanvas.
 
 O glossário usa src/game/glossary.ts como catálogo pesquisável. A verificação de regras exige cobertura de todos os campos públicos de Stats. O GameGuide renderiza assuntos e exemplos. A barra superior do hub exibe o saldo de Lamens e a rota de prévia estática saiu de Page.
+## Mapas de missão e protótipo em validação
+
+Na branch `vilas-em-validacao`, `GameCanvas` escolhe o layout da missão pelo save. `villageLayout.ts` contém a planta e os pontos de evento. `villageTerrain.ts` e `villageScenery.ts` alimentam altura, materiais e marcos. `villageTraversal.ts` usa a base do obstáculo e sua altura para apoiar o jogador. A tela inicial carrega `src/prototype/` sob demanda e a comparação de gráficos não usa o estado da missão. [Guia dos mapas](development/CRIAR-MAPAS-JOGAVEIS.md).

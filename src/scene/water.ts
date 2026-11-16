@@ -61,9 +61,9 @@ function bodyDistance(body: WaterBody, x: number, z: number) {
 }
 
 /** O corpo d'água mais próximo deste ponto (menor distância normalizada). */
-export function waterDistance(map: MapId, x: number, z: number) {
+export function waterDistance(map: MapId, x: number, z: number, bodies: readonly WaterBody[] = WATER_BODIES[map]) {
   let best = { s: Infinity, outside: Infinity };
-  for (const body of WATER_BODIES[map] ?? []) {
+  for (const body of bodies) {
     const d = bodyDistance(body, x, z);
     if (d.s < best.s) best = d;
   }
@@ -71,16 +71,16 @@ export function waterDistance(map: MapId, x: number, z: number) {
 }
 
 /** Cava o leito e baixa a margem até o nível do chão da água (0), por cima do relevo em terraços. */
-export function carveWater(map: MapId, x: number, z: number, height: number) {
-  const { s, outside } = waterDistance(map, x, z);
+export function carveWater(map: MapId, x: number, z: number, height: number, bodies?: readonly WaterBody[]) {
+  const { s, outside } = waterDistance(map, x, z, bodies);
   if (s < 1) return -WATER.bed * (1 - s * s);
   if (outside >= WATER.bank) return height;
   return THREE.MathUtils.lerp(0, height, THREE.MathUtils.smoothstep(outside, 0, WATER.bank));
 }
 
 /** Altura da superfície da água aqui, ou -Infinity fora da água. */
-export function waterSurfaceAt(map: MapId, x: number, z: number) {
-  const { s } = waterDistance(map, x, z);
+export function waterSurfaceAt(map: MapId, x: number, z: number, bodies?: readonly WaterBody[]) {
+  const { s } = waterDistance(map, x, z, bodies);
   return s < 1 && -WATER.bed * (1 - s * s) < WATER.level ? WATER.level : -Infinity;
 }
 
@@ -88,7 +88,7 @@ export function waterSurfaceAt(map: MapId, x: number, z: number) {
  * Malha da água de cada corpo, com shader animado sobre o MeshStandardMaterial (mantém luz e névoa do clima).
  * `ground` = altura do chão já com o leito cavado; a profundidade de cada vértice decide cor, espuma e transparência.
  */
-export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, z: number) => number) {
+export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, z: number) => number, bodies: readonly WaterBody[] = WATER_BODIES[map]) {
   const meshes: THREE.Mesh[] = [];
   const uniforms = { waterTime: { value: 0 }, waterRipples: { value: Array.from({ length: RIPPLES.max }, () => new THREE.Vector4(0, 0, -99, 0)) } };
   let nextRipple = 0;
@@ -138,10 +138,11 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
       diffuseColor.a = mix(.62, .9, smoothstep(.0, .8, vWaterDepth)) + foam * .1;
     `);
   };
-  for (const body of WATER_BODIES[map] ?? []) {
+  for (const body of bodies) {
+    const bends = body.kind==='river' ? Array.from({length:17},(_,i)=>body.at(body.from+(body.to-body.from)*i/16)) : [];
     const box = body.kind === 'lake'
       ? { x0: body.x - body.rx - 1, x1: body.x + body.rx + 1, z0: body.z - body.rz - 1, z1: body.z + body.rz + 1 }
-      : { x0: Math.min(...[body.from, body.to].map(body.at)) - body.width - 3, x1: Math.max(...[body.from, body.to].map(body.at)) + body.width + 3, z0: body.from - body.width, z1: body.to };
+      : { x0: Math.min(...bends) - body.width - 3, x1: Math.max(...bends) + body.width + 3, z0: body.from - body.width, z1: body.to };
     const w = box.x1 - box.x0, d = box.z1 - box.z0;
     const geometry = new THREE.PlaneGeometry(w, d, Math.ceil(w * 1.5), Math.ceil(d * 1.5));
     geometry.rotateX(-Math.PI / 2);

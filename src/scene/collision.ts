@@ -1,3 +1,5 @@
+import { boxExit, foundationBlocks, foundationDistance, foundationNormal, type Foundation } from './villageCollision.ts';
+
 /**
  * Colisão de movimento com o cenário (11/11/2026). Só bloqueia DESLOCAMENTO: hits, projéteis e áreas de técnica
  * continuam atravessando (invariante do AGENTS.md). Cada sólido é um círculo no plano XZ, na base do sprite.
@@ -26,14 +28,25 @@ export const COLLISION_RULES = {
   /** Folga ao posicionar eventos e coletáveis fora das construções. */
   placementMargin: 2.5,
 };
-export type Solid = { x: number; z: number; r: number; big: boolean };
+export type Solid = Foundation & { big: boolean };
 type Point = { x: number; z: number };
 
 export function createSolids() {
   const all: Solid[] = [], big: Solid[] = [];
-  const push = (list: Solid[], p: Point, radius: number) => {
+  const push = (list: Solid[], p: Point, radius: number, elevation = -Infinity) => {
     let moved = false;
     for (const s of list) {
+      if (elevation!==-Infinity&&!foundationBlocks(s,elevation)) continue;
+      if (s.halfZ!==undefined) {
+        const distance=foundationDistance(p.x,p.z,s);
+        if(distance<radius) {
+          const normal=foundationNormal(p,s);
+          p.x+=normal.x*(radius-distance+.001);
+          p.z+=normal.z*(radius-distance+.001);
+          moved=true;
+        }
+        continue;
+      }
       const dx = p.x - s.x, dz = p.z - s.z, min = s.r + radius, d2 = dx * dx + dz * dz;
       if (d2 >= min * min) continue;
       const d = Math.sqrt(d2);
@@ -42,8 +55,8 @@ export function createSolids() {
     }
     return moved;
   };
-  function add(x: number, z: number, r: number, building = false) {
-    const solid = { x, z, r, big: building };
+  function add(x: number, z: number, r: number, building = false, top?:number, bottom?:number, halfZ?:number) {
+    const solid = { x, z, r, big: building, top, bottom, halfZ };
     all.push(solid);
     if (building) big.push(solid);
     return solid;
@@ -58,7 +71,7 @@ export function createSolids() {
     for (let i = all.length - 1; i >= 0; i--) {
       const s = all[i];
       if (s.big) continue;
-      if (big.some(b => Math.hypot(s.x - b.x, s.z - b.z) < b.r + s.r + margin)) { all.splice(i, 1); onRemove(s); removed++; }
+      if (big.some(b => foundationDistance(s.x,s.z,b)<s.r+margin)) { all.splice(i, 1); onRemove(s); removed++; }
     }
     return removed;
   }
@@ -66,25 +79,31 @@ export function createSolids() {
     all, big,
     /** `building` também desvia inimigos e afasta eventos e coletáveis. */
     add, prune,
+    addBox(x:number,z:number,halfX:number,halfZ:number,top:number) {return add(x,z,halfX,true,top,undefined,halfZ);},
     addBuilding(x: number, z: number, width: number) {
       add(x, z, Math.min(COLLISION_RULES.buildingMaxRadius, width * COLLISION_RULES.building), true);
     },
     /** Jogador: colide com tudo. Duas passadas resolvem cantos entre dois sólidos vizinhos. */
-    resolve(p: Point, radius = COLLISION_RULES.playerRadius) { if (!COLLISION_RULES.enabled) return false; const moved = push(all, p, radius); if (moved) push(all, p, radius); return moved; },
+    resolve(p: Point, radius = COLLISION_RULES.playerRadius, elevation = -Infinity) { if (!COLLISION_RULES.enabled) return false; const moved = push(all, p, radius,elevation); if (moved) push(all, p, radius,elevation); return moved; },
     /**
      * Rodada 70 (pedido do usuário: "Precisamos andar livre, o máximo que pode ter é travar ao esbarrar, mas ao dar dash
      * conseguir passar"): o dash atravessa árvores, rochas e construções. Se terminar por dentro de um sólido, sai pelo
      * lado para onde ia (dir), nunca de volta para trás.
      */
-    exitAlong(p: Point, dir: Point, radius = COLLISION_RULES.playerRadius) {
+    exitAlong(p: Point, dir: Point, radius = COLLISION_RULES.playerRadius, elevation = -Infinity) {
       if (!COLLISION_RULES.enabled) return false;
       const len = Math.hypot(dir.x, dir.z);
       if (len < 1e-6) return false;
       const ux = dir.x / len, uz = dir.z / len;
       let moved = false;
       for (let pass = 0; pass < 4; pass++) {
-        const s = all.find(o => Math.hypot(p.x - o.x, p.z - o.z) < o.r + radius - 1e-6);
+        const s = all.find(o => (elevation===-Infinity||foundationBlocks(o,elevation))&&foundationDistance(p.x,p.z,o)<radius-1e-6);
         if (!s) break;
+        if(s.halfZ!==undefined) {
+          const t=boxExit(p,s,radius,ux,uz)+.001;
+          p.x+=ux*t;p.z+=uz*t;moved=true;
+          continue;
+        }
         const dx = p.x - s.x, dz = p.z - s.z, min = s.r + radius, b = dx * ux + dz * uz;
         const t = -b + Math.sqrt(Math.max(0, b * b - (dx * dx + dz * dz - min * min)));
         p.x += ux * (t + 1e-3); p.z += uz * (t + 1e-3); moved = true;
@@ -94,7 +113,7 @@ export function createSolids() {
     /** Inimigos: só contornam construções (poucos sólidos; barato com milhares de inimigos). */
     resolveBig(p: Point, radius = COLLISION_RULES.enemyRadius) { return COLLISION_RULES.enabled && push(big, p, radius); },
     /** O ponto está fora de todas as construções, com folga? */
-    isFree(x: number, z: number, margin = COLLISION_RULES.placementMargin) { return big.every(s => Math.hypot(x - s.x, z - s.z) > s.r + margin); },
+    isFree(x: number, z: number, margin = COLLISION_RULES.placementMargin) { return big.every(s => foundationDistance(x,z,s)>margin); },
     /** Devolve o ponto mais próximo fora das construções. */
     freeSpot(x: number, z: number, margin = 1) { const p = { x, z }; push(big, p, margin); push(big, p, margin); return p; },
   };

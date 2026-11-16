@@ -300,6 +300,8 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 
 **Acesso durante a missão.** As entradas de Konoha, Suna, Iwa e Kiri devem conectar a área externa às ruas e praças da vila, com NPCs e eventos acessíveis no mesmo mapa. A escalada das superfícies fica no escopo abaixo.
 
+**Cópia de validação · 15/11/2026.** As quatro vilas passam a ser carregadas em missões novas da cópia de validação. Saves anteriores continuam em `mapas_basicos`. Os pontos de NPCs e eventos usam ruas e praças com terreno livre. Muros usam a base retangular. Casas, árvores e rochas usam apoios dimensionados pela base. O shader de água existente também alimenta o canal novo de Kiri. [Guia de criação e validação](development/CRIAR-MAPAS-JOGAVEIS.md).
+
 **2. Tudo é obstáculo, e dá para subir.**
 
 Confirmação do usuário em 15/11: preservar a câmera e a movimentação atuais. Obstáculos incluem casas, paredes, árvores e pedras e devem permitir caminhar sobre a superfície ao escalar. Enquanto segurar a tecla contra a base de um obstáculo, a animação de deslocamento continua. As capturas dos mapas novos devem ser enviadas ao usuário antes de aplicá-los à versão de teste.

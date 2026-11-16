@@ -354,6 +354,12 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 - **Proposto.** Entregues no chat os renders de Konoha, Suna, Iwa e Kiri com comparação lado a lado à imagem da seleção. A implementação em partida aguarda revisão visual.
 
 - **Planejado.** Entrar nas quatro vilas pelos acessos do cenário e jogar nas ruas e praças durante a missão. Integração pendente.
+### Mapas jogáveis, comparação low poly e validação · 15/11/2026
+
+- **Confirmado.** Guardar a versão anterior como `mapas_basicos`. Preparar ruas, acessos, casas sólidas pelo contato com a base e escalada para as quatro vilas. A entrada na versão principal depende de validação em partida. Verificar tudo que for possível sem navegador.
+- **Implementado na branch de validação.** A rota **Mapa Protótipo** na tela inicial compara sprite com low poly e atlas 1K com 4K. O benchmark local compara 24 cargas, incluindo 1.600 inimigos e efeitos ligados ou desligados. A malha tem corrida, pulo, dash e selos de demonstração. Uma migração do elenco demandaria transferir ao esqueleto as poses e os tempos de cada animação.
+- **Guia.** O processo de composição, integração e testes está em [Criar mapas jogáveis](development/CRIAR-MAPAS-JOGAVEIS.md).
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

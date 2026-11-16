@@ -298,7 +298,7 @@ test('água: lagos e rios cavados em todos os mapas, longe do começo e das cons
   }
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.ok(canvas.includes('Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z))'), 'de pé na superfície');
-  assert.ok(canvas.includes('const water=createWater(scene,MAP.id,terrainHeight)'), 'malha da água na cena');
+  assert.match(canvas,/const water=.*createWater\(scene,MAP\.id,terrainHeight\)/, 'malha da água na cena');
   assert.ok(canvas.includes('waterDistance(MAP.id,x,z).outside<1.5)continue;'), 'sem árvore dentro da água');
 });
 

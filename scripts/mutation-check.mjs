@@ -11,6 +11,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'vilas: portões têm passagem pelo centro', arquivo: 'src/scene/villageScenery.ts', de: "map.id==='folha'?.315:.34", para: '0' },
+  { regra: 'vilas: segurar a direção eleva o jogador', arquivo: 'src/scene/villageTraversal.ts', de: 'SPEED * Math.max(0,upward) * dt', para: '0' },
+  { regra: 'protótipo: a matriz mede até 1.600 inimigos', arquivo: 'src/prototype/prototypeBenchmark.ts', de: '[0,400,1600]', para: '[0,400,1200]' },
   { regra: 'fade da horda não interfere na entrada da bijū', arquivo: 'src/scene/enemyRenderer.ts', de: 'else if(opacity&&!sp.userData.bijuuEntrance)', para: 'else if(opacity)' },
   { regra: 'roleta só tem as cinco casas de personagem', arquivo: 'src/game/roulette.ts', de: "{ id: 'tsunade', label: 'Tsunade'", para: "{ id: 'kunai', label: 'Tsunade'" },
   { regra: 'emboscada da Akatsuki rende três pergaminhos', arquivo: 'src/game/akatsukiAmbush.ts', de: 'rewards: 3', para: 'rewards: 1' },

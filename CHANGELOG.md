@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 15/11/2026 · Vilas jogáveis e Mapa Protótipo na branch de validação
+
+- Konoha, Suna, Iwa e Kiri têm entradas abertas, ruas, praças, casas com base sólida e pontos para NPCs. Pontes em Iwa e Kiri dão apoio acima do terreno ou do canal. A escalada usa Espaço e a direção de avanço. Um segundo Espaço solta, e o personagem encontra apoio ao atingir o topo.
+- A branch `mapas_basicos` preserva a versão anterior completa em `c7581be`. Campanhas antigas retomam no layout anterior. O save novo registra o layout e a altura de apoio.
+- **Mapa Protótipo** no menu inicial de validação. Naruto Shippuden em sprite ou low poly, texturas de 1.024 ou 4.096, Iruka, selo de teste e horda gráfica instanciada até 1.600. A comparação automática de 24 casos exporta FPS médio, 1% low, p99, chamadas, triângulos e resolução.
+- **Passou:** 208 de 208 testes por código, TypeScript e build. Os três defeitos de controle foram detectados ao bloquear o centro dos portões, zerar a velocidade de escalada e trocar o máximo de 1.600 por 1.200 no benchmark. Atlas confirmados em 1.024 × 1.024 e 4.096 × 4.096.
+- **Pendente em partida:** enquadramento, contato visual dos sprites com o terreno e as superfícies, interação com eventos e FPS real. A versão principal mantém os mapas anteriores enquanto a cópia passa por essa validação.
+- [Guia de criação dos próximos mapas](docs/development/CRIAR-MAPAS-JOGAVEIS.md).
+
 ## 15/11/2026 · Acesso às vilas nos mapas planejados
 
 - Registrado o plano de conectar os acessos às ruas, praças e eventos de cada vila no próprio mapa da missão. Implementação pendente.

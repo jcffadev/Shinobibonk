@@ -8,6 +8,8 @@ As 114 versões do elenco usam a corrida com braços para trás no deslocamento 
 
 O hub inclui ranking local de temporada, Top 100, clãs e fichas com builds e missões. [Regras do ranking e proposta de publicação online](docs/development/RANKING-E-CLAS.md).
 
+Na branch `vilas-em-validacao`, **Mapa Protótipo** abre a comparação de sprite e low poly em Konoha. A branch também contém as quatro vilas para novas missões. A versão anterior está em `mapas_basicos`. [Guia de criação de mapas](docs/development/CRIAR-MAPAS-JOGAVEIS.md).
+
 ## Começar
 
 Requisitos: Node.js compatível com Vite 8 (testado com Node 24.22) e pnpm.

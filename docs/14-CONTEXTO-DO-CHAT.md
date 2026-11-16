@@ -2470,3 +2470,62 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Vai dar pra entrar dentro das cidades?
 
 **Resposta.** Sim. A proposta para as quatro vilas inclui atravessar a entrada e continuar a missão nas ruas e praças, com NPCs e eventos. As imagens são prévias e essa navegação ainda está pendente.
+
+## 15/11/2026 — mapas jogáveis e protótipo low poly em validação
+
+> Excelente! e tem muito mapa dentro das cidades?
+> O que você vai fazer então, vai salvar os mapas que temos hoje como mapas_basicos... e vai implementar os novos mapas.
+>
+> Pergunta:
+> personal 3d lol poli e texturização 4K
+>
+> Você sabe o que é isso?
+> Conseguiria me dar um exemplo de como você usaria isso nos personagens/mapas?
+>
+> Si0m, mas eu quero exemplo de como ficaria sem você aplicar ao projeto final, só um exemplo de como ficaria
+>
+> me dê a comparação do naruto hoje como temos e esse ai
+>
+> Você consegue fazer um mapa protótipo com essas alterações de low polly texturizado 4k com todas as alterações que caberiam para testar?
+>
+> pode deixar na tela inicial
+>
+> mapa prototipo
+>
+> me mostre sua fla de prioridades
+>
+> qual seria mais pesado pro jogo, performance
+>
+> E você consegueria manter todas as animações para low polly?
+>
+> você consegue simular todos esses testes? comparação fps, tudo? horda maxima, tudo? efeitos ligados, desligados, tudo? temos programas de testes para isso
+>
+> entao, pela sua fila, os mapas já estãorodando?
+>
+> tirando as questoes low polly?
+>
+> INtegre, bora, bora
+>
+> Voce deixou os mapas que temos hoje rodando como mapas_padrão, salvo em algum lugar?
+>
+> Crie um .md para seguir esses mapas e o jeito que você fez para criar os mapas novos.
+>
+> para quando colocarmos, criarmos novos mapas, fazermos isso
+>
+> Faça, já com as ruas, os acessos, as casas como objetos, mas só dar block ao bater literalmente o boneco nelas, fez a mecanica de subir nas paredes/casas, para escalar?
+>
+> bora, quero ver como vai ficar os mapas, consegue fazer em quantot empo essa implementação?
+>
+> faça
+>
+> só implemente quando você tiver eles completos e funcionando 100%
+>
+> pra partida voce tera que usar o edge? ou não precisa?
+>
+> verifique tudo que conseguir sem navegador
+>
+> Continue
+
+**Resposta.** A comparação usa o Naruto Shippuden atual ao lado da proposta low poly, nas mesmas alturas. A cópia de validação tem o botão Mapa Protótipo com a troca do avatar, atlas de 1K/4K, partida de demonstração e medição de 24 cenários gráficos até 1.600 instâncias. A geometria da horda pode ser medida no Node. FPS e enquadramento em partida dependem do hardware e da validação manual.
+
+As novas vilas foram implementadas na cópia de validação. As entradas dão acesso às ruas, praças e NPCs. Em contato com o obstáculo, Espaço e a direção de avanço sobem à superfície. Espaço solta. A versão anterior está na branch `mapas_basicos`; o projeto principal mantém a versão anterior até a validação em partida. O processo para os próximos mapas está em [Criar mapas jogáveis](development/CRIAR-MAPAS-JOGAVEIS.md).

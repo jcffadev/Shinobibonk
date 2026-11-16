@@ -15,6 +15,8 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
+Na branch de validação, **Mapa Protótipo** abre a comparação de Konoha na tela inicial. As quatro vilas novas estão em missões novas dessa cópia. A branch `mapas_basicos` guarda a versão anterior. [Guia dos mapas](development/CRIAR-MAPAS-JOGAVEIS.md).
+
 Em 15/11, o primeiro Mega Elite da partida passou a ter no máximo 3.000 HP. O Myōjinmon ainda invoca o Guardião com E. Zetsu abre a Emboscada da Akatsuki, e a roleta tem cinco casas de personagem. A arena final posiciona a bijū à frente da câmera e espera o atlas antes da entrada. O Chute Giratório usa seu ícone dedicado. Veja as pendências de mapas, água, jutsus e eventos na [fila do Codex](13-PENDENCIAS-PARA-CONTINUAR.md).
 
 - **IMPLEMENTADO** — ranking de temporada no hub, Top 100, filtros, clãs e fichas com builds e missões, entre os perfis do navegador. [Detalhes e configuração online](development/RANKING-E-CLAS.md).

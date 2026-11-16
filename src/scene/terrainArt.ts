@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { GameMap } from '../game/maps';
 import { MAP_SIZE } from '../game/worldScale';
-import { carveWater, waterDistance, WATER } from './water';
+import { carveWater, waterDistance, WATER, type WaterBody } from './water';
 
 export const RENDERED_GROUND_SIZE = MAP_SIZE + 180;
 export const trailX = (z: number) => Math.sin(z * .09) * 5;
@@ -25,7 +25,7 @@ const mound = (x: number, z: number, cx: number, cz: number, rx: number, rz: num
  */
 export const TERRAIN = { step: 2, riser: .22, ridge: .4, maxInside: 6.2 } as const;
 /** Degrau: platô plano e encosta curta e suave (sem quina vertical, para andar e pular). */
-export function terrace(height: number, step = TERRAIN.step, riser = TERRAIN.riser) {
+export function terrace(height: number, step:number = TERRAIN.step, riser:number = TERRAIN.riser) {
   if (height <= 0) return height;
   const level = Math.floor(height / step), part = height / step - level;
   const t = Math.min(1, Math.max(0, (part - (1 - riser)) / riser));
@@ -170,7 +170,12 @@ const rgb = (hex: string) => [1, 3, 5].map(offset => parseInt(hex.slice(offset, 
  * (createHeightField), não a fórmula exata — antes eram 3 alturas exatas por pixel (~3 milhões de cálculos, ~0,9 s por
  * partida). O desenho é o mesmo (o teste compara com a fórmula exata).
  */
-export function paintGround(map: GameMap, ground: (x: number, z: number) => number = (x, z) => groundHeight(map.id, x, z), size = 1024) {
+type GroundStyle = {
+  surface(x:number,z:number): 'road'|'plaza'|undefined;
+  waters: readonly WaterBody[];
+};
+
+export function paintGround(map: GameMap, ground: (x: number, z: number) => number = (x, z) => groundHeight(map.id, x, z), size = 1024, style?: GroundStyle) {
   const pixels = { data: new Uint8ClampedArray(size * size * 4) };
   const surfaces = new Uint8Array(size * size * 4);
   const grass = rgb(map.terrain.low), dirt = rgb(map.terrain.trail), rock = rgb(map.terrain.high);
@@ -182,10 +187,11 @@ export function paintGround(map: GameMap, ground: (x: number, z: number) => numb
     for (let i = 0; i < size; i++) {
       const x = (i / size - .5) * RENDERED_GROUND_SIZE;
       const fleck = seed(i, j), patch = Math.sin(x * .5 + Math.sin(z * .3)) * Math.cos(z * .63);
-      const onPath = Math.abs(x - trailX(z)) < 2.25 + patch * .45;
-      const inPlaza = Math.abs(x) < 9 && z > -22 && z < -11;
+      const location=style?.surface(x,z);
+      const onPath = style ? location==='road' : Math.abs(x - trailX(z)) < 2.25 + patch * .45;
+      const inPlaza = style ? location==='plaza' : Math.abs(x) < 9 && z > -22 && z < -11;
       // Rodada 89: a água tem malha própria (water.ts); o chão embaixo dela é leito escuro e a margem é areia.
-      const h0 = ground(x, z), shoreDistance = waterDistance(map.id, x, z).outside;
+      const h0 = ground(x, z), shoreDistance = waterDistance(map.id, x, z, style?.waters).outside;
       const river = h0 < WATER.level + .02, shore = !river && shoreDistance < 1.4;
       // Rodada 85: pedra nas encostas dos terraços (inclinação alta), com estrias horizontais como paredão de rocha.
       const slope = Math.hypot(ground(x + .5, z) - h0, ground(x, z + .5) - h0) / .5;
@@ -211,12 +217,12 @@ export function paintGround(map: GameMap, ground: (x: number, z: number) => numb
 }
 
 /** Rodada 95: o chão pintado do último mapa fica guardado — jogar de novo o mesmo mapa não repinta. */
-let paintedGround: { id: GameMap['id']; size: number; data: Uint8ClampedArray; surfaces: Uint8Array } | null = null;
+let paintedGround: { id: GameMap['id']; village: boolean; size: number; data: Uint8ClampedArray; surfaces: Uint8Array } | null = null;
 
 /** Textura ortográfica: trilha e materiais usam as mesmas coordenadas do terreno. */
-export function groundArt(map: GameMap, ground?: (x: number, z: number) => number) {
+export function groundArt(map: GameMap, ground?: (x: number, z: number) => number, style?: GroundStyle) {
   const size = 1024;
-  if (!paintedGround || paintedGround.id !== map.id || paintedGround.size !== size) paintedGround = { id: map.id, size, ...paintGround(map, ground, size) };
+  if (!paintedGround || paintedGround.id !== map.id || paintedGround.size !== size || paintedGround.village!==!!style) paintedGround = { id: map.id, size, village:!!style, ...paintGround(map, ground, size, style) };
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = size;
   const context = canvas.getContext('2d')!;
@@ -233,8 +239,8 @@ export function groundArt(map: GameMap, ground?: (x: number, z: number) => numbe
 
 
 /** Alta resolução local mesmo quando a máscara tem o tamanho da região inteira. */
-export function createGroundMaterial(map: GameMap, ground?: (x: number, z: number) => number) {
-  const { texture, surfaces, size } = groundArt(map, ground);
+export function createGroundMaterial(map: GameMap, ground?: (x: number, z: number) => number, style?: GroundStyle) {
+  const { texture, surfaces, size } = groundArt(map, ground, style);
   const mask = new THREE.DataTexture(surfaces, size, size);
   mask.minFilter = mask.magFilter = THREE.LinearFilter;
   mask.needsUpdate = true;

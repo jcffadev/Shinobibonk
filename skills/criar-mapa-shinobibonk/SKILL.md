@@ -9,6 +9,8 @@ metadata:
 
 Esta skill junta o que foi aprendido nas rodadas 70, 77, 85 e 86, desde as mudanças da Vila Oculta da Folha (Konoha). Leia antes de mexer em `src/game/maps.ts`, `src/scene/terrainArt.ts`, `src/scene/heightField.ts`, `src/scene/collision.ts` ou na parte de cenário do `src/scene/GameCanvas.tsx`.
 
+Para criar uma vila com ruas e acessos jogáveis, siga [Criar mapas jogáveis](../../docs/development/CRIAR-MAPAS-JOGAVEIS.md). O guia registra a planta a partir da foto da seleção, as bases de colisão, a escalada e a validação antes de integrar.
+
 Siga também, na mesma tarefa:
 - `skills/referencia-externa/SKILL.md` se o pedido vier com material do jogo de referência;
 - `skills/criar-arte-shinobibonk/SKILL.md` para sprites, atlas e texturas;

@@ -28,7 +28,11 @@ test('progressão, escolhas e colisão conservam a entrada até keyup ou perda d
   assert.match(canvas, /const onBlur=\(\)=>\{keys\.clear\(\);movementInput\.clear\(\)/);
   assert.equal(canvas.match(/movementInput\.clear\(\)/g)?.length, 1);
   assert.match(canvas, /const \{vertical,horizontal\}=movementInput\.axes\(\)/);
-  assert.match(canvas, /moving=dir\.lengthSq\(\)>0;if\(moving\)\{[\s\S]*?solids\.resolve\(player\.position\)/);
+  const movement=canvas.slice(canvas.indexOf('moving=dir.lengthSq()>0'),canvas.indexOf('const groundSupport=standHeight'));
+  assert.match(movement, /if\(moving\)heading\.copy\(dir\)\.normalize\(\)/);
+  assert.match(movement, /solids\.resolve\(player\.position,COLLISION_RULES\.playerRadius,elevation\)/);
+  assert.match(movement, /else solids\.resolve\(player\.position\)/);
+  assert.doesNotMatch(movement, /moving\s*=\s*false|movementInput\.clear/);
   assert.match(canvas, /const walking=moving&&!defeated/);
 });
 
