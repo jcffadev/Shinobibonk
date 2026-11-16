@@ -353,6 +353,7 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 - **Proposto.** Entregues no chat os renders de Konoha, Suna, Iwa e Kiri com comparação lado a lado à imagem da seleção. A implementação em partida aguarda revisão visual.
 
+- **Planejado.** Entrar nas quatro vilas pelos acessos do cenário e jogar nas ruas e praças durante a missão. Integração pendente.
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

@@ -298,6 +298,8 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 
 **Prévias para revisão · 15/11/2026.** Entregues no chat quatro cenas isoladas, com comparações à arte da seleção. Konoha usa portão, muralha, rua e Monte Hokage. Suna usa recinto murado, arcos de rocha e a sede do Kazekage. Iwa usa passagens em arco e fortaleza sobre os terraços. Kiri usa canal, passarelas e casas com telhados azuis. São renders do protótipo de terreno e cenário, com os atlas do projeto, campo de visão de 60° e zoom 22. A integração de colisões, escalada, eventos e água em movimento depende da revisão das composições.
 
+**Acesso durante a missão.** As entradas de Konoha, Suna, Iwa e Kiri devem conectar a área externa às ruas e praças da vila, com NPCs e eventos acessíveis no mesmo mapa. A escalada das superfícies fica no escopo abaixo.
+
 **2. Tudo é obstáculo, e dá para subir.**
 
 Confirmação do usuário em 15/11: preservar a câmera e a movimentação atuais. Obstáculos incluem casas, paredes, árvores e pedras e devem permitir caminhar sobre a superfície ao escalar. Enquanto segurar a tecla contra a base de um obstáculo, a animação de deslocamento continua. As capturas dos mapas novos devem ser enviadas ao usuário antes de aplicá-los à versão de teste.

@@ -2463,3 +2463,10 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Você fez o mapa igual as fotos de escolha do mapa pra jogar, certo?
 
 **Resposta.** As fotos de seleção foram usadas como referência de composição. As quatro primeiras prévias do terreno e do cenário em 3D foram entregues com comparação lado a lado e um pacote para revisão. A etapa jogável permanece pendente.
+
+
+## 15/11/2026 — acesso às vilas
+
+> Vai dar pra entrar dentro das cidades?
+
+**Resposta.** Sim. A proposta para as quatro vilas inclui atravessar a entrada e continuar a missão nas ruas e praças, com NPCs e eventos. As imagens são prévias e essa navegação ainda está pendente.

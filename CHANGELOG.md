@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 15/11/2026 · Acesso às vilas nos mapas planejados
+
+- Registrado o plano de conectar os acessos às ruas, praças e eventos de cada vila no próprio mapa da missão. Implementação pendente.
+
 ## 15/11/2026 · Prévias de composição das quatro vilas
 
 - Montadas quatro cenas isoladas em projeção 3D para Konoha, Suna, Iwa e Kiri, com os atlas do jogo e a imagem de seleção de cada vila como referência de composição. As comparações lado a lado e os renders foram entregues no chat. A integração ao jogo fica para depois da revisão visual.
