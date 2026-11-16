@@ -372,6 +372,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 - Revisão de jutsus: 16 técnicas genéricas ligadas a efeitos do atlas em `techniqueVisualProfiles.ts` (docs/24, "Revisão de 16/11/2026").
 
+### Rodada 101 · 16/11/2026
+
+- Cartões de pílula/item: `plannerCardInfo` (src/game/plannerCards.ts) — Efeito · Descrição · Quantidade. Catálogo de fusões: ícone em `.fusion-catalog-icon` 44 px e linha do efeito.
+
 ## 5. Estado atual do projeto
 
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).

@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 16/11/2026 · Cartões de pílula e item e catálogo de fusões enquadrado (Rodada 101)
+
+- **Pedidos do usuário:**
+  - "Em pilulas e itens… você vai por assim: Nome · Se esta no pool · Efeito · Descrição · Quantidade".
+  - "Enquadrar as habilidades, ainda não mostra certo as descrições" (print do catálogo de fusões).
+- **Cartões de pílula e item no planejamento** (`plannerCardInfo` em `src/game/plannerCards.ts`): o nome, embaixo se está no pool, e depois as linhas **Efeito**, **Descrição** e **Quantidade** (pílula: "Até 9 níveis"; item: "Comum · até 10 cópias"). Itens ainda não têm texto de descrição próprio; a linha aparece quando houver.
+- **Catálogo de fusões:**
+  - **Causa do ícone fora do quadro:** a regra de CSS do texto do cartão (rodada 81) pegava também o ícone de fusão, que é feito de dois ícones, e os empilhava na vertical.
+  - Agora o ícone fica num quadro fixo de 44 px, e cada fusão mostra, além da receita, o que faz: natureza, forma e efeitos ou status.
+- O cartão completo no modelo de referência ("Como funciona", "Quais melhorias afetam") continua na tarefa das fusões, que espera a aprovação da lista de receitas (`docs/10`).
+- **Testes:** 2 testes novos (o mínimo subiu para 207). **PENDENTE DE VALIDAÇÃO E2E:** ver os cartões e o catálogo na tela.
+
 ## 16/11/2026 · Revisão de jutsus: efeitos próprios no lugar do genérico (Rodada 100)
 
 - **Pedido do usuário:** "Revisar outros jutsus".

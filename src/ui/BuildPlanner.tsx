@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ITEMS, ITEM_BY_NAME, type Rarity } from '../game/catalog';
 import { PILL_NAMES, PILL_MAX, pillDescription } from '../game/pills';
+import { plannerCardInfo } from '../game/plannerCards';
 import { pillStatPreview } from '../game/pillPreview';
 import { PillStatPreview } from './PillStatPreview';
 import { techniquePool, HERO_BY_ID, heroAffinity, familyOf, type PoolTechnique, type Technique } from '../game/heroes';
@@ -126,7 +127,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
        {shownCatalog.map(f=>{const planIndex=fusionPlan.findIndex(p=>p.includes(f.pair[0])&&p.includes(f.pair[1])),done=planIndex>=0;
          // Rodada 82 (pedido do usuário: "Ao clicar na fusão, ela já fica selecionada"): 1 clique planeja; clicar de novo tira do plano.
          return <button type="button" key={f.result.name} className={'fusion-catalog-entry'+(f.kekkei?' is-kekkei':'')} aria-pressed={done} disabled={!done&&fusionPlan.length>=4} title={done?'Clique para tirar do plano':fusionPlan.length>=4?'Limite de 4 fusões planejadas':'Clique para planejar'} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}>
-         <SkillIcon heroId={hero.id} name={f.result.name}/><span><b>{f.name}</b><small>{fusionRecipeText(f.pair,f.kekkei?'Kekkei Genkai':'Fusão')}</small>{done&&<small className="fusion-catalog-planned">✓ Planejada</small>}</span>
+         <span className="fusion-catalog-icon"><SkillIcon heroId={hero.id} name={f.result.name}/></span><span className="fusion-catalog-text"><b>{f.name}</b><small>{fusionRecipeText(f.pair,f.kekkei?'Kekkei Genkai':'Fusão')}</small><small className="fusion-catalog-effect">{[f.result.element,f.result.secondaryElement].filter(Boolean).join(' + ')} · {f.result.shape} · {techniqueStatusText(f.result)}</small>{done&&<small className="fusion-catalog-planned">✓ Planejada</small>}</span>
        </button>;})}
      </div>
      {!catalog.length&&<p className="planner-empty">Este pool ainda não tem duas técnicas que se fundem. Sele mais shinobis para liberar fusões.</p>}
@@ -169,9 +170,9 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
           const technique=tab==='Habilidades'?techniqueByName.get(e.name):undefined;
           return <article key={e.id} className={['pool-card','planner-option',planned.includes(e.name)?'planned':'',e.archived?'archived':'',focused?.id===e.id?'focused':'',tab==='Itens'?'rarity-'+e.rarity.toLowerCase():''].join(' ')}>
             <button type="button" className="build-entry" aria-pressed={focused?.id===e.id} onClick={()=>setSelected(e.id)}>
-              {e.icon}<span><b>{e.name}</b><small>{technique?`Aprende no Nv. ${technique.unlockLevel} · ${techniqueSchool(technique)} · ${technique.element} · ${technique.shape}`:tab==='Itens'?<><PlannerRarity rarity={ITEM_BY_NAME[e.name].rarity} max={ITEM_BY_NAME[e.name].max}/></>:estado(e)}</small></span>
+              {e.icon}<span><b>{e.name}</b><small>{technique?`Aprende no Nv. ${technique.unlockLevel} · ${techniqueSchool(technique)} · ${technique.element} · ${technique.shape}`:estado(e)}</small></span>
             </button>
-            {technique?<small className="planner-option-state">{e.archived?'Em casa':e.rarity}{trained.includes(e.name)?' · +15% de dano':''}<span className="planner-option-effect">{techniqueStatusText(technique)}</span></small>:<p><BuffText text={e.description}/></p>}
+            {technique?<small className="planner-option-state">{e.archived?'Em casa':e.rarity}{trained.includes(e.name)?' · +15% de dano':''}<span className="planner-option-effect">{techniqueStatusText(technique)}</span></small>:(()=>{const info=plannerCardInfo(e.name);return info?<dl className="planner-card-info"><div><dt>Efeito</dt><dd><BuffText text={info.effect}/></dd></div>{info.flavor&&<div><dt>Descrição</dt><dd>{info.flavor}</dd></div>}<div><dt>Quantidade</dt><dd>{info.quantity}</dd></div></dl>:<p><BuffText text={e.description}/></p>;})()}
             {technique&&fusionRecipes(e.name).map(recipe=><b key={recipe} className="fusion-badge planner-fusion-requirement" title="Requisito para Fusão">⚗ {recipe}</b>)}
             {entryActions(e)}
           </article>;

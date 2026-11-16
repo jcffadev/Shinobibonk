@@ -2517,3 +2517,17 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Revisar outros jutsus
 
 **Resposta.** Das 221 técnicas, 39 só tinham o efeito genérico do elemento. 16 ganharam o efeito do atlas que combina com a obra; as demais já têm código próprio ou o efeito do elemento já é o certo (lista em docs/24). **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## Rodada 101 · 16/11/2026 — cartões de pílula e item e catálogo de fusões
+
+> Em pilulas e itens, como por exemplo esta, você vai por assim: Nome · Se esta no pool · Efeito · Descrição · Quantidade
+
+> Enquadrar as habilidades, ainda não mostra certo as descrições, eu já enviei um monte de exemplo disso, não sei porque você não está conseguindo executar corretamente o meu pedido.
+
+**Resposta.**
+
+- Cartões de pílula e item com Nome, pool, Efeito, Descrição e Quantidade.
+- O ícone de fusão escapava do quadro por uma regra de CSS da rodada 81 que empilhava os dois ícones. Corrigido, com o ícone em quadro fixo e a descrição do que a fusão faz.
+- O cartão completo no modelo de referência fica com a tarefa das fusões.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
+- **Publicado no GitHub.**

@@ -64,3 +64,25 @@ test('Chute Giratório renderiza o PNG dedicado no componente compartilhado', as
   assert.match(markup, /\/assets\/inventory\/skill-chute-giratorio-v1\.png/);
   assert.ok(fs.existsSync(new URL('../public/assets/inventory/skill-chute-giratorio-v1.png', import.meta.url)));
 });
+
+
+test('cartão de pílula e item: Nome, pool, Efeito, Descrição e Quantidade (rodada 101)', async () => {
+  const { plannerCardInfo } = await import('../src/game/plannerCards.ts');
+  const pill = plannerCardInfo('Pílula do Mercador');
+  assert.ok(pill.effect.includes('Ryu') && pill.effect.endsWith('por nível'), pill.effect);
+  assert.equal(pill.flavor, 'Faro para Ryu durante a missão.');
+  assert.equal(pill.quantity, 'Até 9 níveis');
+  const item = plannerCardInfo('Luneta Ninja');
+  assert.ok(item.effect.includes('chance crítica') && item.quantity.startsWith('Comum · até '), item.quantity);
+  assert.equal(plannerCardInfo('Rasengan'), undefined, 'técnica não usa este cartão');
+  const src = (await import('node:fs')).readFileSync(new URL('../src/ui/BuildPlanner.tsx', import.meta.url), 'utf8');
+  assert.ok(src.includes('<dt>Efeito</dt>') && src.includes('<dt>Descrição</dt>') && src.includes('<dt>Quantidade</dt>'));
+});
+
+test('catálogo de fusões: ícone enquadrado e descrição do que a fusão faz (rodada 101)', () => {
+  const src = fs.readFileSync(new URL('../src/ui/BuildPlanner.tsx', import.meta.url), 'utf8');
+  const css = fs.readFileSync(new URL('../src/mission-planner.css', import.meta.url), 'utf8');
+  assert.ok(src.includes('<span className="fusion-catalog-icon"><SkillIcon') && src.includes('className="fusion-catalog-effect"'), 'ícone num quadro próprio e linha do efeito');
+  assert.ok(!css.includes('.fusion-catalog-entry>span{'), 'a regra do texto não pega mais o ícone');
+  assert.match(css, /.fusion-catalog-icon{flex:0 0 44px;width:44px;height:44px;[^}]*overflow:hidden/);
+});

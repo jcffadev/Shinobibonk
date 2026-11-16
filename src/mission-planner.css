@@ -175,7 +175,11 @@
 .planner-fusion-hint{margin:2px 0 8px;opacity:.75;font-size:13px}
 .planner-fusion-catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(230px,100%),1fr));gap:6px;max-height:320px;overflow:auto;padding:2px}
 .fusion-catalog-entry{display:flex;gap:8px;align-items:center;text-align:left;padding:6px 8px}
-.fusion-catalog-entry>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+/* Rodada 101: o texto tem classe própria — antes a regra pegava também o ícone de fusão (um span) e empilhava os dois ícones. */
+.fusion-catalog-text{display:flex;flex-direction:column;gap:2px;min-width:0}
+.fusion-catalog-icon{flex:0 0 44px;width:44px;height:44px;display:grid;place-items:center;overflow:hidden;border-radius:6px}
+.fusion-catalog-icon>.skill-art{width:44px!important;height:44px!important;margin:0!important}
+.fusion-catalog-effect{color:#9fe0ff}
 .fusion-catalog-entry small{opacity:.8;overflow-wrap:anywhere}
 .fusion-catalog-entry.is-kekkei b{color:#d9c8ff}
 .fusion-catalog-entry[aria-pressed="true"]{outline:2px solid #7b63a8}
@@ -186,3 +190,8 @@
 .planner-arsenal{display:grid;gap:4px;margin:10px 0 4px}
 .planner-arsenal>small{opacity:.75}
 .planner-arsenal .arsenal-controls{margin:0}
+/* Rodada 101 — cartão de pílula/item: Efeito · Descrição · Quantidade em linhas próprias */
+.planner-card-info{display:grid;gap:3px;margin:6px 0;font-size:12px}
+.planner-card-info>div{display:grid;grid-template-columns:78px 1fr;gap:6px;align-items:baseline}
+.planner-card-info dt{opacity:.7;font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:.04em}
+.planner-card-info dd{margin:0}
