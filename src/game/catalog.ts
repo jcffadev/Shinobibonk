@@ -10,6 +10,7 @@ export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'cri
   |'healthPct'|'regenMult'|'eliteDamage'|'controlledDamage'|'statusStack'|'lowHpDamage'|'noHitDamage'|'killDamage'|'armorPhysical'|'bigCrit'
   |'lifesteal'|'thorns'|'killHeal'|'execute'|'burnChance'|'poisonChance'|'sleepChance'|'rootChance'|'chillChance'|'statusDamage'
   |'revive35'|'revive60'|'shield'|'rush'|'stance'|'smoke'|'emergencyHeal'|'periodicHeal'|'bolts'|'beam'|'freezeOnHit'
+  |'shatter'|'fireBurst'|'iceBurst'
   |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'eliteSpawn'|'threat'|'pillCap'|'skillCap'|'ultReset'
   // Caça-Níquel da Tsunade: +dano a cada 250 Ryu gastos na run (src/game/roulette.ts · spendBonuses)
   |'spendDamage';
@@ -65,7 +66,7 @@ export const ITEMS:Item[] = [
   item('sleep-incense','Incenso do Sono','Incomum',2,3,'2,5% de chance por acerto de fazer o inimigo Dormir por 2 s.',{sleepChance:.025}),
   item('vampire-root','Raiz Vampira','Incomum',13,ANY,'Recupera 3% do dano causado como HP.',{lifesteal:.03}),
   item('chains','Correntes de Contenção','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
-  item('katon-orb','Esfera Katon','Incomum',7,5,'5% de chance por acerto de queimar e +10% de dano de status (queimadura/veneno).',{burnChance:.05,statusDamage:.1}),
+  item('katon-orb','Esfera Katon','Incomum',7,5,'5% de chance por acerto de queimar e +10% de dano de status (queimadura/veneno). Inimigo que morre queimando pode explodir e queimar quem está perto.',{burnChance:.05,statusDamage:.1,fireBurst:1}),
   item('gold-tooth','Dente de Ouro','Incomum',8,3,'O Caça-Níquel da Tsunade e a atualização do Mercador custam 8% menos (até −24%).',{slotDiscount:.08}),
   item('akimichi-box','Marmita Akimichi','Incomum',8,ANY,'+1,2 HP/s de regeneração.',{regen:1.2}),
   item('green-tea','Chá Verde de Konoha','Incomum',13,3,'Ajudantes causam +25% de dano e atacam 15% mais rápido.',{allyDamage:.25,allySpeed:.15}),
@@ -82,7 +83,7 @@ export const ITEMS:Item[] = [
   item('blood-shell','Concha Sanguinária','Incomum',15,ANY,'Recupera 0,8% do dano causado como HP.',{lifesteal:.008}),
   item('emergency-fruit','Fruta Medicinal','Incomum',13,ANY,'+10 HP máximo; abaixo de 30% de HP, recupera 35% (a cada 45 s).',{health:10,emergencyHeal:1}),
   item('dense-smoke','Fumaça Densa','Incomum',0,ANY,'Ao ser atingido: 25% de chance de ficar invisível (invulnerável) por 1,5 s; +3% de evasão.',{smoke:.25,dodge:.03}),
-  item('hyoton','Pergaminho Hyoton','Incomum',10,5,'6% de chance por acerto de congelar parcialmente (Lentidão) e +3 de armadura.',{chillChance:.06,defense:3}),
+  item('hyoton','Pergaminho Hyoton','Incomum',10,5,'6% de chance por acerto de Resfriar (−12% de movimento por acúmulo; 3 acúmulos ou inimigo molhado congelam por 1,5 s) e +3 de armadura.',{chillChance:.06,defense:3}),
   item('poison','Anel do Veneno','Incomum',15,5,'6% de chance por acerto de envenenar e +10 pontos percentuais de chance de status.',{poisonChance:.06,status:.1}),
   item('taunt-flute','Flauta Provocadora','Incomum',2,5,'+12% de inimigos no mapa, +10% de experiência e +5 de Sorte.',{enemyCount:.12,exp:.1,luck:5}),
   item('tracker','Olhos do Rastreador','Incomum',7,ANY,'+25 pontos percentuais de chance de status (Genjutsu). Técnicas sem status passam a aplicar lentidão.',{status:.25}),
@@ -99,6 +100,7 @@ export const ITEMS:Item[] = [
   item('chakra-goggles','Óculos de Chakra','Raro',10,5,'+35% de dano de Ninjutsu e −8% de velocidade de ataque.',{element:.35,attackSpeed:-.08}),
   item('study-scroll','Pergaminho de Estudo','Raro',11,ANY,'+25% de experiência e +2 m de alcance de coleta.',{exp:.25,pickupFlat:2}),
   item('five-elements','Selo dos Cinco Elementos','Raro',11,3,'+6% de dano por status diferente no inimigo (controle, queimadura, veneno, lentidão), até +30%.',{statusStack:.06}),
+  item('ice-breaker','Quebra-Gelo','Raro',10,1,'Acertar um inimigo congelado quebra o gelo: +50% de dano no golpe e os estilhaços resfriam quem está a até 3 m.',{shatter:.5}),
   item('chakra-shield','Escudo de Chakra','Raro',9,2,'Bloqueia totalmente o próximo golpe a cada 14 s.',{shield:1}),
   item('kubikiribocho','Lâmina Kubikiribocho','Raro',1,4,'3% de chance por acerto de causar ×8 de dano.',{bigCrit:.03}),
   item('damage','Selo Amaldiçoado','Raro',3,5,'+30% de dano total e −10% de HP máximo.',{damage:.3,healthPct:-.1}),
@@ -129,7 +131,7 @@ export const ITEMS:Item[] = [
   item('sage-infusion','Selo de Senjutsu','Épico',2,1,'Infunde todas as técnicas com o elemento Sábio e dá a linha Senjutsu (modo sábio) às técnicas de Ninjutsu. Ativa o bônus de +20% de dano sábio de Hashirama.',{sage:1}),
 
   // ───── Lendário ─────
-  item('haku-mirror','Espelho de Gelo de Haku','Lendário',10,1,'+15% de dano; ao ser atingido, congela inimigos próximos por 3 s (a cada 20 s).',{damage:.15,freezeOnHit:1}),
+  item('haku-mirror','Espelho de Gelo de Haku','Lendário',10,1,'+15% de dano; ao ser atingido, congela inimigos próximos por 3 s (a cada 20 s). Inimigo que morre congelado solta estilhaços que resfriam quem está perto.',{damage:.15,freezeOnHit:1,iceBurst:1}),
   item('sage','Armadura do Sábio','Lendário',4,2,'+30% de dano total e +20% de velocidade de ataque.',{damage:.3,attackSpeed:.2}),
   item('rinne-tensei','Chakra de Hagoromo','Lendário',9,3,'Revive uma vez com 60% do HP (uma vez por cópia).',{revive60:1}),
   {...item('ninja-info-cards','Cartões de Informações Ninja','Lendário',3,10,'Ganha 2 níveis ao coletar e +5% de dano total por cópia.',{damage:.05}),levelsOnAcquire:2},

@@ -48,6 +48,7 @@ import { activeSynergies, synergyBonuses, type ActiveSynergy } from '../game/syn
 import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVitality, guardianDefense } from '../game/missions';
 import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DURATION, weatherWait, planZoneWeather, type WeatherEventId, type WeatherPlan } from '../game/maps';
 import { canLockTarget, mistVisibility, ZABUZA_MIST } from '../game/zabuzaMist';
+import { addChill, addPoisonStack, chillSlow, controlResist, deathBurstKind, freezeTarget, isFrozen, poisonMultiplier, reactionsFor, STATUS_RULES, statusDamageMultiplier, tickStatus } from '../game/statusRules';
 import { FALLEN_TRAP, trapRing } from '../game/fallenTrap';
 import { YOUTH_FIGHTER_HP, YOUTH_GOALS, YOUTH_TEXT, rollYouthChallenge, tickYouth, youthBonuses, youthChallengeText, youthSpots, type YouthChallengeId, type YouthDifficulty, type YouthRun } from '../game/youthTraining';
 import { HAGOROMO, HAGOROMO_WAVES, TOOL_BY_ID, chooseTool, createHagoromo, addHagoromoKills, hagoromoRecharges, rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots, type HagoromoState, type SageTool } from '../game/hagoromoTraining';
@@ -110,7 +111,7 @@ export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerS
 export { ALTAR_BUFF_BASE, ALTAR_BUFF_POOL } from '../game/altarRewards';
 /** Bolinho de arroz: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .025, heal: .35 };
-type Enemy = { /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
+type Enemy = { /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
 type MapPickup = { id:string; kind:'kunai'|'shuriken'|'ryu'|'sealDrop'|'cursedShuriken'|'ninjaBody'; name:string; x:number; z:number; mesh:THREE.Object3D; active:boolean; discovered?:boolean };
 type Projectile = {mesh:THREE.Object3D;direction:THREE.Vector3;remaining:number;speed:number;radius:number;technique:Technique;origin:THREE.Vector3;hit:Set<Enemy>;growth:SkillGrowth;ally?:boolean;bounces:number;effectLevel?:number;range:number};
 /** Setup (buff puro) ativo no jogador. */
@@ -1147,7 +1148,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(attacker&&ex('thorns')>0&&enemyList.includes(attacker))takeDamage(attacker,ex('thorns'),'#ffd27a',false,0,'Espinhos');
       if(ex('rush')>0)rushTimer=3;
       if(ex('smoke')>0&&Math.random()<ex('smoke')){invulnerability=1.5;eventToast='Fumaça densa: invisível por 1,5 s';}
-      if(ex('freezeOnHit')>0&&freezeCd<=0){freezeCd=20;for(const e of enemyList)if(Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<5){e.control='Paralisar';e.controlTime=3;}addRing(player.position,'#9fe7ff',5);eventToast='Espelho de Gelo: inimigos congelados!';}
+      if(ex('freezeOnHit')>0&&freezeCd<=0){freezeCd=20;for(const e of enemyList)if(Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<5)freezeTarget(e,3);addRing(player.position,'#9fe7ff',5);eventToast='Espelho de Gelo: inimigos congelados!';}
       if(hp<=0){
         if(revives60<ex('revive60')){revives60++;hp=stats.maxHp*.6;invulnerability=2.5;addRing(player.position,'#b28bff',4);eventToast='Rinne Tensei: você voltou com 60% do HP!';}
         else if(revives35<ex('revive35')){revives35++;hp=stats.maxHp*.35;invulnerability=2.5;addRing(player.position,'#fff195',4);eventToast=heroId==='hidan'&&revives35===1?'Imortalidade de Jashin: você voltou com 35% do HP!':'Você voltou com 35% do HP!';}
@@ -1459,7 +1460,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       // Naruto Totem e clones: recompensas próprias (2 níveis / só XP), nunca selamento nem saque de mega elite.
       if(enemy.totem){endTotem('derrotado');return;}
       if(enemy.bijuu){defeatedBijuu=BIJUU_BY_ID[enemy.heroId!].name;enemyList.splice(i,1);bossCombat.dispose(enemy);disposeEnemySprite(enemy);countKill();bijuuReward=bijuuLamens(MISSION_TIER[mission],plansUsed);openPortal('exit',enemy.sprite.position.x,enemy.sprite.position.z);eventToast=defeatedBijuu+' derrotada · +'+bijuuReward+' Lamens no portal de saída';saveRun();return;}
-      if(enemy.clone){const at=enemy.sprite.position.clone();enemyList.splice(i,1);disposeEnemySprite(enemy);countKill();addDrop(at,'xp',Math.round(TOTEM_RULES.cloneXp*xpMultiplier*ENEMY_XP_MULTIPLIER));if(!hiddenEffects)addRing(at,'#f2f2f2',.45);return;}const defeatedAt=enemy.sprite.position.clone();disposeEnemySprite(enemy);enemyList.splice(i,1);bossCombat.dispose(enemy);countKill();if(ex('killHeal')>0&&!defeated&&Math.random()<ex('killHeal'))hp=Math.min(stats.maxHp,hp+stats.maxHp*.02);if(enemy.account){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const,account:true};/* Rodada 55: o Shinobi para selar também cai e fica deitado (halo ciano) até o E dentro de 10 m. */fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,true,enemy.motionLevel??level)});eventToast='Shinobi para selar derrotado · aproxime-se do corpo e aperte E para selar e DESBLOQUEAR '+pending.target;return;}if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const};fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,false,enemy.motionLevel??level)});eventToast='Mega Elite derrotado · aproxime-se do corpo e aperte E';}for(const id of allies)gainAffinity(id,AFFINITY_RULES.perKill);if(enemy.guardian){hagoromoBossDown=true;const plans=Math.min(GUARDIAN_RULES.shikamaruMaxPlans,enemy.shikamaruPlans??0);for(let n=0;n<1+plans;n++){const angle=Math.PI/2+n*Math.PI*2/(1+plans);spawnPickup('sealDrop',defeatedAt.x+Math.cos(angle)*3.4,defeatedAt.z+Math.sin(angle)*3.4);}openPortal(zone===3?'arena':'zone',defeatedAt.x,defeatedAt.z);eventToast='Portal aberto! Guardião derrotado. '+(1+plans)+' kunai'+(plans?'s grátis no chão (Plano do Shikamaru +'+plans+').':' grátis no chão.');}if(enemy.bodyAmbush&&enemy.bodyAmbush===activeBody&&!enemyList.some(e=>e.bodyAmbush===activeBody)){activeBody.active=false;scene.remove(activeBody.mesh);activeBody=undefined;pendingLevels++;eventToast='Emboscada concluída: +1 nível.';saveRun();}const t=tune(),tierKey:EnemyTier=enemy.guardian?'mega':enemy.tier??'normal',boosted=tierKey!=='normal',loot=lootScale(tierKey,enemy.maxHp??0,ENEMY_TIERS.normal.hp*threatNow().hp,MISSION_TIER[mission])*(tierKey==='elite'?t.eliteLoot:tierKey==='mega'?t.megaLoot:1),pieces=tierKey==='mega'?3:1;addDrop(defeatedAt,'xp',xpDropValue(xpLoot(loot,MISSION_TIER[mission]),xpMultiplier,elapsed));if(Math.random()<Math.min(RAMEN_DROP.chance,dropChance(RAMEN_DROP.chance,t.ramenDrop)))addDrop(defeatedAt,'onigiri',RAMEN_DROP.heal*t.ramenHeal);if(boosted||Math.random()<dropChance(BASE_LOOT.ryuChance,t.ryuDrop))for(let n=0;n<pieces;n++)addDrop(defeatedAt,'ryu',Math.max(1,Math.round(BASE_LOOT.ryu*lootMultiplier*loot/pieces)));if(boosted||Math.random()<dropChance(BASE_LOOT.chakraChance,t.chakraDrop))for(let n=0;n<(tierKey==='mega'?2:1);n++)addDrop(defeatedAt,'chakra',Math.round(BASE_LOOT.chakra*Math.sqrt(loot)*t.chakraGain));
+      if(enemy.clone){const at=enemy.sprite.position.clone();enemyList.splice(i,1);disposeEnemySprite(enemy);countKill();addDrop(at,'xp',Math.round(TOTEM_RULES.cloneXp*xpMultiplier*ENEMY_XP_MULTIPLIER));if(!hiddenEffects)addRing(at,'#f2f2f2',.45);return;}queueDeathBurst(enemy);const defeatedAt=enemy.sprite.position.clone();disposeEnemySprite(enemy);enemyList.splice(i,1);bossCombat.dispose(enemy);countKill();if(ex('killHeal')>0&&!defeated&&Math.random()<ex('killHeal'))hp=Math.min(stats.maxHp,hp+stats.maxHp*.02);if(enemy.account){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const,account:true};/* Rodada 55: o Shinobi para selar também cai e fica deitado (halo ciano) até o E dentro de 10 m. */fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,true,enemy.motionLevel??level)});eventToast='Shinobi para selar derrotado · aproxime-se do corpo e aperte E para selar e DESBLOQUEAR '+pending.target;return;}if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const};fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,false,enemy.motionLevel??level)});eventToast='Mega Elite derrotado · aproxime-se do corpo e aperte E';}for(const id of allies)gainAffinity(id,AFFINITY_RULES.perKill);if(enemy.guardian){hagoromoBossDown=true;const plans=Math.min(GUARDIAN_RULES.shikamaruMaxPlans,enemy.shikamaruPlans??0);for(let n=0;n<1+plans;n++){const angle=Math.PI/2+n*Math.PI*2/(1+plans);spawnPickup('sealDrop',defeatedAt.x+Math.cos(angle)*3.4,defeatedAt.z+Math.sin(angle)*3.4);}openPortal(zone===3?'arena':'zone',defeatedAt.x,defeatedAt.z);eventToast='Portal aberto! Guardião derrotado. '+(1+plans)+' kunai'+(plans?'s grátis no chão (Plano do Shikamaru +'+plans+').':' grátis no chão.');}if(enemy.bodyAmbush&&enemy.bodyAmbush===activeBody&&!enemyList.some(e=>e.bodyAmbush===activeBody)){activeBody.active=false;scene.remove(activeBody.mesh);activeBody=undefined;pendingLevels++;eventToast='Emboscada concluída: +1 nível.';saveRun();}const t=tune(),tierKey:EnemyTier=enemy.guardian?'mega':enemy.tier??'normal',boosted=tierKey!=='normal',loot=lootScale(tierKey,enemy.maxHp??0,ENEMY_TIERS.normal.hp*threatNow().hp,MISSION_TIER[mission])*(tierKey==='elite'?t.eliteLoot:tierKey==='mega'?t.megaLoot:1),pieces=tierKey==='mega'?3:1;addDrop(defeatedAt,'xp',xpDropValue(xpLoot(loot,MISSION_TIER[mission]),xpMultiplier,elapsed));if(Math.random()<Math.min(RAMEN_DROP.chance,dropChance(RAMEN_DROP.chance,t.ramenDrop)))addDrop(defeatedAt,'onigiri',RAMEN_DROP.heal*t.ramenHeal);if(boosted||Math.random()<dropChance(BASE_LOOT.ryuChance,t.ryuDrop))for(let n=0;n<pieces;n++)addDrop(defeatedAt,'ryu',Math.max(1,Math.round(BASE_LOOT.ryu*lootMultiplier*loot/pieces)));if(boosted||Math.random()<dropChance(BASE_LOOT.chakraChance,t.chakraDrop))for(let n=0;n<(tierKey==='mega'?2:1);n++)addDrop(defeatedAt,'chakra',Math.round(BASE_LOOT.chakra*Math.sqrt(loot)*t.chakraGain));
       // SEM drop de item por abate (pedido do usuário, 06/11/2026): itens só por kunai/shuriken/eventos com interação.
       // Antes: 1,8% por abate (×Sorte) virava pendingItemRewards ao ser puxado pelo ímã — com emboscadas e horda grande, chovia item sem interação.
       playSfx('impact');}
@@ -1472,6 +1473,34 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
     function takeDamage(enemy:Enemy,damage:number,color:string,fromAlly=false,tier=0,name='Status'){if(!enemyList.includes(enemy))return;if(enemy.defense)damage*=1-enemy.defense;if(enemy.account&&damage>=1)damage=Math.max(damage,(enemy.maxHp||1)*.10);const dealt=Math.min(enemy.hp,damage);if(fromAlly)allyDamage+=dealt;else{totalDamage+=dealt;skillDamage[name]=(skillDamage[name]||0)+dealt;if(ex('lifesteal')>0&&!defeated)hp=Math.min(stats.maxHp,hp+dealt*ex('lifesteal'));}enemy.hp-=damage;
       // Lâmina do Carrasco: inimigos comuns abaixo de 8% (+4 pontos por cópia extra) morrem na hora.
       const executeAt=ex('execute')>0?.04*(ex('execute')/.08+1):0;if(executeAt>0&&enemy.hp>0&&!enemy.megaElite&&!enemy.guardian&&!enemy.totem&&enemy.hp<(enemy.maxHp||0)*executeAt)enemy.hp=0;damageNumber(enemy.sprite.position,damage,tier);if(enemy.hp<=0)removeEnemy(enemy);else if(!hiddenEffects){enemy.sprite.material.color.set(color);}}
+    /** Rodada 103: Resfriado (3 acúmulos ou molhado congelam). */
+    function chillEnemy(enemy:Enemy,stacks:number){if(addChill(enemy,stacks)&&!hiddenEffects)addRing(enemy.sprite.position,'#9fe7ff',1.1);}
+    const near=(at:THREE.Vector3,radius:number,skip?:Enemy)=>enemyList.filter(e=>e!==skip&&!e.totem&&Math.hypot(e.sprite.position.x-at.x,e.sprite.position.z-at.z)<radius);
+    /** Rodada 103: Quebra-Gelo e reações elementais do golpe. */
+    function statusReactions(enemy:Enemy,t:Technique,damage:number,shatter:boolean){
+      if(!enemyList.includes(enemy))return;
+      if(shatter&&ex('shatter')>0){enemy.control=undefined;enemy.controlTime=0;for(const e of near(enemy.sprite.position,STATUS_RULES.shatter.radius,enemy))chillEnemy(e,1);if(!hiddenEffects)addRing(enemy.sprite.position,'#d8f6ff',STATUS_RULES.shatter.radius);}
+      for(const reaction of reactionsFor(enemy,[t.element,t.secondaryElement])){
+        if(reaction==='wet')enemy.wet=STATUS_RULES.wet.seconds;
+        else if(reaction==='electro'){enemy.wet=0;const {targets,radius,share}=STATUS_RULES.electro;for(const e of near(enemy.sprite.position,radius,enemy).slice(0,targets))takeDamage(e,damage*share,'#9fd8ff',false,0,t.name);if(!hiddenEffects)addRing(enemy.sprite.position,'#9fd8ff',radius*.5);}
+        else if(reaction==='scorch'){for(const e of near(enemy.sprite.position,STATUS_RULES.scorch.radius,enemy).slice(0,STATUS_RULES.scorch.targets))e.burn=Math.max(e.burn??0,enemy.burn??0);}
+      }
+    }
+    /** Rodada 103: explosões na morte (Esfera Katon / Espelho de Gelo de Haku), resolvidas no quadro seguinte. */
+    const deathBursts:{x:number;z:number;kind:'fire'|'ice'}[]=[];
+    function queueDeathBurst(enemy:Enemy){const kind=deathBurstKind(enemy,ex('fireBurst'),ex('iceBurst'),Math.random());if(kind)deathBursts.push({x:enemy.sprite.position.x,z:enemy.sprite.position.z,kind});}
+    function flushDeathBursts(){
+      const D=STATUS_RULES.deathBurst;
+      for(const b of deathBursts.splice(0,D.perFrame)){
+        const at=new THREE.Vector3(b.x,0,b.z),fire=b.kind==='fire';
+        for(const e of near(at,fire?D.fireRadius:D.iceRadius)){
+          takeDamage(e,stats.damage*(fire?D.fireDamage*(1+ex('statusDamage')):D.iceDamage),fire?'#ff9b46':'#9fe7ff',false,0,fire?'Esfera Katon':'Espelho de Gelo de Haku');
+          if(!enemyList.includes(e))continue;
+          if(fire)e.burn=Math.max(e.burn??0,2*stats.duration);else chillEnemy(e,1);
+        }
+        if(!hiddenEffects)addRing(at.setY(terrainHeight(b.x,b.z)+.1),fire?'#ff9b46':'#9fe7ff',fire?D.fireRadius:D.iceRadius);
+      }
+    }
     /** Multiplicador de dano dos itens para uma técnica do jogador contra este inimigo. */
     function itemDamageBonus(enemy:Enemy,t:Technique){
       const elements=t.ultimate?[...new Set(Object.values(ELEMENT_KEY))]:[ELEMENT_KEY[t.element],...(t.secondaryElement?[ELEMENT_KEY[t.secondaryElement]]:[])];
@@ -1489,22 +1518,26 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       bonus*=1+Math.min(.3,Math.floor(kills/100)*ex('killDamage'));
       if(t.ultimate||t.school==='Taijutsu')bonus*=1+Math.min(.5,stats.armor*ex('armorPhysical'));
       if(ex('bigCrit')>0&&Math.random()<ex('bigCrit'))bonus*=8;
+      // Rodada 103: congelado +25% (Quebra-Gelo +50%) e o golpe que acorda +60%.
+      bonus*=statusDamageMultiplier(enemy,ex('shatter'));
       return bonus;
     }
     function hit(enemy:Enemy,t:Technique,g:SkillGrowth,origin:THREE.Vector3,ally=false,effectLevel=ally||t.ultimate?1:(skillLevels[t.name]||1)){if(!enemyList.includes(enemy))return;const critical=techniqueCritical(t,effectLevel),crit=rollCritical(stats.crit+critical.chance,stats.critDamage+critical.damage),school=t.ultimate?stats.physical*stats.ninjutsu:t.school==='Taijutsu'?stats.physical:t.school==='Ninjutsu'?stats.ninjutsu:1,sage=t.element==='Sábio'||stats.sage>0||(!ally&&sageModeActive()),passive=!ally&&DETERMINATION[heroId]!==undefined?1+DETERMINATION[heroId]*(1-hp/stats.maxHp):!ally&&familyOf(heroId)==='hashirama'&&sage?1.2:!ally&&familyOf(heroId)==='tenten'&&(t.element==='Neutro'||t.shape==='Projétil'||t.shape==='Em V')?1.5:1;
       const damage=stats.damage*t.power*TECHNIQUE_SCALE*(1+g.damage)*(!ally&&config.trained?.includes(t.name)?1.15:1)*school*passive*crit.multiplier*(ally?.65*stats.allyDamage:damageMultiplier*tune().playerDamage*itemDamageBonus(enemy,t));
       if(!ally)toolHitHooks(enemy,damage,crit.tier>0);
+      const frozenBefore=isFrozen(enemy),poisonBefore=enemy.poison;
       if(enemy.control==='Dormir')enemy.controlTime=0;
       if(t.gravity&&!enemy.bijuu&&!enemy.totem){
         const delta=origin.clone().sub(enemy.sprite.position).setY(0),distance=delta.length();
         const step=t.gravity==='push'?-2:Math.min(3,Math.max(0,distance-(t.gravity==='core'?.28:.82)));
         enemy.sprite.position.addScaledVector(delta.normalize(),step*(enemy.guardian?.4:1));
       }
-      const status=t.status??(stats.status>0?'Lentidão':undefined);if(status&&Math.random()<techniqueProc(t.status?t.statusChance:0,effectLevel,stats.status)){const duration=(status==='Lentidão'?1.8:.65)*stats.duration*(1+g.duration);if(status==='Empurrar'){const away=enemy.sprite.position.clone().sub(origin);away.y=0;enemy.sprite.position.addScaledVector(away.normalize(),1.4);}else{enemy.control=status;enemy.controlTime=duration;if(status==='Lentidão')enemy.slow=duration;}}
+      const status=t.status??(stats.status>0?'Lentidão':undefined);if(status&&Math.random()<techniqueProc(t.status?t.statusChance:0,effectLevel,stats.status)){const duration=(status==='Lentidão'?1.8:.65)*stats.duration*(1+g.duration);if(status==='Empurrar'){const away=enemy.sprite.position.clone().sub(origin);away.y=0;enemy.sprite.position.addScaledVector(away.normalize(),1.4);}else if(status==='Congelar')chillEnemy(enemy,STATUS_RULES.chill.techniqueStacks);else{enemy.control=status;enemy.controlTime=duration*(status==='Lentidão'?1:controlResist(enemy));if(status==='Lentidão')enemy.slow=duration;}}
       if(t.secondaryStatus&&Math.random()<techniqueProc(t.secondaryStatusChance??0,effectLevel,stats.status)){
         if(t.secondaryStatus==='Lentidão')enemy.slow=Math.max(enemy.slow??0,1.8*stats.duration*(1+g.duration));
         else if(t.secondaryStatus==='Empurrar')enemy.sprite.position.addScaledVector(enemy.sprite.position.clone().sub(origin).setY(0).normalize(),1.4);
-        else if(!enemy.controlTime){enemy.control=t.secondaryStatus;enemy.controlTime=.65*stats.duration*(1+g.duration);}
+        else if(t.secondaryStatus==='Congelar')chillEnemy(enemy,1);
+        else if(!enemy.controlTime){enemy.control=t.secondaryStatus;enemy.controlTime=.65*stats.duration*(1+g.duration)*controlResist(enemy);}
       }
       if(stats.poison>0)enemy.poison={remaining:3*stats.duration*(1+g.duration),dps:damage*stats.poison*(1+ex('statusDamage'))/3};if(t.burn&&Math.random()<techniqueProc(BURN_CHANCE,effectLevel,stats.status))enemy.burn=Math.max(enemy.burn??0,2*stats.duration*(1+g.duration));
       if(t.poison&&Math.random()<techniqueProc(POISON_CHANCE,effectLevel,stats.status)){const duration=3*stats.duration*(1+g.duration);enemy.poison={remaining:duration,dps:Math.max(enemy.poison?.dps??0,damage*.45*(1+ex('statusDamage'))/duration)};}
@@ -1512,10 +1545,13 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(!ally){
         if(Math.random()<ex('burnChance'))enemy.burn=2*stats.duration;
         if(Math.random()<ex('poisonChance'))enemy.poison={remaining:3*stats.duration,dps:damage*.35*(1+ex('statusDamage'))/3};
-        if(Math.random()<ex('sleepChance')){enemy.control='Dormir';enemy.controlTime=2*stats.duration;}
-        if(Math.random()<ex('rootChance')){enemy.control='Paralisar';enemy.controlTime=1.2*stats.duration;}
-        if(Math.random()<ex('chillChance')){enemy.control='Lentidão';enemy.controlTime=1.8*stats.duration;enemy.slow=1.8*stats.duration;}
+        if(Math.random()<ex('sleepChance')){enemy.control='Dormir';enemy.controlTime=2*stats.duration*controlResist(enemy);}
+        if(Math.random()<ex('rootChance')){enemy.control='Paralisar';enemy.controlTime=1.2*stats.duration*controlResist(enemy);}
+        if(Math.random()<ex('chillChance'))chillEnemy(enemy,1);
       }
+      // Rodada 103: acúmulos de veneno, Quebra-Gelo e reações (molhado, eletrocutar, espalhar queimadura).
+      if(enemy.poison&&enemy.poison!==poisonBefore)addPoisonStack(enemy);
+      statusReactions(enemy,t,damage,frozenBefore&&!ally);
       // Impacto por natureza em partículas (limite por quadro dentro do particleFx; sem alocar malha por acerto).
       if(!hiddenEffects)particles.impact(t,enemy.sprite.position);
       takeDamage(enemy,damage,t.color,ally,crit.tier,t.name);
@@ -1700,11 +1736,12 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         position.y=terrainHeight(position.x,position.z)+.68;
         if(shot.object instanceof THREE.Sprite)shot.object.material.rotation+=dt*12;
       }
+      flushDeathBursts();
       for(const enemy of [...enemyList]){if(hagoromoEvent&&!enemy.hagoromo)continue;
         if(mistHides(weatherEvent,elapsed)&&!enemyRenderer.isBatched(enemy.sprite))enemy.sprite.visible=Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<ZABUZA_MIST.reveal+ZABUZA_MIST.fade;
         else enemy.sprite.visible=true;
-        if(enemy.poison){const duration=Math.min(dt,enemy.poison.remaining);enemy.poison.remaining-=duration;takeDamage(enemy,enemy.poison.dps*duration,'#b67bff');if(!enemyList.includes(enemy))continue;if(enemy.poison.remaining<=0)enemy.poison=undefined;}
-        enemy.sprite.material.color.lerp(enemy.elite?ELITE_TINT:WHITE_TINT,dt*6);if((enemy.burn??0)>0){enemy.burn=Math.max(0,(enemy.burn??0)-dt);takeDamage(enemy,stats.damage*.15*dt*(1+ex('statusDamage')),'#ff9b46');if(!enemyList.includes(enemy))continue;}if(enemy.totem)continue;enemy.controlTime=Math.max(0,(enemy.controlTime||0)-dt);enemy.slow=Math.max(0,(enemy.slow||0)-dt);const channeling=isChanneling(weatherEvent,enemy.heroId,elapsed);const stunned=channeling||!enemy.bijuu&&enemy.controlTime>0&&enemy.control!=='Lentidão';const casting=enemy.boss?bossCombat.update(enemy,dt,Boolean(enemy.guardian||enemy.megaElite&&!enemy.account)&&!stunned&&enemy.windup===undefined&&!defeated):false;if(defeated)break;
+        if(enemy.poison){const duration=Math.min(dt,enemy.poison.remaining);enemy.poison.remaining-=duration;takeDamage(enemy,enemy.poison.dps*duration*poisonMultiplier(enemy.poisonStacks),'#b67bff');if(!enemyList.includes(enemy))continue;if(enemy.poison.remaining<=0){enemy.poison=undefined;enemy.poisonStacks=0;}}
+        enemy.sprite.material.color.lerp(enemy.elite?ELITE_TINT:WHITE_TINT,dt*6);if((enemy.burn??0)>0){enemy.burn=Math.max(0,(enemy.burn??0)-dt);takeDamage(enemy,stats.damage*.15*dt*(1+ex('statusDamage')),'#ff9b46');if(!enemyList.includes(enemy))continue;}if(enemy.totem)continue;enemy.controlTime=Math.max(0,(enemy.controlTime||0)-dt);enemy.slow=Math.max(0,(enemy.slow||0)-dt);tickStatus(enemy,dt);const channeling=isChanneling(weatherEvent,enemy.heroId,elapsed);const stunned=channeling||!enemy.bijuu&&enemy.controlTime>0&&enemy.control!=='Lentidão';const casting=enemy.boss?bossCombat.update(enemy,dt,Boolean(enemy.guardian||enemy.megaElite&&!enemy.account)&&!stunned&&enemy.windup===undefined&&!defeated):false;if(defeated)break;
         const sprite=enemy.sprite,batched=enemyRenderer.isBatched(sprite),motion=enemy.motion;
         dir.set(player.position.x-sprite.position.x,0,player.position.z-sprite.position.z);
         const distance=dir.length();
@@ -1753,7 +1790,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           }else if(!ranged&&enemy.attackPoint&&Math.hypot(player.position.x-enemy.attackPoint.x,player.position.z-enemy.attackPoint.z)<radius&&invulnerability<=0){
             damagePlayer(10*(enemy.dmgMult??1)*threat.damage,enemy);
           }if(enemy.marker){scene.remove(enemy.marker);enemy.marker.geometry.dispose();(enemy.marker.material as THREE.Material).dispose();enemy.marker=undefined;}enemy.windup=undefined;enemy.hitTimer=(ranged?2.25:.9)/threat.attackRate;}
-        }else{enemy.hitTimer-=dt;if(distance>reach){enemy.sprite.position.addScaledVector(enemyTravel,enemy.speed*threat.speed*(enemy.slow?.75:1)*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(!arena&&!enemy.bijuu)solids.resolveBig(enemy.sprite.position);enemy.sprite.position.y=standHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
+        }else{enemy.hitTimer-=dt;if(distance>reach){enemy.sprite.position.addScaledVector(enemyTravel,enemy.speed*threat.speed*(enemy.slow?.75:1)*chillSlow(enemy)*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(!arena&&!enemy.bijuu)solids.resolveBig(enemy.sprite.position);enemy.sprite.position.y=standHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
           else if(enemy.hitTimer<=0){enemy.windup=Math.max(.28,.65/Math.sqrt(threat.attackRate));enemy.attackPoint=player.position.clone();/* Aviso no chão desenhado em lote (enemyRenderer); o Mesh é só dado. */const marker=enemyRenderer.marker(ranged?.7:enemy.megaElite?1.7:1);marker.position.set(enemy.attackPoint.x,terrainHeight(enemy.attackPoint.x,enemy.attackPoint.z)+.2,enemy.attackPoint.z);enemy.marker=marker;}
         }
         if(motion){

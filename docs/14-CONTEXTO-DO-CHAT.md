@@ -2543,3 +2543,16 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Nagato/Pain usam magnetismo, então suas habilidades deveriam depender bastante disso
 
 **Resposta.** Contagem: 59 de 216 só davam crítico. Agora só 7 golpes de precisão ficam no crítico; as outras ganharam status da obra, o gelo congela e Pain e Nagato puxam e repelem (tabela no CHANGELOG). **Testes:** tipos, testes e build. **Publicado no GitHub.**
+
+## Rodada 103 · 16/11/2026 — pacote de status
+
+> Sim, implementar
+
+**Resposta.**
+
+- Resfriado em acúmulos (3 congelam), congelado leva +25% de dano.
+- Reações: molhado + gelo congela, molhado + Raio eletrocuta, queimando + Vento espalha.
+- Resistência a controle (Mega Elite e Guardião 40%, bijū 25%), golpe que acorda +60%, veneno acumula até 8.
+- Item novo Quebra-Gelo; Esfera Katon e Espelho de Gelo de Haku explodem na morte.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
+- **Publicado no GitHub.**

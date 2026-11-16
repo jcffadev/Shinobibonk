@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 16/11/2026 · Pacote de status: Resfriado, reações, resistência e itens que explodem (Rodada 103)
+
+- **Pedido do usuário:** "vamos ter que aumentar um pouco os itens que tem efeito de congelar para balancear e o dano..." e, depois das sugestões, "Sim, implementar".
+- **Regras em `src/game/statusRules.ts`** (lógica pura, valores PROPOSTOS para calibrar no simulador):
+  - **Resfriado:** cada acúmulo tira 12% do movimento; 3 acúmulos congelam por 1,5 s; sem frio novo por 3 s, os acúmulos somem. Técnicas com Congelar dão 2 acúmulos; o Pergaminho Hyoton dá 1.
+  - **Congelado:** não age e recebe +25% de dano.
+  - **Reações:** técnicas de Água molham por 5 s. Molhado + gelo congela na hora. Molhado + Raio eletrocuta: até 3 vizinhos a 6 m levam 40% do golpe. Queimando + Vento espalha a queimadura para até 4 vizinhos a 3 m.
+  - **Resistência a controle:** Mega Elite e Guardião 40%, bijū 25% (encurta a duração).
+  - **Sono:** o golpe que acorda causa +60%.
+  - **Veneno:** acumula até 8; cada acúmulo além do primeiro dá +15% de dano por segundo.
+- **Itens:**
+  - **Novo: Quebra-Gelo** (Raro): acertar um inimigo congelado quebra o gelo (+50% no golpe) e os estilhaços resfriam quem está a até 3 m.
+  - **Esfera Katon:** inimigo que morre queimando tem 50% de chance de explodir (dano em 3,5 m e queimadura).
+  - **Espelho de Gelo de Haku:** inimigo que morre congelado solta estilhaços (dano e Resfriado em 3 m). O congelamento ao ser atingido agora é Congelar de verdade (antes era Paralisar), com resistência.
+- As explosões na morte são resolvidas no quadro seguinte (até 12 por quadro), para não mexer na lista de inimigos durante a morte.
+- **Testes:** 4 testes novos em `tests/status.test.mjs` (o mínimo subiu para 212) e 3 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver na tela o Resfriado deixando o inimigo lento, o congelamento, os anéis das reações e as explosões na morte.
+
 ## 16/11/2026 · Equilíbrio dos status: menos crítico, gelo que congela e magnetismo do Pain (Rodada 102)
 
 - **Pedidos do usuário:**

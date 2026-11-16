@@ -15,6 +15,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 | Queda de Mega Elites (depois) | Para todos os shinobis que podem aparecer como Mega Elite: cambalear, ajoelhar, perder o apoio e cair até ficar deitado para selamento. Preservar o traje da versão, ponto de contato com o chão e interação com E. A queda atual em `fallenShinobi.ts` continua até este item ser executado. |
 | Arena final | **IMPLEMENTADO.** A bijū carrega o atlas antes da entrada e conserva sua própria opacidade. Conferir as nove no jogo e retomar a arena salva. |
 | Roleta e emboscada da Akatsuki | **IMPLEMENTADO.** Cinco personagens na roleta. Zetsu substitui o Altar do Desafio. Validar em partida o surgimento, acionamento, combate, três pergaminhos, rolos e chances. |
+| Status | **Rodada 103:** Resfriado em acúmulos, reações (molhado, eletrocutar, espalhar queimadura), resistência a controle, sono com golpe extra, veneno em acúmulos, item Quebra-Gelo e explosões na morte. Valores propostos: calibrar no simulador. Validação na tela pendente. |
 | Desempenho | Em andamento com o Claude Code. |
 | Divisão (16/11) | O Claude Code faz o resto desta fila: eventos, água e jutsus. Os **mapas jogáveis das vilas ficam com o Codex** ("deixa aquilo pro codex"). |
 
