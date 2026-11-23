@@ -99,46 +99,63 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
   material.onBeforeCompile = shader => {
     shader.uniforms.waterTime = uniforms.waterTime;
     shader.uniforms.waterRipples = uniforms.waterRipples;
+
     shader.vertexShader = `
       attribute float waterDepth;
       uniform float waterTime;
       varying float vWaterDepth;
-      varying vec2 vWaterXZ;
+      varying vec3 vWaterWorld;
     ` + shader.vertexShader.replace('#include <begin_vertex>', `
       #include <begin_vertex>
       vWaterDepth = waterDepth;
-      vWaterXZ = position.xz;
-      transformed.y += (sin(waterTime * 1.7 + position.x * .9) + cos(waterTime * 1.3 + position.z * .8)) * .035 * smoothstep(.0, .3, waterDepth);
+      float move = sin(position.x * 1.15 + position.z * .47 - waterTime * 1.24)
+        + sin(position.x * -.37 + position.z * 1.70 + waterTime * .79);
+      transformed.y += move * .024 * smoothstep(.035, .38, waterDepth);
+      vWaterWorld = (modelMatrix * vec4(transformed, 1.0)).xyz;
     `);
     shader.fragmentShader = `
       uniform float waterTime;
       uniform vec4 waterRipples[${RIPPLES.max}];
       varying float vWaterDepth;
-      varying vec2 vWaterXZ;
+      varying vec3 vWaterWorld;
     ` + shader.fragmentShader.replace('#include <map_fragment>', `
       #include <map_fragment>
       if (vWaterDepth <= 0.0) discard;
-      // Pixel art: o padrão das ondas usa células de 25 cm, como os pixels do chão.
-      vec2 cell = floor(vWaterXZ * 4.0) / 4.0;
-      float ripple = sin(cell.x * 1.7 + waterTime * 1.9) * cos(cell.y * 1.5 - waterTime * 1.4);
-      float band = step(.78, ripple);
-      vec3 shallow = vec3(.45, .82, .86), deep = vec3(.10, .36, .58);
-      vec3 water = mix(shallow, deep, smoothstep(.0, .9, vWaterDepth));
-      water = floor(water * 9.0) / 9.0;
-      float foam = 1.0 - smoothstep(${WATER.shore.toFixed(2)}, ${(WATER.shore * 2.6).toFixed(2)}, vWaterDepth + ripple * .03);
-      float sparkle = step(.985, fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453 + waterTime * .25));
-      // Ondas dos passos: anel claro que cresce e some (x, z, início, força).
+      vec2 channel = vWaterWorld.xz;
+      float a = dot(channel, vec2(1.48, .57)) - waterTime * 1.23;
+      float b = dot(channel, vec2(-.53, 1.95)) + waterTime * .81;
+      float c = dot(channel + vec2(.2, -.32) * waterTime, vec2(3.65, 3.17));
+      vec3 waterNormal = normalize(vec3(.11*cos(a) - .065*cos(b) + .027*cos(c), 1.0,
+        .045*cos(a) + .10*cos(b) + .022*cos(c)));
+      vec3 eye = normalize(cameraPosition - vWaterWorld);
+      float fresnel = .032 + .66 * pow(1.0 - max(dot(eye, waterNormal), 0.0), 4.0);
+      float depthMix = smoothstep(.025, 1.08, vWaterDepth);
+      vec3 shallows = vec3(.105, .48, .40);
+      vec3 deep = vec3(.018, .155, .29);
+      vec3 reflection = mix(vec3(.49, .72, .75), vec3(.32, .56, .74), smoothstep(.1, .8, eye.y));
+      float sunHighlight = pow(max(dot(reflect(-normalize(vec3(-.40, .85, .32)), waterNormal), eye), 0.0), 86.0);
+      float caustics = pow(.5 + .5 * sin(a * 2.4 + sin(b * 1.4)) * sin(c * .83), 4.0);
+      vec3 water = mix(shallows + vec3(.085, .13, .088) * caustics * (1.0 - depthMix), deep, depthMix);
+      water = mix(water, reflection, fresnel) + sunHighlight * vec3(.65, .71, .67) * .52;
+      float breakup = .042 * sin(a * 2.4) + .024 * sin(c + b);
+      float foam = (1.0 - smoothstep(.035, .19, vWaterDepth + breakup))
+        * smoothstep(.015, .08, vWaterDepth) * (.37 + .36 * smoothstep(-.7,.8,sin(c)));
       float rings = 0.0;
       for (int i = 0; i < ${RIPPLES.max}; i++) {
         vec4 r = waterRipples[i];
         float age = waterTime - r.z;
         if (age < 0.0 || age > ${RIPPLES.life.toFixed(2)}) continue;
         float front = .15 + age * ${RIPPLES.speed.toFixed(2)};
-        float d = length(cell - r.xy);
-        rings += r.w * (1.0 - age / ${RIPPLES.life.toFixed(2)}) * (1.0 - smoothstep(.0, .22, abs(d - front)));
+        float distanceToRing = abs(length(channel - r.xy) - front);
+        rings += r.w * (1.0 - age / ${RIPPLES.life.toFixed(2)})
+          * (1.0 - smoothstep(.027, .17 + age * .035, distanceToRing));
       }
-      diffuseColor.rgb = mix(water + band * .07, vec3(.93, .98, 1.0), clamp(max(max(foam, sparkle * .8), rings * .85), 0.0, 1.0));
-      diffuseColor.a = mix(.62, .9, smoothstep(.0, .8, vWaterDepth)) + foam * .1;
+      diffuseColor.rgb = mix(water, vec3(.78, .91, .88), clamp(foam + rings * .67, 0.0, .82));
+      diffuseColor.a = mix(.33, .91, smoothstep(.015, 1.05, vWaterDepth)) + foam * .14;
+    `);
+    shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>', `
+      #include <normal_fragment_maps>
+      normal = normalize(mat3(viewMatrix) * waterNormal);
     `);
   };
   for (const body of bodies) {
@@ -147,7 +164,7 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
       ? { x0: body.x - body.rx - 1, x1: body.x + body.rx + 1, z0: body.z - body.rz - 1, z1: body.z + body.rz + 1 }
       : { x0: Math.min(...bends) - body.width - 3, x1: Math.max(...bends) + body.width + 3, z0: body.from - body.width, z1: body.to };
     const w = box.x1 - box.x0, d = box.z1 - box.z0;
-    const geometry = new THREE.PlaneGeometry(w, d, Math.ceil(w * 1.5), Math.ceil(d * 1.5));
+    const geometry = new THREE.PlaneGeometry(w, d, Math.ceil(w * 2.4), Math.ceil(d * 2.4));
     geometry.rotateX(-Math.PI / 2);
     geometry.translate(box.x0 + w / 2, WATER.level, box.z0 + d / 2);
     const position = geometry.attributes.position, depth = new Float32Array(position.count);

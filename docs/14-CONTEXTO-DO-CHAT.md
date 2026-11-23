@@ -2603,3 +2603,23 @@ Konoha ganhou bairros laterais, árvores e escadaria na entrada. O Monte Hokage 
 > Aumentar ainda mais a vila, deve ser praticamente 80% do cenário... para o jogador explorar e ter casas, bastante coisa, claro que algumas você vai encaixar por rng nossos npcs/casas.
 
 O piscar vinha da sobreposição de dois pisos na mesma altura. Cada degrau passou a ter um piso, espelho e laterais. A escada lateral chega a um pátio junto à fachada e continua até outra rua. Konoha ocupou aproximadamente 81% da área jogável, com bairros novos, praças e pontes. Os pontos de encontro e as variações das casas continuam sorteados.
+
+
+## 23/11/2026 · Eventos fixos, água e referências visuais de Konoha
+
+> Nossos eventos/altares/mercadores/npcs ainda estão girando junto com a cãmera, eles precisma ficar fixos.
+>
+> Olha como ta a estrutura dessa parte de madara e hashirama, isso não pode acontecer, nem com a estrutura também dos kades.
+> Outra coisa...
+> A água precisamos colocar qualidade no cenário.
+>
+> REFERENCIAS PARA casas, seguir e fazer diferenciação de casas pegar referencias de coisas reais do anime e colocar na cidade.
+> Você precisa entender, buscar e aplicar
+>
+> rosto dos kages tem que ser assim, ter a estrutura, a cidade toda em volta ou embaixo e eles em cima, mas precisa dar pra subir
+>
+> entrada da vila no anime, faça o melhor que puder, pode usar mais pode gráfico em konoha para testarmos, me fale como vai fazer usar pra melhorar ainda mais toda a qualidade gráfica disso
+>
+> exemplo de uma cidade legal, konoha em um jogo do xbox, conseguimos chegar perto disso?
+
+A rodada usa as referências para definir altura, densidade, tipos de telhado, fachada, canal, portal de entrada e encosta. Salvas as artes próprias, os NPCs viraram faces fixas, os postos ganharam volume e os monumentos receberam verso com a silhueta da rocha. É possível escalar pelas saliências do lado oeste do Monte Hokage. Em Konoha, usamos mais resolução de sombras conforme a qualidade. A água mantém espumas e ondas de contato, com margem e iluminação revisadas. Os testes por código e a renderização nativa passaram, com conferência em uma partida e medição de desempenho ainda pendentes.

@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Eventos, água e direção visual de Konoha · 23/11/2026
+
+- **IMPLEMENTADO:** orientação fixa de estruturas e NPCs, relevo das estátuas e do Monte Hokage, rota de subida até o mirante, casas diferenciadas, Academia, portão com folhas verdes e água com reflexo aproximado.
+- **PENDENTE DE VALIDAÇÃO E2E:** percorrer os marcos e interagir com os eventos ao girar a câmera. Medir FPS em Alta, Média e Baixa, perto da água e do topo do monte. Revisar composição, marcos do horizonte e densidade de fachadas nos bairros secundários com base no teste jogável.
+
 ## Expansão de Konoha e acabamento das escadas · 23/11/2026
 
 - **IMPLEMENTADO:** degraus de superfície única, pátio conectado à rua pelos dois lados, praça de treino, praças de bairro e pontes. A vila ocupa aproximadamente 81% do chão jogável, com 161 lotes na semente usada para a prévia.

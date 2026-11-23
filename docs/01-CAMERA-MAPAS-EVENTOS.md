@@ -414,3 +414,14 @@ Konoha ocupa até 42 m de cada lado da avenida e ganhou 24 lotes laterais. A sem
 ### Expansão urbana e malhas de degraus
 
 A área urbana de Konoha ocupa 81,3% dos pontos da grade de 1 m dentro do limite jogável, incluindo ruas, praças, lotes e parques, com a clareira de Hagoromo reservada. Foram acrescentadas três praças e três pontes sobre o rio da Folha. As escadas usam perfis contínuos com uma face por piso. O terraço lateral se prolonga para o pátio do quarteirão e desce até a outra rua.
+
+
+### Konoha, volumes fixos e orçamento de iluminação
+
+Os eventos da missão deixam de usar sprites que acompanham a câmera. Os NPCs reutilizam o atlas em superfícies fixas de frente, verso e perfil. Altares, Myōjinmon, Ichiraku e mercador têm peças volumétricas agrupadas por material. Interações, sorteio da posição e cores de raridade usam as regras da missão.
+
+Monte Hokage e estátuas usam o alfa da arte própria do projeto para limitar os volumes de rocha. O caminho do lado oeste leva a um mirante. As estátuas ficam em margens secas, com apoio ajustado ao terreno. A Academia e a casa dos Uzumaki compõem os marcos residenciais, e a casa de banhos e as pontes vermelhas fazem parte do passeio do canal.
+
+Qualidade Alta e Média habilitam sombras locais na vila da Folha. A câmera da luz cobre o entorno do jogador e atualiza o mapa de sombras a cada 4 m. A água usa profundidade geométrica, normais animadas e reflexo aproximado do céu em uma passagem da própria superfície.
+
+Referências consultadas: [A casa dos Uzumaki no anime](https://naruto-official.com/en/anime/boruto/list/01_962), [Academia Ninja](https://naruto.fandom.com/wiki/Academy), [Ichiraku no anime](https://naruto-official.com/en/anime/naruto1/list/01_392) e as imagens enviadas pelo usuário.

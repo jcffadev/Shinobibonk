@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 23/11/2026 · Eventos fixos e marcos de Konoha
+
+- Portais, altares, mercador e Ichiraku usam volumes fixos. Os NPCs, Zetsu e o Totem usam arte em malhas fixas. O clique continua disponível nas faces do Ichiraku e do Zetsu. Cada altar conserva a cor de raridade.
+- Madara e Hashirama têm bases secas nas margens opostas, com verso de pedra limitado à silhueta do atlas. O Monte Hokage usa a mesma técnica de relevo, com saliências escaláveis desde o lado oeste até o mirante.
+- Novas fachadas inspiradas nas referências da obra: Academia com torres e emblema, residência Uzumaki com cobertura circular, casa de banhos do canal com venezianas e placa ゆ, moradias mais altas com tanques. O portão tem travessa clara e folhas verdes abertas. As pontes da Folha têm corrimão vermelho.
+- A água usa duas ondas na malha, brilho direcional, reflexo simulado de céu, margem transparente com espuma e leitura de profundidade. Ondas dos passos, respingos e deslocamento continuam disponíveis.
+- Konoha tem sombras locais em qualidade Alta (2048) e Média (1024), atualizadas ao avançar pelo mapa. A qualidade Baixa dispensa essa passagem. A arquitetura continua agrupada por trecho.
+- **PASSOU:** TypeScript, 231 testes, cobertura, build e compilação nativa do núcleo visual da água. **PENDENTE DE VALIDAÇÃO E2E:** iluminação da partida, desempenho, rota do monte em movimento e interação por mouse em torno dos NPCs.
+
+
 ## 23/11/2026 · Escadas ligadas às ruas e expansão de Konoha
 
 - As escadas do portão e do terraço usam uma face de piso por degrau, com espelhos e laterais em pedra. O pátio lateral encosta no quarteirão, conecta duas ruas e tem floreiras e muretas. Acabamento e apoio seguem o mesmo perfil.

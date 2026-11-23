@@ -3,6 +3,7 @@ import { MEMORIAL } from './memorialStone';
 import { HAGOROMO_ARENA } from './terrainArt';
 import { waterDistance } from './water';
 
+export const KONOHA_STATUES=[{x:33,z:29,index:1},{x:49,z:29,index:2}] as const;
 export const KONOHA_SQUARES=[
   {x:-21,z:22,rx:7.4,rz:5.4},
   {x:57,z:-26,rx:6.7,rz:5.0},
@@ -16,6 +17,7 @@ export type UrbanLot = {
   x: number; z: number; width: number; depth: number; body: number;
   front: -1 | 1; shape: 'round' | 'rect'; use: 'house' | 'shop' | 'terrace';
   palette: number;
+  style?: 'academy' | 'uzumaki' | 'bathhouse' | 'apartments';
   turns?: -1 | 1;
 };
 
@@ -114,7 +116,7 @@ function clearKonohaLot(lot:UrbanLot) {
   const {x,z}=lot;
   if(inHagoromoClearing(x,z,5.2)||waterDistance('folha',x,z).outside<4.3)return false;
   if(Math.hypot(x-MEMORIAL.x,z-MEMORIAL.z)<5.8)return false;
-  if(Math.hypot(x-42,z-25)<6.8||Math.hypot(x-54,z-32)<6.8)return false;
+  if(KONOHA_STATUES.some(statue=>Math.hypot(x-statue.x,z-statue.z)<6.8))return false;
   return KONOHA_SQUARES.every(square=>
     Math.abs(x-square.x)>square.rx+2.5||Math.abs(z-square.z)>square.rz+2.5);
 }
@@ -131,10 +133,19 @@ export function villageLots(map:MapId,seed:number):UrbanLot[] {
     const z=lot.z+(seed?(random()-.5)*1.05:0);
     const body=lot.body*(seed?1.12+(random()-.5)*.17:1);
     const turns=map==='folha'&&Math.abs(x)<9&&z> -8 ? x<0?1:-1 : undefined;
+    const style=map!=='folha'?undefined
+      :lot.x===-14.9&&lot.z< -54?'academy'
+      :lot.x===-7.2&&lot.z>5?'uzumaki'
+      :lot.x===29&&lot.z===36?'bathhouse'
+      :lot.z< -28&&index%6===4?'apartments':undefined;
     const placed:UrbanLot={
       ...lot,x,z,body,width:lot.width*scale,depth:lot.depth*scale,turns,
-      palette:seed?Math.floor(random()*3):lot.palette,
+      palette:seed?Math.floor(random()*3):lot.palette,style,
     };
+    if(style==='academy'){placed.width=5.9;placed.depth=4.65;placed.body=4.25;placed.front=1;placed.shape='rect';}
+    if(style==='uzumaki'){placed.shape='round';placed.depth=placed.width;placed.body*=.93;placed.front=1;}
+    if(style==='bathhouse'){placed.shape='rect';placed.width=5.30;placed.front=1;}
+    if(style==='apartments')placed.body*=1.25;
     if(map==='folha'&&index>=base.length&&!clearKonohaLot(placed))return [];
     return [placed];
   });

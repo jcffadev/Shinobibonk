@@ -399,6 +399,11 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 **P:** Corrigir as escadas piscando ou isoladas e ocupar aproximadamente 80% do cenário jogável com a vila.
 **R:** Os degraus usam malhas com um piso por trecho. O terraço dá acesso ao pátio junto à fachada e liga duas ruas. A área urbana de Konoha ocupa 81,3% da área jogável amostrada e a semente de teste contém 161 lotes. O sorteio distribui os pontos de evento com folga das escadas.
 
+### 23/11/2026 · Eventos fixos e referências para Konoha
+
+**P:** Parar a rotação dos eventos, acabar com os blocos atrás dos monumentos, melhorar a água e usar os marcos e as fachadas da obra. O Monte Hokage precisa ser escalável. A vila pode usar mais gráficos.
+**R:** Eventos com volumes e NPCs em faces fixas, monumentos com relevo, caminho de subida e estilos de edifício distintos. A Folha recebeu sombras locais ajustáveis e água com profundidade, espuma e reflexo aproximado. Desempenho e composição final ainda serão conferidos em partida.
+
 ## 5. Estado atual do projeto
 
 **Retomada de 23/11/2026.** A versão principal recebeu as rodadas 97–103 do Claude, até `a394509`. Os mapas continuam com o Codex, em branch de validação e com parcial local. O usuário pediu manter os personagens atuais, guardar o low poly externamente e aproximar a densidade e o acabamento das cidades às fotos de seleção. Construções precisam mostrar laterais e fundos com a rotação da câmera. A arquitetura nova ainda precisa ser ligada à cena. [Estado conferido e fila de continuação](27-RETOMADA-MAPAS-23-11.md).

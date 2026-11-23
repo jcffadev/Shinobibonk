@@ -5,6 +5,7 @@ import { COLLISION_RULES, type Solid } from './collision';
 import { createMemorialSprite, MEMORIAL } from './memorialStone';
 import { HAGOROMO_ARENA } from './terrainArt';
 import { KONOHA_SQUARES, villageRandom } from './villageDistricts';
+import { HOKAGE_MOUNTAIN_ROUTE, makeLandmarkRelief } from './landmarkRelief';
 import { createVillageArchitecture } from './villageArchitecture';
 import { bridgeHeight, villageSurface, type VillageLayout } from './villageLayout';
 import { waterDistance, type WaterBody } from './water';
@@ -125,28 +126,36 @@ export function createVillageScenery(
     texture.repeat.x=1/3;
     texture.offset.x=index/3;
     textures.set('leaf-'+index,texture);
-    if(index===0) {
-      // Rocha de apoio até a base desenhada. As faces esculpidas são voltadas para a vila.
-      const foot=surface('#c5b6a3',2);
-      for(let i=0;i<11;i++){
-        const px=x+(i-5)*width*.078,pz=z-4.24-(i%3)*1.4;
-        const base=ground(px,pz);
-        const rise=height*(.36+.18*Math.sin((i+1)*1.7)**2);
-        const boulder=new THREE.Mesh(new THREE.CylinderGeometry(1.6+(i%2)*.48,3.1,rise,6,1),foot);
-        boulder.name='monte-hokage-rocha';
-        boulder.position.set(px,base+rise*.48,pz);
-        boulder.rotation.y=i*.65;
-        boulder.scale.z=1.22;
-        architecture.add(boulder);
-        solids.add(px,pz,2.70,true,base+rise*.93);
+    const stone=surface('#a69a87',2);
+    stone.side=THREE.DoubleSide;
+    const depth=index===0?12:1.5;
+    const monument=makeLandmarkRelief(index,width,height,depth,texture,stone);
+    monument.name=index===0?'monte-hokage':index===1?'estatua-hashirama':'estatua-madara';
+    monument.position.set(x,y-(index===0?.55:.035),z);
+    architecture.add(monument);
+    if(index===0){
+      solids.addBox(x,z-3.5,width*.43,3.49,y+height*.22);
+      // Saliências conectam a trilha do lado oeste ao mirante atrás dos rostos.
+      for(const shelf of HOKAGE_MOUNTAIN_ROUTE){
+        const cx=x+shelf.dx,cz=z+shelf.dz,top=y+height*shelf.height;
+        const footing=ground(cx,cz)-.35;
+        const geometry=new THREE.BoxGeometry(shelf.width,top-footing,shelf.depth,5,4,3);
+        const points=geometry.attributes.position,span=top-footing;
+        for(let i=0;i<points.count;i++){
+          const x=points.getX(i),y=points.getY(i),z=points.getZ(i),t=y/span+.5;
+          const weathering=(1-t)*(.075+.07*Math.sin(x*2.4+z*1.7+y*1.5));
+          points.setXYZ(i,x*(1-weathering),y+.13*(1-t)*Math.sin(x*2.5+z*1.75),z*(1-weathering));
+        }
+        geometry.computeVertexNormals();
+        const rock=new THREE.Mesh(geometry,stone);
+        rock.name='monte-hokage-trilha';
+        rock.position.set(cx,(top+footing)*.5,cz);
+        rock.castShadow=true;rock.receiveShadow=true;
+        architecture.add(rock);
+        solids.addBox(cx,cz,shelf.width/2,shelf.depth/2,top);
       }
-      landmarkFace(texture,x,y-.5,z+.045,width,height);
-    } else {
-      const depth=2.45;
-      box(x,y+height*.29,z-depth/2,width*.80,height*.58,depth,rockFace);
-      box(x,y+height*.22,z-depth*.81,width*.92,height*.44,depth*.56,rockFace);
-      landmarkFace(texture,x,y-.06,z+.045,width,height);
-      solids.addBox(x,z-depth/2,width*.40,depth*.5,y+height*.58);
+    }else {
+      solids.addBox(x,z-depth*.45,width*.31,depth*.48,y+height*.22);
     }
   }
   if(map.id==='folha') {
@@ -176,6 +185,7 @@ export function createVillageScenery(
   }
 
   const stone=surface(map.id==='areia'?'#d09a61':'#a3a7a6',2);
+  const bridgeRail=map.id==='folha'?surface('#a44b3b'):wood;
   for(const bridge of layout.bridges) {
     const segments=20,w=bridge.halfSpan*2/segments;
     for(let i=0;i<segments;i++) {
@@ -186,9 +196,9 @@ export function createVillageScenery(
       board.rotation.z=Math.atan(slope);
       for(const sign of [-1,1]) {
         const z=bridge.z+sign*(bridge.width/2-.10);
-        const rail=box(x,y+.49,z,w+.10,.12,.14,bridge.wood?wood:stone);
+        const rail=box(x,y+.49,z,w+.10,.12,.14,bridge.wood?bridgeRail:stone);
         rail.rotation.z=Math.atan(slope);
-        if(i%3===0)box(x,y+.23,z,.15,.53,.16,bridge.wood?wood:stone);
+        if(i%3===0)box(x,y+.23,z,.15,.53,.16,bridge.wood?bridgeRail:stone);
       }
     }
   }

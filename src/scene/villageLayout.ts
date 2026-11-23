@@ -1,5 +1,5 @@
 import type { MapId } from '../game/maps';
-import { inHagoromoClearing, KONOHA_SQUARES, villageLots, villageRandom, type UrbanLot } from './villageDistricts';
+import { inHagoromoClearing, KONOHA_SQUARES, KONOHA_STATUES, villageLots, villageRandom, type UrbanLot } from './villageDistricts';
 import { leafRiver } from './water';
 
 export type MapLayout = 'mapas_basicos' | 'vilas';
@@ -41,9 +41,8 @@ export const VILLAGES: Record<MapId, VillageLayout> = {
     crossings: [-55,-43,-26,-16,-6,11,19,30,40,50,59], bridges: konohaBridges,
     buildings: [
       { art: 'environment', index: 4, x: 0, z: -8, width: 7.6, height: 6.1, gate: true },
-      { art: 'leaf', index: 0, x: 10, z: -72, width: 43, height: 22 },
-      { art: 'leaf', index: 1, x: 42, z: 25, width: 6.6, height: 10 },
-      { art: 'leaf', index: 2, x: 54, z: 32, width: 6.6, height: 10 },
+      { art: 'leaf', index: 0, x: 10, z: -64, width: 43, height: 22 },
+      ...KONOHA_STATUES.map(statue=>({...statue,art:'leaf' as const,width:6.6,height:10})),
     ],
     sites: [[-6,-16],[6,-16],[-16,-26],[16,-26],[0,-26],[-5,-32],[6,-33],[-18,-43],[17,-43],[-7,-45],[6,-45],[0,-51],[0,-33],[-39,-16],[39,-16],[-34,-26],[35,-26],[-39,-43],[39,-43],[-32,-55],[34,-55]]
       .map(([x,z]) => ({x,z})),
@@ -91,7 +90,7 @@ export function createVillageLayout(map:MapId,seed:number) {
 export function villageSurface(layout: VillageLayout, x: number, z: number): 'road' | 'plaza' | 'rock' | undefined {
   if(layout.map==='folha'){
     if(inHagoromoClearing(x,z))return;
-    if(((x-10)/25)**2+((z+72)/10)**2<1)return 'rock';
+    if(((x-10)/25)**2+((z+67)/9.3)**2<1)return 'rock';
     if(KONOHA_SQUARES.some(square=>Math.abs(x-square.x)<square.rx&&Math.abs(z-square.z)<square.rz))return 'plaza';
     if(z>8&&z<layout.bounds.south&&Math.abs(x)<2.65)return 'road';
   }

@@ -12,7 +12,13 @@ const tile = {
   plaster:0,stone:1,red:2,gold:3,blue:4,wood:5,clay:6,sand:7,
   glass:8,vermillion:9,moss:10,cloth:11,bronze:12,slate:13,dark:14,paving:15,
 } as const;
-type Surface=keyof typeof tile;
+export type ArchitectureSurface=keyof typeof tile;
+type Surface=ArchitectureSurface;
+export function fitArchitectureTile(geometry:THREE.BufferGeometry,key:ArchitectureSurface) {
+  const cell=tile[key],u=(cell%4)/4,v=(3-Math.floor(cell/4))/4;
+  const uv=geometry.attributes.uv;
+  for(let i=0;i<uv.count;i++)uv.setXY(i,u+.002+uv.getX(i)*.246,v+.002+uv.getY(i)*.246);
+}
 
 const palettes:Record<MapId,{wall:Surface[];roof:Surface[];base:Surface;trim:Surface}> = {
   folha:{wall:['plaster','plaster','sand'],roof:['red','gold','red'],base:'stone',trim:'wood'},
@@ -54,12 +60,11 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     state.scale.set(w,h,d);
     state.updateMatrix();
     g.applyMatrix4(state.matrix);
-    const cell=tile[key],u=(cell%4)/4,v=(3-Math.floor(cell/4))/4;
+    fitArchitectureTile(g,key);
     const uv=g.attributes.uv;
     const color=new THREE.Color(tint);
     const vertices=new Float32Array(uv.count*3);
     for(let i=0;i<uv.count;i++){
-      uv.setXY(i,u+.002+uv.getX(i)*.246,v+.002+uv.getY(i)*.246);
       vertices.set([color.r,color.g,color.b],i*3);
     }
     g.setAttribute('color',new THREE.BufferAttribute(vertices,3));
@@ -136,17 +141,45 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     const map=new THREE.CanvasTexture(canvas);
     map.colorSpace=THREE.SRGBColorSpace;
     const label=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map}));
+    if(frontage?.turns){
+      const turn=frontage.turns,rx=frontage.x+(z-frontage.z)*turn;
+      z=frontage.z-(x-frontage.x)*turn;
+      x=rx;label.rotation.y=turn*Math.PI/2;
+    }
     label.position.set(x,y,z);
     root.add(label);placards.push(map);
+    return label;
+  }
+
+  function academy(lot:UrbanLot,y:number) {
+    const {x,z,width:w,depth:d,body:h}=lot;
+    box('stone',x,y+.15,z,w+.3,.30,d+.3);
+    box('vermillion',x,y+h*.44,z,w,h*.88,d,0xe69a82);
+    slabRoof('red',x,z,y+h*.88,w,d,.66);
+    const doorZ=z+d/2;
+    box('wood',x,y+.98,doorZ,.98,1.82,.21);
+    box('dark',x,y+1,doorZ+.09,.76,1.52,.12);
+    for(const side of [-1,1]){
+      const towerX=x+side*(w*.467);
+      cylinder('plaster',towerX,y+h*.5,z-.22,1.47,h,2.3);
+      cylinder('red',towerX,y+h+.36,z-.22,1.72,.79,2.44,.55);
+      sash(towerX,y+2.68,z+.96,.52,.65,1,false,'wood');
+      solids.add(towerX,z-.22,.72,true,y+h+.76);
+    }
+    box('moss',x,y+h*.85,doorZ+.16,1.9,1.65,.16);
+    plaque('忍','#4a2721','#d98f78',x,y+h*.85,doorZ+.254,1.61,1.38);
+    solids.addBox(x,z,w/2,d/2,y+h*.88+.73);
   }
 
   const colors=palettes[layout.map];
   function building(lot:UrbanLot) {
-    const {x,z,width:w,depth:d,body,shape,front,use,palette}=lot;
+    const {x,z,width:w,depth:d,body,shape,front,use,palette,style}=lot;
     const round=shape==='round';
     const pier=layout.map==='nevoa'&&x>18?.46:.18;
     const y=ground(x,z);
-    const wall=colors.wall[palette],roof=colors.roof[palette],trim=colors.trim;
+    if(style==='academy'){academy(lot,y);return;}
+    const wall=colors.wall[palette],trim=colors.trim;
+    const roof=style==='uzumaki'?'red':style==='bathhouse'?'blue':colors.roof[palette];
     const rise=layout.map==='areia'?.75:use==='terrace'?1.07:.78;
     const sideZ=z+front*(d*.5);
     if(layout.map==='nevoa') {
@@ -168,7 +201,7 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     } else {
       box(wall,x,y+pier+body/2,z,w,body,d);
       box(trim,x,y+pier+body-.10,z,w+.05,.20,d+.09);
-      slabRoof(roof,x,z,y+pier+body,w,d,rise);
+      slabRoof(roof,x,z,y+pier+body,w,d,rise,style==='bathhouse'?0xaed092:0xffffff);
       for(const s of [-1,1])for(const a of [-1,1])
         box(trim,x+s*(w/2-.055),y+pier+body/2,z+a*(d/2-.058),.14,body,.14);
     }
@@ -209,6 +242,31 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
         for(const offset of [.18,.51])cylinder('dark',tankX,top+offset,z-.26,.84,.055,.84);
       }
     }
+    if(style==='uzumaki'){
+      const floor=top-.12;
+      cylinder('plaster',x,floor+.67,z,w*.54,1.46,d*.54);
+      cylinder('dark',x,floor+1.30,z,w*.58,.13,d*.58);
+      cylinder('red',x,floor+1.58,z,w*.64,.54,d*.64,.58);
+      sash(x,floor+.63,z+d*.262,.65,.65,1,false,'wood');
+      sash(x,floor+.63,z-d*.262,.65,.65,-1,false,'wood');
+      cylinder('stone',x-.38,floor+1.90,z-.32,.56,.61,.56);
+      box('glass',x+.48,floor+1.91,z+.13,.67,.10,.50,0x7091a6);
+      solids.add(x,z,w*.31,true,floor+1.84,top);
+    }else if(style==='bathhouse'){
+      const facade=sideZ+front*.115;
+      box('moss',x,y+1.03,facade,1.54,1.78,.17,0xe0ead5);
+      for(let i=-4;i<=4;i++)box('dark',x+i*.162,y+1.03,facade+.10,.028,1.72,.03);
+      box('wood',x,y+2.56,facade,.95,.65,.20);
+      plaque('ゆ','#77312a','#e3d2ac',x,y+2.56,facade+.105,.79,.57);
+      for(const side of [-1,1])box('vermillion',x+side*w*.29,y+.72,sideZ+.77,.055,1.31,.065);
+    }else if(style==='apartments'){
+      const terrace=top-.04;
+      cylinder('stone',x-.48,terrace+.29,z-.06,.87,.56,.87);
+      circular('plaster',x-.48,terrace+.79,z-.06,1.12,.90,1.07,0xc6d0d2);
+      cylinder('bronze',x+.69,terrace+.60,z-.40,.14,1.14,.14);
+      box('dark',x+w*.48,y+body*.52,z+.41,.12,body*.9,.11);
+      box('wood',x,y+body*.51,sideZ+front*.24,w*.60,.075,.28);
+    }
     if(layout.map==='nevoa') {
       lantern(x-w*.32,y+pier+1.65,sideZ+front*.31,'gold');
       box('wood',x,y+.12,sideZ+front*.55,w,.23,1.10);
@@ -243,14 +301,21 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
       lantern(cx,level+2.5,z+pier*.68,sand?'gold':'red');
       if(leaf) {
         // Folhas abertas do portão, alinhadas à passagem e apoiadas nos batentes.
-        box('moss',cx,level+1.72,z-1.12,.16,3.08,1.67,0xb2ccae);
-        for(let i=0;i<3;i++)box('dark',cx,level+.47+i*1.23,z-1.12,.19,.072,1.71);
-        solids.addBox(cx,z-1.12,.08,.835,level+3.26);
+        box('moss',cx,level+2.07,z-1.47,.21,3.81,2.24,0xc5dcc8);
+        for(let i=0;i<4;i++)box('wood',cx,level+.39+i*1.11,z-1.47,.23,.092,2.29);
+        box('stone',cx,level+2.01,z+.03,pier+.13,4.00,.61,0xe4d8c8);
+        const doorSign=plaque(s>0?'ノ':'木','#a5463b','#92a682',cx-.115*s,level+2.40,z-1.51,1.27,1.53);
+        doorSign.rotation.y=-s*Math.PI/2;
+        solids.addBox(cx,z-1.47,.105,1.12,level+3.98);
       }
       solids.addBox(cx,z,pier*.5,(pier+.26)*.5,level+h*.80);
     }
     box(sand?'paving':rock?'slate':'dark',x,y+h*.75,z,w,.43,1.48);
-    if(!sand&&!rock)slabRoof('red',x,z,y+h*.77,w,1.63,.87);
+    if(leaf){
+      box('plaster',x,y+h*.714,z+.45,w*.88,.52,.73,0xf1e1cf);
+      box('vermillion',x,y+h*.766,z,w,.26,1.45);
+      slabRoof('red',x,z,y+h*.79,w,1.76,1.02);
+    }
     else {
       box(base,x,y+h*.84,z,w+1,.75,1.78);
       for(let i=-3;i<=3;i++)box(colors.base,x+i*w*.139,y+h*.89,z,.37,.43,1.74);

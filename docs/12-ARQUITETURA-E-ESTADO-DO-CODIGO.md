@@ -410,3 +410,6 @@ A revisão acrescenta `SavedRun.villageSeed`. `createVillageLayout()` calcula os
 
 
 Na expansão de Konoha, o piso e a colisão das escadas usam o mesmo perfil de degraus. `createVillageGround()` agrupa os lotes em células de 8 m para amostrar a altura. `resolveBig()` consulta uma grade de fundações para os inimigos.
+
+
+`missionStructures.ts` gera os volumes dos postos de missão e as faces fixas dos NPCs. `landmarkRelief.ts` usa perfis do alfa do atlas para fechar o verso dos monumentos e descreve a rota de saliências do Monte Hokage. `water.ts` usa material padrão com onda, normal e transparência por profundidade. `GameCanvas.tsx` configura o mapa de sombras local conforme a qualidade.

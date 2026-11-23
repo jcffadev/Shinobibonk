@@ -13,7 +13,7 @@ const { createVillageScenery }=await load('/src/scene/villageScenery.ts');
 const { createVillageTraversal, moveVillageActor }=await load('/src/scene/villageTraversal.ts');
 const { createSolids, COLLISION_RULES }=await load('/src/scene/collision.ts');
 const { foundationDistance }=await load('/src/scene/villageCollision.ts');
-const { WATER, WATER_BODIES, waterSurfaceAt }=await load('/src/scene/water.ts');
+const { WATER, WATER_BODIES, createWater, waterSurfaceAt }=await load('/src/scene/water.ts');
 const { MAP_BY_ID }=await load('/src/game/maps.ts');
 const { WORLD_LIMIT }=await load('/src/game/worldScale.ts');
 const sceneFixture=new Map();
@@ -291,4 +291,90 @@ test('Konoha ocupa aproximadamente 80% da área jogável com bairros conectados'
     assert.equal(waterSurfaceAt('folha',bridge.x,bridge.z,waters),WATER.level);
     assert.ok(villageDeck(layout,ground,bridge.x,bridge.z)>WATER.level+.48);
   }
+});
+
+
+test('eventos e NPCs usam volume fixo e continuam clicáveis de perfis diferentes',async()=>{
+  const {createFixedMissionNpc,createMissionStructures}=await load('/src/scene/missionStructures.ts');
+  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(52,1,.1,40);
+  const structures=createMissionStructures();
+  const npc=createFixedMissionNpc(new THREE.SpriteMaterial({map:new THREE.Texture(),alphaTest:.1}));
+  const actors=[npc,...['guardian','ramen','merchant','altar'].map(kind=>structures.make(kind,0x85caec).obj)];
+  for(const [i,obj] of actors.entries()){
+    obj.position.set(i*3,1,0);
+    scene.add(obj);
+  }
+  scene.updateMatrixWorld(true);
+  const poses=actors.map(obj=>obj.matrixWorld.clone());
+  const ray=new THREE.Raycaster();
+  for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5]){
+    for(const [i,obj] of actors.entries()){
+      camera.position.set(obj.position.x+Math.sin(angle)*6,1,Math.cos(angle)*6);
+      camera.lookAt(obj.position);
+      camera.updateMatrixWorld();
+      scene.updateMatrixWorld(true);
+      assert.ok(obj.matrixWorld.equals(poses[i]));
+      obj.traverse(child=>assert.ok(!child.isSprite));
+      if(obj===npc){
+        ray.setFromCamera(new THREE.Vector2(),camera);
+        assert.ok(ray.intersectObject(npc,false).length>0,'NPC tem uma face clicável de todos os lados');
+      }
+    }
+  }
+  structures.dispose();
+});
+
+test('monumentos têm relevo dentro da silhueta e é possível escalar até o mirante',async()=>{
+  const {HOKAGE_MOUNTAIN_ROUTE}=await load('/src/scene/landmarkRelief.ts');
+  const {layout,ground,waters,solids,scenery}=sceneFor('folha',6308);
+  for(const name of ['monte-hokage','estatua-hashirama','estatua-madara']){
+    const monument=scenery.root.getObjectByName(name);
+    assert.ok(monument&&monument.children.length===2);
+    const relief=monument.getObjectByName('landmark-rock-relief');
+    relief.geometry.computeBoundingBox();
+    assert.ok(relief.geometry.boundingBox.min.z<-.6);
+    assert.ok(relief.geometry.boundingBox.max.z<.001,'apoio não atravessa a face de pedra');
+  }
+  for(const statue of layout.buildings.filter(landmark=>landmark.art==='leaf'&&landmark.index>0)){
+    assert.equal(waterSurfaceAt('folha',statue.x,statue.z,waters),-Infinity);
+  }
+  const mountain=layout.buildings.find(landmark=>landmark.art==='leaf'&&landmark.index===0);
+  const base=ground(mountain.x,mountain.z);
+  let previous;
+  for(const stage of HOKAGE_MOUNTAIN_ROUTE){
+    const x=mountain.x+stage.dx,z=mountain.z+stage.dz;
+    const left=x-stage.width/2;
+    const approach={x:left-.16,z:previous?(z+previous.z)/2:z};
+    const traversal=createVillageTraversal(solids.all);
+    const terrain=ground(approach.x,approach.z);
+    traversal.restore(approach,previous?.height,terrain);
+    const direction={x:1,z:0};
+    assert.ok(traversal.jump(approach,direction,terrain),'saliência tem acesso pela etapa anterior');
+    for(let i=0;i<150&&traversal.climbing;i++)traversal.advance(approach,direction,terrain,.016);
+    const height=base+mountain.height*stage.height;
+    assert.ok(Math.abs(traversal.elevation-height)<.001,'saliência tem chão no topo');
+    previous={height,z};
+  }
+  assert.ok(previous.height>16);
+});
+
+test('Konoha varia arquitetura e a água usa profundidade, luz e margem local',()=>{
+  const layout=createVillageLayout('folha',6308),styles=new Set(layout.lots.map(lot=>lot.style));
+  for(const style of ['academy','uzumaki','bathhouse','apartments'])assert.ok(styles.has(style),style);
+  const {ground,waters}=sceneFor('folha',6308);
+  const scene=new THREE.Scene(),water=createWater(scene,'folha',ground,waters);
+  assert.equal(scene.children.length,waters.length);
+  for(const mesh of scene.children){
+    const depth=mesh.geometry.attributes.waterDepth.array;
+    assert.ok(depth.some(value=>value>0)&&depth.some(value=>value<0));
+  }
+  const program=THREE.ShaderLib.standard;
+  const shader={uniforms:{},vertexShader:program.vertexShader,fragmentShader:program.fragmentShader};
+  scene.children[0].material.onBeforeCompile(shader);
+  assert.match(shader.fragmentShader,/fresnel/);
+  assert.match(shader.fragmentShader,/vWaterDepth\s*<=\s*0.0/);
+  assert.match(shader.fragmentShader,/foam \+ rings/);
+  assert.ok(shader.uniforms.waterRipples);
+  water.dispose();
+  assert.equal(scene.children.length,0);
 });

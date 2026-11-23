@@ -27,7 +27,7 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
     rolling += mound(x,z,-25,-4,11,15,1.4) + mound(x,z,28,-32,14,16,1.65);
     let h = terrace(rolling, 1.15) * smoothstep((Math.hypot(x,z) - 5) / 9);
     if (map === 'folha') {
-      h+=mound(x,z,10,-72,25,14,3.8);
+      h+=mound(x,z,10,-68,25,14,3.8);
       h+=mound(x,z,-20,-63,18,12,1.75)+mound(x,z,35,-60,15,12,1.10);
     }
     if (map === 'areia') h += 4.55 * smoothstep((Math.abs(x) - 30) / 11)
