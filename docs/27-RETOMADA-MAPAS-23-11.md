@@ -61,3 +61,8 @@ Os registros históricos preservam decisões e contagens antigas. Para o estado 
 A restrição de testes em navegador segue ativa para todos os agentes. A [política central](development/TESTING_POLICY.md) define os testes permitidos e o registro da validação visual pendente.
 
 Nesta retomada passaram a checagem TypeScript, `verify-rules`, o build da versão principal e a conferência do diff documental. A suíte de 212 testes não foi repetida nesta revisão de documentação. O parcial dos mapas também não foi revalidado nesta retomada.
+
+
+## Continuação no mesmo dia
+
+A branch de revisão parte de `5955bb0`, com os lotes e a arquitetura fixa integrados ao código atual. O experimento de personagem segue no arquivo externo. Consulte a [fila atualizada](13-PENDENCIAS-PARA-CONTINUAR.md). O diagnóstico acima descreve o parcial de onde a integração partiu.

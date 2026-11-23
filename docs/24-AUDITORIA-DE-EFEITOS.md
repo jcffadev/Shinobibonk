@@ -240,3 +240,20 @@ Medido no código: 221 técnicas no pool, 39 sem efeito com nome (só o genéric
 - **Já têm código próprio** fora do atlas: Rasengan, Rasenshuriken, Shuriken, Kunai, Kage Bunshin, Substituição, Susanoo, Kuroari e Invocação do Sapo.
 - **Seguem no efeito do elemento:** técnicas de Terra (impacto) e de Raio (relâmpago), cujo efeito do elemento já é o certo, e Agulhas de Cabelo, Agulhas de Karasu e Barras de Chakra.
 - **Arte pendente:** Susanoo de Sasuke e Itachi (folhas pintadas como a do Madara).
+
+
+## Susanoo por portador · 23/11/2026
+
+| Portador | Forma e acabamento da referência | Implementação da cena |
+|---|---|---|
+| Madara | Azul profundo e duas lâminas onduladas | Folha original de quatro fases com mistura de quadros e malha de apoio |
+| Sasuke | Violeta, arco de chakra e flecha | Braço com arco e corda, puxada, disparo e rastro orientado ao acerto |
+| Itachi | Vermelho alaranjado, Espelho de Yata e Espada de Totsuka | Escudo modelado no braço esquerdo e lâmina que sai da cabaça, com estocada e redemoinho |
+| Kakashi | Azul-claro, forma alada dos dois Mangekyō e shuriken do Kamui | Malha alada, cicatriz na máscara e shuriken rotativo em trajeto até o alvo. Estilo preparado para a versão dos dois Mangekyō |
+| Shisui | Verde e agulhas de chakra na animação Ninja Escapades | Peitoral marcado e rajada verde, usada quando o pool existente concede Susanoo ao Shisui |
+
+A forma verde de Shisui vem da animação especializada. A forma perfeita com armas exclusivas de jogos licenciados fica para uma decisão própria. Os caminhos da técnica comum, a Espada de Totsuka e o Susanoo Perfeito continuam usando as regras existentes. O efeito comum acompanha a espera do acerto já calculada pelo disparo.
+
+Fontes: [Narutopedia — formas e armamento](https://naruto.fandom.com/wiki/Susanoo), [Naruto oficial — Itachi contra Sasuke](https://naruto-official.com/en/news/01_1316), [Naruto oficial — Madara e a luta dos irmãos Uchiha](https://naruto-official.com/en/news/01_1333), [Naruto oficial — Kakashi, capítulo 689](https://naruto-official.com/en/news/01_1904), [Bandai Namco — diferenças de mídia e agulhas de chakra de Shisui](https://naruto-official.com/en/news/01_1871).
+
+Pendente conferir silhueta e transições ao vivo e desenhar folhas próprias de Sasuke e Itachi. Esta revisão usa malhas articuladas originais nesses dois efeitos.

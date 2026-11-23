@@ -2574,3 +2574,13 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > E as construçõps não podem girar quando girarmos a camera, elas precisam ficar paradas
 
 **Resposta.** A revisão encontrou a versão principal e o GitHub sincronizados na rodada 103, em a394509. Os mapas estão na branch vilas-em-validacao, publicada em d0656ea, com alterações locais posteriores. O low poly está arquivado fora do projeto. A remoção local do protótipo e a arquitetura nova das vilas ainda precisam de integração e publicação. A prioridade é trazer o avanço da base do Claude, concluir as construções fixas e os quarteirões e conferir o resultado contra as imagens de seleção. O relatório de retomada está em docs/27-RETOMADA-MAPAS-23-11.md.
+
+
+## 23/11/2026 · Mapa jogável pela referência e Susanoo
+
+> Você me enviou uma imagem de como ficaria o mapa, eu quero daquela forma só que jogável...
+> Quando fui ver o "esboçO" ainda estavamos muito longe do refinamento
+> Os Susano'o você tem que pegar a referência de cor/armas que eles usam e fazer fiel ao anime/obra
+> Jutsus e status de balanceamento você vai me dar detalhado depois para tomarmos uma decisão
+
+A revisão foi montada sobre a versão atual na branch de validação. Ela liga os bairros fixos à cena jogável, com ruas, eventos, escala de obstáculos, escadas e escalada. A prévia renderiza a geometria dessa branch fora do navegador. A comparação visual em partida e o aceite das vilas continuam pendentes. Cada portador de Susanoo recebeu a arma, a cor e a ação da sua referência. A revisão detalhada de balanceamento será discutida separadamente e os valores desta rodada seguem os da versão principal.

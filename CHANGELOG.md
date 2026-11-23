@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 23/11/2026 · Vilas em 3D e Susanoo por personagem
+
+- Na branch de validação, Konoha, Suna, Iwa e Kiri ganharam bairros jogáveis com volumes fixos, fachadas em vários lados, telhados inclinados, entrada, marcos, escada em Konoha e pontes em Kiri. Os materiais são originais e compartilham um atlas.
+- As fundações bloqueiam por contato. Espaço e movimento em direção à parede iniciam a escalada. Tetos servem de apoio e a escada de Konoha é transitável a pé. A partida salva registra a variante do mapa e a altura de apoio. Saves anteriores carregam os mapas básicos.
+- Mantidas as rodadas 97–103, incluindo os dois treinamentos, os respingos e as regras de status. A branch parte da versão principal e exclui os arquivos do protótipo low poly.
+- Madara usa a folha azul com duas lâminas onduladas. Sasuke prepara arco e flecha roxos. Itachi equipa o Espelho de Yata e a espada que sai da cabaça de Totsuka. Kakashi usa a malha azul-clara com o shuriken do Kamui em voo. Shisui usa chakra verde e agulhas na versão de referência animada Ninja Escapades. O efeito da técnica comum segue a espera do acerto existente.
+- Perfil equilibrado sem navegador **PASSOU**: tipos, 223 testes, cobertura e build. A mutação da escada foi detectada.
+- Prévia por renderização nativa das malhas. **PENDENTE DE VALIDAÇÃO E2E** em partida: comparação visual com a composição aprovada, giro de câmera, portas e escalada, colocação de eventos, quadros e legibilidade dos Susanoo.
+
+
 ## 23/11/2026 · Recuperação de contexto e estado das vilas
 
 - Revisados os Markdown do projeto principal, as instruções e skills, o guia da cópia de validação, as branches e o parcial local das vilas. A `main` está na rodada 103. A branch dos mapas ainda precisa incorporar as rodadas 97–103.

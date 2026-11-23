@@ -163,3 +163,6 @@ O ranking usa armazenamento local por padrão. A [integração Netlify/PostgreSQ
 O botão **Guia do jogo** na inicial reúne controles, progresso, eventos da missão, NPCs e glossário pesquisável.
 
 Na aba **Glossário**, filtre por assunto ou busque o nome de um atributo, como chance crítica, projétil ou duração de status. O saldo de Lamens fica ao lado do perfil, na barra superior.
+
+
+A revisão das cidades jogáveis e dos Susanoo está na branch de validação. Veja o [estado e as verificações pendentes](docs/13-PENDENCIAS-PARA-CONTINUAR.md) e o [guia dos mapas](docs/development/CRIAR-MAPAS-JOGAVEIS.md).

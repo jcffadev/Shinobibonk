@@ -298,7 +298,7 @@ test('água: lagos e rios cavados em todos os mapas, longe do começo e das cons
   }
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.ok(canvas.includes('Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z))'), 'de pé na superfície');
-  assert.ok(canvas.includes('const water=createWater(scene,MAP.id,terrainHeight)'), 'malha da água na cena');
+  assert.match(canvas,/const water=.*createWater\(scene,MAP\.id,terrainHeight\)/, 'malha da água na cena');
   assert.ok(canvas.includes('waterDistance(MAP.id,x,z).outside<1.5)continue;'), 'sem árvore dentro da água');
 });
 
@@ -401,4 +401,31 @@ test('água: respingos, ondas de inimigos e aliados e chakra no ritmo dos passos
   assert.ok(canvas.includes("water.ripple(a.position.x,a.position.z,.35);made++;"), 'outros atores fazem ondas');
   assert.ok(canvas.includes('chakraFeet.step();'), 'chakra pulsa no passo');
   assert.ok(canvas.includes('splashes.update(dt);'));
+});
+
+
+test('Susanoo carrega o armamento do portador e dispara o impacto no tempo do acerto',async()=>{
+  const {createSusanooFx,susanooStyleFor}=await load('/src/scene/susanooFx.ts');
+  const scene=new THREE.Scene(),bursts=[];
+  const fx=createSusanooFx(scene,{emitRaw(...args){bursts.push(args);},lastAxis(){},lastStretch(){}},()=>0);
+  const camera=new THREE.PerspectiveCamera(),origin=new THREE.Vector3(),dir=new THREE.Vector3(0,0,1),target=new THREE.Vector3(0,0,5);
+  assert.equal(susanooStyleFor('shisui'),'shisui');
+  for(const [style,parts] of [
+    ['sasuke',['arco de chakra','flecha de chakra']],
+    ['itachi',['Espada de Totsuka','Espelho de Yata']],
+    ['kakashi',['shuriken do Kamui']],
+    ['shisui',[]],
+  ]){
+    fx.trigger(style,origin,dir,target,2,false,.30);
+    const root=scene.getObjectByName('susanoo-'+style);
+    assert.ok(root&&root.visible);
+    for(const part of parts)assert.ok(root.getObjectByName(part));
+    fx.update(.29,camera);
+    assert.ok(!bursts.some(burst=>burst[1]===target.x&&burst[3]===target.z));
+    fx.update(.02,camera);
+    assert.ok(bursts.some(burst=>burst[1]===target.x&&burst[3]===target.z));
+    fx.clear();bursts.length=0;
+  }
+  fx.dispose();
+  assert.equal(scene.children.length,0);
 });

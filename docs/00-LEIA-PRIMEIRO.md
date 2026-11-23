@@ -15,7 +15,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
-O estado das branches e o parcial das vilas foram conferidos em [23/11/2026](27-RETOMADA-MAPAS-23-11.md). A versão principal recebeu as rodadas 97–103. As vilas mais detalhadas continuam em validação e precisam da integração da arquitetura fixa.
+O estado das branches e o parcial das vilas foram conferidos em [23/11/2026](27-RETOMADA-MAPAS-23-11.md). A versão principal recebeu as rodadas 97–103. A arquitetura fixa das quatro vilas está na branch de validação. A [fila atual](13-PENDENCIAS-PARA-CONTINUAR.md) registra o que ainda precisa ser conferido em partida.
 
 Em 15/11, o primeiro Mega Elite da partida passou a ter no máximo 3.000 HP. O Myōjinmon ainda invoca o Guardião com E. Zetsu abre a Emboscada da Akatsuki, e a roleta tem cinco casas de personagem. A arena final posiciona a bijū à frente da câmera e espera o atlas antes da entrada. O Chute Giratório usa seu ícone dedicado. Veja as pendências de mapas, água, jutsus e eventos na [fila do Codex](13-PENDENCIAS-PARA-CONTINUAR.md).
 

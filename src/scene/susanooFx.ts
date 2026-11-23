@@ -7,18 +7,20 @@ import { GLOW, FLAME, STREAK, BLADE, SPARK } from './particleFx';
  * brilhante (fresnel aditivo), chamas de chakra em partículas e a arma própria de cada usuário.
  * Referência de cor/armas (Narutopedia, página "Susanoo"): Madara azul-escuro com lâminas onduladas (kris);
  * Sasuke roxo com arco e flecha; Itachi vermelho/laranja (anime) com Espada de Totsuka e Espelho de Yata;
- * Kakashi azul-claro com shuriken do Kamui (não há versão com Susanoo no elenco atual — estilo pronto para uso futuro).
+ * Kakashi dos dois Mangekyō azul-claro com shuriken do Kamui. Shisui verde com agulhas de chakra, da animação Ninja Escapades.
  * Rigs são criados uma vez por estilo e reaproveitados; nenhum material/geometria é criado por cast.
  */
-export type SusanooStyle = 'madara' | 'sasuke' | 'itachi' | 'kakashi';
+export type SusanooStyle = 'madara' | 'sasuke' | 'itachi' | 'kakashi' | 'shisui';
 const STYLE: Record<SusanooStyle, { body: string; rim: string; flame: [string, string, string] }> = {
   madara: { body: '#2f4dff', rim: '#a8b8ff', flame: ['#e6ecff', '#6f86ff', '#2233c8'] },
   sasuke: { body: '#8b3dff', rim: '#e4c8ff', flame: ['#f6ecff', '#b27bff', '#5a1fb0'] },
   itachi: { body: '#ff4422', rim: '#ffcc88', flame: ['#fff2d8', '#ff8a4a', '#c4260e'] },
+  shisui: { body: '#24bc61', rim: '#b5ffae', flame: ['#ddffbd', '#51e57c', '#166e39'] },
   kakashi: { body: '#36c8ff', rim: '#dafaff', flame: ['#f0fdff', '#7fe2ff', '#1d8cc8'] },
 };
 export function susanooStyleFor(family: string | undefined): SusanooStyle {
-  return family === 'sasuke' ? 'sasuke' : family === 'itachi' ? 'itachi' : family === 'kakashi' ? 'kakashi' : 'madara';
+  if (family === 'sasuke' || family === 'itachi' || family === 'kakashi' || family === 'shisui') return family;
+  return 'madara';
 }
 
 const VERT = `varying vec3 vN; varying float vY; void main(){ vN=normalize(normalMatrix*normal); vec4 w=modelMatrix*vec4(position,1.); vY=w.y; gl_Position=projectionMatrix*viewMatrix*w; }`;
@@ -38,23 +40,44 @@ function geometries() {
   const kris = new THREE.ShapeGeometry(wavy);
   const blade = new THREE.ConeGeometry(.12, 3, 4); blade.translate(0, 1.5, 0);
   const arrow = new THREE.CylinderGeometry(.04, .04, 1.8, 5); arrow.translate(0, .9, 0);
-  const shuriken = new THREE.TorusGeometry(.5, .12, 3, 3);
+  const shuriken = new THREE.Shape();
+  shuriken.moveTo(0, .24);
+  for (let i = 0; i < 3; i++) {
+    const a = -i * Math.PI * 2 / 3;
+    const point = (x:number,y:number) => shuriken.lineTo(x*Math.cos(a)-y*Math.sin(a),x*Math.sin(a)+y*Math.cos(a));
+    point(-.12,.34);point(-.24,.75);point(.15,.61);point(.34,.32);point(.208,-.12);
+  }
+  shuriken.closePath();
+  const hole = new THREE.Path();hole.absarc(0,0,.12,0,Math.PI*2,true);shuriken.holes.push(hole);
+  const yata = new THREE.Shape();
+  yata.moveTo(0,.72);
+  yata.quadraticCurveTo(.44,.62,.68,.30);
+  yata.quadraticCurveTo(.55,-.51,0,-.75);
+  yata.quadraticCurveTo(-.55,-.51,-.68,.30);
+  yata.quadraticCurveTo(-.44,.62,0,.72);
   geos = {
     rib: new THREE.TorusGeometry(.55, .05, 4, 16, Math.PI * 1.15), bone, joint: new THREE.IcosahedronGeometry(.16, 0),
     spine: new THREE.CylinderGeometry(.09, .12, 1.8, 7), chest: new THREE.SphereGeometry(.7, 12, 10), skull: new THREE.SphereGeometry(.42, 12, 10),
     horn: new THREE.ConeGeometry(.08, .55, 5), eye: new THREE.SphereGeometry(.07, 6, 5), hood: new THREE.ConeGeometry(.75, .9, 10, 1, true),
     kris, blade, arrow, tip: new THREE.ConeGeometry(.1, .3, 5), bow: new THREE.TorusGeometry(1.05, .05, 4, 22, Math.PI * 1.15),
-    mirror: new THREE.CircleGeometry(.55, 20), mirrorRim: new THREE.TorusGeometry(.55, .06, 4, 20), gourd: new THREE.SphereGeometry(.22, 8, 6), shuriken,
+    shield: new THREE.ExtrudeGeometry(yata,{depth:.10,bevelEnabled:true,bevelThickness:.045,bevelSize:.05,bevelSegments:1,steps:1,curveSegments:6}),
+    rosette: new THREE.TorusGeometry(.24,.032,5,20),
+    plate: new THREE.IcosahedronGeometry(.42,0),
+    wing: new THREE.ConeGeometry(.36,1.3,4),
+    cord: new THREE.CylinderGeometry(.017,.017,1.43,5),
+    gourd: new THREE.SphereGeometry(.22, 10, 8),
+    shuriken: new THREE.ExtrudeGeometry(shuriken,{depth:.065,bevelEnabled:false,curveSegments:10}),
   };
   return geos;
 }
 
 type Rig = {
-  root: THREE.Group; mats: THREE.ShaderMaterial[]; style: SusanooStyle; age: number; life: number; active: boolean; scale: number;
+  root: THREE.Group; mats: THREE.ShaderMaterial[]; style: SusanooStyle; age: number; life: number; impactAt: number; active: boolean; scale: number;
   ribs: THREE.Object3D[]; spine: THREE.Object3D; chest: THREE.Object3D; head: THREE.Object3D; armL: THREE.Group; armR: THREE.Group;
   foreL: THREE.Group; foreR: THREE.Group; weaponL: THREE.Object3D; weaponR: THREE.Object3D;
   owner: THREE.Vector3; dir: THREE.Vector3; target: THREE.Vector3; radius: number; ultimate: boolean; fired: boolean; flameAcc: number;
   samples: THREE.Object3D[];
+  projectile?: THREE.Mesh;
   painted?: THREE.Sprite;
   /** Rodada 99: segundo sprite da folha pintada, para fundir um quadro no seguinte. */
   paintedNext?: THREE.Sprite;
@@ -64,8 +87,8 @@ function buildRig(style: SusanooStyle): Rig {
   const G = geometries(), S = STYLE[style];
   const mat = (base: number) => new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
     uniforms: { body: { value: new THREE.Color(S.body) }, rim: { value: new THREE.Color(S.rim) }, opacity: { value: 0 }, time: { value: 0 }, base: { value: base } } });
-  const shell = mat(.16), solid = mat(.5);
-  const root = new THREE.Group(); root.visible = false;
+  const shell = mat(.23), solid = mat(.57);
+  const root = new THREE.Group(); root.name='susanoo-'+style; root.visible = false;
   const add = (parent: THREE.Object3D, geo: THREE.BufferGeometry, m: THREE.Material, x = 0, y = 0, z = 0) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.renderOrder = 6; parent.add(o); return o; };
   const spine = add(root, G.spine, shell, 0, 1.75, -.15);
   const ribs: THREE.Object3D[] = [];
@@ -75,15 +98,37 @@ function buildRig(style: SusanooStyle): Rig {
   }
   const chest = add(root, G.chest, shell, 0, 2.05, -.1); chest.scale.set(1.25, 1.05, .75);
   const hood = add(chest, G.hood, shell, 0, .55, 0); hood.scale.set(1.1, .7, 1);
+  if(style==='itachi') {
+    for(const side of [-1,1]) {
+      const mantle=add(chest,G.plate,solid,side*.69,.24,-.03);
+      mantle.rotation.z=side*.56;mantle.scale.set(1.2,1.55,.96);
+    }
+  }
+  if(style==='kakashi') {
+    for(const side of [-1,1])for(let i=0;i<3;i++) {
+      const wing=add(chest,G.wing,shell,side*(.75+i*.25),.35+i*.10,-.54-i*.07);
+      wing.rotation.z=-side*(.85+i*.21);wing.rotation.x=-.32;wing.scale.set(.95,1.22+i*.13,.54);
+    }
+  }
+  if(style==='shisui') {
+    add(chest,G.plate,solid,0,.12,.42).scale.set(.83,1.1,.6);
+    add(chest,G.rosette,solid,0,.14,.64).scale.setScalar(.65);
+  }
   const head = new THREE.Group(); head.position.set(0, 3.15, 0); root.add(head);
   const skull = add(head, G.skull, shell); skull.scale.set(1, 1.15, 1);
   for (const side of [-1, 1]) add(head, G.eye, solid, side * .16, .06, .36);
-  if (style === 'sasuke') for (const side of [-1, 1]) { const h = add(head, G.horn, shell, side * .26, .42, -.05); h.rotation.z = -side * .55; }
+  if(style==='kakashi') {
+    const scar=add(head,G.bone,solid,-.16,.26,.388);
+    scar.scale.set(.24,.52,.23);scar.rotation.z=-.09;
+  }
+  if (style === 'sasuke' || style === 'shisui') for (const side of [-1, 1]) { const h = add(head, G.horn, shell, side * .26, .42, -.05); h.rotation.z = -side * .55; }
   else if (style === 'madara') { const h = add(head, G.horn, shell, 0, .5, -.05); h.rotation.x = -.3; for (const side of [-1, 1]) { const t = add(head, G.horn, shell, side * .2, -.32, .25); t.scale.set(.5, .6, .5); t.rotation.x = Math.PI * .85; } }
   else { const nose = add(head, G.horn, shell, 0, .02, .45); nose.rotation.x = Math.PI / 2; nose.scale.set(.7, .8, .7); for (const side of [-1, 1]) { const lock = add(head, G.bone, shell, side * .4, .2, 0); lock.scale.set(.5, .7, .5); } }
   const arm = (side: number) => {
     const shoulder = new THREE.Group(); shoulder.position.set(side * 1.05, 2.55, -.1); root.add(shoulder);
     add(shoulder, G.joint, shell);
+    const pauldron=add(shoulder,G.plate,solid,side*.05,.02,-.04);
+    pauldron.rotation.z=-side*.35;pauldron.scale.set(1.05,style==='itachi'?1.44:1.06,.98);
     const upper = add(shoulder, G.bone, shell); upper.scale.set(1.1, 1.1, 1.1);
     const fore = new THREE.Group(); fore.position.set(0, -1.1, 0); shoulder.add(fore);
     add(fore, G.joint, shell); add(fore, G.bone, shell).scale.set(.95, 1, .95);
@@ -93,18 +138,36 @@ function buildRig(style: SusanooStyle): Rig {
   const L = arm(-1), R = arm(1);
   // Armas por usuário.
   const weaponR = new THREE.Group(), weaponL = new THREE.Group(); R.fore.add(weaponR); L.fore.add(weaponL); weaponR.position.y = weaponL.position.y = -1.05;
-  if (style === 'madara') { for (const w of [weaponR, weaponL]) { const k = add(w, G.kris, solid); k.rotation.x = Math.PI / 2; } }
-  else if (style === 'itachi') {
-    const sword = add(weaponR, G.blade, solid); sword.rotation.x = Math.PI / 2; sword.scale.set(.6, 1.1, .6);
-    add(weaponR, G.gourd, shell, .25, .1, -.2); add(weaponR, G.gourd, shell, .25, .38, -.2).scale.setScalar(.7);
-    const mirror = add(weaponL, G.mirror, shell, 0, 0, .35); add(mirror, G.mirrorRim, solid);
+  let projectile:THREE.Mesh|undefined;
+  if (style === 'madara') {
+    for (const weapon of [weaponR,weaponL]) {
+      const blade=add(weapon,G.kris,solid);
+      blade.name='lâmina ondulada';blade.rotation.x=Math.PI/2;blade.scale.x=1.65;
+    }
+  } else if (style === 'itachi') {
+    add(weaponR,G.gourd,solid).scale.set(1.25,1.48,1.25);
+    add(weaponR,G.gourd,solid,0,0,.26).scale.setScalar(.68);
+    const sword=add(weaponR,G.blade,solid,0,0,.34);
+    sword.name='Espada de Totsuka';sword.rotation.x=Math.PI/2;sword.scale.set(.77,1.05,.77);
+    const shield=add(weaponL,G.shield,solid,0,0,.43);
+    shield.name='Espelho de Yata';shield.scale.set(1.20,1.28,.9);
+    add(shield,G.rosette,solid,0,.12,.16);
+    add(shield,G.plate,shell,0,.10,.16).scale.setScalar(.36);
   } else if (style === 'sasuke') {
-    const bow = add(weaponL, G.bow, solid, 0, 0, .2); bow.rotation.set(0, Math.PI / 2, -.575 * Math.PI);
-    const arrow = add(weaponR, G.arrow, solid); arrow.rotation.x = Math.PI / 2; add(arrow, G.tip, solid, 0, 1.9, 0);
-  } else { const s = add(weaponR, G.shuriken, solid); s.rotation.x = Math.PI / 2; s.scale.setScalar(1.4); const k = add(weaponL, G.blade, solid); k.rotation.x = Math.PI / 2; }
+    const bow=add(weaponL,G.bow,solid,0,0,.22);
+    bow.name='arco de chakra';bow.rotation.set(-Math.PI/2,0,-.575*Math.PI);
+    const cord=add(weaponL,G.cord,shell,0,0,-.39);
+    cord.rotation.z=Math.PI/2;cord.scale.y=1.4;
+    const arrow=add(weaponR,G.arrow,solid);arrow.name='flecha de chakra';arrow.rotation.x=Math.PI/2;
+    add(arrow,G.tip,solid,0,1.9,0);
+  } else if(style==='kakashi') {
+    add(weaponR,G.shuriken,solid).scale.setScalar(1.12);
+    projectile=add(root,G.shuriken,solid);
+    projectile.name='shuriken do Kamui';projectile.visible=false;
+  }
   const samples: THREE.Object3D[] = [L.shoulder, R.shoulder, L.fore, R.fore, head, spine, ...ribs, chest];
-  return { root, mats: [shell, solid], style, age: 0, life: 1, active: false, scale: 1, ribs, spine, chest, head, armL: L.shoulder, armR: R.shoulder, foreL: L.fore, foreR: R.fore, weaponL, weaponR,
-    owner: new THREE.Vector3(), dir: new THREE.Vector3(0, 0, 1), target: new THREE.Vector3(), radius: 1, ultimate: false, fired: false, flameAcc: 0, samples };
+  return { root, mats: [shell, solid], style, age: 0, life: 1, impactAt: .22, active: false, scale: 1, ribs, spine, chest, head, armL: L.shoulder, armR: R.shoulder, foreL: L.fore, foreR: R.fore, weaponL, weaponR,
+    owner: new THREE.Vector3(), dir: new THREE.Vector3(0, 0, 1), target: new THREE.Vector3(), radius: 1, ultimate: false, fired: false, flameAcc: 0, samples, projectile };
 }
 
 const ease = (v: number) => { const x = Math.min(1, Math.max(0, v)); return x * x * (3 - 2 * x); };
@@ -118,7 +181,7 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
   const colsOf = (s: SusanooStyle) => { let c = flameCols.get(s); if (!c) { c = STYLE[s].flame.map(col); flameCols.set(s, c); } return c; };
 
   /** Dispara o Susanoo do usuário: forma em camadas, ataca com a arma do estilo e desaparece. */
-  function trigger(style: SusanooStyle, owner: THREE.Vector3, dir: THREE.Vector3, target: THREE.Vector3, radius: number, ultimate = false) {
+  function trigger(style: SusanooStyle, owner: THREE.Vector3, dir: THREE.Vector3, target: THREE.Vector3, radius: number, ultimate = false, impactAt=.22) {
     if (hidden) return;
     let rig = rigs.get(style);
     if (!rig) {
@@ -143,7 +206,9 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       }
     }
     rig.owner = owner; rig.dir.set(dir.x, 0, dir.z).normalize(); rig.target.copy(target); rig.radius = radius; rig.ultimate = ultimate;
-    rig.age = 0; rig.life = ultimate ? 1.35 : .95; rig.active = true; rig.fired = false; rig.root.visible = true;
+    rig.age=0;rig.weaponR.visible=true;if(rig.projectile)rig.projectile.visible=false;
+    rig.impactAt=Math.max(.001,impactAt);
+    rig.life=(ultimate?1.35:.95)+rig.impactAt-.22; rig.active = true; rig.fired = false; rig.root.visible = true;
     rig.scale = Math.min(1.9, .85 + radius * .32) * (ultimate ? 1.25 : 1);
   }
 
@@ -153,7 +218,23 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
     const sx = rig.owner.x, sz = rig.owner.z, ox = rig.ultimate ? sx : rig.target.x, oz = rig.ultimate ? sz : rig.target.z;
     // Anel no chão do tamanho real da área atingida (no alvo; na Ultimate, ao redor do usuário).
     fx.emitRaw(true, ox, ground(ox, oz) + .08, oz, 0, 0, 0, .45, R * .6, R * 2.5, core, .9, edge, 0, 5, 2, 0);
-    if (rig.style === 'madara' || rig.style === 'kakashi') {
+    if(rig.style==='kakashi') {
+      fx.emitRaw(true,ox,ground(ox,oz)+.65,oz,0,0,0,.32,R*.48,R*1.38,core,.85,edge,0,GLOW,0,.14);
+      for(let i=0;i<9;i++){
+        const angle=i*Math.PI*2/9;
+        fx.emitRaw(true,ox+Math.cos(angle)*R*.62,ground(ox,oz)+.50,oz+Math.sin(angle)*R*.62,
+          -Math.sin(angle)*3,.7,Math.cos(angle)*3,.40,.15,.04,mid,.95,edge,0,STREAK,1,.14);
+      }
+    } else if(rig.style==='shisui') {
+      const tx=rig.target.x,tz=rig.target.z;
+      for(let i=-4;i<=4;i++){
+        const x=tx+d.z*i*.13,z=tz-d.x*i*.13;
+        const vx=x-o.x,vz=z-o.z;
+        fx.emitRaw(true,o.x+vx*.24,g+2.2*rig.scale,o.z+vz*.24,vx*7,-4.9,vz*7,.15,.105,.03,core,.9,mid,0,STREAK,1,Math.abs(i)*.012);
+        setAxis(fx,vx*.48,-.95,vz*.48);
+      }
+      fx.emitRaw(true,tx,ground(tx,tz)+.5,tz,0,0,0,.20,R*.42,R*1.4,core,.96,edge,0,SPARK,0,.12);
+    } else if (rig.style === 'madara') {
       // Dois cortes horizontais girando ao redor (lâminas kris), deixando chamas azuis no chão.
       for (let k = 0; k < 2; k++) for (let j = 0; j < 6; j++) {
         const a = Math.atan2(d.z, d.x) + (k ? Math.PI : 0) + j * .5;
@@ -182,8 +263,9 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
     for (const rig of rigs.values()) {
       if (!rig.active) continue;
       rig.age += dt;
-      const a = rig.age, T = rig.life;
-      if (a >= T || hidden) { rig.active = false; rig.root.visible = false; continue; }
+      if (rig.age >= rig.life || hidden) { rig.active = false; rig.root.visible = false; continue; }
+      const a=rig.age<rig.impactAt ? .22*rig.age/rig.impactAt : .22+rig.age-rig.impactAt;
+      const T=rig.life-rig.impactAt+.22;
       const o = rig.owner, s = rig.scale;
       // Atrás e acima do usuário, voltado para a direção do golpe.
       rig.root.position.set(o.x - rig.dir.x * .55, ground(o.x, o.z) - .2, o.z - rig.dir.z * .55);
@@ -198,7 +280,26 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       const wp = ease((a - .18) / .08); rig.weaponL.scale.setScalar(wp + .001); rig.weaponR.scale.setScalar(wp + .001);
       // Golpe (≈ quando o acerto é resolvido: 0,24 s após o cast).
       const sw = ease((a - .2) / .2), back = ease((a - .12) / .1) * (1 - sw);
-      if (rig.style === 'madara' || rig.style === 'kakashi') {
+      if(rig.style==='kakashi') {
+        rig.armR.rotation.set(-.65-1.02*sw, -.46*back, 1.0*(1-sw)+.14);
+        rig.foreR.rotation.x=-1.25*(1-sw);
+        rig.armL.rotation.set(-.37,0,-.92);
+        const travel=Math.min(1,Math.max(0,(a-.22)/.16));
+        rig.weaponR.visible=a<.22;
+        if(rig.projectile){
+          rig.projectile.visible=a>=.22&&a<.38;
+          tmp.copy(rig.target).setY(ground(rig.target.x,rig.target.z)+.55);
+          rig.root.updateMatrixWorld(true);
+          rig.root.worldToLocal(tmp);
+          rig.projectile.position.set(.46*(1-travel)+tmp.x*travel,2.23*(1-travel)+tmp.y*travel,.52*(1-travel)+tmp.z*travel);
+          rig.projectile.rotation.set(-.42,0,travel*Math.PI*3);
+          rig.projectile.scale.setScalar(.92+travel*.29);
+        }
+      } else if(rig.style==='shisui') {
+        rig.armL.rotation.set(-.73,0,-.65);rig.armR.rotation.set(-.73,0,.65);
+        rig.foreL.rotation.x=-.72+sw*.37;rig.foreR.rotation.x=-.72+sw*.37;
+        rig.chest.rotation.x=-.14*sw;
+      } else if (rig.style === 'madara') {
         rig.armR.rotation.set(-1.2 * back - .3 * sw, 0, .9 - 1.9 * sw); rig.armL.rotation.set(-1.2 * back - .3 * sw, 0, -.9 + 1.9 * sw);
         rig.foreR.rotation.x = -1 * (1 - sw) - .3; rig.foreL.rotation.x = -1 * (1 - sw) - .3;
       } else if (rig.style === 'itachi') {
@@ -209,7 +310,7 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
         const draw = 1 - sw; rig.armR.rotation.set(-1.5 + .2 * draw, 0, .5 * draw); rig.foreR.rotation.x = -1.5 * draw;
         rig.weaponR.visible = a < .24;
       }
-      if (!rig.fired && a >= .22) { rig.fired = true; attack(rig); }
+      if (!rig.fired && rig.age >= rig.impactAt) { rig.fired = true; attack(rig); }
       const fade = a < .05 ? a / .05 : a > T - .25 ? Math.max(0, (T - a) / .25) : 1;
       const painted = rig.painted;
       const paintedReady = Boolean((painted?.material.map?.image as HTMLImageElement|undefined)?.width);
@@ -244,7 +345,7 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       }
       if (a < .05) fx.emitRaw(true, o.x, o.y + .4, o.z, 0, 0, 0, .25, 1.4 * s, 2.4 * s, core, .7, mid, 0, GLOW, 0, 0);
       // Rodada 99: rajada de chamas de chakra no chão enquanto o Susanoo se forma.
-      if (rig.painted && a < .18) for (let i = 0; i < 3; i++) { const ang = Math.random() * 6.283, r = (.4 + Math.random() * 1.2) * s; fx.emitRaw(true, o.x + Math.cos(ang) * r, ground(o.x, o.z) + .1, o.z + Math.sin(ang) * r, 0, 2.2 + Math.random() * 1.6, 0, .55, .5 * s, .1, Math.random() < .4 ? core : mid, .8, edge, 0, FLAME, 0, 0); }
+      if (a < (rig.ultimate ? .14 : .07)) for (let i = 0; i < 3; i++) { const ang = Math.random() * 6.283, r = (.4 + Math.random() * 1.2) * s; fx.emitRaw(true, o.x + Math.cos(ang) * r, ground(o.x, o.z) + .1, o.z + Math.sin(ang) * r, 0, 2.2 + Math.random() * 1.6, 0, .55, .5 * s, .1, Math.random() < .4 ? core : mid, .8, edge, 0, FLAME, 0, 0); }
       void camera;
     }
   }

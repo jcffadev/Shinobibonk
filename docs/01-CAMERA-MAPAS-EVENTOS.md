@@ -397,3 +397,10 @@ Confirmação do usuário em 15/11: preservar a câmera e a movimentação atuai
 - **Partida:** `GameCanvas.tsx`. Teletransporte e arena como a Bijuu, `spawnEnemy` para as hordas e o Mega Elite, e a recompensa no mesmo fluxo de escolha das cartas.
 - **Arte:** ícones das 9 ferramentas pela skill `criar-arte-shinobibonk`. A arena segue a skill `criar-mapa-shinobibonk`.
 - **Regra do projeto:** nenhum nome do jogo de referência no código, nos textos ou nos commits.
+
+
+## Validação das vilas jogáveis · 23/11/2026
+
+A branch de revisão combina o terreno e os sistemas da versão principal com quatro vilas navegáveis. As fachadas e os telhados são malhas fixas. Árvores usam os sprites de cenário. Monte Hokage e estátuas têm frente texturizada e volume de rocha por trás. No novo terreno, as pontes dão apoio e o canal de Kiri usa o sistema de água da cena. Os eventos de missão preferem áreas secas acessíveis ao longo das ruas. A arena final descarta a sobreposição das vilas e a clareira de Hagoromo mantém seu espaço específico.
+
+Partidas novas da branch iniciam nos bairros urbanos. A variante e o apoio dos pés ficam na partida salva. Um save anterior a esse campo abre em mapas básicos. As prévias nativas mostram geometria, composição de fachadas e materiais. Em partida, conferir os climas, a água, os efeitos e o resultado em movimento. [Guia de criação](development/CRIAR-MAPAS-JOGAVEIS.md).

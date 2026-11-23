@@ -35,6 +35,10 @@ import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type Shinra
 import { createDamageNumbers } from './damageNumbers';
 import { bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
+import { missionMapLayout, VILLAGES, villageDeck, villageEventSite, villageSurface, type MapLayout } from './villageLayout';
+import { createVillageGround, villageWater } from './villageTerrain';
+import { createVillageScenery } from './villageScenery';
+import { createVillageTraversal } from './villageTraversal';
 import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE, PLAYER_SIZE } from '../game/worldScale';
 import { playHurt, playSfx, playTechniqueSound } from '../audio/sfx';
 import { createDamageFlash, flashStrength, registerHit, vignetteOpacity } from '../game/damageFeedback';
@@ -79,7 +83,7 @@ type PortalKind='zone'|'arena'|'exit';
 type ActiveWeatherEvent={id:WeatherEventId;until:number;elite:string;x:number;z:number;castEnd?:number;openingMega?:boolean};
 type SavedBijuu={id:string;hp:number;maxHp:number;x?:number;z?:number};
 type CampaignSave={openingMegaSpawned?:boolean;akatsukiAmbush?:AmbushMemberSave[];weatherPlan?:WeatherPlan;altarBlessing?:{tier:number;name:string;offers:LevelOffer[]};weatherEvent?:ActiveWeatherEvent;nextWeatherAt?:number;fallenMegas?:{heroId:string;x:number;z:number;account?:boolean}[];start:number;pendingLevels?:number;sagesUsedZone?:number;merges?:TechniqueMerge[];megaSchedule?:number[];accountEncounters?:number;plans:number;arena:boolean;reward:number;bijuu:string;portal?:{kind:PortalKind;x:number;z:number};boss?:SavedBijuu;locations?:{id:string;x:number;z:number}[];pickups?:{kind:MapPickup['kind'];x:number;z:number;discovered:boolean}[]};
-export type SavedRun={hagoromo?:HagoromoState;rankTicket?:{id:string;owner:string};killStreak?:KillStreak;powerlevel?:Powerlevel;v:1;heroId:string;mission:Difficulty;mapId:MapId;savedAt:number;elapsed:number;zone:number;level:number;xp:number;xpNext:number;kills:number;runMoney:number;kunai:number;shuriken:number;chakra:number;hp:number;bonusHp:number;totalDamage:number;allyDamage:number;skillDamage:Record<string,number>;knownItems:Record<string,number>;knownPills:Record<string,number>;pillQuality?:Record<string,number>;skillLevels:Record<string,number>;growth:Record<string,SkillGrowth>;allies:string[];allyAffinity:Record<string,number>;runBuffs:Bonuses;uses:{reroll:number;skip:number;ban:number};banned:string[];events:{id:string;active:boolean;uses:number;discovered:boolean}[];explored:string[];ryuSpent:number;rouletteSpins:number;paidWeapons:number;guardianSpawned:boolean;shikamaruPlans:number;megaElitesSpawned:number;zoneDifficulty:number;xpMultiplier:number;lootMultiplier:number;totemSpawned:boolean;pendingItemRewards:number;defenseDone:boolean;player:{x:number;z:number};accountTried:string[]; campaign?:CampaignSave; merchant?:{purchases:number;rerolls:number;stock:(string|null)[];prices?:number[]}; rouletteItems?:PendingPrize[]; rouletteSession?:{pending:RoulettePrize[];sessionSpins:number;sessionSpent:number}|null};
+export type SavedRun={hagoromo?:HagoromoState;mapLayout?:MapLayout;surfaceElevation?:number;rankTicket?:{id:string;owner:string};killStreak?:KillStreak;powerlevel?:Powerlevel;v:1;heroId:string;mission:Difficulty;mapId:MapId;savedAt:number;elapsed:number;zone:number;level:number;xp:number;xpNext:number;kills:number;runMoney:number;kunai:number;shuriken:number;chakra:number;hp:number;bonusHp:number;totalDamage:number;allyDamage:number;skillDamage:Record<string,number>;knownItems:Record<string,number>;knownPills:Record<string,number>;pillQuality?:Record<string,number>;skillLevels:Record<string,number>;growth:Record<string,SkillGrowth>;allies:string[];allyAffinity:Record<string,number>;runBuffs:Bonuses;uses:{reroll:number;skip:number;ban:number};banned:string[];events:{id:string;active:boolean;uses:number;discovered:boolean}[];explored:string[];ryuSpent:number;rouletteSpins:number;paidWeapons:number;guardianSpawned:boolean;shikamaruPlans:number;megaElitesSpawned:number;zoneDifficulty:number;xpMultiplier:number;lootMultiplier:number;totemSpawned:boolean;pendingItemRewards:number;defenseDone:boolean;player:{x:number;z:number};accountTried:string[]; campaign?:CampaignSave; merchant?:{purchases:number;rerolls:number;stock:(string|null)[];prices?:number[]}; rouletteItems?:PendingPrize[]; rouletteSession?:{pending:RoulettePrize[];sessionSpins:number;sessionSpent:number}|null};
 /** Recompensas atraídas pelo jogador. O bolinho de arroz cura uma fração do HP máximo. */
 type Drop = { mesh: THREE.Sprite; type: 'xp' | 'ryu' | 'chakra' | 'pill' | 'item' | 'onigiri'; value: number; name: string; born: number; magnet: boolean; speed: number };
 /**
@@ -181,19 +185,28 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let renderer = createRenderer(); container.appendChild(renderer.domElement); let activeGpu = currentSettings().gpu;
     scene.add(new THREE.HemisphereLight('#d4e9ff', '#35402d', 2.4)); const sun = new THREE.DirectionalLight('#ffe6b0', 3); sun.position.set(-8, 18, 7); scene.add(sun);
     // Rodada 95: a grade cobre todo o chão desenhado (não só a área de jogo): pintura do chão, malha e água leem dela.
-    const terrainHeight=createHeightField((x:number,z:number)=>groundHeight(MAP.id,x,z),RENDERED_GROUND_SIZE/2);
+    const mapLayout:MapLayout=enabledRef.current?missionMapLayout(resume):'mapas_basicos';
+    const village=mapLayout==='vilas'?VILLAGES[MAP.id]:null;
+    const waters=village?villageWater(MAP.id):undefined;
+    const exactGround=village&&waters?createVillageGround(village,waters):(x:number,z:number)=>groundHeight(MAP.id,x,z);
+    const terrainHeight=createHeightField(exactGround,RENDERED_GROUND_SIZE/2);
+    let villageActive=!!village;
     // Rodada 88 (pedido do usuário: "as vezes o pé do personagem está indo para abaixo do solo… corrigir em todos os mapas…
     // todos os personagens"): personagens ficam de pé no ponto MAIS ALTO do chão sob os pés (raio FOOT_RADIUS). Na encosta
     // de um terraço o chão logo à frente é mais alto que o centro e escondia os pés.
     // Rodada 89: sobre lagos e rios os personagens andam na superfície da água (como os ninjas com chakra na obra).
-    const standHeight=(x:number,z:number)=>Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z));
+    const standHeight=(x:number,z:number)=>village&&villageActive
+      ?Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z,waters),villageDeck(village,terrainHeight,x,z))
+      :Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z));
     const solids=createSolids();
     // Partículas das técnicas (natureza × forma) e Susanoo procedural: pools fixos, só visual (particleFx.ts / susanooFx.ts).
     const particles=createParticleFx(scene,terrainHeight),susanoo=createSusanooFx(scene,particles,terrainHeight);particles.setHidden(hiddenEffects);
     runCleanups.push(()=>{susanoo.dispose();particles.dispose();});
     // Rodada 55: contorno + preenchimento das áreas reais das técnicas do jogador (só visual; src/scene/techniqueAreas.ts).
     const areas=createTechniqueAreas(scene,terrainHeight);runCleanups.push(()=>areas.dispose());
-    const groundLook=createGroundMaterial(MAP,terrainHeight);
+    const groundLook=village&&waters
+      ?createGroundMaterial(MAP,terrainHeight,{waters,surface:(x,z)=>villageSurface(village,x,z)})
+      :createGroundMaterial(MAP,terrainHeight);
     const terrainGeometry=new THREE.PlaneGeometry(RENDERED_GROUND_SIZE,RENDERED_GROUND_SIZE,340,340);
     const terrainPositions=terrainGeometry.attributes.position;
     for(let i=0;i<terrainPositions.count;i++)terrainPositions.setZ(i,terrainHeight(terrainPositions.getX(i),-terrainPositions.getY(i)));
@@ -202,7 +215,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     groundLook.material.polygonOffset=true;groundLook.material.polygonOffsetFactor=GROUND_DEPTH_OFFSET.factor;groundLook.material.polygonOffsetUnits=GROUND_DEPTH_OFFSET.units;
     const ground=new THREE.Mesh(terrainGeometry,groundLook.material);
     ground.rotation.x=-Math.PI/2;scene.add(ground);
-    const water=createWater(scene,MAP.id,terrainHeight);runCleanups.push(()=>water.dispose());
+    const water=village?createWater(scene,MAP.id,terrainHeight,waters):createWater(scene,MAP.id,terrainHeight);runCleanups.push(()=>water.dispose());
     // Rodada 91: ondas dos passos e brilho de chakra nos pés sobre a água.
     const chakraFeet=createChakraFeet(scene);runCleanups.push(()=>chakraFeet.dispose());let rippleTimer=0,wasAirborne=false;
     // Rodada 99: respingos e ondas dos outros atores na água.
@@ -238,6 +251,11 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const cameraTarget=new THREE.Vector3(0,standHeight(0,0)+player.scale.y*.5,0);
     const environmentMaps=new Map<number,THREE.Texture>(),decor:THREE.Sprite[]=[];
     const environmentSprite=(index:number,width:number,height:number)=>{let map=environmentMaps.get(index);if(!map){map=new THREE.TextureLoader().load('/assets/environment-v2.png');map.colorSpace=THREE.SRGBColorSpace;map.magFilter=THREE.NearestFilter;map.minFilter=THREE.NearestFilter;map.generateMipmaps=false;map.repeat.set(.25,.5);map.offset.set((index%4)*.25,(1-Math.floor(index/4))*.5);environmentMaps.set(index,map);}const obj=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,alphaTest:.1,depthWrite:false}));obj.scale.set(width,height,1);return obj;};
+    const civicScene=village&&waters?createVillageScenery(scene,MAP,village,terrainHeight,waters,solids,environmentSprite):null;
+    if(civicScene){decor.push(...civicScene.sprites);runCleanups.push(()=>civicScene.dispose());}
+    const traversal=createVillageTraversal(solids.all);
+    let walkingFloor=standHeight(0,0);
+    if(!village){
     const scenery=(index:number,x:number,z:number,w:number,h:number)=>{const obj=environmentSprite(index,w,h);if(MAP.scenery.tint!=='#ffffff')obj.material.color.set(MAP.scenery.tint);obj.position.set(x,terrainHeight(x,z)+h*.45,z);scene.add(obj);decor.push(obj);return obj;};
     /** Rodada 70: sprite de cada árvore/rocha, para remover junto com o sólido quando ficar dentro de uma construção. */
     const sceneryBySolid=new Map<object,THREE.Sprite>();
@@ -276,6 +294,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     for(let k=0;k<22;k++){const a=k/22*Math.PI*2,r=HAGOROMO_ARENA.r+2.4+(k%3)*.9;scenery(k%4===0?1:0,HAGOROMO_ARENA.x+Math.cos(a)*r,HAGOROMO_ARENA.z+Math.sin(a)*r,3.4,3.8);}
     // Rodada 70: sem árvore/rocha escondida dentro de construção (bloqueava o caminho sem aparecer).
     solids.prune(COLLISION_RULES.sceneryClearance,solid=>{const obj=sceneryBySolid.get(solid);if(!obj)return;scene.remove(obj);obj.material.dispose();decor.splice(decor.indexOf(obj),1);sceneryBySolid.delete(solid);});
+    }
     const eventDefs=[{id:'shikamaru',name:'Plano do Shikamaru',x:14,z:8,icon:'♟️',sprite:8},{id:'guardian-seal',name:'Portal do Guardião · Myōjinmon',x:2,z:-12,icon:'⛩️',sprite:4},{id:'challenge',name:'Emboscada da Akatsuki',x:-14,z:9,icon:'akatsuki-cloud',sprite:9},{id:'orochimaru',name:'Maldição de Orochimaru',x:9,z:-18,icon:'🐍',sprite:10},{id:'altar',name:'Altar para proteger',x:-17,z:-13,icon:'🛕',sprite:11},{id:'trader',name:'Mercador de itens',x:-3,z:18,icon:'🥷',sprite:8},{id:'slot',name:'Caça-Níquel da Tsunade',x:5,z:18,icon:'🎰',sprite:8},{id:'arsenal',name:'Arsenal da Tenten',x:-21,z:-1,icon:'🗡️',sprite:8},{id:'sapos-sabios',name:'Sapos Sábios · Monte Myōboku',x:-25,z:18,icon:'🐸',sprite:8},{id:'ichiraku',name:'Barraca Ichiraku',x:13,z:21,icon:'🍜',sprite:8},{id:'ebisu',name:'Treino de Elite do Ebisu',x:25,z:5,icon:'🕶',sprite:8},{id:'iruka',name:'Aula do Iruka',x:-24,z:14,icon:'📚',sprite:8},{id:'youth',name:'Treinamento da Juventude · Might Guy',x:-30,z:-42,icon:'🔥',sprite:8}];
     const altarColors=['#cbd5e1','#4cda83','#5daafa','#bb78f3','#ffcb55'];
     const altarRarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
@@ -305,12 +324,19 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function scatterEvents(){
       zetsuRise=0;
       const spots:{x:number;z:number}[]=[];
-      for(const e of events){
+      for(const [index,e] of events.entries()){
         let x=0,z=0;
-        for(let n=0;n<80;n++){
+        const margin=e.id.startsWith('altar')?5:COLLISION_RULES.placementMargin;
+        const free=(x:number,z:number)=>spots.every(p=>Math.hypot(p.x-x,p.z-z)>6)&&solids.isFree(x,z,margin);
+        const site=village&&!e.id.startsWith('altar')&&villageEventSite(village,index,
+          point=>free(point.x,point.z)&&waterSurfaceAt(MAP.id,point.x,point.z,waters)===-Infinity);
+        if(site){x=site.x;z=site.z;}
+        else for(let n=0;n<80;n++){
           const radius=e.id==='guardian-seal'?14+Math.random()*16:13+Math.random()*55;
           const angle=Math.random()*Math.PI*2;x=Math.cos(angle)*radius;z=Math.sin(angle)*radius;
-          if(spots.every(p=>Math.hypot(p.x-x,p.z-z)>8)&&solids.isFree(x,z,e.id.startsWith('altar')?5:COLLISION_RULES.placementMargin))break;
+          if(village?free(x,z)&&waterSurfaceAt(MAP.id,x,z,waters)===-Infinity
+            :spots.every(p=>Math.hypot(p.x-x,p.z-z)>8)&&solids.isFree(x,z,margin))break;
+          if(village&&n===79){const point=solids.freeSpot(x,z,margin);x=point.x;z=point.z;}
         }
         spots.push({x,z});e.x=x;e.z=z;e.active=true;e.uses=0;e.discovered=false;
         e.obj.visible=false;e.obj.position.set(x,standHeight(x,z)+e.obj.scale.y*.45,z);if(e===ichiraku)placeTeuchi();
@@ -826,7 +852,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(hagoromo.keys<=0){eventToast=hagoromoRecharges('classico',hagoromoBossDown)?`Treinamento do Hagoromo: faltam ${HAGOROMO.killsPerKey-hagoromo.progress} abates para a próxima chave.`:'Treinamento do Hagoromo: sem recarga depois do chefe da zona (volta na próxima zona).';snapshotTimer=0;return;}
       hagoromo.keys--;const rarity=rollHagoromoRarity();
       hagoromoEvent={rarity,wave:0,origin:{x:player.position.x,z:player.position.z},mega:null};
-      player.position.set(HAGOROMO_ARENA.x,standHeight(HAGOROMO_ARENA.x,HAGOROMO_ARENA.z)+player.scale.y*.5,HAGOROMO_ARENA.z);
+      traversal.reset();walkingFloor=standHeight(HAGOROMO_ARENA.x,HAGOROMO_ARENA.z);
+      player.position.set(HAGOROMO_ARENA.x,walkingFloor+player.scale.y*.5,HAGOROMO_ARENA.z);
       lockedTarget=null;addRing(player.position,'#c9b8ff',3);
       spawnHagoromoWave();playSfx('ultimate');
       eventToast=`Treinamento do Hagoromo (${rarity}) · ${HAGOROMO_WAVES[rarity].waves} hordas de ${HAGOROMO_WAVES[rarity].perWave} e um Mega Elite`;snapshotTimer=0;
@@ -914,7 +941,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let streak: KillStreak = { count:0, lastAt:0 };
     const countKill = () => { kills += 1; streak = extendStreak(streak, elapsed); addHagoromoKills(hagoromo, 1, { inEvent: !!hagoromoEvent, recharge: hagoromoRecharges('classico', hagoromoBossDown) }); };
     let openingMegaSpawned=false;
-    let yaw=Math.PI/4, targetYaw=yaw, pitch=perspective?CAMERA_VIEW.pitch:.55, targetPitch=pitch, zoom=currentSettings().cameraDistance, spawnTimer=1,megaSchedule=rollMegaSchedule(),megaElitesSpawned=0,accountEncounters=0,snapshotTimer=0,chakra=0,hp=stats.maxHp,level=1,xp=0,xpNext=30,kills=0,runMoney=0,frames=0,fps=0,fpsTimer=0,autoUlt=currentSettings().autoUltimate,last=performance.now(),elapsed=0,eventToast='',zoneDifficulty=1,xpMultiplier=1,lootMultiplier=1;
+    let yaw=village?0:Math.PI/4, targetYaw=yaw, pitch=perspective?CAMERA_VIEW.pitch:.55, targetPitch=pitch, zoom=currentSettings().cameraDistance, spawnTimer=1,megaSchedule=rollMegaSchedule(),megaElitesSpawned=0,accountEncounters=0,snapshotTimer=0,chakra=0,hp=stats.maxHp,level=1,xp=0,xpNext=30,kills=0,runMoney=0,frames=0,fps=0,fpsTimer=0,autoUlt=currentSettings().autoUltimate,last=performance.now(),elapsed=0,eventToast='',zoneDifficulty=1,xpMultiplier=1,lootMultiplier=1;
     const enemyWeapons=['Kunai','Shuriken','Shuriken Fūma'] as const;
     const enemyShots:{object:THREE.Object3D;direction:THREE.Vector3;life:number;speed:number;damage:number;radius:number}[]=[];
     const shadowClones:{sprite:THREE.Sprite;motion:ReturnType<typeof createPlayerMotion>;target:Enemy;life:number;technique:Technique;growth:SkillGrowth;ally:boolean;level:number}[]=[];
@@ -1013,7 +1040,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       for(const number of numbers)number.sprite.visible=!value;
     }
     const movementInput=createMovementInput();
-    const onKeyDown=(e:KeyboardEvent)=>{const rawKey=e.key.toLowerCase(),key=rawKey==='escape'||rawKey==='tab'?rawKey:translateKey(rawKey);if(!key)return; if(e.target instanceof HTMLElement&&e.target.matches('input,select,textarea'))return;if(e.repeat&&['m','tab','p','e','r','g','y','h'].includes(key))return;if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright',' ','tab'].includes(key))e.preventDefault();if(!enabledRef.current||defeated||victory||debugOpenRef.current)return;movementInput.press(e.code||rawKey,key);if(document.querySelector('.game-panel-backdrop.over-choice')){if(key==='escape'||key==='p')onPanelRef.current(null);return;}if(key==='p'&&(sealing||choiceData||roulette)){if(sealing?.phase!=='sealing')onPanelRef.current('sheet');return;}if(roulette)return;/* Roleta aberta: TsunadeRoulette.tsx trata E/Esc/F/X. */if(sealing){if(key==='e'&&sealing.phase==='ready'&&sealing.account){sealing.phase='sealing';sealTimer=knownItems['Shuriken Selo da Tenten']?2.7:0;eventToast='O selo está prendendo o chakra do shinobi…';playSfx('ultimate');}else if(key==='g'&&sealing.phase==='ready'&&sealing.account){const lost=sealing.target;nextSeal();eventToast=lost+' escapou: não foi desbloqueado na conta.';}else if(key==='e'&&sealing.phase==='ready'){if(hasAllyFamily(sealing.heroId)){eventToast=sealing.target+' já está na equipe: G para receber um item.';return;}if(allyActors.length>=stats.supportSlots){openReplace(sealing);return;}sealing.phase='sealing';sealTimer=knownItems['Shuriken Selo da Tenten']?2.7:0;eventToast='O selo está prendendo o chakra do inimigo…';playSfx('ultimate');}else if(key==='g'&&sealing.phase==='ready'){spawnPickup('sealDrop',player.position.x,player.position.z);nextSeal();eventToast='Selamento recusado: siga a luz verde do pergaminho para escolher um item';}else if((key==='enter'||key==='e')&&sealing.phase==='complete'){nextSeal();if(!sealing&&!replaceCandidate)eventToast='Shinobi selado e adicionado à equipe desta missão';}recaptureAfterChoice();return;}if(choiceData){if(key==='escape'){if(choiceLevel===-8&&!document.querySelector('.game-panel-backdrop')){rewardAction('skip');recaptureAfterChoice();}else onPanelRef.current(null);return;}if(e.repeat||pausedRef.current&&document.querySelector('.game-panel-backdrop'))return;if(!choiceArmed())return;if(key==='v')sellLoot();else if(key==='e'&&choiceLevel===-9)chooseLevelOffer(0);else if(key==='f')rewardAction('reroll');else if(key==='x')rewardAction('skip');else if(key==='z')rewardAction('ban');else if(/^[1-9]$/.test(key))chooseLevelOffer(Number(key)-1);recaptureAfterChoice();return;}if(key==='m'){quickMapHeld=false;if(mapPanel==='map'){mapPanel=null;suppressUnlockPause();onPanelRef.current(null);return;}mapPanel='map';onPanelRef.current('map');return;}if(key==='tab'){if(!pausedRef.current){if(mapPanel==='quickmap'){mapPanel=null;quickMapHeld=false;suppressUnlockPause();onPanelRef.current(null);return;}quickMapHeld=true;mapPanel='quickmap';onPanelRef.current('quickmap');}return;}if(key==='p'){quickMapHeld=false;mapPanel=null;onPanelRef.current(pausedRef.current?null:'sheet');return;}if(key==='escape'&&quickMapHeld){quickMapHeld=false;mapPanel=null;suppressUnlockPause();onPanelRef.current(null);return;}if(pausedRef.current){if(key==='escape'){if(mapPanel)mapPanel=null;suppressUnlockPause();onPanelRef.current(null);}return;}if(key==='g'){/* G marca 📍 aqui sem rota; se a rota era um ping, ela é substituída. */if(route?.kind==='ping')clearRoute();currentPing={x:player.position.x,z:player.position.z};return;}if(key==='e'){interact();return;}if(key==='escape'){onPanelRef.current('pause');return;}if(!testPointer&&!pointerLocked())captureGamePointer();if(key==='h'){setHiddenEffects(!hiddenEffects);return;}if(key==='c')activateHagoromo();if(key==='y'){onToggleAuto();return;}if(key==='r'){castUltimate();return;}if(key===' '){if(sandCloud)keys.add(' ');if(!e.repeat&&!jumpTime&&!slideTime){jumpTime=jumpDuration;sandGlideLeft=sandCloud ? .9 : 0;}return;}if(key==='shift'){if(!e.repeat&&!jumpTime&&!slideRecovery){readMovement(dashHeading);if(dashHeading.lengthSq())dashHeading.normalize();else dashHeading.copy(heading);slideTime=slideDuration;slideRecovery=.9;invulnerability=Math.max(invulnerability,.14);}return;}};
+    const onKeyDown=(e:KeyboardEvent)=>{const rawKey=e.key.toLowerCase(),key=rawKey==='escape'||rawKey==='tab'?rawKey:translateKey(rawKey);if(!key)return; if(e.target instanceof HTMLElement&&e.target.matches('input,select,textarea'))return;if(e.repeat&&['m','tab','p','e','r','g','y','h'].includes(key))return;if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright',' ','tab'].includes(key))e.preventDefault();if(!enabledRef.current||defeated||victory||debugOpenRef.current)return;movementInput.press(e.code||rawKey,key);if(document.querySelector('.game-panel-backdrop.over-choice')){if(key==='escape'||key==='p')onPanelRef.current(null);return;}if(key==='p'&&(sealing||choiceData||roulette)){if(sealing?.phase!=='sealing')onPanelRef.current('sheet');return;}if(roulette)return;/* Roleta aberta: TsunadeRoulette.tsx trata E/Esc/F/X. */if(sealing){if(key==='e'&&sealing.phase==='ready'&&sealing.account){sealing.phase='sealing';sealTimer=knownItems['Shuriken Selo da Tenten']?2.7:0;eventToast='O selo está prendendo o chakra do shinobi…';playSfx('ultimate');}else if(key==='g'&&sealing.phase==='ready'&&sealing.account){const lost=sealing.target;nextSeal();eventToast=lost+' escapou: não foi desbloqueado na conta.';}else if(key==='e'&&sealing.phase==='ready'){if(hasAllyFamily(sealing.heroId)){eventToast=sealing.target+' já está na equipe: G para receber um item.';return;}if(allyActors.length>=stats.supportSlots){openReplace(sealing);return;}sealing.phase='sealing';sealTimer=knownItems['Shuriken Selo da Tenten']?2.7:0;eventToast='O selo está prendendo o chakra do inimigo…';playSfx('ultimate');}else if(key==='g'&&sealing.phase==='ready'){spawnPickup('sealDrop',player.position.x,player.position.z);nextSeal();eventToast='Selamento recusado: siga a luz verde do pergaminho para escolher um item';}else if((key==='enter'||key==='e')&&sealing.phase==='complete'){nextSeal();if(!sealing&&!replaceCandidate)eventToast='Shinobi selado e adicionado à equipe desta missão';}recaptureAfterChoice();return;}if(choiceData){if(key==='escape'){if(choiceLevel===-8&&!document.querySelector('.game-panel-backdrop')){rewardAction('skip');recaptureAfterChoice();}else onPanelRef.current(null);return;}if(e.repeat||pausedRef.current&&document.querySelector('.game-panel-backdrop'))return;if(!choiceArmed())return;if(key==='v')sellLoot();else if(key==='e'&&choiceLevel===-9)chooseLevelOffer(0);else if(key==='f')rewardAction('reroll');else if(key==='x')rewardAction('skip');else if(key==='z')rewardAction('ban');else if(/^[1-9]$/.test(key))chooseLevelOffer(Number(key)-1);recaptureAfterChoice();return;}if(key==='m'){quickMapHeld=false;if(mapPanel==='map'){mapPanel=null;suppressUnlockPause();onPanelRef.current(null);return;}mapPanel='map';onPanelRef.current('map');return;}if(key==='tab'){if(!pausedRef.current){if(mapPanel==='quickmap'){mapPanel=null;quickMapHeld=false;suppressUnlockPause();onPanelRef.current(null);return;}quickMapHeld=true;mapPanel='quickmap';onPanelRef.current('quickmap');}return;}if(key==='p'){quickMapHeld=false;mapPanel=null;onPanelRef.current(pausedRef.current?null:'sheet');return;}if(key==='escape'&&quickMapHeld){quickMapHeld=false;mapPanel=null;suppressUnlockPause();onPanelRef.current(null);return;}if(pausedRef.current){if(key==='escape'){if(mapPanel)mapPanel=null;suppressUnlockPause();onPanelRef.current(null);}return;}if(key==='g'){/* G marca 📍 aqui sem rota; se a rota era um ping, ela é substituída. */if(route?.kind==='ping')clearRoute();currentPing={x:player.position.x,z:player.position.z};return;}if(key==='e'){interact();return;}if(key==='escape'){onPanelRef.current('pause');return;}if(!testPointer&&!pointerLocked())captureGamePointer();if(key==='h'){setHiddenEffects(!hiddenEffects);return;}if(key==='c')activateHagoromo();if(key==='y'){onToggleAuto();return;}if(key==='r'){castUltimate();return;}if(key===' '){if(sandCloud)keys.add(' ');if(!e.repeat&&!jumpTime&&!slideTime){readMovement(dir);if(villageActive&&traversal.jump(player.position,dir.lengthSq()?dir.normalize():heading,standHeight(player.position.x,player.position.z)))return;jumpTime=jumpDuration;sandGlideLeft=sandCloud ? .9 : 0;}return;}if(key==='shift'){if(!e.repeat&&!jumpTime&&!slideRecovery&&!traversal.climbing){readMovement(dashHeading);if(dashHeading.lengthSq())dashHeading.normalize();else dashHeading.copy(heading);slideTime=slideDuration;slideRecovery=.9;invulnerability=Math.max(invulnerability,.14);}return;}};
     // Ultimate automática: tecla Y ou clique no selo AUTO do botão R (evento shinobi-toggle-auto-ult).
     // Rodada 88 (pedido do usuário: "Se no ultimo jogo eu deixei a ultimate automática, na próxima partida, ela já começa automática"):
     // a troca na partida fica salva nas Configurações (Ultimate automática ao começar).
@@ -1382,7 +1409,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       ebisuDeals=null;irukaLesson=null;irukaScroll=null;npcEvent=null;
     }
     function openBijuuArena(){
-      arena=true;weatherEvent=undefined;weather='Arena da Bijuu';
+      arena=true;villageActive=false;traversal.reset();weatherEvent=undefined;weather='Arena da Bijuu';
+      if(civicScene)civicScene.root.visible=false;
       scene.background=new THREE.Color('#282441');scene.fog=new THREE.Fog('#282441',15,55);
       for(const object of decor)object.visible=false;
       for(const event of events){event.active=false;event.discovered=false;event.obj.visible=false;}
@@ -1413,7 +1441,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
           xp+=collectedXp(drop.value,stats.xpGain,tune().xpGain);
         }
       }
-      clearZone();zoneStart=elapsed;weatherPlan=planZoneWeather(WEATHER_BY_MAP[mapId],zoneStart);scheduleWeather();hagoromoBossDown=false;youthOffer=null;player.position.set(0,standHeight(0,0)+player.scale.y*.5,0);revealAround(0,0);
+      traversal.reset();clearZone();zoneStart=elapsed;weatherPlan=planZoneWeather(WEATHER_BY_MAP[mapId],zoneStart);scheduleWeather();hagoromoBossDown=false;youthOffer=null;
+      walkingFloor=standHeight(0,0);player.position.set(0,walkingFloor+player.scale.y*.5,0);revealAround(0,0);
       invulnerability=2;
       if(kind==='arena'){
         openBijuuArena();
@@ -1626,7 +1655,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         if(t.gravity==='pull'&&!hiddenEffects){const object=techniqueVisual(t);object.position.copy(center);object.scale.setScalar(radius);scene.add(object);visuals.push({object,life:.52});}
         else if(!hiddenEffects){const half=ATTACK_SCALE*.65*Math.sqrt(stats.area*(1+g.area));
           if(ally||!areas.enabled())particles.footprint(t,origin,direction,center,radius,range,half);
-          if(t.name==='Susanoo'){if(instant||delay<=0)susanoo.trigger(susanooStyle,origin,direction,target.sprite.position,radius);}
+          if(t.name==='Susanoo'){if(instant||delay<=0)susanoo.trigger(susanooStyle,origin,direction,center,radius);}
           else{particles.cast(t,origin,direction,center,radius,range,half);if(t.secondaryElement)particles.cast({...t,element:t.secondaryElement},origin,direction,center,radius,range,half);}
           const puppet=puppetArt(t.name);if(puppet)showPuppet(origin,target.sprite.position,puppet);
           if(visuals.length<36&&hasSignatureVisual(t,false)&&!puppet&&t.name!=='Susanoo'){const object=cachedTechniqueVisual(t);object.position.copy(center);animateTechniqueVisual(object,0,direction);object.scale.multiplyScalar(Math.max(.55,radius));scene.add(object);visuals.push({object,life:.35});}}
@@ -1634,7 +1663,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         const delay=(t.school==='Taijutsu'?IMPACT_DELAY.Taijutsu:IMPACT_DELAY.other)/Math.max(.3,stats.projectileSpeed);
         const susanooStyle=susanooStyleFor(familyOf(casterId));
         // Susanoo forma-se já no cast: o golpe da arma (~0,22 s) coincide com o acerto resolvido após o preparo.
-        if(!instant&&!hiddenEffects&&delay>0){if(t.name==='Susanoo')susanoo.trigger(susanooStyle,origin,direction,target.sprite.position,radius);else particles.windup(t,origin,center,delay);}
+        if(!instant&&!hiddenEffects&&delay>0){if(t.name==='Susanoo')susanoo.trigger(susanooStyle,origin,direction,center,radius,false,delay);else particles.windup(t,origin,center,delay);}
         if(!ally&&(t.shape==='Área'||t.gravity==='pull')){areaTelegraphed=true;areas.mark(t,origin,direction,center,radius,range,0,instant?0:Math.max(0,delay),hiddenEffects);}
         if(instant||delay<=0)resolve();else pendingHits.push({time:delay,run:resolve});
         // Rodada 55: `projectiles` vale como GOLPE extra nas técnicas sem projétil (corpo a corpo, cone, linha, área): cada projétil
@@ -1690,24 +1719,43 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       slideRecovery=Math.max(0,slideRecovery-dt);
       const dashing=slideTime>0;
       if(dashing){dir.copy(dashHeading);slideTime=Math.max(0,slideTime-dt);}
-      moving=dir.lengthSq()>0;if(moving){heading.copy(dir).normalize();
-        player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);if(!arena){/* Rodada 70: dash atravessa; ao terminar dentro de algo, sai pela frente. */if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}}revealAround(player.position.x,player.position.z);}
       tickHagoromo(dt);tickYouthRun(dt);
+      moving=dir.lengthSq()>0;
+      if(moving)heading.copy(dir).normalize();
+      if(moving&&!traversal.climbing){
+        const elevation=villageActive?Math.max(standHeight(player.position.x,player.position.z),traversal.elevation??-Infinity)+jumpHeight:-Infinity;
+        player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));
+        player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);
+        player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);
+        if(!arena) {
+          if(villageActive) {
+            const step=solids.stairTop(player.position.x,player.position.z,elevation-jumpHeight);
+            solids.resolve(player.position,COLLISION_RULES.playerRadius,Math.max(elevation,step+jumpHeight));
+          }
+          else if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}
+        }
+        revealAround(player.position.x,player.position.z);
+      }
+      const groundSupport=villageActive
+        ?Math.max(standHeight(player.position.x,player.position.z),solids.stairTop(player.position.x,player.position.z,walkingFloor))
+        :standHeight(player.position.x,player.position.z);
+      walkingFloor=villageActive?traversal.advance(player.position,dir,groundSupport,dt):groundSupport;
       // Rodada 93: Shinra Tensei — o Pain levita e solta ondas de repulsão que empurram, ferem e atordoam.
       let shinraHeight=0;
       if(shinra&&shinraTech){const waves=advanceShinra(shinra,dt);shinraHeight=shinraLift(shinra.elapsed);
         for(let w=0;w<waves;w++){if(!hiddenEffects){const object=techniqueVisual(shinraTech);object.position.copy(player.position);object.position.y=terrainHeight(player.position.x,player.position.z)+.32;object.scale.set(shinraRadius,2,shinraRadius);scene.add(object);visuals.push({object,life:.55});}addRing(player.position,'#e1eaff',shinraRadius);
           for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<shinraRadius){hit(enemy,shinraTech,NO_GROWTH,player.position);if(enemyList.includes(enemy)&&!enemy.bijuu){enemy.control='Atordoar';enemy.controlTime=Math.max(enemy.controlTime||0,SHINRA.stunSeconds);}}}
         if(shinraDone(shinra)){shinra=null;shinraTech=null;}}
-      player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5+jumpHeight+shinraHeight;
-      {const onWater=waterSurfaceAt(MAP.id,player.position.x,player.position.z)>-Infinity,airborne=jumpHeight>.05;
-        if(onWater&&!airborne){rippleTimer-=dt;const footY=standHeight(player.position.x,player.position.z);
+      player.position.y=walkingFloor+player.scale.y*.5+jumpHeight+shinraHeight;
+      {const level=waterSurfaceAt(MAP.id,player.position.x,player.position.z,villageActive?waters:undefined);
+        const onWater=level>-Infinity&&walkingFloor<=level+.14,airborne=jumpHeight>.05||traversal.climbing;
+        if(onWater&&!airborne){rippleTimer-=dt;const footY=walkingFloor;
           if(wasAirborne){water.ripple(player.position.x,player.position.z,1);splashes.burst(player.position.x,footY,player.position.z,16,1.4);chakraFeet.step();rippleTimer=RIPPLES.step;}
           else if(slideTime>0&&rippleTimer<=0){water.ripple(player.position.x,player.position.z,.8);splashes.burst(player.position.x,footY,player.position.z,8,1.1);rippleTimer=.1;}
           else if(moving&&rippleTimer<=0){water.ripple(player.position.x,player.position.z,.6);splashes.burst(player.position.x,footY,player.position.z,6,.7);chakraFeet.step();rippleTimer=RIPPLES.step;}}
         // Inimigos e aliados perto também mexem a água (poucos por vez, para não pesar).
         othersRippleTimer-=dt;if(othersRippleTimer<=0){othersRippleTimer=SPLASH.othersEvery;const actors=[...allyActors,...enemyList.map(e=>e.sprite)];let made=0;
-          for(let k=0;k<actors.length&&made<SPLASH.othersMax;k++){const a=actors[(othersRippleIndex+k)%actors.length];if(Math.hypot(a.position.x-player.position.x,a.position.z-player.position.z)>SPLASH.othersRange)continue;if(waterSurfaceAt(MAP.id,a.position.x,a.position.z)===-Infinity)continue;water.ripple(a.position.x,a.position.z,.35);made++;}
+          for(let k=0;k<actors.length&&made<SPLASH.othersMax;k++){const a=actors[(othersRippleIndex+k)%actors.length];if(Math.hypot(a.position.x-player.position.x,a.position.z-player.position.z)>SPLASH.othersRange)continue;if(waterSurfaceAt(MAP.id,a.position.x,a.position.z,villageActive?waters:undefined)===-Infinity)continue;water.ripple(a.position.x,a.position.z,.35);made++;}
           othersRippleIndex=(othersRippleIndex+SPLASH.othersMax)%Math.max(1,actors.length);}
         wasAirborne=airborne;chakraFeet.update(player.position.x,player.position.z,onWater&&!airborne,performance.now()/1000,dt);}
       const threat=threatNow();
@@ -1925,7 +1973,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
           // Rodada 63: durante os selos a névoa engrossa aos poucos (névoa aberta → névoa do evento).
           if(scene.fog instanceof THREE.Fog){const distance=camera.position.distanceTo(player.position),range=blendFog(active,castProgress(elapsed,weatherEvent?.castEnd,active.cast?.seconds??0));scene.fog.color.set(active.sky);scene.fog.near=distance+range.near;scene.fog.far=distance+range.far;}
         }else scene.fog=null;
-      }const targetHeight=standHeight(player.position.x,player.position.z)+player.scale.y*.5;
+      }const targetHeight=walkingFloor+player.scale.y*.5;
       // O centro permanece no jogador, mesmo durante a rotação e a interpolação do zoom.
       cameraTarget.set(player.position.x,targetHeight,player.position.z);
       const orbitDistance=perspective?perspectiveDistance(zoom):zoom*1.65+10;
@@ -1955,7 +2003,11 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         : movementFacing(moveVertical,moveHorizontal);
       const zoomReadability=Math.max(1,64*zoom/(1.55*Math.max(1,renderer.domElement.clientHeight)));
       playerMotion.setBodyScale(zoomReadability*(familyOf(heroId)==='choji'&&activeSetups.some(setup=>setup.name==='Jutsu de Expansão')?1.48:1));
-      playerMotion.update(pausedRef.current||choiceData||roulette||sealing?0:dt,terrainHeight(player.position.x,player.position.z),hp,stats.maxHp,walking,viewBack,viewLeft,level,jumpHeight,sliding,walking&&diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration,sliding?Math.abs(facing.dot(v1))<.32:moveVertical===0&&moveHorizontal!==0);
+      playerMotion.update(pausedRef.current||choiceData||roulette||sealing?0:dt,walkingFloor,hp,stats.maxHp,walking,viewBack,viewLeft,level,jumpHeight,sliding,walking&&diagonal,1-jumpTime/jumpDuration,1-slideTime/slideDuration,sliding?Math.abs(facing.dot(v1))<.32:moveVertical===0&&moveHorizontal!==0);
+      if(traversal.climbing){
+        const side=traversal.facing.x*v2.x+traversal.facing.z*v2.z;
+        player.material.rotation=side*.58;
+      }
       if(damageVignette){
         damageVignette.style.opacity=String(vignetteOpacity(damageFlash,now,hp,stats.maxHp,{enabled:enabledRef.current&&!defeated&&currentSettings().damageFlash,hiddenEffects}));
       }
@@ -1978,7 +2030,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       }else{
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=true;
         enemyRenderer.sync(enemyList,enemyOpacity,dt);
-      }water.update(performance.now()/1000);splashes.update(dt);landscape.setFogged(!!scene.fog);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
+      }const renderTime=performance.now()/1000;water.update(renderTime);civicScene?.update(renderTime);splashes.update(dt);landscape.setFogged(!!scene.fog);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
     };
     // V-Sync (Gráficos): LIGADO = requestAnimationFrame (um quadro por quadro do monitor). DESLIGADO = spin loop acima da taxa do monitor
     // (melhor esforço no navegador — ele ainda pode limitar; no .exe a sincronização sai direto do motor).
@@ -1990,7 +2042,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
     // ───── Salvar e retomar a run (Esc → "Salvar e sair", salvamento automático e ao fechar o navegador) ─────
     // Salva o progresso da run (tempo, abates, nível, itens, pílulas, técnicas, ajudantes, eventos, mapa explorado...).
     // Hordas, drops e projéteis vivos não são salvos: voltam a surgir naturalmente ao retomar.
-    function serializeRun():SavedRun{return {hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,tools:[...hagoromo.tools]},rankTicket:getRankTicket?.(),killStreak:streak,powerlevel:{...powerlevel},v:1,heroId,mission,mapId,savedAt:Date.now(),elapsed,zone,level,xp,xpNext,kills,runMoney,kunai,shuriken,chakra,hp,bonusHp,totalDamage,allyDamage,skillDamage:{...skillDamage},knownItems:{...knownItems},knownPills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},growth:JSON.parse(JSON.stringify(growth)),allies:[...allies],allyAffinity:{...allyAffinity},runBuffs:{...runBuffs},uses:{...uses},banned:[...banned],events:events.map(e=>({id:e.id,active:e.active,uses:e.uses,discovered:!!e.discovered})),explored:[...exploredCells.keys()],ryuSpent,rouletteSpins,paidWeapons,guardianSpawned,shikamaruPlans,megaElitesSpawned,zoneDifficulty,xpMultiplier,lootMultiplier,totemSpawned,pendingItemRewards,defenseDone,player:{x:player.position.x,z:player.position.z},accountTried:[...accountTried],merchant:{...merchant,stock:[...merchant.stock],prices:[...merchant.prices]},rouletteItems:[...rouletteItems],rouletteSession:roulette,campaign:{openingMegaSpawned,akatsukiAmbush:akatsukiEnemies.size?[...akatsukiEnemies].map(e=>({id:e.heroId!,x:e.sprite.position.x,z:e.sprite.position.z,hp:e.hp,maxHp:e.maxHp!})):undefined,altarBlessing:pendingAltar&&choiceData&&choiceLevel===-10?{...pendingAltar,offers:choiceData}:undefined,fallenMegas:fallenMegas.map(({candidate,body})=>({heroId:candidate.heroId,x:body.position.x,z:body.position.z,account:candidate.account})),weatherEvent:weatherEvent?{...weatherEvent,...(()=>{const target=enemyList.find(e=>e.heroId===weatherEvent?.elite);return target?{x:target.sprite.position.x,z:target.sprite.position.z}:{};})()}:undefined,nextWeatherAt,weatherPlan,start:zoneStart,pendingLevels,sagesUsedZone,merges:[...merges.values()],megaSchedule:[...megaSchedule],accountEncounters,plans:plansUsed,arena,reward:bijuuReward,bijuu:defeatedBijuu,portal:portal?{kind:portal.kind,x:portal.x,z:portal.z}:undefined,boss:enemyList.filter(e=>e.bijuu).map(e=>({id:e.heroId!,hp:e.hp,maxHp:e.maxHp!,x:e.sprite.position.x,z:e.sprite.position.z}))[0],locations:events.map(e=>({id:e.id,x:e.x,z:e.z})),pickups:pickups.filter(p=>p.active).map(p=>({kind:p.kind,x:p.x,z:p.z,discovered:!!p.discovered}))}};}
+    function serializeRun():SavedRun{return {mapLayout,surfaceElevation:traversal.elevation,hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,tools:[...hagoromo.tools]},rankTicket:getRankTicket?.(),killStreak:streak,powerlevel:{...powerlevel},v:1,heroId,mission,mapId,savedAt:Date.now(),elapsed,zone,level,xp,xpNext,kills,runMoney,kunai,shuriken,chakra,hp,bonusHp,totalDamage,allyDamage,skillDamage:{...skillDamage},knownItems:{...knownItems},knownPills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},growth:JSON.parse(JSON.stringify(growth)),allies:[...allies],allyAffinity:{...allyAffinity},runBuffs:{...runBuffs},uses:{...uses},banned:[...banned],events:events.map(e=>({id:e.id,active:e.active,uses:e.uses,discovered:!!e.discovered})),explored:[...exploredCells.keys()],ryuSpent,rouletteSpins,paidWeapons,guardianSpawned,shikamaruPlans,megaElitesSpawned,zoneDifficulty,xpMultiplier,lootMultiplier,totemSpawned,pendingItemRewards,defenseDone,player:{x:player.position.x,z:player.position.z},accountTried:[...accountTried],merchant:{...merchant,stock:[...merchant.stock],prices:[...merchant.prices]},rouletteItems:[...rouletteItems],rouletteSession:roulette,campaign:{openingMegaSpawned,akatsukiAmbush:akatsukiEnemies.size?[...akatsukiEnemies].map(e=>({id:e.heroId!,x:e.sprite.position.x,z:e.sprite.position.z,hp:e.hp,maxHp:e.maxHp!})):undefined,altarBlessing:pendingAltar&&choiceData&&choiceLevel===-10?{...pendingAltar,offers:choiceData}:undefined,fallenMegas:fallenMegas.map(({candidate,body})=>({heroId:candidate.heroId,x:body.position.x,z:body.position.z,account:candidate.account})),weatherEvent:weatherEvent?{...weatherEvent,...(()=>{const target=enemyList.find(e=>e.heroId===weatherEvent?.elite);return target?{x:target.sprite.position.x,z:target.sprite.position.z}:{};})()}:undefined,nextWeatherAt,weatherPlan,start:zoneStart,pendingLevels,sagesUsedZone,merges:[...merges.values()],megaSchedule:[...megaSchedule],accountEncounters,plans:plansUsed,arena,reward:bijuuReward,bijuu:defeatedBijuu,portal:portal?{kind:portal.kind,x:portal.x,z:portal.z}:undefined,boss:enemyList.filter(e=>e.bijuu).map(e=>({id:e.heroId!,hp:e.hp,maxHp:e.maxHp!,x:e.sprite.position.x,z:e.sprite.position.z}))[0],locations:events.map(e=>({id:e.id,x:e.x,z:e.z})),pickups:pickups.filter(p=>p.active).map(p=>({kind:p.kind,x:p.x,z:p.z,discovered:!!p.discovered}))}};}
     function saveRun(){if(defeated||victory)return;try{localStorage.setItem(SAVED_RUN_KEY,JSON.stringify(serializeRun()));}catch{/* sem armazenamento */}}
     function restoreRun(s:SavedRun){if(s.hagoromo){hagoromo.keys=s.hagoromo.keys;hagoromo.progress=s.hagoromo.progress;hagoromo.tools=[...s.hagoromo.tools];}Object.assign(powerlevel,readPowerlevel(s.powerlevel));elapsed=s.elapsed;streak=s.killStreak??{count:0,lastAt:0};zone=s.zone;const camp=s.campaign;weatherEvent=camp?.weatherEvent;nextWeatherAt=camp?.nextWeatherAt??elapsed+65;weatherPlan=camp?.weatherPlan??planZoneWeather(WEATHER_BY_MAP[mapId],elapsed);if(camp?.altarBlessing?.offers.length===3){const {tier,name,offers}=camp.altarBlessing;pendingAltar={tier,name};choiceLevel=-10;choiceData=offers;}pendingLevels=camp?.pendingLevels??0;sagesUsedZone=camp?.sagesUsedZone??(camp?.merges?.length?s.zone:0);zoneStart=camp?.start??Math.max(0,(zone-1)*200);for(const plan of camp?.merges??[]){let technique=mergedTechnique(plan,techniques);if(technique){const legacyName='Fusão · '+plan.names.join(' / ');if(plan.kind==='fuse'&&s.skillLevels[legacyName]&&technique.name!==legacyName){const [first,second]=plan.names.map(name=>techniques.find(t=>t.name===name)!);technique={...technique,name:legacyName,shape:'Área',status:first.status??second.status,statusChance:first.status?first.statusChance:second.statusChance,burn:first.burn||second.burn,poison:first.poison||second.poison};}techniques.push(technique);merges.set(technique.name,plan);plan.names.forEach(name=>consumedTechniques.add(name));}}megaSchedule=camp?.megaSchedule??megaSchedule;accountEncounters=camp?.accountEncounters??0;plansUsed=camp?.plans??s.shikamaruPlans;arena=camp?.arena??false;bijuuReward=camp?.reward??0;defeatedBijuu=camp?.bijuu??'';level=s.level;xp=s.xp;xpNext=s.xpNext;kills=s.kills;runMoney=s.runMoney;kunai=s.kunai;shuriken=s.shuriken;chakra=s.chakra;bonusHp=s.bonusHp;totalDamage=s.totalDamage;allyDamage=s.allyDamage;Object.assign(skillDamage,s.skillDamage);for(const [name,count] of Object.entries(s.knownItems)){const key=currentItemName(name);knownItems[key]=(knownItems[key]??0)+count;}Object.assign(knownPills,Object.fromEntries(Object.entries(s.knownPills).filter(([name,lv])=>PILL_BY_NAME[name]&&lv>0).sort((a,b)=>b[1]-a[1]).slice(0,PILL_SLOTS)));Object.assign(pillQuality,s.pillQuality??{});Object.assign(skillLevels,s.skillLevels);for(const t of techniques)if(merges.get(t.name)?.kind==='fuse'&&skillLevels[t.name]>techniqueLevelCap(t))skillLevels[t.name]=techniqueLevelCap(t);Object.assign(growth,s.growth);Object.assign(runBuffs,s.runBuffs);Object.assign(uses,s.uses);for(const b of s.banned)banned.add(b);
       for(const saved of s.events){const e=events.find(x=>x.id===saved.id);if(e){e.active=saved.active;e.uses=saved.uses;e.discovered=saved.discovered;e.obj.visible=saved.discovered;}}
@@ -2020,7 +2072,10 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         else if(!portal&&!defeatedBijuu)spawnBijuu();
       }else placeTeuchi();
       refreshStats();for(const id of s.allies)recruitAlly(id);Object.assign(allyAffinity,s.allyAffinity);refreshStats();hp=Math.min(stats.maxHp,s.hp);if(!roulette)showRouletteItem();
-      player.position.set(s.player.x,standHeight(s.player.x,s.player.z)+player.scale.y*.5,s.player.z);player.material.dispose();player.material=heroMaterial(heroId,level);invulnerability=3;eventToast='Missão retomada de onde parou.';}
+      player.position.set(s.player.x,standHeight(s.player.x,s.player.z)+player.scale.y*.5,s.player.z);player.material.dispose();player.material=heroMaterial(heroId,level);invulnerability=3;
+      walkingFloor=standHeight(player.position.x,player.position.z);
+      if(villageActive){traversal.restore(player.position,s.surfaceElevation,walkingFloor);walkingFloor=traversal.elevation??walkingFloor;}
+      eventToast='Missão retomada de onde parou.';}
     if(resume&&resume.heroId===heroId)restoreRun(resume);
     let configuredZoom=currentSettings().cameraDistance,configuredFx=currentSettings().hideMyAttacks;
     const onSettings=()=>{const S=currentSettings();
@@ -2043,7 +2098,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
     const onPageHide=()=>saveRun();window.addEventListener('pagehide',onPageHide);window.addEventListener('beforeunload',onPageHide);
     const onSaveEvent=()=>saveRun();window.addEventListener('shinobi-save',onSaveEvent);
     const onForfeit=()=>{if(defeated||victory)return;hp=0;defeated=true;eventToast='Você desistiu da missão.';};window.addEventListener('shinobi-forfeit',onForfeit);
-    const onStuck=()=>{const len=Math.hypot(player.position.x,player.position.z)||1,step=Math.min(8,len);player.position.x-=player.position.x/len*step;player.position.z-=player.position.z/len*step;player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5;invulnerability=Math.max(invulnerability,2);eventToast='Preso? Você foi movido para uma área livre.';};window.addEventListener('shinobi-stuck',onStuck);
+    const onStuck=()=>{traversal.reset();const len=Math.hypot(player.position.x,player.position.z)||1,step=Math.min(8,len);player.position.x-=player.position.x/len*step;player.position.z-=player.position.z/len*step;player.position.y=standHeight(player.position.x,player.position.z)+player.scale.y*.5;invulnerability=Math.max(invulnerability,2);eventToast='Preso? Você foi movido para uma área livre.';};window.addEventListener('shinobi-stuck',onStuck);
     runCleanups.push(()=>{window.clearInterval(autosave);window.removeEventListener('pagehide',onPageHide);window.removeEventListener('beforeunload',onPageHide);window.removeEventListener('shinobi-save',onSaveEvent);window.removeEventListener('shinobi-forfeit',onForfeit);window.removeEventListener('shinobi-stuck',onStuck);});    if(import.meta.env.DEV&&new URLSearchParams(location.search).has('test'))debugWindow.__shinobiTest={
       finishMission:()=>{victory=true;snapshotTimer=0;eventToast='Missão concluída!';return victory;},
       dropShowcase:()=>{const p=player.position;const list:[Drop['type'],number][]=[['xp',8],['xp',25],['xp',100],['chakra',9],['ryu',3],['onigiri',RAMEN_DROP.heal],['pill',1],['item',1]];list.forEach(([type,value],n)=>{const at=new THREE.Vector3(p.x-5.6+n*1.6,0,p.z+3.2);addDrop(at,type,value,type==='pill'?Object.keys(knownPills)[0]||'':'');});return drops.length;},

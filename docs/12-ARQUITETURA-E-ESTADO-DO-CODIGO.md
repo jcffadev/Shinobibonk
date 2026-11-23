@@ -396,3 +396,11 @@ O cliente usa src/game/onlineRanking.ts e a função Netlify em netlify/function
 A rota de hub guide monta GameGuide com as teclas em uso. A página reaproveita maps.ts para fases do clima, npcs.ts para regras de Iruka, Ebisu e Totem e roulette.ts para as casas da Tsunade. A origem do tempo de espera do clima é WEATHER_WAIT em maps.ts. Na descrição de mecânicas, consulte os pontos de entrada de GameCanvas.
 
 O glossário usa src/game/glossary.ts como catálogo pesquisável. A verificação de regras exige cobertura de todos os campos públicos de Stats. O GameGuide renderiza assuntos e exemplos. A barra superior do hub exibe o saldo de Lamens e a rota de prévia estática saiu de Page.
+
+
+## Componentes apresentados na branch de validação das vilas
+
+- **Traçado:** `villageLayout.ts` registra portões, praças, vias, pontes e áreas de evento. `villageDistricts.ts` registra lotes e fachadas. `villageTerrain.ts` nivela lotes e preserva a clareira de Hagoromo.
+- **Geometria:** `villageArchitecture.ts` agrupa fachadas por região e por material numa textura compartilhada. `villageScenery.ts` acrescenta árvores, marcos e pontes e descarta materiais ao sair.
+- **Movimento:** `collision.ts` guarda as fundações. `villageTraversal.ts` usa a direção atual e a altura de apoio para subir, alcançar o beiral, descer e restaurar a posição.
+- **Efeitos:** `susanooFx.ts` mantém estilos articulados por portador, com armas, movimento e cores específicos.

@@ -90,7 +90,7 @@ Cuidado com lugares fora da vila: a Ponte Kannabi fica no País da Grama, e a Po
 1. Leia o contexto (`skills/contexto-e-decisao/SKILL.md`) e esta skill. Confirme na Narutopedia o nome, o país, o símbolo e os lugares da vila.
 2. Ficha em `maps.ts`: id, nome canônico, país, símbolo, cores (`terrain.low`, `trail`, `high`, `accent`), pesos e tinta do cenário, 2 climas e 3 zonas com guardiões da obra.
 3. Relevo: reaproveite `rollingBase` e `terrace`. Varie só os montes de base (posição e altura) para mudar o desenho do mapa, dentro dos alvos da seção 3.
-4. Construções: defina a lista de pontos e a área plana de cada uma (ou uma praça) antes de pôr os sprites. Adicione a coordenada ao teste de chão plano.
+4. Construções: defina lotes, ruas e fundações planas. Modele o volume com faces e telhado, fixe a orientação no mundo e confira a colisão no contato. Siga o [guia de vilas jogáveis](../../docs/development/CRIAR-MAPAS-JOGAVEIS.md).
 5. Horizonte: acrescente um caso em `horizonProfile` com a forma do fundo da vila. Já existem: Konoha (montes arredondados), Suna (paredão de platô com topo reto e borda íngreme), Iwa (picos altos e pontudos, os mais altos), Kiri (agulhas finas). O teste confere a forma de cada um.
 6. Arte (atlas de chão, marcos, fundo): siga `criar-arte-shinobibonk`. Nenhum arquivo de referência entra no repositório.
 7. Testes sem navegador (`docs/development/TESTING_POLICY.md`): estenda `tests/cena.test.mjs` com os alvos do mapa novo (altura, platôs, horizonte, chão plano sob construções) e acrescente uma mutação em `scripts/mutation-check.mjs`.

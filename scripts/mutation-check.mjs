@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'escadas das vilas apoiam passos sem pulo', arquivo: 'src/scene/collision.ts', de: 'stair.top!<=from+.205', para: 'stair.top!<=from+.05' },
   { regra: 'fade da horda não interfere na entrada da bijū', arquivo: 'src/scene/enemyRenderer.ts', de: 'else if(opacity&&!sp.userData.bijuuEntrance)', para: 'else if(opacity)' },
   { regra: 'roleta só tem as cinco casas de personagem', arquivo: 'src/game/roulette.ts', de: "{ id: 'tsunade', label: 'Tsunade'", para: "{ id: 'kunai', label: 'Tsunade'" },
   { regra: 'emboscada da Akatsuki rende três pergaminhos', arquivo: 'src/game/akatsukiAmbush.ts', de: 'rewards: 3', para: 'rewards: 1' },
@@ -27,7 +28,7 @@ const MUTATIONS = [
   { regra: 'portal conserva XP atraído', arquivo: 'src/game/drops.ts', de: '(magnet || distance < pickupRadius)', para: 'distance < pickupRadius' },
   { regra: 'corpo do jogador na escala do desenho', arquivo: 'src/scene/collision.ts', de: 'playerRadius: .17,', para: 'playerRadius: .42,' },
   { regra: 'tronco da árvore do tamanho desenhado', arquivo: 'src/scene/collision.ts', de: 'scenery: [.3, .25, .55, .85],', para: 'scenery: [.5, .42, .55, .85],' },
-  { regra: 'cenário escondido em construção é removido', arquivo: 'src/scene/collision.ts', de: 'if (s.big) continue;', para: 'continue;' },
+  { regra: 'cenário escondido em construção é removido', arquivo: 'src/scene/collision.ts', de: 'if (s.big||s.stair) continue;', para: 'continue;' },
   { regra: 'dash sai pela frente', arquivo: 'src/scene/collision.ts', de: 'const t = -b + Math.sqrt', para: 'const t = -b - Math.sqrt' },
   { regra: 'marco grande não bloqueia além de 3 m', arquivo: 'src/scene/collision.ts', de: 'buildingMaxRadius: 3,', para: 'buildingMaxRadius: 7,' },
   { regra: 'Comum/Incomum sem projétil no altar', arquivo: 'src/game/altarRewards.ts', de: 'ALTAR_PROJECTILES=[0,0,1,2,3]', para: 'ALTAR_PROJECTILES=[0,1,1,2,3]' },

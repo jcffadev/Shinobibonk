@@ -23,3 +23,6 @@ Referências de seleção de técnicas [UOL Start](https://www.uol.com.br/start/
 - O efeito próprio começa com até 10% no Nv. 1 e cresce pelo nível da técnica e pelos buffs da missão. Para ataques sem efeito, confira chance e dano crítico por nível. Em fusões, aplique o teto até Nv. 7 e use a mesma fórmula e descrição no plano e na oficina.
 - Para Kekkei Genkai, confirme as duas naturezas e a execução do jutsu na Narutopedia e, quando disponível, em fonte oficial. Receitas futuras entram se as naturezas forem sustentadas pela obra. O plano depende do pool daquele shinobi, e a oficina exige os dois Ninjutsu aprendidos. O desbloqueio por fusão é uma mecânica do ShinobiBonk e não concede linhagem ou amplia o pool ordinário.
 - Em dōjutsu, identifique olho, portador e forma. Kamui compartilha o desenho com Obito e Kakashi, o Kotoamatsukami usa o de Shisui e Amaterasu varia entre Itachi e Sasuke. Siga o atlas do projeto e mantenha a diferença entre ícone do olho e efeito real da técnica.
+
+
+Para os Susanoo, confirme portador, versão, cor e armamento antes de reutilizar um rig. Consulte a [tabela de fontes](../../docs/24-AUDITORIA-DE-EFEITOS.md#susanoo-por-portador--23112026). Alinhe a fase de impacto da técnica comum à espera real do acerto. Quando o efeito existir apenas numa animação especial ou num jogo licenciado, registre a mídia da referência.
