@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 23/11/2026 · Versos das estátuas, itens apoiados e queda antes do selamento
+
+- Hashirama e Madara ganharam costas pintadas com cabelo, placas de armadura e pedestal próprios. O atlas projetado sobre o relevo mistura a arte com a pedra das laterais.
+- Pergaminhos, shuriken amaldiçoada e itens do mapa têm apoio na superfície, respeitam o recorte transparente e recebem uma pequena sombra de contato. Drops de abate ficam apoiados até o ímã puxá-los. Os pergaminhos grátis mantêm o farol.
+- O shinobi derrotado cambaleia, dobra o joelho, tomba para longe do jogador e repousa apoiado no terreno. O selamento aparece quando a queda termina. Os corpos restaurados do save já entram deitados.
+- **TESTADO.** TypeScript, 238 testes, duas mutações focadas, verificação de regras e build. O renderizador nativo conferiu o atlas, três poses da queda e os quatro lados de Konoha. A validação contínua em partida está pendente.
+
 ## 23/11/2026 · Base do Monte Hokage e limite visível
 
 - A face e o verso do Monte Hokage terminam dentro da encosta. A arte se abre levemente na base para esconder o vão que aparecia nos giros de câmera. A rota de escalada continua acessível até o mirante.

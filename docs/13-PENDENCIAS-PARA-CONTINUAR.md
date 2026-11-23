@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Verso do Vale do Fim, drops e selamento · 23/11/2026
+
+- **IMPLEMENTADO:** arte distinta nas costas dos dois monumentos, itens apoiados, sombra de contato e fase de joelho na queda dos shinobis capturáveis.
+- **PENDENTE DE VALIDAÇÃO E2E:** comparar as laterais das estátuas durante a rotação, ver o apoio dos pergaminhos perto de pontes e morros, e selar um Mega Elite depois do tombo em partida.
+
 ## Base do Monte Hokage, limite e horizonte · 23/11/2026
 
 - **IMPLEMENTADO:** a base do monte acompanha o chão, o perímetro sinaliza os quatro lados, Konoha tem bosque exterior e a câmera fica acima do relevo.

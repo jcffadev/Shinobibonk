@@ -22,14 +22,48 @@ function body(extra = {}) {
 }
 function run(b, seconds, hidden = false, step = 1 / 60) { for (let t = 0; t < seconds; t += step) b.update(step, hidden); }
 
-test('Mega Elite caído: cambaleia → cai → assenta → fica deitado, nos tempos de FALLEN_TIMING', () => {
+test('Mega Elite cambaleia, baixa um joelho e assenta antes de poder selar', () => {
   const { b } = body(), T = F.FALLEN_TIMING;
   assert.equal(b.debug().phase, 'stagger');
-  run(b, (T.stagger + T.fall) / 2); assert.equal(b.debug().phase, 'fall');
-  run(b, T.settle - (T.stagger + T.fall) / 2 - .05); assert.equal(b.debug().phase, 'settle');
-  run(b, .2); assert.equal(b.debug().phase, 'down');
+  b.update(T.kneel-.045,false);
+  assert.equal(b.debug().phase,'kneel');
+  assert.ok(b.debug().knee>.8,'joelho dobra antes do tombo');
+  assert.equal(b.ready,false);
+  b.update(T.fall-T.kneel-.04,false);
+  assert.equal(b.debug().phase,'fall');
+  b.update(.13,false);
+  assert.equal(b.debug().phase,'settle');
+  assert.equal(b.ready,false);
+  b.update(T.settle-T.fall,false);
+  assert.equal(b.debug().phase,'down');
+  assert.equal(b.ready,true);
   assert.ok(Math.abs(b.debug().angle - Math.PI / 2) < 1e-3, `deitado a 90°: ${b.debug().angle}`);
   run(b, 30); assert.equal(b.debug().phase, 'down', 'continua deitado até ser capturado');
+});
+
+test('corpo deitado acompanha a encosta com os pés e o tronco apoiados',()=>{
+  const ground=(x,z)=>.15*x+.1*z;
+  const {scene,b}=body({ground});
+  b.update(F.FALLEN_TIMING.settle+.1,false);
+  const vertices=scene.getObjectByName('shinobi-em-queda').geometry.attributes.position;
+  for(let i=0;i<vertices.count;i++){
+    const clearance=vertices.getY(i)-ground(vertices.getX(i),vertices.getZ(i));
+    assert.ok(Math.abs(clearance-.055)<.002);
+  }
+});
+
+test('pergaminhos e drops usam a base do desenho e têm sombra de contato reutilizada',async()=>{
+  const {groundDropAnchor,createPickupShadows}=await load('/src/scene/dropSprites.ts');
+  assert.ok(groundDropAnchor('kunai',4)>groundDropAnchor('kunai',0),'pergaminho fechado é mais baixo no quadro');
+  assert.equal(groundDropAnchor('shuriken',4),groundDropAnchor('kunaiFree',4));
+  assert.ok(groundDropAnchor('coin')<.2);
+  const shadows=createPickupShadows(x=>x*.35);
+  const a=shadows.place(0,0,1.6),b=shadows.place(4,3,1);
+  const normal=new THREE.Vector3(0,1,0).applyQuaternion(a.quaternion);
+  assert.ok(normal.x<-.3 && a.position.y<.03);
+  assert.equal(a.geometry,b.geometry);
+  assert.equal(a.material,b.material);
+  shadows.dispose();
 });
 
 test('luz do corpo caído: aparece ao chegar ao chão, pulsa suave e nunca estoura', () => {

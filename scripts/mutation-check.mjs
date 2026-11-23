@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'shinobi dobra o joelho antes do tombo', arquivo: 'src/scene/fallenShinobi.ts', de: 'bend=THREE.MathUtils.smoothstep(t,stagger,kneel);', para: 'bend=0;' },
+  { regra: 'estátua recebe arte de costas na própria célula', arquivo: 'src/scene/landmarkRelief.ts', de: '(index-1+.5-x)*.5', para: '(.5-x)*.5' },
   { regra: 'base do Monte Hokage entra no chão', arquivo: 'src/scene/landmarkRelief.ts', de: 'embedBase(faceGeometry,face.position.y,face.position.z);', para: '' },
   { regra: 'câmera orbita acima do terreno', arquivo: 'src/scene/heightField.ts', de: 'Math.max(y,footHeight(ground,x,z,.62)+.80)', para: 'y' },
   { regra: 'acostamento de Konoha mistura os materiais', arquivo: 'src/scene/villageLayout.ts', de: '1-MathUtils.smoothstep(distance+roughness,-.4,.57)', para: 'Number(distance<0)' },

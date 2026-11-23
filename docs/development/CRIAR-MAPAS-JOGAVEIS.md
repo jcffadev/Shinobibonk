@@ -32,3 +32,5 @@ Use o mesmo contorno para a transição de material e de altura nas ruas e praç
 ## Perímetro, encaixe no terreno e horizonte
 
 A face interna da cerca acompanha o limite de movimento. Apoie os postes na altura local e use a altura da superfície da água para a travessa sobre rios. Mantenha as copas e as colinas do panorama além da área jogável. Enterre o recorte da arte e o verso dos monumentos na encosta, abaixo da linha visível. Valide ângulos baixos, a vista de costas, o apoio da rota e a folga da câmera em relação ao chão.
+
+Para estátuas com silhueta humana, prepare arte própria para o verso no mesmo atlas de escala e apoie o pedestal no chão. Confira de costas e em três quartos. Para itens, use como âncora a base do desenho dentro da margem transparente. Apoie a sombra na inclinação da superfície e reserve o movimento vertical do drop para a coleta.

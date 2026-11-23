@@ -398,6 +398,19 @@ test('a base do Monte Hokage entra no terreno de frente e de costas',()=>{
   }
 });
 
+test('os versos das estátuas do Vale usam suas próprias áreas da arte',()=>{
+  const {scenery}=sceneFor('folha',6308);
+  for(const [i,name] of ['estatua-hashirama','estatua-madara'].entries()){
+    const relief=scenery.root.getObjectByName(name).getObjectByName('landmark-rock-relief');
+    const uv=relief.geometry.attributes.backArtUv;
+    assert.ok(relief.material.userData.backArt);
+    for(let j=0;j<uv.count;j++)assert.ok(uv.getX(j)>=.5*i && uv.getX(j)<=.5*(i+1));
+    const shader={uniforms:{},vertexShader:'#include <uv_vertex>',fragmentShader:'#include <map_fragment>'};
+    relief.material.onBeforeCompile(shader);
+    assert.match(shader.fragmentShader,/texture2D\(backArt,carvedUv.xy\)/);
+  }
+});
+
 test('o limite físico tem cerca nos quatro lados e o horizonte cobre a vista de baixo',async()=>{
   const {createMapBoundary}=await load('/src/scene/mapBoundary.ts');
   const {createLandscape,LANDSCAPE}=await load('/src/scene/landscape.ts');

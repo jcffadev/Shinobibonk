@@ -248,7 +248,7 @@ function drawEnemyKunai(g: CanvasRenderingContext2D) {
 
 const DRAW: Record<DropVisual, (g: CanvasRenderingContext2D, variant?: number) => void> = { chakra: drawChakra, xp: drawXp, ryu: drawOnigiri, coin: drawCoin, onigiri: drawOnigiriDrop, ramen: drawRamen, pill: drawPill, item: drawItem, kunai: drawKunai, kunaiFree: drawKunaiFree, shuriken: drawKunai, cursed: drawCursed, enemyKunai: drawEnemyKunai, enemyShuriken: drawShurikenShape, enemyShurikenFuma: drawShurikenShape };
 
-const isScroll = (kind: DropVisual) => kind === 'kunai' || kind === 'kunaiFree';
+const isScroll = (kind: DropVisual) => kind === 'kunai' || kind === 'kunaiFree' || kind === 'shuriken';
 const cacheKey = (kind: DropVisual, variant: number) => (isScroll(kind) && variant ? `${kind}:${variant}` : kind) as DropVisual;
 
 export function dropTexture(kind: DropVisual, variant = 0) {
@@ -293,4 +293,39 @@ export function makeDropSprite(kind: DropVisual, value: number, variant = isScro
   // pular o descarte — senão a limpeza dos projéteis inimigos descarta o material do cache e ele é re-linkado a cada tiro.
   sprite.userData.shared = true;
   return sprite;
+}
+
+/** Ancora na borda do desenho útil, dentro da margem transparente do atlas. */
+export function groundDropAnchor(kind:DropVisual,variant=0) {
+  if(isScroll(kind))return scrollStyle(variant).open?.203:.313;
+  if(kind==='cursed')return .146;
+  if(kind==='ryu'||kind==='onigiri'||kind==='coin')return .105;
+  if(kind==='xp')return .117;
+  if(kind==='chakra')return .233;
+  return .19;
+}
+
+/** Um material e uma geometria para todas as sombras de itens colocados no mapa. */
+export function createPickupShadows(surface:(x:number,z:number)=>number) {
+  const {c,g}=canvas();
+  glow(g,'rgba(22,16,9,.66)');
+  const map=new THREE.CanvasTexture(c);
+  const material=new THREE.MeshBasicMaterial({map,transparent:true,depthWrite:false,
+    polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-2});
+  const geometry=new THREE.PlaneGeometry(1,1);
+  geometry.rotateX(-Math.PI/2);
+  const up=new THREE.Vector3(0,1,0),normal=new THREE.Vector3();
+  return {
+    place(x:number,z:number,width:number) {
+      const mesh=new THREE.Mesh(geometry,material);
+      const step=.36;
+      normal.set(surface(x-step,z)-surface(x+step,z),step*2,
+        surface(x,z-step)-surface(x,z+step)).normalize();
+      mesh.quaternion.setFromUnitVectors(up,normal);
+      mesh.position.y=.018;
+      mesh.scale.set(width,1,width*.74);
+      return mesh;
+    },
+    dispose(){geometry.dispose();material.dispose();map.dispose();},
+  };
 }

@@ -417,3 +417,5 @@ Na expansão de Konoha, o piso e a colisão das escadas usam o mesmo perfil de d
 Em Konoha, `villageLayout.ts` fornece as faixas de cobertura das ruas e praças. `villageTerrain.ts` usa as faixas para nivelar suas bordas e `terrainArt.ts` grava pesos de material na máscara, amostra o atlas no shader e guarda a pintura em cache por semente.
 
 `mapBoundary.ts` monta a cerca alinhada a `WORLD_LIMIT` e o bosque exterior de Konoha. `heightField.ts` calcula a folga da câmera contra o terreno amostrado. `landscape.ts` combina o panorama com uma superfície que cobre o entorno do chão quadrado. A base do relevo em `landmarkRelief.ts` é ajustada à encosta por vértice.
+
+`landmarkRelief.ts` projeta a textura `leaf-statue-backs-v1.png` sobre o verso de Hashirama e Madara. `dropSprites.ts` mantém as âncoras das artes e a sombra reutilizada. `fallenShinobi.ts` dobra a malha pelos segmentos da perna e do tronco, e expõe o estado `ready` após o assentamento.

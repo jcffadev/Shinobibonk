@@ -12,11 +12,12 @@ export const HOKAGE_MOUNTAIN_ROUTE = [
   {dx:2.9,dz:-9.0,height:.83,width:24,depth:4.5},
 ] as const;
 
-/** A frente conserva a arte. O verso é rocha tridimensional limitada pela silhueta de cada fileira. */
+/** O verso curvo acompanha a silhueta, com arte dedicada nas estátuas. */
 export function makeLandmarkRelief(
   index:number,width:number,height:number,depth:number,art:THREE.Texture,stone:THREE.Material,
-  footing?:(x:number,z:number)=>number,
+  options:{footing?:(x:number,z:number)=>number; backArt?:THREE.Texture}={},
 ) {
+  const {footing,backArt}=options;
   const root=new THREE.Group();
   const faceGeometry=new THREE.PlaneGeometry(width,height,footing?48:1,footing?32:1);
   const face=new THREE.Mesh(faceGeometry,
@@ -24,7 +25,7 @@ export function makeLandmarkRelief(
   face.position.set(0,height/2,.025);
   root.add(face);
 
-  const rows=LEAF_RELIEF_PROFILES[index],positions:number[]=[],uv:number[]=[],indices:number[]=[];
+  const rows=LEAF_RELIEF_PROFILES[index],positions:number[]=[],uv:number[]=[],backUv:number[]=[],indices:number[]=[];
   const cols=12;
   for(const [row,[y,left,right]] of rows.entries()){
     const center=(left+right)/2,radius=(right-left)/2;
@@ -32,8 +33,10 @@ export function makeLandmarkRelief(
       const angle=Math.PI*(1-col/cols);
       const breadth=Math.sin(angle);
       const irregular=.84+.105*Math.cos(row*.48+col*.92)+.055*Math.sin(col*2.3);
-      positions.push(width*(center+radius*Math.cos(angle)),height*y,-depth*breadth*irregular);
+      const x=center+radius*Math.cos(angle);
+      positions.push(width*x,height*y,-depth*breadth*irregular);
       uv.push(col/cols,y);
+      if(backArt)backUv.push((index-1+.5-x)*.5,y,THREE.MathUtils.smoothstep(breadth,.03,.55));
       if(row>0&&col>0){
         const i=row*(cols+1)+col,prev=i-cols-1;
         indices.push(i-1,prev-1,prev,i-1,prev,i);
@@ -61,8 +64,28 @@ export function makeLandmarkRelief(
     embedBase(faceGeometry,face.position.y,face.position.z);
     embedBase(geometry,0,0);
   }
+  let backMaterial=stone;
+  if(backArt){
+    geometry.setAttribute('backArtUv',new THREE.Float32BufferAttribute(backUv,3));
+    backMaterial=stone.clone();
+    backMaterial.userData.backArt=backArt;
+    backMaterial.onBeforeCompile=shader=>{
+      shader.uniforms.backArt={value:backArt};
+      shader.vertexShader='attribute vec3 backArtUv; varying vec3 carvedUv;\n'+shader.vertexShader
+        .replace('#include <uv_vertex>','#include <uv_vertex>\ncarvedUv=backArtUv;');
+      shader.fragmentShader='uniform sampler2D backArt; varying vec3 carvedUv;\n'+shader.fragmentShader
+        .replace('#include <map_fragment>',`
+          #include <map_fragment>
+          vec4 sculpture=texture2D(backArt,carvedUv.xy);
+          if(sculpture.a<.20)discard;
+          float carving=smoothstep(.20,.75,sculpture.a)*carvedUv.z;
+          diffuseColor.rgb=mix(diffuseColor.rgb,sculpture.rgb,carving);
+        `);
+    };
+    backMaterial.customProgramCacheKey=()=> 'valley-statue-carving';
+  }
   geometry.computeVertexNormals();
-  const rock=new THREE.Mesh(geometry,stone);
+  const rock=new THREE.Mesh(geometry,backMaterial);
   rock.name='landmark-rock-relief';
   root.add(rock);
   return root;

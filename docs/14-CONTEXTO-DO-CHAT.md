@@ -2638,3 +2638,17 @@ A prévia anterior juntava as texturas numa imagem de baixa resolução. As bord
 > abaixo do chão, as vezes quando viramos a câmera esta ficando azul sem renderizar algo, rpecisamos corrigir para não aparecer nunca isso.
 
 A rocha do monumento foi encaixada no terreno pela frente e pelo verso. Postes e travessas marcam o fim da área jogável das quatro regiões. Konoha ganhou o bosque distante e um panorama com colinas em camadas. A câmera recebe folga contra a encosta e há uma base opaca sob o panorama. A conferência em partida está pendente.
+
+## Costas do Vale do Fim, itens no chão e captura · 23/11/2026
+
+> atrás fica tipo uma terra, ele tem que fazer as costas da estatua bonita também, o mapa melhorou muito parabéns preciso ver nos limites do mapa
+>
+> Se você conseguir lapidar e refinar ainda mais, pode fazer...
+> Quero também que você revise os pergaminhos no chão... os itens no chão, para seguirem a qualidade do mapa, eles ficam meio flutuando...
+> Também fazer animação de derrotar os shinobis para capturar mais bonitinho, ele ta tipo caindo reto no chão
+>
+> continue o que estava fazendo
+
+As estátuas receberam arte própria nas costas, projetada no relevo. As quatro bordas foram registradas em imagens do renderizador nativo. Os pergaminhos e itens se apoiam no terreno, e os drops de abate só levantam ao serem atraídos. O shinobi derrotado cambaleia, dobra o joelho, tomba de lado e assenta antes de liberar o selamento.
+
+A arte do verso foi criada no ImageGen com a frente do atlas como referência. Pedido visual: duas estátuas inteiras vistas a 180 graus em fundo transparente, Hashirama à esquerda e Madara à direita, proporções, gesto e tom de pedra preservados, com cabelo, placas e pedestal esculpidos, musgo discreto e mão levantada no lado correto visto de costas.

@@ -118,6 +118,8 @@ export function createVillageScenery(
     return mesh;
   }
   const rockFace=surface('#8c7c65',2);
+  const statueBacks=map.id==='folha'?pixelTexture('/assets/leaf-statue-backs-v1.png'):undefined;
+  if(statueBacks)textures.set('valley-statue-backs',statueBacks);
   for(const item of layout.buildings) {
     if(item.art!=='leaf')continue;
     const {x,z,width,height,index}=item;
@@ -126,12 +128,12 @@ export function createVillageScenery(
     texture.repeat.x=1/3;
     texture.offset.x=index/3;
     textures.set('leaf-'+index,texture);
-    const stone=surface('#a69a87',2);
+    const stone=surface(index===0?'#a69a87':'#bfb9b4',2);
     stone.side=THREE.DoubleSide;
     const depth=index===0?12:1.5;
     const base=y-(index===0?.55:.035);
     const footing=index===0?(dx:number,dz:number)=>ground(x+dx,z+dz)-base:undefined;
-    const monument=makeLandmarkRelief(index,width,height,depth,texture,stone,footing);
+    const monument=makeLandmarkRelief(index,width,height,depth,texture,stone,{footing,backArt:index===0?undefined:statueBacks});
     monument.name=index===0?'monte-hokage':index===1?'estatua-hashirama':'estatua-madara';
     monument.position.set(x,base,z);
     architecture.add(monument);

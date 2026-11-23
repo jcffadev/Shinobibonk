@@ -3,14 +3,8 @@ import * as THREE from 'three';
 /**
  * Rodada 55 — corpo caído do Mega Elite (contorno vermelho) e do Shinobi para selar (contorno ciano).
  *
- * Sem arte nova: o sprite do próprio personagem (retrato estático da forma) é animado no WebGL.
- * 1. Cambaleia (0–0,40 s): balança com tinta de impacto e leve agachamento.
- * 2. Cai (0,40–0,95 s): gira 90° em torno dos PÉS, em queda acelerada, para o lado oposto ao jogador.
- * 3. Assenta (0,95–1,25 s): pequeno quique + poeira (sem poeira no modo H).
- * 4. Deitado: fica no chão, com respiração leve (espessura do corpo ±2,5%), até ser capturado (E),
- *    recusado (G no ritual) ou sumir na troca de zona.
- * O corpo é um billboard girado em espaço de tela: em qualquer ângulo da câmera (360°) ele aparece deitado
- * na horizontal. A posição de repouso (centro do corpo) é fixa no mundo; ela é a referência dos 10 m do E.
+ * A arte da forma é separada em segmentos de perna e tronco durante o cambaleio, apoio de joelho e tombo.
+ * No repouso a malha acompanha o chão, com respiração leve. Seu centro é a referência dos 10 m do E.
  *
  * Luz: halo no chão na cor do contorno (disco suave + anel), que acompanha o relevo, pulsa devagar e em baixa
  * intensidade (mistura normal, sem aditivo → não estoura nem gera bloom), sem névoa (fog:false) para ser visto
@@ -22,13 +16,15 @@ import * as THREE from 'three';
  * - Área de captura: círculo no chão com o raio do E (`areaRadius`, 10 m), na cor do contorno, preenchimento
  *   bem fraco e borda marcada, acompanhando o relevo. Pulsa devagar; no modo H fica fixo.
  */
-export const FALLEN_TIMING = { stagger: .4, fall: .95, settle: 1.25 } as const;
+export const FALLEN_TIMING = { stagger: .24, kneel: .63, fall: 1.09, settle: 1.36 } as const;
+type FallPhase = 'stagger' | 'kneel' | 'fall' | 'settle' | 'down';
 
 export type FallenBody = {
   /** Centro do corpo deitado no chão (fixo no mundo). */
   readonly position: THREE.Vector3;
+  readonly ready: boolean;
   update(dt: number, hidden: boolean): void;
-  debug(): { phase: 'stagger' | 'fall' | 'settle' | 'down'; angle: number; halo: number; beam: number; area: number; areaRadius: number; x: number; z: number };
+  debug(): { phase: FallPhase; angle: number; knee: number; halo: number; beam: number; area: number; areaRadius: number; x: number; z: number };
   dispose(): void;
 };
 
@@ -120,7 +116,7 @@ function groundDisc(radius: number, cx: number, cz: number, baseY: number, groun
 }
 
 function outlineMaterial(map: THREE.Texture, color: string) {
-  const material = new THREE.SpriteMaterial({ map, transparent: true, depthWrite: false, alphaTest: .1 });
+  const material = new THREE.MeshBasicMaterial({ map, transparent: true, depthWrite: false, alphaTest: .1, side: THREE.DoubleSide });
   const rgb = new THREE.Color(color);
   material.onBeforeCompile = shader => {
     shader.fragmentShader = shader.fragmentShader.replace('#include <map_fragment>',
@@ -143,8 +139,12 @@ export function createFallenBody(o: Options): FallenBody {
   const restY = ground(rest.x, rest.z);
   rest.y = restY;
 
-  const body = new THREE.Sprite(new THREE.SpriteMaterial({ map, transparent: true, alphaTest: .1, depthWrite: false }));
-  const outline = new THREE.Sprite(outlineMaterial(map, color));
+  const bodyGeo=new THREE.PlaneGeometry(1,1,4,20);
+  const outlineGeo=bodyGeo.clone();
+  const body = new THREE.Mesh(bodyGeo,new THREE.MeshBasicMaterial({ map, transparent: true, alphaTest: .1, depthWrite: false, side: THREE.DoubleSide }));
+  const outline = new THREE.Mesh(outlineGeo,outlineMaterial(map, color));
+  body.name='shinobi-em-queda';
+  body.frustumCulled=outline.frustumCulled=false;
   outline.renderOrder = 1; body.renderOrder = 2;
   const haloRadius = Math.max(1.3, h * .62);
   // Clareia 25% rumo ao branco: o vermelho puro some no gramado; ainda é a cor do contorno, sem estourar.
@@ -173,22 +173,28 @@ export function createFallenBody(o: Options): FallenBody {
   scene.add(area, shadow, halo, outline, body, beam, dust);
 
   let t = o.instant ? FALLEN_TIMING.settle + 1 : 0;
-  let angle = 0, haloShown = 0, beamShown = 0, areaShown = 0;
-  let phase: 'stagger' | 'fall' | 'settle' | 'down' = 'stagger';
+  let angle = 0, knee = 0, haloShown = 0, beamShown = 0, areaShown = 0;
+  let phase: FallPhase = 'stagger';
   const tint = new THREE.Color();
+  const front=new THREE.Vector3(-right.z,0,right.x);
+  const poseUv=bodyGeo.attributes.uv,vertices=bodyGeo.attributes.position,edgeVertices=outlineGeo.attributes.position;
 
   const place = (hidden: boolean) => {
-    const { stagger, fall, settle } = FALLEN_TIMING;
-    let lean: number, squash = 1;
+    const { stagger, kneel, fall, settle } = FALLEN_TIMING;
+    let lean: number,bend=0;
     if (t < stagger) {
       phase = 'stagger';
       const k = t / stagger;
       lean = Math.sin(t * 22) * .1 * (1 - k) + .14 * k;
-      squash = 1 - .05 * Math.sin(Math.PI * k);
+    } else if(t<kneel){
+      phase='kneel';
+      bend=THREE.MathUtils.smoothstep(t,stagger,kneel);
+      lean=.14+.24*bend;
     } else if (t < fall) {
       phase = 'fall';
-      const k = (t - stagger) / (fall - stagger);
-      lean = .14 + (Math.PI / 2 - .14) * k * k;
+      const k = (t - kneel) / (fall - kneel);
+      bend=1-THREE.MathUtils.smoothstep(k,0,.98);
+      lean = .38 + (Math.PI / 2 - .38) * k * k;
     } else if (t < settle) {
       phase = 'settle';
       lean = Math.PI / 2 - .08 * Math.sin(Math.PI * (t - fall) / (settle - fall));
@@ -197,25 +203,35 @@ export function createFallenBody(o: Options): FallenBody {
       lean = Math.PI / 2;
     }
     angle = lean;
-    // Rotação no plano da tela: negativo = horário (cabeça vai para a direita da tela quando side = 1).
-    const rot = -side * lean;
-    const breath = phase === 'down' ? 1 + .025 * Math.sin(t * 2.3) : 1;
-    body.material.rotation = outline.material.rotation = rot;
-    body.scale.set(w * breath, h * squash, 1);
-    outline.scale.set(w * breath * 1.14, h * squash * 1.08, 1);
-    // Pivô nos pés: centro = pés + (−sen θ, cos θ)·h/2 na base (direita da câmera no momento da queda, vertical).
-    const s = Math.sin(rot), c = Math.cos(rot);
-    const lift = Math.abs(Math.sin(lean)) * w * .36;
-    const fx = feet.x - s * (h * squash / 2) * right.x, fz = feet.z - s * (h * squash / 2) * right.z;
-    const cx = phase === 'down' ? rest.x : fx, cz = phase === 'down' ? rest.z : fz;
-    const floor = ground(cx, cz);
-    body.position.set(cx, floor + c * h * squash / 2 + lift, cz);
-    outline.position.copy(body.position);
+    knee=bend;
+    const shinAngle=lean-1.17*bend,thighAngle=lean+1.48*bend,torsoAngle=lean+.13*bend;
+    const shinSin=Math.sin(shinAngle),thighSin=Math.sin(thighAngle),torsoSin=Math.sin(torsoAngle);
+    const shinCos=Math.cos(shinAngle),thighCos=Math.cos(thighAngle),torsoCos=Math.cos(torsoAngle);
+    const flat=THREE.MathUtils.smoothstep(lean,.56,Math.PI/2);
+    const width=w*(phase==='down'?1+.019*Math.sin(t*2.3):1);
+    // Os pés permanecem no ponto original. O joelho recua, o quadril baixa, depois o tronco apoia no terreno.
+    for(let i=0;i<poseUv.count;i++){
+      const v=poseUv.getY(i);
+      const shin=Math.min(v,.23),thigh=Math.min(Math.max(0,v-.23),.21),torso=Math.max(0,v-.44);
+      const lateral=h*side*(shin*shinSin+thigh*thighSin+torso*torsoSin);
+      const vertical=h*(shin*shinCos+thigh*thighCos+torso*torsoCos);
+      const across=(poseUv.getX(i)-.5)*width;
+      const x=feet.x+lateral*right.x,z=feet.z+lateral*right.z;
+      // Oriente a largura pelo tronco para o rosto não esticar quando a cabeça se inclina.
+      const acrossUpright=(1-flat)*across;
+      const dx=right.x*torsoCos*acrossUpright+front.x*flat*across;
+      const dz=right.z*torsoCos*acrossUpright+front.z*flat*across;
+      const support=ground(x+dx,z+dz);
+      const y=support+Math.max(0,vertical-torsoSin*side*acrossUpright*THREE.MathUtils.smoothstep(v,.25,.53))+.055;
+      vertices.setXYZ(i,x+dx,y,z+dz);
+      edgeVertices.setXYZ(i,x+1.08*dx,y+.013,z+1.08*dz);
+    }
+    vertices.needsUpdate=edgeVertices.needsUpdate=true;
     // Tinta de impacto que volta ao branco durante a queda.
     const hitMix = Math.max(0, 1 - t / FALLEN_TIMING.fall);
     body.material.color.copy(tint.setRGB(1, 1 - .45 * hitMix, 1 - .45 * hitMix));
     // Sombra e luz aparecem conforme o corpo chega ao chão.
-    const grounded = Math.min(1, Math.max(0, (t - stagger) / (settle - stagger)));
+    const grounded = THREE.MathUtils.smoothstep(t,kneel,settle);
     shadow.material.opacity = .42 * grounded;
     const pulse = .5 + .5 * Math.sin(t * Math.PI * 2 / 2.6);
     haloShown = hidden ? .45 * grounded : (.52 + .2 * pulse) * grounded;
@@ -234,13 +250,15 @@ export function createFallenBody(o: Options): FallenBody {
 
   return {
     position: rest,
+    get ready(){return phase==='down';},
     update(dt: number, hidden: boolean) { t += dt; place(hidden); },
-    debug: () => ({ phase, angle: +angle.toFixed(3), halo: +haloShown.toFixed(3), beam: +beamShown.toFixed(3), area: +areaShown.toFixed(3), areaRadius, x: +rest.x.toFixed(2), z: +rest.z.toFixed(2) }),
+    debug: () => ({ phase, angle: +angle.toFixed(3), knee:+knee.toFixed(3), halo: +haloShown.toFixed(3), beam: +beamShown.toFixed(3), area: +areaShown.toFixed(3), areaRadius, x: +rest.x.toFixed(2), z: +rest.z.toFixed(2) }),
     dispose() {
       for (const object of [area, shadow, halo, outline, body, beam, dust]) object.removeFromParent();
       area.geometry.dispose(); area.material.dispose();
       halo.geometry.dispose(); shadow.geometry.dispose(); dust.geometry.dispose();
       halo.material.dispose(); shadow.material.dispose(); beam.material.dispose(); dust.material.dispose();
+      bodyGeo.dispose(); outlineGeo.dispose();
       body.material.dispose(); outline.material.dispose();
     },
   };

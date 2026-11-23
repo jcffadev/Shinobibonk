@@ -433,3 +433,7 @@ As ruas mantêm terra batida, as praças usam pedra e o gramado se mistura aos a
 ## Limite visível e vista acima do terreno
 
 As missões usam um perímetro de postes e travessas no limite de movimento. Em Konoha, um bosque separa a cerca das colinas e da névoa do panorama. O Monte Hokage mergulha na encosta. A câmera conserva a inclinação pedida quando há folga e sobe quando a posição da órbita alcança o terreno. Uma superfície opaca fecha a junção inferior do panorama.
+
+## Vale do Fim e objetos sobre o piso
+
+Os versos de Hashirama e Madara mantêm a pose e usam arte própria sobre o relevo curvo. Os pergaminhos e os itens de cenário repousam na superfície e têm sombra de contato. Os drops de abate ficam apoiados até serem atraídos. O farol do pergaminho grátis continua visível.
