@@ -6,27 +6,28 @@ import { installCanvasStub,load } from './helpers/load.mjs';
 
 installCanvasStub();
 THREE.TextureLoader.prototype.load = function () { return new THREE.Texture(); };
-const { VILLAGES, insideVillage, missionMapLayout, villageDeck, villageEventSite, villageCanalX, villageSurface }=await load('/src/scene/villageLayout.ts');
+const { VILLAGES, createVillageLayout, shuffledVillageSites, insideVillage, missionMapLayout, villageDeck, villageCanalX, villageSurface }=await load('/src/scene/villageLayout.ts');
 const { createVillageGround, villageWater }=await load('/src/scene/villageTerrain.ts');
 const { VILLAGE_LOTS }=await load('/src/scene/villageDistricts.ts');
 const { createVillageScenery }=await load('/src/scene/villageScenery.ts');
-const { createVillageTraversal }=await load('/src/scene/villageTraversal.ts');
+const { createVillageTraversal, moveVillageActor }=await load('/src/scene/villageTraversal.ts');
 const { createSolids, COLLISION_RULES }=await load('/src/scene/collision.ts');
 const { foundationDistance }=await load('/src/scene/villageCollision.ts');
 const { WATER, WATER_BODIES, waterSurfaceAt }=await load('/src/scene/water.ts');
 const { MAP_BY_ID }=await load('/src/game/maps.ts');
 const sceneFixture=new Map();
 
-function sceneFor(map) {
-  const cached=sceneFixture.get(map);
+function sceneFor(map,seed=0) {
+  const key=map+':'+seed;
+  const cached=sceneFixture.get(key);
   if(cached)return cached;
-  const layout=VILLAGES[map],waters=villageWater(map),ground=createVillageGround(layout,waters);
+  const layout=createVillageLayout(map,seed),waters=villageWater(map),ground=createVillageGround(layout,waters);
   const solids=createSolids();
   const scene=new THREE.Scene();
   const scenery=createVillageScenery(scene,MAP_BY_ID[map],layout,ground,waters,solids,
     ()=>new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.Texture()})));
   const result={layout,waters,ground,solids,scenery,scene};
-  sceneFixture.set(map,result);
+  sceneFixture.set(key,result);
   return result;
 }
 
@@ -50,7 +51,8 @@ test('novas partidas usam as vilas e uma partida antiga retoma em mapas_basicos'
   assert.equal(missionMapLayout({mapLayout:'vilas'}),'vilas');
   const canvas=readFileSync(new URL('../src/scene/GameCanvas.tsx',import.meta.url),'utf8');
   assert.match(canvas,/mapLayout:MapLayout=enabledRef.current\?missionMapLayout\(resume\):'mapas_basicos'/);
-  assert.match(canvas,/surfaceElevation:traversal.elevation/);
+  assert.match(canvas,/mapLayout,villageSeed,surfaceElevation:traversal.elevation/);
+  assert.match(canvas,/resume.villageSeed\?\?0/);
   assert.match(canvas,/villageActive=false;traversal.reset\(\)/);
 });
 
@@ -69,11 +71,12 @@ for(const map of Object.keys(VILLAGES))test(`${map} permite atravessar entrada e
     &&waterSurfaceAt(map,site.x,site.z,waters)===-Infinity
     &&seen.has(`${site.x},${site.z}`));
   assert.ok(available.length>=7,`pontos de evento livres: ${available.length}`);
-  const chosen=villageEventSite(layout,4,site=>available.includes(site));
+  const shuffled=shuffledVillageSites(layout,4);
+  const chosen=shuffled.find(site=>available.includes(site));
   assert.ok(chosen&&insideVillage(layout,chosen.x,chosen.z));
   const placements=[];
   for(let i=0;i<12;i++){
-    const site=villageEventSite(layout,i,p=>solids.isFree(p.x,p.z,2.5)
+    const site=shuffled.find(p=>solids.isFree(p.x,p.z,2.5)
       &&waterSurfaceAt(map,p.x,p.z,waters)===-Infinity
       &&seen.has(`${p.x},${p.z}`)
       &&placements.every(previous=>Math.hypot(p.x-previous.x,p.z-previous.z)>6));
@@ -83,7 +86,7 @@ for(const map of Object.keys(VILLAGES))test(`${map} permite atravessar entrada e
   assert.equal(villageSurface(layout,layout.plaza.x,layout.plaza.z),'plaza');
   const buildings=scenery.root.children.filter(mesh=>mesh.name==='village-architecture');
   const vertices=buildings.reduce((sum,mesh)=>sum+mesh.geometry.attributes.position.count,0);
-  assert.ok(VILLAGE_LOTS[map].length>=35);
+  assert.ok(layout.lots.length>=VILLAGE_LOTS[map].length);
   assert.ok(vertices>10000&&buildings.every(mesh=>mesh.isMesh&&mesh.material.map));
   for(const lot of VILLAGE_LOTS[map]){
     assert.equal(solids.isFree(lot.x,lot.z,0),false,'o corpo visível da casa tem colisão');
@@ -180,4 +183,50 @@ test('escada de Konoha aceita o avanço a pé degrau por degrau e perde o apoio 
     assert.equal(solids.resolve(p,COLLISION_RULES.playerRadius,feet),false);
   }
   assert.equal(solids.stairTop(x+2,z,feet),-Infinity);
+});
+
+
+test('dash percorre os degraus sem atravessar as escadas de Konoha',()=>{
+  const {solids,ground}=sceneFor('folha',3497);
+  const direction={x:0,z:-1};
+  for(const [x,z,treads] of [[0,-5,5],[7.85,-13,8]]){
+    const point={x,z},traversal=createVillageTraversal(solids.all);
+    const base=x===0?ground(0,-8):ground(x,-13.4);
+    const tops=[];
+    for(let i=0;i<treads;i++){
+      tops.push(moveVillageActor(point,direction,.52,0,.045,traversal,solids,ground,76));
+      const surface=solids.stairTop(point.x,point.z,tops.at(-1));
+      assert.ok(tops.at(-1)+.0001>=surface,'o pé continua acima da face que atravessou');
+    }
+    assert.ok(Math.max(...tops)>base+.65,'a escada sobe no dash');
+    assert.ok(point.z<z-1.9,'a escada permanece transitável');
+  }
+});
+
+test('cidades sorteiam lotes, entrada e eventos por semente sem bloquear os bairros',()=>{
+  for(const map of Object.keys(VILLAGES)){
+    const seed=6308;
+    const {layout,ground,waters,solids}=sceneFor(map,seed);
+    const other=createVillageLayout(map,seed+1);
+    assert.deepEqual(layout.lots,createVillageLayout(map,seed).lots);
+    assert.notDeepEqual(layout.lots,other.lots);
+    assert.deepEqual(shuffledVillageSites(layout,seed),shuffledVillageSites(layout,seed));
+    assert.notDeepEqual(shuffledVillageSites(layout,seed),shuffledVillageSites(layout,seed+1));
+    for(const lot of layout.lots){
+      assert.ok(!solids.isFree(lot.x,lot.z,0));
+      assert.ok(Number.isFinite(ground(lot.x,lot.z)));
+    }
+    const connected=explore(solids),chosen=[];
+    const spots=shuffledVillageSites(layout,seed);
+    for(let i=0;i<12;i++){
+      const site=spots.find(p=>solids.isFree(p.x,p.z,2.5)&&waterSurfaceAt(map,p.x,p.z,waters)===-Infinity
+        &&connected.has(p.x+','+p.z)&&chosen.every(o=>Math.hypot(o.x-p.x,o.z-p.z)>6));
+      if(site)chosen.push(site);
+    }
+    assert.equal(chosen.length,12,map);
+    if(map==='folha'){
+      assert.ok(layout.lots.length>=60);
+      assert.ok(connected.has('-39,-43')&&connected.has('39,-43'));
+    }
+  }
 });

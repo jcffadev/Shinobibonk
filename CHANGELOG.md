@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 23/11/2026 · Konoha maior, escadas e bairros sorteados
+
+- Konoha cresceu de 52 para 84 m na largura do distrito, com 24 lotes laterais, ruas transversais e mais árvores. As fachadas da entrada se voltam para a avenida, com beirais, barris e pedras baixas no acostamento.
+- As quatro vilas sorteiam posições, dimensões e materiais dos lotes na nova missão. A semente fica no save. Os pontos dos NPCs são embaralhados por zona, com folga entre si, fora das construções e da água. Os NPCs comuns e as estruturas de atendimento ficaram 17% maiores nas vilas.
+- As escadas de Konoha têm degraus maciços, inclusive na entrada do portão. A locomoção testa colisão e apoio em trechos curtos para caminhar e dar dash.
+- O Monte Hokage foi elevado ao fundo e deslocado para a direita da torre. O pé do monte usa rocha no terreno e volumes atrás da frente esculpida.
+- Perfil equilibrado sem navegador **PASSOU**: tipos, 225 testes, cobertura e build.
+- **PENDENTE DE VALIDAÇÃO E2E**: conferir escadas, o entorno do monumento e os NPCs em partidas com sementes diferentes.
+
+
 ## 23/11/2026 · Vilas em 3D e Susanoo por personagem
 
 - Na branch de validação, Konoha, Suna, Iwa e Kiri ganharam bairros jogáveis com volumes fixos, fachadas em vários lados, telhados inclinados, entrada, marcos, escada em Konoha e pontes em Kiri. Os materiais são originais e compartilham um atlas.

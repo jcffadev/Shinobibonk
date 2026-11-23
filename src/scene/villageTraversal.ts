@@ -1,4 +1,4 @@
-import { COLLISION_RULES, type Solid } from './collision';
+import { COLLISION_RULES, type createSolids, type Solid } from './collision';
 import { foundationDistance, foundationNormal } from './villageCollision';
 
 type Point = { x: number; z: number };
@@ -65,4 +65,29 @@ export function createVillageTraversal(solidList: readonly Solid[]) {
       return feet;
     },
   };
+}
+
+
+/** Resolve o contato e atualiza o apoio a cada trecho curto do deslocamento, inclusive durante o dash. */
+export function moveVillageActor(
+  point:Point,direction:Point,distance:number,jumpHeight:number,dt:number,
+  traversal:ReturnType<typeof createVillageTraversal>,
+  solids:Pick<ReturnType<typeof createSolids>,'resolve'|'stairTop'>,
+  standHeight:(x:number,z:number)=>number,limit:number,
+) {
+  const radius=COLLISION_RULES.playerRadius;
+  const steps=Math.max(1,Math.ceil(distance/(radius*.85)));
+  const stride=distance/steps;
+  let floor=Math.max(standHeight(point.x,point.z),traversal.elevation??-Infinity);
+  for (let i=0;i<steps;i++) {
+    if(stride>0&&!traversal.climbing){
+      point.x=Math.max(-limit,Math.min(limit,point.x+direction.x*stride));
+      point.z=Math.max(-limit,Math.min(limit,point.z+direction.z*stride));
+      const step=solids.stairTop(point.x,point.z,floor);
+      solids.resolve(point,radius,Math.max(floor,step)+jumpHeight);
+    }
+    const support=Math.max(standHeight(point.x,point.z),solids.stairTop(point.x,point.z,floor));
+    floor=traversal.advance(point,direction,support,dt/steps);
+  }
+  return floor;
 }

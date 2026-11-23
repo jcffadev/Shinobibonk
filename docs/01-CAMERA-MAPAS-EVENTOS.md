@@ -404,3 +404,8 @@ Confirmação do usuário em 15/11: preservar a câmera e a movimentação atuai
 A branch de revisão combina o terreno e os sistemas da versão principal com quatro vilas navegáveis. As fachadas e os telhados são malhas fixas. Árvores usam os sprites de cenário. Monte Hokage e estátuas têm frente texturizada e volume de rocha por trás. No novo terreno, as pontes dão apoio e o canal de Kiri usa o sistema de água da cena. Os eventos de missão preferem áreas secas acessíveis ao longo das ruas. A arena final descarta a sobreposição das vilas e a clareira de Hagoromo mantém seu espaço específico.
 
 Partidas novas da branch iniciam nos bairros urbanos. A variante e o apoio dos pés ficam na partida salva. Um save anterior a esse campo abre em mapas básicos. As prévias nativas mostram geometria, composição de fachadas e materiais. Em partida, conferir os climas, a água, os efeitos e o resultado em movimento. [Guia de criação](development/CRIAR-MAPAS-JOGAVEIS.md).
+
+
+### Tamanho e geração dos bairros
+
+Konoha ocupa até 42 m de cada lado da avenida e ganhou 24 lotes laterais. A semente da missão varia posição, escala e acabamento de cada lote. A troca de zona reposiciona os NPCs. Retomar recupera os pontos e a semente originais. O Monte Hokage fica ao norte, com base de rocha. A cada subpasso, o movimento resolve contato e altura do apoio.

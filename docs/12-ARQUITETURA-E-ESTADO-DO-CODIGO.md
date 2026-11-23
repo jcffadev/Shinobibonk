@@ -404,3 +404,6 @@ O glossário usa src/game/glossary.ts como catálogo pesquisável. A verificaç�
 - **Geometria:** `villageArchitecture.ts` agrupa fachadas por região e por material numa textura compartilhada. `villageScenery.ts` acrescenta árvores, marcos e pontes e descarta materiais ao sair.
 - **Movimento:** `collision.ts` guarda as fundações. `villageTraversal.ts` usa a direção atual e a altura de apoio para subir, alcançar o beiral, descer e restaurar a posição.
 - **Efeitos:** `susanooFx.ts` mantém estilos articulados por portador, com armas, movimento e cores específicos.
+
+
+A revisão acrescenta `SavedRun.villageSeed`. `createVillageLayout()` calcula os lotes compartilhados pela geometria e pelo terreno, `shuffledVillageSites()` deriva a ordem por zona e `moveVillageActor()` testa apoios e colisões em subpassos do deslocamento.

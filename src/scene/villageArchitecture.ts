@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import type { MapId } from '../game/maps';
 import type { createSolids } from './collision';
-import { VILLAGE_LOTS, type UrbanLot } from './villageDistricts';
+import { villageLots, villageRandom, type UrbanLot } from './villageDistricts';
 import type { VillageLayout } from './villageLayout';
 
 type Ground = (x:number,z:number)=>number;
@@ -37,10 +37,18 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
   const sphereIndexed=new THREE.SphereGeometry(.5,12,6);
   const sphere=sphereIndexed.toNonIndexed();sphereIndexed.dispose();
   const state=new THREE.Object3D();
+  let frontage:UrbanLot|undefined;
 
   function add(geo:THREE.BufferGeometry,key:Surface,x:number,y:number,z:number,w:number,h:number,d:number,
     tint=0xffffff,axis=0,lit=false) {
     const g=geo.clone();
+    if(frontage?.turns){
+      const {x:cx,z:cz,turns}=frontage;
+      const rotatedX=cx+(z-cz)*turns;
+      z=cz-(x-cx)*turns;
+      x=rotatedX;
+      axis+=turns*Math.PI/2;
+    }
     state.position.set(x,y,z);
     state.rotation.set(0,axis,0);
     state.scale.set(w,h,d);
@@ -168,7 +176,7 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     if(round) {
       // A forma circular da fundação segue o corpo e exclui o vão dos beirais.
       solids.add(x,z,Math.min(w,d)*.49,true,top);
-    } else solids.addBox(x,z,w*.5,d*.5,top);
+    } else solids.addBox(x,z,(lot.turns?d:w)*.5,(lot.turns?w:d)*.5,top);
     box(trim,x,y+pier+.82,sideZ,1.08,1.67,.13);
     box('dark',x,y+pier+.80,sideZ+front*.075,.79,1.51,.13);
     box('bronze',x+.24,y+pier+.84,sideZ+front*.15,.075,.09,.07);
@@ -178,15 +186,28 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
       if(body>=3.55)sash(x+side*w*.31,y+pier+1.25,z+front*d*(round?.40:.5),.53,.52,front,false,trim);
       sash(x+side*w*.23,y+pier+body*.62,z-front*d*(round?.45:.5),.61,.63,-front,false,trim);
     }
+    if(layout.map==='folha'&&lot.turns){
+      slabRoof(roof,x,sideZ+front*.38,y+pier+1.91,w*.86,1.04,.41);
+      for(const side of [-1,1]){
+        box('wood',x+side*w*.41,y+pier+.91,sideZ+front*.89,.10,1.77,.13);
+        cylinder('wood',x+side*w*.39,y+.25,sideZ+front*.54,.45,.50,.45,.94);
+        cylinder('dark',x+side*w*.39,y+.41,sideZ+front*.54,.46,.05,.46);
+      }
+    }
     if(use==='shop'){
-      awning(x,y+pier+1.97,sideZ,w*.66,front,layout.map==='nevoa'?'blue':layout.map==='areia'?'cloth':'vermillion');
+      if(!lot.turns)awning(x,y+pier+1.97,sideZ,w*.66,front,layout.map==='nevoa'?'blue':layout.map==='areia'?'cloth':'vermillion');
       lantern(x+w*.36,y+pier+1.78,sideZ+front*.21,'gold');
       for(const s of [-1,1])box('wood',x+s*w*.42,y+.27,sideZ+front*.32,.49,.53,.51);
     } else if (use==='terrace') {
       box(colors.base,x,y+pier+1.93,sideZ+front*.30,w*.71,.18,.72);
       box(trim,x,y+pier+2.30,sideZ+front*.61,w*.70,.10,.10);
       for(let i=-2;i<=2;i++)box(trim,x+i*w*.156,y+pier+2.10,sideZ+front*.61,.078,.37,.10);
-      if(layout.map==='folha')cylinder('slate',x+w*.19,top+.39,z-.29,.91,.80,.86);
+      if(layout.map==='folha'){
+        const tankX=x+w*.10;
+        cylinder('slate',tankX,top+.37,z-.26,.81,.76,.81);
+        cylinder('stone',tankX,top+.73,z-.26,.86,.15,.86,.70);
+        for(const offset of [.18,.51])cylinder('dark',tankX,top+offset,z-.26,.84,.055,.84);
+      }
     }
     if(layout.map==='nevoa') {
       lantern(x-w*.32,y+pier+1.65,sideZ+front*.31,'gold');
@@ -200,7 +221,11 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
       box(trim,x+side*(w*.55),y+pier+body*.61,z,.047,.49,.05);
     }
   }
-  for(const lot of VILLAGE_LOTS[layout.map])building(lot);
+  for(const lot of layout.lots??villageLots(layout.map,0)){
+    frontage=lot;
+    building(lot);
+  }
+  frontage=undefined;
 
   const gate=layout.buildings.find(item=>item.gate);
   if(gate) {
@@ -232,6 +257,12 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     }
     box(sand?'cloth':'vermillion',x,y+h*.75,z+1.0,1.28,.78,.16);
     plaque(leaf?'忍':sand?'砂':'岩','#7b2722','#f4dbad',x,y+h*.75,z+1.085,1.08,.64);
+    if(leaf){
+      const width=3.24;
+      stairFlight(x,z+2.59,y,width,5,.15,.42);
+      stairFlight(x,z-2.59,y,width,5,.15,.42,-1);
+      stairTread(x,z,y+.75,width,.62);
+    }
   }
 
   function tower(x:number,z:number,diameter:number,height:number) {
@@ -287,18 +318,43 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     }
   }
 
+  function stairTread(x:number,z:number,top:number,width:number,halfDepth:number) {
+    const base=Math.min(top-.09,ground(x,z)-.18);
+    box('stone',x,(top+base)/2,z,width,top-base,halfDepth*2,0xe2d4bf);
+    box('paving',x,top-.043,z,width+.035,.086,halfDepth*2+.012,0xeee3c9);
+    solids.addStair(x,z,width/2,halfDepth+.006,top);
+  }
+
+  function stairFlight(x:number,start:number,base:number,width:number,count:number,rise:number,depth:number,direction=1) {
+    for(let i=0;i<count;i++){
+      stairTread(x,start-direction*(i+.5)*depth,base+rise*(i+1),width,depth/2+.02);
+    }
+  }
+
   if(layout.map==='folha') {
-    // Escada exterior e terraço do lado da rua. Cada degrau tem o próprio apoio.
-    const x=7.85,z=-15.4,base=ground(x,z+2.0);
+    const x=7.85,z=-15.4,base=ground(x,z+2);
+    stairFlight(x,z+2.16,base,2.22,8,.15,.54);
     for(let i=0;i<8;i++){
       const stepZ=z+1.89-i*.54,top=base+.15*(i+1);
-      box('stone',x,top-.22,stepZ,2.22,.44,.59);
-      solids.addStair(x,stepZ,1.11,.295,top);
       for(const side of [-1,1])box('paving',x+side*1.2,top-.065,stepZ,.24,.43,.58);
     }
-    const landing=base+1.2;
-    box('paving',x,landing-.35,z-3.02,2.50,.70,1.80);
-    solids.addStair(x,z-3.02,1.25,.9,landing);
+    stairTread(x,z-3.02,base+1.20,2.50,.9);
+
+    // Pedras baixas e tufos compõem o acostamento. A passagem central fica livre.
+    const random=villageRandom((layout.seed??0)^0xb053);
+    for(const side of [-1,1])for(let i=0;i<52;i++){
+      const z=11-i*.67+(random()-.5)*.32;
+      if(Math.abs(z-layout.entry.z)<2.25||layout.crossings.some(crossing=>Math.abs(crossing-z)<1.55))continue;
+      const x=side*(2.42+random()*.98);
+      const y=ground(x,z),size=.12+random()*.25;
+      circular('stone',x,y+.028,z,size,.082,size*.81,i%4?0xbdb09c:0xe0d4bd);
+      if(i%3===0){
+        const shrubX=side*(3.66+random()*.46);
+        const shrubY=ground(shrubX,z);
+        circular('moss',shrubX,shrubY+.09,z,.48,.25,.37,0xb7d481);
+        circular('moss',shrubX+side*.13,shrubY+.12,z-.14,.34,.31,.36,0x96b568);
+      }
+    }
   }
 
   const meshes:THREE.Mesh[]=[];

@@ -4,6 +4,7 @@ export type UrbanLot = {
   x: number; z: number; width: number; depth: number; body: number;
   front: -1 | 1; shape: 'round' | 'rect'; use: 'house' | 'shop' | 'terrace';
   palette: number;
+  turns?: -1 | 1;
 };
 
 type Block = { z: number; west: number[]; east: number[]; height: number };
@@ -64,3 +65,35 @@ export const VILLAGE_LOTS:Record<MapId,UrbanLot[]> = Object.fromEntries(
     })
   )])
 ) as Record<MapId,UrbanLot[]>;
+
+
+/** Sementes independentes para lotes, árvores e eventos da zona. */
+export function villageRandom(seed:number) {
+  let value=seed>>>0;
+  return () => {
+    value=(Math.imul(value,1664525)+1013904223)>>>0;
+    return value/0x1_0000_0000;
+  };
+}
+
+export function villageLots(map:MapId,seed:number):UrbanLot[] {
+  const base=VILLAGE_LOTS[map];
+  const random=villageRandom(seed);
+  const outskirts=map==='folha' ? [-13,-21,-32,-40,-51,-58].flatMap((z,i)=>
+    [-36,-29,29,36].map((x,j):UrbanLot=>({
+      x,z,width:4.25+(i+j)%3*.21,depth:3.8,body:3.15+(i*2+j)%3*.36,
+      front:1,shape:(i+j)%3===1?'round':'rect',use:(i+j)%3===0?'shop':'terrace',palette:(i+j)%3,
+    }))
+  ) : [];
+  return [...base,...outskirts].map(lot=>{
+    const scale=seed ? 1.09+(random()-.5)*.13 : 1;
+    const x=lot.x+(seed?(random()-.5)*1.24:0);
+    const z=lot.z+(seed?(random()-.5)*1.05:0);
+    const body=lot.body*(seed?1.12+(random()-.5)*.17:1);
+    const turns=map==='folha'&&Math.abs(x)<9&&z> -8 ? x<0?1:-1 : undefined;
+    return {
+      ...lot,x,z,body,width:lot.width*scale,depth:lot.depth*scale,turns,
+      palette:seed?Math.floor(random()*3):lot.palette,
+    };
+  });
+}

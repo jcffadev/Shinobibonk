@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Circulação e refinamento de Konoha · 23/11/2026
+
+- **IMPLEMENTADO:** apoio por degrau com teste de dash, NPCs maiores, casas e pontos de evento sorteados, bairros laterais de Konoha, árvores e patamar rochoso no Monte Hokage. O save repõe a semente e as posições dos eventos.
+- **PENDENTE DE VALIDAÇÃO E2E:** testar a escada nos dois sentidos, conferir o dash e o monumento com a câmera em movimento e comparar partidas novas com sementes diferentes.
+
 ## Vilas refinadas e Susanoo · 23/11/2026
 
 1. **PENDENTE DE VALIDAÇÃO E2E.** Revisar os quatro mapas na branch de validação e comparar a entrada, escala, densidade, ruas, paisagem, eventos, clima e leitura em giros de câmera com as respectivas referências. Verificar ao vivo os apoios das escadas, paredes e telhados. Integrar a versão principal depois do aceite.

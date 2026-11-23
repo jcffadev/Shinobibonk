@@ -35,10 +35,11 @@ import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type Shinra
 import { createDamageNumbers } from './damageNumbers';
 import { bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
-import { missionMapLayout, VILLAGES, villageDeck, villageEventSite, villageSurface, type MapLayout } from './villageLayout';
+import { createVillageLayout, missionMapLayout, shuffledVillageSites, villageDeck, villageSurface, type MapLayout } from './villageLayout';
 import { createVillageGround, villageWater } from './villageTerrain';
 import { createVillageScenery } from './villageScenery';
-import { createVillageTraversal } from './villageTraversal';
+import { villageRandom } from './villageDistricts';
+import { createVillageTraversal, moveVillageActor } from './villageTraversal';
 import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE, PLAYER_SIZE } from '../game/worldScale';
 import { playHurt, playSfx, playTechniqueSound } from '../audio/sfx';
 import { createDamageFlash, flashStrength, registerHit, vignetteOpacity } from '../game/damageFeedback';
@@ -83,7 +84,7 @@ type PortalKind='zone'|'arena'|'exit';
 type ActiveWeatherEvent={id:WeatherEventId;until:number;elite:string;x:number;z:number;castEnd?:number;openingMega?:boolean};
 type SavedBijuu={id:string;hp:number;maxHp:number;x?:number;z?:number};
 type CampaignSave={openingMegaSpawned?:boolean;akatsukiAmbush?:AmbushMemberSave[];weatherPlan?:WeatherPlan;altarBlessing?:{tier:number;name:string;offers:LevelOffer[]};weatherEvent?:ActiveWeatherEvent;nextWeatherAt?:number;fallenMegas?:{heroId:string;x:number;z:number;account?:boolean}[];start:number;pendingLevels?:number;sagesUsedZone?:number;merges?:TechniqueMerge[];megaSchedule?:number[];accountEncounters?:number;plans:number;arena:boolean;reward:number;bijuu:string;portal?:{kind:PortalKind;x:number;z:number};boss?:SavedBijuu;locations?:{id:string;x:number;z:number}[];pickups?:{kind:MapPickup['kind'];x:number;z:number;discovered:boolean}[]};
-export type SavedRun={hagoromo?:HagoromoState;mapLayout?:MapLayout;surfaceElevation?:number;rankTicket?:{id:string;owner:string};killStreak?:KillStreak;powerlevel?:Powerlevel;v:1;heroId:string;mission:Difficulty;mapId:MapId;savedAt:number;elapsed:number;zone:number;level:number;xp:number;xpNext:number;kills:number;runMoney:number;kunai:number;shuriken:number;chakra:number;hp:number;bonusHp:number;totalDamage:number;allyDamage:number;skillDamage:Record<string,number>;knownItems:Record<string,number>;knownPills:Record<string,number>;pillQuality?:Record<string,number>;skillLevels:Record<string,number>;growth:Record<string,SkillGrowth>;allies:string[];allyAffinity:Record<string,number>;runBuffs:Bonuses;uses:{reroll:number;skip:number;ban:number};banned:string[];events:{id:string;active:boolean;uses:number;discovered:boolean}[];explored:string[];ryuSpent:number;rouletteSpins:number;paidWeapons:number;guardianSpawned:boolean;shikamaruPlans:number;megaElitesSpawned:number;zoneDifficulty:number;xpMultiplier:number;lootMultiplier:number;totemSpawned:boolean;pendingItemRewards:number;defenseDone:boolean;player:{x:number;z:number};accountTried:string[]; campaign?:CampaignSave; merchant?:{purchases:number;rerolls:number;stock:(string|null)[];prices?:number[]}; rouletteItems?:PendingPrize[]; rouletteSession?:{pending:RoulettePrize[];sessionSpins:number;sessionSpent:number}|null};
+export type SavedRun={hagoromo?:HagoromoState;mapLayout?:MapLayout;villageSeed?:number;surfaceElevation?:number;rankTicket?:{id:string;owner:string};killStreak?:KillStreak;powerlevel?:Powerlevel;v:1;heroId:string;mission:Difficulty;mapId:MapId;savedAt:number;elapsed:number;zone:number;level:number;xp:number;xpNext:number;kills:number;runMoney:number;kunai:number;shuriken:number;chakra:number;hp:number;bonusHp:number;totalDamage:number;allyDamage:number;skillDamage:Record<string,number>;knownItems:Record<string,number>;knownPills:Record<string,number>;pillQuality?:Record<string,number>;skillLevels:Record<string,number>;growth:Record<string,SkillGrowth>;allies:string[];allyAffinity:Record<string,number>;runBuffs:Bonuses;uses:{reroll:number;skip:number;ban:number};banned:string[];events:{id:string;active:boolean;uses:number;discovered:boolean}[];explored:string[];ryuSpent:number;rouletteSpins:number;paidWeapons:number;guardianSpawned:boolean;shikamaruPlans:number;megaElitesSpawned:number;zoneDifficulty:number;xpMultiplier:number;lootMultiplier:number;totemSpawned:boolean;pendingItemRewards:number;defenseDone:boolean;player:{x:number;z:number};accountTried:string[]; campaign?:CampaignSave; merchant?:{purchases:number;rerolls:number;stock:(string|null)[];prices?:number[]}; rouletteItems?:PendingPrize[]; rouletteSession?:{pending:RoulettePrize[];sessionSpins:number;sessionSpent:number}|null};
 /** Recompensas atraídas pelo jogador. O bolinho de arroz cura uma fração do HP máximo. */
 type Drop = { mesh: THREE.Sprite; type: 'xp' | 'ryu' | 'chakra' | 'pill' | 'item' | 'onigiri'; value: number; name: string; born: number; magnet: boolean; speed: number };
 /**
@@ -186,7 +187,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     scene.add(new THREE.HemisphereLight('#d4e9ff', '#35402d', 2.4)); const sun = new THREE.DirectionalLight('#ffe6b0', 3); sun.position.set(-8, 18, 7); scene.add(sun);
     // Rodada 95: a grade cobre todo o chão desenhado (não só a área de jogo): pintura do chão, malha e água leem dela.
     const mapLayout:MapLayout=enabledRef.current?missionMapLayout(resume):'mapas_basicos';
-    const village=mapLayout==='vilas'?VILLAGES[MAP.id]:null;
+    const villageSeed=mapLayout==='vilas'?(resume?resume.villageSeed??0:1+Math.floor(Math.random()*0xffff_fffe)):undefined;
+    const village=villageSeed===undefined?null:createVillageLayout(MAP.id,villageSeed);
     const waters=village?villageWater(MAP.id):undefined;
     const exactGround=village&&waters?createVillageGround(village,waters):(x:number,z:number)=>groundHeight(MAP.id,x,z);
     const terrainHeight=createHeightField(exactGround,RENDERED_GROUND_SIZE/2);
@@ -299,7 +301,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const altarColors=['#cbd5e1','#4cda83','#5daafa','#bb78f3','#ffcb55'];
     const altarRarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
     const allEvents=[...eventDefs.filter(e=>e.id!=='altar').map(e=>({...e,altarTier:undefined as number|undefined})),...Array.from({length:8},(_,i)=>{const tier=i<5?i:Math.floor(Math.random()*5);return {id:'altar-'+i,name:'Altar · '+(tier===0?'Normal':altarRarities[tier]),x:0,z:0,icon:'🛕',sprite:11,altarTier:tier};})];
-    const events=allEvents.map(def=>{const gate=def.id==='guardian-seal';const obj=def.id==='challenge'?makeHero('zetsu',1,1.14):environmentSprite(gate?4:def.id==='ichiraku'?5:def.id==='trader'?7:6,gate?5.6:def.id==='ichiraku'?4:3.2,gate?5:def.id==='ichiraku'?3.4:3.2);if(def.id==='slot'||def.id==='arsenal'||def.id==='shikamaru'||def.id==='ebisu'||def.id==='iruka'||def.id==='sapos-sabios'||def.id==='youth'){obj.material.dispose();obj.material=heroMaterial(def.id==='slot'?'tsunade':def.id==='arsenal'?'tenten':def.id==='youth'?'guy':def.id);}if(def.id==='orochimaru'){obj.material.dispose();obj.material=heroMaterial('orochimaru');obj.scale.set(2.2,3.1,1);}if(def.altarTier!==undefined){obj.material=obj.material.clone();obj.material.color.set(altarColors[def.altarTier]);}if(def.id!=='challenge')obj.scale.multiplyScalar(ACTOR_SCALE);obj.position.set(def.x,standHeight(def.x,def.z)+obj.scale.y*.45,def.z);obj.visible=false;scene.add(obj);return { ...def, obj, discovered:false, uses:0, active:true };});
+    const events=allEvents.map(def=>{const gate=def.id==='guardian-seal';const obj=def.id==='challenge'?makeHero('zetsu',1,1.14):environmentSprite(gate?4:def.id==='ichiraku'?5:def.id==='trader'?7:6,gate?5.6:def.id==='ichiraku'?4:3.2,gate?5:def.id==='ichiraku'?3.4:3.2);if(def.id==='slot'||def.id==='arsenal'||def.id==='shikamaru'||def.id==='ebisu'||def.id==='iruka'||def.id==='sapos-sabios'||def.id==='youth'){obj.material.dispose();obj.material=heroMaterial(def.id==='slot'?'tsunade':def.id==='arsenal'?'tenten':def.id==='youth'?'guy':def.id);}if(def.id==='orochimaru'){obj.material.dispose();obj.material=heroMaterial('orochimaru');obj.scale.set(2.2,3.1,1);}if(def.altarTier!==undefined){obj.material=obj.material.clone();obj.material.color.set(altarColors[def.altarTier]);}if(def.id!=='challenge')obj.scale.multiplyScalar(ACTOR_SCALE);if(village&&def.altarTier===undefined&&!gate)obj.scale.multiplyScalar(1.17);obj.position.set(def.x,standHeight(def.x,def.z)+obj.scale.y*.45,def.z);obj.visible=false;scene.add(obj);return { ...def, obj, discovered:false, uses:0, active:true };});
     const occluders=[...decor,...events.filter(event=>['ichiraku','trader','guardian-seal'].includes(event.id)).map(event=>event.obj)];
     const ichiraku=events.find(event=>event.id==='ichiraku')!;
     const zetsuEvent=events.find(event=>event.id==='challenge')!;
@@ -315,6 +317,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     }
     const teuchi=makeHero('teuchi');
     teuchi.center.set(.5,0);
+    if(village)teuchi.scale.multiplyScalar(1.17);
     scene.add(teuchi);
     function placeTeuchi(){
       const x=ichiraku.x+1.1,z=ichiraku.z+1.45;
@@ -324,19 +327,30 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function scatterEvents(){
       zetsuRise=0;
       const spots:{x:number;z:number}[]=[];
-      for(const [index,e] of events.entries()){
+      const siteSeed=(villageSeed??0)^Math.imul(zone,0x9e3779b1);
+      const sites=village?shuffledVillageSites(village,siteSeed):[];
+      const random=village?villageRandom(siteSeed^0xce7161b7):Math.random;
+      for(const e of events){
         let x=0,z=0;
-        const margin=e.id.startsWith('altar')?5:COLLISION_RULES.placementMargin;
-        const free=(x:number,z:number)=>spots.every(p=>Math.hypot(p.x-x,p.z-z)>6)&&solids.isFree(x,z,margin);
-        const site=village&&!e.id.startsWith('altar')&&villageEventSite(village,index,
-          point=>free(point.x,point.z)&&waterSurfaceAt(MAP.id,point.x,point.z,waters)===-Infinity);
+        const altar=e.id.startsWith('altar');
+        const margin=altar?5:COLLISION_RULES.placementMargin;
+        const free=(x:number,z:number)=>spots.every(p=>Math.hypot(p.x-x,p.z-z)>(village?6:8))&&solids.isFree(x,z,margin);
+        const dry=(x:number,z:number)=>waterSurfaceAt(MAP.id,x,z,waters)===-Infinity;
+        const site=!altar?sites.find(point=>free(point.x,point.z)&&dry(point.x,point.z)):undefined;
         if(site){x=site.x;z=site.z;}
-        else for(let n=0;n<80;n++){
-          const radius=e.id==='guardian-seal'?14+Math.random()*16:13+Math.random()*55;
-          const angle=Math.random()*Math.PI*2;x=Math.cos(angle)*radius;z=Math.sin(angle)*radius;
-          if(village?free(x,z)&&waterSurfaceAt(MAP.id,x,z,waters)===-Infinity
-            :spots.every(p=>Math.hypot(p.x-x,p.z-z)>8)&&solids.isFree(x,z,margin))break;
-          if(village&&n===79){const point=solids.freeSpot(x,z,margin);x=point.x;z=point.z;}
+        else {
+          let placed=false;
+          for(let n=0;n<80;n++){
+            const radius=e.id==='guardian-seal'?14+random()*16:13+random()*55;
+            const angle=random()*Math.PI*2;x=Math.cos(angle)*radius;z=Math.sin(angle)*radius;
+            if(free(x,z)&&(!village||dry(x,z))){placed=true;break;}
+          }
+          // Busca exaustiva só se a faixa sorteada estiver ocupada.
+          if(village&&!placed){
+            search: for(let z0=-70;z0<=70;z0+=4)for(let x0=-70;x0<=70;x0+=4){
+              if(Math.hypot(x0,z0)>13&&free(x0,z0)&&dry(x0,z0)){x=x0;z=z0;break search;}
+            }
+          }
         }
         spots.push({x,z});e.x=x;e.z=z;e.active=true;e.uses=0;e.discovered=false;
         e.obj.visible=false;e.obj.position.set(x,standHeight(x,z)+e.obj.scale.y*.45,z);if(e===ichiraku)placeTeuchi();
@@ -1722,24 +1736,19 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       tickHagoromo(dt);tickYouthRun(dt);
       moving=dir.lengthSq()>0;
       if(moving)heading.copy(dir).normalize();
-      if(moving&&!traversal.climbing){
-        const elevation=villageActive?Math.max(standHeight(player.position.x,player.position.z),traversal.elevation??-Infinity)+jumpHeight:-Infinity;
-        player.position.addScaledVector(heading,speed*dt*(slideTime>0?2.6:1));
-        player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);
-        player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);
-        if(!arena) {
-          if(villageActive) {
-            const step=solids.stairTop(player.position.x,player.position.z,elevation-jumpHeight);
-            solids.resolve(player.position,COLLISION_RULES.playerRadius,Math.max(elevation,step+jumpHeight));
-          }
-          else if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}
+      const distance=moving?speed*dt*(slideTime>0?2.6:1):0;
+      if(villageActive){
+        walkingFloor=moveVillageActor(player.position,moving?heading:dir,distance,jumpHeight,dt,traversal,solids,standHeight,WORLD_LIMIT);
+      } else {
+        if(moving){
+          player.position.addScaledVector(heading,distance);
+          player.position.x=THREE.MathUtils.clamp(player.position.x,-WORLD_LIMIT,WORLD_LIMIT);
+          player.position.z=THREE.MathUtils.clamp(player.position.z,-WORLD_LIMIT,WORLD_LIMIT);
+          if(!arena){if(slideTime<=0){if(dashing)solids.exitAlong(player.position,heading);else solids.resolve(player.position);}}
         }
-        revealAround(player.position.x,player.position.z);
+        walkingFloor=standHeight(player.position.x,player.position.z);
       }
-      const groundSupport=villageActive
-        ?Math.max(standHeight(player.position.x,player.position.z),solids.stairTop(player.position.x,player.position.z,walkingFloor))
-        :standHeight(player.position.x,player.position.z);
-      walkingFloor=villageActive?traversal.advance(player.position,dir,groundSupport,dt):groundSupport;
+      if(moving)revealAround(player.position.x,player.position.z);
       // Rodada 93: Shinra Tensei — o Pain levita e solta ondas de repulsão que empurram, ferem e atordoam.
       let shinraHeight=0;
       if(shinra&&shinraTech){const waves=advanceShinra(shinra,dt);shinraHeight=shinraLift(shinra.elapsed);
@@ -2042,7 +2051,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
     // ───── Salvar e retomar a run (Esc → "Salvar e sair", salvamento automático e ao fechar o navegador) ─────
     // Salva o progresso da run (tempo, abates, nível, itens, pílulas, técnicas, ajudantes, eventos, mapa explorado...).
     // Hordas, drops e projéteis vivos não são salvos: voltam a surgir naturalmente ao retomar.
-    function serializeRun():SavedRun{return {mapLayout,surfaceElevation:traversal.elevation,hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,tools:[...hagoromo.tools]},rankTicket:getRankTicket?.(),killStreak:streak,powerlevel:{...powerlevel},v:1,heroId,mission,mapId,savedAt:Date.now(),elapsed,zone,level,xp,xpNext,kills,runMoney,kunai,shuriken,chakra,hp,bonusHp,totalDamage,allyDamage,skillDamage:{...skillDamage},knownItems:{...knownItems},knownPills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},growth:JSON.parse(JSON.stringify(growth)),allies:[...allies],allyAffinity:{...allyAffinity},runBuffs:{...runBuffs},uses:{...uses},banned:[...banned],events:events.map(e=>({id:e.id,active:e.active,uses:e.uses,discovered:!!e.discovered})),explored:[...exploredCells.keys()],ryuSpent,rouletteSpins,paidWeapons,guardianSpawned,shikamaruPlans,megaElitesSpawned,zoneDifficulty,xpMultiplier,lootMultiplier,totemSpawned,pendingItemRewards,defenseDone,player:{x:player.position.x,z:player.position.z},accountTried:[...accountTried],merchant:{...merchant,stock:[...merchant.stock],prices:[...merchant.prices]},rouletteItems:[...rouletteItems],rouletteSession:roulette,campaign:{openingMegaSpawned,akatsukiAmbush:akatsukiEnemies.size?[...akatsukiEnemies].map(e=>({id:e.heroId!,x:e.sprite.position.x,z:e.sprite.position.z,hp:e.hp,maxHp:e.maxHp!})):undefined,altarBlessing:pendingAltar&&choiceData&&choiceLevel===-10?{...pendingAltar,offers:choiceData}:undefined,fallenMegas:fallenMegas.map(({candidate,body})=>({heroId:candidate.heroId,x:body.position.x,z:body.position.z,account:candidate.account})),weatherEvent:weatherEvent?{...weatherEvent,...(()=>{const target=enemyList.find(e=>e.heroId===weatherEvent?.elite);return target?{x:target.sprite.position.x,z:target.sprite.position.z}:{};})()}:undefined,nextWeatherAt,weatherPlan,start:zoneStart,pendingLevels,sagesUsedZone,merges:[...merges.values()],megaSchedule:[...megaSchedule],accountEncounters,plans:plansUsed,arena,reward:bijuuReward,bijuu:defeatedBijuu,portal:portal?{kind:portal.kind,x:portal.x,z:portal.z}:undefined,boss:enemyList.filter(e=>e.bijuu).map(e=>({id:e.heroId!,hp:e.hp,maxHp:e.maxHp!,x:e.sprite.position.x,z:e.sprite.position.z}))[0],locations:events.map(e=>({id:e.id,x:e.x,z:e.z})),pickups:pickups.filter(p=>p.active).map(p=>({kind:p.kind,x:p.x,z:p.z,discovered:!!p.discovered}))}};}
+    function serializeRun():SavedRun{return {mapLayout,villageSeed,surfaceElevation:traversal.elevation,hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,tools:[...hagoromo.tools]},rankTicket:getRankTicket?.(),killStreak:streak,powerlevel:{...powerlevel},v:1,heroId,mission,mapId,savedAt:Date.now(),elapsed,zone,level,xp,xpNext,kills,runMoney,kunai,shuriken,chakra,hp,bonusHp,totalDamage,allyDamage,skillDamage:{...skillDamage},knownItems:{...knownItems},knownPills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},growth:JSON.parse(JSON.stringify(growth)),allies:[...allies],allyAffinity:{...allyAffinity},runBuffs:{...runBuffs},uses:{...uses},banned:[...banned],events:events.map(e=>({id:e.id,active:e.active,uses:e.uses,discovered:!!e.discovered})),explored:[...exploredCells.keys()],ryuSpent,rouletteSpins,paidWeapons,guardianSpawned,shikamaruPlans,megaElitesSpawned,zoneDifficulty,xpMultiplier,lootMultiplier,totemSpawned,pendingItemRewards,defenseDone,player:{x:player.position.x,z:player.position.z},accountTried:[...accountTried],merchant:{...merchant,stock:[...merchant.stock],prices:[...merchant.prices]},rouletteItems:[...rouletteItems],rouletteSession:roulette,campaign:{openingMegaSpawned,akatsukiAmbush:akatsukiEnemies.size?[...akatsukiEnemies].map(e=>({id:e.heroId!,x:e.sprite.position.x,z:e.sprite.position.z,hp:e.hp,maxHp:e.maxHp!})):undefined,altarBlessing:pendingAltar&&choiceData&&choiceLevel===-10?{...pendingAltar,offers:choiceData}:undefined,fallenMegas:fallenMegas.map(({candidate,body})=>({heroId:candidate.heroId,x:body.position.x,z:body.position.z,account:candidate.account})),weatherEvent:weatherEvent?{...weatherEvent,...(()=>{const target=enemyList.find(e=>e.heroId===weatherEvent?.elite);return target?{x:target.sprite.position.x,z:target.sprite.position.z}:{};})()}:undefined,nextWeatherAt,weatherPlan,start:zoneStart,pendingLevels,sagesUsedZone,merges:[...merges.values()],megaSchedule:[...megaSchedule],accountEncounters,plans:plansUsed,arena,reward:bijuuReward,bijuu:defeatedBijuu,portal:portal?{kind:portal.kind,x:portal.x,z:portal.z}:undefined,boss:enemyList.filter(e=>e.bijuu).map(e=>({id:e.heroId!,hp:e.hp,maxHp:e.maxHp!,x:e.sprite.position.x,z:e.sprite.position.z}))[0],locations:events.map(e=>({id:e.id,x:e.x,z:e.z})),pickups:pickups.filter(p=>p.active).map(p=>({kind:p.kind,x:p.x,z:p.z,discovered:!!p.discovered}))}};}
     function saveRun(){if(defeated||victory)return;try{localStorage.setItem(SAVED_RUN_KEY,JSON.stringify(serializeRun()));}catch{/* sem armazenamento */}}
     function restoreRun(s:SavedRun){if(s.hagoromo){hagoromo.keys=s.hagoromo.keys;hagoromo.progress=s.hagoromo.progress;hagoromo.tools=[...s.hagoromo.tools];}Object.assign(powerlevel,readPowerlevel(s.powerlevel));elapsed=s.elapsed;streak=s.killStreak??{count:0,lastAt:0};zone=s.zone;const camp=s.campaign;weatherEvent=camp?.weatherEvent;nextWeatherAt=camp?.nextWeatherAt??elapsed+65;weatherPlan=camp?.weatherPlan??planZoneWeather(WEATHER_BY_MAP[mapId],elapsed);if(camp?.altarBlessing?.offers.length===3){const {tier,name,offers}=camp.altarBlessing;pendingAltar={tier,name};choiceLevel=-10;choiceData=offers;}pendingLevels=camp?.pendingLevels??0;sagesUsedZone=camp?.sagesUsedZone??(camp?.merges?.length?s.zone:0);zoneStart=camp?.start??Math.max(0,(zone-1)*200);for(const plan of camp?.merges??[]){let technique=mergedTechnique(plan,techniques);if(technique){const legacyName='Fusão · '+plan.names.join(' / ');if(plan.kind==='fuse'&&s.skillLevels[legacyName]&&technique.name!==legacyName){const [first,second]=plan.names.map(name=>techniques.find(t=>t.name===name)!);technique={...technique,name:legacyName,shape:'Área',status:first.status??second.status,statusChance:first.status?first.statusChance:second.statusChance,burn:first.burn||second.burn,poison:first.poison||second.poison};}techniques.push(technique);merges.set(technique.name,plan);plan.names.forEach(name=>consumedTechniques.add(name));}}megaSchedule=camp?.megaSchedule??megaSchedule;accountEncounters=camp?.accountEncounters??0;plansUsed=camp?.plans??s.shikamaruPlans;arena=camp?.arena??false;bijuuReward=camp?.reward??0;defeatedBijuu=camp?.bijuu??'';level=s.level;xp=s.xp;xpNext=s.xpNext;kills=s.kills;runMoney=s.runMoney;kunai=s.kunai;shuriken=s.shuriken;chakra=s.chakra;bonusHp=s.bonusHp;totalDamage=s.totalDamage;allyDamage=s.allyDamage;Object.assign(skillDamage,s.skillDamage);for(const [name,count] of Object.entries(s.knownItems)){const key=currentItemName(name);knownItems[key]=(knownItems[key]??0)+count;}Object.assign(knownPills,Object.fromEntries(Object.entries(s.knownPills).filter(([name,lv])=>PILL_BY_NAME[name]&&lv>0).sort((a,b)=>b[1]-a[1]).slice(0,PILL_SLOTS)));Object.assign(pillQuality,s.pillQuality??{});Object.assign(skillLevels,s.skillLevels);for(const t of techniques)if(merges.get(t.name)?.kind==='fuse'&&skillLevels[t.name]>techniqueLevelCap(t))skillLevels[t.name]=techniqueLevelCap(t);Object.assign(growth,s.growth);Object.assign(runBuffs,s.runBuffs);Object.assign(uses,s.uses);for(const b of s.banned)banned.add(b);
       for(const saved of s.events){const e=events.find(x=>x.id===saved.id);if(e){e.active=saved.active;e.uses=saved.uses;e.discovered=saved.discovered;e.obj.visible=saved.discovered;}}

@@ -1,4 +1,5 @@
 import type { MapId } from '../game/maps';
+import { villageLots, villageRandom, type UrbanLot } from './villageDistricts';
 
 export type MapLayout = 'mapas_basicos' | 'vilas';
 export const missionMapLayout = (save?: { mapLayout?: MapLayout } | null): MapLayout =>
@@ -10,6 +11,8 @@ export type Bridge = Position & { halfSpan: number; width: number; rise: number;
 type Wall = { from: number; to: number; z: number; height: number; width: number };
 export type VillageLayout = {
   map: MapId;
+  seed?: number;
+  lots?: readonly UrbanLot[];
   entry: Position;
   plaza: Position;
   bounds: { x: number; south: number; north: number };
@@ -26,20 +29,21 @@ const walls = (z: number, width: number, opening: number, height: number): Wall[
 export const villageCanalX = (z: number) => 10.5 + Math.sin((z + 2) * .08) * 1.2;
 const canalBridges = [-13, -30, -46].map(z => ({ x: villageCanalX(z), z, halfSpan: 6.4, width: 2.8, rise: 1.12, wood: true }));
 const inlandStreets=[-8,8,-24,24];
+const konohaStreets=[-40,-33,-25,-8,8,25,33,40];
 const canalStreets=[3.05,17.05];
 
 export const VILLAGES: Record<MapId, VillageLayout> = {
   folha: {
     map: 'folha', entry: { x: 0, z: -8 }, plaza: { x: 0, z: -26 },
-    bounds: { x: 26, south: -8, north: -58 }, walls: walls(-8, 25, 3.1, 2.45),
-    crossings: [-16, -26, -43], bridges: [],
+    bounds: { x: 42, south: -8, north: -64 }, walls: walls(-8, 25, 3.1, 2.45),
+    crossings: [-16,-26,-43,-55], bridges: [],
     buildings: [
       { art: 'environment', index: 4, x: 0, z: -8, width: 7.6, height: 6.1, gate: true },
-      { art: 'leaf', index: 0, x: 0, z: -66, width: 34, height: 19 },
+      { art: 'leaf', index: 0, x: 10, z: -72, width: 43, height: 22 },
       { art: 'leaf', index: 1, x: 42, z: 25, width: 6.6, height: 10 },
       { art: 'leaf', index: 2, x: 54, z: 32, width: 6.6, height: 10 },
     ],
-    sites: [[-6,-16],[6,-16],[-16,-26],[16,-26],[0,-26],[-5,-32],[6,-33],[-18,-43],[17,-43],[-7,-45],[6,-45],[0,-51],[0,-33]]
+    sites: [[-6,-16],[6,-16],[-16,-26],[16,-26],[0,-26],[-5,-32],[6,-33],[-18,-43],[17,-43],[-7,-45],[6,-45],[0,-51],[0,-33],[-39,-16],[39,-16],[-34,-26],[35,-26],[-39,-43],[39,-43],[-32,-55],[34,-55]]
       .map(([x,z]) => ({x,z})),
   },
   areia: {
@@ -78,13 +82,18 @@ export const VILLAGES: Record<MapId, VillageLayout> = {
   },
 };
 
-export function villageSurface(layout: VillageLayout, x: number, z: number): 'road' | 'plaza' | undefined {
+export function createVillageLayout(map:MapId,seed:number) {
+  return {...VILLAGES[map],seed,lots:villageLots(map,seed)};
+}
+
+export function villageSurface(layout: VillageLayout, x: number, z: number): 'road' | 'plaza' | 'rock' | undefined {
+  if(layout.map==='folha'&&((x-10)/25)**2+((z+72)/10)**2<1)return 'rock';
   const trail = Math.sin((z + 8) * .08) * .8;
   const plaza = Math.abs(z - layout.plaza.z) < 4.8 && Math.abs(x - layout.plaza.x) < 9.6;
   if (plaza) return 'plaza';
   if (Math.abs(x - trail) < 2.5 && z < 25 && z > layout.bounds.north) return 'road';
   if (z > layout.bounds.south && z < 2) return;
-  const streets = layout.map === 'nevoa' ? canalStreets : inlandStreets;
+  const streets=layout.map==='nevoa'?canalStreets:layout.map==='folha'?konohaStreets:inlandStreets;
   if (z < layout.bounds.south && z > layout.bounds.north && streets.some(side => Math.abs(x - side) < 1.45)) return 'road';
   if (Math.abs(x) < layout.bounds.x && layout.crossings.some(crossing => Math.abs(z - crossing) < 1.65)) return 'road';
 }
@@ -93,17 +102,21 @@ export function insideVillage(layout: VillageLayout, x: number, z: number) {
   return Math.abs(x) < layout.bounds.x && z < layout.bounds.south && z > layout.bounds.north;
 }
 
-export function villageEventSite(layout: VillageLayout, index:number, available:(point:Position)=>boolean) {
-  for(let i=0;i<layout.sites.length;i++) {
-    const point=layout.sites[(index+i)%layout.sites.length];
-    if(insideVillage(layout,point.x,point.z)&&available(point))return point;
-  }
+function eventCandidates(layout:VillageLayout) {
+  const candidates=[...layout.sites];
   for(const z of layout.crossings) {
-    for(let x=-layout.bounds.x+2;x<layout.bounds.x-1;x+=3) {
-      const point={x,z};
-      if(insideVillage(layout,x,z)&&available(point))return point;
-    }
+    for(let x=-layout.bounds.x+2;x<layout.bounds.x-1;x+=3) candidates.push({x,z});
   }
+  return candidates.filter(p=>insideVillage(layout,p.x,p.z));
+}
+
+export function shuffledVillageSites(layout:VillageLayout,seed:number) {
+  const candidates=eventCandidates(layout),random=villageRandom(seed);
+  for(let i=candidates.length-1;i>0;i--) {
+    const j=Math.floor(random()*(i+1));
+    [candidates[i],candidates[j]]=[candidates[j],candidates[i]];
+  }
+  return candidates;
 }
 
 export function bridgeHeight(bridge: Bridge, x: number, ground: (x: number, z: number) => number) {

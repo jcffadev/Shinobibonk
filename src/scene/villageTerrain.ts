@@ -2,7 +2,7 @@ import type { MapId } from '../game/maps';
 import { groundHeight, HAGOROMO_ARENA, terrace } from './terrainArt';
 import { carveWater, WATER_BODIES, type WaterBody } from './water';
 import { villageCanalX, villageSurface, type VillageLayout } from './villageLayout';
-import { VILLAGE_LOTS } from './villageDistricts';
+import { villageLots } from './villageDistricts';
 
 const canal: WaterBody = { kind: 'river', width: 10.1, from: -74, to: 29, at: villageCanalX };
 export const villageWater = (map: MapId) => map === 'nevoa' ? [...WATER_BODIES[map], canal] : WATER_BODIES[map];
@@ -19,14 +19,17 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
   const { map, bounds } = layout;
   const plots = layout.buildings.filter(building => !building.gate)
     .map(({x,z,width}) => ({x,z,radius:Math.min(5.8,width*.37)}));
-  for(const lot of VILLAGE_LOTS[map])plots.push({x:lot.x,z:lot.z,radius:Math.hypot(lot.width,lot.depth)*.50});
+  for(const lot of layout.lots??villageLots(map,0))plots.push({x:lot.x,z:lot.z,radius:Math.hypot(lot.width,lot.depth)*.50});
   if (map === 'folha') plots.push({ x: -1, z: -39, radius: 5.2 });
 
   function relief(x: number, z: number) {
     let rolling = .8 + .7 * Math.sin(x * .11 + 2) * Math.cos(z * .14) + .46 * Math.sin((x + z) * .14);
     rolling += mound(x,z,-25,-4,11,15,1.4) + mound(x,z,28,-32,14,16,1.65);
     let h = terrace(rolling, 1.15) * smoothstep((Math.hypot(x,z) - 5) / 9);
-    if (map === 'folha') h += mound(x,z,0,-62,22,11,3.15);
+    if (map === 'folha') {
+      h+=mound(x,z,10,-72,25,14,3.8);
+      h+=mound(x,z,-20,-63,18,12,1.75)+mound(x,z,35,-60,15,12,1.10);
+    }
     if (map === 'areia') h += 4.55 * smoothstep((Math.abs(x) - 30) / 11)
       * Math.max(mound(x,z,-38,-31,12,37,1), mound(x,z,38,-35,12,34,1));
     if (map === 'pedra') {

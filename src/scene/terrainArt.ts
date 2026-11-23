@@ -182,7 +182,7 @@ const rgb = (hex: string) => [1, 3, 5].map(offset => parseInt(hex.slice(offset, 
  * partida). O desenho é o mesmo (o teste compara com a fórmula exata).
  */
 type GroundStyle = {
-  surface(x:number,z:number): 'road'|'plaza'|undefined;
+  surface(x:number,z:number): 'road'|'plaza'|'rock'|undefined;
   waters: readonly WaterBody[];
 };
 
@@ -206,7 +206,7 @@ export function paintGround(map: GameMap, ground: (x: number, z: number) => numb
       const river = h0 < WATER.level + .02, shore = !river && shoreDistance < 1.4;
       // Rodada 85: pedra nas encostas dos terraços (inclinação alta), com estrias horizontais como paredão de rocha.
       const slope = Math.hypot(ground(x + .5, z) - h0, ground(x, z + .5) - h0) / .5;
-      const stone = !shore && (slope > .55 || h0 > 4.2);
+      const stone = !shore && (location==='rock'||slope > .55 || h0 > 4.2);
       const color = river ? water : shore ? sand : inPlaza ? plaza : onPath ? dirt : stone ? rock : grass;
       let shade = .88 + .18 * fleck + .08 * patch;
       if (inPlaza && !river) {

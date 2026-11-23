@@ -389,6 +389,11 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 **P:** Transformar a arte aprovada em uma vila jogável e respeitar cor e armamento de cada Susanoo.
 **R:** A branch de validação liga os volumes texturizados e as colisões das quatro vilas, inclui prévias nativas e dá a cada portador a animação correspondente. A análise de dano, jutsus e status fica para a rodada de decisão com o usuário. A integração ao principal depende do aceite visual.
 
+### 23/11/2026 · Feedback sobre as escadas e a escala da vila
+
+**P:** Corrigir o apoio da escada e ampliar o espaço, com mais árvores e NPCs e casas maiores em posições sorteadas. Subir o Monte Hokage e ajustar o chão.
+**R:** Subdividimos o deslocamento, ampliamos Konoha, escalamos os NPCs e sorteamos os lotes e pontos de evento com persistência. O monte está mais alto, com base rochosa. A prévia das malhas e os testes de circulação antecedem a revisão em partida.
+
 ## 5. Estado atual do projeto
 
 **Retomada de 23/11/2026.** A versão principal recebeu as rodadas 97–103 do Claude, até `a394509`. Os mapas continuam com o Codex, em branch de validação e com parcial local. O usuário pediu manter os personagens atuais, guardar o low poly externamente e aproximar a densidade e o acabamento das cidades às fotos de seleção. Construções precisam mostrar laterais e fundos com a rotação da câmera. A arquitetura nova ainda precisa ser ligada à cena. [Estado conferido e fila de continuação](27-RETOMADA-MAPAS-23-11.md).

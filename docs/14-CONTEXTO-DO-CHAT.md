@@ -2584,3 +2584,13 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 > Jutsus e status de balanceamento você vai me dar detalhado depois para tomarmos uma decisão
 
 A revisão foi montada sobre a versão atual na branch de validação. Ela liga os bairros fixos à cena jogável, com ruas, eventos, escala de obstáculos, escadas e escalada. A prévia renderiza a geometria dessa branch fora do navegador. A comparação visual em partida e o aceite das vilas continuam pendentes. Cada portador de Susanoo recebeu a arma, a cor e a ação da sua referência. A revisão detalhada de balanceamento será discutida separadamente e os valores desta rodada seguem os da versão principal.
+
+
+## 23/11/2026 · Feedback da revisão jogável
+
+> Esta melhor, mas precisa de muito refinamento ainda, mas está indo no caminho certo
+>
+> A escada esta meio bugada as vezes passamos no meio, o mapa precisa colocar mais árvores um pouco a cidade ser maior no mapa para andarmos bastante, os nossos npcs e casas serem um pouco maiores e bem distribuidos pelo rng e nunca ficarem fixos em um local.
+> A estatua dos kages precisa ficar no alto ao fundo e refinada, o chão nela esta esquisito
+
+Konoha ganhou bairros laterais, árvores e escadaria na entrada. O Monte Hokage subiu no fundo e ganhou base de rocha. A caminhada e o dash recalculam o apoio a cada trecho do deslocamento. Os locais dos NPCs e das casas variam a cada missão, e o save guarda a semente e as coordenadas dos eventos.

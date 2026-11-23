@@ -4,6 +4,7 @@ import { MAP_SIZE } from '../game/worldScale';
 import { COLLISION_RULES, type Solid } from './collision';
 import { createMemorialSprite, MEMORIAL } from './memorialStone';
 import { HAGOROMO_ARENA } from './terrainArt';
+import { villageRandom } from './villageDistricts';
 import { createVillageArchitecture } from './villageArchitecture';
 import { bridgeHeight, villageSurface, type VillageLayout } from './villageLayout';
 import { waterDistance, type WaterBody } from './water';
@@ -45,8 +46,8 @@ export function createVillageScenery(
   }
 
   // Lotes densos, com as ruas livres entre os bairros. Semente fixa para salvar e retomar no mesmo lugar.
-  let seed=map.id.split('').reduce((sum,char)=>sum+char.charCodeAt(0),1729);
-  const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/0x1_0000_0000;};
+  const terrainSeed=map.id.split('').reduce((sum,char)=>sum+char.charCodeAt(0),1729);
+  const random=villageRandom(terrainSeed^(layout.seed??0));
   const weights=map.scenery.weights,total=weights.reduce((sum,n)=>sum+n,0);
   const foliage=new Map<Solid,THREE.Sprite>();
   function plant(kind:number,x:number,z:number,scale:number) {
@@ -60,13 +61,22 @@ export function createVillageScenery(
     const gardens=[[-9,10,1.27],[9,12,1.28],[-4.37,-3,1.34],[4.35,-3,1.18],
       [-8.8,-24,1.08],[9.9,-29,1.12],[-10,-44,1.04],[7.2,-45,1.08]];
     gardens.forEach(([x,z,scale],i)=>plant(i%3===1?1:0,x,z,scale));
+    for(let i=0;i<28;i++){
+      const x=-39+i*2.9+(random()-.5)*1.1,z=-61.5-(i%3)*1.4;
+      plant(i%4===0?0:1,x,z,1.14+random()*.52);
+    }
+    for(const side of [-1,1])for(let i=0;i<12;i++){
+      const x=side*(26.1+i%2*.6),z=-13-i*4.12;
+      if(layout.crossings.some(crossing=>Math.abs(crossing-z)<2))continue;
+      plant(i%3===1?1:0,x,z,.88+random()*.28);
+    }
   }
   for(let i=0;i<22;i++){
     const angle=i*Math.PI*2/22,r=HAGOROMO_ARENA.r+2.4+(i%3)*.9;
     plant(i%4===0?1:0,HAGOROMO_ARENA.x+Math.cos(angle)*r,HAGOROMO_ARENA.z+Math.sin(angle)*r,.98);
   }
 
-  for(let i=0;i<Math.round(map.scenery.count*1.55);i++) {
+  for(let i=0;i<Math.round(map.scenery.count*(map.id==='folha'?1.79:1.55));i++) {
     const x=(random()-.5)*(MAP_SIZE-8),z=(random()-.5)*(MAP_SIZE-8);
     if(Math.hypot(x,z)<6||villageSurface(layout,x,z)||waterDistance(map.id,x,z,waters).outside<1.5) continue;
     if(Math.hypot(x-HAGOROMO_ARENA.x,z-HAGOROMO_ARENA.z)<HAGOROMO_ARENA.r+1.5)continue;
@@ -109,11 +119,29 @@ export function createVillageScenery(
     texture.repeat.x=1/3;
     texture.offset.x=index/3;
     textures.set('leaf-'+index,texture);
-    const depth=index===0?5:2.45;
-    box(x,y+height*.29,z-depth/2,width*.80,height*.58,depth,rockFace);
-    box(x,y+height*.22,z-depth*.81,width*.92,height*.44,depth*.56,rockFace);
-    landmarkFace(texture,x,y-.06,z+.045,width,height);
-    solids.addBox(x,z-depth/2,width*.40,depth*.5,y+height*.58);
+    if(index===0) {
+      // Rocha de apoio até a base desenhada. As faces esculpidas são voltadas para a vila.
+      const foot=surface('#c5b6a3',2);
+      for(let i=0;i<11;i++){
+        const px=x+(i-5)*width*.078,pz=z-4.24-(i%3)*1.4;
+        const base=ground(px,pz);
+        const rise=height*(.36+.18*Math.sin((i+1)*1.7)**2);
+        const boulder=new THREE.Mesh(new THREE.CylinderGeometry(1.6+(i%2)*.48,3.1,rise,6,1),foot);
+        boulder.name='monte-hokage-rocha';
+        boulder.position.set(px,base+rise*.48,pz);
+        boulder.rotation.y=i*.65;
+        boulder.scale.z=1.22;
+        architecture.add(boulder);
+        solids.add(px,pz,2.70,true,base+rise*.93);
+      }
+      landmarkFace(texture,x,y-.5,z+.045,width,height);
+    } else {
+      const depth=2.45;
+      box(x,y+height*.29,z-depth/2,width*.80,height*.58,depth,rockFace);
+      box(x,y+height*.22,z-depth*.81,width*.92,height*.44,depth*.56,rockFace);
+      landmarkFace(texture,x,y-.06,z+.045,width,height);
+      solids.addBox(x,z-depth/2,width*.40,depth*.5,y+height*.58);
+    }
   }
   if(map.id==='folha') {
     const {x,z,width,height}=MEMORIAL;
