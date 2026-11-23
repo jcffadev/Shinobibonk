@@ -4,7 +4,7 @@
 
 - O usuário autorizou promover as quatro vilas para teste. O código revisado e validado em `5b72a16` segue para `main`.
 - O estado anterior de `main` foi preservado em `backup/live-antes-vilas-2026-11-23` (`5955bb0`). A branch histórica `mapas_basicos` permanece em `c7581be`.
-- O projeto registra deploy manual no Netlify. A publicação no GitHub e a disponibilidade no endereço hospedado têm verificações próprias.
+- As quatro vilas estão ativas nas novas missões da seleção normal na cópia principal. `pnpm build` atualizou o `dist`. O usuário fará a publicação manual no site.
 
 ## 23/11/2026 · Água, NPCs 3D e acabamento das quatro vilas
 

@@ -5,7 +5,8 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 ## Teste das quatro vilas no Live · 23/11/2026
 
 - **CONFIRMADO:** teste da revisão das vilas autorizado. O ponto de retorno do código anterior é `backup/live-antes-vilas-2026-11-23` (`5955bb0`), além de `mapas_basicos` (`c7581be`).
-- **PENDENTE NO NETLIFY:** identificar o projeto de produção e confirmar qual build está servindo. O processo anterior de publicação era manual. Testes de partida seguem pendentes.
+- **IMPLEMENTADO:** as novas missões das quatro vilas usam o mapa refinado na cópia principal. O `dist` foi recompilado a partir da `main`.
+- **PENDENTE:** o usuário fará a publicação manual no site e testará as partidas.
 
 ## Água, NPCs 3D e revisão regional · 23/11/2026
 
@@ -44,7 +45,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 ## Vilas refinadas e Susanoo · 23/11/2026
 
-1. **PENDENTE DE VALIDAÇÃO E2E.** Revisar os quatro mapas na branch de validação e comparar a entrada, escala, densidade, ruas, paisagem, eventos, clima e leitura em giros de câmera com as respectivas referências. Verificar ao vivo os apoios das escadas, paredes e telhados. Integrar a versão principal depois do aceite.
+1. **PENDENTE DE VALIDAÇÃO E2E.** Revisar os quatro mapas na seleção normal do jogo e comparar a entrada, escala, densidade, ruas, paisagem, eventos, clima e leitura em giros de câmera com as respectivas referências. Verificar em partida os apoios das escadas, paredes e telhados.
 2. **PENDENTE DE VALIDAÇÃO E2E.** Conferir os Susanoo por usuário em partida, incluindo a silhueta contra fundos claros e a arma no quadro de impacto. A arte pintada dedicada de Sasuke e Itachi continua na fila. [Referências e escopo](24-AUDITORIA-DE-EFEITOS.md#susanoo-por-portador--23112026).
 3. **PENDENTE DE DECISÃO.** Entregar a revisão de jutsus e status após os mapas. Tabela por técnica com versão, referência, forma, alcance, acertos, potência, recarga, status, chance inicial e efetiva, duração, acúmulos, resistências e reações. Mostrar interações com itens e builds, simular de início e fim da missão e apresentar mudanças como propostas.
 4. Continuam na fila as artes de queda ajoelhada, corrida do Jūzō, revisão de todos os jutsus e acabamento das fusões.

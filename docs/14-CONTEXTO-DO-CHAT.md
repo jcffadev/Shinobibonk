@@ -2670,3 +2670,7 @@ Corrigimos o quadriculado do leito e os recortes das margens. Os NPCs ganharam m
 > Salve os outros como backup pra se precisarmos voltar
 
 Preservamos o estado anterior do código em `backup/live-antes-vilas-2026-11-23` e mantivemos `mapas_basicos`. A revisão das vilas passou em 240 testes e foi promovida para teste. O Live hospedado no Netlify demanda identificar e conferir o projeto que serve a publicação.
+
+> To falando pra por no projeto pra todos jogarmos, eu subo no site
+
+Os mapas de Konoha, Suna, Iwa e Kiri já estão na cópia principal para novas missões pela seleção normal. Recompilei `dist` na cópia principal e confirmei que o bundle corresponde à revisão validada. O usuário fará a publicação no site. O backup da versão anterior continua disponível.
