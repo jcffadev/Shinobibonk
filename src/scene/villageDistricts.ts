@@ -1,4 +1,16 @@
 import type { MapId } from '../game/maps';
+import { MEMORIAL } from './memorialStone';
+import { HAGOROMO_ARENA } from './terrainArt';
+import { waterDistance } from './water';
+
+export const KONOHA_SQUARES=[
+  {x:-21,z:22,rx:7.4,rz:5.4},
+  {x:57,z:-26,rx:6.7,rz:5.0},
+  {x:25,z:53,rx:6.2,rz:5.8},
+] as const;
+export const inHagoromoClearing=(x:number,z:number,margin=2)=>
+  Math.hypot(x-HAGOROMO_ARENA.x,z-HAGOROMO_ARENA.z)<HAGOROMO_ARENA.r+margin;
+
 
 export type UrbanLot = {
   x: number; z: number; width: number; depth: number; body: number;
@@ -76,24 +88,54 @@ export function villageRandom(seed:number) {
   };
 }
 
+function konohaExpansion():UrbanLot[] {
+  const outskirts=[-13,-21,-32,-40,-51,-58].flatMap((z,i)=>
+    [-36,-29,29,36].map((x,j)=>lotFor(x,z,i,j))
+  );
+  const flanks=[-60,-49,-36,-22,-12,-2,9,21,31,43,54,63].flatMap((z,i)=>
+    [-64,-52,-43,43,52,64].map((x,j)=>lotFor(x,z,i+1,j))
+  );
+  const south=[15,25,36,46,56,64].flatMap((z,i)=>
+    [-37,-29,-20,-13,-6,6,13,20,29,37].map((x,j)=>lotFor(x,z,i+2,j))
+  );
+  return [...outskirts,...flanks,...south.filter(clearKonohaLot)];
+}
+
+function lotFor(x:number,z:number,row:number,col:number):UrbanLot {
+  const n=(row*7+col*3)%13;
+  return {
+    x,z,width:4.05+n%5*.18,depth:3.48+n%4*.16,body:2.95+n%5*.27,
+    front:row%2===0?1:-1,
+    shape:n%3===1?'round':'rect',use:n%5===0?'shop':n%3===0?'terrace':'house',palette:n%3,
+  };
+}
+
+function clearKonohaLot(lot:UrbanLot) {
+  const {x,z}=lot;
+  if(inHagoromoClearing(x,z,5.2)||waterDistance('folha',x,z).outside<4.3)return false;
+  if(Math.hypot(x-MEMORIAL.x,z-MEMORIAL.z)<5.8)return false;
+  if(Math.hypot(x-42,z-25)<6.8||Math.hypot(x-54,z-32)<6.8)return false;
+  return KONOHA_SQUARES.every(square=>
+    Math.abs(x-square.x)>square.rx+2.5||Math.abs(z-square.z)>square.rz+2.5);
+}
+
+const konohaLots=konohaExpansion();
+
 export function villageLots(map:MapId,seed:number):UrbanLot[] {
   const base=VILLAGE_LOTS[map];
   const random=villageRandom(seed);
-  const outskirts=map==='folha' ? [-13,-21,-32,-40,-51,-58].flatMap((z,i)=>
-    [-36,-29,29,36].map((x,j):UrbanLot=>({
-      x,z,width:4.25+(i+j)%3*.21,depth:3.8,body:3.15+(i*2+j)%3*.36,
-      front:1,shape:(i+j)%3===1?'round':'rect',use:(i+j)%3===0?'shop':'terrace',palette:(i+j)%3,
-    }))
-  ) : [];
-  return [...base,...outskirts].map(lot=>{
+  const candidates=map==='folha'?[...base,...konohaLots]:base;
+  return candidates.flatMap((lot,index)=>{
     const scale=seed ? 1.09+(random()-.5)*.13 : 1;
     const x=lot.x+(seed?(random()-.5)*1.24:0);
     const z=lot.z+(seed?(random()-.5)*1.05:0);
     const body=lot.body*(seed?1.12+(random()-.5)*.17:1);
     const turns=map==='folha'&&Math.abs(x)<9&&z> -8 ? x<0?1:-1 : undefined;
-    return {
+    const placed:UrbanLot={
       ...lot,x,z,body,width:lot.width*scale,depth:lot.depth*scale,turns,
       palette:seed?Math.floor(random()*3):lot.palette,
     };
+    if(map==='folha'&&index>=base.length&&!clearKonohaLot(placed))return [];
+    return [placed];
   });
 }

@@ -40,7 +40,21 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
     return Math.min(4.8, h);
   }
 
-  const leveled = plots.map(plot => ({ ...plot, y: relief(plot.x,plot.z) }));
+  const leveled=plots.map(plot=>({...plot,y:relief(plot.x,plot.z)}));
+  const cells=new Map<number,typeof leveled>();
+  const cell=(x:number,z:number)=>x+z*128;
+  const gridSize=8,shoulder=2.6;
+  for(const plot of leveled){
+    const extent=plot.radius+shoulder;
+    for(let z=Math.floor((plot.z-extent)/gridSize);z<=Math.floor((plot.z+extent)/gridSize);z++){
+      for(let x=Math.floor((plot.x-extent)/gridSize);x<=Math.floor((plot.x+extent)/gridSize);x++){
+        const key=cell(x,z),previous=cells.get(key);
+        if(previous)previous.push(plot);
+        else cells.set(key,[plot]);
+      }
+    }
+  }
+  const noPlots:typeof leveled=[];
   return (x: number, z: number) => {
     const edge = Math.max(Math.abs(x), Math.abs(z));
     if (edge >= 84) return groundHeight(map,x,z);
@@ -48,10 +62,10 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
     const surface = villageSurface(layout,x,z);
     if (surface === 'plaza') h = 0;
     if (surface === 'road') h *= z < bounds.north + 15 ? .83 : .57;
-    for (const plot of leveled) {
+    for (const plot of cells.get(cell(Math.floor(x/gridSize),Math.floor(z/gridSize)))??noPlots) {
       const dx = Math.abs(x-plot.x), dz = Math.abs(z-plot.z), r = plot.radius;
-      if (dx > r + 2.6 || dz > r + 2.6) continue;
-      const influence = smoothstep((Math.hypot(dx,dz)-r)/2.6);
+      if (dx > r + shoulder || dz > r + shoulder) continue;
+      const influence = smoothstep((Math.hypot(dx,dz)-r)/shoulder);
       h = plot.y + (h - plot.y) * influence;
     }
     if (Math.abs(z-layout.entry.z) < 4.2 && Math.abs(x-layout.entry.x) < 5) {

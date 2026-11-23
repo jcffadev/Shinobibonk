@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import type { MapId } from '../game/maps';
 import type { createSolids } from './collision';
-import { villageLots, villageRandom, type UrbanLot } from './villageDistricts';
+import { KONOHA_SQUARES, villageLots, villageRandom, type UrbanLot } from './villageDistricts';
 import type { VillageLayout } from './villageLayout';
 
 type Ground = (x:number,z:number)=>number;
@@ -29,7 +29,7 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
   atlas.anisotropy=2;
   const material=new THREE.MeshStandardMaterial({map:atlas,vertexColors:true,roughness:.84,flatShading:true});
   const lanternMaterial=new THREE.MeshBasicMaterial({map:atlas,vertexColors:true});
-  const batches=new Map<string,{items:THREE.BufferGeometry[];lit:boolean}>();
+  const batches=new Map<string,{items:THREE.BufferGeometry[];lit:boolean;name:string}>();
   const boxIndexed=new THREE.BoxGeometry(1,1,1);
   const boxSource=boxIndexed.toNonIndexed();boxIndexed.dispose();
   const cylinders=new Map<number,THREE.BufferGeometry>();
@@ -40,7 +40,7 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
   let frontage:UrbanLot|undefined;
 
   function add(geo:THREE.BufferGeometry,key:Surface,x:number,y:number,z:number,w:number,h:number,d:number,
-    tint=0xffffff,axis=0,lit=false) {
+    tint=0xffffff,axis=0,lit=false,name='village-architecture') {
     const g=geo.clone();
     if(frontage?.turns){
       const {x:cx,z:cz,turns}=frontage;
@@ -63,9 +63,9 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
       vertices.set([color.r,color.g,color.b],i*3);
     }
     g.setAttribute('color',new THREE.BufferAttribute(vertices,3));
-    const id=`${Math.floor(x/24)},${Math.floor(z/24)},${Number(lit)}`;
+    const id=`${Math.floor(x/24)},${Math.floor(z/24)},${Number(lit)}`+'/'+name;
     let batch=batches.get(id);
-    if(!batch){batch={items:[],lit};batches.set(id,batch);}
+    if(!batch){batch={items:[],lit,name};batches.set(id,batch);}
     batch.items.push(g);
   }
   function box(key:Surface,x:number,y:number,z:number,w:number,h:number,d:number,tint?:number,axis?:number,lit?:boolean) {
@@ -258,10 +258,9 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     box(sand?'cloth':'vermillion',x,y+h*.75,z+1.0,1.28,.78,.16);
     plaque(leaf?'忍':sand?'砂':'岩','#7b2722','#f4dbad',x,y+h*.75,z+1.085,1.08,.64);
     if(leaf){
-      const width=3.24;
-      stairFlight(x,z+2.59,y,width,5,.15,.42);
-      stairFlight(x,z-2.59,y,width,5,.15,.42,-1);
-      stairTread(x,z,y+.75,width,.62);
+      buildStairs(x,3.24,
+        steps(z-2.59,z-.49,y,y+.75),{from:z-.49,to:z+.49,top:y+.75},
+        steps(z+.49,z+2.59,y+.75,y));
     }
   }
 
@@ -318,27 +317,91 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     }
   }
 
-  function stairTread(x:number,z:number,top:number,width:number,halfDepth:number) {
-    const base=Math.min(top-.09,ground(x,z)-.18);
-    box('stone',x,(top+base)/2,z,width,top-base,halfDepth*2,0xe2d4bf);
-    box('paving',x,top-.043,z,width+.035,.086,halfDepth*2+.012,0xeee3c9);
-    solids.addStair(x,z,width/2,halfDepth+.006,top);
+  type Tread={from:number;to:number;top:number};
+  function steps(from:number,to:number,start:number,end:number,count=Math.max(1,Math.ceil(Math.abs(end-start)/.17))):Tread[] {
+    const depth=(to-from)/count;
+    return Array.from({length:count},(_,i)=>({
+      from:from+i*depth,to:from+(i+1)*depth,
+      top:start+(end-start)*(start<end?i+1:i)/count,
+    }));
   }
 
-  function stairFlight(x:number,start:number,base:number,width:number,count:number,rise:number,depth:number,direction=1) {
-    for(let i=0;i<count;i++){
-      stairTread(x,start-direction*(i+.5)*depth,base+rise*(i+1),width,depth/2+.02);
+  function buildStairs(x:number,width:number,...sections:(Tread|Tread[])[]) {
+    const profile=sections.flat();
+    const half=width/2,left=x-half,right=x+half;
+    const end=profile.at(-1)!;
+    const base=Math.min(...profile.map(step=>Math.min(ground(left,step.from),ground(right,step.from),step.top)),
+      ground(left,end.to),ground(right,end.to))-.30;
+    const floor:number[]=[],wall:number[]=[];
+    function quad(list:number[],a:number[],b:number[],c:number[],d:number[]) {
+      list.push(...a,...b,...c,...a,...c,...d);
+    }
+    function riser(z:number,before:number,after:number) {
+      if(Math.abs(before-after)<.0001)return;
+      quad(wall,[right,before,z],[left,before,z],[left,after,z],[right,after,z]);
+    }
+    for(const [i,{from,to,top}] of profile.entries()){
+      quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);
+      quad(wall,[left,base,from],[left,base,to],[left,top,to],[left,top,from]);
+      quad(wall,[right,base,to],[right,base,from],[right,top,from],[right,top,to]);
+      riser(from,profile[i-1]?.top??base,top);
+      solids.addStair(x,(from+to)/2,half,(to-from)/2,top);
+    }
+    riser(end.to,end.top,base);
+    for(const [key,positions,tint] of [
+      ['stone',floor,0xf1e8d8],['stone',wall,0xccba9f],
+    ] as const){
+      const geometry=new THREE.BufferGeometry();
+      geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+      const uv:number[]=[];
+      for(let i=0;i<positions.length;i+=18)uv.push(0,0,1,0,1,1,0,0,1,1,0,1);
+      geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
+      geometry.computeVertexNormals();
+      add(geometry,key,0,0,0,1,1,1,tint,0,false,'village-stairs');
+      geometry.dispose();
     }
   }
 
   if(layout.map==='folha') {
-    const x=7.85,z=-15.4,base=ground(x,z+2);
-    stairFlight(x,z+2.16,base,2.22,8,.15,.54);
-    for(let i=0;i<8;i++){
-      const stepZ=z+1.89-i*.54,top=base+.15*(i+1);
-      for(const side of [-1,1])box('paving',x+side*1.2,top-.065,stepZ,.24,.43,.58);
+    const x=7.85,from=-13.24,landing=-17.56,court=-21.10,to=-25.70,width=2.22;
+    const base=ground(x,-13.4),top=base+1.20,courtBase=ground(x,to-.20);
+    buildStairs(x,width,steps(to,court,courtBase,top),{from:court,to:landing,top},steps(landing,from,top,base,8));
+    // O patamar abre para o pátio elevado junto à fachada do quarteirão.
+    const patioEdge=x+width/2,patioWidth=3.30;
+    buildStairs(patioEdge+patioWidth/2,patioWidth,{from:court-.24,to:landing+.24,top});
+    function railing(edge:number,from:number,to:number) {
+      const length=to-from,center=(from+to)/2,foot=ground(edge,center)-.20;
+      box('stone',edge,(top+foot)/2,center,.19,top-foot,length);
+      box('dark',edge,top+.37,center,.13,.10,length-.08);
+      for(let i=0;i<5;i++)box('wood',edge,top+.17,from+.18+i*(length-.36)/4,.155,.34,.15);
+      solids.addBox(edge,center,.095,length/2,top+.42);
     }
-    stairTread(x,z-3.02,base+1.20,2.50,.9);
+    railing(x-width/2-.10,court,landing);
+    railing(patioEdge+patioWidth+.095,court-.24,landing+.24);
+    for(const sign of [-1,1]) {
+      const z=sign<0?court-.24:landing+.24;
+      const planterX=patioEdge+patioWidth*.65;
+      box('stone',planterX,top+.16,z-sign*.43,1.34,.32,.69);
+      circular('moss',planterX,top+.40,z-sign*.43,1.13,.38,.57,0x9fb46a);
+      solids.addBox(planterX,z-sign*.43,.67,.345,top+.32);
+    }
+
+    // Arquitetura baixa nos limites das praças mantém o centro aberto para circulação e eventos.
+    for(const [i,square] of KONOHA_SQUARES.entries()){
+      const posts=i===2?[-2,0,2]:[-2.5,2.5];
+      for(const dx of posts){
+        const sx=square.x+dx,sz=square.z-square.rz+.8,sy=ground(sx,sz);
+        if(i===2){
+          cylinder('wood',sx,sy+.74,sz,.31,1.48,.31);
+          cylinder('cloth',sx,sy+1.07,sz,.37,.31,.37,.94,0xd4bb95);
+          solids.add(sx,sz,.16,false,sy+1.48);
+        }else{
+          box('stone',sx,sy+.26,sz,1.56,.15,.53);
+          for(const offset of [-.55,.55])box('stone',sx+offset,sy+.094,sz,.22,.19,.38);
+          solids.addBox(sx,sz,.78,.265,sy+.335);
+        }
+      }
+    }
 
     // Pedras baixas e tufos compõem o acostamento. A passagem central fica livre.
     const random=villageRandom((layout.seed??0)^0xb053);
@@ -364,7 +427,7 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     if(!merged)continue;
     merged.computeBoundingSphere();
     const mesh=new THREE.Mesh(merged,batch.lit?lanternMaterial:material);
-    mesh.name='village-architecture';
+    mesh.name=batch.name;
     mesh.castShadow=true;
     mesh.receiveShadow=true;
     root.add(mesh);meshes.push(mesh);

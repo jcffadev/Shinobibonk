@@ -105,3 +105,6 @@ Cuidado com lugares fora da vila: a Ponte Kannabi fica no País da Grama, e a Po
 - Árvore ou rocha escondida dentro de construção, travando o caminho sem aparecer (rodada 70, `prune`).
 - Raio de colisão maior que o desenho: "paredes invisíveis" (rodada 70).
 - Teste de regra antigo que exigia um número literal da câmera: ao mudar uma regra a pedido do usuário, atualize a conferência para a regra nova, nunca apague nem afrouxe.
+
+
+Para escadas definitivas, alinhe pé, espelho e piso do degrau ao perfil da fundação. Cada piso tem uma única superfície visível. Termine no terreno, em uma rua, na entrada de uma construção ou num pátio ligado à rota. Confira a travessia nos dois sentidos e procure superfícies sobrepostas durante a validação.

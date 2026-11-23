@@ -4,7 +4,7 @@ import { MAP_SIZE } from '../game/worldScale';
 import { COLLISION_RULES, type Solid } from './collision';
 import { createMemorialSprite, MEMORIAL } from './memorialStone';
 import { HAGOROMO_ARENA } from './terrainArt';
-import { villageRandom } from './villageDistricts';
+import { KONOHA_SQUARES, villageRandom } from './villageDistricts';
 import { createVillageArchitecture } from './villageArchitecture';
 import { bridgeHeight, villageSurface, type VillageLayout } from './villageLayout';
 import { waterDistance, type WaterBody } from './water';
@@ -61,6 +61,12 @@ export function createVillageScenery(
     const gardens=[[-9,10,1.27],[9,12,1.28],[-4.37,-3,1.34],[4.35,-3,1.18],
       [-8.8,-24,1.08],[9.9,-29,1.12],[-10,-44,1.04],[7.2,-45,1.08]];
     gardens.forEach(([x,z,scale],i)=>plant(i%3===1?1:0,x,z,scale));
+    for(const square of KONOHA_SQUARES){
+      for(const side of [-1,1]){
+        plant(0,square.x+side*(square.rx-.9),square.z+square.rz-.8,1.13);
+        plant(1,square.x+side*(square.rx-.9),square.z-square.rz+.8,.94);
+      }
+    }
     for(let i=0;i<28;i++){
       const x=-39+i*2.9+(random()-.5)*1.1,z=-61.5-(i%3)*1.4;
       plant(i%4===0?0:1,x,z,1.14+random()*.52);
@@ -176,7 +182,7 @@ export function createVillageScenery(
       const x=bridge.x-bridge.halfSpan+(i+.5)*w;
       const y=bridgeHeight(bridge,x,ground);
       const slope=(bridgeHeight(bridge,x+w/2,ground)-bridgeHeight(bridge,x-w/2,ground))/w;
-      const board=box(x,y-.10,bridge.z,w+.035,.20,bridge.width,bridge.wood?wood:stone);
+      const board=box(x,y-.10,bridge.z,w,.20,bridge.width,bridge.wood?wood:stone);
       board.rotation.z=Math.atan(slope);
       for(const sign of [-1,1]) {
         const z=bridge.z+sign*(bridge.width/2-.10);

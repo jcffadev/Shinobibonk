@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'degraus têm uma só superfície de piso', arquivo: 'src/scene/villageArchitecture.ts', de: 'quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);', para: 'quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);' },
   { regra: 'escadas das vilas apoiam passos sem pulo', arquivo: 'src/scene/collision.ts', de: 'stair.top!<=from+.205', para: 'stair.top!<=from+.05' },
   { regra: 'fade da horda não interfere na entrada da bijū', arquivo: 'src/scene/enemyRenderer.ts', de: 'else if(opacity&&!sp.userData.bijuuEntrance)', para: 'else if(opacity)' },
   { regra: 'roleta só tem as cinco casas de personagem', arquivo: 'src/game/roulette.ts', de: "{ id: 'tsunade', label: 'Tsunade'", para: "{ id: 'kunai', label: 'Tsunade'" },

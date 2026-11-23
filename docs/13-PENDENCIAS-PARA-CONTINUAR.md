@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Expansão de Konoha e acabamento das escadas · 23/11/2026
+
+- **IMPLEMENTADO:** degraus de superfície única, pátio conectado à rua pelos dois lados, praça de treino, praças de bairro e pontes. A vila ocupa aproximadamente 81% do chão jogável, com 161 lotes na semente usada para a prévia.
+- **PENDENTE DE VALIDAÇÃO E2E:** caminhar e dar dash pelos degraus com rotação de câmera. Conferir o visual do pátio, a densidade dos quarteirões e a distribuição de eventos nos bairros novos.
+
 ## Circulação e refinamento de Konoha · 23/11/2026
 
 - **IMPLEMENTADO:** apoio por degrau com teste de dash, NPCs maiores, casas e pontos de evento sorteados, bairros laterais de Konoha, árvores e patamar rochoso no Monte Hokage. O save repõe a semente e as posições dos eventos.

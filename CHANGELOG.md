@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 23/11/2026 · Escadas ligadas às ruas e expansão de Konoha
+
+- As escadas do portão e do terraço usam uma face de piso por degrau, com espelhos e laterais em pedra. O pátio lateral encosta no quarteirão, conecta duas ruas e tem floreiras e muretas. Acabamento e apoio seguem o mesmo perfil.
+- Konoha ocupa 81,3% da área jogável amostrada. Na semente de revisão há 161 lotes, três praças novas, três pontes e bairros ao sul e nas laterais. A clareira de Hagoromo e áreas ao redor da água continuam livres.
+- A geração usa lotes e pontos de NPCs sorteados na missão. Eventos deixam folga das escadas, e ao retomar posições que passaram a ficar sob construção usam um ponto válido. O Guardião recebe prioridade nos locais próximos do início.
+- As amostras de terreno consultam os lotes próximos. A colisão de inimigos consulta as construções da célula atual e da vizinha quando há empurrão entre células.
+- Perfil equilibrado sem navegador **PASSOU**: tipos, 228 testes, cobertura e build. O teste também acusou a duplicação deliberada de um piso.
+- **PENDENTE DE VALIDAÇÃO E2E:** conferir a ausência de cintilação durante giros de câmera, percorrer o pátio e explorar os distritos com inimigos e eventos em partida.
+
+
 ## 23/11/2026 · Konoha maior, escadas e bairros sorteados
 
 - Konoha cresceu de 52 para 84 m na largura do distrito, com 24 lotes laterais, ruas transversais e mais árvores. As fachadas da entrada se voltam para a avenida, com beirais, barris e pedras baixas no acostamento.

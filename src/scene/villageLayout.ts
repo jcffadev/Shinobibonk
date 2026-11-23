@@ -1,5 +1,6 @@
 import type { MapId } from '../game/maps';
-import { villageLots, villageRandom, type UrbanLot } from './villageDistricts';
+import { inHagoromoClearing, KONOHA_SQUARES, villageLots, villageRandom, type UrbanLot } from './villageDistricts';
+import { leafRiver } from './water';
 
 export type MapLayout = 'mapas_basicos' | 'vilas';
 export const missionMapLayout = (save?: { mapLayout?: MapLayout } | null): MapLayout =>
@@ -29,14 +30,15 @@ const walls = (z: number, width: number, opening: number, height: number): Wall[
 export const villageCanalX = (z: number) => 10.5 + Math.sin((z + 2) * .08) * 1.2;
 const canalBridges = [-13, -30, -46].map(z => ({ x: villageCanalX(z), z, halfSpan: 6.4, width: 2.8, rise: 1.12, wood: true }));
 const inlandStreets=[-8,8,-24,24];
-const konohaStreets=[-40,-33,-25,-8,8,25,33,40];
+const konohaStreets=[-69,-58,-48,-40,-33,-25,-8,8,25,33,40,48,58,69];
+const konohaBridges=[19,40,59].map(z=>({x:leafRiver(z),z,halfSpan:4.5,width:3.1,rise:.68,wood:true}));
 const canalStreets=[3.05,17.05];
 
 export const VILLAGES: Record<MapId, VillageLayout> = {
   folha: {
     map: 'folha', entry: { x: 0, z: -8 }, plaza: { x: 0, z: -26 },
-    bounds: { x: 42, south: -8, north: -64 }, walls: walls(-8, 25, 3.1, 2.45),
-    crossings: [-16,-26,-43,-55], bridges: [],
+    bounds: { x: 73, south: 67, north: -71 }, walls: walls(-8, 25, 3.1, 2.45),
+    crossings: [-55,-43,-26,-16,-6,11,19,30,40,50,59], bridges: konohaBridges,
     buildings: [
       { art: 'environment', index: 4, x: 0, z: -8, width: 7.6, height: 6.1, gate: true },
       { art: 'leaf', index: 0, x: 10, z: -72, width: 43, height: 22 },
@@ -87,7 +89,12 @@ export function createVillageLayout(map:MapId,seed:number) {
 }
 
 export function villageSurface(layout: VillageLayout, x: number, z: number): 'road' | 'plaza' | 'rock' | undefined {
-  if(layout.map==='folha'&&((x-10)/25)**2+((z+72)/10)**2<1)return 'rock';
+  if(layout.map==='folha'){
+    if(inHagoromoClearing(x,z))return;
+    if(((x-10)/25)**2+((z+72)/10)**2<1)return 'rock';
+    if(KONOHA_SQUARES.some(square=>Math.abs(x-square.x)<square.rx&&Math.abs(z-square.z)<square.rz))return 'plaza';
+    if(z>8&&z<layout.bounds.south&&Math.abs(x)<2.65)return 'road';
+  }
   const trail = Math.sin((z + 8) * .08) * .8;
   const plaza = Math.abs(z - layout.plaza.z) < 4.8 && Math.abs(x - layout.plaza.x) < 9.6;
   if (plaza) return 'plaza';
@@ -99,7 +106,8 @@ export function villageSurface(layout: VillageLayout, x: number, z: number): 'ro
 }
 
 export function insideVillage(layout: VillageLayout, x: number, z: number) {
-  return Math.abs(x) < layout.bounds.x && z < layout.bounds.south && z > layout.bounds.north;
+  return Math.abs(x)<layout.bounds.x&&z<layout.bounds.south&&z>layout.bounds.north
+    &&(layout.map!=='folha'||!inHagoromoClearing(x,z));
 }
 
 function eventCandidates(layout:VillageLayout) {

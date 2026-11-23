@@ -2594,3 +2594,12 @@ A revisão foi montada sobre a versão atual na branch de validação. Ela liga 
 > A estatua dos kages precisa ficar no alto ao fundo e refinada, o chão nela esta esquisito
 
 Konoha ganhou bairros laterais, árvores e escadaria na entrada. O Monte Hokage subiu no fundo e ganhou base de rocha. A caminhada e o dash recalculam o apoio a cada trecho do deslocamento. Os locais dos NPCs e das casas variam a cada missão, e o save guarda a semente e as coordenadas dos eventos.
+
+
+## 23/11/2026 · Escadas e ocupação da vila
+
+> Porque essas escadas estão meio que piscando?
+> E porque essa escada está solta?
+> Aumentar ainda mais a vila, deve ser praticamente 80% do cenário... para o jogador explorar e ter casas, bastante coisa, claro que algumas você vai encaixar por rng nossos npcs/casas.
+
+O piscar vinha da sobreposição de dois pisos na mesma altura. Cada degrau passou a ter um piso, espelho e laterais. A escada lateral chega a um pátio junto à fachada e continua até outra rua. Konoha ocupou aproximadamente 81% da área jogável, com bairros novos, praças e pontes. Os pontos de encontro e as variações das casas continuam sorteados.

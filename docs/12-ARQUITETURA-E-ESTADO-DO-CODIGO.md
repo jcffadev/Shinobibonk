@@ -407,3 +407,6 @@ O glossário usa src/game/glossary.ts como catálogo pesquisável. A verificaç�
 
 
 A revisão acrescenta `SavedRun.villageSeed`. `createVillageLayout()` calcula os lotes compartilhados pela geometria e pelo terreno, `shuffledVillageSites()` deriva a ordem por zona e `moveVillageActor()` testa apoios e colisões em subpassos do deslocamento.
+
+
+Na expansão de Konoha, o piso e a colisão das escadas usam o mesmo perfil de degraus. `createVillageGround()` agrupa os lotes em células de 8 m para amostrar a altura. `resolveBig()` consulta uma grade de fundações para os inimigos.

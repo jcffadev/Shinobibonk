@@ -15,6 +15,7 @@ const { createSolids, COLLISION_RULES }=await load('/src/scene/collision.ts');
 const { foundationDistance }=await load('/src/scene/villageCollision.ts');
 const { WATER, WATER_BODIES, waterSurfaceAt }=await load('/src/scene/water.ts');
 const { MAP_BY_ID }=await load('/src/game/maps.ts');
+const { WORLD_LIMIT }=await load('/src/game/worldScale.ts');
 const sceneFixture=new Map();
 
 function sceneFor(map,seed=0) {
@@ -31,13 +32,13 @@ function sceneFor(map,seed=0) {
   return result;
 }
 
-function explore(solids,from= {x:0,z:0}) {
+function explore(solids,from={x:0,z:0},extent={x:43,north:-73,south:9}) {
   const queue=[from],seen=new Set([`${from.x},${from.z}`]);
   for(let n=0;n<queue.length;n++) {
     const p=queue[n];
     for(const [dx,dz] of [[0,-1],[0,1],[-1,0],[1,0]]) {
       const x=p.x+dx,z=p.z+dz,key=`${x},${z}`;
-      if(x< -43||x>43||z< -73||z>9||seen.has(key)||!solids.isFree(x,z,.2))continue;
+      if(Math.abs(x)>extent.x||z<extent.north||z>extent.south||seen.has(key)||!solids.isFree(x,z,.2))continue;
       seen.add(key);queue.push({x,z});
     }
   }
@@ -67,7 +68,7 @@ for(const map of Object.keys(VILLAGES))test(`${map} permite atravessar entrada e
     return insideVillage(layout,x,z);
   });
   assert.ok(connected.length>900,`piso conectado: ${connected.length} m² amostrados`);
-  const available=layout.sites.filter(site=>solids.isFree(site.x,site.z,2.5)
+  const available=layout.sites.filter(site=>solids.isFree(site.x,site.z,2.5,true)
     &&waterSurfaceAt(map,site.x,site.z,waters)===-Infinity
     &&seen.has(`${site.x},${site.z}`));
   assert.ok(available.length>=7,`pontos de evento livres: ${available.length}`);
@@ -76,7 +77,7 @@ for(const map of Object.keys(VILLAGES))test(`${map} permite atravessar entrada e
   assert.ok(chosen&&insideVillage(layout,chosen.x,chosen.z));
   const placements=[];
   for(let i=0;i<12;i++){
-    const site=shuffled.find(p=>solids.isFree(p.x,p.z,2.5)
+    const site=shuffled.find(p=>solids.isFree(p.x,p.z,2.5,true)
       &&waterSurfaceAt(map,p.x,p.z,waters)===-Infinity
       &&seen.has(`${p.x},${p.z}`)
       &&placements.every(previous=>Math.hypot(p.x-previous.x,p.z-previous.z)>6));
@@ -112,6 +113,10 @@ test('colisão atual usa o limite do muro e o contato redondo do tronco',()=>{
   const trunk={x:9.37,z:0};
   assert.equal(solids.resolve(trunk),true);
   assert.ok(Math.abs(trunk.x-9.5)<.005);
+  solids.addBox(9,8,1,.5,2.2);
+  const enemy={x:7.8,z:7.9};
+  assert.equal(solids.resolveBig(enemy),true);
+  assert.ok(enemy.x<7.66,'casa na célula vizinha também resolve a colisão');
 });
 
 test('segurar a direção sobe paredes retas e troncos; soltar a parede e retomar no telhado respeita o apoio',()=>{
@@ -219,7 +224,7 @@ test('cidades sorteiam lotes, entrada e eventos por semente sem bloquear os bair
     const connected=explore(solids),chosen=[];
     const spots=shuffledVillageSites(layout,seed);
     for(let i=0;i<12;i++){
-      const site=spots.find(p=>solids.isFree(p.x,p.z,2.5)&&waterSurfaceAt(map,p.x,p.z,waters)===-Infinity
+      const site=spots.find(p=>solids.isFree(p.x,p.z,2.5,true)&&waterSurfaceAt(map,p.x,p.z,waters)===-Infinity
         &&connected.has(p.x+','+p.z)&&chosen.every(o=>Math.hypot(o.x-p.x,o.z-p.z)>6));
       if(site)chosen.push(site);
     }
@@ -228,5 +233,62 @@ test('cidades sorteiam lotes, entrada e eventos por semente sem bloquear os bair
       assert.ok(layout.lots.length>=60);
       assert.ok(connected.has('-39,-43')&&connected.has('39,-43'));
     }
+  }
+});
+
+
+test('escadas de Konoha têm um piso por trecho, sem faces sobrepostas na mesma altura',()=>{
+  const {scenery,solids}=sceneFor('folha',6308);
+  const floors=[];
+  for(const mesh of scenery.root.children.filter(child=>child.name==='village-stairs')){
+    const pos=mesh.geometry.attributes.position;
+    for(let i=0;i<pos.count;i+=6){
+      const points=Array.from({length:6},(_,j)=>[pos.getX(i+j),pos.getY(i+j),pos.getZ(i+j)]);
+      const top=points[0][1];
+      if(points.some(p=>Math.abs(p[1]-top)>.0001))continue;
+      const x=points.map(p=>p[0]),z=points.map(p=>p[2]);
+      floors.push({left:Math.min(...x),right:Math.max(...x),from:Math.min(...z),to:Math.max(...z),top});
+    }
+  }
+  assert.equal(floors.length,solids.all.filter(solid=>solid.stair).length);
+  for(const [i,floor] of floors.entries())for(const next of floors.slice(i+1)){
+    const width=Math.min(floor.right,next.right)-Math.max(floor.left,next.left);
+    const depth=Math.min(floor.to,next.to)-Math.max(floor.from,next.from);
+    assert.ok(width<.0001||depth<.0001||Math.abs(floor.top-next.top)>.0001,'dois pisos disputando os mesmos pixels');
+  }
+});
+
+test('o terraço lateral dá passagem entre duas ruas nos dois sentidos',()=>{
+  const {solids,ground}=sceneFor('folha',6308);
+  for(const [from,end,heading] of [[-12.9,-26.1,-1],[-26.1,-12.9,1]]){
+    const traversal=createVillageTraversal(solids.all);
+    const point={x:7.85,z:from};
+    const levels=[];
+    for(let i=0;i<54;i++){
+      levels.push(moveVillageActor(point,{x:0,z:heading},.25,0,.05,traversal,solids,ground,WORLD_LIMIT));
+    }
+    assert.ok(Math.max(...levels)>1.0);
+    assert.ok(Math.abs(point.z-end)<.55,'o outro lado da passagem está acessível');
+    assert.ok(Math.abs(levels.at(-1)-ground(point.x,point.z))<.05);
+  }
+});
+
+test('Konoha ocupa aproximadamente 80% da área jogável com bairros conectados',()=>{
+  const {layout,ground,waters,solids}=sceneFor('folha',6308);
+  let total=0,urban=0;
+  for(let z=-WORLD_LIMIT;z<=WORLD_LIMIT;z++)for(let x=-WORLD_LIMIT;x<=WORLD_LIMIT;x++){
+    total++;
+    if(insideVillage(layout,x,z))urban++;
+  }
+  assert.ok(urban/total>=.78&&urban/total<=.85,'proporção do tecido urbano: '+urban/total);
+  assert.ok(layout.lots.length>=150);
+  const connected=explore(solids,{x:0,z:0},{x:WORLD_LIMIT,north:-WORLD_LIMIT,south:WORLD_LIMIT});
+  for(const [x,z] of [[64,-26],[-64,-26],[2,62],[47,59],[-20,50],[1,-51]]){
+    assert.ok(connected.has(x+','+z),'ligação com o bairro '+x+','+z);
+  }
+  assert.equal(layout.bridges.length,3);
+  for(const bridge of layout.bridges){
+    assert.equal(waterSurfaceAt('folha',bridge.x,bridge.z,waters),WATER.level);
+    assert.ok(villageDeck(layout,ground,bridge.x,bridge.z)>WATER.level+.48);
   }
 });

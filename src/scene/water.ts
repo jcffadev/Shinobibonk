@@ -29,7 +29,7 @@ export const rippleRadius = (age: number) => age < 0 || age > RIPPLES.life ? 0 :
 /** Superfície da água, profundidade máxima do leito e largura da margem (m, em coordenadas do mundo). */
 export const WATER = { level: -.35, bed: 1.3, bank: 5, shore: .12 } as const;
 
-const leafRiver = (z: number) => 41.5 + Math.sin(z * .13) * 2;
+export const leafRiver = (z: number) => 41.5 + Math.sin(z * .13) * 2;
 
 /** Corpos d'água por mapa. Longe do centro (onde o ninja nasce), da trilha e das construções. */
 export const WATER_BODIES: Record<MapId, readonly WaterBody[]> = {

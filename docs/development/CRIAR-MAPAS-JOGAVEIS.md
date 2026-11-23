@@ -12,3 +12,8 @@
 ## Sorteio por missão
 
 A semente determina o posicionamento, a escala e os materiais dos lotes. Terreno e malhas leem os mesmos lotes do `VillageLayout`. Use ruas e marcos para orientação. Os NPCs usam o sorteio por zona e exigem espaço livre e seco. Salve as posições dos eventos e a semente. Escadas usam degraus maciços e altura de apoio por degrau.
+
+
+## Escadas e ocupação urbana
+
+Construa o piso e os espelhos a partir de um só perfil de degraus. Evite a sobreposição de acabamento e corpo no plano superior. Cada degrau compartilha sua largura, profundidade e altura com a fundação. Conecte o patamar a outra via, a um pátio ou à entrada de uma construção e exercite a travessia nos dois sentidos. Meça a área urbana pela grade jogável, incluindo áreas públicas. Reserve a água e os espaços de eventos antes de distribuir as casas.

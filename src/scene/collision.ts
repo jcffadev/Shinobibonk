@@ -33,6 +33,10 @@ type Point = { x: number; z: number };
 
 export function createSolids() {
   const all: Solid[] = [], big: Solid[] = [], stairs: Solid[] = [];
+  const cells=new Map<number,Solid[]>();
+  const cellSize=8,indexMargin=.75;
+  const key=(x:number,z:number)=>x+1024*z;
+  const positionKey=(p:Point)=>key(Math.floor(p.x/cellSize),Math.floor(p.z/cellSize));
   const push = (list: Solid[], p: Point, radius: number, elevation = -Infinity) => {
     let moved = false;
     for (const s of list) {
@@ -58,7 +62,17 @@ export function createSolids() {
   function add(x: number, z: number, r: number, building = false, top?:number, bottom?:number, halfZ?:number) {
     const solid:Solid = { x, z, r, big: building, top, bottom, halfZ };
     all.push(solid);
-    if (building) big.push(solid);
+    if (building) {
+      big.push(solid);
+      const xPad=r+indexMargin,zPad=(halfZ??r)+indexMargin;
+      for(let iz=Math.floor((z-zPad)/cellSize);iz<=Math.floor((z+zPad)/cellSize);iz++){
+        for(let ix=Math.floor((x-xPad)/cellSize);ix<=Math.floor((x+xPad)/cellSize);ix++){
+          const id=key(ix,iz),bucket=cells.get(id);
+          if(bucket)bucket.push(solid);
+          else cells.set(id,[solid]);
+        }
+      }
+    }
     return solid;
   }
   /**
@@ -123,9 +137,24 @@ export function createSolids() {
       return moved;
     },
     /** Inimigos: só contornam construções (poucos sólidos; barato com milhares de inimigos). */
-    resolveBig(p: Point, radius = COLLISION_RULES.enemyRadius) { return COLLISION_RULES.enabled && push(big, p, radius); },
+    resolveBig(p: Point, radius = COLLISION_RULES.enemyRadius) {
+      if(!COLLISION_RULES.enabled)return false;
+      if(radius>indexMargin)return push(big,p,radius);
+      const id=positionKey(p),nearby=cells.get(id);
+      if(!nearby)return false;
+      const moved=push(nearby,p,radius);
+      // Empurrões que cruzam uma célula resolvem também o novo vizinho.
+      const next=positionKey(p);
+      if(moved&&next!==id){
+        const nextNearby=cells.get(next);
+        if(nextNearby)push(nextNearby,p,radius);
+      }
+      return moved;
+    },
     /** O ponto está fora de todas as construções, com folga? */
-    isFree(x: number, z: number, margin = COLLISION_RULES.placementMargin) { return big.every(s => foundationDistance(x,z,s)>margin); },
+    isFree(x:number,z:number,margin=COLLISION_RULES.placementMargin,includeStairs=false) {
+      return big.every(s=>foundationDistance(x,z,s)>margin)&&(!includeStairs||stairs.every(s=>foundationDistance(x,z,s)>margin));
+    },
     /** Devolve o ponto mais próximo fora das construções. */
     freeSpot(x: number, z: number, margin = 1) { const p = { x, z }; push(big, p, margin); push(big, p, margin); return p; },
   };

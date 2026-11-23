@@ -409,3 +409,8 @@ Partidas novas da branch iniciam nos bairros urbanos. A variante e o apoio dos p
 ### Tamanho e geração dos bairros
 
 Konoha ocupa até 42 m de cada lado da avenida e ganhou 24 lotes laterais. A semente da missão varia posição, escala e acabamento de cada lote. A troca de zona reposiciona os NPCs. Retomar recupera os pontos e a semente originais. O Monte Hokage fica ao norte, com base de rocha. A cada subpasso, o movimento resolve contato e altura do apoio.
+
+
+### Expansão urbana e malhas de degraus
+
+A área urbana de Konoha ocupa 81,3% dos pontos da grade de 1 m dentro do limite jogável, incluindo ruas, praças, lotes e parques, com a clareira de Hagoromo reservada. Foram acrescentadas três praças e três pontes sobre o rio da Folha. As escadas usam perfis contínuos com uma face por piso. O terraço lateral se prolonga para o pátio do quarteirão e desce até a outra rua.

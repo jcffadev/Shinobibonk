@@ -333,15 +333,17 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       for(const e of events){
         let x=0,z=0;
         const altar=e.id.startsWith('altar');
+        const guardian=e.id==='guardian-seal';
         const margin=altar?5:COLLISION_RULES.placementMargin;
-        const free=(x:number,z:number)=>spots.every(p=>Math.hypot(p.x-x,p.z-z)>(village?6:8))&&solids.isFree(x,z,margin);
+        const free=(x:number,z:number)=>spots.every(p=>Math.hypot(p.x-x,p.z-z)>(village?6:8))&&solids.isFree(x,z,margin,!!village);
         const dry=(x:number,z:number)=>waterSurfaceAt(MAP.id,x,z,waters)===-Infinity;
-        const site=!altar?sites.find(point=>free(point.x,point.z)&&dry(point.x,point.z)):undefined;
+        const site=!altar?sites.find(point=>(!guardian||Math.hypot(point.x,point.z)<=31)
+          &&free(point.x,point.z)&&dry(point.x,point.z)):undefined;
         if(site){x=site.x;z=site.z;}
         else {
           let placed=false;
           for(let n=0;n<80;n++){
-            const radius=e.id==='guardian-seal'?14+random()*16:13+random()*55;
+            const radius=guardian?14+random()*16:13+random()*55;
             const angle=random()*Math.PI*2;x=Math.cos(angle)*radius;z=Math.sin(angle)*radius;
             if(free(x,z)&&(!village||dry(x,z))){placed=true;break;}
           }
@@ -2060,7 +2062,12 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(s.merchant)Object.assign(merchant,{...s.merchant,stock:s.merchant.stock.map(name=>name===null?null:currentItemName(name))});
       rouletteItems.push(...(s.rouletteItems??[]).map(prize=>typeof prize==='string'?currentItemName(prize):prize));
       roulette=s.rouletteSession?{...s.rouletteSession,pending:s.rouletteSession.pending.map(prize=>prize.item?{...prize,item:currentItemName(prize.item)}:prize)}:null;rouletteSeq=roulette?.pending.at(-1)?.seq??0;
-      for(const point of camp?.locations??[]){const e=events.find(e=>e.id===point.id);if(e){e.x=point.x;e.z=point.z;e.obj.position.set(e.x,standHeight(e.x,e.z)+e.obj.scale.y*.45,e.z);}}
+      for(const point of camp?.locations??[]){
+        const e=events.find(event=>event.id===point.id);
+        if(!e)continue;
+        if(villageActive&&(!solids.isFree(point.x,point.z,.6,true)||waterSurfaceAt(MAP.id,point.x,point.z,waters)>-Infinity))continue;
+        e.x=point.x;e.z=point.z;e.obj.position.set(e.x,standHeight(e.x,e.z)+e.obj.scale.y*.45,e.z);
+      }
       if(camp?.pickups){for(const p of pickups)scene.remove(p.mesh);pickups.length=0;for(const p of camp.pickups){spawnPickup(p.kind,p.x,p.z);pickups.at(-1)!.discovered=p.discovered||p.kind==='sealDrop';}}
       for(const entry of camp?.fallenMegas??[]){const shinobi=HERO_BY_ID[entry.heroId];if(shinobi)fallenMegas.push({candidate:{heroId:shinobi.id,target:shinobi.name,phase:'ready',account:entry.account},body:layFallenShinobi(shinobi.id,entry.x,entry.z,!!entry.account,level,true)});}
       if(camp?.portal)openPortal(camp.portal.kind,camp.portal.x,camp.portal.z);
@@ -2083,7 +2090,15 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       refreshStats();for(const id of s.allies)recruitAlly(id);Object.assign(allyAffinity,s.allyAffinity);refreshStats();hp=Math.min(stats.maxHp,s.hp);if(!roulette)showRouletteItem();
       player.position.set(s.player.x,standHeight(s.player.x,s.player.z)+player.scale.y*.5,s.player.z);player.material.dispose();player.material=heroMaterial(heroId,level);invulnerability=3;
       walkingFloor=standHeight(player.position.x,player.position.z);
-      if(villageActive){traversal.restore(player.position,s.surfaceElevation,walkingFloor);walkingFloor=traversal.elevation??walkingFloor;}
+      if(villageActive){
+        traversal.restore(player.position,s.surfaceElevation,walkingFloor);
+        walkingFloor=traversal.elevation??walkingFloor;
+        if(solids.resolve(player.position,COLLISION_RULES.playerRadius,walkingFloor)){
+          walkingFloor=standHeight(player.position.x,player.position.z);
+          traversal.restore(player.position,undefined,walkingFloor);
+        }
+        player.position.y=walkingFloor+player.scale.y*.5;
+      }
       eventToast='Missão retomada de onde parou.';}
     if(resume&&resume.heroId===heroId)restoreRun(resume);
     let configuredZoom=currentSettings().cameraDistance,configuredFx=currentSettings().hideMyAttacks;
