@@ -129,9 +129,11 @@ export function createVillageScenery(
     const stone=surface('#a69a87',2);
     stone.side=THREE.DoubleSide;
     const depth=index===0?12:1.5;
-    const monument=makeLandmarkRelief(index,width,height,depth,texture,stone);
+    const base=y-(index===0?.55:.035);
+    const footing=index===0?(dx:number,dz:number)=>ground(x+dx,z+dz)-base:undefined;
+    const monument=makeLandmarkRelief(index,width,height,depth,texture,stone,footing);
     monument.name=index===0?'monte-hokage':index===1?'estatua-hashirama':'estatua-madara';
-    monument.position.set(x,y-(index===0?.55:.035),z);
+    monument.position.set(x,base,z);
     architecture.add(monument);
     if(index===0){
       solids.addBox(x,z-3.5,width*.43,3.49,y+height*.22);

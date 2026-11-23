@@ -415,3 +415,5 @@ Na expansão de Konoha, o piso e a colisão das escadas usam o mesmo perfil de d
 `missionStructures.ts` gera os volumes dos postos de missão e as faces fixas dos NPCs. `landmarkRelief.ts` usa perfis do alfa do atlas para fechar o verso dos monumentos e descreve a rota de saliências do Monte Hokage. `water.ts` usa material padrão com onda, normal e transparência por profundidade. `GameCanvas.tsx` configura o mapa de sombras local conforme a qualidade.
 
 Em Konoha, `villageLayout.ts` fornece as faixas de cobertura das ruas e praças. `villageTerrain.ts` usa as faixas para nivelar suas bordas e `terrainArt.ts` grava pesos de material na máscara, amostra o atlas no shader e guarda a pintura em cache por semente.
+
+`mapBoundary.ts` monta a cerca alinhada a `WORLD_LIMIT` e o bosque exterior de Konoha. `heightField.ts` calcula a folga da câmera contra o terreno amostrado. `landscape.ts` combina o panorama com uma superfície que cobre o entorno do chão quadrado. A base do relevo em `landmarkRelief.ts` é ajustada à encosta por vértice.

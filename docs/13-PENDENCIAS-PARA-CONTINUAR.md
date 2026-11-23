@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Base do Monte Hokage, limite e horizonte · 23/11/2026
+
+- **IMPLEMENTADO:** a base do monte acompanha o chão, o perímetro sinaliza os quatro lados, Konoha tem bosque exterior e a câmera fica acima do relevo.
+- **PENDENTE DE VALIDAÇÃO E2E:** girar a câmera com zoom mínimo e máximo junto à base do monte e nos cantos do mapa. Conferir o limite em corrida e dash e a leitura do horizonte nos modos perspectiva e ortográfico.
+
 ## Piso de Konoha · 23/11/2026
 
 - **IMPLEMENTADO:** as bordas de ruas e praças misturam materiais e altura. O atlas das superfícies preserva sua resolução na prévia nativa.

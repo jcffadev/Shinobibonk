@@ -317,7 +317,9 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
   assert.ok(gcSrc.includes("targetYaw-=dx*.0025*settings.mouseSensitivity"),'taxa do yaw reduzida e simétrica (rodada 44)');
   assert.ok(gcSrc.includes("dy*.0025*settings.mouseSensitivity"),'taxa do pitch reduzida e simétrica (rodada 44)');
   assert.ok(gcSrc.includes("clamp(targetPitch+dy*.0025*settings.mouseSensitivity*(settings.invertY?-1:1),CAMERA_MIN_PITCH,1.48)")&&gcSrc.includes('CAMERA_MIN_PITCH = .03'),'piso do pitch deitado para 0.03 rad (rodada 44 → 55)');
-  assert.ok(gcSrc.includes('const viewPitch=pitch;')&&gcSrc.includes('player.material.depthTest=true;'),'o terreno oculta o jogador sem alterar a inclinação da câmera (rodada 68)');
+  assert.ok(gcSrc.includes('offset.set(ox*Math.cos(pitch),Math.sin(pitch),oz*Math.cos(pitch))')
+    &&gcSrc.includes('cameraHeightAboveTerrain(camera.position.y,camera.position.x,camera.position.z,terrainHeight)')
+    &&gcSrc.includes('player.material.depthTest=true;'),'a câmera segue a inclinação do jogador com folga no chão, e o relevo pode ocultar o personagem');
   const { DEFAULT_SETTINGS } = await import('../src/game/settings.ts');
   assert.equal(DEFAULT_SETTINGS.musicVolume,.1,'música padrão em 10% (rodada 55)');
   // Rodada 85: a vista ortográfica antiga mantém 0.55 rad; a perspectiva (padrão) começa em CAMERA_VIEW.pitch.

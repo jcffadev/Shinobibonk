@@ -355,7 +355,7 @@ test('monumentos têm relevo dentro da silhueta e é possível escalar até o mi
     const relief=monument.getObjectByName('landmark-rock-relief');
     relief.geometry.computeBoundingBox();
     assert.ok(relief.geometry.boundingBox.min.z<-.6);
-    assert.ok(relief.geometry.boundingBox.max.z<.001,'apoio não atravessa a face de pedra');
+    assert.ok(relief.geometry.boundingBox.max.z<(name==='monte-hokage'?.551:.001),'apoio acompanha o contorno da face');
   }
   for(const statue of layout.buildings.filter(landmark=>landmark.art==='leaf'&&landmark.index>0)){
     assert.equal(waterSurfaceAt('folha',statue.x,statue.z,waters),-Infinity);
@@ -378,6 +378,61 @@ test('monumentos têm relevo dentro da silhueta e é possível escalar até o mi
     previous={height,z};
   }
   assert.ok(previous.height>16);
+});
+
+test('a base do Monte Hokage entra no terreno de frente e de costas',()=>{
+  const {scenery,ground}=sceneFor('folha',6308);
+  const mountain=scenery.root.getObjectByName('monte-hokage');
+  mountain.updateWorldMatrix(true,true);
+  const vertex=new THREE.Vector3();
+  for(const part of mountain.children){
+    const {position,uv}=part.geometry.attributes;
+    let buried=0;
+    for(let i=0;i<position.count;i++){
+      if(uv.getY(i)<.08 || uv.getY(i)>.205)continue;
+      buried++;
+      vertex.fromBufferAttribute(position,i).applyMatrix4(part.matrixWorld);
+      assert.ok(vertex.y<ground(vertex.x,vertex.z)-.25,'a borda do alfa e o verso ficam enterrados');
+    }
+    assert.ok(buried>10);
+  }
+});
+
+test('o limite físico tem cerca nos quatro lados e o horizonte cobre a vista de baixo',async()=>{
+  const {createMapBoundary}=await load('/src/scene/mapBoundary.ts');
+  const {createLandscape,LANDSCAPE}=await load('/src/scene/landscape.ts');
+  const scene=new THREE.Scene(),boundary=createMapBoundary('folha',()=>0,()=>0);
+  scene.add(boundary.root);
+  const landscape=createLandscape(scene,'folha');
+  scene.updateMatrixWorld(true);
+  const forest=boundary.root.getObjectByName('bosque-fora-do-limite');
+  assert.ok(forest?.geometry.attributes.position.count>100);
+  assert.equal(boundary.root.children.length,5);
+  for(const dir of [[1,0,0],[-1,0,0],[0,0,1],[0,0,-1]]){
+    const ray=new THREE.Raycaster(new THREE.Vector3(0,.85,0),new THREE.Vector3(...dir));
+    const [rail]=ray.intersectObject(boundary.root,true);
+    assert.ok(rail && Math.abs(rail.distance-WORLD_LIMIT)<.2);
+  }
+  const floor=scene.getObjectByName('fundo-abaixo-do-terreno');
+  const down=new THREE.Raycaster(new THREE.Vector3(LANDSCAPE.radius-2,0,0),new THREE.Vector3(0,-1,0));
+  assert.ok(down.intersectObject(floor).length>0);
+  assert.equal(floor.material.transparent,false);
+  landscape.dispose();
+  boundary.dispose();
+  assert.equal(scene.children.length,0);
+});
+
+test('a câmera sobe só quando a órbita entra no terreno',async()=>{
+  const {cameraHeightAboveTerrain}=await load('/src/scene/heightField.ts');
+  const ground=(x,z)=>Math.abs(x)<.4&&Math.abs(z)<.4?0:3;
+  assert.ok(cameraHeightAboveTerrain(.5,0,0,ground)>3.5);
+  assert.equal(cameraHeightAboveTerrain(8,0,0,ground),8);
+  const {ground:konoha}=sceneFor('folha',6308);
+  for(let i=0;i<16;i++){
+    const angle=i*Math.PI/8,x=10+7*Math.sin(angle),z=-62+7*Math.cos(angle);
+    const height=cameraHeightAboveTerrain(2,x,z,konoha);
+    assert.ok(height>=konoha(x,z)+.79);
+  }
 });
 
 test('Konoha varia arquitetura e a água usa profundidade, luz e margem local',()=>{

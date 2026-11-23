@@ -28,3 +28,7 @@ Use mais detalhes perto da rota principal e nos marcos da vila. Agrupe construç
 ## Chão e acostamentos
 
 Use o mesmo contorno para a transição de material e de altura nas ruas e praças. Mantenha o desenho macro das vias na máscara de cobertura e amostre o atlas de perto no shader. A prévia deve renderizar o detalhe do atlas separado da máscara. Compare o piso de perto e de ângulo baixo no mesmo enquadramento.
+
+## Perímetro, encaixe no terreno e horizonte
+
+A face interna da cerca acompanha o limite de movimento. Apoie os postes na altura local e use a altura da superfície da água para a travessa sobre rios. Mantenha as copas e as colinas do panorama além da área jogável. Enterre o recorte da arte e o verso dos monumentos na encosta, abaixo da linha visível. Valide ângulos baixos, a vista de costas, o apoio da rota e a folga da câmera em relação ao chão.

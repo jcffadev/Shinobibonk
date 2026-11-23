@@ -27,9 +27,10 @@ import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from './gamabunta
 import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } from './kuroari';
 import { createEnemyRenderer, ENEMY_FRAME } from './enemyRenderer';
 import { focusOpacity, setFocusView } from './playerFocus';
-import { createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightField';
+import { cameraHeightAboveTerrain, createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightField';
 import { createChakraFeet, createSplashes, createWater, RIPPLES, SPLASH, waterDistance, waterSurfaceAt } from './water';
 import { createLandscape } from './landscape';
+import { createMapBoundary } from './mapBoundary';
 import { createMemorialSprite } from './memorialStone';
 import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type ShinraState } from '../game/shinraTensei';
 import { createDamageNumbers } from './damageNumbers';
@@ -257,6 +258,10 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const splashes=createSplashes(scene);runCleanups.push(()=>splashes.dispose());let othersRippleTimer=0,othersRippleIndex=0;
     // Rodada 89: paisagem de fundo pintada (panorama da vila) em volta do mapa.
     const landscape=createLandscape(scene,MAP.id);runCleanups.push(()=>landscape.dispose());
+    const boundary=createMapBoundary(MAP.id,terrainHeight,standHeight);
+    scene.add(boundary.root);
+    boundary.root.visible=enabledRef.current;
+    runCleanups.push(()=>boundary.dispose());
     const texture = new THREE.TextureLoader().load('/assets/shinobi-sprites-atlas.png'); texture.colorSpace = THREE.SRGBColorSpace; texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter; texture.generateMipmaps = false;const orochimaruTexture=new THREE.TextureLoader().load('/assets/orochimaru-sprite.svg');orochimaruTexture.colorSpace=THREE.SRGBColorSpace;orochimaruTexture.magFilter=THREE.NearestFilter;orochimaruTexture.minFilter=THREE.NearestFilter;
     // Inimigos comuns/elite: o Sprite vira só dado (posição/escala/cor de acerto) e é desenhado em lote instanciado (enemyRenderer.ts).
     const enemyRenderer=createEnemyRenderer(scene),damageNumbers=createDamageNumbers(scene);const ELITE_TINT=new THREE.Color('#ffb969'),WHITE_TINT=new THREE.Color('#ffffff');
@@ -1504,6 +1509,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function openBijuuArena(){
       arena=true;villageActive=false;traversal.reset();weatherEvent=undefined;weather='Arena da Bijuu';
       if(civicScene)civicScene.root.visible=false;
+      boundary.root.visible=false;
       scene.background=new THREE.Color('#282441');scene.fog=new THREE.Fog('#282441',15,55);
       for(const object of decor)object.visible=false;
       for(const event of events){event.active=false;event.discovered=false;event.obj.visible=false;}
@@ -2067,18 +2073,18 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       const orbitDistance=perspective?perspectiveDistance(zoom):zoom*1.65+10;
       const ox=Math.sin(yaw),oz=Math.cos(yaw);
       // O jogador pode rotacionar a câmera para encontrar uma linha de visão livre.
-      const viewPitch=pitch;
+      offset.set(ox*Math.cos(pitch),Math.sin(pitch),oz*Math.cos(pitch)).multiplyScalar(orbitDistance);
+      camera.position.copy(cameraTarget).add(offset);
+      camera.position.y=cameraHeightAboveTerrain(camera.position.y,camera.position.x,camera.position.z,terrainHeight);
+      const viewLength=Math.hypot(offset.x,offset.z);
+      const viewPitch=Math.atan2(camera.position.y-cameraTarget.y,viewLength);
       cameraViewPitch=viewPitch;
-      offset.set(ox*Math.cos(viewPitch),Math.sin(viewPitch),oz*Math.cos(viewPitch)).multiplyScalar(orbitDistance);
       // Em ortográfica, o chão visível na parte de baixo pode cair atrás da origem da câmera.
       const near=Math.min(-70,orbitDistance-(zoom*.5+4)/Math.sin(viewPitch));
       // Rodada 55: com a câmera bem deitada o chão visível no topo vai além de 240 m — o far acompanha (sem cortar o chão).
-      const far=Math.max(240,orbitDistance+(zoom*.5+4)/Math.sin(viewPitch)+20);
+      const far=Math.max(380,orbitDistance+(zoom*.5+4)/Math.sin(viewPitch)+20);
       if(!perspective&&(Math.abs(camera.near-near)>.05||Math.abs(camera.far-far)>.5)){camera.near=near;camera.far=far;camera.updateProjectionMatrix();}
-      camera.position.copy(cameraTarget).add(offset);
-      // Rodada 55: sem a trava "câmera ≥ chão+1,2" — na ortográfica a posição só ancora o raio de visão (near negativo já
-      // desenha o que fica atrás dela); a trava inclinava a vista sempre que havia morro atrás da câmera.
-      const viewX=camera.position.x-player.position.x,viewZ=camera.position.z-player.position.z,viewLength=Math.hypot(viewX,viewZ);
+      const viewX=camera.position.x-player.position.x,viewZ=camera.position.z-player.position.z;
       for(const {obj,fadeMaterials} of occluders){
         const dx=obj.position.x-player.position.x,dz=obj.position.z-player.position.z;
         const depth=(dx*viewX+dz*viewZ)/viewLength,side=Math.abs(dx*viewZ-dz*viewX)/viewLength;
@@ -2107,7 +2113,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       player.material.fog=false;
       player.material.depthTest=true;
       player.renderOrder=28;
-      const playerOccluded=terrainOccludesActor(player.position.x,player.position.y,player.position.z,yaw,viewPitch,orbitDistance,terrainHeight);
+      const playerOccluded=terrainOccludesActor(player.position.x,player.position.y,player.position.z,yaw,viewPitch,viewLength,terrainHeight);
       playerMotion.fitHealthBar(zoom/Math.max(1,renderer.domElement.clientHeight),!playerOccluded);
       if(sandCloud){sandCloud.visible=jumpHeight>0&&!defeated&&keys.has(' ')&&sandGlideLeft>0&&jumpTime<=jumpDuration*.5;sandCloud.position.set(player.position.x,player.position.y-player.scale.y*.5-.18,player.position.z);}
       sageAura.sprite.visible=enabledRef.current&&!hiddenEffects&&(sageModeActive()||heroId==='kabuto-sabio')&&!defeated;

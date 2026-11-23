@@ -11,6 +11,7 @@ import type { MapId } from '../game/maps';
  * - Kiri: agulhas de pedra finas envoltas em névoa densa.
  */
 export const LANDSCAPE = { radius: 240, bottom: -25, height: 100, width: 768, pixels: 200 } as const;
+export const LANDSCAPE_FLOOR = { radius: LANDSCAPE.radius+10, height:-9 } as const;
 
 type Paint = CanvasRenderingContext2D;
 const TAU = Math.PI * 2;
@@ -67,6 +68,10 @@ export function paintLandscape(map: MapId, canvas: HTMLCanvasElement) {
   ctx.clearRect(0, 0, width, pixels);
   const shape = LANDSCAPE_SHAPES[map], color = PALETTE[map];
   range(ctx, color.far, 70, 70, shape.far);
+  if (map === 'folha') {
+    band(ctx, 75, 117, color.mist, .5);
+    range(ctx, '#667f72', 54, 51, u=>.38+.16*s(u,6,2)+.09*Math.abs(s(u,17)));
+  }
   if (map === 'pedra' || map === 'nevoa') band(ctx, 60, 120, color.mist, map === 'nevoa' ? .85 : .7);
   if (map === 'pedra') { // cachoeiras finas descendo dos picos
     ctx.fillStyle = 'rgba(240,248,255,.85)';
@@ -78,16 +83,15 @@ export function paintLandscape(map: MapId, canvas: HTMLCanvasElement) {
     for (let y = 46; y < 96; y += 7) for (let x = 0; x < width; x++) if (40 + 60 * shape.near(x / width) > y) ctx.fillRect(x, pixels - y, 1, 1);
     range(ctx, '#e3c58f', 18, 14, u => .5 + .5 * s(u, 23, 1));
   }
-  if (map === 'folha') { // copas das árvores na colina e o Monte Hokage
+  if (map === 'folha') {
     ctx.fillStyle = color.detail;
-    for (let x = 0; x < width; x += 3) { const h = 40 + 60 * shape.near(x / width); ctx.fillRect(x, pixels - h - 2, 3, 3); }
-    const x0 = Math.round(width * .08), w = 70;
-    ctx.fillStyle = '#b7a58c'; ctx.fillRect(x0, pixels - 118, w, 80);
-    ctx.fillStyle = '#9b8a72';
-    for (let k = 0; k < 4; k++) { // rostos: testa, olhos e boca em blocos
-      const fx = x0 + 6 + k * 16;
-      ctx.fillRect(fx, pixels - 108, 12, 3); ctx.fillRect(fx + 2, pixels - 100, 3, 2); ctx.fillRect(fx + 7, pixels - 100, 3, 2); ctx.fillRect(fx + 3, pixels - 92, 6, 2);
+    for (let x = 0; x < width; x += 3) {
+      const h = 40+60*shape.near(x/width);
+      const crown=3+Math.round(2*Math.abs(s(x/width,67,.5)));
+      ctx.fillRect(x,pixels-h-crown,3,crown+4);
+      ctx.fillRect(x,pixels-h+7,3,Math.round(7+4*s(x/width,41)));
     }
+    range(ctx,'#385b3d',20,24,u=>.42+.22*s(u,8)+.10*Math.abs(s(u,43)));
   }
   if (map === 'nevoa') band(ctx, 30, 80, color.mist, .75);
   band(ctx, 0, 40, color.mist, map === 'areia' ? .35 : .5);
@@ -106,10 +110,21 @@ export function createLandscape(scene: THREE.Scene, map: MapId) {
   const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.BackSide, fog: false, depthWrite: false });
   const mesh = new THREE.Mesh(geometry, material);
   mesh.renderOrder = -1;
-  scene.add(mesh);
+  // O piso ao fundo fecha a vista entre o chão quadrado e o panorama circular.
+  const floorGeometry=new THREE.CircleGeometry(LANDSCAPE_FLOOR.radius,128);
+  floorGeometry.rotateX(-Math.PI/2);
+  const floorMaterial=new THREE.MeshBasicMaterial({color:PALETTE[map].near,side:THREE.DoubleSide});
+  const floor=new THREE.Mesh(floorGeometry,floorMaterial);
+  floor.position.y=LANDSCAPE_FLOOR.height;
+  floor.name='fundo-abaixo-do-terreno';
+  scene.add(mesh,floor);
   return {
     /** Com névoa de clima o fundo some um pouco, para não destoar. */
     setFogged(fogged: boolean) { material.opacity = fogged ? .35 : 1; },
-    dispose() { scene.remove(mesh); geometry.dispose(); material.dispose(); texture.dispose(); },
+    dispose() {
+      scene.remove(mesh,floor);
+      geometry.dispose(); material.dispose(); texture.dispose();
+      floorGeometry.dispose(); floorMaterial.dispose();
+    },
   };
 }

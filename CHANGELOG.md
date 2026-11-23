@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 23/11/2026 · Base do Monte Hokage e limite visível
+
+- A face e o verso do Monte Hokage terminam dentro da encosta. A arte se abre levemente na base para esconder o vão que aparecia nos giros de câmera. A rota de escalada continua acessível até o mirante.
+- As quatro regiões de missão ganharam um perímetro com postes e travessas na borda já usada pelo movimento. Konoha tem um bosque depois da cerca e mais camadas de colinas ao fundo.
+- A posição de câmera ganha altura só quando toca o relevo. Um piso distante e opaco cobre a junção do terreno com o panorama, e o alcance ortográfico inclui o fundo.
+- **TESTADO.** TypeScript, 235 testes, duas mutações focadas, verificação de regras, build e renderização nativa. A rotação da câmera em uma partida continua pendente de validação.
+
 ## 23/11/2026 · Acabamento do chão de Konoha
 
 - As ruas de terra batida têm acostamentos que se misturam ao gramado. As praças mantêm o piso de pedra, com os cantos suavizados. O relevo acompanha a transição entre as superfícies.

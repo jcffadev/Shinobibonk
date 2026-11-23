@@ -429,3 +429,7 @@ Referências consultadas: [A casa dos Uzumaki no anime](https://naruto-official.
 ## Acabamento do chão de Konoha
 
 As ruas mantêm terra batida, as praças usam pedra e o gramado se mistura aos acostamentos. O relevo usa as mesmas faixas suaves da pintura para evitar degraus artificiais nas bordas. A escala do atlas e a filtragem preservam detalhes no plano inclinado.
+
+## Limite visível e vista acima do terreno
+
+As missões usam um perímetro de postes e travessas no limite de movimento. Em Konoha, um bosque separa a cerca das colinas e da névoa do panorama. O Monte Hokage mergulha na encosta. A câmera conserva a inclinação pedida quando há folga e sobe quando a posição da órbita alcança o terreno. Uma superfície opaca fecha a junção inferior do panorama.

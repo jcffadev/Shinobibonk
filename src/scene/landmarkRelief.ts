@@ -13,9 +13,13 @@ export const HOKAGE_MOUNTAIN_ROUTE = [
 ] as const;
 
 /** A frente conserva a arte. O verso é rocha tridimensional limitada pela silhueta de cada fileira. */
-export function makeLandmarkRelief(index:number,width:number,height:number,depth:number,art:THREE.Texture,stone:THREE.Material) {
+export function makeLandmarkRelief(
+  index:number,width:number,height:number,depth:number,art:THREE.Texture,stone:THREE.Material,
+  footing?:(x:number,z:number)=>number,
+) {
   const root=new THREE.Group();
-  const face=new THREE.Mesh(new THREE.PlaneGeometry(width,height),
+  const faceGeometry=new THREE.PlaneGeometry(width,height,footing?48:1,footing?32:1);
+  const face=new THREE.Mesh(faceGeometry,
     new THREE.MeshBasicMaterial({map:art,alphaTest:.26}));
   face.position.set(0,height/2,.025);
   root.add(face);
@@ -41,6 +45,22 @@ export function makeLandmarkRelief(index:number,width:number,height:number,depth
   geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
   geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
   geometry.setIndex(indices);
+  if(footing){
+    // Enterra a borda do alfa na encosta, tanto na face pintada quanto no verso de pedra.
+    function embedBase(mesh:THREE.BufferGeometry,yOffset:number,zOffset:number) {
+      const points=mesh.attributes.position;
+      for(let i=0;i<points.count;i++){
+        const x=points.getX(i),y=points.getY(i)+yOffset,z=points.getZ(i)+zOffset;
+        const blend=1-THREE.MathUtils.smoothstep(y/height,.205,.39);
+        if(blend===0)continue;
+        const edgeZ=z+blend*.55*(z < -depth*.55 ? -1 : 1);
+        const buried=footing!(x,edgeZ)-height*.232-.38;
+        points.setXYZ(i,x,y+blend*buried-yOffset,edgeZ-zOffset);
+      }
+    }
+    embedBase(faceGeometry,face.position.y,face.position.z);
+    embedBase(geometry,0,0);
+  }
   geometry.computeVertexNormals();
   const rock=new THREE.Mesh(geometry,stone);
   rock.name='landmark-rock-relief';

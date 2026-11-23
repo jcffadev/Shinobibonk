@@ -26,3 +26,8 @@ export const GROUND_DEPTH_OFFSET = { factor: 2, units: 4 } as const;
 export function footHeight(ground: (x: number, z: number) => number, x: number, z: number, radius = FOOT_RADIUS) {
   return Math.max(ground(x, z), ground(x + radius, z), ground(x - radius, z), ground(x, z + radius), ground(x, z - radius));
 }
+
+/** Dá folga ao plano próximo, inclusive ao orbitar sobre a quina de um terraço. */
+export function cameraHeightAboveTerrain(y:number,x:number,z:number,ground:(x:number,z:number)=>number) {
+  return Math.max(y,footHeight(ground,x,z,.62)+.80);
+}

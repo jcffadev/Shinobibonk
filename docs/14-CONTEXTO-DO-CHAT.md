@@ -2629,3 +2629,12 @@ A rodada usa as referências para definir altura, densidade, tipos de telhado, f
 > porue o chão ficou esquisito?
 
 A prévia anterior juntava as texturas numa imagem de baixa resolução. As bordas das ruas também cortavam a pintura e a altura de forma brusca. Corrigimos os dois pontos, deixando visível a terra batida, a pedra das praças e a transição para a grama. A renderização nativa foi refeita com o shader do jogo e texturas separadas.
+
+## Monte Hokage e horizonte · 23/11/2026
+
+> monumento dos kages, você precisa conseguir esconder essa parte de terreno embaixo para não ficar feio
+>
+> essa parte do terreno não tem como ficar assim... o jogador precisa ter uma noçao melhor de onde conseguir ir no limite do mapa, ter alguma barreira ou algo que mostre que ali é o final do mapa para correr... precisamos colocar algo no horizonte para ficar bonito o mapa do jogo...
+> abaixo do chão, as vezes quando viramos a câmera esta ficando azul sem renderizar algo, rpecisamos corrigir para não aparecer nunca isso.
+
+A rocha do monumento foi encaixada no terreno pela frente e pelo verso. Postes e travessas marcam o fim da área jogável das quatro regiões. Konoha ganhou o bosque distante e um panorama com colinas em camadas. A câmera recebe folga contra a encosta e há uma base opaca sob o panorama. A conferência em partida está pendente.

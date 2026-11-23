@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'base do Monte Hokage entra no chão', arquivo: 'src/scene/landmarkRelief.ts', de: 'embedBase(faceGeometry,face.position.y,face.position.z);', para: '' },
+  { regra: 'câmera orbita acima do terreno', arquivo: 'src/scene/heightField.ts', de: 'Math.max(y,footHeight(ground,x,z,.62)+.80)', para: 'y' },
   { regra: 'acostamento de Konoha mistura os materiais', arquivo: 'src/scene/villageLayout.ts', de: '1-MathUtils.smoothstep(distance+roughness,-.4,.57)', para: 'Number(distance<0)' },
   { regra: 'NPC de missão mantém orientação fixa', arquivo: 'src/scene/missionStructures.ts', de: '  return mesh;', para: '  return new THREE.Sprite(art);' },
   { regra: 'degraus têm uma só superfície de piso', arquivo: 'src/scene/villageArchitecture.ts', de: 'quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);', para: 'quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);' },
