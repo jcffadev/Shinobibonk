@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Piso de Konoha · 23/11/2026
+
+- **IMPLEMENTADO:** as bordas de ruas e praças misturam materiais e altura. O atlas das superfícies preserva sua resolução na prévia nativa.
+- **PENDENTE DE VALIDAÇÃO E2E:** conferir o piso e os acostamentos em movimento, incluindo ângulos baixos e zoom afastado.
+
 ## Eventos, água e direção visual de Konoha · 23/11/2026
 
 - **IMPLEMENTADO:** orientação fixa de estruturas e NPCs, relevo das estátuas e do Monte Hokage, rota de subida até o mirante, casas diferenciadas, Academia, portão com folhas verdes e água com reflexo aproximado.

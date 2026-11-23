@@ -324,6 +324,28 @@ test('eventos e NPCs usam volume fixo e continuam clicáveis de perfis diferente
   structures.dispose();
 });
 
+test('as bordas das vias de Konoha misturam os materiais sem criar um degrau',async()=>{
+  const {konohaGroundBands}=await load('/src/scene/villageLayout.ts');
+  const {paintGround,RENDERED_GROUND_SIZE}=await load('/src/scene/terrainArt.ts');
+  const layout=createVillageLayout('folha',6308),waters=villageWater('folha');
+  const ground=createVillageGround(layout,waters);
+  const bands=(x,z)=>konohaGroundBands(layout,x,z);
+  assert.equal(bands(8,45).road,1);
+  assert.equal(bands(11,45).road,0);
+  assert.equal(bands(-21,22).plaza,1);
+  assert.equal(bands(-29,15).plaza,0);
+  const edge=bands(9.45,45).road;
+  assert.ok(edge>.2 && edge<.8,'a borda recebe os dois materiais');
+  assert.ok(Math.abs(ground(9.44,45)-ground(9.46,45))<.025);
+  const size=512;
+  const {surfaces}=paintGround(MAP_BY_ID.folha,ground,size,{waters,bands,surface:(x,z)=>villageSurface(layout,x,z)});
+  const row=size-1-Math.round((45/RENDERED_GROUND_SIZE+.5)*size);
+  const column=Math.round((9.45/RENDERED_GROUND_SIZE+.5)*size);
+  const pixel=surfaces.subarray(4*(row*size+column),4*(row*size+column+1));
+  assert.ok(pixel[1]>0 && pixel[1]<255,'a máscara mantém cobertura fracionária');
+  assert.equal(pixel.reduce((sum,weight)=>sum+weight),255);
+});
+
 test('monumentos têm relevo dentro da silhueta e é possível escalar até o mirante',async()=>{
   const {HOKAGE_MOUNTAIN_ROUTE}=await load('/src/scene/landmarkRelief.ts');
   const {layout,ground,waters,solids,scenery}=sceneFor('folha',6308);

@@ -24,3 +24,7 @@ Construa o piso e os espelhos a partir de um só perfil de degraus. Evite a sobr
 Use referências verificadas da obra para as proporções, os materiais, a composição e os elementos de identificação. Modele volumes com frente, lados e fundo. Eventos, NPCs e portais de missão mantêm orientação de mundo. Nos monumentos texturizados, alinhe o verso ao contorno da arte e faça o apoio coincidir com o chão. Quando um mirante precisa ser acessível, siga o caminho de saliências no código e teste o contato desde a primeira subida.
 
 Use mais detalhes perto da rota principal e nos marcos da vila. Agrupe construções por trecho. Desenhe uma área limitada de sombras em qualidade alta e média e confira o impacto no FPS. Trate a água como superfície com graus de profundidade, ondas direcionais e uma margem legível.
+
+## Chão e acostamentos
+
+Use o mesmo contorno para a transição de material e de altura nas ruas e praças. Mantenha o desenho macro das vias na máscara de cobertura e amostre o atlas de perto no shader. A prévia deve renderizar o detalhe do atlas separado da máscara. Compare o piso de perto e de ângulo baixo no mesmo enquadramento.

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 23/11/2026 · Acabamento do chão de Konoha
+
+- As ruas de terra batida têm acostamentos que se misturam ao gramado. As praças mantêm o piso de pedra, com os cantos suavizados. O relevo acompanha a transição entre as superfícies.
+- O shader usa o atlas em escala menor e com filtragem anisotrópica maior, para preservar detalhes vistos de ângulo baixo. A pintura em cache acompanha a semente da vila.
+- A comparação visual nativa foi feita com o shader e o atlas separados. A conferência do chão durante a partida fica na validação da branch de vilas.
+- **TESTADO.** TypeScript, 232 testes, mutação focada, verificação de regras e build de produção passaram.
+
 ## 23/11/2026 · Eventos fixos e marcos de Konoha
 
 - Portais, altares, mercador e Ichiraku usam volumes fixos. Os NPCs, Zetsu e o Totem usam arte em malhas fixas. O clique continua disponível nas faces do Ichiraku e do Zetsu. Cada altar conserva a cor de raridade.

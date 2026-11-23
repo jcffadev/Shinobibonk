@@ -2623,3 +2623,9 @@ O piscar vinha da sobreposição de dois pisos na mesma altura. Cada degrau pass
 > exemplo de uma cidade legal, konoha em um jogo do xbox, conseguimos chegar perto disso?
 
 A rodada usa as referências para definir altura, densidade, tipos de telhado, fachada, canal, portal de entrada e encosta. Salvas as artes próprias, os NPCs viraram faces fixas, os postos ganharam volume e os monumentos receberam verso com a silhueta da rocha. É possível escalar pelas saliências do lado oeste do Monte Hokage. Em Konoha, usamos mais resolução de sombras conforme a qualidade. A água mantém espumas e ondas de contato, com margem e iluminação revisadas. Os testes por código e a renderização nativa passaram, com conferência em uma partida e medição de desempenho ainda pendentes.
+
+## Chão de Konoha · 23/11/2026
+
+> porue o chão ficou esquisito?
+
+A prévia anterior juntava as texturas numa imagem de baixa resolução. As bordas das ruas também cortavam a pintura e a altura de forma brusca. Corrigimos os dois pontos, deixando visível a terra batida, a pedra das praças e a transição para a grama. A renderização nativa foi refeita com o shader do jogo e texturas separadas.

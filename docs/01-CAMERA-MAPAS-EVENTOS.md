@@ -425,3 +425,7 @@ Monte Hokage e estátuas usam o alfa da arte própria do projeto para limitar os
 Qualidade Alta e Média habilitam sombras locais na vila da Folha. A câmera da luz cobre o entorno do jogador e atualiza o mapa de sombras a cada 4 m. A água usa profundidade geométrica, normais animadas e reflexo aproximado do céu em uma passagem da própria superfície.
 
 Referências consultadas: [A casa dos Uzumaki no anime](https://naruto-official.com/en/anime/boruto/list/01_962), [Academia Ninja](https://naruto.fandom.com/wiki/Academy), [Ichiraku no anime](https://naruto-official.com/en/anime/naruto1/list/01_392) e as imagens enviadas pelo usuário.
+
+## Acabamento do chão de Konoha
+
+As ruas mantêm terra batida, as praças usam pedra e o gramado se mistura aos acostamentos. O relevo usa as mesmas faixas suaves da pintura para evitar degraus artificiais nas bordas. A escala do atlas e a filtragem preservam detalhes no plano inclinado.

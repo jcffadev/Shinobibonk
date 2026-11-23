@@ -1,4 +1,5 @@
 import type { MapId } from '../game/maps';
+import { MathUtils } from 'three';
 import { inHagoromoClearing, KONOHA_SQUARES, KONOHA_STATUES, villageLots, villageRandom, type UrbanLot } from './villageDistricts';
 import { leafRiver } from './water';
 
@@ -33,6 +34,7 @@ const inlandStreets=[-8,8,-24,24];
 const konohaStreets=[-69,-58,-48,-40,-33,-25,-8,8,25,33,40,48,58,69];
 const konohaBridges=[19,40,59].map(z=>({x:leafRiver(z),z,halfSpan:4.5,width:3.1,rise:.68,wood:true}));
 const canalStreets=[3.05,17.05];
+const laneHalfWidth=1.45, crossingHalfWidth=1.65;
 
 export const VILLAGES: Record<MapId, VillageLayout> = {
   folha: {
@@ -100,8 +102,31 @@ export function villageSurface(layout: VillageLayout, x: number, z: number): 'ro
   if (Math.abs(x - trail) < 2.5 && z < 25 && z > layout.bounds.north) return 'road';
   if (z > layout.bounds.south && z < 2) return;
   const streets=layout.map==='nevoa'?canalStreets:layout.map==='folha'?konohaStreets:inlandStreets;
-  if (z < layout.bounds.south && z > layout.bounds.north && streets.some(side => Math.abs(x - side) < 1.45)) return 'road';
-  if (Math.abs(x) < layout.bounds.x && layout.crossings.some(crossing => Math.abs(z - crossing) < 1.65)) return 'road';
+  if (z < layout.bounds.south && z > layout.bounds.north && streets.some(side => Math.abs(x - side) < laneHalfWidth)) return 'road';
+  if (Math.abs(x) < layout.bounds.x && layout.crossings.some(crossing => Math.abs(z - crossing) < crossingHalfWidth)) return 'road';
+}
+
+/** Acostamentos e cantos arredondados acompanham a rede de ruas, em metros de mundo. */
+export function konohaGroundBands(layout:VillageLayout, x:number, z:number) {
+  const {north,south}=layout.bounds;
+  if (x < -75 || x > 75 || z < north-1 || z > south+1 || inHagoromoClearing(x,z))
+    return {road:0,plaza:0};
+  const roughness=.14*Math.sin(x*2.1+z*1.3)+.08*Math.sin(z*4.1-x*2.9);
+  const edge=(distance:number)=>1-MathUtils.smoothstep(distance+roughness,-.4,.57);
+  const box=(dx:number,dz:number,rx:number,rz:number,radius:number)=>{
+    const a=Math.abs(dx)-rx+radius, b=Math.abs(dz)-rz+radius;
+    return (a>0&&b>0?Math.hypot(a,b):Math.max(a,b))-radius;
+  };
+  let road=box(x-Math.sin((z+8)*.08)*.8,z-(north+25)/2,2.5,(25-north)/2,.65);
+  road=Math.min(road,box(x,z-(8+south)/2,2.65,(south-8)/2,.65));
+  for(const lane of konohaStreets)
+    road=Math.min(road,box(x-lane,z-(north+south)/2,laneHalfWidth,(south-north)/2,.55));
+  for(const crossing of layout.crossings)
+    road=Math.min(road,box(x,z-crossing,layout.bounds.x,crossingHalfWidth,.6));
+  let plaza=box(x-layout.plaza.x,z-layout.plaza.z,9.6,4.8,1.4);
+  for(const square of KONOHA_SQUARES)
+    plaza=Math.min(plaza,box(x-square.x,z-square.z,square.rx,square.rz,1.2));
+  return {road:edge(road),plaza:edge(plaza)};
 }
 
 export function insideVillage(layout: VillageLayout, x: number, z: number) {

@@ -184,6 +184,8 @@ const rgb = (hex: string) => [1, 3, 5].map(offset => parseInt(hex.slice(offset, 
 type GroundStyle = {
   surface(x:number,z:number): 'road'|'plaza'|'rock'|undefined;
   waters: readonly WaterBody[];
+  seed?: number;
+  bands?(x:number,z:number): { road:number; plaza:number };
 };
 
 export function paintGround(map: GameMap, ground: (x: number, z: number) => number = (x, z) => groundHeight(map.id, x, z), size = 1024, style?: GroundStyle) {
@@ -222,7 +224,22 @@ export function paintGround(map: GameMap, ground: (x: number, z: number) => numb
         shade *= (h0 * 4.2) % 1 < .5 ? .84 : 1.02;
       } else if (!onPath && fleck > .94) shade += .14;
       const offset = 4 * (j * size + i);
-      if (!river) surfaces[4 * ((size - 1 - j) * size + i) + (inPlaza ? 3 : onPath || shore ? 1 : stone ? 2 : 0)] = 255;
+      const maskOffset = 4 * ((size - 1 - j) * size + i);
+      if (!river && !shore && style?.bands) {
+        const bands=style.bands(x,z);
+        const paving=Math.round(bands.plaza*255);
+        const path=Math.round(bands.road*(255-paving));
+        surfaces[maskOffset+(stone?2:0)] = 255-paving-path;
+        surfaces[maskOffset+1] = path;
+        surfaces[maskOffset+3] = paving;
+        for (let channel=0; channel<3; channel++) {
+          const earth=stone?rock[channel]:grass[channel];
+          pixels.data[offset+channel]=(earth*(255-paving-path)+dirt[channel]*path+plaza[channel]*paving)*shade/255;
+        }
+        pixels.data[offset+3]=255;
+        continue;
+      }
+      if (!river) surfaces[maskOffset + (inPlaza ? 3 : onPath || shore ? 1 : stone ? 2 : 0)] = 255;
       for (let channel = 0; channel < 3; channel++) pixels.data[offset + channel] = color[channel] * shade;
       pixels.data[offset + 3] = 255;
     }
@@ -231,12 +248,13 @@ export function paintGround(map: GameMap, ground: (x: number, z: number) => numb
 }
 
 /** Rodada 95: o chão pintado do último mapa fica guardado — jogar de novo o mesmo mapa não repinta. */
-let paintedGround: { id: GameMap['id']; village: boolean; size: number; data: Uint8ClampedArray; surfaces: Uint8Array } | null = null;
+let paintedGround: { id: GameMap['id']; village: boolean; seed?:number; size: number; data: Uint8ClampedArray; surfaces: Uint8Array } | null = null;
 
 /** Textura ortográfica: trilha e materiais usam as mesmas coordenadas do terreno. */
 export function groundArt(map: GameMap, ground?: (x: number, z: number) => number, style?: GroundStyle) {
   const size = 1024;
-  if (!paintedGround || paintedGround.id !== map.id || paintedGround.size !== size || paintedGround.village!==!!style) paintedGround = { id: map.id, size, village:!!style, ...paintGround(map, ground, size, style) };
+  if (!paintedGround || paintedGround.id !== map.id || paintedGround.size !== size || paintedGround.village!==!!style || paintedGround.seed!==style?.seed)
+    paintedGround = { id: map.id, size, village:!!style, seed:style?.seed, ...paintGround(map, ground, size, style) };
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = size;
   const context = canvas.getContext('2d')!;
@@ -255,13 +273,15 @@ export function groundArt(map: GameMap, ground?: (x: number, z: number) => numbe
 /** Alta resolução local mesmo quando a máscara tem o tamanho da região inteira. */
 export function createGroundMaterial(map: GameMap, ground?: (x: number, z: number) => number, style?: GroundStyle) {
   const { texture, surfaces, size } = groundArt(map, ground, style);
+  const detailedStreets=Boolean(style?.bands);
   const mask = new THREE.DataTexture(surfaces, size, size);
   mask.minFilter = mask.magFilter = THREE.LinearFilter;
   mask.needsUpdate = true;
   const atlas = new THREE.TextureLoader().load(map.id==='folha'?'/assets/ground-materials-v1.png':`/assets/ground-${map.id}-v2.png`);
   atlas.colorSpace = THREE.SRGBColorSpace;
-  atlas.anisotropy = 4;
+  atlas.anisotropy = detailedStreets?8:4;
   const material = new THREE.MeshStandardMaterial({ map: texture, roughness: 1, flatShading: true });
+  material.customProgramCacheKey=()=>detailedStreets?'ground-konoha':'ground-standard';
   material.onBeforeCompile = shader => {
     shader.uniforms.terrainAtlas = { value: atlas };
     shader.uniforms.terrainMask = { value: mask };
@@ -277,10 +297,10 @@ export function createGroundMaterial(map: GameMap, ground?: (x: number, z: numbe
     ` + shader.fragmentShader.replace('#include <map_fragment>', `
       #include <map_fragment>
       vec4 coverage = texture2D(terrainMask, vMapUv);
-      vec3 tiles = terrainSample(vMapUv, vec2(0., 1.), 9.) * coverage.r
-        + terrainSample(vMapUv, vec2(1., 1.), 7.) * coverage.g
+      vec3 tiles = terrainSample(vMapUv, vec2(0., 1.), ${detailedStreets?'5.5':'9.'}) * coverage.r
+        + terrainSample(vMapUv, vec2(1., 1.), ${detailedStreets?'4.5':'7.'}) * coverage.g
         + terrainSample(vMapUv, vec2(0., 0.), 8.) * coverage.b
-        + terrainSample(vMapUv, vec2(1., 0.), 6.) * coverage.a;
+        + terrainSample(vMapUv, vec2(1., 0.), ${detailedStreets?'4.5':'6.'}) * coverage.a;
       float amount = dot(coverage, vec4(1.));
       vec3 tinted = diffuseColor.rgb * clamp(dot(tiles, vec3(.299,.587,.114)) * 2.6, .55, 1.3);
       diffuseColor.rgb = mix(diffuseColor.rgb, mix(tinted, tiles, leafPalette), amount * .91);

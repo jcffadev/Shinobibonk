@@ -35,7 +35,7 @@ import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type Shinra
 import { createDamageNumbers } from './damageNumbers';
 import { bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
-import { createVillageLayout, missionMapLayout, shuffledVillageSites, villageDeck, villageSurface, type MapLayout } from './villageLayout';
+import { createVillageLayout, konohaGroundBands, missionMapLayout, shuffledVillageSites, villageDeck, villageSurface, type MapLayout } from './villageLayout';
 import { createVillageGround, villageWater } from './villageTerrain';
 import { createVillageScenery } from './villageScenery';
 import { createFixedMissionNpc, createMissionStructures, type MissionStructure } from './missionStructures';
@@ -237,7 +237,10 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Rodada 55: contorno + preenchimento das áreas reais das técnicas do jogador (só visual; src/scene/techniqueAreas.ts).
     const areas=createTechniqueAreas(scene,terrainHeight);runCleanups.push(()=>areas.dispose());
     const groundLook=village&&waters
-      ?createGroundMaterial(MAP,terrainHeight,{waters,surface:(x,z)=>villageSurface(village,x,z)})
+      ?createGroundMaterial(MAP,terrainHeight,{
+        waters, seed:village.seed, surface:(x,z)=>villageSurface(village,x,z),
+        bands:MAP.id==='folha'?(x,z)=>konohaGroundBands(village,x,z):undefined,
+      })
       :createGroundMaterial(MAP,terrainHeight);
     const terrainGeometry=new THREE.PlaneGeometry(RENDERED_GROUND_SIZE,RENDERED_GROUND_SIZE,340,340);
     const terrainPositions=terrainGeometry.attributes.position;
