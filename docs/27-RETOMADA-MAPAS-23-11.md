@@ -66,3 +66,7 @@ Nesta retomada passaram a checagem TypeScript, `verify-rules`, o build da versã
 ## Continuação no mesmo dia
 
 A branch de revisão parte de `5955bb0`, com os lotes e a arquitetura fixa integrados ao código atual. O experimento de personagem segue no arquivo externo. Consulte a [fila atualizada](13-PENDENCIAS-PARA-CONTINUAR.md). O diagnóstico acima descreve o parcial de onde a integração partiu.
+
+## Promoção para teste no Live
+
+O usuário autorizou a integração da revisão de `vilas-refinadas` a `main`. O estado imediatamente anterior está em `backup/live-antes-vilas-2026-11-23` (`5955bb0`). `mapas_basicos` mantém o histórico anterior às vilas. A revisão do jogo validada é `5b72a16`, com 240 testes, TypeScript e build. A confirmação da versão no endereço público depende do projeto Netlify já usado pelo usuário.

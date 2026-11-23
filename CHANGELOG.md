@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 23/11/2026 · Mapas novos para teste no Live
+
+- O usuário autorizou promover as quatro vilas para teste. O código revisado e validado em `5b72a16` segue para `main`.
+- O estado anterior de `main` foi preservado em `backup/live-antes-vilas-2026-11-23` (`5955bb0`). A branch histórica `mapas_basicos` permanece em `c7581be`.
+- O projeto registra deploy manual no Netlify. A publicação no GitHub e a disponibilidade no endereço hospedado têm verificações próprias.
+
 ## 23/11/2026 · Água, NPCs 3D e acabamento das quatro vilas
 
 - A malha tem subdivisão localizada nas margens, com vértices compartilhados nas transições. A água ganha leito contínuo, borda translúcida e reflexos sinuosos. Passos, ondulações e respingos continuam ativos.

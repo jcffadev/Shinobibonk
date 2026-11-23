@@ -2662,3 +2662,11 @@ A arte do verso foi criada no ImageGen com a frente do atlas como referência. P
 > E voce precisa fazer e aplicar o que fizemos em relação aos outros mapas, o caminho de Konoha esta excelente, mas todos os outros precisam ter a mesma excelencia e refinamento e precisamos melhorar ao máximo que conseguirmos
 
 Corrigimos o quadriculado do leito e os recortes das margens. Os NPCs ganharam modelos 3D articulados e mantêm a orientação, o clique e a interação por E. Suna, Iwa e Kiri receberam bairros, ruas com acabamento equivalente e construções características. A rotação em partida, a interação e o desempenho com horda seguem para validação E2E.
+
+## Mapas novos no Live com backup · 23/11/2026
+
+> Pode colocar no Live pra gente jogar nos mapas e testarmos
+>
+> Salve os outros como backup pra se precisarmos voltar
+
+Preservamos o estado anterior do código em `backup/live-antes-vilas-2026-11-23` e mantivemos `mapas_basicos`. A revisão das vilas passou em 240 testes e foi promovida para teste. O Live hospedado no Netlify demanda identificar e conferir o projeto que serve a publicação.

@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Teste das quatro vilas no Live · 23/11/2026
+
+- **CONFIRMADO:** teste da revisão das vilas autorizado. O ponto de retorno do código anterior é `backup/live-antes-vilas-2026-11-23` (`5955bb0`), além de `mapas_basicos` (`c7581be`).
+- **PENDENTE NO NETLIFY:** identificar o projeto de produção e confirmar qual build está servindo. O processo anterior de publicação era manual. Testes de partida seguem pendentes.
+
 ## Água, NPCs 3D e revisão regional · 23/11/2026
 
 - **IMPLEMENTADO:** terreno detalhado junto às margens, NPCs animados em malhas e expansão de Suna, Iwa e Kiri com ruas e fachadas próprias.
