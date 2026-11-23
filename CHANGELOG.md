@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 23/11/2026 · Recuperação de contexto e estado das vilas
+
+- Revisados os Markdown do projeto principal, as instruções e skills, o guia da cópia de validação, as branches e o parcial local das vilas. A `main` está na rodada 103. A branch dos mapas ainda precisa incorporar as rodadas 97–103.
+- Registradas as últimas decisões do usuário sobre sprites atuais, arquivo externo do low poly, densidade das cidades e orientação fixa das construções.
+- Identificado que a arquitetura local nova ainda não é chamada pela cena. Os 208 testes registrados anteriormente pertencem à primeira versão publicada da branch, antes do parcial atual.
+- [Retomada e próximos passos](docs/27-RETOMADA-MAPAS-23-11.md). Esta rodada atualiza apenas a documentação.
+- Passaram TypeScript, verificação de regras, build da versão principal e conferência do diff documental. Os testes de gameplay e do parcial das vilas não foram repetidos nesta revisão.
+
 ## 16/11/2026 · Pacote de status: Resfriado, reações, resistência e itens que explodem (Rodada 103)
 
 - **Pedido do usuário:** "vamos ter que aumentar um pouco os itens que tem efeito de congelar para balancear e o dano..." e, depois das sugestões, "Sim, implementar".

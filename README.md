@@ -4,6 +4,8 @@ Protótipo jogável de um survivor roguelite inspirado no universo ninja. A base
 
 Repositório: https://github.com/jcffadev/Shinobibonk
 
+[Retomada de 23/11/2026](docs/27-RETOMADA-MAPAS-23-11.md) registra as branches, os mapas em revisão e o trabalho publicado nas rodadas 97–103.
+
 As 114 versões do elenco usam a corrida com braços para trás no deslocamento normal. São cinco vistas e quatro quadros por vista. A ficha e a seleção compartilham o retrato em perfil. [Matriz por versão](docs/development/COBERTURA-DE-VISTAS.md).
 
 O hub inclui ranking local de temporada, Top 100, clãs e fichas com builds e missões. [Regras do ranking e proposta de publicação online](docs/development/RANKING-E-CLAS.md).

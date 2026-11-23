@@ -2556,3 +2556,21 @@ O usuário também mandou imagens de anime de Iwagakure e Kirigakure como refer�
 - Item novo Quebra-Gelo; Esfera Katon e Espelho de Gelo de Haku explodem na morte.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.**
 - **Publicado no GitHub.**
+
+
+## 23/11/2026 — retomada da documentação e do trabalho de mapas
+
+> Veja toda a documentação e o que estavamos fazendo
+
+**Últimos pedidos deste chat que orientam a retomada.**
+
+> beleza, deixe o personagem low polly so pra gente em uma pasta fora da pasta do projeto, o personagem vamos manter os que estão hoje por enquanto...
+> Já o mapa, você me mostrou uma coisa e entregou nem 20% daquilo, a nossa vila quase não tem nada comparado ao que você me mostrou...
+
+> Faça um trabalho bom, seja meticuloso
+
+> veja a imagem varias vezes, entenda o que falta, faça o mapa,
+
+> E as construçõps não podem girar quando girarmos a camera, elas precisam ficar paradas
+
+**Resposta.** A revisão encontrou a versão principal e o GitHub sincronizados na rodada 103, em a394509. Os mapas estão na branch vilas-em-validacao, publicada em d0656ea, com alterações locais posteriores. O low poly está arquivado fora do projeto. A remoção local do protótipo e a arquitetura nova das vilas ainda precisam de integração e publicação. A prioridade é trazer o avanço da base do Claude, concluir as construções fixas e os quarteirões e conferir o resultado contra as imagens de seleção. O relatório de retomada está em docs/27-RETOMADA-MAPAS-23-11.md.

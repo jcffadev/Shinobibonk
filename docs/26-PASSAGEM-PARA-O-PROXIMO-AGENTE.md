@@ -1,5 +1,7 @@
 # 26 · Passagem para o próximo agente (14/11/2026)
 
+**Retomada posterior.** Para continuar a reforma das vilas, comece pelo [estado conferido em 23/11](27-RETOMADA-MAPAS-23-11.md), que inclui o parcial local e as rodadas 97–103. As seções abaixo preservam a passagem anterior.
+
 > O usuário pediu para publicar tudo e continuar com outra IA ("publicar agora… vou continuar com outra IA… Anote tudo e deixe em fila"). Este documento é o ponto de partida. Leia antes: `AGENTS.md`, `docs/development/TESTING_POLICY.md`, `docs/13-PENDENCIAS-PARA-CONTINUAR.md` (tabela "Fila do usuário · 14/11/2026") e o topo do `CHANGELOG.md` (rodadas 54–63).
 
 ## Regras que valem

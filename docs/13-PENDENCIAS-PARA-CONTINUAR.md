@@ -2,6 +2,10 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Retomada conferida em 23/11/2026
+
+A prioridade do Codex é concluir a revisão visual e jogável das quatro vilas. A `main` recebeu as rodadas 97–103 do Claude. A branch `vilas-em-validacao` ainda parte de `c7581be` e tem parcial local posterior a `d0656ea`. Integrar esse avanço da base antes de concluir os mapas. O low poly está arquivado externamente e sua remoção local ainda precisa ser registrada em commit. A arquitetura fixa de casas e quarteirões está escrita, mas falta ligá-la a `villageScenery.ts`. [Estado dos arquivos e ordem de continuação](27-RETOMADA-MAPAS-23-11.md).
+
 ## Retomada do Codex · 15/11/2026
 
 | Frente | Estado |

@@ -386,6 +386,8 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 ## 5. Estado atual do projeto
 
+**Retomada de 23/11/2026.** A versão principal recebeu as rodadas 97–103 do Claude, até `a394509`. Os mapas continuam com o Codex, em branch de validação e com parcial local. O usuário pediu manter os personagens atuais, guardar o low poly externamente e aproximar a densidade e o acabamento das cidades às fotos de seleção. Construções precisam mostrar laterais e fundos com a rotação da câmera. A arquitetura nova ainda precisa ser ligada à cena. [Estado conferido e fila de continuação](27-RETOMADA-MAPAS-23-11.md).
+
 **14/11/2026.** As 114 versões jogáveis usam quatro quadros por vista na caminhada, no pulo e no dash. Os quatro inimigos comuns têm quatro quadros nas mesmas três ações. As nove bijū têm os atlas dianteiro e traseiro. A prova visual em partida continua pendente. Ver [elenco](21-ELASTAO-DE-HEROIS.md) e [fila do Claude](26-PASSAGEM-PARA-O-PROXIMO-AGENTE.md).
 
 - **Repositório:** `https://github.com/jcffadev/Shinobibonk.git`, branch `main`, commits das rodadas 35 (plano) e 36 (segmentação de contexto — ver git log). O usuário decidiu (11/11) **excluir e recriar o repositório** para remover do histórico o zip de origem não verificada e os materiais antigos (execução pendente do usuário; nada preparado para o suporte da GitHub). Até a recriação, commit/push segue neste repositório; depois, `git remote set-url origin <novo-url>` + push. `artifacts/sb-swishes-source.zip` fora do índice e no .gitignore — sai com a exclusão do repositório.

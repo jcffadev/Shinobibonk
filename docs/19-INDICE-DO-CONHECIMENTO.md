@@ -13,6 +13,8 @@
 
 ## Mapa de domínios → onde vive
 
+A recuperação de contexto em 23/11 está em [Retomada dos mapas e estado das branches](27-RETOMADA-MAPAS-23-11.md). Leia antes de continuar a reforma das vilas.
+
 | Domínio | Documentação | Código-fonte (fonte da verdade) |
 |---|---|---|
 | **Scaling e fórmulas** (dificuldade, zonas, tempo, Final Swarm, crescimento, drops) | **[20-SCALING-E-REGULAS.md](20-SCALING-E-REGULAS.md)** | `src/game/progression.ts` · `combat.ts` · `tuning.ts` · `worldScale.ts` · `enemyTiers.ts` |
