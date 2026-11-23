@@ -17,7 +17,7 @@ export type UrbanLot = {
   x: number; z: number; width: number; depth: number; body: number;
   front: -1 | 1; shape: 'round' | 'rect'; use: 'house' | 'shop' | 'terrace';
   palette: number;
-  style?: 'academy' | 'uzumaki' | 'bathhouse' | 'apartments';
+  style?: 'academy' | 'uzumaki' | 'bathhouse' | 'apartments' | 'sand-rotunda' | 'stone-watchtower' | 'mist-dockhouse';
   turns?: -1 | 1;
 };
 
@@ -123,17 +123,27 @@ function clearKonohaLot(lot:UrbanLot) {
 
 const konohaLots=konohaExpansion();
 
+function regionalExpansion(map:Exclude<MapId,'folha'>) {
+  const rows=map==='areia'?[-56,-37,-19,-4,14,24]:map==='pedra'?[-55,-38,-21,-4,14,24]:[-55,-37,-21,-3,14,22];
+  const sides=rows.flatMap((z,row)=>[-38,-33,34,40].map((x,col)=>lotFor(x,z,row,col)));
+  const south=[[-24,15],[-15,16],[-7,20],[7,19],[16,16],[24,17],[-24,24],[27,25]];
+  return [...sides,...south.map(([x,z],i)=>lotFor(x,z,6,i))];
+}
+const regionalLots={areia:regionalExpansion('areia'),pedra:regionalExpansion('pedra'),nevoa:regionalExpansion('nevoa')};
+
 export function villageLots(map:MapId,seed:number):UrbanLot[] {
   const base=VILLAGE_LOTS[map];
   const random=villageRandom(seed);
-  const candidates=map==='folha'?[...base,...konohaLots]:base;
+  const candidates=[...base,...(map==='folha'?konohaLots:regionalLots[map])];
   return candidates.flatMap((lot,index)=>{
     const scale=seed ? 1.09+(random()-.5)*.13 : 1;
     const x=lot.x+(seed?(random()-.5)*1.24:0);
     const z=lot.z+(seed?(random()-.5)*1.05:0);
     const body=lot.body*(seed?1.12+(random()-.5)*.17:1);
     const turns=map==='folha'&&Math.abs(x)<9&&z> -8 ? x<0?1:-1 : undefined;
-    const style=map!=='folha'?undefined
+    const style=map==='areia'?index%7===3?'sand-rotunda':undefined
+      :map==='pedra'?index%7===4?'stone-watchtower':undefined
+      :map==='nevoa'?index%6===2?'mist-dockhouse':undefined
       :lot.x===-14.9&&lot.z< -54?'academy'
       :lot.x===-7.2&&lot.z>5?'uzumaki'
       :lot.x===29&&lot.z===36?'bathhouse'
@@ -146,7 +156,13 @@ export function villageLots(map:MapId,seed:number):UrbanLot[] {
     if(style==='uzumaki'){placed.shape='round';placed.depth=placed.width;placed.body*=.93;placed.front=1;}
     if(style==='bathhouse'){placed.shape='rect';placed.width=5.30;placed.front=1;}
     if(style==='apartments')placed.body*=1.25;
+    if(map==='areia'){placed.shape='round';placed.depth=placed.width;}
+    if(style==='sand-rotunda'){placed.body*=1.19;placed.use='shop';}
+    if(style==='stone-watchtower'){placed.shape='round';placed.depth=placed.width*.92;placed.body*=1.38;}
+    if(style==='mist-dockhouse'){placed.shape='rect';placed.use='terrace';}
     if(map==='folha'&&index>=base.length&&!clearKonohaLot(placed))return [];
+    if(map!=='folha'&&index>=base.length
+      &&(waterDistance(map,x,z).outside<3.35||(map==='nevoa'&&Math.abs(x-10.5)<8)))return [];
     return [placed];
   });
 }

@@ -27,7 +27,7 @@ test('Zetsu sobe gradualmente; os três pergaminhos ficam separados', () => {
 
 test('Zetsu inicia por clique ou E, e a última baixa solta os pergaminhos sem selamento', () => {
   const src = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
-  assert.match(src, /npcRay\.intersectObject\(zetsuEvent\.obj,false\)\.length&&startAkatsukiAmbush\(\)/);
+  assert.match(src, /npcRay\.intersectObject\(zetsuEvent\.obj,true\)\.length&&startAkatsukiAmbush\(\)/);
   assert.match(src, /if\(event===zetsuEvent\)\{startAkatsukiAmbush\(\);return;\}/);
   assert.match(src, /const hp=akatsukiAmbushHp\(threatNow\(\)\.hp\)/);
   assert.match(src, /if\(akatsukiEnemies\.delete\(enemy\)\)\{[\s\S]*?trapRing\(x,z,AKATSUKI_AMBUSH\.rewards,2\.8\)[\s\S]*?spawnPickup\('sealDrop'/);

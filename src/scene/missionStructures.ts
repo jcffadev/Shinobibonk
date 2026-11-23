@@ -5,31 +5,6 @@ import { ARCHITECTURE_ATLAS, fitArchitectureTile, type ArchitectureSurface } fro
 
 export type MissionStructure = 'guardian' | 'ramen' | 'merchant' | 'altar';
 
-/** A small four-sided relief. All faces keep the same orientation in world space. */
-export function createFixedMissionNpc(art:THREE.SpriteMaterial) {
-  const faces:THREE.PlaneGeometry[]=[];
-  const depth=.15;
-  for(const side of [-1,1]){
-    const front=new THREE.PlaneGeometry(1,1);
-    front.rotateY(side===1?0:Math.PI);
-    front.translate(0,0,side*depth/2);
-    faces.push(front);
-    const flank=new THREE.PlaneGeometry(depth,1);
-    flank.rotateY(side*Math.PI/2);
-    flank.translate(side*.5,0,0);
-    faces.push(flank);
-  }
-  const geometry=mergeGeometries(faces)!;
-  faces.forEach(face=>face.dispose());
-  const material=new THREE.MeshBasicMaterial({
-    map:art.map,color:art.color,opacity:art.opacity,transparent:art.transparent,
-    alphaTest:art.alphaTest,depthWrite:true,
-  });
-  const mesh=new THREE.Mesh(geometry,material);
-  mesh.name='mission-npc-fixed';
-  return mesh;
-}
-
 export function createMissionStructures() {
   const atlas=new THREE.TextureLoader().load(ARCHITECTURE_ATLAS);
   atlas.colorSpace=THREE.SRGBColorSpace;

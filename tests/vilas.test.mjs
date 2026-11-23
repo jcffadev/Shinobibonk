@@ -295,13 +295,14 @@ test('Konoha ocupa aproximadamente 80% da área jogável com bairros conectados'
 
 
 test('eventos e NPCs usam volume fixo e continuam clicáveis de perfis diferentes',async()=>{
-  const {createFixedMissionNpc,createMissionStructures}=await load('/src/scene/missionStructures.ts');
+  const {createMissionStructures}=await load('/src/scene/missionStructures.ts');
+  const {createMissionNpc,missionNpcForEvent}=await load('/src/scene/missionNpcs.ts');
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(52,1,.1,40);
   const structures=createMissionStructures();
-  const npc=createFixedMissionNpc(new THREE.SpriteMaterial({map:new THREE.Texture(),alphaTest:.1}));
+  const zetsu=createMissionNpc('zetsu'),npc=zetsu.root;
   const actors=[npc,...['guardian','ramen','merchant','altar'].map(kind=>structures.make(kind,0x85caec).obj)];
   for(const [i,obj] of actors.entries()){
-    obj.position.set(i*3,1,0);
+    obj.position.set(i*3,0,0);
     scene.add(obj);
   }
   scene.updateMatrixWorld(true);
@@ -309,27 +310,45 @@ test('eventos e NPCs usam volume fixo e continuam clicáveis de perfis diferente
   const ray=new THREE.Raycaster();
   for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5]){
     for(const [i,obj] of actors.entries()){
-      camera.position.set(obj.position.x+Math.sin(angle)*6,1,Math.cos(angle)*6);
-      camera.lookAt(obj.position);
+      camera.position.set(obj.position.x+Math.sin(angle)*6,.52,Math.cos(angle)*6);
+      camera.lookAt(obj.position.x,.52,obj.position.z);
       camera.updateMatrixWorld();
       scene.updateMatrixWorld(true);
       assert.ok(obj.matrixWorld.equals(poses[i]));
       obj.traverse(child=>assert.ok(!child.isSprite));
       if(obj===npc){
         ray.setFromCamera(new THREE.Vector2(),camera);
-        assert.ok(ray.intersectObject(npc,false).length>0,'NPC tem uma face clicável de todos os lados');
+        assert.ok(ray.intersectObject(npc,true).length>0,'NPC tem volume clicável de todos os lados');
       }
     }
+  }
+  zetsu.dispose();
+  const ids=['shikamaru','orochimaru','ebisu','iruka','challenge','slot','arsenal','youth','trader','sapos-sabios'].map(missionNpcForEvent);
+  assert.equal(new Set(ids).size,ids.length);
+  for(const id of [...ids,'teuchi','naruto']){
+    const actor=createMissionNpc(id);
+    const bounds=new THREE.Box3().setFromObject(actor.root);
+    assert.ok(bounds.max.z-bounds.min.z>.19,id+' tem profundidade modelada');
+    actor.root.traverse(node=>{
+      assert.ok(!node.isSprite);
+      if(node.isMesh)assert.ok(!node.material.map,'figura feita de malhas coloridas');
+    });
+    const head=actor.root.getObjectByName('cabeca');
+    actor.update(.2);
+    const initial=head.rotation.y;
+    actor.update(1.3);
+    assert.notEqual(head.rotation.y,initial,id+' tem animação de repouso');
+    actor.dispose();
   }
   structures.dispose();
 });
 
 test('as bordas das vias de Konoha misturam os materiais sem criar um degrau',async()=>{
-  const {konohaGroundBands}=await load('/src/scene/villageLayout.ts');
+  const {villageGroundBands}=await load('/src/scene/villageLayout.ts');
   const {paintGround,RENDERED_GROUND_SIZE}=await load('/src/scene/terrainArt.ts');
   const layout=createVillageLayout('folha',6308),waters=villageWater('folha');
   const ground=createVillageGround(layout,waters);
-  const bands=(x,z)=>konohaGroundBands(layout,x,z);
+  const bands=(x,z)=>villageGroundBands(layout,x,z);
   assert.equal(bands(8,45).road,1);
   assert.equal(bands(11,45).road,0);
   assert.equal(bands(-21,22).plaza,1);
@@ -344,6 +363,54 @@ test('as bordas das vias de Konoha misturam os materiais sem criar um degrau',as
   const pixel=surfaces.subarray(4*(row*size+column),4*(row*size+column+1));
   assert.ok(pixel[1]>0 && pixel[1]<255,'a máscara mantém cobertura fracionária');
   assert.equal(pixel.reduce((sum,weight)=>sum+weight),255);
+});
+
+test('as três outras vilas têm bairros novos, fachadas próprias e pintura com acostamento',async()=>{
+  const {villageGroundBands}=await load('/src/scene/villageLayout.ts');
+  for(const [map,style,road] of [['areia','sand-rotunda',20],['pedra','stone-watchtower',20],['nevoa','mist-dockhouse',19]]){
+    const {layout,solids}=sceneFor(map,6308);
+    assert.ok(layout.lots.length>=VILLAGE_LOTS[map].length+18,map);
+    assert.ok(layout.lots.some(lot=>lot.style===style),map);
+    const seen=explore(solids,{x:0,z:0},{x:46,north:-68,south:28});
+    assert.ok(seen.has('0,21')&&[...seen].some(key=>Math.abs(+key.split(',')[0])>32),map);
+    assert.equal(villageGroundBands(layout,22,road).road,1,map);
+    const edge=villageGroundBands(layout,22,road+1.65).road;
+    assert.ok(edge>0&&edge<1,map);
+  }
+});
+
+test('margens curvas usam malha fina conectada ao restante do chão',async()=>{
+  const {createTerrainGeometry}=await load('/src/scene/terrainGeometry.ts');
+  const {carveWater}=await load('/src/scene/water.ts');
+  const lakes=[{kind:'lake',x:1.75,z:-.30,rx:4,rz:3}];
+  const ground=(x,z)=>carveWater('folha',x,z,1,lakes);
+  const geom=createTerrainGeometry('folha',ground,lakes,24);
+  const positions=geom.attributes.position;
+  const floor=new THREE.Mesh(geom,new THREE.MeshBasicMaterial());
+  const coast=Math.sqrt(1+WATER.level/WATER.bed);
+  for(let j=0;j<36;j++){
+    const a=j*Math.PI/18,x=1.75+Math.cos(a)*4*coast,z=-.30+Math.sin(a)*3*coast;
+    const ray=new THREE.Raycaster(new THREE.Vector3(x,4,z),new THREE.Vector3(0,-1,0));
+    const [hit]=ray.intersectObject(floor);
+    assert.ok(hit && Math.abs(hit.point.y-WATER.level)<.018,'a água encontra uma margem curva sem degraus de 1 m');
+  }
+  const shared=new Map();
+  const indices=geom.index;
+  for(let i=0;i<indices.count;i+=3){
+    const triangle=[indices.getX(i),indices.getX(i+1),indices.getX(i+2)];
+    for(let j=0;j<3;j++){
+      const a=triangle[j],b=triangle[(j+1)%3];
+      const key=a<b?a+':'+b:b+':'+a;
+      shared.set(key,(shared.get(key)??0)+1);
+    }
+  }
+  for(const [edge,count] of shared)if(count!==2){
+    const [a,b]=edge.split(':').map(Number);
+    assert.equal(count,1);
+    const border=(axis)=>Math.abs(positions[axis](a))===12&&positions[axis](a)===positions[axis](b);
+    assert.ok(border('getX')||border('getZ'),'malha de costa sem costuras internas');
+  }
+  geom.dispose();
 });
 
 test('monumentos têm relevo dentro da silhueta e é possível escalar até o mirante',async()=>{
@@ -464,6 +531,7 @@ test('Konoha varia arquitetura e a água usa profundidade, luz e margem local',(
   assert.match(shader.fragmentShader,/fresnel/);
   assert.match(shader.fragmentShader,/vWaterDepth\s*<=\s*0.0/);
   assert.match(shader.fragmentShader,/foam \+ rings/);
+  assert.match(shader.fragmentShader,/shoreFade \* \(mix/);
   assert.ok(shader.uniforms.waterRipples);
   water.dispose();
   assert.equal(scene.children.length,0);

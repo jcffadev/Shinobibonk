@@ -1,7 +1,7 @@
 import type { MapId } from '../game/maps';
 import { groundHeight, HAGOROMO_ARENA, terrace } from './terrainArt';
 import { carveWater, WATER_BODIES, type WaterBody } from './water';
-import { konohaGroundBands, villageCanalX, villageSurface, type VillageLayout } from './villageLayout';
+import { villageGroundBands, villageCanalX, type VillageLayout } from './villageLayout';
 import { villageLots } from './villageDistricts';
 
 const canal: WaterBody = { kind: 'river', width: 10.1, from: -74, to: 29, at: villageCanalX };
@@ -60,14 +60,8 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
     if (edge >= 84) return groundHeight(map,x,z);
     let h = relief(x,z);
     const roadHeight = z < bounds.north + 15 ? .83 : .57;
-    if (map === 'folha') {
-      const {road,plaza}=konohaGroundBands(layout,x,z);
-      h *= (1-road*(1-roadHeight))*(1-plaza);
-    } else {
-      const surface = villageSurface(layout,x,z);
-      if (surface === 'plaza') h = 0;
-      if (surface === 'road') h *= roadHeight;
-    }
+    const {road,plaza}=villageGroundBands(layout,x,z);
+    h *= (1-road*(1-roadHeight))*(1-plaza);
     for (const plot of cells.get(cell(Math.floor(x/gridSize),Math.floor(z/gridSize)))??noPlots) {
       const dx = Math.abs(x-plot.x), dz = Math.abs(z-plot.z), r = plot.radius;
       if (dx > r + shoulder || dz > r + shoulder) continue;

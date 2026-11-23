@@ -419,3 +419,5 @@ Em Konoha, `villageLayout.ts` fornece as faixas de cobertura das ruas e praças.
 `mapBoundary.ts` monta a cerca alinhada a `WORLD_LIMIT` e o bosque exterior de Konoha. `heightField.ts` calcula a folga da câmera contra o terreno amostrado. `landscape.ts` combina o panorama com uma superfície que cobre o entorno do chão quadrado. A base do relevo em `landmarkRelief.ts` é ajustada à encosta por vértice.
 
 `landmarkRelief.ts` projeta a textura `leaf-statue-backs-v1.png` sobre o verso de Hashirama e Madara. `dropSprites.ts` mantém as âncoras das artes e a sombra reutilizada. `fallenShinobi.ts` dobra a malha pelos segmentos da perna e do tronco, e expõe o estado `ready` após o assentamento.
+
+`terrainGeometry.ts` subdivide e costura as células de margem. `water.ts` controla as ondulações e a opacidade de contato, e `terrainArt.ts` pinta o leito contínuo e a cobertura das ruas. `missionNpcs.ts` cria a hierarquia de malhas articuladas dos NPCs e do Totem. `missionStructures.ts` cuida das construções de evento. Os bairros e fachadas regionais vêm de `villageDistricts.ts` e `villageArchitecture.ts`.

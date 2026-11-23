@@ -192,6 +192,15 @@ export function createVillageScenery(
   const bridgeRail=map.id==='folha'?surface('#a44b3b'):wood;
   for(const bridge of layout.bridges) {
     const segments=20,w=bridge.halfSpan*2/segments;
+    if(!bridge.wood||map.id==='nevoa')for(const offset of [-.70,.70]){
+      const px=bridge.x+offset*bridge.halfSpan;
+      const top=bridgeHeight(bridge,px,ground)-.075;
+      for(const side of [-1,1]){
+        const pz=bridge.z+side*bridge.width*.34,bottom=ground(px,pz)-.08;
+        if(top>bottom+.08)
+          box(px,(bottom+top)/2,pz,bridge.wood?.18:.51,top-bottom,bridge.wood?.18:.50,bridge.wood?wood:stone);
+      }
+    }
     for(let i=0;i<segments;i++) {
       const x=bridge.x-bridge.halfSpan+(i+.5)*w;
       const y=bridgeHeight(bridge,x,ground);
@@ -249,7 +258,17 @@ export function createVillageScenery(
     const peak=map.id==='pedra'?12+(i*11%15):map.id==='areia'?11+(i*7%11):9+(i*7%13);
     const foot=map.id==='areia'?8.3:map.id==='pedra'?6.4:3.0;
     const top=map.id==='areia'?foot*.78:map.id==='pedra'?.60:.28;
-    const crag=new THREE.Mesh(new THREE.CylinderGeometry(top,foot,peak,5,1),skyline);
+    const geometry=new THREE.CylinderGeometry(top,foot,peak,9,7);
+    const points=geometry.attributes.position;
+    for(let j=0;j<points.count;j++){
+      const px=points.getX(j),py=points.getY(j),pz=points.getZ(j);
+      const h=py/peak+.5,a=Math.atan2(pz,px);
+      const grit=1+.13*Math.sin(a*3+i*.82+h*7)+.11*Math.cos(h*19+i);
+      const overhang=foot*(.11*Math.sin(h*6+i)-.14)*h;
+      points.setXYZ(j,px*grit+overhang,py+.065*peak*Math.sin(a*3+i)*h*h,pz*grit*(.77+.23*Math.sin(i*.68)**2));
+    }
+    geometry.computeVertexNormals();
+    const crag=new THREE.Mesh(geometry,skyline);
     crag.rotation.y=i*.72;
     crag.position.set(x,base+peak*.47,z);
     architecture.add(crag);

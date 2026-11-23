@@ -28,6 +28,7 @@ import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } f
 import { createEnemyRenderer, ENEMY_FRAME } from './enemyRenderer';
 import { focusOpacity, setFocusView } from './playerFocus';
 import { cameraHeightAboveTerrain, createHeightField, footHeight, GROUND_DEPTH_OFFSET } from './heightField';
+import { createTerrainGeometry } from './terrainGeometry';
 import { createChakraFeet, createSplashes, createWater, RIPPLES, SPLASH, waterDistance, waterSurfaceAt } from './water';
 import { createLandscape } from './landscape';
 import { createMapBoundary } from './mapBoundary';
@@ -36,10 +37,11 @@ import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type Shinra
 import { createDamageNumbers } from './damageNumbers';
 import { bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
-import { createVillageLayout, konohaGroundBands, missionMapLayout, shuffledVillageSites, villageDeck, villageSurface, type MapLayout } from './villageLayout';
+import { createVillageLayout, villageGroundBands, missionMapLayout, shuffledVillageSites, villageDeck, villageSurface, type MapLayout } from './villageLayout';
 import { createVillageGround, villageWater } from './villageTerrain';
 import { createVillageScenery } from './villageScenery';
-import { createFixedMissionNpc, createMissionStructures, type MissionStructure } from './missionStructures';
+import { createMissionStructures, type MissionStructure } from './missionStructures';
+import { createMissionNpc, missionNpcForEvent } from './missionNpcs';
 import { villageRandom } from './villageDistricts';
 import { createVillageTraversal, moveVillageActor } from './villageTraversal';
 import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE, PLAYER_SIZE } from '../game/worldScale';
@@ -118,7 +120,7 @@ export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerS
 export { ALTAR_BUFF_BASE, ALTAR_BUFF_POOL } from '../game/altarRewards';
 /** Bolinho de arroz: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .025, heal: .35 };
-type Enemy = { /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:ReturnType<typeof createFixedMissionNpc>; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
+type Enemy = { /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:ReturnType<typeof createMissionNpc>; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
 type MapPickup = { id:string; kind:'kunai'|'shuriken'|'ryu'|'sealDrop'|'cursedShuriken'|'ninjaBody'; name:string; x:number; z:number; mesh:THREE.Object3D; active:boolean; discovered?:boolean };
 type Projectile = {mesh:THREE.Object3D;direction:THREE.Vector3;remaining:number;speed:number;radius:number;technique:Technique;origin:THREE.Vector3;hit:Set<Enemy>;growth:SkillGrowth;ally?:boolean;bounces:number;effectLevel?:number;range:number};
 /** Setup (buff puro) ativo no jogador. */
@@ -194,12 +196,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const waters=village?villageWater(MAP.id):undefined;
     const exactGround=village&&waters?createVillageGround(village,waters):(x:number,z:number)=>groundHeight(MAP.id,x,z);
     const terrainHeight=createHeightField(exactGround,RENDERED_GROUND_SIZE/2);
-    const detailedKonoha=village?.map==='folha';
+    const villageShadows=!!village;
     let shadowX=Infinity,shadowZ=Infinity,shadowSize=0;
     scene.add(sun.target);
     function updateVillageLight(x:number,z:number){
       const quality=currentSettings().quality;
-      const size=detailedKonoha&&quality!=='baixa'?(quality==='alta'?2048:1024):0;
+      const size=villageShadows&&quality!=='baixa'?(quality==='alta'?2048:1024):0;
       if(size!==shadowSize||renderer.shadowMap.enabled!==Boolean(size)){
         renderer.shadowMap.enabled=Boolean(size);
         renderer.shadowMap.type=THREE.PCFShadowMap;
@@ -242,17 +244,14 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const groundLook=village&&waters
       ?createGroundMaterial(MAP,terrainHeight,{
         waters, seed:village.seed, surface:(x,z)=>villageSurface(village,x,z),
-        bands:MAP.id==='folha'?(x,z)=>konohaGroundBands(village,x,z):undefined,
+        bands:(x,z)=>villageGroundBands(village,x,z),
       })
       :createGroundMaterial(MAP,terrainHeight);
-    const terrainGeometry=new THREE.PlaneGeometry(RENDERED_GROUND_SIZE,RENDERED_GROUND_SIZE,340,340);
-    const terrainPositions=terrainGeometry.attributes.position;
-    for(let i=0;i<terrainPositions.count;i++)terrainPositions.setZ(i,terrainHeight(terrainPositions.getX(i),-terrainPositions.getY(i)));
-    terrainGeometry.computeVertexNormals();
+    const terrainGeometry=createTerrainGeometry(MAP.id,terrainHeight,waters);
     // Rodada 88: o chão recua um pouco na profundidade, para a base dos sprites não ser cortada pela encosta.
     groundLook.material.polygonOffset=true;groundLook.material.polygonOffsetFactor=GROUND_DEPTH_OFFSET.factor;groundLook.material.polygonOffsetUnits=GROUND_DEPTH_OFFSET.units;
     const ground=new THREE.Mesh(terrainGeometry,groundLook.material);
-    ground.rotation.x=-Math.PI/2;ground.receiveShadow=Boolean(detailedKonoha);scene.add(ground);
+    ground.receiveShadow=villageShadows;scene.add(ground);
     const water=village?createWater(scene,MAP.id,terrainHeight,waters):createWater(scene,MAP.id,terrainHeight);runCleanups.push(()=>water.dispose());
     // Rodada 91: ondas dos passos e brilho de chakra nos pés sobre a água.
     const chakraFeet=createChakraFeet(scene);runCleanups.push(()=>chakraFeet.dispose());let rippleTimer=0,wasAirborne=false;
@@ -348,31 +347,33 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const structure:MissionStructure|undefined=gate?'guardian':def.id==='ichiraku'?'ramen'
         :def.id==='trader'?'merchant':def.altarTier!==undefined?'altar':undefined;
       const addedSize=village&&def.altarTier===undefined&&!gate?1.17:1;
-      let obj:THREE.Group|THREE.Mesh<THREE.BufferGeometry,THREE.MeshBasicMaterial>;
+      let obj:THREE.Group;
       let fadeMaterials:THREE.Material[];
+      const npcId=missionNpcForEvent(def.id),actor=npcId?createMissionNpc(npcId):undefined;
+      if(actor)runCleanups.push(actor.dispose);
       if(structure){
         const color=def.altarTier===undefined?0xffffff:parseInt(altarColors[def.altarTier].slice(1),16);
         ({obj,fadeMaterials}=eventStructures.make(structure,color));
         const w=(gate?5.6:structure==='ramen'?4:3.2)*ACTOR_SCALE*addedSize;
         const h=(gate?5:structure==='ramen'?3.4:3.2)*ACTOR_SCALE*addedSize;
         obj.scale.set(w,h,w);
+        if(actor){
+          actor.root.position.set(.47,-.45,.37);
+          actor.root.scale.setScalar(.78);
+          obj.add(actor.root);
+        }
       }else{
-        const id=def.id==='slot'?'tsunade':def.id==='arsenal'?'tenten'
-          :def.id==='youth'?'guy':def.id==='challenge'?'zetsu':def.id;
-        const art=heroMaterial(id);
-        const npc=createFixedMissionNpc(art);
-        art.dispose();
         const scale=ACTOR_SCALE*addedSize;
-        const w=def.id==='challenge'?1.65*1.14:def.id==='orochimaru'?2.2:3.2;
-        const h=def.id==='challenge'?2.25*1.14:def.id==='orochimaru'?3.1:3.2;
-        npc.scale.set(w*scale,h*scale,w*scale);
-        obj=npc;
-        fadeMaterials=[npc.material];
+        const h=def.id==='challenge'?2.55:def.id==='sapos-sabios'?2.72:2.95;
+        obj=actor!.root;
+        obj.scale.setScalar(h*scale);
+        fadeMaterials=[];
       }
-      obj.position.set(def.x,standHeight(def.x,def.z)+obj.scale.y*.45,def.z);
+      const groundOffset=structure?obj.scale.y*.45:0;
+      obj.position.set(def.x,standHeight(def.x,def.z)+groundOffset,def.z);
       obj.visible=false;
       scene.add(obj);
-      return {...def,obj,fadeMaterials,discovered:false,uses:0,active:true};
+      return {...def,obj,actor,groundOffset,fadeMaterials,discovered:false,uses:0,active:true};
     });
     const occluders=[
       ...decor.map(obj=>({obj,fadeMaterials:[obj.material]})),
@@ -388,17 +389,16 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       obj.visible=zetsuEvent.discovered;
       if(!obj.visible||zetsuRise>=AKATSUKI_AMBUSH.riseTime)return;
       zetsuRise=Math.min(AKATSUKI_AMBUSH.riseTime,zetsuRise+dt);
-      obj.position.y=standHeight(x,z)+obj.scale.y*(zetsuEmergence(zetsuRise)-.55);
+      obj.position.y=standHeight(x,z)+obj.scale.y*(zetsuEmergence(zetsuRise)-1);
     }
-    const teuchiArt=heroMaterial('teuchi');
-    const teuchi=createFixedMissionNpc(teuchiArt);
-    teuchiArt.dispose();
+    const teuchiActor=createMissionNpc('teuchi'),teuchi=teuchiActor.root;
+    runCleanups.push(teuchiActor.dispose);
     const teuchiScale=ACTOR_SCALE*(village?1.17:1);
-    teuchi.scale.set(1.65*teuchiScale,2.25*teuchiScale,1.65*teuchiScale);
+    teuchi.scale.setScalar(2.25*teuchiScale);
     scene.add(teuchi);
     function placeTeuchi(){
       const x=ichiraku.x+1.1,z=ichiraku.z+1.45;
-      teuchi.position.set(x,standHeight(x,z)+teuchi.scale.y*.5,z);
+      teuchi.position.set(x,standHeight(x,z),z);
       teuchi.visible=ichiraku.obj.visible;
     }
     function scatterEvents(){
@@ -432,7 +432,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
           }
         }
         spots.push({x,z});e.x=x;e.z=z;e.active=true;e.uses=0;e.discovered=false;
-        e.obj.visible=false;e.obj.position.set(x,standHeight(x,z)+e.obj.scale.y*.45,z);if(e===ichiraku)placeTeuchi();
+        e.obj.visible=false;e.obj.position.set(x,standHeight(x,z)+e.groundOffset,z);if(e===ichiraku)placeTeuchi();
       }
     }
     scatterEvents();
@@ -1194,8 +1194,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const bounds=container.getBoundingClientRect();
       clickPoint.set(pointerLocked()?0:2*(e.clientX-bounds.left)/bounds.width-1,pointerLocked()?0:1-2*(e.clientY-bounds.top)/bounds.height);
       npcRay.setFromCamera(clickPoint,camera);
-      if(nearZetsu&&npcRay.intersectObject(zetsuEvent.obj,false).length&&startAkatsukiAmbush())return true;
-      if(!nearIchiraku||(!npcRay.intersectObject(ichiraku.obj,true).length&&!npcRay.intersectObject(teuchi,false).length))return false;
+      if(nearZetsu&&npcRay.intersectObject(zetsuEvent.obj,true).length&&startAkatsukiAmbush())return true;
+      if(!nearIchiraku||(!npcRay.intersectObject(ichiraku.obj,true).length&&!npcRay.intersectObject(teuchi,true).length))return false;
       openIchiraku();
       return true;
     };
@@ -1380,19 +1380,16 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       return texture;
     }
     runCleanups.push(()=>puppetSheets.forEach(texture=>texture.dispose()));
-    const totemHands=new THREE.TextureLoader().load('/assets/shinobi-motion/naruto-hand-seal-v1.png');
-    totemHands.colorSpace=THREE.SRGBColorSpace;
-    totemHands.minFilter=totemHands.magFilter=THREE.NearestFilter;
-    totemHands.generateMipmaps=false;
-    totemHands.repeat.set(.25,.25);totemHands.offset.set(.25,.5);
-    runCleanups.push(()=>totemHands.dispose());
+    runCleanups.push(()=>totem?.fixedArt?.dispose());
     /** O Totem mantém o selo de mãos. Os clones usam a locomoção do Naruto Clássico. */
     function spawnTotem(){if(totemSpawned)return null;totemSpawned=true;totemDiscovered=false;totemResult='';totemCloneTimer=1;
       const angle=Math.random()*Math.PI*2,x=THREE.MathUtils.clamp(player.position.x+Math.cos(angle)*TOTEM_RULES.distance,-44,44),z=THREE.MathUtils.clamp(player.position.z+Math.sin(angle)*TOTEM_RULES.distance,-44,44);
-      const sprite=makeHero('naruto-genin',10);sprite.material.map=totemHands;sprite.material.alphaTest=.55;
-      const fixedArt=createFixedMissionNpc(sprite.material);
+      const sprite=makeHero('naruto-genin',10);
+      const fixedArt=createMissionNpc('naruto');
       sprite.material.colorWrite=false;
-      sprite.add(fixedArt);
+      fixedArt.root.scale.setScalar(2.25*ACTOR_SCALE*1.5);
+      fixedArt.root.position.set(x,standHeight(x,z),z);
+      scene.add(fixedArt.root);
       sprite.scale.multiplyScalar(1.5);sprite.position.set(x,terrainHeight(x,z)+1.7,z);scene.add(sprite);totemPos.set(x,0,z);
       const hp=TOTEM_RULES.baseHp*threatNow().hp;totem={sprite,hp,maxHp:hp,speed:0,hitTimer:99,totem:true,fixedArt};enemyList.push(totem);
       totemBar=createTotemBar(scene);totemBar.follow(sprite);totemBar.draw(1,TOTEM_RULES.end-elapsed);
@@ -1403,7 +1400,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       enemyList.push({sprite,hp,maxHp:hp,speed:TOTEM_RULES.cloneSpeed,hitTimer:.3,clone:true,motionLevel:10,motion:createPlayerMotion(scene,sprite,'naruto-genin',false)});}
     /** Clones somem em fumaça (sem recompensa) quando o totem cai ou expira. */
     function dispelClones(){for(const e of enemyList.filter(e=>e.clone)){disposeEnemySprite(e);enemyList.splice(enemyList.indexOf(e),1);if(!hiddenEffects)addRing(e.sprite.position,'#f2f2f2',.5);}}
-    function disposeEnemySprite(e:Enemy){e.motion?.dispose();if(e.fixedArt)disposeObject(e.fixedArt);scene.remove(e.sprite);e.sprite.material.dispose();for(const child of e.sprite.children)if(child instanceof THREE.Sprite)child.material.dispose();if(e.marker){scene.remove(e.marker);e.marker.geometry.dispose();(e.marker.material as THREE.Material).dispose();e.marker=undefined;}}
+    function disposeEnemySprite(e:Enemy){e.motion?.dispose();e.fixedArt?.dispose();scene.remove(e.sprite);e.sprite.material.dispose();for(const child of e.sprite.children)if(child instanceof THREE.Sprite)child.material.dispose();if(e.marker){scene.remove(e.marker);e.marker.geometry.dispose();(e.marker.material as THREE.Material).dispose();e.marker=undefined;}}
     function endTotem(result:'derrotado'|'expirou'){if(!totem)return;const t=totem;totem=null;totemResult=result;const i=enemyList.indexOf(t);if(i>=0)enemyList.splice(i,1);disposeEnemySprite(t);totemBar?.dispose();totemBar=null;dispelClones();
       if(result==='derrotado'){countKill();pendingLevels+=TOTEM_RULES.levels;addRing(t.sprite.position,'#ffb34d',3);playSfx('ultimate');eventToast=`Naruto Totem derrotado! +${TOTEM_RULES.levels} níveis (escolha técnicas e pílulas).`;}
       else eventToast='O Naruto Totem sumiu às 6:00 · sem recompensa.';}
@@ -1413,7 +1410,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(!totem)return;
       if(elapsed>=TOTEM_RULES.end){endTotem('expirou');return;}
       totem.sprite.position.y=terrainHeight(totem.sprite.position.x,totem.sprite.position.z)+1.7;totemBar?.follow(totem.sprite);totemBar?.draw(totem.hp/(totem.maxHp||1),TOTEM_RULES.end-elapsed);
-      totemHands.offset.x=totemCloneTimer<.15?0:.25;
+      totem.fixedArt?.update(elapsed,totemCloneTimer<.15);
       totemCloneTimer-=dt;if(totemCloneTimer<=0){totemCloneTimer=TOTEM_RULES.interval;const alive=enemyList.reduce((n,e)=>n+(e.clone?1:0),0);for(let n=0;n<Math.min(TOTEM_RULES.perWave,TOTEM_RULES.maxClones-alive);n++)spawnTotemClone();}
     }
     // Plano do Shikamaru: cada acionamento dá +1 kunai grátis ao derrotar o guardião desta zona (limite 3 por zona, sem penalidade).
@@ -2143,7 +2140,10 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       }else{
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=true;
         enemyRenderer.sync(enemyList,enemyOpacity,dt);
-      }const renderTime=performance.now()/1000;water.update(renderTime);civicScene?.update(renderTime);splashes.update(dt);landscape.setFogged(!!scene.fog);updateVillageLight(player.position.x,player.position.z);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
+      }const renderTime=performance.now()/1000;
+      for(const event of events)if(event.obj.visible)event.actor?.update(elapsed);
+      if(teuchi.visible)teuchiActor.update(elapsed);
+      water.update(renderTime);civicScene?.update(renderTime);splashes.update(dt);landscape.setFogged(!!scene.fog);updateVillageLight(player.position.x,player.position.z);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
     };
     // V-Sync (Gráficos): LIGADO = requestAnimationFrame (um quadro por quadro do monitor). DESLIGADO = spin loop acima da taxa do monitor
     // (melhor esforço no navegador — ele ainda pode limitar; no .exe a sincronização sai direto do motor).
@@ -2168,7 +2168,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         const e=events.find(event=>event.id===point.id);
         if(!e)continue;
         if(villageActive&&(!solids.isFree(point.x,point.z,.6,true)||waterSurfaceAt(MAP.id,point.x,point.z,waters)>-Infinity))continue;
-        e.x=point.x;e.z=point.z;e.obj.position.set(e.x,standHeight(e.x,e.z)+e.obj.scale.y*.45,e.z);
+        e.x=point.x;e.z=point.z;e.obj.position.set(e.x,standHeight(e.x,e.z)+e.groundOffset,e.z);
       }
       if(camp?.pickups){for(const p of pickups)scene.remove(p.mesh);pickups.length=0;for(const p of camp.pickups){spawnPickup(p.kind,p.x,p.z);pickups.at(-1)!.discovered=p.discovered||p.kind==='sealDrop';}}
       for(const entry of camp?.fallenMegas??[]){const shinobi=HERO_BY_ID[entry.heroId];if(shinobi)fallenMegas.push({candidate:{heroId:shinobi.id,target:shinobi.name,phase:'ready',account:entry.account},body:layFallenShinobi(shinobi.id,entry.x,entry.z,!!entry.account,level,true)});}
@@ -2264,7 +2264,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       sages:()=>{openSages();return choiceData?.length??0;},
       cloneMotion:()=>shadowClones.map(clone=>clone.motion.state()),
       gamabuntaPhase:()=>visuals.find(effect=>effect.object.userData.gamabuntaPhase)?.object.userData.gamabuntaPhase,
-      totemMotion:()=>({sign:totem?.sprite.material.map===totemHands,clones:enemyList.filter(e=>e.clone).map(e=>({pose:e.motion?.state(),distance:Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)}))}),
+      totemMotion:()=>({sign:!!totem?.fixedArt,clones:enemyList.filter(e=>e.clone).map(e=>({pose:e.motion?.state(),distance:Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)}))}),
       spawnRanged:()=>{const enemy=spawnEnemy();enemy.ranged=2;enemy.speed=0;enemy.sprite.position.copy(player.position).add(new THREE.Vector3(5,0,0));return enemy.hp;},
       rangedState:()=>({foes:enemyList.filter(e=>e.ranged!==undefined).length,shots:enemyShots.length}),
       enemyFrames:()=>enemyList.filter(e=>enemyRenderer.isBatched(e.sprite)).map(e=>e.sprite.userData.frame as number),

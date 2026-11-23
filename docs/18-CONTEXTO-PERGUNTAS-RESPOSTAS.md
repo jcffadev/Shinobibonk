@@ -416,6 +416,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 **IMPLEMENTADO.** Os dois monumentos do Vale do Fim ganharam arte própria no verso. Itens repousam no terreno e a queda para selamento passa por um apoio de joelho. Houve revisão visual das quatro bordas de Konoha. Ver [mapas e câmera](01-CAMERA-MAPAS-EVENTOS.md).
 
+### Como tirar o quadriculado da água, dar volume aos NPCs e refinar as outras vilas? · 23/11/2026
+
+**IMPLEMENTADO.** A margem recebe subdivisão seletiva e o leito tem variação contínua. NPCs estacionários usam modelos articulados e os eventos preservam seus controles. Suna, Iwa e Kiri ganharam bairros e acabamento próprios com o mesmo sistema de ruas de Konoha. Ver [mapas e câmera](01-CAMERA-MAPAS-EVENTOS.md).
+
 ## 5. Estado atual do projeto
 
 **Retomada de 23/11/2026.** A versão principal recebeu as rodadas 97–103 do Claude, até `a394509`. Os mapas continuam com o Codex, em branch de validação e com parcial local. O usuário pediu manter os personagens atuais, guardar o low poly externamente e aproximar a densidade e o acabamento das cidades às fotos de seleção. Construções precisam mostrar laterais e fundos com a rotação da câmera. A arquitetura nova ainda precisa ser ligada à cena. [Estado conferido e fila de continuação](27-RETOMADA-MAPAS-23-11.md).

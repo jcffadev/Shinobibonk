@@ -30,10 +30,10 @@ const walls = (z: number, width: number, opening: number, height: number): Wall[
 
 export const villageCanalX = (z: number) => 10.5 + Math.sin((z + 2) * .08) * 1.2;
 const canalBridges = [-13, -30, -46].map(z => ({ x: villageCanalX(z), z, halfSpan: 6.4, width: 2.8, rise: 1.12, wood: true }));
-const inlandStreets=[-8,8,-24,24];
+const inlandStreets=[-41,-31,-24,-8,8,24,31,42];
 const konohaStreets=[-69,-58,-48,-40,-33,-25,-8,8,25,33,40,48,58,69];
 const konohaBridges=[19,40,59].map(z=>({x:leafRiver(z),z,halfSpan:4.5,width:3.1,rise:.68,wood:true}));
-const canalStreets=[3.05,17.05];
+const canalStreets=[-41,-30,-18,-8,3.05,17.05,31,43];
 const laneHalfWidth=1.45, crossingHalfWidth=1.65;
 
 export const VILLAGES: Record<MapId, VillageLayout> = {
@@ -51,8 +51,8 @@ export const VILLAGES: Record<MapId, VillageLayout> = {
   },
   areia: {
     map: 'areia', entry: { x: 0, z: -10 }, plaza: { x: 0, z: -28 },
-    bounds: { x: 31, south: -10, north: -65 }, walls: walls(-10, 28, 4.35, 3.5),
-    crossings: [-18, -28, -45], bridges: [],
+    bounds: { x: 46, south: 31, north: -65 }, walls: walls(-10, 28, 4.35, 3.5),
+    crossings: [-59,-45,-28,-18,-5,7,20,29], bridges: [],
     buildings: [
       { art: 'regional', index: 1, x: 0, z: -10, width: 12, height: 8.9, gate: true },
       { art: 'regional', index: 0, x: 0, z: -49, width: 17.6, height: 13.4 },
@@ -62,8 +62,8 @@ export const VILLAGES: Record<MapId, VillageLayout> = {
   },
   pedra: {
     map: 'pedra', entry: { x: 0, z: -8 }, plaza: { x: 0, z: -27 },
-    bounds: { x: 30, south: -8, north: -65 }, walls: [],
-    crossings: [-17, -27, -43],
+    bounds: { x: 46, south: 29, north: -65 }, walls: [],
+    crossings: [-61,-43,-27,-17,-6,8,20,28],
     bridges: [{ x: 0, z: -17, halfSpan: 9.4, width: 3.2, rise: .72, wood: false },
       { x: 0, z: -43, halfSpan: 9.4, width: 3.2, rise: .86, wood: false }],
     buildings: [
@@ -75,7 +75,7 @@ export const VILLAGES: Record<MapId, VillageLayout> = {
   },
   nevoa: {
     map: 'nevoa', entry: { x: 0, z: -7 }, plaza: { x: -2, z: -26 },
-    bounds: { x: 31, south: -7, north: -61 }, walls: [], crossings: [-13,-26,-46], bridges: canalBridges,
+    bounds: { x: 46, south: 28, north: -64 }, walls: [], crossings: [-58,-46,-30,-26,-13,-4,8,19,26], bridges: canalBridges,
     buildings: [
       { art: 'regional', index: 6, x: -12, z: -43, width: 14.8, height: 13 },
       { art: 'regional', index: 6, x: 25, z: -60, width: 8.2, height: 8.2 },
@@ -107,9 +107,9 @@ export function villageSurface(layout: VillageLayout, x: number, z: number): 'ro
 }
 
 /** Acostamentos e cantos arredondados acompanham a rede de ruas, em metros de mundo. */
-export function konohaGroundBands(layout:VillageLayout, x:number, z:number) {
+export function villageGroundBands(layout:VillageLayout, x:number, z:number) {
   const {north,south}=layout.bounds;
-  if (x < -75 || x > 75 || z < north-1 || z > south+1 || inHagoromoClearing(x,z))
+  if (Math.abs(x)>layout.bounds.x+1 || z < north-1 || z > south+1 || inHagoromoClearing(x,z))
     return {road:0,plaza:0};
   const roughness=.14*Math.sin(x*2.1+z*1.3)+.08*Math.sin(z*4.1-x*2.9);
   const edge=(distance:number)=>1-MathUtils.smoothstep(distance+roughness,-.4,.57);
@@ -119,12 +119,13 @@ export function konohaGroundBands(layout:VillageLayout, x:number, z:number) {
   };
   let road=box(x-Math.sin((z+8)*.08)*.8,z-(north+25)/2,2.5,(25-north)/2,.65);
   road=Math.min(road,box(x,z-(8+south)/2,2.65,(south-8)/2,.65));
-  for(const lane of konohaStreets)
+  const lanes=layout.map==='folha'?konohaStreets:layout.map==='nevoa'?canalStreets:inlandStreets;
+  for(const lane of lanes)
     road=Math.min(road,box(x-lane,z-(north+south)/2,laneHalfWidth,(south-north)/2,.55));
   for(const crossing of layout.crossings)
     road=Math.min(road,box(x,z-crossing,layout.bounds.x,crossingHalfWidth,.6));
   let plaza=box(x-layout.plaza.x,z-layout.plaza.z,9.6,4.8,1.4);
-  for(const square of KONOHA_SQUARES)
+  if(layout.map==='folha')for(const square of KONOHA_SQUARES)
     plaza=Math.min(plaza,box(x-square.x,z-square.z,square.rx,square.rz,1.2));
   return {road:edge(road),plaza:edge(plaza)};
 }

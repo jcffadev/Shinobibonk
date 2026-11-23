@@ -216,10 +216,10 @@ export function paintGround(map: GameMap, ground: (x: number, z: number) => numb
         const joint = j % 6 === 0 || (i + (row % 2) * 4) % 8 === 0;
         shade *= joint ? .72 : .93 + seed(Math.floor(i / 8), row) * .16;
       } else if (river) {
-        shade *= .78 + .22 * fleck;
+        // Varia por metro no leito raso, sem o granulado por texel que aparecia através da água.
+        shade = .86 + .068 * Math.sin(x*.69 + Math.cos(z*.37)) + .040 * patch;
       } else if (shore) {
-        // Rodada 99: areia molhada colada à água.
-        shade *= shoreDistance < .6 ? .78 : .97;
+        shade = (.89 + .075*patch) * THREE.MathUtils.lerp(.82,1,THREE.MathUtils.smoothstep(shoreDistance,.25,1.35));
       } else if (stone) {
         shade *= (h0 * 4.2) % 1 < .5 ? .84 : 1.02;
       } else if (!onPath && fleck > .94) shade += .14;
@@ -264,7 +264,7 @@ export function groundArt(map: GameMap, ground?: (x: number, z: number) => numbe
   const surfaces = paintedGround.surfaces.slice();
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.magFilter = THREE.NearestFilter;
+  texture.magFilter = style?.bands?THREE.LinearFilter:THREE.NearestFilter;
   texture.minFilter = THREE.LinearMipmapLinearFilter;
   return { texture, surfaces, size };
 }
@@ -280,8 +280,8 @@ export function createGroundMaterial(map: GameMap, ground?: (x: number, z: numbe
   const atlas = new THREE.TextureLoader().load(map.id==='folha'?'/assets/ground-materials-v1.png':`/assets/ground-${map.id}-v2.png`);
   atlas.colorSpace = THREE.SRGBColorSpace;
   atlas.anisotropy = detailedStreets?8:4;
-  const material = new THREE.MeshStandardMaterial({ map: texture, roughness: 1, flatShading: true });
-  material.customProgramCacheKey=()=>detailedStreets?'ground-konoha':'ground-standard';
+  const material = new THREE.MeshStandardMaterial({ map: texture, roughness: 1, flatShading: !detailedStreets });
+  material.customProgramCacheKey=()=>detailedStreets?'ground-village':'ground-standard';
   material.onBeforeCompile = shader => {
     shader.uniforms.terrainAtlas = { value: atlas };
     shader.uniforms.terrainMask = { value: mask };

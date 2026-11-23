@@ -2652,3 +2652,13 @@ A rocha do monumento foi encaixada no terreno pela frente e pelo verso. Postes e
 As estátuas receberam arte própria nas costas, projetada no relevo. As quatro bordas foram registradas em imagens do renderizador nativo. Os pergaminhos e itens se apoiam no terreno, e os drops de abate só levantam ao serem atraídos. O shinobi derrotado cambaleia, dobra o joelho, tomba de lado e assenta antes de liberar o selamento.
 
 A arte do verso foi criada no ImageGen com a frente do atlas como referência. Pedido visual: duas estátuas inteiras vistas a 180 graus em fundo transparente, Hashirama à esquerda e Madara à direita, proporções, gesto e tom de pedra preservados, com cabelo, placas e pedestal esculpidos, musgo discreto e mão levantada no lado correto visto de costas.
+
+## Água quadriculada, NPCs com volume e revisão regional · 23/11/2026
+
+> A água ta meio quadriculada, consegue melhorar?
+>
+> os personagens no jogo parados/eventos... quando você vira a câmera, eles parecem placas, não pode ser, tem que ser personagens mesmo, ideal ainda se eles tivessem animações... consegue? tem que ser bonecos, não fotos ... ai você colocou 4 fotos para cada angulo, fica horrivel
+>
+> E voce precisa fazer e aplicar o que fizemos em relação aos outros mapas, o caminho de Konoha esta excelente, mas todos os outros precisam ter a mesma excelencia e refinamento e precisamos melhorar ao máximo que conseguirmos
+
+Corrigimos o quadriculado do leito e os recortes das margens. Os NPCs ganharam modelos 3D articulados e mantêm a orientação, o clique e a interação por E. Suna, Iwa e Kiri receberam bairros, ruas com acabamento equivalente e construções características. A rotação em partida, a interação e o desempenho com horda seguem para validação E2E.

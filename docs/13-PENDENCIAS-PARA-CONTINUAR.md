@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Água, NPCs 3D e revisão regional · 23/11/2026
+
+- **IMPLEMENTADO:** terreno detalhado junto às margens, NPCs animados em malhas e expansão de Suna, Iwa e Kiri com ruas e fachadas próprias.
+- **PENDENTE DE VALIDAÇÃO E2E:** verificar a água com vários zooms em movimento, clicar em Teuchi e Zetsu em ângulos diferentes e percorrer os novos bairros. Medir FPS em partida com horda e sombras nas quatro vilas.
+
 ## Verso do Vale do Fim, drops e selamento · 23/11/2026
 
 - **IMPLEMENTADO:** arte distinta nas costas dos dois monumentos, itens apoiados, sombra de contato e fase de joelho na queda dos shinobis capturáveis.

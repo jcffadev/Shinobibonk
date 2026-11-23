@@ -437,3 +437,7 @@ As missões usam um perímetro de postes e travessas no limite de movimento. Em 
 ## Vale do Fim e objetos sobre o piso
 
 Os versos de Hashirama e Madara mantêm a pose e usam arte própria sobre o relevo curvo. Os pergaminhos e os itens de cenário repousam na superfície e têm sombra de contato. Os drops de abate ficam apoiados até serem atraídos. O farol do pergaminho grátis continua visível.
+
+## Margens, NPCs 3D e bairros regionais
+
+A água usa borda que perde opacidade na margem, leito contínuo e maior resolução junto ao primeiro plano do canal. Os NPCs dos eventos têm volume, animação de repouso e orientação fixa. O clique de Teuchi e Zetsu alcança as malhas filhas. Suna, Iwa e Kiri ligam seus novos bairros pela mesma pintura de ruas e acostamentos de Konoha. As quatro vilas têm sombras locais configuradas pela qualidade gráfica.

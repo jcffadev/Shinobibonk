@@ -2,6 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { missionNpcForEvent } from '../src/scene/missionNpcs.ts';
 import {
   YOUTH_CHALLENGES, YOUTH_DIFFICULTIES, YOUTH_GOALS, YOUTH_POWER, YOUTH_STATS, YOUTH_TEXT, rollYouthChallenge, tickYouth,
   youthBonuses, youthBonusText, youthChallengeText, youthSpots,
@@ -45,7 +46,7 @@ test('a partida liga o Might Guy: NPC, painel, desafio, falha ao ser acertado e 
   const main = fs.readFileSync(new URL('../src/main.tsx', import.meta.url), 'utf8');
   for (const wired of [
     "{id:'youth',name:'Treinamento da Juventude · Might Guy'",
-    "def.id==='youth'?'guy':def.id",
+    'npcId=missionNpcForEvent(def.id),actor=npcId?createMissionNpc(npcId):undefined',
     "if(event.id==='youth'){openYouth(event);return;}",
     'choiceLevel=-13;choiceData=[];',
     "window.addEventListener('shinobi-youth',onYouth);",
@@ -54,5 +55,6 @@ test('a partida liga o Might Guy: NPC, painel, desafio, falha ao ser acertado e 
     'if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth){',
     'tickHagoromo(dt);tickYouthRun(dt);',
   ]) assert.ok(canvas.includes(wired), wired);
+  assert.equal(missionNpcForEvent('youth'),'guy');
   assert.ok(main.includes('<YouthPanel challenge={world.youth.challenge}/>') && main.includes('<YouthBanner run={world.youth.run}/>'));
 });

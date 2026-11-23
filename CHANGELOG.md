@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 23/11/2026 · Água, NPCs 3D e acabamento das quatro vilas
+
+- A malha tem subdivisão localizada nas margens, com vértices compartilhados nas transições. A água ganha leito contínuo, borda translúcida e reflexos sinuosos. Passos, ondulações e respingos continuam ativos.
+- NPCs de posto e evento ganharam corpos 3D articulados. Teuchi mexe a concha, Zetsu continua surgindo do chão e Naruto Totem faz o selo com os braços. A orientação permanece fixa, com respiração e movimento de cabeça no repouso.
+- Suna, Iwa e Kiri ganham bairros laterais e ao sul, acostamentos suaves e novas construções próprias. Suna tem rotundas de mercado, Iwa casas com vigias de pedra e Kiri varandas de cais. Os picos regionais receberam perfis irregulares, pontes receberam apoios e as vilas usam sombras locais.
+- **TESTADO.** TypeScript, 240 testes, duas mutações focadas, regras e build de produção. As quatro vilas e os NPCs foram conferidos no renderizador nativo. A validação em partida e a medição de FPS seguem pendentes.
+
 ## 23/11/2026 · Versos das estátuas, itens apoiados e queda antes do selamento
 
 - Hashirama e Madara ganharam costas pintadas com cabelo, placas de armadura e pedestal próprios. O atlas projetado sobre o relevo mistura a arte com a pedra das laterais.

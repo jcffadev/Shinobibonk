@@ -33,7 +33,7 @@ Siga também, na mesma tarefa:
 | Áreas planas | `LEAF_PLACES` (Folha) e `REGIONAL_PLACES` (outros mapas) | chão plano sob construção, com 4–5 m de transição |
 | Pintura do chão | `groundArt` em `terrainArt.ts` | grama, trilha, pedra nas encostas (inclinação > 0,55) com estrias, praça e rio |
 | Texturas do chão | `public/assets/ground-materials-v1.png` (Folha) e `ground-<id>-v2.png` | atlas 2×2 por superfície |
-| Malha do chão | `GameCanvas.tsx`: `PlaneGeometry(RENDERED_GROUND_SIZE, …, 340, 340)` | ~1 m por célula, para os degraus aparecerem |
+| Malha do chão | `terrainGeometry.ts` | ~1 m por célula longe da água e 0,25 m perto das margens, com vértices de transição compartilhados |
 | Construções e marcos | `GameCanvas.tsx` (`landmarks`, `REGIONAL_PLACES`, `solids.addBuilding`) | sprites com `center (.5,.03)` na altura do chão |
 | Árvores e rochas | `scenery()` em `GameCanvas.tsx`, atlas `environment-v2.png` | `MAP.scenery.weights` (árvore, pinheiro, bambu, rocha) e `tint` |
 | Colisão | `src/scene/collision.ts` (`COLLISION_RULES`) | raios medidos no desenho; `prune` tira cenário dentro de construção |
@@ -59,7 +59,7 @@ Siga também, na mesma tarefa:
 ## 3.1 Água e paisagem
 
 - Água sempre cavada no terreno (`carveWater`), com margem baixando até o nível 0 em 5 m: nunca uma superfície flutuando sobre terraço. Longe do começo (> 15 m), da trilha e das construções (> 8 m); o teste confere.
-- Árvores e rochas não nascem a menos de 1,5 m da água. O chão sob a água é leito escuro e a margem é areia.
+- Árvores e rochas não nascem a menos de 1,5 m da água. O leito escuro e a areia da margem têm variação contínua. O shader reduz a opacidade ao se aproximar da borda e mantém as ondas de contato.
 - A paisagem de fundo tem uma forma por vila em `LANDSCAPE_SHAPES` (camada longe e perto) e detalhes pintados (Monte Hokage, cachoeiras, estratos, névoa). Mapa novo = nova entrada nos dois e na paleta.
 
 ## 4. Câmera

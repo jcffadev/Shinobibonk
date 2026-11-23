@@ -266,6 +266,38 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
       cylinder('bronze',x+.69,terrace+.60,z-.40,.14,1.14,.14);
       box('dark',x+w*.48,y+body*.52,z+.41,.12,body*.9,.11);
       box('wood',x,y+body*.51,sideZ+front*.24,w*.60,.075,.28);
+    }else if(style==='sand-rotunda'){
+      // O adobe tem nervuras, sombreamento na entrada e uma cúpula acima do mercado.
+      for(const level of [.31,.87])
+        cylinder('clay',x,y+pier+body*level,z,w+.12,.14,d+.12,1,0xd8b78e);
+      for(const side of [-1,1]){
+        const facade=sideZ+front*.29;
+        box('sand',x+side*w*.36,y+1.03,facade,.34,2.06,.49);
+        box('bronze',x+side*w*.36,y+1.96,facade,.47,.12,.55);
+      }
+      cylinder('sand',x,top+.22,z,w*.43,.46,d*.43);
+      circular('clay',x,top+.46,z,w*.49,.58,d*.49,0xf4c8a0);
+      cylinder('bronze',x,top+.81,z,.10,.22,.10);
+      solids.add(x,z,w*.235,true,top+.76,top-.04);
+    }else if(style==='stone-watchtower'){
+      for(const side of [-1,1]){
+        cylinder('slate',x+side*w*.445,y+body*.43,z,.57,body*.86,.68,.72);
+        box('stone',x+side*w*.445,y+.16,z,.71,.32,.80);
+      }
+      cylinder('stone',x,top+.29,z,w*.49,.65,d*.49);
+      cylinder('blue',x,top+.69,z,w*.56,.42,d*.56,.62,0xb1a8d4);
+      box('dark',x,top+.32,z+d*.244,.40,.37,.10);
+      solids.add(x,z,w*.255,true,top+.91,top-.04);
+    }else if(style==='mist-dockhouse'){
+      const dockZ=sideZ+front*.97;
+      box('slate',x,y+.16,dockZ,w+.39,.26,1.13);
+      for(const s of [-1,1]){
+        const px=x+s*w*.46;
+        box('dark',px,y+.49,dockZ,.11,.82,.13);
+        box('wood',px,y+.99,dockZ,.20,.12,.21);
+        box('blue',px,y+.71,dockZ+front*.47,.11,.09,.83);
+      }
+      awning(x,y+pier+2.23,sideZ,w*.68,front,'moss');
     }
     if(layout.map==='nevoa') {
       lantern(x-w*.32,y+pier+1.65,sideZ+front*.31,'gold');

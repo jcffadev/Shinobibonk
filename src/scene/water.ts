@@ -120,6 +120,7 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
       varying vec3 vWaterWorld;
     ` + shader.fragmentShader.replace('#include <map_fragment>', `
       #include <map_fragment>
+      float shoreWidth = .045 + fwidth(vWaterDepth);
       if (vWaterDepth <= 0.0) discard;
       vec2 channel = vWaterWorld.xz;
       float a = dot(channel, vec2(1.48, .57)) - waterTime * 1.23;
@@ -134,12 +135,14 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
       vec3 deep = vec3(.018, .155, .29);
       vec3 reflection = mix(vec3(.49, .72, .75), vec3(.32, .56, .74), smoothstep(.1, .8, eye.y));
       float sunHighlight = pow(max(dot(reflect(-normalize(vec3(-.40, .85, .32)), waterNormal), eye), 0.0), 86.0);
-      float caustics = pow(.5 + .5 * sin(a * 2.4 + sin(b * 1.4)) * sin(c * .83), 4.0);
+      float stream = a * 1.8 + .72 * sin(b * .61) + .38 * sin(c * .41 + a * .27);
+      float caustics = pow(.5 + .5 * sin(stream), 5.0)
+        * (.35 + .65 * smoothstep(-.8, .9, sin(b * .48 + stream * .19)));
       vec3 water = mix(shallows + vec3(.085, .13, .088) * caustics * (1.0 - depthMix), deep, depthMix);
       water = mix(water, reflection, fresnel) + sunHighlight * vec3(.65, .71, .67) * .52;
-      float breakup = .042 * sin(a * 2.4) + .024 * sin(c + b);
-      float foam = (1.0 - smoothstep(.035, .19, vWaterDepth + breakup))
-        * smoothstep(.015, .08, vWaterDepth) * (.37 + .36 * smoothstep(-.7,.8,sin(c)));
+      float breakup = .032 * sin(stream) + .018 * sin(c * .68 + b);
+      float foam = (1.0 - smoothstep(.045, .19, vWaterDepth + breakup))
+        * smoothstep(.015, .09, vWaterDepth) * (.24 + .34 * smoothstep(-.68,.85,sin(c * .68)));
       float rings = 0.0;
       for (int i = 0; i < ${RIPPLES.max}; i++) {
         vec4 r = waterRipples[i];
@@ -151,7 +154,8 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
           * (1.0 - smoothstep(.027, .17 + age * .035, distanceToRing));
       }
       diffuseColor.rgb = mix(water, vec3(.78, .91, .88), clamp(foam + rings * .67, 0.0, .82));
-      diffuseColor.a = mix(.33, .91, smoothstep(.015, 1.05, vWaterDepth)) + foam * .14;
+      float shoreFade = smoothstep(0.0, shoreWidth, vWaterDepth);
+      diffuseColor.a = shoreFade * (mix(.29, .91, smoothstep(.015, 1.05, vWaterDepth)) + foam * .14);
     `);
     shader.fragmentShader=shader.fragmentShader.replace('#include <normal_fragment_maps>', `
       #include <normal_fragment_maps>
@@ -162,9 +166,9 @@ export function createWater(scene: THREE.Scene, map: MapId, ground: (x: number, 
     const bends = body.kind==='river' ? Array.from({length:17},(_,i)=>body.at(body.from+(body.to-body.from)*i/16)) : [];
     const box = body.kind === 'lake'
       ? { x0: body.x - body.rx - 1, x1: body.x + body.rx + 1, z0: body.z - body.rz - 1, z1: body.z + body.rz + 1 }
-      : { x0: Math.min(...bends) - body.width - 3, x1: Math.max(...bends) + body.width + 3, z0: body.from - body.width, z1: body.to };
+      : { x0: Math.min(...bends) - body.width - 3, x1: Math.max(...bends) + body.width + 3, z0: body.from - body.width, z1: body.to + body.width };
     const w = box.x1 - box.x0, d = box.z1 - box.z0;
-    const geometry = new THREE.PlaneGeometry(w, d, Math.ceil(w * 2.4), Math.ceil(d * 2.4));
+    const geometry = new THREE.PlaneGeometry(w, d, Math.ceil(w * 3.4), Math.ceil(d * 3.4));
     geometry.rotateX(-Math.PI / 2);
     geometry.translate(box.x0 + w / 2, WATER.level, box.z0 + d / 2);
     const position = geometry.attributes.position, depth = new Float32Array(position.count);
