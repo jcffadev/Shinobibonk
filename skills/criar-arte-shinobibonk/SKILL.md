@@ -21,6 +21,13 @@ Leia a direção de arte de `AGENTS.md`. Abra os atlases usados pelo módulo alv
 - Use o atlas de pixel art para a Substituição e a aura do Modo Sábio. A aura deve permanecer visível durante o buff. Reaproveite quadros e efeitos na prévia com alvos, inclusive a animação de corrida de clones.
 - Para os ícones de Modo Sábio, mantenha a identidade e as marcas oculares de cada shinobi conforme a referência da obra. Para aldeias, mostre o emblema e o nome original.
 
+## Fidelidade ao anime · padrão permanente
+
+1. Identifique o personagem, a fase e o traje antes de desenhar. Localize uma cena do anime ou material oficial da versão. Compare rosto e corpo inteiro e busque perfil ou costas quando disponíveis. Use a Narutopedia para localizar episódios e cruzar detalhes com os quadros da obra.
+2. Registre a referência e as características observáveis antes de gerar. Confira paleta, formato da cabeça, olhos, cabelo, marcas, piercings, proteção da testa, roupa, símbolos, armas e em qual mão ficam. Aplique a proporção chibi do Naruto Academia, Genin e Shippuden do projeto à identidade da versão retratada.
+3. Use o mesmo desenho-base em seleção, ficha, repouso, corrida, ataque, pulo e dash. Valide frente, perfil, costas e as diagonais em folha de contato, no tamanho de jogo. Compare frente e costas com a referência para confirmar que nenhum detalhe muda de fase, cor, posição ou lado. Antecipe os casos assimétricos antes de espelhar.
+4. Verifique as quatro fases de cada ação, a margem transparente e o apoio dos pés. Em conjuração, confirme a pose da técnica e os selos apropriados. Preserve as ações e proporções já aprovadas ao corrigir uma versão. Use as referências de terceiros para orientar arte original e registre os links na documentação.
+
 ## Consistência das versões
 
 Use o Naruto Academia, Genin e Shippuden como referência chibi em todo o elenco. Cabeça bem marcada, mãos e pés legíveis, tronco e pernas compactos e contorno de pixel art. Compare seleção, repouso, caminhada/corrida e ações lado a lado. Preserve diferenças de idade, roupas, cabelo e acessórios dentro dessa linguagem. Para NPCs, parta dos sprites aprovados e preserve a identidade ao animar. Use desenhos próprios de perfil e costas quando disponíveis.

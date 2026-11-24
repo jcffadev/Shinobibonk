@@ -22,6 +22,7 @@ export function missionNpcForEvent(id: string): MissionNpcId | undefined {
 
 type Cell = ReturnType<typeof portraitRegion>;
 type View = 'front' | 'side' | 'back';
+const extraViews = new Set<MissionNpcId>(['ebisu', 'teuchi', 'sapos-sabios']);
 const band = Math.PI / 4;
 const hysteresis = Math.PI / 30;
 const cellAt = (row: { path: string; rows: number }, index: number): Cell => ({ ...row, cols: 4, index });
@@ -106,8 +107,10 @@ export function createMissionNpcs() {
     const family = id === 'naruto-genin' ? 'naruto' : id;
     const form = id === 'naruto-genin' ? 10 : 1;
     const cardinal = cardinalWalkArt(family, form), lateral = lateralWalkArt(family, form);
-    const side = lateral && cellAt(lateral, 4 * lateral.row + 1);
-    const back = cardinal?.back !== undefined ? cellAt(cardinal, 4 * cardinal.back + 1) : undefined;
+    const views = extraViews.has(id) ? { path: '/assets/shinobis/' + id + '-perfil-costas-v1.png', cols: 2, rows: 1 } : undefined;
+    const side = views ? { ...views, index: 0 } : lateral && cellAt(lateral, 4 * lateral.row + 1);
+    const back = views ? { ...views, index: 1 }
+      : cardinal?.back !== undefined ? cellAt(cardinal, 4 * cardinal.back + 1) : undefined;
     const seal = id === 'naruto-genin' ? handSealArt(family, form) : undefined;
     const seals = seal && Array.from({ length: 4 }, (_, i) => cellAt({ path: seal.path, rows: 4 }, 4 * seal.row + i));
     for (const cell of [front, side, back, ...(seals ?? [])]) if (cell) textureFor(cell.path);

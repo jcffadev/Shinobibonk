@@ -10,7 +10,7 @@ A corrida é a animação do deslocamento normal das 114 versões. As mesmas ent
 
 As imagens de corrida foram geradas com ImageGen usando retrato e quadros do próprio jogo como modelos. O pedido por dupla de versões foi uma grade 4 × 10 transparente, com tronco inclinado, braços para trás e quatro fases das pernas, preservando traje, cabelos e acessórios nas cinco vistas. Após a seleção, cada quadro foi recortado a partir dos vãos da folha original e ancorado pela base.
 
-A partir de 24/11/2026, Haku e Hanzō têm atlas chibi dedicados. `*-chibi-v3.png` guarda a caminhada reta, o repouso de três quartos e as fases de ataque. `*-chibi-run-v1.png` usa cinco vistas de corrida. `*-chibi-acrobatics-v1.png` tem pulo de frente e costas, seguido de dash de frente e costas, com quatro quadros em cada fila.
+A partir de 24/11/2026, Haku, Hanzō, Nagato, Sasori e Jūzō têm atlas chibi dedicados. `*-chibi-v3.png` guarda a caminhada reta, o repouso de três quartos e as fases de ataque. `*-chibi-run-v1.png` usa cinco vistas de corrida. `*-chibi-acrobatics-v1.png` tem pulo de frente e costas, seguido de dash de frente e costas, com quatro quadros em cada fila.
 
 Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros, o espelho e a margem transparente das células dos 26 atlas dedicados. Os atlas foram repaginados a partir dos originais para evitar recorte e vazamento da fileira vizinha.
 
@@ -67,8 +67,8 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | suigetsu | suigetsu-roster-v1.png · 0/1 | walk-side-9.png · 7 | suigetsu-directional-v2.png · 0/1 |
 | mangetsu | mangetsu-roster-v1.png · 0/1 | walk-side-13.png · 5 | mangetsu-directional-v2.png · 0/1 |
 | karin | karin-roster-v1.png · 0/1 | walk-side-12.png · 7 | karin-directional-v2.png · 0/1 |
-| nagato | nagato-roster-v1.png · 0/1 | walk-side-10.png · 1 | nagato-directional-v2.png · 0/1 |
-| sasori | sasori-roster-v1.png · 0/1 | walk-side-6.png · 5 | sasori-directional-v2.png · 0/1 |
+| nagato | nagato-chibi-v3.png · 0/1 | nagato-chibi-run-v1.png · 2 | nagato-chibi-run-v1.png · 3/4 |
+| sasori | sasori-chibi-v3.png · 0/1 | sasori-chibi-run-v1.png · 2 | sasori-chibi-run-v1.png · 3/4 |
 | haku | haku-chibi-v3.png · 0/1 | haku-chibi-run-v1.png · 2 | haku-chibi-run-v1.png · 3/4 |
 | chiriku | chiriku-roster-v1.png · 0/1 | walk-side-13.png · 4 | chiriku-directional-v2.png · 0/1 |
 | sakumo | sakumo-roster-v1.png · 0/1 | sakumo-choji-lateral-v1.png · 0 | sakumo-directional-v2.png · 0/1 |
@@ -87,7 +87,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | dosu | dosu-roster-v1.png · 0/1 | walk-side-14.png · 2 | dosu-directional-v2.png · 0/1 |
 | zaku | zaku-roster-v1.png · 0/1 | walk-side-14.png · 3 | zaku-directional-v2.png · 0/1 |
 | kin | kin-roster-v1.png · 0/1 | walk-side-14.png · 4 | kin-directional-v2.png · 0/1 |
-| juzo | juzo-roster-v1.png · 0/1 | walk-side-6.png · 7 | juzo-directional-v2.png · 0/1 |
+| juzo | juzo-chibi-v3.png · 0/1 | juzo-chibi-run-v1.png · 2 | juzo-chibi-run-v1.png · 3/4 |
 | naruto-genin | walk-cardinal-4.png · 0/1 | naruto-classic-cardinal-v2.png · 1 | naruto-classico-motion-v1.png · 0/1 |
 | naruto-shippuden | walk-cardinal-4.png · 2/3 | naruto-classic-cardinal-v2.png · 3 | naruto-shippuden-motion-v1.png · 0/1 |
 | naruto-kyuubi | walk-cardinal-4.png · 4/5 | naruto-classic-cardinal-v2.png · 5 | naruto-kyuubi-motion-v1.png · 0/1 |

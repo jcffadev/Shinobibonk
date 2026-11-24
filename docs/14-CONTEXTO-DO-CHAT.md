@@ -2686,4 +2686,17 @@ Os mapas de Konoha, Suna, Iwa e Kiri já estão na cópia principal para novas m
 
 > E você vai conseguir animar 3D todos esses personagens "npcs"?
 
-A versão anterior das vilas tinha substituído os sprites por formas 3D genéricas. Os NPCs da missão voltaram a usar sua pixel art original na cena 3D, com movimento de tronco e cabeça e pés apoiados. As folhas disponíveis fornecem perfil e costas. Teuchi, Ebisu e os Sapos conservam a vista desenhada animada. Naruto Totem faz os selos do Genin. A auditoria chibi usa os recortes das 114 versões de seleção, repouso, corrida e ação. Hanzō e Haku são os primeiros redesenhos entregues. Cada versão recebeu três atlas, com o mesmo estilo chibi na seleção, repouso, caminhada reta, corrida nas cinco vistas, ataque, pulo e dash. Os testes de movimento passaram. A comparação em partida segue pendente.
+A versão anterior das vilas tinha substituído os sprites por formas 3D genéricas. Os NPCs da missão voltaram a usar sua pixel art original na cena 3D, com movimento de tronco e cabeça e pés apoiados. As folhas disponíveis fornecem perfil e costas. Teuchi, Ebisu e os Sapos conservam a vista original animada e ganharam perfil e costas próprios. Naruto Totem faz os selos do Genin. A auditoria chibi usa os recortes das 114 versões de seleção, repouso, corrida e ação. Foram integrados Haku, Hanzō, Nagato, Sasori e Jūzō. A primeira prévia incluiu ainda Gengetsu, Sakumo e Orochimaru Akatsuki. Cada versão recebeu três atlas, com o mesmo estilo chibi na seleção, repouso, caminhada reta, corrida nas cinco vistas, ataque, pulo e dash. Os testes de movimento passaram. A comparação em partida segue pendente.
+
+> Sengetsu
+> Sakumo Hatake
+> Orochimaru Akatsuki
+>
+> Precisa refazer, pegue referências melhores e refaça
+>
+> Implemente o que já arrumou
+>
+> Implemente que eu quero sempre FIEL ao anime, fiel, busque referências e faça...
+> Coloque no skill esse tipo de modelo para SEMPRE SEMPRE fazerem os personagens assim, para ficar um PADRÃO de QUALIDADE!!!
+
+O nome “Sengetsu” foi interpretado como Gengetsu Hōzuki, que aparecia na prévia. A entrega do restante segue com a skill de arte atualizada para validar cada versão a partir de cenas e materiais oficiais do anime. Gengetsu, Sakumo e Orochimaru Akatsuki passam por novo desenho com referências melhores.

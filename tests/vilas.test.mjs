@@ -368,6 +368,13 @@ test('as construções ficam fixas e a pixel art dos NPCs tem apoio, animação 
       feet++;
     }
     assert.ok(feet>0,id+' tem uma fileira fixa nos pés');
+    camera.position.set(6,.52,0);
+    actor.update(1.3,camera);
+    const sideMap=visual.material.map.name;
+    const sideUV=visual.geometry.attributes.uv.getX(0);
+    camera.position.set(0,.52,-6);
+    actor.update(1.3,camera);
+    assert.ok(sideMap!==visual.material.map.name || sideUV!==visual.geometry.attributes.uv.getX(0),id+' tem recortes distintos de perfil e costas');
     actor.dispose();
   }
   const zetsuVisual=npc.getObjectByName('arte-original');

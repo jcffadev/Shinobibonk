@@ -176,8 +176,10 @@ for (const hero of ROSTER_EXPANSION) {
   signatures.set(hero.ultimate, finisher);
 }
 export const expansionVisual = (name: string) => signatures.get(name)?.visual;
+const SHINOBI_CHIBI_ATLASES = new Set(['haku', 'hanzo', 'juzo', 'nagato', 'sasori']);
+
 export const chibiMotionArt = (id: string) => {
-  if (id!=='haku'&&id!=='hanzo') return;
+  if (!SHINOBI_CHIBI_ATLASES.has(id)) return;
   const path='/assets/shinobi-motion/'+id+'-chibi';
   return { motion: path+'-v3.png', run: path+'-run-v1.png', acrobatics: path+'-acrobatics-v1.png' };
 };

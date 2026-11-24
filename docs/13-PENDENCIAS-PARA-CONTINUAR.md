@@ -4,9 +4,10 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 ## NPCs em pixel art e revisão chibi do elenco · 24/11/2026
 
-- **IMPLEMENTADO:** NPCs animados com a arte original. Zetsu conserva a subida do solo. Naruto Totem usa o selo do Genin. Atores e construções ficam no ponto do evento.
+- **IMPLEMENTADO:** NPCs animados com a arte original e vistas próprias, incluindo as folhas suplementares de Ebisu, Teuchi e Sapos Sábios. Zetsu conserva a subida do solo. Naruto Totem usa o selo do Genin. Atores e construções ficam no ponto do evento.
 - **PENDENTE DE VALIDAÇÃO E2E:** olhar os NPCs em partida, girar a câmera, conferir os cliques e a transição de vistas.
-- **REVISÃO CHIBI:** as 114 versões foram comparadas em seleção, repouso, corrida e ação. Hanzō e Haku ganharam folhas novas que passaram nos testes por código. Seguem em andamento os demais redesenhos identificados, com Gengetsu, Nagato e Sakumo na sequência.
+- **REVISÃO CHIBI:** as 114 versões foram comparadas em seleção, repouso, corrida e ação. Haku, Hanzō, Nagato, Sasori e Jūzō foram redesenhados. **PENDENTE DE VALIDAÇÃO E2E:** conferir as cinco versões em partida.
+- **REFAZER COM AS REFERÊNCIAS DA OBRA:** Gengetsu, Sakumo e Orochimaru Akatsuki, pelo feedback sobre a primeira prévia.
 
 ## Teste das quatro vilas no Live · 23/11/2026
 

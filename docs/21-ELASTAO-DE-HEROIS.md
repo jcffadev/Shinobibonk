@@ -2,6 +2,10 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). Fonte da verdade: `src/game/heroes.ts` (+ `evolution.ts` para formas). O detalhe completo de cada kit (técnicas, passivas, bônus exatos) está no código; este documento é o **índice do elenco** + fila de personagens novos.
 
+## Revisão chibi das 114 versões · 24/11/2026
+
+A comparação em folhas de contato usou o Naruto Academia como referência para cabeça, torso e pernas compactos, preservando o traje e as diferenças de cada versão. Haku, Hanzō Salamandra, Nagato, Sasori e Jūzō receberam novos atlas nesta entrega. Gengetsu, Sakumo e Orochimaru Akatsuki voltam à revisão de fidelidade ao anime. O registro liga a mesma versão à seleção, ficha, jogo, aliados e encontros. Veja os recortes na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
+
 ## Auditoria das 114 versões · 14/11/2026
 
 - Cinco atlas da seleção registram retratos para as 58 versões da expansão. Conferência de enquadramento na tela de seleção pendente.

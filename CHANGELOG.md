@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 24/11/2026 · Revisão chibi do elenco e vistas completas dos NPCs
+
+- A comparação visual percorreu as 114 versões em seleção, repouso, corrida e ação. Além de Haku e Hanzō, Nagato, Sasori e Jūzō ganharam folhas chibi de repouso, caminhada, ataque, corrida, pulo e dash.
+- Ebisu, Teuchi e Sapos Sábios receberam arte própria de perfil e costas, com a vista anterior de frente. Os quadros do Totem incluem a preparação e o selo vistos de frente e de costas.
+- **PENDENTE DE VALIDAÇÃO E2E:** ver os NPCs ao girar a câmera e as transições entre repouso, corrida, ataque, pulo e dash das cinco versões em partida.
+
 ## 24/11/2026 · Primeiras folhas da revisão chibi
 
 - Haku e Hanzō Salamandra receberam novas folhas com a proporção chibi de Naruto, mantendo os trajes das versões do jogo. A mesma arte aparece no retrato, repouso, ataques, corrida nas cinco vistas, pulo e dash.
