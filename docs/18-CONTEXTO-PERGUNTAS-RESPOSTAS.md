@@ -45,6 +45,8 @@ Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos ba
 
 ## 3. Decisões permanentes do usuário
 
+- **24/11/2026 · Arte dos personagens.** NPCs devem conservar os desenhos originais animados. O elenco inteiro segue o padrão chibi das primeiras versões do Naruto, com o traje e os traços da própria versão. Revisar seleção e cenas da partida, incluindo Hanzō e Haku.
+
 - **15/11/2026 — Restrição de navegador vale para TODAS as IAs** (Claude Code, Codex, Qwen e outras), confirmada pelo usuário: "Está para todas as IAs". Substitui a decisão de 14/11 ("por enquanto só no claude"). Validação visual fica PENDENTE DE VALIDAÇÃO E2E até nova autorização explícita.
 - **14/11/2026 (rodada 56) — Política central de testes:** `docs/development/TESTING_POLICY.md` vale para todos os agentes (perfil padrão EQUILIBRADO, status PASSOU/FALHOU/INSTÁVEL/NÃO EXECUTADO/NÃO MENSURÁVEL, toda regra nova com teste em `tests/`). A restrição de navegador continua só para o Claude Code — **CONFIRMADO pelo usuário em 14/11**: "por enquanto só no claude, vou testar no codex e qwen depois, se for preciso mando eles a adicionar a restrição para eles".
 - **14/11/2026 — Testes sem navegador (temporário, só Claude Code):** não abrir Edge/Chrome/Firefox, nem headless/Playwright, para testar; validar com tsc, build, verify-rules e `tests/` (`TESTAR_JOGO.bat`); o que exigir navegador fica "PENDENTE DE VALIDAÇÃO E2E". Política completa em `CLAUDE.md`; só volta com autorização explícita.
@@ -427,6 +429,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 **P.** “To falando pra por no projeto pra todos jogarmos, eu subo no site”
 
 **R.** Os mapas novos estão na seleção normal da cópia principal para partidas novas. O `dist` foi recompilado para o usuário publicar no site. As partidas antigas salvas conservam o mapa em que começaram.
+
+### Por que os NPCs mudaram de estilo e dá para animá-los na cena 3D? · 24/11/2026
+
+A troca veio da revisão que substituiu os sprites por personagens modelados. A arte original voltou animada na cena, com vistas direcionais nas folhas que já as têm e selos no Naruto Totem. A revisão chibi das 114 versões está em andamento, incluindo Hanzō e Haku.
 
 ## 5. Estado atual do projeto
 

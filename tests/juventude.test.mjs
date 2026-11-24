@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { missionNpcForEvent } from '../src/scene/missionNpcs.ts';
+import { load } from './helpers/load.mjs';
 import {
   YOUTH_CHALLENGES, YOUTH_DIFFICULTIES, YOUTH_GOALS, YOUTH_POWER, YOUTH_STATS, YOUTH_TEXT, rollYouthChallenge, tickYouth,
   youthBonuses, youthBonusText, youthChallengeText, youthSpots,
@@ -41,12 +41,13 @@ test('vencer, perder e "não ser acertado" (vence quando o tempo acaba)', () => 
   assert.equal(tickYouth(nohit, 44), null); assert.equal(tickYouth(nohit, 2), 'win');
 });
 
-test('a partida liga o Might Guy: NPC, painel, desafio, falha ao ser acertado e buff ao vencer', () => {
+test('a partida liga o Might Guy: NPC, painel, desafio, falha ao ser acertado e buff ao vencer', async () => {
+  const { missionNpcForEvent } = await load('/src/scene/missionNpcs.ts');
   const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   const main = fs.readFileSync(new URL('../src/main.tsx', import.meta.url), 'utf8');
   for (const wired of [
     "{id:'youth',name:'Treinamento da Juventude · Might Guy'",
-    'npcId=missionNpcForEvent(def.id),actor=npcId?createMissionNpc(npcId):undefined',
+    'npcId=missionNpcForEvent(def.id),actor=npcId?missionNpcs.create(npcId):undefined',
     "if(event.id==='youth'){openYouth(event);return;}",
     'choiceLevel=-13;choiceData=[];',
     "window.addEventListener('shinobi-youth',onYouth);",

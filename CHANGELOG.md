@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 24/11/2026 · NPCs animados com a arte original
+
+- **IMPLEMENTADO.** Os NPCs voltam à pixel art anterior e ganham movimentos de cabeça e tronco com os pés apoiados. Nos shinobis com atlas direcional, a câmera revela perfil e costas em uma única figura. Teuchi, Ebisu e Sapos Sábios mantêm a vista original animada.
+- Zetsu conserva a subida e o clique, e Naruto Totem usa a folha de selos do Naruto Genin. Casas, altares e o mercador continuam no mundo em seus pontos fixos.
+- **TESTADO.** TypeScript, build e 241 testes por código com cobertura. **PENDENTE DE VALIDAÇÃO E2E:** ver os NPCs em partida com câmera baixa e alta, giro, neblina e aproximação.
+
 ## 23/11/2026 · Mapas novos para teste no Live
 
 - O usuário autorizou promover as quatro vilas para teste. O código revisado e validado em `5b72a16` segue para `main`.

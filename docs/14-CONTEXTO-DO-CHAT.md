@@ -2674,3 +2674,16 @@ Preservamos o estado anterior do código em `backup/live-antes-vilas-2026-11-23`
 > To falando pra por no projeto pra todos jogarmos, eu subo no site
 
 Os mapas de Konoha, Suna, Iwa e Kiri já estão na cópia principal para novas missões pela seleção normal. Recompilei `dist` na cópia principal e confirmei que o bundle corresponde à revisão validada. O usuário fará a publicação no site. O backup da versão anterior continua disponível.
+
+## NPCs originais animados e padrão chibi · 24/11/2026
+
+> porque os personagens estão assim? eu quero os personagens que nos tinhamos, mas você fazer eles animados, porque virou tipo um "roblox"
+
+> Depois disso você precisa revisar TODOS os personagens...
+> Porque?
+> Os personagens NOVOS, você não fez chibbi tipo naruto e tal, igual o Hanzo da Salamandra e a Haku, precisamos refazer...
+> Você precisa verificar todos os personagens e ver quais você fez e não fez considerando esses Chibbi e fazer TODOS no padrão Chibbi que era o padrão do nosso projeto, não sei porque você fez diferente.
+
+> E você vai conseguir animar 3D todos esses personagens "npcs"?
+
+A versão anterior das vilas tinha substituído os sprites por formas 3D genéricas. Os NPCs da missão voltaram a usar sua pixel art original na cena 3D, com movimento de tronco e cabeça e pés apoiados. As folhas disponíveis fornecem perfil e costas. Teuchi, Ebisu e os Sapos conservam a vista desenhada animada. Naruto Totem faz os selos do Genin. A auditoria chibi usa os recortes das 114 versões de seleção, repouso, corrida e ação. Hanzō e Haku são os primeiros redesenhos.

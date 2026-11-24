@@ -23,6 +23,8 @@ Leia a direção de arte de `AGENTS.md`. Abra os atlases usados pelo módulo alv
 
 ## Consistência das versões
 
+Use o Naruto Academia, Genin e Shippuden como referência chibi em todo o elenco. Cabeça bem marcada, mãos e pés legíveis, tronco e pernas compactos e contorno de pixel art. Compare seleção, repouso, caminhada/corrida e ações lado a lado. Preserve diferenças de idade, roupas, cabelo e acessórios dentro dessa linguagem. Para NPCs, parta dos sprites aprovados e preserve a identidade ao animar. Use desenhos próprios de perfil e costas quando disponíveis.
+
 Crie o repouso em três quartos e o retrato em perfil a partir da mesma identidade. Use o mesmo recorte de retrato na seleção e na ficha. Na caminhada, separe frente reta, costas retas, perfil, diagonal frontal e diagonal traseira. Use a pose da vista e o enquadramento da mesma versão. A altura visível vem do corpo, com Gaara Genin como referência infantil. Compare o personagem dianteiro e traseiro lado a lado para reconhecer de imediato roupa, silhueta, idade e acessórios. Para a corrida, use a pose com braços para trás nas cinco vistas e preserve o traje da versão, incluindo cabelo, marcas, acessórios e silhueta. Compare a arte de frente, costas e perfil lado a lado com o modelo antes de integrar. Siga o layout e a verificação de cobertura da skill `movimentar-shinobi`.
 
 Na seleção, ficha e ranking, use a pose em três quartos da própria versão. A cabeça fica centralizada no card pequeno e a silhueta inteira no card de detalhes, com margens regulares. Compare com Naruto Shippuden e confira o quadro real de cada versão numa folha de contato.

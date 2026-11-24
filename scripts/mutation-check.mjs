@@ -16,7 +16,7 @@ const MUTATIONS = [
   { regra: 'base do Monte Hokage entra no chão', arquivo: 'src/scene/landmarkRelief.ts', de: 'embedBase(faceGeometry,face.position.y,face.position.z);', para: '' },
   { regra: 'câmera orbita acima do terreno', arquivo: 'src/scene/heightField.ts', de: 'Math.max(y,footHeight(ground,x,z,.62)+.80)', para: 'y' },
   { regra: 'acostamento de Konoha mistura os materiais', arquivo: 'src/scene/villageLayout.ts', de: '1-MathUtils.smoothstep(distance+roughness,-.4,.57)', para: 'Number(distance<0)' },
-  { regra: 'NPC de missão usa malhas, sem planos de rosto', arquivo: 'src/scene/missionNpcs.ts', de: "  root.name='npc-3d-'+id;", para: "  root.name='npc-3d-'+id; root.add(new THREE.Sprite());" },
+  { regra: 'NPC de missão preserva o sprite da própria versão', arquivo: 'src/scene/missionNpcs.ts', de: 'const front = portraitRegion(id);', para: "const front = portraitRegion('teuchi');" },
   { regra: 'margem curva tem subdivisão local', arquivo: 'src/scene/terrainGeometry.ts', de: 'if(detailed[i])grid(sx,sz,sub);', para: 'if(detailed[i])grid(sx,sz,1);' },
   { regra: 'degraus têm uma só superfície de piso', arquivo: 'src/scene/villageArchitecture.ts', de: 'quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);', para: 'quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);quad(floor,[left,top,to],[right,top,to],[right,top,from],[left,top,from]);' },
   { regra: 'escadas das vilas apoiam passos sem pulo', arquivo: 'src/scene/collision.ts', de: 'stair.top!<=from+.205', para: 'stair.top!<=from+.05' },

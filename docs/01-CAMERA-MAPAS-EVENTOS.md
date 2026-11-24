@@ -438,6 +438,10 @@ As missões usam um perímetro de postes e travessas no limite de movimento. Em 
 
 Os versos de Hashirama e Madara mantêm a pose e usam arte própria sobre o relevo curvo. Os pergaminhos e os itens de cenário repousam na superfície e têm sombra de contato. Os drops de abate ficam apoiados até serem atraídos. O farol do pergaminho grátis continua visível.
 
-## Margens, NPCs 3D e bairros regionais
+## Margens e bairros regionais
 
-A água usa borda que perde opacidade na margem, leito contínuo e maior resolução junto ao primeiro plano do canal. Os NPCs dos eventos têm volume, animação de repouso e orientação fixa. O clique de Teuchi e Zetsu alcança as malhas filhas. Suna, Iwa e Kiri ligam seus novos bairros pela mesma pintura de ruas e acostamentos de Konoha. As quatro vilas têm sombras locais configuradas pela qualidade gráfica.
+A água usa borda que perde opacidade na margem, leito contínuo e maior resolução junto ao primeiro plano do canal. Teuchi e Zetsu mantêm seus alvos de clique. Suna, Iwa e Kiri ligam seus novos bairros pela mesma pintura de ruas e acostamentos de Konoha. As quatro vilas têm sombras locais configuradas pela qualidade gráfica.
+
+## NPCs animados · 24/11/2026
+
+A arte anterior de Shikamaru, Orochimaru, Ebisu, Iruka, Zetsu, Tsunade, Tenten, Guy, Sapos Sábios e Teuchi volta à cena. A malha do sprite anima tronco e cabeça, com os pés na altura do chão. O ponto de interação e o rumo do ator permanecem fixos. Os shinobis com vistas próprias usam perfil e costas conforme o ângulo. Ebisu, Teuchi e Sapos Sábios usam a vista original animada até terem novos desenhos. Naruto Totem alterna entre preparação e selo do Naruto Genin com vistas dianteira e traseira. O mercador é representado pela construção.

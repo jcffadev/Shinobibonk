@@ -41,7 +41,7 @@ import { createVillageLayout, villageGroundBands, missionMapLayout, shuffledVill
 import { createVillageGround, villageWater } from './villageTerrain';
 import { createVillageScenery } from './villageScenery';
 import { createMissionStructures, type MissionStructure } from './missionStructures';
-import { createMissionNpc, missionNpcForEvent } from './missionNpcs';
+import { createMissionNpcs, missionNpcForEvent, type MissionNpc } from './missionNpcs';
 import { villageRandom } from './villageDistricts';
 import { createVillageTraversal, moveVillageActor } from './villageTraversal';
 import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE, PLAYER_SIZE } from '../game/worldScale';
@@ -120,7 +120,7 @@ export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerS
 export { ALTAR_BUFF_BASE, ALTAR_BUFF_POOL } from '../game/altarRewards';
 /** Bolinho de arroz: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .025, heal: .35 };
-type Enemy = { /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:ReturnType<typeof createMissionNpc>; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
+type Enemy = { /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:MissionNpc; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
 type MapPickup = { id:string; kind:'kunai'|'shuriken'|'ryu'|'sealDrop'|'cursedShuriken'|'ninjaBody'; name:string; x:number; z:number; mesh:THREE.Object3D; active:boolean; discovered?:boolean };
 type Projectile = {mesh:THREE.Object3D;direction:THREE.Vector3;remaining:number;speed:number;radius:number;technique:Technique;origin:THREE.Vector3;hit:Set<Enemy>;growth:SkillGrowth;ally?:boolean;bounces:number;effectLevel?:number;range:number};
 /** Setup (buff puro) ativo no jogador. */
@@ -341,7 +341,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const altarRarities:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
     const allEvents=[...eventDefs.filter(e=>e.id!=='altar').map(e=>({...e,altarTier:undefined as number|undefined})),...Array.from({length:8},(_,i)=>{const tier=i<5?i:Math.floor(Math.random()*5);return {id:'altar-'+i,name:'Altar · '+(tier===0?'Normal':altarRarities[tier]),x:0,z:0,icon:'🛕',sprite:11,altarTier:tier};})];
     const eventStructures=createMissionStructures();
-    runCleanups.push(eventStructures.dispose);
+    const missionNpcs=createMissionNpcs();
+    runCleanups.push(eventStructures.dispose,missionNpcs.dispose);
     const events=allEvents.map(def=>{
       const gate=def.id==='guardian-seal';
       const structure:MissionStructure|undefined=gate?'guardian':def.id==='ichiraku'?'ramen'
@@ -349,7 +350,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const addedSize=village&&def.altarTier===undefined&&!gate?1.17:1;
       let obj:THREE.Group;
       let fadeMaterials:THREE.Material[];
-      const npcId=missionNpcForEvent(def.id),actor=npcId?createMissionNpc(npcId):undefined;
+      const npcId=missionNpcForEvent(def.id),actor=npcId?missionNpcs.create(npcId):undefined;
       if(actor)runCleanups.push(actor.dispose);
       if(structure){
         const color=def.altarTier===undefined?0xffffff:parseInt(altarColors[def.altarTier].slice(1),16);
@@ -357,14 +358,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         const w=(gate?5.6:structure==='ramen'?4:3.2)*ACTOR_SCALE*addedSize;
         const h=(gate?5:structure==='ramen'?3.4:3.2)*ACTOR_SCALE*addedSize;
         obj.scale.set(w,h,w);
-        if(actor){
-          actor.root.position.set(.47,-.45,.37);
-          actor.root.scale.setScalar(.78);
-          obj.add(actor.root);
-        }
       }else{
         const scale=ACTOR_SCALE*addedSize;
-        const h=def.id==='challenge'?2.55:def.id==='sapos-sabios'?2.72:2.95;
+        const h=def.id==='challenge'?2.05:def.id==='sapos-sabios'?1.8:1.85;
         obj=actor!.root;
         obj.scale.setScalar(h*scale);
         fadeMaterials=[];
@@ -391,10 +387,10 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       zetsuRise=Math.min(AKATSUKI_AMBUSH.riseTime,zetsuRise+dt);
       obj.position.y=standHeight(x,z)+obj.scale.y*(zetsuEmergence(zetsuRise)-1);
     }
-    const teuchiActor=createMissionNpc('teuchi'),teuchi=teuchiActor.root;
+    const teuchiActor=missionNpcs.create('teuchi'),teuchi=teuchiActor.root;
     runCleanups.push(teuchiActor.dispose);
     const teuchiScale=ACTOR_SCALE*(village?1.17:1);
-    teuchi.scale.setScalar(2.25*teuchiScale);
+    teuchi.scale.setScalar(1.76*teuchiScale);
     scene.add(teuchi);
     function placeTeuchi(){
       const x=ichiraku.x+1.1,z=ichiraku.z+1.45;
@@ -1385,9 +1381,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function spawnTotem(){if(totemSpawned)return null;totemSpawned=true;totemDiscovered=false;totemResult='';totemCloneTimer=1;
       const angle=Math.random()*Math.PI*2,x=THREE.MathUtils.clamp(player.position.x+Math.cos(angle)*TOTEM_RULES.distance,-44,44),z=THREE.MathUtils.clamp(player.position.z+Math.sin(angle)*TOTEM_RULES.distance,-44,44);
       const sprite=makeHero('naruto-genin',10);
-      const fixedArt=createMissionNpc('naruto');
+      const fixedArt=missionNpcs.create('naruto-genin');
       sprite.material.colorWrite=false;
-      fixedArt.root.scale.setScalar(2.25*ACTOR_SCALE*1.5);
+      fixedArt.root.scale.setScalar(2.25*ACTOR_SCALE*1.25);
       fixedArt.root.position.set(x,standHeight(x,z),z);
       scene.add(fixedArt.root);
       sprite.scale.multiplyScalar(1.5);sprite.position.set(x,terrainHeight(x,z)+1.7,z);scene.add(sprite);totemPos.set(x,0,z);
@@ -1410,7 +1406,6 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(!totem)return;
       if(elapsed>=TOTEM_RULES.end){endTotem('expirou');return;}
       totem.sprite.position.y=terrainHeight(totem.sprite.position.x,totem.sprite.position.z)+1.7;totemBar?.follow(totem.sprite);totemBar?.draw(totem.hp/(totem.maxHp||1),TOTEM_RULES.end-elapsed);
-      totem.fixedArt?.update(elapsed,totemCloneTimer<.15);
       totemCloneTimer-=dt;if(totemCloneTimer<=0){totemCloneTimer=TOTEM_RULES.interval;const alive=enemyList.reduce((n,e)=>n+(e.clone?1:0),0);for(let n=0;n<Math.min(TOTEM_RULES.perWave,TOTEM_RULES.maxClones-alive);n++)spawnTotemClone();}
     }
     // Plano do Shikamaru: cada acionamento dá +1 kunai grátis ao derrotar o guardião desta zona (limite 3 por zona, sem penalidade).
@@ -2141,8 +2136,12 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=true;
         enemyRenderer.sync(enemyList,enemyOpacity,dt);
       }const renderTime=performance.now()/1000;
-      for(const event of events)if(event.obj.visible)event.actor?.update(elapsed);
-      if(teuchi.visible)teuchiActor.update(elapsed);
+      for(const event of events)if(event.obj.visible)event.actor?.update(elapsed,camera);
+      if(teuchi.visible)teuchiActor.update(elapsed,camera);
+      if(totem?.fixedArt){
+        totem.fixedArt.root.visible=totem.sprite.visible;
+        if(totem.sprite.visible)totem.fixedArt.update(elapsed,camera,totemCloneTimer<.24);
+      }
       water.update(renderTime);civicScene?.update(renderTime);splashes.update(dt);landscape.setFogged(!!scene.fog);updateVillageLight(player.position.x,player.position.z);const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
     };
     // V-Sync (Gráficos): LIGADO = requestAnimationFrame (um quadro por quadro do monitor). DESLIGADO = spin loop acima da taxa do monitor
@@ -2264,7 +2263,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       sages:()=>{openSages();return choiceData?.length??0;},
       cloneMotion:()=>shadowClones.map(clone=>clone.motion.state()),
       gamabuntaPhase:()=>visuals.find(effect=>effect.object.userData.gamabuntaPhase)?.object.userData.gamabuntaPhase,
-      totemMotion:()=>({sign:!!totem?.fixedArt,clones:enemyList.filter(e=>e.clone).map(e=>({pose:e.motion?.state(),distance:Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)}))}),
+      totemMotion:()=>({sign:!!totem?.fixedArt?.sealing(),clones:enemyList.filter(e=>e.clone).map(e=>({pose:e.motion?.state(),distance:Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)}))}),
       spawnRanged:()=>{const enemy=spawnEnemy();enemy.ranged=2;enemy.speed=0;enemy.sprite.position.copy(player.position).add(new THREE.Vector3(5,0,0));return enemy.hp;},
       rangedState:()=>({foes:enemyList.filter(e=>e.ranged!==undefined).length,shots:enemyShots.length}),
       enemyFrames:()=>enemyList.filter(e=>enemyRenderer.isBatched(e.sprite)).map(e=>e.sprite.userData.frame as number),

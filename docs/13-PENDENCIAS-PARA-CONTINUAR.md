@@ -2,6 +2,12 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## NPCs em pixel art e revisão chibi do elenco · 24/11/2026
+
+- **IMPLEMENTADO:** NPCs animados com a arte original. Zetsu conserva a subida do solo. Naruto Totem usa o selo do Genin. Atores e construções ficam no ponto do evento.
+- **PENDENTE DE VALIDAÇÃO E2E:** olhar os NPCs em partida, girar a câmera, conferir os cliques e a transição de vistas.
+- **EM ANDAMENTO:** revisar as 114 versões no padrão chibi do Naruto do projeto, com olhos e cabeça proporcionais, corpo compacto e a mesma identidade nas poses. Hanzō e Haku são prioridades.
+
 ## Teste das quatro vilas no Live · 23/11/2026
 
 - **CONFIRMADO:** teste da revisão das vilas autorizado. O ponto de retorno do código anterior é `backup/live-antes-vilas-2026-11-23` (`5955bb0`), além de `mapas_basicos` (`c7581be`).

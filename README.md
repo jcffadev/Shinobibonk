@@ -8,6 +8,8 @@ Repositório: https://github.com/jcffadev/Shinobibonk
 
 As 114 versões do elenco usam a corrida com braços para trás no deslocamento normal. São cinco vistas e quatro quadros por vista. A ficha e a seleção compartilham o retrato em perfil. [Matriz por versão](docs/development/COBERTURA-DE-VISTAS.md).
 
+Nas quatro vilas, os NPCs de missão usam a pixel art original com movimento de repouso, vistas direcionais quando disponíveis e interação no mesmo ponto do cenário. [Mapas e eventos](docs/01-CAMERA-MAPAS-EVENTOS.md).
+
 O hub inclui ranking local de temporada, Top 100, clãs e fichas com builds e missões. [Regras do ranking e proposta de publicação online](docs/development/RANKING-E-CLAS.md).
 
 ## Começar

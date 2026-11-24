@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { installCanvasStub,load } from './helpers/load.mjs';
+import { decodePng } from '../scripts/audit-walk-sheets.mjs';
 
 installCanvasStub();
 THREE.TextureLoader.prototype.load = function () { return new THREE.Texture(); };
@@ -294,53 +295,123 @@ test('Konoha ocupa aproximadamente 80% da área jogável com bairros conectados'
 });
 
 
-test('eventos e NPCs usam volume fixo e continuam clicáveis de perfis diferentes',async()=>{
+const pngs=new Map();
+function useNpcPngs(t) {
+  t.mock.method(THREE.TextureLoader.prototype,'load',function(path) {
+    if(!path.includes('shinobi'))return new THREE.Texture();
+    if(!pngs.has(path))pngs.set(path,decodePng(new URL('../public'+path,import.meta.url)));
+    return new THREE.Texture(pngs.get(path));
+  });
+  let crop;
+  t.mock.method(globalThis.document,'createElement',()=>({
+    getContext:()=>({
+      drawImage:(image,x,y)=>{crop={image,x,y};},
+      getImageData:(_x,_y,w,h)=>{
+        const data=new Uint8ClampedArray(w*h*4);
+        for(let y=0;y<h;y++)for(let x=0;x<w;x++)data[(y*w+x)*4+3]=crop.image.alpha(crop.x+x,crop.y+y);
+        return {data};
+      },
+    }),
+  }));
+}
+test('as construções ficam fixas e a pixel art dos NPCs tem apoio, animação e clique em todos os ângulos',async t=>{
+  useNpcPngs(t);
   const {createMissionStructures}=await load('/src/scene/missionStructures.ts');
-  const {createMissionNpc,missionNpcForEvent}=await load('/src/scene/missionNpcs.ts');
+  const {createMissionNpcs,missionNpcForEvent}=await load('/src/scene/missionNpcs.ts');
+  const {portraitRegion}=await load('/src/game/evolution.ts');
   const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(52,1,.1,40);
-  const structures=createMissionStructures();
-  const zetsu=createMissionNpc('zetsu'),npc=zetsu.root;
-  const actors=[npc,...['guardian','ramen','merchant','altar'].map(kind=>structures.make(kind,0x85caec).obj)];
-  for(const [i,obj] of actors.entries()){
+  const structures=createMissionStructures(),npcs=createMissionNpcs();
+  const zetsu=npcs.create('zetsu'),npc=zetsu.root;
+  const objects=[npc,...['guardian','ramen','merchant','altar'].map(kind=>structures.make(kind,0x85caec).obj)];
+  for(const [i,obj] of objects.entries()){
     obj.position.set(i*3,0,0);
     scene.add(obj);
   }
   scene.updateMatrixWorld(true);
-  const poses=actors.map(obj=>obj.matrixWorld.clone());
+  const poses=objects.map(obj=>obj.matrixWorld.clone());
   const ray=new THREE.Raycaster();
   for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5]){
-    for(const [i,obj] of actors.entries()){
+    for(const [i,obj] of objects.entries()){
       camera.position.set(obj.position.x+Math.sin(angle)*6,.52,Math.cos(angle)*6);
       camera.lookAt(obj.position.x,.52,obj.position.z);
       camera.updateMatrixWorld();
       scene.updateMatrixWorld(true);
       assert.ok(obj.matrixWorld.equals(poses[i]));
-      obj.traverse(child=>assert.ok(!child.isSprite));
       if(obj===npc){
+        zetsu.update(angle,camera);
+        scene.updateMatrixWorld(true);
         ray.setFromCamera(new THREE.Vector2(),camera);
-        assert.ok(ray.intersectObject(npc,true).length>0,'NPC tem volume clicável de todos os lados');
+        assert.ok(ray.intersectObject(npc,true).length>0,'alvo fixo clicável dos quatro lados');
       }
     }
   }
-  zetsu.dispose();
-  const ids=['shikamaru','orochimaru','ebisu','iruka','challenge','slot','arsenal','youth','trader','sapos-sabios'].map(missionNpcForEvent);
+  const ids=['shikamaru','orochimaru','ebisu','iruka','challenge','slot','arsenal','youth','sapos-sabios'].map(missionNpcForEvent);
   assert.equal(new Set(ids).size,ids.length);
-  for(const id of [...ids,'teuchi','naruto']){
-    const actor=createMissionNpc(id);
-    const bounds=new THREE.Box3().setFromObject(actor.root);
-    assert.ok(bounds.max.z-bounds.min.z>.19,id+' tem profundidade modelada');
-    actor.root.traverse(node=>{
-      assert.ok(!node.isSprite);
-      if(node.isMesh)assert.ok(!node.material.map,'figura feita de malhas coloridas');
-    });
-    const head=actor.root.getObjectByName('cabeca');
-    actor.update(.2);
-    const initial=head.rotation.y;
-    actor.update(1.3);
-    assert.notEqual(head.rotation.y,initial,id+' tem animação de repouso');
+  assert.equal(missionNpcForEvent('trader'),undefined,'o mercador é o edifício da loja');
+  for(const id of [...ids,'teuchi']){
+    const actor=npcs.create(id);
+    const visual=actor.root.getObjectByName('arte-original');
+    camera.position.set(0,.52,6);
+    actor.update(.2,camera);
+    assert.equal(visual.material.map.name,portraitRegion(id).path,id+' usa a arte anterior de frente');
+    assert.ok(visual.visible);
+    assert.equal(actor.root.children.filter(node=>node.material?.map).length,1,'uma imagem visível por vez');
+    const points=visual.geometry.attributes.position;
+    const mesh=Array.from(points.array);
+    actor.update(1.3,camera);
+    assert.notDeepEqual(Array.from(points.array),mesh,id+' tem movimento de tronco/cabeça');
+    let feet=0;
+    for(let i=0;i<points.count;i++)if(mesh[i*3+1]===0){
+      assert.equal(points.getX(i),mesh[i*3]);
+      assert.equal(points.getY(i),0);
+      assert.equal(Math.abs(points.getZ(i)),0);
+      feet++;
+    }
+    assert.ok(feet>0,id+' tem uma fileira fixa nos pés');
     actor.dispose();
   }
+  const zetsuVisual=npc.getObjectByName('arte-original');
+  camera.position.set(6,.52,0);
+  zetsu.update(1,camera);
+  assert.match(zetsuVisual.material.map.name,/walk-side-6/);
+  const sideU=zetsuVisual.geometry.attributes.uv.getX(0);
+  camera.position.set(-6,.52,0);
+  zetsu.update(1,camera);
+  assert.notEqual(zetsuVisual.geometry.attributes.uv.getX(0),sideU,'perfis opostos usam sentidos opostos');
+  camera.position.set(0,.52,-6);
+  zetsu.update(1,camera);
+  assert.equal(zetsuVisual.material.map.name,portraitRegion('zetsu').path);
+  const backsV=zetsuVisual.geometry.attributes.uv.getY(0);
+  camera.position.set(0,.52,6);
+  zetsu.update(1,camera);
+  assert.notEqual(zetsuVisual.geometry.attributes.uv.getY(0),backsV,'costas e frente são células distintas');
+  zetsu.dispose();
+  npcs.dispose();
   structures.dispose();
+});
+
+test('Naruto Totem alterna preparação e selo Genin, com a célula traseira na câmera oposta',async t=>{
+  useNpcPngs(t);
+  const {createMissionNpcs}=await load('/src/scene/missionNpcs.ts');
+  const camera=new THREE.OrthographicCamera(-2,2,2,-2,.1,40),npcs=createMissionNpcs();
+  const naruto=npcs.create('naruto-genin');
+  const visual=naruto.root.getObjectByName('arte-original');
+  const uv=visual.geometry.attributes.uv;
+  camera.position.set(0,1,6);
+  camera.lookAt(0,.5,0);
+  naruto.update(0,camera);
+  assert.ok(naruto.sealing());
+  assert.match(visual.material.map.name,/naruto-hand-seal-v1/);
+  const preparing=uv.getX(0);
+  naruto.update(.1,camera,true);
+  const casting=uv.getX(0);
+  assert.ok(casting>preparing);
+  camera.position.set(0,1,-6);
+  camera.lookAt(0,.5,0);
+  naruto.update(.1,camera,true);
+  assert.ok(uv.getX(0)>casting,'célula de costas');
+  naruto.dispose();
+  npcs.dispose();
 });
 
 test('as bordas das vias de Konoha misturam os materiais sem criar um degrau',async()=>{
