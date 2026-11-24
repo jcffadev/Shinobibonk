@@ -2,7 +2,7 @@
 
 ## Próximas prioridades sugeridas
 
-1. Corrigir o que saiu da [auditoria visual das 114 versões](development/AUDITORIA-CHIBI-ELENCO.md). Redesenhar Chiriku, Jūgo Taka e Obito Máscara Branca. Harmonizar as poses das três Sakuras, Kushina, Tobi Akatsuki e Hanabi Adulta. Registrar a referência da fase de cada versão e conferir as transições em partida, incluindo Jūzō como jogador e ajudante.
+1. Conferir em partida os nove ajustes da [auditoria visual das 114 versões](development/AUDITORIA-CHIBI-ELENCO.md), incluindo as transições de repouso, corrida e ação. Verificar Jūzō como jogador e ajudante. Continuar o registro de referências por versão para o restante do elenco.
 2. Finalizar os Susanoo de Sasuke e Itachi e revisar os jutsus que usam efeitos compartilhados. Documentar o efeito na obra, a área de acerto e os valores de status. Usar o simulador antes de propor mudanças de balanceamento.
 3. Percorrer as quatro vilas no jogo, com foco em água, escadas, escalada, NPCs, Balanço da Academia e Pedra Memorial. Medir o desempenho com horda nas qualidades gráficas.
 4. Validar o ranking público na hospedagem e definir a verificação competitiva dos resultados antes de ampliar os modos e equipes.

@@ -10,7 +10,9 @@ import { load } from './helpers/load.mjs';
 globalThis.document ??= { createElement: () => ({ getContext: () => null, width: 0, height: 0 }) };
 const M = await load('/src/scene/playerMotion.ts');
 const { runningArt } = await load('/src/game/runningArt.ts');
-const { HEROES, portraitRegion } = await load('/scripts/motion-review-entry.ts');
+const { HEROES } = await load('/scripts/motion-review-entry.ts');
+const { menuPortraitRegion, portraitRegion } = await load('/src/game/evolution.ts');
+const { actionArt } = await load('/src/game/directionalArt.ts');
 
 const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
 
@@ -71,6 +73,35 @@ test('WASD e o vetor do dash selecionam a mesma orientação nas oito direções
 test('inimigos apontam no mesmo vetor usado para caminhar e dar dash', () => {
   assert.match(canvas, /stableFacing\(sprite\.userData,enemyTravel\.dot\(v1\),enemyTravel\.dot\(v2\)\)/);
   assert.match(canvas, /enemy\.sprite\.position\.addScaledVector\(enemyTravel,enemy\.speed/);
+});
+
+test('as nove versões revisadas compartilham o retrato e têm os ataques de frente e de costas', () => {
+  const refined = [
+    'chiriku', 'jugo', 'obito-guerra', 'sakura', 'sakura-shippuden', 'sakura-byakugou',
+    'kushina', 'tobi-akatsuki', 'hanabi-adulta',
+  ];
+  for (const id of refined) {
+    const hero = HEROES.find(entry => entry.id === id);
+    const portrait = portraitRegion(id);
+    const action = actionArt(hero.family, hero.form);
+    assert.deepEqual(menuPortraitRegion(id), portrait, id);
+    const firstAction = id === 'chiriku' ? 2 : 1;
+    assert.equal(portrait.index, id === 'chiriku' ? 8 : 0, id);
+    assert.equal(action.path, portrait.path, id);
+    assert.equal(action.firstRow, firstAction, id);
+    assert.notEqual(runningArt(id).path, action.path, id);
+    const image = decodePng('public' + action.path);
+    const width = image.width / portrait.cols;
+    const height = image.height / action.rows;
+    assert.ok(Number.isInteger(width) && Number.isInteger(height), id);
+    assert.ok(!cellShape(image, 0, Math.floor(portrait.index / portrait.cols) * height, width, height).empty, id);
+    for (let row = firstAction; row < action.rows; row++) {
+      for (let column = 0; column < portrait.cols; column++) {
+        const cell = cellShape(image, column * width, row * height, width, height);
+        assert.ok(!cell.empty, id + ' quadro ' + row + '/' + column);
+      }
+    }
+  }
 });
 
 test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direções', (t) => {

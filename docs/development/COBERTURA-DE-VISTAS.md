@@ -12,6 +12,8 @@ As imagens de corrida foram geradas com ImageGen usando retrato e quadros do pr�
 
 A partir de 24/11/2026, Haku, Hanzō, Nagato, Sasori, Jūzō, Gengetsu, Sakumo e Orochimaru Akatsuki têm atlas chibi dedicados. `*-chibi-v3.png` guarda a caminhada reta, o repouso de três quartos e as fases de ataque. `*-chibi-run-v1.png` usa cinco vistas de corrida. `*-chibi-acrobatics-v1.png` tem pulo de frente e costas, seguido de dash de frente e costas, com quatro quadros em cada fila.
 
+Chiriku agora usa três atlas próprios com o traje da obra. As outras oito versões apontadas na auditoria usam `*-chibi-poses-v1.png` para retrato, repouso e ataque. Jūgo e Obito Máscara Branca também têm `*-acrobatics-v3.png` para pulo e dash. Veja o [registro dos ajustes](AUDITORIA-CHIBI-ELENCO.md#ajuste-das-nove-versões).
+
 Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros, o espelho e a margem transparente das células dos 26 atlas dedicados. Os atlas foram repaginados a partir dos originais para evitar recorte e vazamento da fileira vizinha.
 
 | Versão | S/W · frente/costas | A/D · perfil | Diagonais · frente/costas |

@@ -136,3 +136,21 @@ Resultado visual nas poses amostradas. **105 versões seguem o padrão. Três pr
 | 112 | Obito Uchiha Tobi · Akatsuki | `tobi-akatsuki` | Ajuste entre poses |
 | 113 | Obito Uchiha Máscara Branca | `obito-guerra` | Redesenho |
 | 114 | Hanabi Hyūga Adulta | `hanabi-adulta` | Ajuste entre poses |
+
+## Ajuste das nove versões
+
+As classificações da tabela registram o diagnóstico anterior ao ajuste. A seleção e a ficha usam o mesmo recorte de repouso. O ataque conserva as quatro fases de frente e de costas. Os arquivos entram em `public/assets/shinobi-motion/`.
+
+| Versão | Folhas integradas | Referência da fase |
+| --- | --- | --- |
+| Chiriku | `chiriku-chibi-v3.png`, `chiriku-chibi-run-v1.png`, `chiriku-chibi-acrobatics-v1.png` | [Chiriku no Templo do Fogo](https://naruto-official.com/en/anime/naruto2/list/01_502) e [sua roupa e a faixa dos guardiões](https://naruto.fandom.com/wiki/Chiriku). |
+| Jūgo Taka | `jugo-chibi-poses-v1.png` e `jugo-1-acrobatics-v3.png` | [Jūgo no refúgio do Norte](https://naruto-official.com/en/anime/naruto2/list/01_561) e [a formação da equipe](https://naruto-official.com/en/anime/naruto2/list/01_562). |
+| Obito Máscara Branca | `obito-guerra-chibi-poses-v1.png` e `obito-30-acrobatics-v3.png` | [Obito e Madara](https://naruto-official.com/en/anime/naruto2/list/01_788) e [trajes por fase](https://naruto.fandom.com/wiki/Obito_Uchiha). |
+| Sakura Genin, Shippuden e Byakugō | `sakura-chibi-poses-v1.png`, `sakura-shippuden-chibi-poses-v1.png` e `sakura-byakugou-chibi-poses-v1.png` | [Sakura por fase](https://naruto-official.com/en/news/01_1743). |
+| Kushina | `kushina-chibi-poses-v1.png` | [Kushina adulta](https://naruto-official.com/en/news/01_1833). |
+| Tobi Akatsuki | `tobi-akatsuki-chibi-poses-v1.png` | [Obito e a fase da máscara laranja](https://naruto-official.com/en/news/01_1706) e [trajes por fase](https://naruto.fandom.com/wiki/Obito_Uchiha). |
+| Hanabi Adulta | `hanabi-adulta-chibi-poses-v1.png` | [Hanabi treina com Boruto](https://naruto-official.com/en/anime/boruto/list/01_953). |
+
+### Orientação usada no ImageGen
+
+As folhas do jogo serviram de base para o enquadramento, os gestos e a paleta. O pedido comum foi manter a grade e a ordem dos recortes, com fundo transparente, proporções próximas da corrida, contorno escuro e os quatro passos de cada ação. Para as três Sakuras, preservar a diferença de cabelo, luvas e marcas do Byakugō. Para Kushina, manter cabelo longo vermelho, vestido verde, selo e palma aberta. Para Tobi, conservar a máscara laranja de uma abertura e o manto com nuvens vermelhas. Para Hanabi, conservar os olhos do Byakugan, o quimono dourado, a faixa escura e o golpe de palma. Para Jūgo, manter o braço cinza transformado no lado correto, a faixa roxa e o casaco. Para Obito da guerra, destacar a máscara branca e preservar o gunbai nas vistas traseiras. Para Chiriku, tirar o colar e a marca da testa, usar a veste clara com manto cinza-escuro sobre o ombro, faixa dos Guardiões e pés descalços. Suas folhas seguem com ataque em duas vistas, corrida em cinco vistas e pulo e dash de frente e de costas.

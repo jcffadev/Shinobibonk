@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 24/11/2026 · Ajuste nas nove versões da auditoria chibi
+
+- Chiriku, Jūgo Taka e Obito Máscara Branca receberam novas proporções no retrato, no repouso, no ataque e nas acrobacias. Chiriku também recebeu corrida nas cinco vistas com o traje do Templo do Fogo.
+- Sakura Genin, Sakura Shippuden, Sakura Byakugō, Kushina, Tobi Akatsuki e Hanabi Adulta receberam novas poses de repouso e ataque, com a proporção mais próxima da corrida. O retrato da versão também aparece na ficha.
+- **TESTADO.** TypeScript, build, 244 testes por código e recortes conferidos nas folhas de contato.
+- **PENDENTE DE VALIDAÇÃO E2E.** Conferir as transições de repouso, corrida e ataque em partida, inclusive no jogador, nos ajudantes e nos Mega Elites. [Auditoria e referências](docs/development/AUDITORIA-CHIBI-ELENCO.md#ajuste-das-nove-versões).
+
 ## 24/11/2026 · Auditoria visual das 114 versões jogáveis
 
 - Conferidos 1.026 recortes no seletor e no controlador de movimento. A [auditoria chibi](docs/development/AUDITORIA-CHIBI-ELENCO.md) identifica 105 versões consistentes nos recortes, três para redesenho e seis para harmonizar as poses. A fila recebe os nove casos.

@@ -1,6 +1,6 @@
 import { runningArt } from './runningArt.ts';
 import { ROSTER_EXPANSION, chibiMotionArt, expansionSheet } from './rosterExpansion.ts';
-import { directionalArt } from './directionalArt.ts';
+import { directionalArt, refinedChibiArt } from './directionalArt.ts';
 import { HERO_BY_ID, HEROES, NARUTO_FORMS, familyOf } from './heroes.ts';
 export type Form={level:number;name:string;outfit?:string;detail?:string};
 // Níveis são design do jogo. Personagens sem outra fase apropriada mantêm a aparência.
@@ -43,6 +43,8 @@ export const ASUMA_ATLAS = '/assets/asuma-motion-v1.png';
 export function portraitRegion(versionId:string,level=1){
  // Versões usam o retrato da forma da família (ex.: `naruto-shippuden` → célula Shippuden do Naruto).
  const id=familyOf(versionId);level=HERO_BY_ID[versionId]?formAt(versionId).level:level;
+ const refined=refinedChibiArt(id,level);
+ if(refined)return {path:refined.path,cols:4,rows:refined.rows,index:0};
  const expansion=expansionSheet(id,level);
  if(expansion)return {path:expansion,cols:4,rows:6,index:8};
  if(id==='sapos-sabios')return {path:'/assets/shinobis/sapos-sabios-v1.png',cols:1,rows:1,index:0};
@@ -67,8 +69,8 @@ export function portraitRegion(versionId:string,level=1){
 }
 
 export function menuPortraitRegion(id:string) {
- if(chibiMotionArt(id))return portraitRegion(id);
  const family=familyOf(id), form=formAt(id).level;
+ if(chibiMotionArt(id)||refinedChibiArt(family,form))return portraitRegion(id);
  if(family==='naruto'&&form===1)return {path:'/assets/naruto-academia-diagonal-v1.png',cols:4,rows:2,index:0};
  if(id==='killer-b'){
    const running=runningArt(id);

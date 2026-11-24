@@ -24,7 +24,7 @@ const fullAcrobatics = new Set([
   'minato-15', 'naruto-10', 'naruto-25', 'neji-1', 'neji-15', 'orochimaru-1', 'orochimaru-15',
   'pain-1', 'sakura-1', 'sakura-15', 'sakura-30', 'sasuke-1', 'sasuke-15', 'sasuke-30',
   'shikamaru-1', 'shikamaru-15', 'shikamaru-30', 'temari-1', 'temari-15', 'tenten-1', 'tenten-15',
-  'tobirama-1', 'tsunade-1', 'tsunade-15', 'tsunade-30',
+  'tobirama-1', 'tsunade-1', 'tsunade-15', 'tsunade-30', 'jugo-1', 'obito-30',
 ]);
 // Versões da expansão e companheiros com quadros traseiros próprios.
 const expansionDirectionalIds = new Set([
@@ -56,6 +56,26 @@ export function acrobaticsArt(family:string,form:number){
     return {path:`/assets/shinobi-motion/${family}-${form}-acrobatics-v2.png`,kind:'acrobatics' as const,directional:true,rows:2,firstRow:0};
 }
 
+const refinedChibiVersions: Record<string, string> = {
+  'jugo-1': 'jugo',
+  'obito-30': 'obito-guerra',
+  'sakura-1': 'sakura',
+  'sakura-15': 'sakura-shippuden',
+  'sakura-30': 'sakura-byakugou',
+  'kushina-1': 'kushina',
+  'obito-15': 'tobi-akatsuki',
+  'hanabi-15': 'hanabi-adulta',
+};
+
+export function refinedChibiArt(family: string, form: number) {
+  const version = refinedChibiVersions[`${family}-${form}`];
+  if (version) return {
+    path: `/assets/shinobi-motion/${version}-chibi-poses-v1.png`,
+    rows: 5,
+    firstRow: 1,
+  };
+}
+
 const gaaraSheet = (level: number) => `/assets/shinobi-motion/gaara-${level}-motion-v3.png`;
 export const NARUTO_HAND_SEALS = '/assets/shinobi-motion/naruto-hand-seal-v1.png';
 const narutoSealForms = [1, 10, 25, 50];
@@ -73,6 +93,8 @@ export function handSealArt(family: string, level: number) {
 }
 
 export function actionArt(hero: string, formLevel: number) {
+  const refined = refinedChibiArt(hero, formLevel);
+  if (refined) return {...refined, kind:'full' as const, separateAcrobatics:true};
   const expansion=expansionSheet(hero,formLevel);
   if(expansion)return {path:expansion,kind:'full' as const,rows:6,firstRow:2,separateAcrobatics:true};
   if(revisedActionForms[hero]?.includes(formLevel))return {path:`/assets/shinobi-motion/${hero}-${formLevel}-action-v3.png`,kind:'full' as const,rows:4};

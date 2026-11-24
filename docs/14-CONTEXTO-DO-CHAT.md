@@ -2720,3 +2720,13 @@ As 114 versões foram comparadas em seleção, repouso, corrida e ações. Oito 
 > Confira e verifique se todas estão estilo chibi
 
 Foram abertas seis folhas de contato com 1.026 recortes das 114 versões em uso. A revisão de proporções indicou 105 versões consistentes, três para redesenho e seis para ajuste entre poses. A auditoria registra o resultado por versão e a fila prioriza Chiriku, Jūgo Taka e Obito Máscara Branca. A comparação foi feita nos recortes, com a validação em partida ainda pendente.
+
+## Ajuste das nove versões chibi · 24/11/2026
+
+> Reajuste as que precisam de ajuste
+
+> Cotniue
+
+> Continue
+
+Entraram as nove correções da auditoria. Chiriku usa o traje da referência do anime no retrato e em todas as ações. Jūgo e Obito Máscara Branca receberam proporções novas também no pulo e no dash. As três Sakuras, Kushina, Tobi Akatsuki e Hanabi Adulta tiveram o repouso e o ataque harmonizados com a corrida. A conferência visual em partida continua pendente.

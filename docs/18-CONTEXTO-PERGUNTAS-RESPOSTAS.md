@@ -450,6 +450,10 @@ As 114 versões jogáveis foram comparadas com o padrão chibi de Naruto Academi
 
 A nova [auditoria por versão](development/AUDITORIA-CHIBI-ELENCO.md) mostrou 105 versões consistentes nos recortes, três para redesenho e seis para ajuste entre poses. As correções entraram na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
+### O que foi corrigido após a auditoria chibi? · 24/11/2026
+
+Chiriku, Jūgo Taka e Obito Máscara Branca receberam proporções novas. As três Sakuras, Kushina, Tobi Akatsuki e Hanabi Adulta ganharam repouso e ataque mais próximos das proporções da corrida. Chiriku passou a usar o manto do Templo do Fogo em todas as ações, de acordo com a referência do anime. A [auditoria](development/AUDITORIA-CHIBI-ELENCO.md#ajuste-das-nove-versões) registra os atlas e as referências. Falta conferir as transições em partida.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.
