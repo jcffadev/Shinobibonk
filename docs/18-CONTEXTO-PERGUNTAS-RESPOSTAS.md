@@ -446,6 +446,10 @@ O balanço fica à esquerda da entrada da Academia, no pátio de terra batida. A
 
 As 114 versões jogáveis foram comparadas com o padrão chibi de Naruto Academia em recortes de seleção, repouso, corrida e ações. Oito receberam atlas novos. O [registro do elenco](21-ELASTAO-DE-HEROIS.md) detalha as fontes do anime para Gengetsu, Sakumo e Orochimaru Akatsuki. A validação canônica documentada das 114 versões e a conferência visual em partida ficam na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
+### Quais versões ainda destoam do padrão chibi? · 24/11/2026
+
+A nova [auditoria por versão](development/AUDITORIA-CHIBI-ELENCO.md) mostrou 105 versões consistentes nos recortes, três para redesenho e seis para ajuste entre poses. As correções entraram na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

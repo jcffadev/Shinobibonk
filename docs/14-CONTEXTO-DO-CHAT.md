@@ -2714,3 +2714,9 @@ Os três shinobis aprovados foram integrados em `bb092d0`. O balanço foi constr
 > voce revisou todos os personagens e verificou se todos estão em estilo chibbi? usando referencias boas do anime?
 
 As 114 versões foram comparadas em seleção, repouso, corrida e ações. Oito receberam folhas novas. Gengetsu, Sakumo e Orochimaru Akatsuki têm as referências canônicas da revisão registradas no documento do elenco. Ainda falta validar cada versão com a referência da sua fase e ver a fluidez em partida. A fila propõe fechar essa revisão, depois conferir jutsus e Susanoo, percorrer as quatro vilas e validar o ranking público.
+
+## Conferência do estilo chibi em todo o elenco · 24/11/2026
+
+> Confira e verifique se todas estão estilo chibi
+
+Foram abertas seis folhas de contato com 1.026 recortes das 114 versões em uso. A revisão de proporções indicou 105 versões consistentes, três para redesenho e seis para ajuste entre poses. A auditoria registra o resultado por versão e a fila prioriza Chiriku, Jūgo Taka e Obito Máscara Branca. A comparação foi feita nos recortes, com a validação em partida ainda pendente.

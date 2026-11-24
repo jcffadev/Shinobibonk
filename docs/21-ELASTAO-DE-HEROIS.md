@@ -6,6 +6,8 @@
 
 A comparação em folhas de contato usou o Naruto Academia como referência para cabeça, torso e pernas compactos, preservando o traje e as diferenças de cada versão. Haku, Hanzō Salamandra, Nagato, Sasori e Jūzō receberam novos atlas nesta entrega. A revisão seguinte redesenhou e integrou Gengetsu, Sakumo e Orochimaru Akatsuki com as referências abaixo. O registro liga a mesma versão à seleção, ficha, jogo, aliados e encontros. A comparação verifica proporção e coerência das folhas. Ainda falta registrar a referência canônica da fase para cada versão e conferir o resultado na partida. Veja os recortes na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
 
+A [auditoria visual dos recortes em uso](development/AUDITORIA-CHIBI-ELENCO.md) listou 105 versões consistentes nas poses amostradas, três para redesenho de proporção e seis para ajuste entre poses.
+
 ### Referências de Gengetsu, Sakumo e Orochimaru Akatsuki
 
 | Versão | Características que as folhas precisam manter | Referência |

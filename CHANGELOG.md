@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 24/11/2026 · Auditoria visual das 114 versões jogáveis
+
+- Conferidos 1.026 recortes no seletor e no controlador de movimento. A [auditoria chibi](docs/development/AUDITORIA-CHIBI-ELENCO.md) identifica 105 versões consistentes nos recortes, três para redesenho e seis para harmonizar as poses. A fila recebe os nove casos.
+
 ## 24/11/2026 · Fila de revisão de arte
 
 - A documentação registra a diferença entre a comparação chibi das 114 versões, as oito artes refeitas e a validação de referências por versão ainda pendente. Jūzō tem folha nova e segue para conferência em partida. A fila também reúne os jutsus, a vistoria das vilas e a validação do ranking público.
