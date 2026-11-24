@@ -73,6 +73,18 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
   const name = t.name;
   group.userData.motionElement=t.element;
   group.userData.motionShape=t.shape;
+  if(name==='Espelhos Demoníacos de Gelo'||name==='Labirinto de Espelhos'){
+    group.userData.iceMirrors=true;
+    for(let i=0;i<8;i++){
+      const angle=i*Math.PI/4;
+      const mirror=mesh(new THREE.BoxGeometry(.43,.99,.07),'#d3f8ff',Math.sin(angle)*.88,0,Math.cos(angle)*.88);
+      mirror.rotation.y=angle;
+      const pane=new THREE.Mesh(new THREE.PlaneGeometry(.33,.87),new THREE.MeshBasicMaterial({color:'#66c8df',side:THREE.DoubleSide}));
+      pane.position.z=-.043;
+      mirror.add(pane);
+    }
+    return group;
+  }
   const overlay = !/Kunai Tática|Kunai Hiraishin|Kunai do Instrutor|^Shuriken$|Senbon|Barras de Chakra|Receptores de Chakra|^Rasengan|Rasenshuriken|Bijūdama|Chute Giratório|Substituição|Bunshin|Invocação do Sapo|Gamabunta|Kuroari|Bansho Tenin|Shinra Tensei|Chibaku Tensei|Susanoo|Espada de Totsuka/.test(name);
   const namedAtlas=signatureEffectTile(name)?.path;
   const factionArt=namedAtlas===FACTION_EFFECT_ATLAS||namedAtlas===FACTION_EFFECT_ATLAS_DETAIL;
@@ -580,6 +592,17 @@ export function animateTechniqueVisual(object: THREE.Object3D, dt: number, direc
     sprite.material.opacity=envelope*.82;
     sprite.scale.set(.52+envelope*.72,.38+envelope*.87,1);
     sprite.position.y=.27+phase*.39;
+  }
+  if(object.userData.iceMirrors){
+    for(const [i,mirror] of object.children.entries()){
+      const rise=THREE.MathUtils.smoothstep(age-i*.008,0,.10);
+      const melt=1-THREE.MathUtils.smoothstep(age,.20,.35);
+      const height=Math.max(.001,rise*melt);
+      mirror.visible=height>.01;
+      mirror.scale.y=height;
+      mirror.position.y=.495*height;
+    }
+    return;
   }
   if(object.userData.atlasFrame)object.userData.atlasFrame(age);
   else if(object.userData.motionElement&&!object.userData.spin){

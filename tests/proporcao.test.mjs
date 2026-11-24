@@ -1,6 +1,6 @@
 // Proporção ao começar a andar (Rodada 69 — pedido do usuário: "A cabeça dos personagens ao iniciar o movimento, estava
 // ficando desproporcional ao personagem e a ele parado"). Lê os PNG reais no Node (sem navegador) e aplica a regra do
-// controlador (headProportion de src/scene/playerMotion.ts) às 2.280 células de corrida das 114 versões.
+// controlador (headProportion de src/scene/playerMotion.ts) às células de corrida de todo o elenco.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { decodePng } from '../scripts/audit-walk-sheets.mjs';
@@ -55,10 +55,10 @@ test('regra: iguala a cabeça, com limites e piso do corpo', () => {
   assert.equal(headProportion(0, .8, .4, .4), 1, 'sem medida do repouso: não mexe');
 });
 
-test('as 114 versões têm células de corrida medidas', () => {
+test('todas as versões têm células de corrida medidas', () => {
   const cells = runningCells();
-  assert.ok(cells.length >= 2200, `${cells.length} células`);
-  assert.ok(new Set(cells.map(c => c.id)).size >= 114);
+  assert.equal(cells.length,HEROES.length*20);
+  assert.equal(new Set(cells.map(c => c.id)).size,HEROES.length);
 });
 
 test('correndo, a cabeça fica do mesmo tamanho que parado (mediana) e sem exageros (90% dos quadros até +25%)', () => {

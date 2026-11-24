@@ -2,6 +2,7 @@ import type { Bonuses } from './catalog';
 import { EXPANSION_BY_ID, ROSTER_EXPANSION } from './rosterExpansion.ts';
 import { lineageNatures } from './techniqueMerge.ts';
 import { applyStatusProfile } from './statusProfiles.ts';
+import { KAKASHI_DMS, KAKASHI_DMS_FORM, KAMUI_SHURIKEN, susanooStyleFor } from './susanoo.ts';
 export type School='Taijutsu'|'Ninjutsu'|'Genjutsu';
 export type Element='Neutro'|'Fogo'|'Água'|'Vento'|'Terra'|'Raio'|'Madeira'|'Areia'|'Sombra'|'Sábio';
 export type Shape='Projétil'|'Corpo a corpo'|'Cone'|'Onda'|'Em V'|'Linha'|'Área'|'Órbita'|'Buff';
@@ -117,6 +118,8 @@ const U={
  estacas:t('Estacas Mokuton','Ninjutsu','Madeira','Linha'),
  floresta:t('Floresta Profunda','Ninjutsu','Sábio','Área',1.6),
  raikiri:t('Raikiri','Ninjutsu','Raio','Linha',1.6),
+ kamuiRaikiri:{...t('Raikiri do Kamui','Ninjutsu','Raio','Linha',1.7),status:'Paralisar' as const,statusChance:.24},
+ kamuiLongo:{...t('Kamui','Ninjutsu','Sombra','Área',1.55),gravity:'core' as const},
  purpura:t('Púrpura Elétrica','Ninjutsu','Raio','Linha',1.8),
  corvos:t('Corvos Ilusórios','Genjutsu','Sombra','Órbita'),
  tsukuyomi:t('Tsukuyomi','Genjutsu','Sombra','Área',1.4),
@@ -238,6 +241,7 @@ export const HERO_VERSIONS:Hero[]=[
  version('madara','madara-seis-caminhos','Seis Caminhos',30,2,'Sábio dos Seis Caminhos · +12 pontos de chance crítica, +20% ninjutsu e +10 pontos de evasão.',{crit:.12,element:.2,dodge:.1},[U.limbo,L.bolaFogo,L.susanoo,U.esferas],'Tsukuyomi Infinito','Crítico, evasão e ninjutsu'),
  version('hashirama','hashirama-sabio','Sábio',20,1,'Modo Sábio Senju · +20% de dano Sábio e +1,2 HP/s.',{regen:1.2},[U.estacas,L.raizes,L.modoSabio,U.floresta],'Mil Mãos de Madeira','Senjutsu, regeneração e área'),
  version('kakashi','kakashi-hokage','Hokage',25,1,'Sexto Hokage · +8 pontos de chance crítica, +15% velocidade de ataque e +10% recarga da Ultimate.',{crit:.08,attackSpeed:.15,cool:.1},[U.raikiri,L.dragaoAgua,L.corteRaio,U.purpura],'Fera Relâmpago','Crítico, raio e recarga'),
+ version('kakashi',KAKASHI_DMS,'Dois Mangekyō',KAKASHI_DMS_FORM,2,'Chakra de Obito · +12% de ninjutsu e +5 pontos de evasão.',{element:.12,dodge:.05},[U.kamuiRaikiri,L.shuriken,L.susanoo,U.kamuiLongo],KAMUI_SHURIKEN,'Ninjutsu, espaço-tempo e evasão'),
  version('itachi','itachi-akatsuki','Akatsuki',15,1,'Mangekyō Sharingan · +25 pontos de chance de status e +35% duração de status.',{status:.25,duration:.35},[L.fenix,U.corvos,L.susanoo,U.tsukuyomi],'Espada de Totsuka','Genjutsu, duração e controle'),
  version('minato','minato-hokage','Hokage',15,1,'Quarto Hokage · +25% movimento e +20% velocidade de ataque.',{move:.25,attackSpeed:.2},[U.hiraishin,L.rasengan,L.vendaval,U.barreira],'Selo do Ceifador','Movimento, velocidade e projéteis'),
  version('tsunade','tsunade-hokage','Hokage',15,1,'Quinta Hokage · +1,2 HP/s, +20% taijutsu e +10% dano dos ajudantes.',{regen:1.2,normal:.2,allyDamage:.1},[L.punho,L.ruptura,L.byakugou,U.chuteCeleste],'Katsuyu Gigante','Regeneração, ajudantes e taijutsu'),
@@ -298,6 +302,7 @@ export function versionForEncounter(family:string,zone:number,difficulty:string)
 export const DETERMINATION:Record<string,number>={naruto:.2,'naruto-genin':.25,'naruto-shippuden':.25,'naruto-kyuubi':.3};
 const ULTIMATE_FROM_STARTER=new Set(['choji','choji-guerra','kabuto','kimimaro','tayuya','sakon-ukon','juzo','orochimaru-akatsuki']);
 export function ultimateBase(hero:Hero):Technique{
+  if(hero.id===KAKASHI_DMS)return hero.techniques[2];
   if(ULTIMATE_FROM_STARTER.has(hero.id))return hero.techniques[0];
   return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];
 }
@@ -362,8 +367,7 @@ const CANONICAL_TEACHING:Record<string,readonly string[]>={
   'Portões do Inferno':['lee','guy'],
 };
 function canonicalPhase(id:string,name:string) {
-  const family=familyOf(id);
-  if(name==='Susanoo')return family==='sasuke'?id!=='sasuke'&&id!=='sasuke-academia':family==='kakashi'?id==='kakashi-dms':true;
+  if(name==='Susanoo')return Boolean(susanooStyleFor(id,name));
   if(name==='Byakugou')return id!=='sakura';
   if(name==='Rasengan'||name==='Invocação do Sapo')return id!=='naruto';
   return true;
@@ -427,7 +431,7 @@ export const ORGANIZATIONS:{id:string;name:string;members:string[]}[]=[
 const ORGANIZATION_VERSIONS: Partial<Record<string, readonly string[]>> = {
  akatsuki:['itachi-akatsuki','pain','kisame','sasori','tobi-akatsuki','nagato','deidara','hidan','kakuzu','konan','zetsu','juzo','orochimaru-akatsuki'],
  hokage:['hashirama','hashirama-sabio','tobirama','minato-hokage','tsunade-hokage','tsunade-byakugou','kakashi-hokage','hiruzen','naruto-hokage'],
- time7:['naruto-genin','naruto-shippuden','naruto-kyuubi','sasuke','sasuke-rinnegan','sakura','sakura-shippuden','sakura-byakugou','kakashi','sai','yamato'],
+ time7:['naruto-genin','naruto-shippuden','naruto-kyuubi','sasuke','sasuke-rinnegan','sakura','sakura-shippuden','sakura-byakugou','kakashi',KAKASHI_DMS,'sai','yamato'],
  alianca:['naruto-kyuubi','sasuke-rinnegan','sakura-byakugou','gaara-alianca','kankuro-alianca','hinata-leoes','guy-setimo-portao','lee-portoes','choji-guerra','ino-guerra','onoki','mei','raikage-quarto','killer-b'],
  taka:['sasuke-shippuden','suigetsu','karin','jugo'],
 };

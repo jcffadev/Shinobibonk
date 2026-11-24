@@ -2739,3 +2739,18 @@ Entraram as nove correções da auditoria. Chiriku usa o traje da referência do
 > O que falta fazer?
 
 Foram oito versões na primeira entrega e nove versões, de seis personagens, na segunda. As nove artes estão no build da cópia principal, na seleção e na ficha de cada versão correspondente. A fila registra a validação em partida e o restante das frentes de arte, gameplay, mapas e ranking.
+
+
+## Execução da fila · 24/11/2026
+
+> Faça
+
+Implementados os novos Susanoo de Sasuke e Itachi, a prévia da Totsuka e os espelhos de Haku. O controlador de movimento foi exercitado para o elenco e Jūzō nos dois papéis. A verificação por código cobriu as quatro vilas e a função de ranking com provedor simulado. O registro de balanceamento traz 60 simulações e as chances de cada efeito nas técnicas estudadas. Seguem pendentes os testes visuais em partida e na GPU, as referências canônicas restantes e a integração com a hospedagem real do ranking.
+
+> Você verificou todos do elenco que tem susannoo e nas respectivas versões e incorporou ao personagem?
+
+A conferência achou oito versões com acesso. O efeito usa o ID de quem conjura e aparece com a cor e a arma desse portador. A ligação cobre personagem jogável, ajudante com a técnica e Mega Elite ou guardião quando a técnica está no seu repertório. Na conferência, a versão dos dois Mangekyō ainda não estava no elenco.
+
+> implemente
+
+Kakashi dos Dois Mangekyō entra como 115ª versão, com folhas chibi próprias e missão de selamento em Iwa. Seu kit inclui Raikiri do Kamui, Shuriken, Susanoo e Kamui. A ultimate Shuriken do Kamui usa o Susanoo azul alado no impacto marcado.

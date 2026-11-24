@@ -8,6 +8,16 @@ A comparação em folhas de contato usou o Naruto Academia como referência para
 
 A [auditoria visual dos recortes em uso](development/AUDITORIA-CHIBI-ELENCO.md) listou 105 versões consistentes nas poses amostradas, três para redesenho de proporção e seis para ajuste entre poses. As nove versões receberam seus ajustes em `e013be4`. Foram nove versões de seis personagens, pois três são da Sakura e duas são do Obito. As duas entregas somam 17 versões revisadas com arte integrada. A conferência das transições em partida continua pendente.
 
+A [auditoria chibi](development/AUDITORIA-CHIBI-ELENCO.md#transições-e-referências-da-primeira-entrega--24112026) registra as referências de Haku, Hanzō, Nagato, Sasori e Jūzō e o teste de movimento de Jūzō como jogador e ajudante.
+
+O [quadro de portadores do Susanoo](24-AUDITORIA-DE-EFEITOS.md#versões-jogáveis-e-caminhos-de-execução) identifica as nove versões jogáveis que têm acesso, incluindo as formas que dependem de desbloqueio no pool.
+
+## Kakashi dos Dois Mangekyō · 24/11/2026
+
+A versão `kakashi-dms` usa o colete da guerra, máscara escura, bandana acima dos dois olhos e Mangekyō vermelhos. O retrato de três quartos é o primeiro quadro da folha de repouso e ação. As folhas da versão têm 20 quadros de corrida, oito de repouso e ação (com selos) e 16 de pulo e dash. As cinco vistas da corrida e os quatro quadros de cada acrobacia passam pelo controlador comum.
+
+A missão **O Último Presente de Obito** usa Kakashi Hokage em Iwa, dificuldade Kage, a partir de 7 minutos e 950 abates. Derrote e sele a forma do encontro para adicioná-la à conta. A rota é uma revisitação do combate da guerra dentro da progressão do jogo. O kit traz Raikiri do Kamui, Shuriken, Susanoo e Kamui. A ultimate **Shuriken do Kamui** usa o Susanoo azul alado e marca a área junto do alvo. [Kakashi contra Kaguya](https://naruto-official.com/en/news/01_1904).
+
 ### Referências de Gengetsu, Sakumo e Orochimaru Akatsuki
 
 | Versão | Características que as folhas precisam manter | Referência |
@@ -46,7 +56,7 @@ Referências: [Obito no site oficial](https://naruto-official.com/en/news/01_170
 | **Gaara** (Areia) | Genin | Kazekage (1·15) · Aliança (2·30) |
 | **Madara** (Uchiha) | Armadura | Rinnegan (1·15) · Seis Caminhos (2·30) |
 | **Hashirama** (Folha) | Hokage | Sábio (1·20) |
-| **Kakashi** (Folha) | Jonin | Hokage (1·25) |
+| **Kakashi** (Folha) | Jonin | Hokage (1·25) · Dois Mangekyō (2·30) |
 | **Itachi** (Uchiha) | ANBU | Akatsuki (1·15) |
 | **Minato** (Folha) | Jonin | Hokage (1·15) |
 | **Tsunade** (Folha) | Sannin | Hokage (1·15) · Byakugou (2·30) |

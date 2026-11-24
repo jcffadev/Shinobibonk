@@ -24,3 +24,15 @@ As tabelas ficam em esquema privado. As operações públicas acessam somente fu
 O servidor confere conta, identificação da partida, campos e plausibilidade, preserva idempotência e separa registros em revisão. A integridade competitiva depende de simulação autoritativa ou replay verificável. O sistema ainda recebe as métricas do cliente. A interface oferece os filtros de modo e equipe, que receberão dados quando os modos correspondentes tiverem integração. O modo solo clássico funciona para submissão. Credenciais e progresso do cadastro local permanecem no dispositivo.
 
 O instalador Windows depende da distribuição final. Código, assets e parâmetros executados no dispositivo são inspecionáveis. Parâmetros reservados e cálculo autoritativo precisam residir no servidor para preservar confidencialidade. Ainda não há instalador nem ambiente de produção divulgado nesta rodada.
+
+
+## Validação local e resultados competitivos · 24/11/2026
+
+O teste em Node chama a função Netlify com requisições HTTP e um provedor simulado. Cobre cadastro, confirmação, cookie de sessão, recusa de início sem conta, envio de fim de partida e retorno da posição pessoal fora do Top 100. A migração PostgreSQL e a configuração implantada ainda exigem um teste de integração.
+
+Antes de abrir o ranking competitivo de equipes, o servidor deve conferir a partida executada. A proposta é seguir estes passos.
+
+1. No início, vincular o ticket à temporada, à versão das regras, à configuração inicial da build e aos IDs autenticados da equipe. O servidor escolhe a semente.
+2. Fixar um passo de simulação, separar o estado competitivo da renderização e gravar entradas e escolhas em ordem. Para coop, registrar o participante de cada escolha e aplicar a mesma ordem em caso de empate no tick.
+3. Validar em processo isolado com limite de tamanho e duração. Recalcular abates, tempo, nível, ondas, vitória e build final com as regras da versão. Promover apenas resultados recalculados para o placar oficial. Repetir um envio deve recuperar o resultado do mesmo ticket.
+4. Manter placares provisórios e confirmados identificados. Exibir a projeção durante a partida e a classificação calculada pelo servidor depois da verificação. Salvar o motivo e métricas mínimas de rejeição sem guardar credenciais ou dados de sessão.

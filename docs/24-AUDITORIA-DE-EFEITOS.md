@@ -239,7 +239,7 @@ Medido no código: 221 técnicas no pool, 39 sem efeito com nome (só o genéric
   - Chutes, Combo do Leão e Punho da Folha: impacto de Taijutsu.
 - **Já têm código próprio** fora do atlas: Rasengan, Rasenshuriken, Shuriken, Kunai, Kage Bunshin, Substituição, Susanoo, Kuroari e Invocação do Sapo.
 - **Seguem no efeito do elemento:** técnicas de Terra (impacto) e de Raio (relâmpago), cujo efeito do elemento já é o certo, e Agulhas de Cabelo, Agulhas de Karasu e Barras de Chakra.
-- **Arte pendente:** Susanoo de Sasuke e Itachi (folhas pintadas como a do Madara).
+- **Arte entregue em 24/11:** Susanoo de Sasuke e Itachi (folhas de quatro fases).
 
 
 ## Susanoo por portador · 23/11/2026
@@ -249,11 +249,54 @@ Medido no código: 221 técnicas no pool, 39 sem efeito com nome (só o genéric
 | Madara | Azul profundo e duas lâminas onduladas | Folha original de quatro fases com mistura de quadros e malha de apoio |
 | Sasuke | Violeta, arco de chakra e flecha | Braço com arco e corda, puxada, disparo e rastro orientado ao acerto |
 | Itachi | Vermelho alaranjado, Espelho de Yata e Espada de Totsuka | Escudo modelado no braço esquerdo e lâmina que sai da cabaça, com estocada e redemoinho |
-| Kakashi | Azul-claro, forma alada dos dois Mangekyō e shuriken do Kamui | Malha alada, cicatriz na máscara e shuriken rotativo em trajeto até o alvo. Estilo preparado para a versão dos dois Mangekyō |
+| Kakashi | Azul-claro, forma alada dos dois Mangekyō e shuriken do Kamui | Malha alada, cicatriz na máscara e shuriken rotativo em trajeto até o alvo. Estilo usado pelo Kakashi dos Dois Mangekyō |
 | Shisui | Verde e agulhas de chakra na animação Ninja Escapades | Peitoral marcado e rajada verde, usada quando o pool existente concede Susanoo ao Shisui |
 
 A forma verde de Shisui vem da animação especializada. A forma perfeita com armas exclusivas de jogos licenciados fica para uma decisão própria. Os caminhos da técnica comum, a Espada de Totsuka e o Susanoo Perfeito continuam usando as regras existentes. O efeito comum acompanha a espera do acerto já calculada pelo disparo.
 
 Fontes: [Narutopedia — formas e armamento](https://naruto.fandom.com/wiki/Susanoo), [Naruto oficial — Itachi contra Sasuke](https://naruto-official.com/en/news/01_1316), [Naruto oficial — Madara e a luta dos irmãos Uchiha](https://naruto-official.com/en/news/01_1333), [Naruto oficial — Kakashi, capítulo 689](https://naruto-official.com/en/news/01_1904), [Bandai Namco — diferenças de mídia e agulhas de chakra de Shisui](https://naruto-official.com/en/news/01_1871).
 
-Pendente conferir silhueta e transições ao vivo e desenhar folhas próprias de Sasuke e Itachi. Esta revisão usa malhas articuladas originais nesses dois efeitos.
+Pendente conferir silhueta e transições em partida. As malhas articuladas continuam como apoio das folhas.
+
+## Arte e checagem de status · 24/11/2026
+
+Os Susanoo de Sasuke e Itachi receberam folhas próprias de quatro fases. O efeito usa costelas, armadura, preparo e golpe, com transição suave. O arco de Sasuke e Totsuka seguem o lado do alvo projetado na câmera. A Espada de Totsuka usa a mesma família visual no planejador. A ultimate de Itachi conserva o cálculo imediato de dano do jogo e a apresentação animada vem na sequência. [Itachi contra Sasuke](https://naruto-official.com/en/news/01_1316).
+
+Os Espelhos Demoníacos de Gelo se formam em oito painéis no perímetro do acerto. A técnica normal envolve o alvo. A ultimate usa o raio ao redor de Haku. Os painéis sobem em sequência e baixam após o impacto. [Episódio dos Espelhos de Gelo](https://naruto-official.com/en/anime/naruto1/list/01_237).
+
+A consulta de 221 técnicas do pool, com os shinobis selados, retornou 13 nomes sem perfil nominal no atlas e sem um dos caminhos dedicados já inventariados. Alguns já têm geometria própria, como Barras de Chakra. Conferir individualmente o que aparece em partida. Os 13 são Doton: Pedregulho, Parede de Terra, Ruptura do Solo, Shannaro!, Chute Celestial, Agulhas de Cabelo, Barras de Chakra, Agulhas de Karasu, Flecha de Indra, Impacto de Sakura, Golpe dos Cem Selos, Púrpura Elétrica e Criação do Renascimento.
+
+| Técnica | Acerto | Nv. 1 | Nv. 5 | Nv. 9 | Nv. 9 com +12 p.p. de status |
+| --- | --- | --- | --- | --- | --- |
+| Senbon de Gelo | Projétil no trajeto | Congelar 10% | 16% | 22% | 34% |
+| Espelhos Demoníacos de Gelo | Órbita centrada no alvo | Congelar 10% | 20% | 30% | 42% |
+| Yōton: Torrente de Lava | Onda no trajeto | Lentidão 10%, queimadura 10% | 17%, 35% | 24%, 60% | 36%, 72% |
+| Futton: Névoa Corrosiva | Área centrada no alvo | Lentidão 10%, dano contínuo 10% | 17%, 30% | 24%, 50% | 36%, 62% |
+| Kunai Tática | Trajetórias em V | +2 p.p. crítico, +5% dano crítico | +5 p.p., +15% | +8 p.p., +25% | +8 p.p., +25% |
+
+O Banshō Ten’in continua puxando ao redor do usuário. O Chibaku Tensei concentra a atração no ponto do alvo. Ambos usam gravidade própria. No caso de Haku, o resultado de Congelar alimenta a regra de acúmulo de frio, com resistência dos chefes.
+
+### Versões jogáveis e caminhos de execução
+
+O teste percorre o pool das 115 versões com todos os shinobis selados. Nove têm acesso ao Susanoo. `src/game/susanoo.ts` vincula o efeito ao ID da versão do conjurador. A origem da técnica aprendida aparece no planejador. A arte segue a versão que executa o golpe.
+
+| Versão | Acesso no jogo | Apresentação |
+| --- | --- | --- |
+| Madara Armadura | Kit e ultimate Susanoo Perfeito | Folha azul com lâminas. A ultimate amplia o mesmo efeito. |
+| Madara Rinnegan e Madara Seis Caminhos | Kit de cada fase | Folha azul de Madara. As ultimates das duas fases são próprias. |
+| Itachi Akatsuki | Kit e ultimate Espada de Totsuka | Folha vermelha com Totsuka e Yata, também na prévia. |
+| Itachi ANBU | Desbloqueio pelo pool, como adaptação já existente do jogo | Folha vermelha de Itachi. |
+| Sasuke Rinnegan | Kit | Folha violeta com arco e flecha de chakra. |
+| Sasuke Shippuden | Desbloqueio pelo pool | Folha violeta de Sasuke. |
+| Shisui | Desbloqueio pelo pool | Forma verde animada em WebGL, com rajada de agulhas. |
+| Kakashi dos Dois Mangekyō | Kit e ultimate Shuriken do Kamui | Forma azul alada em WebGL. O shuriken gira no trajeto e se desfaz no ponto de acerto. |
+
+Sasuke Genin, Kakashi Jōnin e Kakashi Hokage ficam sem Susanoo. O jogador e o Guardião Kakashi dos Dois Mangekyō executam a ultimate no ponto marcado, com o shuriken chegando na janela de acerto. [Kakashi contra Kaguya](https://naruto-official.com/en/news/01_1904).
+
+Jogador, ajudantes equipados, Mega Elites e guardiões resolvem o estilo por versão. A prévia usa a mesma regra. Ao enfrentar um portador, o Susanoo nasce junto dele durante o preparo e golpeia no momento do acerto. A área de perigo desenhada para o chefe continua sendo a referência do dano. Dois conjuradores com o mesmo estilo têm animações independentes. Os testes verificam as ligações e a janela de impacto. A apresentação em partida continua pendente.
+
+### Simulação da progressão
+
+Sessenta rodadas, cinco shinobis (Haku, Mei, Itachi Akatsuki, Sasuke Rinnegan e Naruto Academia), dificuldades Genin e Kage, contas nova e no máximo, três sementes (17, 101 e 252) e duração máxima de 12 minutos com habilidade média. Exemplo reproduzível: `node scripts/simulate-run.mjs sasuke-rinnegan Kage 12 17 novo medio`.
+
+As 30 simulações de Genin chegaram à zona 2. No Kage, 27 de 30 chegaram à zona 2. Com conta nova, Naruto caiu em duas sementes a 1,1 minuto e Sasuke caiu em uma aos 6,8 minutos. O modelo aproxima a pressão da horda e o dano médio de críticos. Controle de grupo, movimentação, efeitos de terreno e ultimates ficam fora dele. As chances por golpe acima foram calculadas pelas mesmas funções usadas na partida. Nenhum valor de balanceamento foi alterado.

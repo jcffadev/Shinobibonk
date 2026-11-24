@@ -458,6 +458,18 @@ Chiriku, Jūgo Taka e Obito Máscara Branca receberam proporções novas. As tr�
 
 O primeiro lote teve oito versões redesenhadas. O segundo ajustou nove versões de seis personagens. As nove artes foram confirmadas no build da cópia principal. Seguem pendentes a validação visual em partida, a conferência de referências por fase, os efeitos e fusões, a vistoria das vilas e o ranking online. Veja o [registro do elenco](21-ELASTAO-DE-HEROIS.md) e a [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
 
+### Quais partes da fila foram executadas? · 24/11/2026
+
+Foram integrados os Susanoo de Sasuke e Itachi e a animação dos espelhos de Haku. Testados em Node o controlador das 114 versões, Jūzō nos dois papéis, a geometria e os pontos de interação das vilas e a função Netlify com serviço simulado. A documentação registra 60 simulações e as chances de status. A vistoria em partida, a medição de FPS e a integração com o serviço hospedado continuam na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
+
+### Quais versões têm Susanoo e onde o efeito aparece? · 24/11/2026
+
+Oito versões têm acesso no elenco. Os testes percorrem os 114 pools e exercitam as animações, incluindo o preparo de Mega Elites e guardiões. O estilo vem da versão do conjurador. A checagem identificou que Kakashi dos dois Mangekyō ainda aguardava uma versão jogável, acrescentada no pedido seguinte. [Portadores e acesso](24-AUDITORIA-DE-EFEITOS.md#versões-jogáveis-e-caminhos-de-execução).
+
+### Como entrou o Kakashi dos Dois Mangekyō? · 24/11/2026
+
+A versão 115 tem missão de selamento em Iwa Kage usando Kakashi Hokage, arte para repouso, corrida, selos, ataque e acrobacias, e ultimate Shuriken do Kamui pelo Susanoo alado. A conferência por código cobre a integração da nova versão, inclusive o Guardião. [Registro do elenco](21-ELASTAO-DE-HEROIS.md).
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

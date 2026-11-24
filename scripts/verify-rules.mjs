@@ -11,8 +11,8 @@ import { ITEMS,rollItems,availableItems } from '../src/game/catalog.ts';
 import { ASUMA_ATLAS,FORMS,formAt,portraitRegion } from '../src/game/evolution.ts';
 import { actionArt, directionalArt } from '../src/game/directionalArt.ts';
 import { choiceCount,choiceUses,purchase,refund,NEW_ADMIN } from '../src/game/preparation.ts';
-// Versões separadas (06/11/2026): cada forma de evolution.ts é um personagem jogável próprio (24 famílias, 56 versões).
-assert.equal(HEROES.length,56+ROSTER_EXPANSION.length);
+// Cada forma de evolution.ts é um personagem jogável. A base de 57 inclui Kakashi dos Dois Mangekyō.
+assert.equal(HEROES.length,57+ROSTER_EXPANSION.length);
 assert.equal(new Set(HEROES.map(h=>h.family)).size,24+ROSTER_EXPANSION.filter(h=>h.id===h.family).length);
 for(const id of ['chomei','gyuki']){
  const portrait=portraitRegion(id);

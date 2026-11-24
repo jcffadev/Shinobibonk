@@ -1,4 +1,5 @@
 import { ROSTER_EXPANSION, chibiMotionArt, expansionSheet } from './rosterExpansion.ts';
+import { KAKASHI_DMS_FORM } from './susanoo.ts';
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
 const fullActionForms: Record<string, readonly number[]> = {
   sakura: [1, 15, 30],
@@ -19,7 +20,7 @@ const fullAcrobatics = new Set([
   'naruto-1', 'naruto-50', 'kuri-1',
   'gaara-1', 'gaara-15', 'gaara-30', 'guy-1', 'guy-15', 'guy-30', 'hashirama-1',
   'hashirama-20', 'hinata-1', 'hinata-15', 'hinata-30', 'itachi-1', 'itachi-15', 'jiraiya-1',
-  'jiraiya-20', 'kakashi-1', 'kakashi-25', 'kankuro-1', 'kankuro-15', 'kankuro-30', 'kushina-1',
+  'jiraiya-20', 'kakashi-1', 'kakashi-25', `kakashi-${KAKASHI_DMS_FORM}`, 'kankuro-1', 'kankuro-15', 'kankuro-30', 'kushina-1',
   'lee-1', 'lee-15', 'lee-30', 'madara-1', 'madara-15', 'madara-30', 'minato-1',
   'minato-15', 'naruto-10', 'naruto-25', 'neji-1', 'neji-15', 'orochimaru-1', 'orochimaru-15',
   'pain-1', 'sakura-1', 'sakura-15', 'sakura-30', 'sasuke-1', 'sasuke-15', 'sasuke-30',
@@ -68,6 +69,9 @@ const refinedChibiVersions: Record<string, string> = {
 };
 
 export function refinedChibiArt(family: string, form: number) {
+  if (family === 'kakashi' && form === KAKASHI_DMS_FORM) return {
+    path: '/assets/shinobi-motion/kakashi-dms-poses-v1.png', rows: 2, firstRow: 0,
+  };
   const version = refinedChibiVersions[`${family}-${form}`];
   if (version) return {
     path: `/assets/shinobi-motion/${version}-chibi-poses-v1.png`,
@@ -152,6 +156,7 @@ const rosterForms: Record<string, readonly number[]> = {
 };
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
+  if (hero === 'kakashi' && formLevel === KAKASHI_DMS_FORM) return {path:'/assets/shinobi-motion/kakashi-dms-run-v1.png',rows:5};
   const id = revisedDirectionalId(hero, formLevel);
   const chibi=chibiMotionArt(id);
   if(chibi)return {path:chibi.motion,rows:6};

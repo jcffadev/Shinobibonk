@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 24/11/2026 · Kakashi dos Dois Mangekyō
+
+- Nova versão jogável com retrato chibi, corrida nas cinco vistas, selo, golpe, pulo e dash. A missão em Iwa Kage usa Kakashi Hokage, com encontro a partir de 7 minutos e 950 abates.
+- Kit com Raikiri do Kamui, Shuriken, Susanoo e Kamui. A ultimate Shuriken do Kamui usa a forma azul alada, com trajetória e impacto na área do alvo. Aparece também quando a forma conjura como guardião.
+- Nove versões do elenco têm acesso ao Susanoo. Passaram a compilação, a verificação das 115 versões e os 250 testes por código. A vistoria da missão no jogo continua pendente.
+
+## 24/11/2026 · Susanoo, espelhos de Haku e validação da fila
+
+- Sasuke recebeu uma folha violeta de quatro fases, com arco e flecha. Itachi recebeu a folha com a Espada de Totsuka e o Espelho de Yata, também usada na prévia da Totsuka. A orientação do golpe acompanha o lado do alvo na câmera.
+- As oito versões que podem usar Susanoo têm a arte vinculada ao ID do conjurador. Mega Elites e guardiões usam esse efeito no momento do acerto. Lançamentos de dois portadores ficam independentes.
+- Os Espelhos Demoníacos de Gelo e a ultimate de Haku usam painéis que surgem em sequência no perímetro da área de acerto e depois baixam.
+- A auditoria verifica o retorno ao repouso nas 114 versões, cobre o controlador de Jūzō como jogador e ajudante e acrescenta as referências da primeira entrega chibi. A função Netlify agora tem teste em Node para sessão, envio de partida e leitura do placar. A proposta de verificação competitiva está no documento de ranking.
+- O registro de efeitos traz as chances por nível e 60 simulações. A vistoria das quatro vilas em partida, o FPS com GPU e a validação do ranking hospedado continuam pendentes.
+
 ## 24/11/2026 · Contagem das duas entregas de revisão chibi
 
 - O registro do elenco distingue as oito versões redesenhadas na primeira entrega das nove versões ajustadas após a auditoria. As duas entregas somam 17 versões trabalhadas nas 114 jogáveis. Foram conferidos os nove retratos no build da cópia principal.

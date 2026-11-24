@@ -6,7 +6,7 @@ Repositório: https://github.com/jcffadev/Shinobibonk
 
 [Retomada de 23/11/2026](docs/27-RETOMADA-MAPAS-23-11.md) registra as branches, os mapas em revisão e o trabalho publicado nas rodadas 97–103.
 
-As 114 versões do elenco usam a corrida com braços para trás no deslocamento normal. São cinco vistas e quatro quadros por vista. A ficha e a seleção compartilham o retrato em perfil. [Matriz por versão](docs/development/COBERTURA-DE-VISTAS.md).
+As 115 versões do elenco usam a corrida com braços para trás no deslocamento normal. São cinco vistas e quatro quadros por vista. A ficha e a seleção compartilham o retrato em perfil. [Matriz por versão](docs/development/COBERTURA-DE-VISTAS.md).
 
 Nas quatro vilas, os NPCs de missão usam a pixel art original com movimento de repouso, vistas direcionais quando disponíveis e interação no mesmo ponto do cenário. [Mapas e eventos](docs/01-CAMERA-MAPAS-EVENTOS.md). Em novas missões de Konoha, abra o mapa para traçar uma rota até **Academia · Balanço** ou **Pedra Memorial**.
 
@@ -167,4 +167,4 @@ O botão **Guia do jogo** na inicial reúne controles, progresso, eventos da mis
 Na aba **Glossário**, filtre por assunto ou busque o nome de um atributo, como chance crítica, projétil ou duração de status. O saldo de Lamens fica ao lado do perfil, na barra superior.
 
 
-A revisão das cidades jogáveis e dos Susanoo está na branch de validação. Veja o [estado e as verificações pendentes](docs/13-PENDENCIAS-PARA-CONTINUAR.md) e o [guia dos mapas](docs/development/CRIAR-MAPAS-JOGAVEIS.md).
+As quatro cidades têm verificações de rotas, escadas, escalada, água e NPCs em Node. Sasuke e Itachi usam folhas próprias no Susanoo. Os espelhos de Haku se fecham em torno da área do golpe. Kakashi dos Dois Mangekyō entra com missão de desbloqueio, Susanoo azul alado e Shuriken do Kamui. Veja a [auditoria de efeitos](docs/24-AUDITORIA-DE-EFEITOS.md), o [guia dos mapas](docs/development/CRIAR-MAPAS-JOGAVEIS.md) e as [validações pendentes](docs/13-PENDENCIAS-PARA-CONTINUAR.md).

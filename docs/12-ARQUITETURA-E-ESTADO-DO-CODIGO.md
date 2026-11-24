@@ -4,6 +4,8 @@ Atualizado em 11/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Mapa de arquivos
 
+`src/game/susanoo.ts` descreve as nove versões com Susanoo e é compartilhado pelo pool, pela prévia, pela partida e por `bossCombat.ts`. `src/scene/susanooFx.ts` usa folhas de quatro fases para Madara, Itachi e Sasuke, com transição na janela do golpe. `TechniquePreview.tsx` usa o mesmo efeito para a Espada de Totsuka. `techniqueEffects.ts` forma e dissolve oito painéis para os espelhos de Haku. A revisão acrescenta Kakashi dos Dois Mangekyō na fábrica de versões. Sua ultimate segue a área de acerto no alvo. As técnicas antigas mantêm suas fórmulas. [Auditoria de efeitos](24-AUDITORIA-DE-EFEITOS.md).
+
 `src/game/runningArt.ts` indexa as folhas de corrida por ID da versão jogável. `playerMotion` seleciona uma das cinco vistas e a primeira fileira da versão. A textura carrega no primeiro deslocamento. Ações específicas continuam nos atlas de combate e acrobacia.
 
 **Atualização de 14/11/2026.** `cardinalWalkArt` fornece W/S, `lateralWalkArt` fornece A/D e as folhas direcionais fornecem as diagonais. `playerMotion` escolhe a vista e conserva a fase. O jogador, os Mega Elites e os ajudantes usam esse controlador e a base da câmera. `playerFocus.ts` calcula sobreposição, e `enemyRenderer.ts` separa as poucas entidades translúcidas em lotes. A seleção e a ficha compartilham o `CardPortrait`. O recorte de três quartos e a centralização pela silhueta foram atualizados em 15/11. [Cobertura das vistas](development/COBERTURA-DE-VISTAS.md).

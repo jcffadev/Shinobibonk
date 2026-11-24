@@ -2,10 +2,10 @@
 
 ## Próximas prioridades sugeridas
 
-1. Conferir em partida os nove ajustes da [auditoria visual das 114 versões](development/AUDITORIA-CHIBI-ELENCO.md), incluindo as transições de repouso, corrida e ação. Verificar Jūzō como jogador e ajudante. Continuar o registro de referências por versão para o restante do elenco.
-2. Finalizar os Susanoo de Sasuke e Itachi e revisar os jutsus que usam efeitos compartilhados. Documentar o efeito na obra, a área de acerto e os valores de status. Usar o simulador antes de propor mudanças de balanceamento.
-3. Percorrer as quatro vilas no jogo, com foco em água, escadas, escalada, NPCs, Balanço da Academia e Pedra Memorial. Medir o desempenho com horda nas qualidades gráficas.
-4. Validar o ranking público na hospedagem e definir a verificação competitiva dos resultados antes de ampliar os modos e equipes.
+1. Conferir o elenco em partida, com foco nas 17 versões ajustadas e no Jūzō como jogador e ajudante. Conferir também a missão e as ações do novo Kakashi dos Dois Mangekyō. O controlador passou pelos oito rumos, ações e retorno ao repouso nas 115 versões. Completar as referências específicas das 97 versões restantes. [Auditoria chibi](development/AUDITORIA-CHIBI-ELENCO.md).
+2. Conferir em partida o Susanoo das nove versões que podem usar a técnica, incluindo os novos efeitos de Sasuke e Itachi, a conjuração dos chefes e os Espelhos Demoníacos de Gelo de Haku. Passar pelos 13 nomes levantados na auditoria de efeitos e revisar também ultimates e fusões, que ficam fora do inventário do pool. O registro tem a área de acerto, as chances atuais e 60 simulações. [Auditoria de efeitos](24-AUDITORIA-DE-EFEITOS.md).
+3. Percorrer Konoha, Suna, Iwa e Kiri em partida. Escadas, escalada, água, NPCs, Balanço da Academia, Pedra Memorial e rotas já têm testes em Node. A vistoria no jogo e os FPS de GPU com horda seguem pendentes.
+4. Validar a hospedagem e a migração do ranking com conta de teste. Implementar o verificador de resultados do servidor antes de classificar partidas em equipe. A função Netlify foi testada com um provedor simulado. [Ranking e clãs](development/RANKING-E-CLAS.md).
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 

@@ -1,18 +1,20 @@
 # Cobertura das vistas de caminhada · 14/11/2026
 
-O controlador usa cinco vistas e quatro quadros por vista nas **114 versões selecionáveis**. W exibe costas e S, frente. A e D usam a vista em perfil. WD e WA usam três quartos de costas, SD e SA, três quartos de frente. A, WA e SA espelham o recorte correspondente e a transição conserva a fase da caminhada.
+O controlador usa cinco vistas e quatro quadros por vista nas **115 versões selecionáveis**. W exibe costas e S, frente. A e D usam a vista em perfil. WD e WA usam três quartos de costas, SD e SA, três quartos de frente. A, WA e SA espelham o recorte correspondente e a transição conserva a fase da caminhada.
 
 Os Mega Elites e os ajudantes que usam essas versões consultam as mesmas folhas. Quatro modelos de inimigo comum passaram a usar perfil na perseguição lateral, além das vistas dianteira e traseira que já usavam. Akamaru e Kuri têm ciclos próprios. O retrato da seleção e da ficha usa a vista em perfil da mesma versão.
 
 O dash acompanha o vetor e o lado das oito direções, com quatro fases de frente e de costas. A arte de perfil dedicada do dash está no Naruto Academia. Para as demais versões o dash e o pulo continuam apoiados nas vistas frontal e traseira. A aprovação visual dos ângulos, poses e transições em partida está pendente conforme a [política de testes](TESTING_POLICY.md).
 
-A corrida é a animação do deslocamento normal das 114 versões. As mesmas entradas escolhem as cinco vistas dos atlas `corrida-01.png` a `corrida-57.png` em `public/assets/shinobi-motion`. A associação por versão fica em `src/game/runningArt.ts`. A tabela abaixo indica as folhas de caminhada usadas como referência de identidade e disponíveis durante o carregamento.
+A corrida é a animação do deslocamento normal de todas as 115 versões. As mesmas entradas escolhem as cinco vistas dos atlas `corrida-01.png` a `corrida-57.png` em `public/assets/shinobi-motion`. A associação por versão fica em `src/game/runningArt.ts`. A tabela abaixo indica as folhas de caminhada usadas como referência de identidade e disponíveis durante o carregamento.
 
 As imagens de corrida foram geradas com ImageGen usando retrato e quadros do próprio jogo como modelos. O pedido por dupla de versões foi uma grade 4 × 10 transparente, com tronco inclinado, braços para trás e quatro fases das pernas, preservando traje, cabelos e acessórios nas cinco vistas. Após a seleção, cada quadro foi recortado a partir dos vãos da folha original e ancorado pela base.
 
 A partir de 24/11/2026, Haku, Hanzō, Nagato, Sasori, Jūzō, Gengetsu, Sakumo e Orochimaru Akatsuki têm atlas chibi dedicados. `*-chibi-v3.png` guarda a caminhada reta, o repouso de três quartos e as fases de ataque. `*-chibi-run-v1.png` usa cinco vistas de corrida. `*-chibi-acrobatics-v1.png` tem pulo de frente e costas, seguido de dash de frente e costas, com quatro quadros em cada fila.
 
 Chiriku agora usa três atlas próprios com o traje da obra. As outras oito versões apontadas na auditoria usam `*-chibi-poses-v1.png` para retrato, repouso e ataque. Jūgo e Obito Máscara Branca também têm `*-acrobatics-v3.png` para pulo e dash. Veja o [registro dos ajustes](AUDITORIA-CHIBI-ELENCO.md#ajuste-das-nove-versões).
+
+Kakashi dos Dois Mangekyō tem 20 quadros de corrida em `kakashi-dms-run-v1.png`, repouso, selo e golpe em `kakashi-dms-poses-v1.png` e acrobacias em `kakashi-30-acrobatics-v3.png`.
 
 Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros, o espelho e a margem transparente das células dos 26 atlas dedicados. Os atlas foram repaginados a partir dos originais para evitar recorte e vazamento da fileira vizinha.
 
@@ -25,6 +27,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | sasuke | walk-cardinal-1.png · 2/3 | walk-side-1.png · 3 | sasuke-classico-motion-v1.png · 0/1 |
 | sakura | walk-cardinal-1.png · 4/5 | walk-side-1.png · 6 | sakura-classico-motion-v1.png · 0/1 |
 | kakashi | walk-cardinal-3.png · 0/1 | walk-side-2.png · 1 | kakashi-walk-v1.png · 0/1 |
+| kakashi-dms | kakashi-dms-run-v1.png · 0/1 | kakashi-dms-run-v1.png · 2 | kakashi-dms-run-v1.png · 3/4 |
 | itachi | walk-cardinal-3.png · 4/5 | walk-side-2.png · 3 | itachi-walk-v1.png · 0/1 |
 | minato | walk-cardinal-7.png · 0/1 | walk-side-5.png · 0 | minato-walk-v1.png · 0/1 |
 | tsunade | walk-cardinal-7.png · 4/5 | walk-side-5.png · 2 | tsunade-walk-v1.png · 0/1 |

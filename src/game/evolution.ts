@@ -2,6 +2,7 @@ import { runningArt } from './runningArt.ts';
 import { ROSTER_EXPANSION, chibiMotionArt, expansionSheet } from './rosterExpansion.ts';
 import { directionalArt, refinedChibiArt } from './directionalArt.ts';
 import { HERO_BY_ID, HEROES, NARUTO_FORMS, familyOf } from './heroes.ts';
+import { KAKASHI_DMS, KAKASHI_DMS_FORM } from './susanoo.ts';
 export type Form={level:number;name:string;outfit?:string;detail?:string};
 // Níveis são design do jogo. Personagens sem outra fase apropriada mantêm a aparência.
 export const FORMS:Record<string,Form[]>={
@@ -32,10 +33,11 @@ export const FORMS:Record<string,Form[]>={
  * (`Hero.form`): o nível da run não troca mais a forma. Ids fora do elenco (NPCs) seguem a tabela por nível.
  */
 export function formAt(id:string,level=1){const hero=HERO_BY_ID[id],family=familyOf(id),list=FORMS[family]??[{level:1,name:'Shinobi'}];if(hero)return list.find(f=>f.level===(hero.form??1))??list[0];return [...list].reverse().find(f=>level>=f.level)??list[0];}
-export function spriteFile(id:string,level=1){const family=familyOf(id),form=formAt(id,level);if(expansionSheet(family,form.level))return null;if(family==='naruto')return `/assets/shinobis/${NARUTO_FORMS.find(f=>f.name===form.name)!.file}.svg`;if(HERO_BY_ID[family]?.atlas!==undefined&&form.level===1)return null;return `/assets/shinobis/${family}-${form.level}.svg`;}
+export function spriteFile(id:string,level=1){if(id===KAKASHI_DMS)return null;const family=familyOf(id),form=formAt(id,level);if(expansionSheet(family,form.level))return null;if(family==='naruto')return `/assets/shinobis/${NARUTO_FORMS.find(f=>f.name===form.name)!.file}.svg`;if(HERO_BY_ID[family]?.atlas!==undefined&&form.level===1)return null;return `/assets/shinobis/${family}-${form.level}.svg`;}
 /** Nível de liberação da técnica `index` do kit (fonte única: `unlockLevel` em heroes.ts, ajustado por fase da obra). */
 export function requiredLevel(heroId:string,index:number){return HERO_BY_ID[heroId]?.techniques[index]?.unlockLevel??[1,5,12,20][index];}
 const evolvedCells=Object.entries(FORMS).flatMap(([id,forms])=>id==='naruto'?[]:forms.filter(f=>f.level>1).map(f=>id+'-'+f.level));
+FORMS.kakashi.push({level:KAKASHI_DMS_FORM,name:'Dois Mangekyō',detail:'sharingan'});
 for(const hero of ROSTER_EXPANSION)(FORMS[hero.family]??=[]).push({level:hero.form,name:hero.title});
 import { BIJUU } from './bijuu.ts';
 const leafPortraits = ['ebisu', 'iruka', 'kushina'];

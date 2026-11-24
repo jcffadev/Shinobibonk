@@ -2,6 +2,10 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Kakashi dos Dois Mangekyō · 24/11/2026
+
+Como segundo avanço da família, parte de ×1,24 de HP e dano de base, +2 de armadura e +0,16 m/s de movimento em relação ao Kakashi Jōnin. A passiva da versão acrescenta +12% de Ninjutsu e +5 pontos de evasão, conforme a progressão de passivas do elenco. A missão em Iwa Kage usa Kakashi Hokage, 7 minutos e 950 abates. Nas sementes 17, 101 e 252, Kakashi Jōnin, Hokage e Dois Mangekyō chegaram à zona 2 no simulador em Kage, conta nova, até 12 minutos. O simulador aproxima a horda e deixa as ultimates fora do cálculo.
+
 ## 1. Dificuldade (rank da missão) — `progression.ts`
 
 `MISSION_TIER` (IMPLEMENTADO): **Genin ×1 · Chunin ×1,4 · Jonin ×1,9 · Kage ×2,6**. Sem desconto de early game em nenhum rank (revisão 11/11 — pedido do usuário: todas nascem na força plena do tier, em suas devidas proporções).

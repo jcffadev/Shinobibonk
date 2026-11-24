@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { compactNumber } from '../game/format';
 import { BIJUU, BIJUU_BY_ID, BIJUU_BOMB, BIJUU_FRONT_SHEETS, BIJUU_BACK_SHEETS, beastPhase, bijuuFacesAway, bijuuSheetCell } from '../game/bijuu';
 import { HERO_BY_ID, SHAPE_POWER, ultimateBase, type Technique } from '../game/heroes';
+import { susanooStyleFor } from '../game/susanoo';
+import type { createSusanooFx } from './susanooFx';
 import { animateTechniqueVisual, techniqueVisual, disposeObject } from './techniqueEffects';
 
 /**
@@ -25,7 +27,7 @@ export const BOSS_RULES = {
 };
 
 type CastShape = 'circle' | 'cone' | 'line' | 'lineV' | 'ring';
-type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir: THREE.Vector3; range: number; width: number; windup: number; total: number; power: number; marker: THREE.Group; ultimate: boolean };
+type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir: THREE.Vector3; range: number; width: number; windup: number; total: number; power: number; marker: THREE.Group; ultimate: boolean; susanoo?: boolean };
 export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number; motionTime:number; recoil:number; motionMap?:THREE.Texture; motionRow?:number;
   /** Rodada 55: espelho com histerese, posição anterior (andar = deslocamento real) e quadro exibido (testes). */
   flip?:boolean; lastX?:number; lastZ?:number; walkBlend?:number; pose?:number;
@@ -50,6 +52,7 @@ export type BossContext = {
   height: (x: number, z: number) => number;
   zone: () => number;
   hidden: () => boolean;
+  susanoo?: Pick<ReturnType<typeof createSusanooFx>, 'trigger' | 'cancel'>;
   /** Aplica o golpe no jogador (ameaça, armadura, evasão, invulnerabilidade e god mode ficam com a simulação). */
   hitPlayer: (base: number, slowSeconds: number, gravity?:Technique['gravity'], center?:THREE.Vector3) => void;
   /** Rodada 55: direita da tela projetada no chão (v2 da câmera). Espelha a bijū pela câmera e não pelo eixo X do mundo. */
@@ -157,7 +160,9 @@ export function createBossCombat(ctx: BossContext) {
     // Círculo de técnica em Área cai sobre a posição atual do jogador; os demais saem do chefe.
     range*=state.phase?1.24:state.guardian?1.22:1.15;
     width*=state.phase?1.28:1.2;
-    const center = (shape === 'circle' && !ultimate && technique.shape === 'Área') ? new THREE.Vector3(ctx.player.position.x, 0, ctx.player.position.z) : new THREE.Vector3(origin.x, 0, origin.z);
+    const style = susanooStyleFor(host.heroId, technique.name);
+    const targetCircle = shape === 'circle' && technique.shape === 'Área' && (!ultimate || style === 'kakashi');
+    const center = targetCircle ? new THREE.Vector3(ctx.player.position.x, 0, ctx.player.position.z) : new THREE.Vector3(origin.x, 0, origin.z);
     const marker = new THREE.Group();
     const y = ctx.height(center.x, center.z) + .22;
     if (shape === 'circle') { const m = flat(new THREE.CircleGeometry(range, 40)); marker.add(m); const edge = flat(new THREE.RingGeometry(range - .12, range, 40)); marker.add(edge); }
@@ -171,7 +176,12 @@ export function createBossCombat(ctx: BossContext) {
     }
     marker.position.set(center.x, y, center.z); ctx.scene.add(marker);
     const windup = state.phase ? (technique===BIJUU_BOMB?1.45:1.15-(state.phase-1)*.16) : ultimate ? BOSS_RULES.ultimateWindup : BOSS_RULES.windup;
-    state.cast = { technique, shape, center, dir, range, width, windup, total: windup, power, marker, ultimate };
+    const usesSusanoo = Boolean(style && ctx.susanoo);
+    if (style && !ctx.hidden()) {
+      const target = center.clone().addScaledVector(dir, shape === 'ring' ? range - .8 : ultimate && !targetCircle ? range * .65 : 0);
+      ctx.susanoo?.trigger(style, origin, dir, target, range, ultimate, windup, false);
+    }
+    state.cast = { technique, shape, center, dir, range, width, windup, total: windup, power, marker, ultimate, susanoo: usesSusanoo };
     state.lastCasting = (state.phase?'Fase '+state.phase+' · ':'') + technique.name;
   }
 
@@ -192,7 +202,7 @@ export function createBossCombat(ctx: BossContext) {
       const controls=Boolean(t.status&&t.status!=='Empurrar')&&Math.random()<techniqueProc(t.statusChance);
       ctx.hitPlayer(BOSS_RULES.baseDamage*c.power,controls?BOSS_RULES.slowSeconds:0,t.gravity,c.center);
     }
-    if (!ctx.hidden()) {
+    if (!ctx.hidden() && !c.susanoo) {
       const visual = techniqueVisual(c.technique);
       animateTechniqueVisual(visual,0,c.dir);
       visual.position.set(c.shape === 'circle' ? c.center.x : host.sprite.position.x + c.dir.x * Math.min(3, c.range / 2), ctx.height(c.center.x, c.center.z) + .9, c.shape === 'circle' ? c.center.z : host.sprite.position.z + c.dir.z * Math.min(3, c.range / 2));
@@ -289,6 +299,7 @@ export function createBossCombat(ctx: BossContext) {
 
   function dispose(host: BossHost) {
     const state = host.boss; if (!state) return;
+    if (state.cast?.susanoo) ctx.susanoo?.cancel(host.sprite.position);
     clearCast(state);state.motionMap?.dispose();state.backMap?.dispose();
     ctx.scene.remove(state.bar); state.bar.material.map?.dispose(); state.bar.material.dispose();
     host.boss = undefined;

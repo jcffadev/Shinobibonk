@@ -82,3 +82,42 @@ test('equilíbrio dos status: só golpes de precisão ficam no crítico; gelo co
   assert.equal(tech('Receptores de Chakra').gravity, 'pull'); assert.equal(tech('Invocação dos Caminhos').gravity, 'push');
   assert.ok(tech('Bijūdama').burn && tech('Yamata no Jutsu').poison && tech('Impacto de Sakura').status === 'Atordoar');
 });
+
+
+test('Susanoo usa a versão do conjurador em todo o elenco, inclusive nas ultimates', async () => {
+  const { KAKASHI_DMS, KAMUI_SHURIKEN, susanooStyleFor } = await import('../src/game/susanoo.ts');
+  const everyoneSealed = new Set(HEROES.map(hero => hero.id));
+  const expected = {
+    madara: 'madara', 'madara-rinnegan': 'madara', 'madara-seis-caminhos': 'madara',
+    itachi: 'itachi', 'itachi-akatsuki': 'itachi', 'sasuke-shippuden': 'sasuke',
+    'sasuke-rinnegan': 'sasuke', shisui: 'shisui', [KAKASHI_DMS]: 'kakashi',
+  };
+  for (const hero of HEROES) {
+    const fromPool = skillPool(hero.id, everyoneSealed).some(t => t.name === 'Susanoo');
+    const style = Object.hasOwn(expected, hero.id) ? expected[hero.id] : undefined;
+    assert.equal(fromPool, Boolean(style), hero.id);
+    assert.equal(susanooStyleFor(hero.id, 'Susanoo'), style, hero.id);
+  }
+  assert.equal(susanooStyleFor('madara', HERO_BY_ID.madara.ultimate), 'madara');
+  assert.equal(susanooStyleFor('itachi-akatsuki', HERO_BY_ID['itachi-akatsuki'].ultimate), 'itachi');
+  assert.equal(HERO_BY_ID[KAKASHI_DMS].ultimate,KAMUI_SHURIKEN);
+  assert.equal(susanooStyleFor(KAKASHI_DMS,KAMUI_SHURIKEN),'kakashi');
+  assert.equal(susanooStyleFor('kakashi',KAMUI_SHURIKEN),undefined);
+  assert.equal(susanooStyleFor('kakashi-hokage',KAMUI_SHURIKEN),undefined);
+});
+
+
+test('Kakashi dos Dois Mangekyō tem seu kit e a missão dependente do Sexto Hokage', async () => {
+  const { versionForEncounter, ultimateBase } = await import('../src/game/heroes.ts');
+  const { UNLOCK_MISSIONS, missingRequirements } = await import('../src/game/unlockMissions.ts');
+  const id = 'kakashi-dms', kakashi = HERO_BY_ID[id];
+  const mission = UNLOCK_MISSIONS[id];
+  assert.deepEqual([mission.playWith, mission.map, mission.difficulty, mission.minute, mission.kills], ['kakashi-hokage','pedra','Kage',7,950]);
+  assert.deepEqual(missingRequirements(id,new Set(),()=>false), ['kakashi-hokage']);
+  assert.deepEqual(missingRequirements(id,new Set(),version=>version==='kakashi-hokage'), []);
+  assert.deepEqual(kakashi.techniques.map(skill=>skill.name), ['Raikiri do Kamui','Shuriken','Susanoo','Kamui']);
+  assert.equal(ultimateBase(kakashi).name, 'Susanoo');
+  assert.equal(techniqueEye(kakashi.ultimate,id), 'obito');
+  assert.equal(versionForEncounter('kakashi',3,'Kage'),id);
+  assert.equal(versionForEncounter('kakashi',3,'Chunin'),'kakashi-hokage');
+});

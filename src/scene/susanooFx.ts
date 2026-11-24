@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { ParticleFx } from './particleFx';
+import type { SusanooStyle } from '../game/susanoo';
 import { GLOW, FLAME, STREAK, BLADE, SPARK } from './particleFx';
 
 /**
@@ -8,9 +9,13 @@ import { GLOW, FLAME, STREAK, BLADE, SPARK } from './particleFx';
  * Referência de cor/armas (Narutopedia, página "Susanoo"): Madara azul-escuro com lâminas onduladas (kris);
  * Sasuke roxo com arco e flecha; Itachi vermelho/laranja (anime) com Espada de Totsuka e Espelho de Yata;
  * Kakashi dos dois Mangekyō azul-claro com shuriken do Kamui. Shisui verde com agulhas de chakra, da animação Ninja Escapades.
- * Rigs são criados uma vez por estilo e reaproveitados; nenhum material/geometria é criado por cast.
+ * As malhas são reutilizadas entre conjurações. Conjuradores simultâneos têm efeitos independentes.
  */
-export type SusanooStyle = 'madara' | 'sasuke' | 'itachi' | 'kakashi' | 'shisui';
+const PAINTED_SUSANOO: Partial<Record<SusanooStyle, string>> = {
+  madara: '/assets/shinobi-motion/susanoo-madara-v1.png',
+  sasuke: '/assets/shinobi-motion/susanoo-sasuke-v1.png',
+  itachi: '/assets/shinobi-motion/susanoo-itachi-v1.png',
+};
 const STYLE: Record<SusanooStyle, { body: string; rim: string; flame: [string, string, string] }> = {
   madara: { body: '#2f4dff', rim: '#a8b8ff', flame: ['#e6ecff', '#6f86ff', '#2233c8'] },
   sasuke: { body: '#8b3dff', rim: '#e4c8ff', flame: ['#f6ecff', '#b27bff', '#5a1fb0'] },
@@ -18,10 +23,6 @@ const STYLE: Record<SusanooStyle, { body: string; rim: string; flame: [string, s
   shisui: { body: '#24bc61', rim: '#b5ffae', flame: ['#ddffbd', '#51e57c', '#166e39'] },
   kakashi: { body: '#36c8ff', rim: '#dafaff', flame: ['#f0fdff', '#7fe2ff', '#1d8cc8'] },
 };
-export function susanooStyleFor(family: string | undefined): SusanooStyle {
-  if (family === 'sasuke' || family === 'itachi' || family === 'kakashi' || family === 'shisui') return family;
-  return 'madara';
-}
 
 const VERT = `varying vec3 vN; varying float vY; void main(){ vN=normalize(normalMatrix*normal); vec4 w=modelMatrix*vec4(position,1.); vY=w.y; gl_Position=projectionMatrix*viewMatrix*w; }`;
 const FRAG = `uniform vec3 body; uniform vec3 rim; uniform float opacity; uniform float time; uniform float base;
@@ -78,6 +79,7 @@ type Rig = {
   owner: THREE.Vector3; dir: THREE.Vector3; target: THREE.Vector3; radius: number; ultimate: boolean; fired: boolean; flameAcc: number;
   samples: THREE.Object3D[];
   projectile?: THREE.Mesh;
+  drawFootprint?: boolean;
   painted?: THREE.Sprite;
   /** Rodada 99: segundo sprite da folha pintada, para fundir um quadro no seguinte. */
   paintedNext?: THREE.Sprite;
@@ -173,7 +175,7 @@ function buildRig(style: SusanooStyle): Rig {
 const ease = (v: number) => { const x = Math.min(1, Math.max(0, v)); return x * x * (3 - 2 * x); };
 
 export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: number, z: number) => number) {
-  const rigs = new Map<SusanooStyle, Rig>();
+  const rigs: Rig[] = [];
   let hidden = false, time = 0;
   const tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
   const col = (h: string) => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255] as const; };
@@ -181,15 +183,17 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
   const colsOf = (s: SusanooStyle) => { let c = flameCols.get(s); if (!c) { c = STYLE[s].flame.map(col); flameCols.set(s, c); } return c; };
 
   /** Dispara o Susanoo do usuário: forma em camadas, ataca com a arma do estilo e desaparece. */
-  function trigger(style: SusanooStyle, owner: THREE.Vector3, dir: THREE.Vector3, target: THREE.Vector3, radius: number, ultimate = false, impactAt=.22) {
+  function trigger(style: SusanooStyle, owner: THREE.Vector3, dir: THREE.Vector3, target: THREE.Vector3, radius: number, ultimate = false, impactAt=.22, drawFootprint = true) {
     if (hidden) return;
-    let rig = rigs.get(style);
+    let rig = rigs.find(rig => rig.style === style && rig.owner === owner)
+      ?? rigs.find(rig => rig.style === style && !rig.active);
     if (!rig) {
       rig = buildRig(style);
-      rigs.set(style, rig);
+      rigs.push(rig);
       scene.add(rig.root);
-      if (style === 'madara') {
-        const map = new THREE.TextureLoader().load('/assets/shinobi-motion/susanoo-madara-v1.png');
+      const paintedPath = PAINTED_SUSANOO[style];
+      if (paintedPath) {
+        const map = new THREE.TextureLoader().load(paintedPath);
         map.colorSpace = THREE.SRGBColorSpace;
         map.magFilter = THREE.NearestFilter;
         map.minFilter = THREE.LinearFilter;
@@ -208,6 +212,7 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
     rig.owner = owner; rig.dir.set(dir.x, 0, dir.z).normalize(); rig.target.copy(target); rig.radius = radius; rig.ultimate = ultimate;
     rig.age=0;rig.weaponR.visible=true;if(rig.projectile)rig.projectile.visible=false;
     rig.impactAt=Math.max(.001,impactAt);
+    rig.drawFootprint = drawFootprint;
     rig.life=(ultimate?1.35:.95)+rig.impactAt-.22; rig.active = true; rig.fired = false; rig.root.visible = true;
     rig.scale = Math.min(1.9, .85 + radius * .32) * (ultimate ? 1.25 : 1);
   }
@@ -217,13 +222,14 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
     // Rodada 78: o golpe do Susanoo cai NO ALVO (sx/sz = usuário, de onde sai a estocada); só a Ultimate envolve o usuário.
     const sx = rig.owner.x, sz = rig.owner.z, ox = rig.ultimate ? sx : rig.target.x, oz = rig.ultimate ? sz : rig.target.z;
     // Anel no chão do tamanho real da área atingida (no alvo; na Ultimate, ao redor do usuário).
-    fx.emitRaw(true, ox, ground(ox, oz) + .08, oz, 0, 0, 0, .45, R * .6, R * 2.5, core, .9, edge, 0, 5, 2, 0);
+    if (rig.drawFootprint) fx.emitRaw(true, ox, ground(ox, oz) + .08, oz, 0, 0, 0, .45, R * .6, R * 2.5, core, .9, edge, 0, 5, 2, 0);
     if(rig.style==='kakashi') {
-      fx.emitRaw(true,ox,ground(ox,oz)+.65,oz,0,0,0,.32,R*.48,R*1.38,core,.85,edge,0,GLOW,0,.14);
+      const tx=rig.target.x,tz=rig.target.z;
+      fx.emitRaw(true,tx,ground(tx,tz)+.65,tz,0,0,0,.32,R*.48,R*1.38,core,.85,edge,0,GLOW,0,0);
       for(let i=0;i<9;i++){
         const angle=i*Math.PI*2/9;
-        fx.emitRaw(true,ox+Math.cos(angle)*R*.62,ground(ox,oz)+.50,oz+Math.sin(angle)*R*.62,
-          -Math.sin(angle)*3,.7,Math.cos(angle)*3,.40,.15,.04,mid,.95,edge,0,STREAK,1,.14);
+        fx.emitRaw(true,tx+Math.cos(angle)*R*.62,ground(tx,tz)+.50,tz+Math.sin(angle)*R*.62,
+          -Math.sin(angle)*3,.7,Math.cos(angle)*3,.40,.15,.04,mid,.95,edge,0,STREAK,1,0);
       }
     } else if(rig.style==='shisui') {
       const tx=rig.target.x,tz=rig.target.z;
@@ -284,10 +290,11 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
         rig.armR.rotation.set(-.65-1.02*sw, -.46*back, 1.0*(1-sw)+.14);
         rig.foreR.rotation.x=-1.25*(1-sw);
         rig.armL.rotation.set(-.37,0,-.92);
-        const travel=Math.min(1,Math.max(0,(a-.22)/.16));
-        rig.weaponR.visible=a<.22;
+        const release=.14;
+        const travel=THREE.MathUtils.clamp((a-release)/(.22-release),0,1);
+        rig.weaponR.visible=a<release;
         if(rig.projectile){
-          rig.projectile.visible=a>=.22&&a<.38;
+          rig.projectile.visible=a>=release&&a<.22;
           tmp.copy(rig.target).setY(ground(rig.target.x,rig.target.z)+.55);
           rig.root.updateMatrixWorld(true);
           rig.root.worldToLocal(tmp);
@@ -315,13 +322,14 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       const painted = rig.painted;
       const paintedReady = Boolean((painted?.material.map?.image as HTMLImageElement|undefined)?.width);
       if (painted) {
-        // Rodada 99 (pedido do usuário: "o Susano'o… você tem que fazer uma animação dela mais bonitinha, aquilo é só
-        // esboço"): os 4 quadros (costelas → armadura → lâminas cruzadas → golpe) se fundem um no outro; o Susanoo SOBE do
-        // chão crescendo, respira, avança no golpe e dissolve subindo. O acerto continua em 0,22 s.
+        // Costelas, armadura, preparo da arma e ataque compartilham a janela de acerto do efeito.
         const look = susanooPaintedLook(a, T);
+        tmp2.setFromMatrixColumn(camera.matrixWorld, 0);
+        const mirror = (rig.style === 'sasuke' || rig.style === 'itachi') && rig.dir.dot(tmp2) < 0;
         const place = (sprite: THREE.Sprite, frame: number, alpha: number) => {
           sprite.visible = paintedReady && alpha > .01;
-          sprite.material.map!.offset.set((frame % 2) * .5, frame < 2 ? .5 : 0);
+          sprite.material.map!.repeat.x = mirror ? -.5 : .5;
+          sprite.material.map!.offset.set((frame % 2 + Number(mirror)) * .5, frame < 2 ? .5 : 0);
           sprite.material.opacity = alpha * fade * .95;
           sprite.position.set(0, look.rise, -.25 + look.lunge);
           sprite.scale.setScalar(look.size);
@@ -346,14 +354,19 @@ export function createSusanooFx(scene: THREE.Scene, fx: ParticleFx, ground: (x: 
       if (a < .05) fx.emitRaw(true, o.x, o.y + .4, o.z, 0, 0, 0, .25, 1.4 * s, 2.4 * s, core, .7, mid, 0, GLOW, 0, 0);
       // Rodada 99: rajada de chamas de chakra no chão enquanto o Susanoo se forma.
       if (a < (rig.ultimate ? .14 : .07)) for (let i = 0; i < 3; i++) { const ang = Math.random() * 6.283, r = (.4 + Math.random() * 1.2) * s; fx.emitRaw(true, o.x + Math.cos(ang) * r, ground(o.x, o.z) + .1, o.z + Math.sin(ang) * r, 0, 2.2 + Math.random() * 1.6, 0, .55, .5 * s, .1, Math.random() < .4 ? core : mid, .8, edge, 0, FLAME, 0, 0); }
-      void camera;
     }
   }
   function setHidden(v: boolean) { hidden = v; if (v) for (const rig of rigs.values()) { rig.active = false; rig.root.visible = false; } }
-  function clear() { for (const rig of rigs.values()) { rig.active = false; rig.root.visible = false; } }
-  function dispose() { for (const rig of rigs.values()) { scene.remove(rig.root); rig.mats.forEach(m => m.dispose()); rig.painted?.material.map?.dispose(); rig.painted?.material.dispose(); rig.paintedNext?.material.map?.dispose(); rig.paintedNext?.material.dispose(); } rigs.clear(); }
-  const active = () => [...rigs.values()].filter(r => r.active).map(r => ({ style: r.style, age: +r.age.toFixed(2), scale: +r.scale.toFixed(2) }));
-  return { trigger, update, setHidden, clear, dispose, active };
+  function cancel(owner?: THREE.Vector3) {
+    for (const rig of rigs) if (!owner || rig.owner === owner) {
+      rig.active = false;
+      rig.root.visible = false;
+    }
+  }
+  function clear() { cancel(); }
+  function dispose() { for (const rig of rigs) { scene.remove(rig.root); rig.mats.forEach(m => m.dispose()); rig.painted?.material.map?.dispose(); rig.painted?.material.dispose(); rig.paintedNext?.material.map?.dispose(); rig.paintedNext?.material.dispose(); } rigs.length = 0; }
+  const active = () => rigs.filter(r => r.active).map(r => ({ style: r.style, age: +r.age.toFixed(2), scale: +r.scale.toFixed(2) }));
+  return { trigger, update, setHidden, cancel, clear, dispose, active };
 }
 
 // Ajustes na última partícula emitida (o módulo de partículas expõe só emitRaw para o Susanoo).

@@ -1,4 +1,5 @@
 import { chibiMotionArt } from './rosterExpansion.ts';
+import { KAKASHI_DMS } from './susanoo.ts';
 
 const RUNNERS_PER_ATLAS = 2;
 const VIEWS_PER_RUNNER = 5;
@@ -74,6 +75,7 @@ runners.forEach((pair, page) => {
 });
 
 export function runningArt(heroId: string) {
+  if (heroId === KAKASHI_DMS) return {path:'/assets/shinobi-motion/kakashi-dms-run-v1.png',rows:VIEWS_PER_RUNNER,firstRow:0};
   const chibi=chibiMotionArt(heroId);
   return chibi ? {path:chibi.run,rows:VIEWS_PER_RUNNER,firstRow:0} : sheets.get(heroId);
 }

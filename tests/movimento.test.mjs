@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
 import { decodePng, cellShape } from '../scripts/audit-walk-sheets.mjs';
-import { load } from './helpers/load.mjs';
+import { installCanvasStub, load } from './helpers/load.mjs';
 
 // O teste lê os PNGs direto do disco. O canvas de proporção do sprite é dispensável.
 globalThis.document ??= { createElement: () => ({ getContext: () => null, width: 0, height: 0 }) };
@@ -104,7 +104,7 @@ test('as nove versões revisadas compartilham o retrato e têm os ataques de fre
   }
 });
 
-test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direções', (t) => {
+test('o elenco jogável completo e os dois companheiros selecionam quadros nas oito direções', (t) => {
   const images = new Map();
   const cells = new Map();
   const getImage = (path) => {
@@ -128,7 +128,7 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
     if (!cells.has(cell)) {
       const img = getImage(path);
       cells.set(cell, !cellShape(img, left, top, w, h).empty);
-      if (/\/(?:walk-(?:cardinal|side)|corrida)-\d+\.png$/.test(path)) {
+      if (/\/(?:(?:walk-(?:cardinal|side)|corrida)-\d+|kakashi-dms-run-v1|kakashi-dms-poses-v1|kakashi-30-acrobatics-v3)\.png$/.test(path)) {
         const margin = 12;
         for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
           if (x >= margin && x < w - margin && y >= margin && y < h - margin) continue;
@@ -139,7 +139,7 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
     assert.ok(cells.get(cell), label);
     return { cell, row: Math.floor((top + .5) / h), path };
   };
-  assert.ok(HEROES.length >= 114);
+  assert.ok(HEROES.length >= 115);
   const scene = new THREE.Scene();
   const missingRearDash = [];
   const dashFrameCounts = {};
@@ -193,6 +193,8 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
       const strike = inspect(sprite.material.map, hero.id + ' ataque ' + keys);
       assert.notEqual(strike.path, runner?.path, hero.id + ' ataque usa folha própria');
       update(.6, false, 0, false, 0);
+      assert.equal(motion.state(),'idle',hero.id + ' retoma repouso depois da ação ' + keys);
+      assert.equal(sprite.material.map,idle,hero.id + ' recupera seu próprio retrato de repouso');
     }
     assert.notEqual(walks.W[0].cell, walks.S[0].cell, hero.id + ' frente e costas');
     if (HEROES.includes(hero)) {
@@ -225,4 +227,34 @@ test('os 114 jogáveis e os dois companheiros selecionam quadros nas oito direç
   assert.deepEqual(missingRearDash, [], 'cada forma precisa de dash traseiro próprio');
   assert.deepEqual(jumpFrameCounts, { 4: actors.length });
   assert.deepEqual(dashFrameCounts, { 4: actors.length });
+});
+
+test('Jūzō alterna corrida, golpe e repouso como jogador e como ajudante', (t) => {
+  installCanvasStub();
+  t.mock.method(THREE.TextureLoader.prototype, 'load', path => new THREE.Texture({ path, width: 1024, height: 1024 }));
+  const scene = new THREE.Scene(), portrait = portraitRegion('juzo');
+  const simulate = healthBar => {
+    const idle = new THREE.Texture({ width: 1024, height: 1024 });
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: idle }));
+    const motion = M.createPlayerMotion(scene, sprite, 'juzo', healthBar);
+    const sample = (dt, walking, back) => {
+      motion.update(dt, 0, 70, 70, walking, back, back, 1, 0, false, false, 0, 0);
+      const { state, frame, atlas, walkAttack, flip } = motion.debug();
+      return { state, frame, atlas, walkAttack, flip, map: sprite.material.map === idle ? portrait.path : atlas };
+    };
+    const result = [sample(.01, false, false), sample(.1, true, false)];
+    motion.attack(true, false, false, 'punch', false, false, .32);
+    const swing = Array.from({ length: 4 }, () => sample(.08 - .001, true, false));
+    assert.equal(new Set(swing.map(frame => frame.frame)).size, 4);
+    assert.ok(swing.every(frame => frame.state === 'attack' && frame.atlas === actionArt('juzo', 1)?.path && frame.walkAttack));
+    result.push(...swing, sample(.05, true, true), sample(.05, false, true));
+    assert.deepEqual(result.map(frame => frame.state), ['idle', 'walk', 'attack', 'attack', 'attack', 'attack', 'walk', 'idle']);
+    assert.equal(result.at(-2).flip, true);
+    assert.equal(result.at(-1).map, portrait.path);
+    motion.dispose();
+    idle.dispose();
+    sprite.material.dispose();
+    return result;
+  };
+  assert.deepEqual(simulate(true), simulate(false));
 });

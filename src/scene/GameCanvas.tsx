@@ -71,7 +71,8 @@ import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSign
 import { createParticleFx } from './particleFx';
 import { createTechniqueAreas, CONE_COS } from './techniqueAreas';
 import { createVirtualCursor } from './virtualCursor';
-import { createSusanooFx, susanooStyleFor } from './susanooFx';
+import { createSusanooFx } from './susanooFx';
+import { susanooStyleFor } from '../game/susanoo';
 import { zoneThreat, zoneCurse, calculateStats, difficultyAt, incomingDamage, rollCritical, MISSION_TIER, normalHpFactor, SPAWN_RING, AMBUSH_RULES, ENEMY_SCALING, FINAL_SWARM, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
 import { buildAltarOffers, extraStrikes } from '../game/altarRewards';
 import { collectedXp, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
@@ -239,7 +240,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       village&&villageActive?villageDeck(village,terrainHeight,x,z):-Infinity);
     const solids=createSolids();
     // Partículas das técnicas (natureza × forma) e Susanoo procedural: pools fixos, só visual (particleFx.ts / susanooFx.ts).
-    const particles=createParticleFx(scene,terrainHeight),susanoo=createSusanooFx(scene,particles,terrainHeight);particles.setHidden(hiddenEffects);
+    const particles=createParticleFx(scene,terrainHeight),susanoo=createSusanooFx(scene,particles,terrainHeight);particles.setHidden(hiddenEffects);susanoo.setHidden(hiddenEffects);
     runCleanups.push(()=>{susanoo.dispose();particles.dispose();});
     // Rodada 55: contorno + preenchimento das áreas reais das técnicas do jogador (só visual; src/scene/techniqueAreas.ts).
     const areas=createTechniqueAreas(scene,terrainHeight);runCleanups.push(()=>areas.dispose());
@@ -1133,6 +1134,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function setHiddenEffects(value:boolean){
       hiddenEffects=value;
       particles.setHidden(value);
+      susanoo.setHidden(value);
       for(const effect of effects)effect.visible=!value;
       for(const shot of shots)shot.mesh.visible=!value;
       for(const fx of visuals)fx.object.visible=!value;
@@ -1296,7 +1298,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       addRing(center,'#2a1630',2.5);
       for(const e of [...enemyList]){const d=Math.hypot(e.sprite.position.x-center.x,e.sprite.position.z-center.z);if(e===target||d<2.5){e.burn=3*stats.duration;takeDamage(e,e===target?damage:damage*.5,'#3b1f45',false,0,'Amaterasu');}}
     }
-    const bossCombat=createBossCombat({scene,player,height:terrainHeight,zone:()=>zone,hidden:()=>hiddenEffects,
+    const bossCombat=createBossCombat({scene,player,height:terrainHeight,zone:()=>zone,hidden:()=>hiddenEffects,susanoo,
       hitPlayer:(base,slow,gravity,center)=>{if(!damagePlayer(base*threatNow().damage,undefined,slow)||!gravity||!center)return;const direction=center.clone().sub(player.position).setY(0), distance=direction.length();const step=gravity==='push'?-2:Math.min(2.25,Math.max(0,distance-.7));player.position.addScaledVector(direction.normalize(),step);if(!arena)solids.resolve(player.position);},viewRight:()=>v2,viewForward:()=>v1});
     function spawnEnemy(challenge=false,megaElite=false,guardian=false,forcedId?:string,accountSeal=false,openingMega=!openingMegaSpawned,akatsuki?:AmbushMemberSave){const t=tune(),candidates=megaElite&&!guardian&&!forcedId?HEROES.filter(h=>h.family===h.id&&!hasAllyFamily(h.id)&&!enemyList.some(enemy=>enemy.heroId&&familyOf(enemy.heroId)===h.id)):[],naturalFamily=candidates[Math.floor(Math.random()*candidates.length)]?.id,id=forcedId??(guardian?ZONES[zone-1].guardians[Math.floor(Math.random()*ZONES[zone-1].guardians.length)]:naturalFamily?versionForEncounter(naturalFamily,zone,mission):heroId),angle=Math.random()*Math.PI*2;if(accountSeal)megaElite=true;const swarmRing=!challenge&&!megaElite&&!guardian&&overtimeNow()>0,r=challenge?7:megaElite?12:swarmRing?FINAL_SWARM.spawnRing[0]+Math.random()*(FINAL_SWARM.spawnRing[1]-FINAL_SWARM.spawnRing[0]):zoneElapsed()<SPAWN_RING.openingSeconds?SPAWN_RING.opening[0]+Math.random()*(SPAWN_RING.opening[1]-SPAWN_RING.opening[0]):10+Math.random()*8,x=THREE.MathUtils.clamp(player.position.x+Math.cos(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),z=THREE.MathUtils.clamp(player.position.z+Math.sin(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),elite=!megaElite&&!challenge&&(forceElite||Math.random()<eliteSpawnChance(t.eliteRate,ex('eliteSpawn')));
       const tier:EnemyTier=accountSeal?'account':guardian?'mega':megaElite?'mega':elite?'elite':'normal',T=ENEMY_TIERS[tier];const e=megaElite?makeHero(id,Math.max(1,level)):makeSprite(Math.floor(Math.random()*4),elite?1.9:1.55,elite?2.5:2);if(megaElite)e.scale.multiplyScalar(1.4);e.position.set(akatsuki?.x??x,terrainHeight(akatsuki?.x??x,akatsuki?.z??z)+(megaElite?1.6:1),akatsuki?.z??z);if(elite)addOutline(e,'#ffd21f');else if(accountSeal)addOutline(e,'#5ff0ff');else if(megaElite&&!guardian)addOutline(e,'#ff4d6d');scene.add(e);const threat=threatNow();const hpBase=accountSeal?T.hp*t.accountHp:elite?T.hp*t.eliteHp*eliteHpRamp(tier,zoneElapsed()):challenge?30:T.hp;const isMegaEncounter=tier==='mega'&&!guardian&&!akatsuki;
@@ -1771,15 +1773,15 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         if(t.gravity==='pull'&&!hiddenEffects){const object=techniqueVisual(t);object.position.copy(center);object.scale.setScalar(radius);scene.add(object);visuals.push({object,life:.52});}
         else if(!hiddenEffects){const half=ATTACK_SCALE*.65*Math.sqrt(stats.area*(1+g.area));
           if(ally||!areas.enabled())particles.footprint(t,origin,direction,center,radius,range,half);
-          if(t.name==='Susanoo'){if(instant||delay<=0)susanoo.trigger(susanooStyle,origin,direction,center,radius);}
+          if(susanooStyle){if(instant||delay<=0)susanoo.trigger(susanooStyle,origin,direction,center,radius);}
           else{particles.cast(t,origin,direction,center,radius,range,half);if(t.secondaryElement)particles.cast({...t,element:t.secondaryElement},origin,direction,center,radius,range,half);}
           const puppet=puppetArt(t.name);if(puppet)showPuppet(origin,target.sprite.position,puppet);
-          if(visuals.length<36&&hasSignatureVisual(t,false)&&!puppet&&t.name!=='Susanoo'){const object=cachedTechniqueVisual(t);object.position.copy(center);animateTechniqueVisual(object,0,direction);object.scale.multiplyScalar(Math.max(.55,radius));scene.add(object);visuals.push({object,life:.35});}}
+          if(visuals.length<36&&hasSignatureVisual(t,false)&&!puppet&&!susanooStyle){const object=cachedTechniqueVisual(t);object.position.copy(center);if(object.userData.iceMirrors)object.position.y=terrainHeight(center.x,center.z);animateTechniqueVisual(object,0,direction);object.scale.multiplyScalar(Math.max(.55,radius));scene.add(object);visuals.push({object,life:.35});}}
         if(sageArea)addRing(center,SENJUTSU.color,Math.min(radius,4));};
         const delay=(t.school==='Taijutsu'?IMPACT_DELAY.Taijutsu:IMPACT_DELAY.other)/Math.max(.3,stats.projectileSpeed);
-        const susanooStyle=susanooStyleFor(familyOf(casterId));
+        const susanooStyle=susanooStyleFor(casterId,t.name);
         // Susanoo forma-se já no cast: o golpe da arma (~0,22 s) coincide com o acerto resolvido após o preparo.
-        if(!instant&&!hiddenEffects&&delay>0){if(t.name==='Susanoo')susanoo.trigger(susanooStyle,origin,direction,center,radius,false,delay);else particles.windup(t,origin,center,delay);}
+        if(!instant&&!hiddenEffects&&delay>0){if(susanooStyle)susanoo.trigger(susanooStyle,origin,direction,center,radius,false,delay);else particles.windup(t,origin,center,delay);}
         if(!ally&&(t.shape==='Área'||t.gravity==='pull')){areaTelegraphed=true;areas.mark(t,origin,direction,center,radius,range,0,instant?0:Math.max(0,delay),hiddenEffects);}
         if(instant||delay<=0)resolve();else pendingHits.push({time:delay,run:resolve});
         // Rodada 55: `projectiles` vale como GOLPE extra nas técnicas sem projétil (corpo a corpo, cone, linha, área): cada projétil
@@ -1789,15 +1791,14 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(!t.ultimate)motion?.attack(t.school==='Taijutsu'||academyThrow,direction.dot(v2)<0,false,t.school!=='Taijutsu'?undefined:t.name==='Furacão da Folha'||t.name==='Lótus Primária'?'kick':'punch',!academyThrow,direction.dot(v1)>.001,t.school==='Taijutsu'?.22:Math.max(.25,IMPACT_DELAY.other/Math.max(.3,stats.projectileSpeed)));
       if(!ally)playTechniqueSound(t,false,heroId);return true;
     }
-    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);if(projectile){castTechnique(t,player.position,NO_GROWTH,false,true);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=enemyList.find(e=>Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<ultRadius),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
+    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=enemyList.find(e=>Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<ultRadius),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
         particles.footprint(t,player.position,aim,player.position,ultRadius,ultRadius,0);
-        if(t.name==='Espada de Totsuka')susanoo.trigger('itachi',player.position,aim,near?.sprite.position??player.position,ultRadius,true);
-        else if(t.name.includes('Susanoo'))susanoo.trigger(susanooStyleFor(familyOf(heroId)),player.position,aim,near?.sprite.position??player.position,ultRadius,true);
+        if(susanooStyle)susanoo.trigger(susanooStyle,player.position,aim,near?.sprite.position??player.position,ultRadius,true);
         else if(puppetArt(t.name))showPuppet(player.position,near?.sprite.position??player.position,puppetArt(t.name));
         else if(t.name==='Shinra Tensei'){const object=techniqueVisual(t);object.position.copy(player.position);object.position.y=terrainHeight(player.position.x,player.position.z)+.32;object.scale.set(ultRadius,2,ultRadius);scene.add(object);visuals.push({object,life:.66});}
         else{particles.cast(t,player.position,aim,player.position,ultRadius,ultRadius,ultRadius*.3);
           if(t.secondaryElement)particles.cast({...t,element:t.secondaryElement},player.position,aim,player.position,ultRadius,ultRadius,ultRadius*.3);
-          if(hasSignatureVisual(t,false)){const object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(player.position);object.scale.multiplyScalar(2.8);scene.add(object);visuals.push({object,life:.7});}}}
+          if(hasSignatureVisual(t,false)){const object=techniqueVisual(t,()=>makeHero(heroId,level));object.position.copy(player.position);if(object.userData.iceMirrors)object.position.y=terrainHeight(player.position.x,player.position.z);object.scale.multiplyScalar(object.userData.iceMirrors?ultRadius:2.8);scene.add(object);visuals.push({object,life:.7});}}}
       for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<4.2*Math.sqrt(stats.area))hit(enemy,t,NO_GROWTH,player.position);
       if(repulsion){shinra=startShinra();shinraTech={...t,power:t.power*SHINRA.pulsePower};shinraRadius=ultRadius;}
       if(t.name===SEXY_JUTSU.name){const charm=SEXY_JUTSU.radius*Math.sqrt(stats.area);for(const enemy of enemyList)if(!enemy.bijuu&&!enemy.totem&&Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<charm){enemy.control='Atordoar';enemy.controlTime=Math.max(enemy.controlTime??0,(enemy.guardian||enemy.megaElite?SEXY_JUTSU.bossStun:SEXY_JUTSU.stun)*stats.duration);}if(!hiddenEffects)for(const [color,size] of [['#ffffff',.35],['#ffd1e8',.65],['#ff8fc7',1]] as const)addRing(player.position,color,charm*size);eventToast='Jutsu Sexy! Inimigos atordoados.';}}

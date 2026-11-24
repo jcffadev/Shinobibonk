@@ -2,6 +2,7 @@ import type { Difficulty } from './progression';
 import type { MapId } from './maps';
 import { unlockedHeroes } from './account.ts';
 import { ROSTER_EXPANSION } from './rosterExpansion.ts';
+import { KAKASHI_DMS } from './susanoo.ts';
 
 /**
  * Missões de desbloqueio (pedido do usuário em 06/11/2026). Para cada shinobi bloqueado:
@@ -36,6 +37,7 @@ export const VERSION_MISSIONS: Record<string, UnlockMission> = {
   'madara-seis-caminhos': V('madara-rinnegan', 'folha', 'Kage', 9, 1800, 'Jinchuriki do Dez-Caudas', 'Madara Rinnegan absorve o Dez-Caudas e vira Sábio dos Seis Caminhos.', true),
   'hashirama-sabio': V('hashirama', 'pedra', 'Kage', 8, 1300, 'O Vale do Fim', 'Jogando com Hashirama Hokage, enfrente Madara no Vale do Fim com o Modo Sábio.', true),
   'kakashi-hokage': V('kakashi', 'folha', 'Jonin', 4, 500, 'O Sexto Hokage', 'Jogando com Kakashi Jonin, assuma a vila depois da Quarta Guerra.'),
+  [KAKASHI_DMS]: V('kakashi-hokage', 'pedra', 'Kage', 7, 950, 'O Último Presente de Obito', 'Reviva com Kakashi o instante em que Obito emprestou os dois Mangekyō na luta contra Kaguya.'),
   'itachi-akatsuki': V('itachi', 'nevoa', 'Kage', 5, 700, 'O Manto da Akatsuki', 'Jogando com Itachi ANBU, siga o caminho que o levou à Akatsuki.'),
   'minato-hokage': V('minato', 'folha', 'Kage', 6, 750, 'O Quarto Hokage', 'Jogando com Minato Jonin, defenda a Folha na noite do ataque da Kurama.'),
   'tsunade-hokage': V('tsunade', 'folha', 'Kage', 5, 650, 'A Quinta Hokage', 'Jogando com Tsunade Sannin, aceite o chapéu de Hokage.'),

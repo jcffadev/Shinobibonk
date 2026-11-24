@@ -154,3 +154,18 @@ As classificações da tabela registram o diagnóstico anterior ao ajuste. A sel
 ### Orientação usada no ImageGen
 
 As folhas do jogo serviram de base para o enquadramento, os gestos e a paleta. O pedido comum foi manter a grade e a ordem dos recortes, com fundo transparente, proporções próximas da corrida, contorno escuro e os quatro passos de cada ação. Para as três Sakuras, preservar a diferença de cabelo, luvas e marcas do Byakugō. Para Kushina, manter cabelo longo vermelho, vestido verde, selo e palma aberta. Para Tobi, conservar a máscara laranja de uma abertura e o manto com nuvens vermelhas. Para Hanabi, conservar os olhos do Byakugan, o quimono dourado, a faixa escura e o golpe de palma. Para Jūgo, manter o braço cinza transformado no lado correto, a faixa roxa e o casaco. Para Obito da guerra, destacar a máscara branca e preservar o gunbai nas vistas traseiras. Para Chiriku, tirar o colar e a marca da testa, usar a veste clara com manto cinza-escuro sobre o ombro, faixa dos Guardiões e pés descalços. Suas folhas seguem com ataque em duas vistas, corrida em cinco vistas e pulo e dash de frente e de costas.
+
+
+## Transições e referências da primeira entrega · 24/11/2026
+
+O teste do controlador de animação verifica as oito direções e o retorno ao recorte de repouso depois do ataque nas 114 versões e nos dois companheiros. Jūzō foi exercitado nos dois modos do mesmo controlador: barra e trilha de dash do jogador ativas, ou desligadas como no suporte. Em ambos, o golpe percorre os quatro quadros, a corrida retoma na direção selecionada e o repouso recupera o atlas da versão.
+
+| Versão | Referência para a revisão |
+| --- | --- |
+| Jūzō Biwa Akatsuki | Capa da Akatsuki e espada Kubikiribōchō na época da dupla com Itachi. [Episódio 676](https://naruto-official.com/en/anime/naruto2/list/01_900). |
+| Haku Caçador da Névoa | Roupa verde, cabelo preso, máscara e senbon na ponte do País das Ondas. [Episódio 13](https://naruto-official.com/en/anime/naruto1/list/01_237). |
+| Hanzō Salamandra | Respirador e armadura escura no confronto contra Mifune. [Episódio 492](https://naruto-official.com/en/anime/naruto2/list/01_716). |
+| Nagato Uzumaki | Cabelo sobre o rosto e Rinnegan em sua fase de Amegakure. [A formação da Akatsuki](https://naruto-official.com/en/anime/naruto2/list/01_791). |
+| Sasori Akatsuki | Visual humano do marionetista em Suna e diferença para a carapaça de Hiruko. [Coluna oficial de Sasori](https://naruto-official.com/en/news/01_1641). |
+
+As três versões de Gengetsu, Sakumo e Orochimaru Akatsuki já têm fontes no [documento do elenco](../21-ELASTAO-DE-HEROIS.md#referências-de-gengetsu-sakumo-e-orochimaru-akatsuki). As duas entregas somam 17 versões com registro. Restam as referências específicas das outras 97 e a conferência da silhueta em partida.

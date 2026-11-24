@@ -428,6 +428,23 @@ test('Susanoo do Madara: quadros se fundem, sobe do chão, avança no golpe e di
   assert.ok(susanooPaintedLook(.98, 1).rise > susanooPaintedLook(.6, 1).rise, 'dissolve subindo');
 });
 
+test('os espelhos de Haku fecham ao redor da área e se desfazem após o golpe', async () => {
+  const { animateTechniqueVisual, cachedTechniqueVisual, techniqueVisual, disposeObject } = await load('/src/scene/techniqueEffects.ts');
+  const mirrors = cachedTechniqueVisual({ name: 'Espelhos Demoníacos de Gelo', element: 'Água', shape: 'Órbita' });
+  const ultimate = techniqueVisual({ name: 'Labirinto de Espelhos', element: 'Água', shape: 'Área' });
+  for (const cast of [mirrors, ultimate]) {
+    assert.equal(cast.children.length, 8);
+    assert.ok(cast.children.every(part => part.isMesh && Math.abs(Math.hypot(part.position.x, part.position.z) - .88) < 1e-6));
+    animateTechniqueVisual(cast, 0, undefined, .04);
+    assert.ok(cast.children[0].visible && !cast.children[7].visible);
+    animateTechniqueVisual(cast, 0, undefined, .18);
+    assert.ok(cast.children.every(part => part.visible && part.scale.y === 1 && part.position.y === .495));
+    animateTechniqueVisual(cast, 0, undefined, .36);
+    assert.ok(cast.children.every(part => !part.visible));
+    disposeObject(cast);
+  }
+});
+
 test('água: respingos, ondas de inimigos e aliados e chakra no ritmo dos passos (rodada 99)', async () => {
   const { RIPPLES, SPLASH } = await load('/src/scene/water.ts');
   assert.equal(RIPPLES.max, 16); assert.ok(SPLASH.pool >= 120 && SPLASH.othersMax >= 4);
@@ -440,12 +457,13 @@ test('água: respingos, ondas de inimigos e aliados e chakra no ritmo dos passos
 });
 
 
-test('Susanoo carrega o armamento do portador e dispara o impacto no tempo do acerto',async()=>{
-  const {createSusanooFx,susanooStyleFor}=await load('/src/scene/susanooFx.ts');
+test('Susanoo carrega o armamento do portador e dispara o impacto no tempo do acerto',async(t)=>{
+  t.mock.method(THREE.TextureLoader.prototype,'load',path=>new THREE.Texture({path,width:768,height:768}));
+  const {createSusanooFx}=await load('/src/scene/susanooFx.ts');
   const scene=new THREE.Scene(),bursts=[];
   const fx=createSusanooFx(scene,{emitRaw(...args){bursts.push(args);},lastAxis(){},lastStretch(){}},()=>0);
   const camera=new THREE.PerspectiveCamera(),origin=new THREE.Vector3(),dir=new THREE.Vector3(0,0,1),target=new THREE.Vector3(0,0,5);
-  assert.equal(susanooStyleFor('shisui'),'shisui');
+
   for(const [style,parts] of [
     ['sasuke',['arco de chakra','flecha de chakra']],
     ['itachi',['Espada de Totsuka','Espelho de Yata']],
@@ -457,11 +475,81 @@ test('Susanoo carrega o armamento do portador e dispara o impacto no tempo do ac
     assert.ok(root&&root.visible);
     for(const part of parts)assert.ok(root.getObjectByName(part));
     fx.update(.29,camera);
+    const frames=root.children.filter(part=>part.isSprite);
+    if(style==='sasuke'||style==='itachi'){
+      assert.equal(frames.length,2);
+      assert.ok(frames.every(frame=>frame.material.map.image.path.endsWith(`/susanoo-${style}-v1.png`)));
+      assert.ok(frames.every(frame=>frame.visible&&frame.material.opacity>0));
+    }else assert.equal(frames.length,0);
     assert.ok(!bursts.some(burst=>burst[1]===target.x&&burst[3]===target.z));
     fx.update(.02,camera);
     assert.ok(bursts.some(burst=>burst[1]===target.x&&burst[3]===target.z));
+    if(frames.length){
+      assert.deepEqual(frames[0].material.map.offset.toArray(),[.5,0]);
+      assert.equal(frames[1].visible,false);
+      camera.rotateY(Math.PI);camera.updateMatrixWorld(true);
+      fx.clear();
+      fx.trigger(style,origin,new THREE.Vector3(1,0,0),target,2,true,.30);
+      fx.update(.31,camera);
+      assert.deepEqual(frames[0].material.map.offset.toArray(),[1,0]);
+      assert.equal(frames[0].material.map.repeat.x,-.5);
+      fx.setHidden(true);
+      assert.equal(root.visible,false);
+      fx.setHidden(false);
+      camera.rotateY(-Math.PI);camera.updateMatrixWorld(true);
+    }
     fx.clear();bursts.length=0;
   }
+  const otherOrigin = new THREE.Vector3(2,0,0);
+  fx.trigger('itachi',origin,dir,target,2);
+  fx.trigger('itachi',otherOrigin,dir,target,2);
+  assert.equal(fx.active().length,2);
+  fx.cancel(otherOrigin);
+  assert.equal(fx.active().length,1);
   fx.dispose();
   assert.equal(scene.children.length,0);
+});
+
+
+test('o Susanoo do adversário usa o conjurador e a janela real de ataque', async () => {
+  const { createBossCombat } = await load('/src/scene/bossCombat.ts');
+  const scene = new THREE.Scene(), player = new THREE.Object3D();
+  player.position.set(2.5, 0, 0);
+  const cast = [], cancelled = [], hits = [];
+  const combat = createBossCombat({
+    scene, player, height: () => 0, zone: () => 3, hidden: () => false,
+    susanoo: { trigger: (...args) => cast.push(args), cancel: owner => cancelled.push(owner) },
+    hitPlayer: damage => hits.push(damage),
+  });
+  const spawn = (heroId, hp, guardian) => {
+    const host = { sprite: new THREE.Sprite(new THREE.SpriteMaterial()), heroId, hp, guardian };
+    combat.attach(host, 100, guardian);
+    host.boss.cooldown = 0;
+    host.boss.next = 2;
+    combat.update(host, .01, true);
+    return host;
+  };
+  const itachi = spawn('itachi-akatsuki', 80, false);
+  assert.equal(itachi.boss.cast.technique.name, 'Susanoo');
+  assert.equal(cast[0][0], 'itachi');
+  assert.equal(cast[0][1], itachi.sprite.position);
+  assert.equal(cast[0][6], itachi.boss.cast.total);
+  combat.update(itachi, itachi.boss.cast.total + .01, true);
+  assert.equal(hits.length, 1);
+  assert.equal(itachi.boss.cast, undefined);
+  const madara = spawn('madara', 40, true);
+  assert.equal(madara.boss.cast.technique.name, 'Susanoo Perfeito');
+  assert.equal(cast[1][0], 'madara');
+  assert.equal(cast[1][5], true);
+  assert.equal(cast[1][6], madara.boss.cast.total);
+  combat.dispose(madara);
+  assert.deepEqual(cancelled, [madara.sprite.position]);
+  combat.dispose(itachi);
+  const kakashi = spawn('kakashi-dms', 40, true);
+  assert.equal(kakashi.boss.cast.technique.name, 'Shuriken do Kamui');
+  assert.equal(cast[2][0], 'kakashi');
+  assert.equal(kakashi.boss.cast.center.x, player.position.x);
+  assert.equal(cast[2][3].x, kakashi.boss.cast.center.x);
+  combat.dispose(kakashi);
+  assert.equal(scene.children.length, 0);
 });

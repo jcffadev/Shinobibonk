@@ -8,7 +8,8 @@ import { createAtlasEffect } from '../scene/atlasEffects';
 import { createPlayerMotion } from '../scene/playerMotion';
 import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from '../scene/gamabunta';
 import { createParticleFx } from '../scene/particleFx';
-import { createSusanooFx, susanooStyleFor } from '../scene/susanooFx';
+import { createSusanooFx } from '../scene/susanooFx';
+import { susanooStyleFor } from '../game/susanoo';
 
 export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:string}){
   const host=useRef<HTMLDivElement>(null);
@@ -46,7 +47,7 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
     const grid=new THREE.GridHelper(12,12,'#397065','#2c4f50');
     scene.add(grid);
     const forward=new THREE.Vector3(1,0,0);
-    const susanoo=/susano/i.test(technique.name);
+    const susanoo=susanooStyleFor(heroId,technique.name);
     const particles=susanoo?createParticleFx(scene,()=>0):null;
     const guardian=particles?createSusanooFx(scene,particles,()=>0):null;
     const impact=techniqueImpact(technique);impact.position.copy(dummies[0].position);scene.add(impact);
@@ -78,7 +79,7 @@ export function TechniquePreview({technique,heroId}:{technique:Technique;heroId:
       if(age<lastAge){guardian?.clear();particles?.clear();}
       if(lastAge<.25&&age>=.25){
         playerMotion.attack(['Projétil','Em V'].includes(technique.shape),false,false,technique.school==='Taijutsu'?'punch':undefined,true,false,.38);
-        guardian?.trigger(susanooStyleFor(familyOf(heroId)),player.position,forward,dummies[0].position,1.2);
+        if(susanoo)guardian?.trigger(susanoo,player.position,forward,dummies[0].position,1.2);
       }
       lastAge=age;
       playerMotion.update(dt,0,1,1,false,false,false,1,0,false,false,0,0);

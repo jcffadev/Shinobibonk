@@ -4,6 +4,8 @@ Este documento resume o que é decisão de produto e o que o código da base atu
 
 A direção permanente e o registro resumido de todas as perguntas e respostas estão em [18-CONTEXTO-PERGUNTAS-RESPOSTAS.md](18-CONTEXTO-PERGUNTAS-RESPOSTAS.md); o texto integral do chat está em [14-CONTEXTO-DO-CHAT.md](14-CONTEXTO-DO-CHAT.md).
 
+As novas animações do Susanoo de Sasuke e Itachi e os Espelhos de Haku estão no jogo. Kakashi dos Dois Mangekyō entra como a 115ª versão jogável. A revisão do elenco continua com a conferência visual em partida. O ranking online tem validação local da função Netlify com um provedor simulado. [Fila de revisões](13-PENDENCIAS-PARA-CONTINUAR.md).
+
 ## Como classificar
 
 - **CONFIRMADO**: decisão passada pelo usuário.
