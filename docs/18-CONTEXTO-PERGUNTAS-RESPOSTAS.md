@@ -434,6 +434,10 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 A troca veio da revisão que substituiu os sprites por personagens modelados. A arte original voltou animada na cena, com vistas direcionais nas folhas que já as têm e selos no Naruto Totem. A primeira comparação das 114 versões em seleção, repouso, corrida e ação foi feita. A primeira entrega inclui Haku, Hanzō, Nagato, Sasori e Jūzō. Ebisu, Teuchi e Sapos Sábios mantêm sua frente original e têm perfil e costas próprios. O resultado em partida segue para validação visual.
 
+### Como manter os próximos personagens fiéis ao anime? · 24/11/2026
+
+Antes de gerar, confirme a fase em cenas e materiais oficiais. Compare rosto, traje, paleta e acessórios em várias vistas. Use o Naruto do jogo como referência de proporção chibi e mantenha o mesmo desenho na ficha e em cada ação. A revisão de Gengetsu, Sakumo e Orochimaru Akatsuki segue a [lista de referências](21-ELASTAO-DE-HEROIS.md#referências-de-gengetsu-sakumo-e-orochimaru-akatsuki).
+
 ## 5. Estado atual do projeto
 
 **Retomada de 23/11/2026.** A versão principal recebeu as rodadas 97–103 do Claude, até `a394509`. Os mapas continuam com o Codex, em branch de validação e com parcial local. O usuário pediu manter os personagens atuais, guardar o low poly externamente e aproximar a densidade e o acabamento das cidades às fotos de seleção. Construções precisam mostrar laterais e fundos com a rotação da câmera. A arquitetura nova ainda precisa ser ligada à cena. [Estado conferido e fila de continuação](27-RETOMADA-MAPAS-23-11.md).

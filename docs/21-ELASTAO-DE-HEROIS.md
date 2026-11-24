@@ -4,7 +4,15 @@
 
 ## Revisão chibi das 114 versões · 24/11/2026
 
-A comparação em folhas de contato usou o Naruto Academia como referência para cabeça, torso e pernas compactos, preservando o traje e as diferenças de cada versão. Haku, Hanzō Salamandra, Nagato, Sasori e Jūzō receberam novos atlas nesta entrega. Gengetsu, Sakumo e Orochimaru Akatsuki voltam à revisão de fidelidade ao anime. O registro liga a mesma versão à seleção, ficha, jogo, aliados e encontros. Veja os recortes na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
+A comparação em folhas de contato usou o Naruto Academia como referência para cabeça, torso e pernas compactos, preservando o traje e as diferenças de cada versão. Haku, Hanzō Salamandra, Nagato, Sasori e Jūzō receberam novos atlas nesta entrega. A revisão seguinte redesenhou e integrou Gengetsu, Sakumo e Orochimaru Akatsuki com as referências abaixo. O registro liga a mesma versão à seleção, ficha, jogo, aliados e encontros. Veja os recortes na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
+
+### Referências de Gengetsu, Sakumo e Orochimaru Akatsuki
+
+| Versão | Características que as folhas precisam manter | Referência |
+| --- | --- | --- |
+| Gengetsu Hōzuki, Segundo Mizukage | Cabelo claro penteado para trás, sem sobrancelhas, bigode fino dividido, cavanhaque triangular, gola alta rosada por dentro, quimono cinza riscado e camada interna verde-escura. | [Confronto de Gengetsu em Naruto Shippuden](https://naruto-official.com/en/anime/naruto2/list/01_746), [quadro do anime](https://www.animecharactersdatabase.com/image.php?imgid=89805&type_id=1), [descrição do traje](https://naruto.fandom.com/wiki/Gengetsu_H%C5%8Dzuki) |
+| Sakumo Hatake, Canino Branco | Rosto adulto descoberto, cabelo prateado preso até o meio das costas, colete verde, manga esquerda branca com dentes vermelhos e espiral, braço direito enfaixado, tira diagonal marrom e bainha do tantō nas costas. | [Coluna oficial](https://naruto-official.com/en/news/01_1875), [quadro com o traje](https://gamek.vn/naruto-nhung-dieu-bi-mat-ve-nhan-vat-sakumo-hatake-huyen-thoai-nanh-trang-cua-konoha-20180918155158499.chn) |
+| Orochimaru Akatsuki | Rosto muito pálido, mechas pretas compridas cruzando o rosto, pupilas verticais amarelas e marcas roxas alongadas. A capa fechada de gola alta tem forro vermelho e nuvens vermelhas. Usa o anel azul-acinzentado da Akatsuki no dedo mínimo esquerdo. | [Episódio da Akatsuki](https://naruto-official.com/en/anime/naruto2/list/01_900), [coluna oficial](https://naruto-official.com/en/news/01_1629), [quadro do rosto](https://alfabetajuega.com/naruto/naruto-estas-son-algunas-de-las-veces-en-las-que-el-intelecto-de-orochimaru-supero-al-resto) |
 
 ## Auditoria das 114 versões · 14/11/2026
 

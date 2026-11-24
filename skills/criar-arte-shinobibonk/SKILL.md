@@ -1,6 +1,6 @@
 ---
 name: criar-arte-shinobibonk
-description: Cria e integra pixel art de shinobis, NPCs, itens, pílulas, drops, marcos e cenários do ShinobiBonk.
+description: Cria e revisa sprites chibi fiéis à fase do anime Naruto, anima NPCs e integra pixel art de itens, pílulas, drops e cenários do ShinobiBonk.
 ---
 
 # Arte do ShinobiBonk
@@ -24,7 +24,7 @@ Leia a direção de arte de `AGENTS.md`. Abra os atlases usados pelo módulo alv
 ## Fidelidade ao anime · padrão permanente
 
 1. Identifique o personagem, a fase e o traje antes de desenhar. Localize uma cena do anime ou material oficial da versão. Compare rosto e corpo inteiro e busque perfil ou costas quando disponíveis. Use a Narutopedia para localizar episódios e cruzar detalhes com os quadros da obra.
-2. Registre a referência e as características observáveis antes de gerar. Confira paleta, formato da cabeça, olhos, cabelo, marcas, piercings, proteção da testa, roupa, símbolos, armas e em qual mão ficam. Aplique a proporção chibi do Naruto Academia, Genin e Shippuden do projeto à identidade da versão retratada.
+2. Registre a referência e as características observáveis antes de gerar. Confira paleta, formato da cabeça, olhos, cabelo, marcas, piercings, proteção da testa, roupa, símbolos, armas e em qual mão ficam. Aplique a proporção chibi do Naruto Academia, Genin e Shippuden do projeto à identidade da versão retratada. Use a folha `public/assets/naruto-academia-diagonal-v1.png` para comparar a silhueta e consulte os exemplos de identificação no [registro do elenco](../../docs/21-ELASTAO-DE-HEROIS.md#referências-de-gengetsu-sakumo-e-orochimaru-akatsuki).
 3. Use o mesmo desenho-base em seleção, ficha, repouso, corrida, ataque, pulo e dash. Valide frente, perfil, costas e as diagonais em folha de contato, no tamanho de jogo. Compare frente e costas com a referência para confirmar que nenhum detalhe muda de fase, cor, posição ou lado. Antecipe os casos assimétricos antes de espelhar.
 4. Verifique as quatro fases de cada ação, a margem transparente e o apoio dos pés. Em conjuração, confirme a pose da técnica e os selos apropriados. Preserve as ações e proporções já aprovadas ao corrigir uma versão. Use as referências de terceiros para orientar arte original e registre os links na documentação.
 

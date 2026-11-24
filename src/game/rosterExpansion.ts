@@ -176,7 +176,7 @@ for (const hero of ROSTER_EXPANSION) {
   signatures.set(hero.ultimate, finisher);
 }
 export const expansionVisual = (name: string) => signatures.get(name)?.visual;
-const SHINOBI_CHIBI_ATLASES = new Set(['haku', 'hanzo', 'juzo', 'nagato', 'sasori']);
+const SHINOBI_CHIBI_ATLASES = new Set(['gengetsu', 'haku', 'hanzo', 'juzo', 'nagato', 'orochimaru-akatsuki', 'sakumo', 'sasori']);
 
 export const chibiMotionArt = (id: string) => {
   if (!SHINOBI_CHIBI_ATLASES.has(id)) return;

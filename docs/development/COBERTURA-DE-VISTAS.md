@@ -10,7 +10,7 @@ A corrida é a animação do deslocamento normal das 114 versões. As mesmas ent
 
 As imagens de corrida foram geradas com ImageGen usando retrato e quadros do próprio jogo como modelos. O pedido por dupla de versões foi uma grade 4 × 10 transparente, com tronco inclinado, braços para trás e quatro fases das pernas, preservando traje, cabelos e acessórios nas cinco vistas. Após a seleção, cada quadro foi recortado a partir dos vãos da folha original e ancorado pela base.
 
-A partir de 24/11/2026, Haku, Hanzō, Nagato, Sasori e Jūzō têm atlas chibi dedicados. `*-chibi-v3.png` guarda a caminhada reta, o repouso de três quartos e as fases de ataque. `*-chibi-run-v1.png` usa cinco vistas de corrida. `*-chibi-acrobatics-v1.png` tem pulo de frente e costas, seguido de dash de frente e costas, com quatro quadros em cada fila.
+A partir de 24/11/2026, Haku, Hanzō, Nagato, Sasori, Jūzō, Gengetsu, Sakumo e Orochimaru Akatsuki têm atlas chibi dedicados. `*-chibi-v3.png` guarda a caminhada reta, o repouso de três quartos e as fases de ataque. `*-chibi-run-v1.png` usa cinco vistas de corrida. `*-chibi-acrobatics-v1.png` tem pulo de frente e costas, seguido de dash de frente e costas, com quatro quadros em cada fila.
 
 Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros, o espelho e a margem transparente das células dos 26 atlas dedicados. Os atlas foram repaginados a partir dos originais para evitar recorte e vazamento da fileira vizinha.
 
@@ -49,7 +49,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | rasa | rasa-roster-v1.png · 0/1 | walk-side-11.png · 4 | rasa-directional-v2.png · 0/1 |
 | hanzo | hanzo-chibi-v3.png · 0/1 | hanzo-chibi-run-v1.png · 2 | hanzo-chibi-run-v1.png · 3/4 |
 | mei | mei-roster-v1.png · 0/1 | walk-side-11.png · 5 | mei-directional-v2.png · 0/1 |
-| gengetsu | gengetsu-roster-v1.png · 0/1 | walk-side-11.png · 6 | gengetsu-directional-v2.png · 0/1 |
+| gengetsu | gengetsu-chibi-v3.png · 0/1 | gengetsu-chibi-run-v1.png · 2 | gengetsu-chibi-run-v1.png · 3/4 |
 | choji | choji-roster-v1.png · 0/1 | sakumo-choji-lateral-v1.png · 1 | choji-directional-v2.png · 0/1 |
 | kiba | kiba-roster-v1.png · 0/1 | walk-side-12.png · 0 | kiba-directional-v2.png · 0/1 |
 | shino | shino-roster-v1.png · 0/1 | walk-side-12.png · 2 | shino-directional-v2.png · 0/1 |
@@ -71,7 +71,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | sasori | sasori-chibi-v3.png · 0/1 | sasori-chibi-run-v1.png · 2 | sasori-chibi-run-v1.png · 3/4 |
 | haku | haku-chibi-v3.png · 0/1 | haku-chibi-run-v1.png · 2 | haku-chibi-run-v1.png · 3/4 |
 | chiriku | chiriku-roster-v1.png · 0/1 | walk-side-13.png · 4 | chiriku-directional-v2.png · 0/1 |
-| sakumo | sakumo-roster-v1.png · 0/1 | sakumo-choji-lateral-v1.png · 0 | sakumo-directional-v2.png · 0/1 |
+| sakumo | sakumo-chibi-v3.png · 0/1 | sakumo-chibi-run-v1.png · 2 | sakumo-chibi-run-v1.png · 3/4 |
 | deidara | deidara-roster-v1.png · 0/1 | walk-side-6.png · 0 | deidara-directional-v2.png · 0/1 |
 | hidan | hidan-roster-v1.png · 0/1 | walk-side-6.png · 1 | hidan-directional-v2.png · 0/1 |
 | kakuzu | kakuzu-roster-v1.png · 0/1 | walk-side-6.png · 2 | kakuzu-directional-v2.png · 0/1 |
@@ -122,7 +122,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | guy-setimo-portao | walk-cardinal-9.png · 8/9 | walk-side-14.png · 7 | guy-walk-v1.png · 4/5 |
 | naruto-hokage | naruto-hokage-roster-v1.png · 0/1 | walk-side-3.png · 1 | naruto-hokage-directional-v2.png · 0/1 |
 | kabuto-sabio | kabuto-sabio-roster-v1.png · 0/1 | walk-side-9.png · 4 | kabuto-sabio-directional-v2.png · 0/1 |
-| orochimaru-akatsuki | orochimaru-akatsuki-roster-v1.png · 0/1 | walk-side-9.png · 2 | orochimaru-akatsuki-directional-v2.png · 0/1 |
+| orochimaru-akatsuki | orochimaru-akatsuki-chibi-v3.png · 0/1 | orochimaru-akatsuki-chibi-run-v1.png · 2 | orochimaru-akatsuki-chibi-run-v1.png · 3/4 |
 | choji-guerra | choji-guerra-roster-v1.png · 0/1 | walk-side-3.png · 0 | choji-guerra-directional-v2.png · 0/1 |
 | kiba-shippuden | kiba-shippuden-roster-v1.png · 0/1 | walk-side-12.png · 1 | kiba-shippuden-directional-v2.png · 0/1 |
 | shino-shippuden | shino-shippuden-roster-v1.png · 0/1 | walk-side-12.png · 3 | shino-shippuden-directional-v2.png · 0/1 |

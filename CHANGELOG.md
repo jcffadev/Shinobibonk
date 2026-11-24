@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 24/11/2026 · Gengetsu, Sakumo e Orochimaru fiéis ao anime
+
+- Após a revisão da prévia, os três shinobis receberam novas folhas baseadas em cenas do anime. Gengetsu tem o traje cinza listrado de gola rosada e o rosto sem sobrancelhas. Sakumo tem a manga branca, a faixa diagonal, a bainha e o cabelo preso longo. Orochimaru usa a capa fechada da Akatsuki, com gola alta, mechas e marcas faciais da fase.
+- Os novos recortes vão da seleção e ficha à corrida em cinco vistas, ataques, pulo e dash. A [skill de arte](skills/criar-arte-shinobibonk/SKILL.md) registra o padrão permanente. As [referências da rodada](docs/21-ELASTAO-DE-HEROIS.md#referências-de-gengetsu-sakumo-e-orochimaru-akatsuki) ficam no registro do elenco.
+- **PENDENTE DE VALIDAÇÃO E2E:** conferir as transições e as animações em partida.
+
 ## 24/11/2026 · Revisão chibi do elenco e vistas completas dos NPCs
 
 - A comparação visual percorreu as 114 versões em seleção, repouso, corrida e ação. Além de Haku e Hanzō, Nagato, Sasori e Jūzō ganharam folhas chibi de repouso, caminhada, ataque, corrida, pulo e dash.

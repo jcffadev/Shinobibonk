@@ -7,7 +7,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 - **IMPLEMENTADO:** NPCs animados com a arte original e vistas próprias, incluindo as folhas suplementares de Ebisu, Teuchi e Sapos Sábios. Zetsu conserva a subida do solo. Naruto Totem usa o selo do Genin. Atores e construções ficam no ponto do evento.
 - **PENDENTE DE VALIDAÇÃO E2E:** olhar os NPCs em partida, girar a câmera, conferir os cliques e a transição de vistas.
 - **REVISÃO CHIBI:** as 114 versões foram comparadas em seleção, repouso, corrida e ação. Haku, Hanzō, Nagato, Sasori e Jūzō foram redesenhados. **PENDENTE DE VALIDAÇÃO E2E:** conferir as cinco versões em partida.
-- **REFAZER COM AS REFERÊNCIAS DA OBRA:** Gengetsu, Sakumo e Orochimaru Akatsuki, pelo feedback sobre a primeira prévia.
+- **IMPLEMENTADO:** Gengetsu, Sakumo e Orochimaru Akatsuki foram refeitos com referências do anime e integrados aos mesmos pontos do jogo. **PENDENTE DE VALIDAÇÃO E2E:** conferir cor, silhueta, ação e transições em partida.
 
 ## Teste das quatro vilas no Live · 23/11/2026
 
