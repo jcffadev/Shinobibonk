@@ -25,7 +25,7 @@ export function SagesWorkshop({world,heroId,onSheet}:{world:WorldSnapshot;heroId
      <div className="sages-pair-art"><SkillIcon heroId={heroId} name={a}/><span>+</span><SkillIcon heroId={heroId} name={b}/></div>
      <div><h2>{kekkeiFusion(card.name)?.name??a}</h2><h3>{kekkeiFusion(card.name)?a+' + '+b:b}</h3><p>{kekkeiFusion(card.name)?card.description:kind==='fuse'?'Nova técnica · afixos somados · nível 1':'Duas técnicas · um espaço · ×1,5 de dano'}</p></div><kbd>{index+1}</kbd>
     </button>;
-   }):<p className="sages-empty">Aprenda duas técnicas de ataque para usar a oficina.</p>}
+   }):<p className="sages-empty">Evolua duas técnicas de ataque até o nível máximo para usar a oficina.</p>}
   </div>
   <footer><RunSheetButton onClick={onSheet}/><button className="button secondary-button" onClick={()=>window.dispatchEvent(new KeyboardEvent('keydown',{key:'x'}))}>Voltar à missão <kbd>X</kbd></button></footer>
  </section></div>;

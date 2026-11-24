@@ -2754,3 +2754,10 @@ A conferência achou oito versões com acesso. O efeito usa o ID de quem conjura
 > implemente
 
 Kakashi dos Dois Mangekyō entra como 115ª versão, com folhas chibi próprias e missão de selamento em Iwa. Seu kit inclui Raikiri do Kamui, Shuriken, Susanoo e Kamui. A ultimate Shuriken do Kamui usa o Susanoo azul alado no impacto marcado.
+
+
+## Nível máximo na Oficina dos Sapos · 24/11/2026
+
+> Revisar porque os sapos estão deixando fazer fusão/combinação antes das habilidades estarem lv máximo
+
+A oficina só verificava se as técnicas haviam sido aprendidas. As duas abas e a confirmação agora usam o teto vigente da partida para cada técnica. A regra de um uso por zona e o planejamento antes da missão continuam válidos.

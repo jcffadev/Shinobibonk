@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 24/11/2026 · Nível máximo para fundir e combinar
+
+- A Oficina dos Sapos Sábios só monta e aplica pares com os dois ataques no teto de nível da partida. Com o Pergaminho Proibido, o requisito sobe para o nível 11. A oficina informa o requisito quando faltam técnicas elegíveis. O planejador continua aceitando pares para a próxima missão.
+
 ## 24/11/2026 · Kakashi dos Dois Mangekyō
 
 - Nova versão jogável com retrato chibi, corrida nas cinco vistas, selo, golpe, pulo e dash. A missão em Iwa Kage usa Kakashi Hokage, com encontro a partir de 7 minutos e 950 abates.

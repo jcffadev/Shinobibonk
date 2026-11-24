@@ -7,8 +7,42 @@ import fs from 'node:fs';
 import { HEROES, ACADEMY, techniquePool, allowedElements, familyOf } from '../src/game/heroes.ts';
 import {
   KEKKEI_RECIPES, HERO_KEKKEI, FUSION_KEKKEI_BONUS, kekkeiRecipe, mergedTechnique, fusionBonus, combineBonus, combinedPart, isMergedName,
-  fusionCatalog, fusionRecipeText,
+  fusionCatalog, fusionRecipeText, sagesMergeCandidates,
 } from '../src/game/techniqueMerge.ts';
+
+test('Sapos exigem o teto atual das duas técnicas para fundir ou combinar', () => {
+  const fire = ninja('Fogo'), earth = ninja('Terra');
+  const setup = ninja('Neutro', 'Preparação', { setup: {} });
+  const fused = ninja('Neutro', 'Fusão · Outra técnica');
+  const combined = ninja('Neutro', 'Outra técnica + Técnica anterior');
+  const basic = [fire, earth, setup, fused, combined];
+  const levels = { [fire.name]: 9, [earth.name]: 8, [setup.name]: 11, [fused.name]: 7, [combined.name]: 11 };
+  assert.deepEqual(sagesMergeCandidates(basic, {}), []);
+  for (const kind of ['fuse', 'combine']) {
+    const plan = { kind, names: [fire.name, earth.name] };
+    const attempt = extraCap => mergedTechnique(plan, sagesMergeCandidates(basic, levels, extraCap));
+    levels[fire.name] = 9;
+    levels[earth.name] = 8;
+    assert.equal(attempt(0), undefined);
+    levels[earth.name] = 9;
+    assert.ok(attempt(0));
+    assert.equal(attempt(2), undefined, 'a oferta perde validade se o teto subir');
+    levels[fire.name] = 11;
+    levels[earth.name] = 10;
+    assert.equal(attempt(2), undefined);
+    levels[earth.name] = 11;
+    assert.ok(attempt(2));
+    assert.deepEqual(sagesMergeCandidates(basic, levels, 2), [fire, earth]);
+  }
+});
+
+test('a oficina consulta os candidatos tanto ao montar a oferta quanto ao aplicar a união', () => {
+  const game = read('src/scene/GameCanvas.tsx');
+  assert.ok(game.includes("sagesMergeCandidates(techniques,skillLevels,ex('skillCap'))"));
+  assert.match(game, /function openSages[\s\S]*?const candidates=sagesCandidates\(\);/);
+  assert.match(game, /function applyMerge[\s\S]*?mergedTechnique\(merge,sagesCandidates\(\),familyOf\(heroId\)\)/);
+  assert.match(game, /if\(!merged\|\|merges\.has\(merged\.name\)\)return;\s+sagesUsedZone=zone;/);
+});
 
 // Medido na Rodada 71: 21 versões com 2+ naturezas no pool e 7 receitas alcançáveis pelas naturezas do kit (a linhagem tem teste próprio).
 const MULTI_FLOOR = 21, CHECKED_FLOOR = 7;
@@ -124,8 +158,8 @@ test('Combinar: ×1,5 e um atributo do par, sempre o mesmo para as mesmas técni
 
 test('a partida e o planejador usam as regras (família, bloqueio e atributo da combinação)', () => {
   const canvas = read('src/scene/GameCanvas.tsx'), planner = read('src/ui/BuildPlanner.tsx');
-  assert.match(canvas, /!merges\.has\(t\.name\)&&!isMergedName\(t\.name\)\);/);
-  assert.equal(canvas.match(/mergedTechnique\(merge,techniques,familyOf\(heroId\)\)/g)?.length, 2);
+  assert.match(canvas, /!merges\.has\(t\.name\)&&!consumedTechniques\.has\(t\.name\)\);/);
+  assert.match(canvas, /mergedTechnique\(merge,candidates,familyOf\(heroId\)\)/);
   assert.match(canvas, /castTechnique\(combinedPart\(source,extra\),/);
   assert.match(planner, /!archivedSkills\.includes\(t\.name\)&&!isMergedName\(t\.name\)\);/);
   assert.match(planner, /mergedTechnique\(\{kind,names:pair\},pool,familyOf\(heroId\)\)/);

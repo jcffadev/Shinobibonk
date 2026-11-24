@@ -106,6 +106,10 @@ export const fusionRecipeText = (pair:readonly [string,string], name:string) => 
 export const FUSION_LEVEL_CAP = 7;
 export const techniqueLevelCap = (t: {name:string}, extra = 0) => t.name.startsWith('Fusão · ') ? FUSION_LEVEL_CAP : 9 + extra;
 
+export function sagesMergeCandidates(pool: readonly Technique[], levels: Readonly<Record<string,number>>, extraCap = 0) {
+  return pool.filter(t => !t.setup && !isMergedName(t.name) && (levels[t.name] ?? 0) >= techniqueLevelCap(t, extraCap));
+}
+
 export type TechniqueMerge = { kind:'fuse'|'combine'; names:[string,string] };
 
 /** `family`: família do shinobi que funde (familyOf), para o bônus da própria Kekkei Genkai. */

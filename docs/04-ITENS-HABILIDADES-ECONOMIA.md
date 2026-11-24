@@ -97,7 +97,7 @@ Slots 1–4: **somente automáticos**, cada um com recarga própria; o quarto é
 - **Desbloqueio**:
   - A técnica inicial é aprendida no nível 1. As outras ficam elegíveis nos níveis 5/12/20 (Naruto: 5/10/15; algumas exceções em Hinata e Guy).
   - A 1ª técnica de colegas da mesma aldeia entra no pool a partir do nível 8.
-- **Limites**: máximo 3 técnicas aprendidas (4 com o nó "Quarta técnica"); nível máximo 9 por técnica.
+- **Limites**: máximo 3 técnicas aprendidas (4 com o nó "Quarta técnica"); nível máximo base 9 por técnica, ou 11 com o Pergaminho Proibido. A [Oficina dos Sapos Sábios](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios) exige esse teto nos dois ataques. A técnica resultante de uma fusão tem teto próprio de nível 7.
 - **Ultimate**: recarga base de 55 s; orbe azul de chakra +9% de carga.
 
 ## Recompensas de level-up (IMPLEMENTADO)

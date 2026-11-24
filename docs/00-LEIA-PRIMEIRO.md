@@ -6,6 +6,8 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 As novas animações do Susanoo de Sasuke e Itachi e os Espelhos de Haku estão no jogo. Kakashi dos Dois Mangekyō entra como a 115ª versão jogável. A revisão do elenco continua com a conferência visual em partida. O ranking online tem validação local da função Netlify com um provedor simulado. [Fila de revisões](13-PENDENCIAS-PARA-CONTINUAR.md).
 
+A Oficina dos Sapos Sábios exige duas técnicas de ataque no [teto vigente da missão](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios).
+
 ## Como classificar
 
 - **CONFIRMADO**: decisão passada pelo usuário.

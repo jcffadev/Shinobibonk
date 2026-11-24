@@ -80,6 +80,8 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 
 ## 7. Crescimento das técnicas (level-up) — `combat.ts`
 
+O teto de nível usado pela oficina é o mesmo da evolução das técnicas. Consulte a [regra de fusão e combinação](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios).
+
 `GROWTH_ROLLS` (IMPLEMENTADO, revisão 11/11 — base ×1,5 + spread maior, pedido do usuário): **dano por nível** (%), por raridade [Comum · Incomum · Raro · Épico · Lendário]: base **[45 · 80 · 135 · 225 · 375]** + aleatório **[22 · 30 · 45 · 70 · 110]** → faixas **45–67 · 80–110 · 135–180 · 225–295 · 375–485%**. Afixos "outros" (área/recarga/duração): base **[15 · 27 · 38 · 45 · 60]** + **[11 · 14 · 14 · 21 · 21]**. Técnica de ataque: dano garantido + 1–2 afixos (setup: 2 afixos de buff).
 
 `TECHNIQUE_SCALE = 1,2` (IMPLEMENTADO, 11/11): escala global de dano das técnicas do jogador e ajudantes (kits de chefe já escalam por fase em `bossCombat.ts`).

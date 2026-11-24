@@ -116,7 +116,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
   {tab==='Fusões'
    ? <section className="planner-fusions" aria-label="Fusões de técnicas">
      <div className="planner-fusion-toolbar">
-       <div><h2>Fusões de técnicas</h2><p>A Oficina dos Sapos Sábios permite fundir ou combinar uma vez por zona.</p></div>
+       <div><h2>Fusões de técnicas</h2><p>Na missão, leve as duas técnicas ao nível máximo. A Oficina dos Sapos Sábios permite uma união por zona.</p></div>
        <button type="button" className="planner-fusion-save" disabled={!canPreview||duplicate||fusionPlan.length>=4}
          onClick={()=>{addFusionPair(...candidate);setFusionA('');setFusionB('');}}>{duplicate?'Par já planejado':'Planejar fusão'} ({fusionPlan.length}/4)</button>
      </div>

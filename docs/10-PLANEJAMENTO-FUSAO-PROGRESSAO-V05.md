@@ -60,7 +60,9 @@ Status: PROPOSTA DE DESIGN — não implementada nem validada no jogo.
 1. Motor de dados para atributos, status, itens, raridades e pool; 2. presets/arquivamento; 3. progressão de dificuldade e mapa procedural; 4. fusão e Shisui; 5. backend/coop e métricas de desempenho. Todos exigem execução e testes; este documento não afirma que foram implementados.
 
 
-## Oficina atual · 07/11/2026
+## Oficina dos Sapos Sábios
+
+Fundir ou combinar exige duas técnicas de ataque no teto vigente da partida. O nível padrão é 9. Com o Pergaminho Proibido, o teto sobe para 11. A oficina verifica os dois níveis ao listar os pares e ao confirmar a escolha. O planejador continua disponível antes da missão.
 
 Fundir e Combinar aparecem em abas separadas, com ícones dos dois ataques, lista de pares e acesso à ficha. Uma união válida consome o único uso compartilhado da zona. Fechar ou trocar a aba preserva esse uso. A run salva o número da zona consumida. A zona seguinte libera outra operação. Não é possível reutilizar uma técnica já incorporada em outra união. A fusão começa no nível 1 com ×2 da média de dano e afixos somados. A combinação mantém os dois ataques no mesmo espaço, cada um com ×1,5 de dano.
 
@@ -84,7 +86,7 @@ Pedido do usuário (rodada 88): "Deixar anotado tudo que você tem sobre as fus�
   - Um clique planeja a fusão, até 4; outro clique tira (rodada 82). O par manual fica em "Montar o par à mão".
   - `FusionCard` compara fundir × combinar.
   - A aba Habilidades mostra a receita na técnica de uma fusão planejada.
-- **Na partida**, a Oficina dos Sapos Sábios (`src/ui/SagesWorkshop.tsx`) funde ou combina, 1 vez por zona. O `GameCanvas.tsx` aplica as fusões.
+- **Na partida**, a Oficina dos Sapos Sábios (`src/ui/SagesWorkshop.tsx`) funde ou combina uma vez por zona. O `GameCanvas.tsx` consulta `sagesMergeCandidates` para listar e confirmar os pares.
 - **Testes:** `tests/fusoes.test.mjs`; mutações em `scripts/mutation-check.mjs` (Kekkei no topo, clique planeja).
 
 ### Decisões do usuário (15/11/2026)

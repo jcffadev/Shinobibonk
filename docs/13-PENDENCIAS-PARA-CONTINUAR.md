@@ -9,6 +9,10 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Nível máximo na Oficina dos Sapos · 24/11/2026
+
+- As duas técnicas precisam atingir o teto vigente antes de fundir ou combinar. Falta conferir em partida a mensagem de requisito e as duas abas antes e depois de atingir o teto. [Regra da oficina](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios).
+
 ## Balanço da Academia e Pedra Memorial · 24/11/2026
 
 - **IMPLEMENTADO.** O pátio da Academia abriga o balanço em todas as sementes. A Pedra Memorial foi refeita em volume e ganhou uma clareira arborizada. Os dois marcos têm GPS por M/Tab na vila de Konoha.

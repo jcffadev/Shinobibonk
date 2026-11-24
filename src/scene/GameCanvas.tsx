@@ -21,7 +21,7 @@ import { createFallenBody, type FallenBody } from './fallenShinobi';
 import { createRewardBeacon, type RewardBeacon } from './rewardBeacon';
 import { createPerfMonitor } from './perfMonitor';
 import { recentStreak, extendStreak, type KillStreak } from '../game/killStreak';
-import { combineBonus, combinedPart, fusionBonus, isMergedName, kekkeiFusion, mergedTechnique, techniqueLevelCap, type TechniqueMerge } from '../game/techniqueMerge';
+import { combineBonus, combinedPart, fusionBonus, kekkeiFusion, mergedTechnique, sagesMergeCandidates, techniqueLevelCap, type TechniqueMerge } from '../game/techniqueMerge';
 import { createAtlasEffect } from './atlasEffects';
 import { createGamabunta, GAMABUNTA_IGNITION, GAMABUNTA_TIME } from './gamabunta';
 import { createKuroari, KUROARI_ART, puppetArt, KUROARI_STRIKE, KUROARI_TIME } from './kuroari';
@@ -730,16 +730,18 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const merges=new Map<string,TechniqueMerge>();
     const consumedTechniques=new Set<string>();
     let sagesKind:TechniqueMerge['kind']='fuse',sagesUsedZone=0;
+    const sagesCandidates=()=>sagesMergeCandidates(techniques,skillLevels,ex('skillCap'))
+      .filter(t=>!merges.has(t.name)&&!consumedTechniques.has(t.name));
     function openSages(kind:TechniqueMerge['kind']=sagesKind){
       sagesKind=kind;
-      const learned=techniques.filter(t=>skillLevels[t.name]&&!t.setup&&!merges.has(t.name)&&!isMergedName(t.name));
       choiceLevel=-6;choiceData=[];banning=false;keys.clear();snapshotTimer=0;
       if(sagesUsedZone===zone)return;
-      for(let i=0;i<learned.length;i++)for(let j=i+1;j<learned.length;j++){
-        const a=learned[i],b=learned[j];
+      const candidates=sagesCandidates();
+      for(let i=0;i<candidates.length;i++)for(let j=i+1;j<candidates.length;j++){
+        const a=candidates[i],b=candidates[j];
         { const kind=sagesKind;
           const merge:TechniqueMerge={kind,names:[a.name,b.name]};
-          const result=mergedTechnique(merge,techniques,familyOf(heroId));
+          const result=mergedTechnique(merge,candidates,familyOf(heroId));
           const clan=kind==='fuse'&&fusionBonus(a,b,familyOf(heroId))>0?' · +15% de dano ('+(a.element===b.element?'mesma natureza':'Kekkei Genkai da linhagem')+')':'';
           if(!result||merges.has(result.name))continue;
           const recipe=kekkeiFusion(result.name);
@@ -750,8 +752,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       }
     }
     function applyMerge(merge:TechniqueMerge){
-      const merged=mergedTechnique(merge,techniques,familyOf(heroId));
-      if(sagesUsedZone===zone||!merged||merges.has(merged.name)||merge.names.some(name=>!skillLevels[name]||merges.has(name)))return;
+      if(sagesUsedZone===zone)return;
+      const merged=mergedTechnique(merge,sagesCandidates(),familyOf(heroId));
+      if(!merged||merges.has(merged.name))return;
       sagesUsedZone=zone;
       const [a,b]=merge.names.map(name=>growth[name]??NO_GROWTH);
       growth[merged.name]=merge.kind==='fuse'?{damage:a.damage+b.damage,area:a.area+b.area,haste:a.haste+b.haste,duration:a.duration+b.duration}:{...NO_GROWTH};

@@ -340,7 +340,7 @@ Na arena final, `bijuuSpawnPoint` posiciona a entrada a partir do yaw da câmera
 
 **IMPLEMENTADO**
 
-- Oficina dos Sapos Sábios com abas Fundir e Combinar, ícones das duas técnicas e ficha acessível pelo botão P. As duas operações compartilham um único uso por zona. Abrir, fechar ou trocar de aba conserva o uso. O consumo ocorre após a união válida.
+- Oficina dos Sapos Sábios com abas Fundir e Combinar, ícones das duas técnicas e ficha acessível pelo botão P. As duas operações compartilham um único uso por zona. Abrir, fechar ou trocar de aba conserva o uso. O consumo ocorre após a união válida. `sagesMergeCandidates` aplica o teto da progressão aos dois níveis tanto na listagem quanto na confirmação.
 - O save guarda `campaign.sagesUsedZone`. Ao retomar, a zona usada continua bloqueada. Ao passar para outra zona, há um novo uso. Saves antigos com uniões e sem esse campo consideram o uso consumido na zona atual.
 - WASD responde imediatamente. Em teclas opostas sobrepostas, vence a última pressionada naquele eixo. Soltá-la retoma a outra ainda segurada. Diagonais mantêm velocidade normalizada.
 - Tab é reservado ao mapa rápido, com movimento e simulação ativos. P abre e fecha a ficha. Fechar a ficha por uma ação do usuário solicita a captura do ponteiro naquele mesmo evento.

@@ -45,6 +45,8 @@ Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos ba
 
 ## 3. Decisões permanentes do usuário
 
+- **24/11/2026 · Oficina dos Sapos Sábios.** Fundir ou combinar só com os dois ataques no nível máximo da partida.
+
 - **24/11/2026 · Arte dos personagens.** NPCs devem conservar os desenhos originais animados. O elenco inteiro segue o padrão chibi das primeiras versões do Naruto, com o traje e os traços da própria versão. Revisar seleção e cenas da partida, incluindo Hanzō e Haku.
 
 - **15/11/2026 — Restrição de navegador vale para TODAS as IAs** (Claude Code, Codex, Qwen e outras), confirmada pelo usuário: "Está para todas as IAs". Substitui a decisão de 14/11 ("por enquanto só no claude"). Validação visual fica PENDENTE DE VALIDAÇÃO E2E até nova autorização explícita.
@@ -469,6 +471,10 @@ Oito versões têm acesso no elenco. Os testes percorrem os 114 pools e exercita
 ### Como entrou o Kakashi dos Dois Mangekyō? · 24/11/2026
 
 A versão 115 tem missão de selamento em Iwa Kage usando Kakashi Hokage, arte para repouso, corrida, selos, ataque e acrobacias, e ultimate Shuriken do Kamui pelo Susanoo alado. A conferência por código cobre a integração da nova versão, inclusive o Guardião. [Registro do elenco](21-ELASTAO-DE-HEROIS.md).
+
+### Por que os Sapos aceitavam técnicas abaixo do nível máximo? · 24/11/2026
+
+A oficina verificava apenas se as duas técnicas foram aprendidas. Agora verifica o teto ao listar a oferta e ao confirmar. O catálogo de planejamento pode ser consultado antes da partida. [Regra da oficina](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios).
 
 ## 5. Estado atual do projeto
 
