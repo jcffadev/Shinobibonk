@@ -1,5 +1,5 @@
 import { runningArt } from './runningArt.ts';
-import { ROSTER_EXPANSION, expansionSheet } from './rosterExpansion.ts';
+import { ROSTER_EXPANSION, chibiMotionArt, expansionSheet } from './rosterExpansion.ts';
 import { directionalArt } from './directionalArt.ts';
 import { HERO_BY_ID, HEROES, NARUTO_FORMS, familyOf } from './heroes.ts';
 export type Form={level:number;name:string;outfit?:string;detail?:string};
@@ -67,6 +67,7 @@ export function portraitRegion(versionId:string,level=1){
 }
 
 export function menuPortraitRegion(id:string) {
+ if(chibiMotionArt(id))return portraitRegion(id);
  const family=familyOf(id), form=formAt(id).level;
  if(family==='naruto'&&form===1)return {path:'/assets/naruto-academia-diagonal-v1.png',cols:4,rows:2,index:0};
  if(id==='killer-b'){

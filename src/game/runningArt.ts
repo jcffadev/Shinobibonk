@@ -1,3 +1,5 @@
+import { chibiMotionArt } from './rosterExpansion.ts';
+
 const RUNNERS_PER_ATLAS = 2;
 const VIEWS_PER_RUNNER = 5;
 // Cada par ocupa dez fileiras: frente, costas, perfil e as duas diagonais de cada versão.
@@ -72,7 +74,8 @@ runners.forEach((pair, page) => {
 });
 
 export function runningArt(heroId: string) {
-  return sheets.get(heroId);
+  const chibi=chibiMotionArt(heroId);
+  return chibi ? {path:chibi.run,rows:VIEWS_PER_RUNNER,firstRow:0} : sheets.get(heroId);
 }
 
 export function runningRow(back: boolean, diagonal: boolean, lateral: boolean) {

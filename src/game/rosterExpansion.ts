@@ -176,8 +176,15 @@ for (const hero of ROSTER_EXPANSION) {
   signatures.set(hero.ultimate, finisher);
 }
 export const expansionVisual = (name: string) => signatures.get(name)?.visual;
+export const chibiMotionArt = (id: string) => {
+  if (id!=='haku'&&id!=='hanzo') return;
+  const path='/assets/shinobi-motion/'+id+'-chibi';
+  return { motion: path+'-v3.png', run: path+'-run-v1.png', acrobatics: path+'-acrobatics-v1.png' };
+};
+
 export const expansionSheet = (hero: string, form: number) => {
   const entry = ROSTER_EXPANSION.find(entry => entry.family === hero && entry.form === form);
-  if(entry?.id==='hanzo'||entry?.id==='haku')return '/assets/shinobi-motion/'+entry.id+'-roster-v2.png';
+  const chibi=entry&&chibiMotionArt(entry.id);
+  if(chibi)return chibi.motion;
   return entry || hero === 'akamaru' ? '/assets/shinobi-motion/' + (entry?.id ?? hero) + '-roster-v1.png' : undefined;
 };

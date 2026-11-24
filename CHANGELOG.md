@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 24/11/2026 · Primeiras folhas da revisão chibi
+
+- Haku e Hanzō Salamandra receberam novas folhas com a proporção chibi de Naruto, mantendo os trajes das versões do jogo. A mesma arte aparece no retrato, repouso, ataques, corrida nas cinco vistas, pulo e dash.
+- **TESTADO.** A suíte de movimento verificou os quadros nas oito direções e as quatro fases de pulo e dash das 114 versões jogáveis e dois companheiros. **PENDENTE DE VALIDAÇÃO E2E:** conferir enquadramento e transições em partida.
+- A comparação do elenco identificou Gengetsu, Nagato e Sakumo como os próximos redesenhos.
+
 ## 24/11/2026 · NPCs animados com a arte original
 
 - **IMPLEMENTADO.** Os NPCs voltam à pixel art anterior e ganham movimentos de cabeça e tronco com os pés apoiados. Nos shinobis com atlas direcional, a câmera revela perfil e costas em uma única figura. Teuchi, Ebisu e Sapos Sábios mantêm a vista original animada.

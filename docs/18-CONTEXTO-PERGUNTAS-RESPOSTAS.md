@@ -432,7 +432,7 @@ Decisão do usuário: "Se ele não tem natureza, igual no anime/obra/mangá, wik
 
 ### Por que os NPCs mudaram de estilo e dá para animá-los na cena 3D? · 24/11/2026
 
-A troca veio da revisão que substituiu os sprites por personagens modelados. A arte original voltou animada na cena, com vistas direcionais nas folhas que já as têm e selos no Naruto Totem. A revisão chibi das 114 versões está em andamento, incluindo Hanzō e Haku.
+A troca veio da revisão que substituiu os sprites por personagens modelados. A arte original voltou animada na cena, com vistas direcionais nas folhas que já as têm e selos no Naruto Totem. A primeira comparação das 114 versões em seleção, repouso, corrida e ação foi feita. Hanzō e Haku estão integrados com novas folhas chibi. A sequência indicada pela comparação inclui Gengetsu, Nagato e Sakumo.
 
 ## 5. Estado atual do projeto
 

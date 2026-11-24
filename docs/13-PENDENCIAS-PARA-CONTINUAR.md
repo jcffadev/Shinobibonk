@@ -6,7 +6,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 
 - **IMPLEMENTADO:** NPCs animados com a arte original. Zetsu conserva a subida do solo. Naruto Totem usa o selo do Genin. Atores e construções ficam no ponto do evento.
 - **PENDENTE DE VALIDAÇÃO E2E:** olhar os NPCs em partida, girar a câmera, conferir os cliques e a transição de vistas.
-- **EM ANDAMENTO:** revisar as 114 versões no padrão chibi do Naruto do projeto, com olhos e cabeça proporcionais, corpo compacto e a mesma identidade nas poses. Hanzō e Haku são prioridades.
+- **REVISÃO CHIBI:** as 114 versões foram comparadas em seleção, repouso, corrida e ação. Hanzō e Haku ganharam folhas novas que passaram nos testes por código. Seguem em andamento os demais redesenhos identificados, com Gengetsu, Nagato e Sakumo na sequência.
 
 ## Teste das quatro vilas no Live · 23/11/2026
 

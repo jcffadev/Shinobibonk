@@ -10,6 +10,8 @@ A corrida é a animação do deslocamento normal das 114 versões. As mesmas ent
 
 As imagens de corrida foram geradas com ImageGen usando retrato e quadros do próprio jogo como modelos. O pedido por dupla de versões foi uma grade 4 × 10 transparente, com tronco inclinado, braços para trás e quatro fases das pernas, preservando traje, cabelos e acessórios nas cinco vistas. Após a seleção, cada quadro foi recortado a partir dos vãos da folha original e ancorado pela base.
 
+A partir de 24/11/2026, Haku e Hanzō têm atlas chibi dedicados. `*-chibi-v3.png` guarda a caminhada reta, o repouso de três quartos e as fases de ataque. `*-chibi-run-v1.png` usa cinco vistas de corrida. `*-chibi-acrobatics-v1.png` tem pulo de frente e costas, seguido de dash de frente e costas, com quatro quadros em cada fila.
+
 Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspeciona os recortes efetivamente usados pelo controlador, os quatro quadros, o espelho e a margem transparente das células dos 26 atlas dedicados. Os atlas foram repaginados a partir dos originais para evitar recorte e vazamento da fileira vizinha.
 
 | Versão | S/W · frente/costas | A/D · perfil | Diagonais · frente/costas |
@@ -45,7 +47,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | onoki | onoki-roster-v1.png · 0/1 | walk-side-11.png · 3 | onoki-directional-v2.png · 0/1 |
 | ao | ao-roster-v1.png · 0/1 | walk-side-11.png · 7 | ao-directional-v2.png · 0/1 |
 | rasa | rasa-roster-v1.png · 0/1 | walk-side-11.png · 4 | rasa-directional-v2.png · 0/1 |
-| hanzo | hanzo-walk-v3.png · 0/1 | hanzo-profile-v1.png · 0 | hanzo-walk-v3.png · 2/3 |
+| hanzo | hanzo-chibi-v3.png · 0/1 | hanzo-chibi-run-v1.png · 2 | hanzo-chibi-run-v1.png · 3/4 |
 | mei | mei-roster-v1.png · 0/1 | walk-side-11.png · 5 | mei-directional-v2.png · 0/1 |
 | gengetsu | gengetsu-roster-v1.png · 0/1 | walk-side-11.png · 6 | gengetsu-directional-v2.png · 0/1 |
 | choji | choji-roster-v1.png · 0/1 | sakumo-choji-lateral-v1.png · 1 | choji-directional-v2.png · 0/1 |
@@ -67,7 +69,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | karin | karin-roster-v1.png · 0/1 | walk-side-12.png · 7 | karin-directional-v2.png · 0/1 |
 | nagato | nagato-roster-v1.png · 0/1 | walk-side-10.png · 1 | nagato-directional-v2.png · 0/1 |
 | sasori | sasori-roster-v1.png · 0/1 | walk-side-6.png · 5 | sasori-directional-v2.png · 0/1 |
-| haku | haku-roster-v2.png · 0/1 | haku-walk-v3.png · 2 | haku-walk-v3.png · 0/1 |
+| haku | haku-chibi-v3.png · 0/1 | haku-chibi-run-v1.png · 2 | haku-chibi-run-v1.png · 3/4 |
 | chiriku | chiriku-roster-v1.png · 0/1 | walk-side-13.png · 4 | chiriku-directional-v2.png · 0/1 |
 | sakumo | sakumo-roster-v1.png · 0/1 | sakumo-choji-lateral-v1.png · 0 | sakumo-directional-v2.png · 0/1 |
 | deidara | deidara-roster-v1.png · 0/1 | walk-side-6.png · 0 | deidara-directional-v2.png · 0/1 |

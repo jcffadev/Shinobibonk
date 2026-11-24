@@ -1,4 +1,4 @@
-import { ROSTER_EXPANSION, expansionSheet } from './rosterExpansion.ts';
+import { ROSTER_EXPANSION, chibiMotionArt, expansionSheet } from './rosterExpansion.ts';
 type DirectionalSheet = { path: string; rows: number; firstRow?: number; cast?: boolean };
 const fullActionForms: Record<string, readonly number[]> = {
   sakura: [1, 15, 30],
@@ -43,8 +43,8 @@ const revisedDirectionalPath = (family: string) => `/assets/shinobi-motion/${fam
 
 export function acrobaticsArt(family:string,form:number){
   const formId = `${family}-${form}`;
-  if(family==='hanzo'||family==='haku')
-    return {path:'/assets/shinobi-motion/'+family+'-acrobatics-v3.png',kind:'directional-acrobatics' as const,rows:4,firstRow:0};
+  const chibi=chibiMotionArt(revisedDirectionalId(family,form));
+  if(chibi)return {path:chibi.acrobatics,kind:'directional-acrobatics' as const,rows:4,firstRow:0};
   if (fullAcrobatics.has(formId))
     return {path:`/assets/shinobi-motion/${formId}-acrobatics-v3.png`,kind:'directional-acrobatics' as const,rows:4,firstRow:0};
   const id = revisedDirectionalId(family, form);
@@ -131,8 +131,8 @@ const rosterForms: Record<string, readonly number[]> = {
 
 export function directionalArt(hero: string, formLevel: number): DirectionalSheet | undefined {
   const id = revisedDirectionalId(hero, formLevel);
-  if (id==='hanzo') return {path:'/assets/shinobi-motion/hanzo-walk-v3.png',rows:4,firstRow:2};
-  if (id==='haku') return {path:'/assets/shinobi-motion/haku-walk-v3.png',rows:3};
+  const chibi=chibiMotionArt(id);
+  if(chibi)return {path:chibi.motion,rows:6};
   if (expansionDirectionalIds.has(id)) return {path:revisedDirectionalPath(id),rows:4};
   const expansion=expansionSheet(hero,formLevel);
   if(expansion)return {path:expansion,rows:6};
@@ -171,8 +171,8 @@ export function cardinalWalkArt(family: string, form: number): WalkRows | undefi
   if(exact)return exact;
   if(family==='naruto'&&form===1)
     return {path:'/assets/shinobi-motion/naruto-academia-cardinal-v2.png',rows:4,front:0,back:1,side:2,dashSide:3};
-  if(family==='hanzo')
-    return {path:'/assets/shinobi-motion/hanzo-walk-v3.png',rows:4,front:0,back:1,side:2};
+  const chibi=chibiMotionArt(revisedDirectionalId(family,form));
+  if(chibi)return {path:chibi.motion,rows:6,front:0,back:1};
   const row=['gaara','sasuke','sakura','zabuza'].indexOf(family)*2;
   if(form===1&&row>=0)return {path:'/assets/shinobi-motion/walk-cardinal-1.png',rows:8,front:row,back:row+1};
   const id=revisedDirectionalId(family,form);
@@ -206,8 +206,8 @@ sideWalkRows.forEach((ids,page)=>ids.forEach((id,row)=>{
 export function lateralWalkArt(family: string, form: number) {
   const profile=sideWalkById.get(`${family}-${form}`);
   if(profile)return profile;
-  if(family==='haku')return {path:'/assets/shinobi-motion/haku-walk-v3.png',rows:3,row:2};
-  if(family==='hanzo')return {path:'/assets/shinobi-motion/hanzo-profile-v1.png',rows:1,row:0};
+  const chibi=chibiMotionArt(revisedDirectionalId(family,form));
+  if(chibi)return {path:chibi.run,rows:5,row:2};
   if(family==='naruto'&&[10,25,50].includes(form))
     return {path:'/assets/shinobi-motion/naruto-classic-cardinal-v2.png',rows:6,row:[10,25,50].indexOf(form)*2+1};
   if(family==='sakumo'||(family==='choji'&&form===1))
