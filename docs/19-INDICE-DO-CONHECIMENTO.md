@@ -28,7 +28,7 @@ A recuperação de contexto em 23/11 está em [Retomada dos mapas e estado das b
 | **Missões e desbloqueios** | `docs/10` · `docs/11` | `missions.ts` · `unlockMissions.ts` · `missionBag.ts` · `preparation.ts` |
 | **Inimigos e chefes** (tiers, elites, megas, bijuu, boss) | [20](20-SCALING-E-REGULAS.md) §2–5 | `enemyTiers.ts` · `bijuu.ts` · `src/scene/bossCombat.ts` |
 | **Emboscada da Akatsuki** (Zetsu, elenco, vida, pergaminhos) | [docs/01](01-CAMERA-MAPAS-EVENTOS.md) § Eventos | `src/game/akatsukiAmbush.ts` · `src/scene/GameCanvas.tsx` |
-| **Mapas e eventos** (4 mapas, zonas, clima, construções) | `docs/01` · [20](20-SCALING-E-REGULAS.md) §11 | `maps.ts` · `worldScale.ts` · `terrainArt.ts` · skill [`criar-mapa-shinobibonk`](../skills/criar-mapa-shinobibonk/SKILL.md) |
+| **Mapas e eventos** (4 mapas, zonas, clima, construções) | `docs/01` · [20](20-SCALING-E-REGULAS.md) §11 | `maps.ts` · `worldScale.ts` · `terrainArt.ts` · `leafLandmarkLayout.ts` · skill [`criar-mapa-shinobibonk`](../skills/criar-mapa-shinobibonk/SKILL.md) |
 | **Selamento e suportes** (ajudantes, sinergias, altares) | `docs/03` | `allies.ts` · `synergy.ts` |
 | **Arte e spritesheets** (atlas, pack, identidade chibi 2.5D) | skill `criar-arte-shinobibonk` · `docs/arte-atlas-2026-11-07.json` | `directionalArt.ts` · `inventoryArt.ts` · `assets/` |
 | **Entrada de movimento** (WASD, setas, tecla remapeada, foco, escolhas e Treinamento) | [docs/12](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md) § Fluxo de execução | `src/game/movementInput.ts` · `src/scene/GameCanvas.tsx` |

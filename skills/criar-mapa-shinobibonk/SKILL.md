@@ -97,6 +97,8 @@ Cuidado com lugares fora da vila: a Ponte Kannabi fica no País da Grama, e a Po
 8. Rode o perfil EQUILIBRADO (`TESTAR_JOGO.bat`: tipos, testes, build). O que só se vê na tela fica como **PENDENTE DE VALIDAÇÃO E2E**, dizendo o que olhar (degraus, construções no chão, horizonte, câmera, FPS).
 9. Documente (CHANGELOG, docs/13, docs/14, docs/18) e publique.
 
+Para marcos citados na obra, desenhe também o espaço público que permite chegar a eles. Reserve o acesso antes de sortear os lotes. Registre locais fixos no mapa com nome e rota. Modele o chão, o apoio e os lados visíveis e confira a praça ou o pátio a partir da rua, com mais de uma semente. Em Konoha, o balanço fica no pátio da Academia e a Pedra Memorial ocupa a clareira a oeste da praça.
+
 ## 7. Erros que já aconteceram (não repita)
 
 - Montanhas de 10 m dentro do mapa: ficaram "muito grandes" e bloqueavam a vista.

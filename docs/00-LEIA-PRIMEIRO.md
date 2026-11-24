@@ -15,7 +15,7 @@ A direção permanente e o registro resumido de todas as perguntas e respostas e
 
 ## Base executável
 
-O estado das branches e o parcial das vilas foram conferidos em [23/11/2026](27-RETOMADA-MAPAS-23-11.md). A versão principal recebeu as rodadas 97–103. As quatro vilas usam arquitetura fixa na versão principal, com os NPCs animados na pixel art original. A [fila atual](13-PENDENCIAS-PARA-CONTINUAR.md) registra o que ainda precisa ser conferido em partida.
+O estado das branches e o parcial das vilas foram conferidos em [23/11/2026](27-RETOMADA-MAPAS-23-11.md). A versão principal recebeu as rodadas 97–103. As quatro vilas usam arquitetura fixa na versão principal, com os NPCs animados na pixel art original. O pátio da Academia e a Pedra Memorial de Konoha podem ser localizados e marcados no mapa (M/Tab). A [fila atual](13-PENDENCIAS-PARA-CONTINUAR.md) registra o que ainda precisa ser conferido em partida.
 
 Em 15/11, o primeiro Mega Elite da partida passou a ter no máximo 3.000 HP. O Myōjinmon ainda invoca o Guardião com E. Zetsu abre a Emboscada da Akatsuki, e a roleta tem cinco casas de personagem. A arena final posiciona a bijū à frente da câmera e espera o atlas antes da entrada. O Chute Giratório usa seu ícone dedicado. Veja as pendências de mapas, água, jutsus e eventos na [fila do Codex](13-PENDENCIAS-PARA-CONTINUAR.md).
 

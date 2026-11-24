@@ -1,58 +1,132 @@
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { MEMORIAL } from './leafLandmarkLayout';
+import { fitArchitectureTile } from './villageArchitecture';
+import type { createSolids } from './collision';
 
-/**
- * Pedra Memorial de Konoha (Rodada 92 — pedido do usuário: "Fazer a pedra memorial em konoha, uma área para ela", com uma
- * cena do anime como referência). Desenhada no jogo em pixel art (canvas), sem arquivo externo:
- * pedra negra polida com nomes gravados e topo em ponta, duas lajes baixas nas laterais, piso de tijolos com juntas azuladas
- * saindo da pedra e um buquê de flores (rosa, branca e lilás) na base.
- * Fica numa clareira plana da Folha (`LEAF_PLACES`), cercada de árvores.
- */
-export const MEMORIAL = { x: -38, z: -26, width: 7.5, height: 6.4, art: [96, 82] as const } as const;
+export function createMemorialStone(
+  ground: (x: number, z: number) => number,
+  solids: ReturnType<typeof createSolids>,
+  atlas: THREE.Texture,
+) {
+  const root = new THREE.Group();
+  root.name = 'pedra-memorial';
+  const { x, z } = MEMORIAL;
+  const y = ground(x, z);
+  root.position.set(x, y, z);
+  const mesh = (geometry: THREE.BufferGeometry, material: THREE.Material, x: number, y: number, z: number) => {
+    const object = new THREE.Mesh(geometry, material);
+    object.position.set(x, y, z);
+    object.castShadow = object.receiveShadow = true;
+    root.add(object);
+    return object;
+  };
+  const darkStone = new THREE.MeshStandardMaterial({ map: atlas, color: 0x606e79, roughness: .91 });
+  const mortar = new THREE.MeshStandardMaterial({ color: 0x5f6269, roughness: 1 });
+  const paving = [0xa7968b, 0x9e8d89, 0xb39993, 0x988980].map(color =>
+    new THREE.MeshStandardMaterial({ map: atlas, color, roughness: .97 }));
+  const soil = new THREE.MeshStandardMaterial({ color: 0x4b403b, roughness: 1 });
 
-/** Desenha a pedra num canvas de `MEMORIAL.art` pixels (ampliado sem suavizar no jogo). */
-export function paintMemorial(canvas: HTMLCanvasElement) {
-  const [w, h] = MEMORIAL.art;
-  canvas.width = w; canvas.height = h;
-  const g = canvas.getContext('2d');
-  if (!g) return canvas;
-  g.clearRect(0, 0, w, h);
-  const px = (x: number, y: number, pw: number, ph: number, color: string) => { g.fillStyle = color; g.fillRect(x, y, pw, ph); };
-  // Piso de tijolos (elipse achatada) com juntas azuladas saindo da pedra.
-  for (let y = 62; y < 82; y++) {
-    const half = Math.round(46 * Math.sqrt(Math.max(0, 1 - ((y - 72) / 10) ** 2)));
-    for (let x = 48 - half; x < 48 + half; x++) {
-      const brick = ((x + (Math.floor(y / 3) % 2) * 3) % 6 === 0) || y % 3 === 0;
-      px(x, y, 1, 1, brick ? '#7d3f2f' : (x + y) % 5 === 0 ? '#b0644c' : '#a05843');
+  const base = new THREE.CylinderGeometry(2.13, 2.18, .30, 40, 1);
+  mesh(base, mortar, 0, -.135, .18);
+  const bricks: THREE.BufferGeometry[][] = paving.map(() => []);
+  for (let row = -5; row <= 5; row++) {
+    const pz = row * .38;
+    const limit = Math.sqrt(2.15 ** 2 - (Math.abs(pz) + .179) ** 2);
+    for (let column = -5; column <= 5; column++) {
+      const px = column * .48 + (row % 2 ? .24 : 0);
+      const left = Math.max(px - .232, -limit), right = Math.min(px + .232, limit);
+      if (right - left < .07) continue;
+      const brick = new THREE.BoxGeometry(right - left, .11, .358);
+      fitArchitectureTile(brick, 'stone');
+      const variation = Math.abs(row * 7 + column * 11) % paving.length;
+      bricks[variation].push(brick.translate((left + right) / 2, -.011, pz + .18));
     }
   }
-  for (const dx of [-30, -16, -6, 6, 16, 30]) for (let t = 0; t < 1; t += .05) px(Math.round(48 + dx * t), Math.round(66 + 14 * t), 1, 1, '#5d78b8');
-  // Lajes laterais baixas.
-  for (const [x0, dir] of [[10, 1], [86, -1]] as const) for (let k = 0; k < 26; k++) {
-    const x = x0 + dir * k, top = 54 + Math.round(k * .12);
-    px(Math.min(x, x0 + dir * 25), top, 1, 66 - top, k < 2 || k > 23 ? '#101418' : '#232a31');
-    px(x, top, 1, 1, '#4f5f73');
+  bricks.forEach((batch, i) => {
+    mesh(mergeGeometries(batch)!, paving[i], 0, 0, 0);
+    batch.forEach(brick => brick.dispose());
+  });
+  const plinth = new THREE.BoxGeometry(1.46, .25, .91);
+  fitArchitectureTile(plinth, 'slate');
+  mesh(plinth, darkStone, 0, .152, 0).name = 'pedra-memorial-base';
+  for (const side of [-1, 1]) {
+    const wing = new THREE.BoxGeometry(.78, .36, .69);
+    fitArchitectureTile(wing, 'slate');
+    mesh(wing, darkStone, side * 1.05, .204, -.09);
+    solids.addBox(x + side * 1.05, z - .09, .39, .345, y + .384);
   }
-  // Pedra central: corpo, topo em ponta, contorno e brilho azul na borda.
-  for (let y = 6; y < 66; y++) {
-    const half = y < 22 ? Math.round(8 + (y - 6) * .95) : 23;
-    for (let x = 48 - half; x <= 48 + half; x++) px(x, y, 1, 1, Math.abs(x - 48) === half || y === 6 ? '#0b0e12' : x < 48 - half + 3 ? '#3b4a5e' : '#1b2128');
-  }
-  // Nomes gravados: linhas curtas mais claras.
-  for (let row = 0; row < 9; row++) for (let x = 34; x < 62; x += 4) if ((x * 7 + row * 13) % 5 !== 0) px(x, 26 + row * 3, 3, 1, '#4a5563');
-  // Buquê de flores na base.
-  const flowers: [number, number, string][] = [[40, 60, '#e69aac'], [43, 58, '#f4f4f4'], [46, 60, '#a98bd6'], [49, 58, '#f4f4f4'], [52, 60, '#e69aac'], [45, 62, '#3d7a3b'], [48, 62, '#3d7a3b']];
-  for (const [x, y, c] of flowers) { px(x, y, 3, 3, c); px(x + 1, y + 1, 1, 1, '#ffffff99'); }
-  px(38, 63, 18, 2, '#e8e2d2');
-  return canvas;
-}
 
-/** Sprite da pedra assentado no chão (centro em baixo), com contorno escuro do próprio desenho. */
-export function createMemorialSprite() {
-  const texture = new THREE.CanvasTexture(paintMemorial(document.createElement('canvas')));
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.magFilter = THREE.NearestFilter; texture.minFilter = THREE.NearestFilter; texture.generateMipmaps = false;
-  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, alphaTest: .12 }));
-  sprite.scale.set(MEMORIAL.width, MEMORIAL.height, 1);
-  sprite.center.set(.5, .03);
-  return sprite;
+  // Plano dos nomes e biséis partilham as mesmas arestas, incluindo o verso.
+  const outline = [
+    [-.39, .28], [.37, .28], [.90, 1.59], [.04, 2.88], [-.94, 1.55],
+  ];
+  const front = [
+    [-.30, .37], [.28, .37], [.70, 1.58], [.035, 2.63], [-.73, 1.53],
+  ];
+  const vertices: number[] = [];
+  const colors: number[] = [];
+  const uvs: number[] = [];
+  type Point = readonly [number, number, number];
+  const position = (outline: number[][], index: number, z: number): Point =>
+    [outline[index][0], outline[index][1], z];
+  function facet(color: number, ...points: Point[]) {
+    const shade = new THREE.Color(color);
+    for (const point of points) {
+      vertices.push(...point);
+      colors.push(shade.r, shade.g, shade.b);
+      uvs.push((point[0] + 1 + point[2] * .13) / 2, point[1] / 3);
+    }
+  }
+  const bevel = [0x3b5663, 0x3f606f, 0x7799a6, 0x98b8bf, 0x5b8592];
+  const n = outline.length;
+  const rim = (i: number, z: number) => position(outline, i, z);
+  const face = (i: number, z: number) => position(front, i, z);
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n;
+    facet(bevel[i], face(j, .305), face(i, .305), rim(i, .092), face(j, .305), rim(i, .092), rim(j, .092));
+    facet(0x303f49, rim(j, .092), rim(i, .092), rim(i, -.24), rim(j, .092), rim(i, -.24), rim(j, -.24));
+    facet(0x42565f, rim(j, -.24), rim(i, -.24), face(i, -.39), rim(j, -.24), face(i, -.39), face(j, -.39));
+    facet(0x5f8395, [0, 1.36, .305], face(i, .305), face(j, .305));
+    facet(0x475f6b, [0, 1.36, -.39], face(j, -.39), face(i, -.39));
+  }
+  const stone = new THREE.BufferGeometry();
+  stone.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  stone.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  stone.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  fitArchitectureTile(stone, 'plaster');
+  stone.computeVertexNormals();
+  mesh(stone, new THREE.MeshStandardMaterial({ map: atlas, vertexColors: true, roughness: .5 }), 0, 0, 0).name =
+    'pedra-memorial-facetada';
+  solids.addBox(x, z, .66, .404, y + 2.72);
+
+  const etching: number[] = [];
+  for (let column = -4; column <= 4; column++) {
+    for (let row = 0; row < 11; row++) {
+      const px = column * .107, py = 1.78 - row * .091;
+      if (Math.abs(px) > .46 - Math.max(0, row - 6) * .036 || (row + column * 4) % 17 === 11) continue;
+      etching.push(px-.025, py, .306, px+.021, py+.003, .306);
+      etching.push(px, py+.019, .306, px-.006, py-.030, .306);
+      const accent = (row * 5 + column * 7) % 3;
+      etching.push(px+.024, py-.012, .306, px+.035, py-.024-accent*.004, .306);
+    }
+  }
+  const inscriptions = new THREE.BufferGeometry();
+  inscriptions.setAttribute('position', new THREE.Float32BufferAttribute(etching, 3));
+  root.add(new THREE.LineSegments(inscriptions, new THREE.LineBasicMaterial({ color: 0xa0b1b1, opacity: .64, transparent: true })));
+
+  const leaves = new THREE.MeshStandardMaterial({ color: 0x4e6e4b, roughness: 1 });
+  const flowers = [0xf3e9db, 0xd998a6, 0x9d8ac5].map(color => new THREE.MeshStandardMaterial({ color, roughness: .87 }));
+  const bouquet = mesh(new THREE.CylinderGeometry(.16, .12, .15, 9), soil, 0, .12, .71);
+  bouquet.name = 'pedra-memorial-oferendas';
+  for (let i = 0; i < 11; i++) {
+    const angle = i * 2.4, spread = Math.sqrt(i) * .058, height = .21 + (i * 13 % 8) * .023;
+    const px = Math.cos(angle) * spread, pz = .71 + Math.sin(angle) * spread;
+    const stem = mesh(new THREE.CylinderGeometry(.010, .013, height, 5), leaves, px * .8, .16 + height / 2, pz);
+    stem.rotation.z = -px;
+    const bloom = mesh(new THREE.IcosahedronGeometry(.051, 0), flowers[i % flowers.length], px, .16 + height, pz);
+    bloom.scale.set(1.22, .74, 1.04);
+  }
+
+  return root;
 }

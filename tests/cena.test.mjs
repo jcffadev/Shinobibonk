@@ -272,10 +272,12 @@ test('terreno em terraços baixos, plano no centro, montanhas só no horizonte (
 });
 
 test('chão plano sob as construções da Folha, mesmo com terraços (rodada 86)', async () => {
+  const { MEMORIAL } = await load('/src/scene/leafLandmarkLayout.ts');
   const { groundHeight, LEAF_PLACES, LEAF_BUILDINGS } = await load('/src/scene/terrainArt.ts');
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   for (const [x, z] of LEAF_BUILDINGS) {
-    assert.ok(canvas.includes(`${x},${z}`) || canvas.includes(`x:${x},z:${z}`), `${x},${z} é um ponto de construção do jogo`);
+    const usesMemorialLayout = x === MEMORIAL.x && z === MEMORIAL.z && canvas.includes('createMemorialStone(terrainHeight,solids,memorialAtlas)');
+    assert.ok(usesMemorialLayout || canvas.includes(`${x},${z}`) || canvas.includes(`x:${x},z:${z}`), `${x},${z} é um ponto de construção do jogo`);
     const place = LEAF_PLACES.find(p => Math.abs(x - p.x) + 3 <= p.rx && Math.abs(z - p.z) + 3 <= p.rz);
     assert.ok(place, `${x},${z} dentro de uma área plana`);
     const center = groundHeight('folha', x, z);
@@ -383,7 +385,7 @@ test('pergaminhos no chão com vários desenhos da obra (rodada 92)', async () =
 });
 
 test('Pedra Memorial de Konoha numa clareira plana (rodada 92)', async () => {
-  const { MEMORIAL } = await load('/src/scene/memorialStone.ts');
+  const { MEMORIAL } = await load('/src/scene/leafLandmarkLayout.ts');
   const { groundHeight, LEAF_BUILDINGS } = await load('/src/scene/terrainArt.ts');
   const { waterDistance } = await load('/src/scene/water.ts');
   assert.ok(LEAF_BUILDINGS.some(([x, z]) => x === MEMORIAL.x && z === MEMORIAL.z), 'na lista de construções (chão plano)');
@@ -391,7 +393,7 @@ test('Pedra Memorial de Konoha numa clareira plana (rodada 92)', async () => {
   for (const [dx, dz] of [[6, 0], [-6, 0], [0, 6], [0, -6]]) assert.ok(Math.abs(groundHeight('folha', MEMORIAL.x + dx, MEMORIAL.z + dz) - h) < .02, 'clareira plana');
   assert.ok(waterDistance('folha', MEMORIAL.x, MEMORIAL.z).outside > 10 && Math.hypot(MEMORIAL.x, MEMORIAL.z) > 20, 'longe da água e do começo');
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
-  assert.ok(canvas.includes('memorial=createMemorialSprite()') && canvas.includes('[x,z]=[-38,-26]'), 'a pedra está na Folha');
+  assert.match(canvas, /const memorial=createMemorialStone\(terrainHeight,solids,memorialAtlas\)/, 'a partida legada usa a mesma pedra');
 });
 
 test('carregamento: chão pintado pela grade de alturas fica igual à fórmula exata e bem mais rápido (rodada 95)', async () => {

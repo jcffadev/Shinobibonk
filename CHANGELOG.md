@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 24/11/2026 · Balanço da Academia e Pedra Memorial de Konoha
+
+- O pátio da Academia ganhou a árvore com raízes, duas cordas e um assento que balança. Os lotes da frente cedem espaço ao pátio de terra batida. A entrada tem o emblema redondo da Academia.
+- A Pedra Memorial ganhou um volume facetado inspirado na kunai do anime, inscrições, base no chão, lajes laterais e flores. A antiga clareira `(-38, -26)` continua sendo sua localização. Os dois marcos têm rota pelo mapa (M/Tab) desde o início nas novas missões da Folha.
+- **TESTADO.** TypeScript, build e 243 testes por código. O teste de mutação acusou a remoção do movimento do balanço. As prévias das malhas foram renderizadas em OpenGL.
+- **PENDENTE DE VALIDAÇÃO E2E.** Percorrer o pátio e o memorial em partida e verificar as rotas no mapa e a leitura com a câmera baixa.
+
 ## 24/11/2026 · Gengetsu, Sakumo e Orochimaru fiéis ao anime
 
 - Após a revisão da prévia, os três shinobis receberam novas folhas baseadas em cenas do anime. Gengetsu tem o traje cinza listrado de gola rosada e o rosto sem sobrancelhas. Sakumo tem a manga branca, a faixa diagonal, a bainha e o cabelo preso longo. Orochimaru usa a capa fechada da Akatsuki, com gola alta, mechas e marcas faciais da fase.

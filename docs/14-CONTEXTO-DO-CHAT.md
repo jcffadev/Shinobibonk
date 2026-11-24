@@ -2700,3 +2700,9 @@ A versão anterior das vilas tinha substituído os sprites por formas 3D genéri
 > Coloque no skill esse tipo de modelo para SEMPRE SEMPRE fazerem os personagens assim, para ficar um PADRÃO de QUALIDADE!!!
 
 O nome “Sengetsu” foi interpretado como Gengetsu Hōzuki, que aparecia na prévia. A entrega do restante segue com a skill de arte atualizada para validar cada versão a partir de cenas e materiais oficiais do anime. Gengetsu, Sakumo e Orochimaru Akatsuki foram refeitos com quadros do anime. A nova versão inclui o traje cinza e a gola rosada de Gengetsu, a manga branca, a bainha e a tira de Sakumo e a capa fechada da Akatsuki com as marcas faciais do Orochimaru. O modelo de rotina para os agentes consta na skill. As oito versões revisadas e os NPCs estão na cópia principal. Falta validar as transições em partida.
+
+## Balanço da Academia e Pedra Memorial · 24/11/2026
+
+> Agora sim, eles ficaram bons, corrija o restante que eu te pedi, você fez a parte do balanço de konoha e a pedra lá do cemitério ainda está horrivel eu ja te passei referências, refaça também e não achei no mapa o balanço...
+
+Os três shinobis aprovados foram integrados em `bb092d0`. O balanço foi construído à esquerda da entrada da Academia e recebeu cordas e assento animados. O novo pátio de terra batida fica aberto para a rua. A Pedra Memorial ocupa a clareira a oeste da praça e tem corpo facetado, inscrições, lajes laterais, piso e flores. Os dois marcos são localizáveis com rota pelo mapa (M/Tab) desde o início de uma missão na vila. A validação em partida segue pendente.

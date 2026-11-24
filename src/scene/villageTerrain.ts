@@ -3,6 +3,7 @@ import { groundHeight, HAGOROMO_ARENA, terrace } from './terrainArt';
 import { carveWater, WATER_BODIES, type WaterBody } from './water';
 import { villageGroundBands, villageCanalX, type VillageLayout } from './villageLayout';
 import { villageLots } from './villageDistricts';
+import { ACADEMY_COURT, MEMORIAL } from './leafLandmarkLayout';
 
 const canal: WaterBody = { kind: 'river', width: 10.1, from: -74, to: 29, at: villageCanalX };
 export const villageWater = (map: MapId) => map === 'nevoa' ? [...WATER_BODIES[map], canal] : WATER_BODIES[map];
@@ -19,8 +20,9 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
   const { map, bounds } = layout;
   const plots = layout.buildings.filter(building => !building.gate)
     .map(({x,z,width}) => ({x,z,radius:Math.min(5.8,width*.37)}));
-  for(const lot of layout.lots??villageLots(map,0))plots.push({x:lot.x,z:lot.z,radius:Math.hypot(lot.width,lot.depth)*.50});
-  if (map === 'folha') plots.push({ x: -1, z: -39, radius: 5.2 });
+  const lots=layout.lots??villageLots(map,0);
+  for(const lot of lots)plots.push({x:lot.x,z:lot.z,radius:Math.hypot(lot.width,lot.depth)*.50});
+  if (map === 'folha') plots.push({ x: -1, z: -39, radius: 5.2 }, MEMORIAL);
 
   function relief(x: number, z: number) {
     let rolling = .8 + .7 * Math.sin(x * .11 + 2) * Math.cos(z * .14) + .46 * Math.sin((x + z) * .14);
@@ -40,6 +42,8 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
     return Math.min(4.8, h);
   }
 
+  const academy=lots.find(lot=>lot.style==='academy');
+  const academyY=academy?relief(academy.x,academy.z)-.055:0;
   const leveled=plots.map(plot=>({...plot,y:relief(plot.x,plot.z)}));
   const cells=new Map<number,typeof leveled>();
   const cell=(x:number,z:number)=>x+z*128;
@@ -67,6 +71,12 @@ export function createVillageGround(layout: VillageLayout, waters: readonly Wate
       if (dx > r + shoulder || dz > r + shoulder) continue;
       const influence = smoothstep((Math.hypot(dx,dz)-r)/shoulder);
       h = plot.y + (h - plot.y) * influence;
+    }
+    if (academy) {
+      const court=ACADEMY_COURT;
+      const distance=Math.max(Math.abs(x-court.x)-court.rx,Math.abs(z-court.z)-court.rz);
+      const mix=smoothstep((distance+.12)/1.55);
+      h=academyY+(h-academyY)*mix;
     }
     if (Math.abs(z-layout.entry.z) < 4.2 && Math.abs(x-layout.entry.x) < 5) {
       h *= smoothstep((Math.abs(z-layout.entry.z)-.8)/3.4);

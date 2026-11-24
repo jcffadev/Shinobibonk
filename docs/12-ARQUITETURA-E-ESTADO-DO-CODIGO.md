@@ -401,7 +401,7 @@ O glossário usa src/game/glossary.ts como catálogo pesquisável. A verificaç�
 ## Componentes apresentados na branch de validação das vilas
 
 - **Traçado:** `villageLayout.ts` registra portões, praças, vias, pontes e áreas de evento. `villageDistricts.ts` registra lotes e fachadas. `villageTerrain.ts` nivela lotes e preserva a clareira de Hagoromo.
-- **Geometria:** `villageArchitecture.ts` agrupa fachadas por região e por material numa textura compartilhada. `villageScenery.ts` acrescenta árvores, marcos e pontes e descarta materiais ao sair.
+- **Geometria:** `villageArchitecture.ts` agrupa fachadas por região e por material numa textura compartilhada. `villageScenery.ts` acrescenta árvores, marcos e pontes e descarta materiais ao sair. Em Konoha, `leafLandmarkLayout.ts` localiza o pátio e a clareira, `academySwing.ts` anima o assento e as cordas e `memorialStone.ts` monta a pedra e seu apoio. O snapshot publica os marcos para `MapOverlay.tsx` e o GPS.
 - **Movimento:** `collision.ts` guarda as fundações. `villageTraversal.ts` usa a direção atual e a altura de apoio para subir, alcançar o beiral, descer e restaurar a posição.
 - **Efeitos:** `susanooFx.ts` mantém estilos articulados por portador, com armas, movimento e cores específicos.
 

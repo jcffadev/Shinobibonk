@@ -2,6 +2,11 @@
 
 O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
 
+## Balanço da Academia e Pedra Memorial · 24/11/2026
+
+- **IMPLEMENTADO.** O pátio da Academia abriga o balanço em todas as sementes. A Pedra Memorial foi refeita em volume e ganhou uma clareira arborizada. Os dois marcos têm GPS por M/Tab na vila de Konoha.
+- **PENDENTE DE VALIDAÇÃO E2E.** Traçar a rota pelo mapa, seguir da rua até o balanço, girar a câmera rente à árvore e circular a Pedra Memorial com os inimigos na missão.
+
 ## NPCs em pixel art e revisão chibi do elenco · 24/11/2026
 
 - **IMPLEMENTADO:** NPCs animados com a arte original e vistas próprias, incluindo as folhas suplementares de Ebisu, Teuchi e Sapos Sábios. Zetsu conserva a subida do solo. Naruto Totem usa o selo do Genin. Atores e construções ficam no ponto do evento.

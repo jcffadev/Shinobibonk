@@ -46,6 +46,63 @@ function explore(solids,from={x:0,z:0},extent={x:43,north:-73,south:9}) {
   return seen;
 }
 
+test('o balanço sempre fica acessível no pátio da Academia de Konoha', () => {
+  for (const seed of [0, 3497, 6308]) {
+    const { layout, ground, scenery, solids } = sceneFor('folha', seed);
+    const academy = layout.lots.find(lot => lot.style === 'academy');
+    const marker = scenery.landmarks.find(point => point.id === 'academy-swing');
+    const tree = scenery.root.getObjectByName('balanco-da-academia');
+    const swing = tree.getObjectByName('balanco-assento-e-cordas');
+    const seat = swing.getObjectByName('balanco-assento');
+    assert.ok(marker.x < academy.x && marker.z > academy.z + academy.depth / 2);
+    assert.ok(solids.isFree(marker.x, marker.z, .17), 'o assento não cria uma parede no pátio');
+    for (const end of [marker.z, marker.z + 1.5, marker.z + 3]) {
+      assert.ok(solids.isFree(marker.x, end, .17), 'a entrada do pátio está aberta até a rua');
+      assert.ok(Math.abs(ground(marker.x, end) - ground(marker.x, marker.z)) < .17);
+    }
+    assert.ok(solids.big.some(solid => solid.x === tree.position.x && solid.z === tree.position.z && solid.r < .6));
+    const reached = explore(solids);
+    assert.ok([-1, 0, 1].some(dx => [-1, 0, 1].some(dz =>
+      reached.has(`${Math.round(marker.x) + dx},${Math.round(marker.z) + dz}`))), 'dá para chegar pelo chão');
+    scenery.update(0);
+    const before = seat.getWorldPosition(new THREE.Vector3());
+    assert.ok(Math.abs(before.x - marker.x) < .001 && Math.abs(before.z - marker.z) < .03);
+    assert.ok(before.y - ground(marker.x, marker.z) > .44 && before.y - ground(marker.x, marker.z) < .92);
+    scenery.update(1);
+    const after = seat.getWorldPosition(new THREE.Vector3());
+    assert.ok(Math.abs(before.z - after.z) > .08, 'cordas e assento oscilam juntos');
+    assert.equal(tree.rotation.x, 0, 'a árvore não gira com o assento');
+    scenery.update(0);
+  }
+  for (const id of ['areia', 'pedra', 'nevoa']) assert.equal(sceneFor(id).scenery.landmarks.length, 0);
+  const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.match(canvas, /landmarks\.find\(point=>point\.id===id\)/, 'o marcador inicial aceita rota');
+  assert.match(canvas, /kind:'landmark' as const/, 'a missão publica o marcador fixo');
+});
+
+test('a Pedra Memorial tem base assentada e faces fechadas em Konoha', () => {
+  const { ground, scenery, solids } = sceneFor('folha', 6308);
+  const marker = scenery.landmarks.find(point => point.id === 'memorial-stone');
+  const root = scenery.root.getObjectByName('pedra-memorial');
+  const stone = root.getObjectByName('pedra-memorial-facetada');
+  const base = root.getObjectByName('pedra-memorial-base');
+  assert.equal(root.position.x, marker.x);
+  assert.equal(root.position.z, marker.z);
+  assert.equal(root.position.y, ground(marker.x, marker.z));
+  root.updateWorldMatrix(true, true);
+  const box = new THREE.Box3().setFromObject(base);
+  assert.ok(Math.abs(box.min.y - (root.position.y + .027)) < .002);
+  assert.ok(Math.abs(ground(marker.x, marker.z + 2.25) - root.position.y) < .05, 'a clareira apoia todo o piso');
+  assert.ok(solids.isFree(marker.x, marker.z + 2, .17), 'a borda do piso deixa passar');
+  const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+  for (const [dx, dz] of directions) {
+    const origin = new THREE.Vector3(marker.x + dx * 3, root.position.y + 1.36, marker.z + dz * 3);
+    const ray = new THREE.Raycaster(origin, new THREE.Vector3(-dx, 0, -dz));
+    assert.ok(ray.intersectObject(stone).length, 'a pedra tem face sólida para todos os lados');
+  }
+  assert.ok(root.getObjectByName('pedra-memorial-oferendas'));
+});
+
 test('novas partidas usam as vilas e uma partida antiga retoma em mapas_basicos',()=>{
   assert.equal(missionMapLayout(null),'vilas');
   assert.equal(missionMapLayout({}),'mapas_basicos');

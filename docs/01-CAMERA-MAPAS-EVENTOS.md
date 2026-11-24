@@ -445,3 +445,11 @@ A água usa borda que perde opacidade na margem, leito contínuo e maior resolu�
 ## NPCs animados · 24/11/2026
 
 A arte anterior de Shikamaru, Orochimaru, Ebisu, Iruka, Zetsu, Tsunade, Tenten, Guy, Sapos Sábios e Teuchi volta à cena. A malha do sprite anima tronco e cabeça, com os pés na altura do chão. O ponto de interação e o rumo do ator permanecem fixos. Os shinobis com vistas próprias usam perfil e costas conforme o ângulo. Ebisu, Teuchi e Sapos Sábios preservam a vista original de frente e têm uma folha suplementar de perfil e costas. A animação de repouso também funciona nesses ângulos, com uma única figura visível a cada instante. Naruto Totem alterna entre preparação e selo do Naruto Genin com vistas dianteira e traseira. O mercador é representado pela construção.
+
+## Pátio da Academia e Pedra Memorial
+
+O balanço fica à esquerda de quem olha para a Academia, no bairro noroeste de Konoha. O pátio de terra batida liga a rua transversal à entrada com o emblema redondo. As cordas e o assento oscilam juntos sob o galho. O tronco e as raízes mantêm suas posições no mundo. A textura da copa usa um recorte das folhas do atlas local `environment-v2.png`.
+
+A Pedra Memorial fica na clareira a oeste da praça, em `(-38, -26)`. O corpo escuro facetado tem a ponta do memorial do anime, inscrições, lajes baixas e flores sobre o piso. A vegetação emoldura a clareira com acesso livre pelo sul. Os dois marcos podem receber rota por M/Tab desde a entrada na vila. A névoa do Zabuza continua ocultando os marcadores enquanto durar.
+
+Foram usadas a imagem do pátio da Academia enviada pelo usuário e o desenho facetado do anime para a pedra. [Pedra Memorial na Narutopedia](https://naruto.fandom.com/wiki/Memorial_Stone) · [Cena do memorial no anime](https://x.com/danbito_/status/1212582164371521538) · [Obito e o memorial no site oficial](https://naruto-official.com/en/news/01_1706).

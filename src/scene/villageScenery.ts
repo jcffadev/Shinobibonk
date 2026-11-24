@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import type { GameMap } from '../game/maps';
 import { MAP_SIZE } from '../game/worldScale';
 import { COLLISION_RULES, type Solid } from './collision';
-import { createMemorialSprite, MEMORIAL } from './memorialStone';
+import { createMemorialStone } from './memorialStone';
+import { createAcademySwing } from './academySwing';
+import { MEMORIAL } from './leafLandmarkLayout';
 import { HAGOROMO_ARENA } from './terrainArt';
 import { KONOHA_SQUARES, villageRandom } from './villageDistricts';
 import { HOKAGE_MOUNTAIN_ROUTE, makeLandmarkRelief } from './landmarkRelief';
@@ -39,12 +41,15 @@ export function createVillageScenery(
   };
   const built=createVillageArchitecture(architecture,layout,ground,solids);
   built.textures.forEach((texture,index)=>textures.set('architecture-'+index,texture));
-  function landmarkFace(map:THREE.Texture,x:number,y:number,z:number,width:number,height:number) {
-    const material=new THREE.MeshBasicMaterial({map,alphaTest:.18});
-    const face=new THREE.Mesh(new THREE.PlaneGeometry(width,height),material);
-    face.position.set(x,y+height/2,z);
-    architecture.add(face);
-  }
+  const canopy=built.academy?pixelTexture('/assets/environment-v2.png'):null;
+  if(canopy)textures.set('academy-tree-canopy',canopy);
+  const swing=built.academy&&canopy?createAcademySwing(built.academy,ground,solids,built.atlas,canopy):null;
+  if(swing)architecture.add(swing.root);
+  const memorial=map.id==='folha'?createMemorialStone(ground,solids,built.atlas):null;
+  if(memorial)architecture.add(memorial);
+  const landmarks: {id:string;name:string;icon:string;x:number;z:number}[]=[];
+  if(swing)landmarks.push({id:'academy-swing',name:'Academia · Balanço',icon:'🌳',x:swing.x,z:swing.z});
+  if(memorial)landmarks.push({id:'memorial-stone',name:'Pedra Memorial',icon:'🪦',x:MEMORIAL.x,z:MEMORIAL.z});
 
   // Lotes densos, com as ruas livres entre os bairros. Semente fixa para salvar e retomar no mesmo lugar.
   const terrainSeed=map.id.split('').reduce((sum,char)=>sum+char.charCodeAt(0),1729);
@@ -62,6 +67,10 @@ export function createVillageScenery(
     const gardens=[[-9,10,1.27],[9,12,1.28],[-4.37,-3,1.34],[4.35,-3,1.18],
       [-8.8,-24,1.08],[9.9,-29,1.12],[-10,-44,1.04],[7.2,-45,1.08]];
     gardens.forEach(([x,z,scale],i)=>plant(i%3===1?1:0,x,z,scale));
+    // As árvores emolduram o memorial e guardam o acesso sul livre.
+    for(const [dx,dz,scale,kind] of [[-4.4,-3.3,1.10,0],[-1.45,-4.6,1.02,1],[2.4,-4.15,1.04,0],
+      [4.5,-2.15,.99,1],[-4.65,1.2,.93,1],[4.9,1.74,.88,0],[-3.83,3.5,.87,0]])
+      plant(kind,MEMORIAL.x+dx,MEMORIAL.z+dz,scale);
     for(const square of KONOHA_SQUARES){
       for(const side of [-1,1]){
         plant(0,square.x+side*(square.rx-.9),square.z+square.rz-.8,1.13);
@@ -86,6 +95,8 @@ export function createVillageScenery(
   for(let i=0;i<Math.round(map.scenery.count*(map.id==='folha'?1.79:1.55));i++) {
     const x=(random()-.5)*(MAP_SIZE-8),z=(random()-.5)*(MAP_SIZE-8);
     if(Math.hypot(x,z)<6||villageSurface(layout,x,z)||waterDistance(map.id,x,z,waters).outside<1.5) continue;
+    if(swing&&Math.hypot(x-swing.x,z-swing.z)<2.3)continue;
+    if(memorial&&Math.hypot(x-MEMORIAL.x,z-MEMORIAL.z)<MEMORIAL.radius+.25)continue;
     if(Math.hypot(x-HAGOROMO_ARENA.x,z-HAGOROMO_ARENA.z)<HAGOROMO_ARENA.r+1.5)continue;
     if (layout.sites.some(site=>Math.hypot(site.x-x,site.z-z)<2.7)) continue;
     let roll=random()*total,kind=0;
@@ -117,7 +128,6 @@ export function createVillageScenery(
     architecture.add(mesh);
     return mesh;
   }
-  const rockFace=surface('#8c7c65',2);
   const statueBacks=map.id==='folha'?pixelTexture('/assets/leaf-statue-backs-v1.png'):undefined;
   if(statueBacks)textures.set('valley-statue-backs',statueBacks);
   for(const item of layout.buildings) {
@@ -162,18 +172,6 @@ export function createVillageScenery(
       solids.addBox(x,z-depth*.45,width*.31,depth*.48,y+height*.22);
     }
   }
-  if(map.id==='folha') {
-    const {x,z,width,height}=MEMORIAL;
-    const memorial=createMemorialSprite();
-    const texture=memorial.material.map!;
-    textures.set('memorial',texture);
-    memorial.material.dispose();
-    const y=ground(x,z);
-    box(x,y+height*.28,z-.38,width*.58,height*.56,.76,rockFace);
-    landmarkFace(texture,x,y-.04,z+.025,width,height);
-    solids.addBox(x,z-.38,width*.29,.38,y+height*.56);
-  }
-
   const wallBody=surface(map.id==='folha'?'#e7c291':'#d99e62',3);
   const wood=surface('#90603f'),roof=surface(map.id==='folha'?'#a94c32':'#aa774a',2);
   for(const wall of layout.walls) {
@@ -284,15 +282,23 @@ export function createVillageScenery(
   });
 
   return {
-    sprites, root:architecture,
-    update(elapsed:number) { for (const stream of animatedWater) stream.offset.y=(elapsed*.36)%1; },
+    sprites, landmarks, root:architecture,
+    update(elapsed:number) {
+      for (const stream of animatedWater) stream.offset.y=(elapsed*.36)%1;
+      swing?.update(elapsed);
+    },
     dispose() {
-      const seen=new Set<THREE.Material>();
+      const materials=new Set<THREE.Material>();
+      const geometries=new Set<THREE.BufferGeometry>();
       architecture.traverse(object=>{
-        if (object instanceof THREE.Mesh) { object.geometry.dispose(); seen.add(object.material); }
-        if (object instanceof THREE.Sprite) {seen.add(object.material); if(object.material.map) object.material.map.dispose();}
+        if (object instanceof THREE.Mesh || object instanceof THREE.LineSegments) {
+          geometries.add(object.geometry);
+          materials.add(object.material);
+        }
+        if (object instanceof THREE.Sprite) {materials.add(object.material); if(object.material.map) object.material.map.dispose();}
       });
-      seen.forEach(material=>material.dispose());
+      geometries.forEach(geometry=>geometry.dispose());
+      materials.forEach(material=>material.dispose());
       textures.forEach(texture=>texture.dispose());
       architecture.removeFromParent();
     },

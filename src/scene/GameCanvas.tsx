@@ -32,7 +32,9 @@ import { createTerrainGeometry } from './terrainGeometry';
 import { createChakraFeet, createSplashes, createWater, RIPPLES, SPLASH, waterDistance, waterSurfaceAt } from './water';
 import { createLandscape } from './landscape';
 import { createMapBoundary } from './mapBoundary';
-import { createMemorialSprite } from './memorialStone';
+import { createMemorialStone } from './memorialStone';
+import { MEMORIAL } from './leafLandmarkLayout';
+import { loadArchitectureAtlas } from './villageArchitecture';
 import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type ShinraState } from '../game/shinraTensei';
 import { createDamageNumbers } from './damageNumbers';
 import { bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
@@ -79,7 +81,7 @@ import { rollRarityTier, RARITY_ORDER } from '../game/combat';
 import { ROULETTE_CASAS, ROULETTE_BY_ID, ROULETTE_RULES, BLESSINGS, BAD_LUCK, SLOT_COMBOS, slotKakuzuRyu, rouletteWeights, roulettePressure, rollRoulette, rouletteCost, seededRng, spendBonuses, type SlotComboId, type RoulettePrize, type RouletteView } from '../game/roulette';
 
 export type LevelOffer = { merge?:TechniqueMerge; id: string; kind: 'skill'|'pill'|'item'|'stat'; name: string; rarity: Rarity; icon: string; description: string; planned?: boolean; price?:number; growth?:SkillGrowth; bonus?:Bonuses; deal?:StatDeal; disabled?:string; /** Tela de substituição de ajudantes (choiceLevel −7): id do ajudante e se é o recém-derrotado. */ allyId?:string; allyNew?:boolean };
-export type WorldSnapshot = { /** Rodada 98: Treinamento da Juventude (painel e desafio em andamento). */ youth?:{panel:boolean;challenge:YouthChallengeId|null;run:{challenge:YouthChallengeId;difficulty:YouthDifficulty;timeLeft:number;progress:number;goal:number}|null}; /** Rodada 97: Treinamento do Hagoromo (chaves, progresso, ferramentas). */ hagoromo?:{keys:number;progress:number;need:number;tools:string[];active:boolean;recharge:boolean}; killStreak?:number; sagesUsed?:boolean; enemyCount?:number; powerlevel?:Powerlevel; allyCharge:number; victory:boolean; remaining:number; protection?:'temporary'|'debug'; /** FINAL SWARM: segundos sobrevividos após o relógio da zona zerar (0/ausente = relógio normal). */ overtime?:number; hiddenEffects:boolean; totalDamage:number; skillDamage:Record<string,number>; skillGrowth:Record<string,SkillGrowth>; techniques:Technique[]; synergy:boolean; synergies:ActiveSynergy[]; setups:{name:string;remaining:number;duration:number}[]; zone:number; phase?:'zone'|'arena'|'exit'; bijuu?:string; bijuuReward?:number; plansUsed?:number; skillTimers?:Record<string,{remaining:number;total:number;duration:number}>; boss:string; defenseProgress:number; banned:string[]; hp: number; maxHp:number; stats:Stats; defeated:boolean; allyDamage:number; difficultyScale:number; level: number; xp: number; xpNext: number; chakra: number; kills: number; runMoney: number; elapsed: number; fps: number; kunai: number; shuriken: number; luck:number; autoUlt:boolean; allies:string[]; /** Pontos de afinidade por ajudante (src/game/allies.ts). */ affinity:Record<string,number>; weather:string;weatherEvent?:WeatherEventId;weatherRemaining?:number; toast:string; interaction:{name:string;description:string;key?:string}|null; items: Record<string, number>; pills: Record<string, number>; pillQuality?:Record<string,number>; skillLevels: Record<string,number>; choice: { level: number; cards: LevelOffer[]; sale?:number; rerollCost?:number }|null; sealing:{heroId:string;target:string;phase:'ready'|'sealing'|'complete';account?:boolean}|null; pickups:{kind:string;x:number;z:number;id?:string;name?:string}[];enemies: { x: number; z: number }[]; /** Marcadores VISTOS em tela (eventos/NPCs, Naruto Totem, mega elites/guardião) para mapa e minimapa. */ events: { id: string; name: string; x: number; z: number; icon: string; kind?:'event'|'enemy'; portrait?:string; guardian?:boolean; active?:boolean }[]; explored: { x: number; z: number }[]; player: { x: number; z: number; heading?:number }; ping: {x:number;z:number}|null; /** Rota do mapa (um alvo por vez): distância em metros e posição do alvo na tela (NDC −1..1). */ route?:RouteView|null; routeNotice?:{text:string;kind:'arrived'|'lost'|'set'}|null; effects: number; choices:{reroll:number;skip:number;ban:number;banning:boolean}; weaponCost:number; merchantRerollCost?:number; tsunadeSpinCost?:number; permanent:Record<string,number>; totem?:{hp:number;maxHp:number;remaining:number}|null; roulette?:RouletteView|null };
+export type WorldSnapshot = { /** Rodada 98: Treinamento da Juventude (painel e desafio em andamento). */ youth?:{panel:boolean;challenge:YouthChallengeId|null;run:{challenge:YouthChallengeId;difficulty:YouthDifficulty;timeLeft:number;progress:number;goal:number}|null}; /** Rodada 97: Treinamento do Hagoromo (chaves, progresso, ferramentas). */ hagoromo?:{keys:number;progress:number;need:number;tools:string[];active:boolean;recharge:boolean}; killStreak?:number; sagesUsed?:boolean; enemyCount?:number; powerlevel?:Powerlevel; allyCharge:number; victory:boolean; remaining:number; protection?:'temporary'|'debug'; /** FINAL SWARM: segundos sobrevividos após o relógio da zona zerar (0/ausente = relógio normal). */ overtime?:number; hiddenEffects:boolean; totalDamage:number; skillDamage:Record<string,number>; skillGrowth:Record<string,SkillGrowth>; techniques:Technique[]; synergy:boolean; synergies:ActiveSynergy[]; setups:{name:string;remaining:number;duration:number}[]; zone:number; phase?:'zone'|'arena'|'exit'; bijuu?:string; bijuuReward?:number; plansUsed?:number; skillTimers?:Record<string,{remaining:number;total:number;duration:number}>; boss:string; defenseProgress:number; banned:string[]; hp: number; maxHp:number; stats:Stats; defeated:boolean; allyDamage:number; difficultyScale:number; level: number; xp: number; xpNext: number; chakra: number; kills: number; runMoney: number; elapsed: number; fps: number; kunai: number; shuriken: number; luck:number; autoUlt:boolean; allies:string[]; /** Pontos de afinidade por ajudante (src/game/allies.ts). */ affinity:Record<string,number>; weather:string;weatherEvent?:WeatherEventId;weatherRemaining?:number; toast:string; interaction:{name:string;description:string;key?:string}|null; items: Record<string, number>; pills: Record<string, number>; pillQuality?:Record<string,number>; skillLevels: Record<string,number>; choice: { level: number; cards: LevelOffer[]; sale?:number; rerollCost?:number }|null; sealing:{heroId:string;target:string;phase:'ready'|'sealing'|'complete';account?:boolean}|null; pickups:{kind:string;x:number;z:number;id?:string;name?:string}[];enemies: { x: number; z: number }[]; /** Marcos fixos e marcadores dinâmicos vistos em tela, para o mapa e minimapa. */ events: { id: string; name: string; x: number; z: number; icon: string; kind?:'event'|'enemy'|'landmark'; portrait?:string; guardian?:boolean; active?:boolean }[]; explored: { x: number; z: number }[]; player: { x: number; z: number; heading?:number }; ping: {x:number;z:number}|null; /** Rota do mapa (um alvo por vez): distância em metros e posição do alvo na tela (NDC −1..1). */ route?:RouteView|null; routeNotice?:{text:string;kind:'arrived'|'lost'|'set'}|null; effects: number; choices:{reroll:number;skip:number;ban:number;banning:boolean}; weaponCost:number; merchantRerollCost?:number; tsunadeSpinCost?:number; permanent:Record<string,number>; totem?:{hp:number;maxHp:number;remaining:number}|null; roulette?:RouletteView|null };
 export type RouteView = { id:string; kind:'event'|'enemy'|'pickup'|'ping'; name:string; x:number; z:number; distance:number; screen:{x:number;y:number} };
 /** Run salva (Esc → Salvar e sair, salvamento automático e ao fechar o navegador). */
 export const SAVED_RUN_KEY='sb_saved_run_v1';
@@ -294,6 +296,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     const environmentSprite=(index:number,width:number,height:number)=>{let map=environmentMaps.get(index);if(!map){map=new THREE.TextureLoader().load('/assets/environment-v2.png');map.colorSpace=THREE.SRGBColorSpace;map.magFilter=THREE.NearestFilter;map.minFilter=THREE.NearestFilter;map.generateMipmaps=false;map.repeat.set(.25,.5);map.offset.set((index%4)*.25,(1-Math.floor(index/4))*.5);environmentMaps.set(index,map);}const obj=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,alphaTest:.1,depthWrite:false}));obj.scale.set(width,height,1);return obj;};
     const civicScene=village&&waters?createVillageScenery(scene,MAP,village,terrainHeight,waters,solids,environmentSprite):null;
     if(civicScene){decor.push(...civicScene.sprites);runCleanups.push(()=>civicScene.dispose());}
+    let legacyMemorial:THREE.Group|null=null;
     const traversal=createVillageTraversal(solids.all);
     let walkingFloor=standHeight(0,0);
     if(!village){
@@ -313,9 +316,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         landmark.scale.set(w,h,1);landmark.center.set(.5,.03);landmark.position.set(x,terrainHeight(x,z)-.14,z);scene.add(landmark);decor.push(landmark);solids.addBuilding(x,z,w);
       }
       for(const [x,z] of [[-9,-15],[8,-17],[-10,-22],[9,-25]]){scenery(5,x,z,5,5);solids.addBuilding(x,z,5);}
-      // Rodada 92: Pedra Memorial numa clareira plana, cercada de árvores.
-      {const [x,z]=[-38,-26],memorial=createMemorialSprite();memorial.position.set(x,terrainHeight(x,z)-.08,z);scene.add(memorial);decor.push(memorial);solids.addBuilding(x,z,4);
-        for(const [dx,dz] of [[-7,-2],[7,-2],[-6,5],[6,5],[0,-8]])scenery(0,x+dx,z+dz,3.4,3.8);}
+      const memorialAtlas=loadArchitectureAtlas();
+      const memorial=createMemorialStone(terrainHeight,solids,memorialAtlas);
+      legacyMemorial=memorial;
+      scene.add(memorial);
+      runCleanups.push(()=>{memorial.removeFromParent();disposeObject(memorial);memorialAtlas.dispose();});
+      for(const [dx,dz] of [[-7,-2],[7,-2],[-6,5],[6,5],[0,-8]])scenery(0,MEMORIAL.x+dx,MEMORIAL.z+dz,3.4,3.8);
     }else{
       const row={areia:0,pedra:1,nevoa:2}[MAP.id];
       for(const {x,z,w,h,column} of REGIONAL_PLACES){
@@ -1073,6 +1079,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(id==='naruto-totem')return totem&&totemDiscovered?{kind:'enemy',id,name:'Naruto Totem',x:totem.sprite.position.x,z:totem.sprite.position.z}:null;
       if(id.startsWith('mega-')){const e=enemyList.find(e=>e.uid!==undefined&&'mega-'+e.uid===id&&e.seen);return e?{kind:'enemy',id,name:megaName(e),x:e.sprite.position.x,z:e.sprite.position.z}:null;}
       if(id.startsWith('pickup-')){const p=pickups.find(p=>p.id===id&&p.active&&p.discovered);return p?{kind:'pickup',id,name:p.name,x:p.x,z:p.z}:null;}
+      const landmark=villageActive?civicScene?.landmarks.find(point=>point.id===id):undefined;
+      if(landmark)return {...landmark,kind:'event'};
       const ev=events.find(e=>e.id===id&&e.discovered&&e.active);return ev?{kind:'event',id,name:ev.name,x:ev.x,z:ev.z}:null;
     }
     function clearRoute(text?:string,kind:'arrived'|'lost'|'set'='lost'){if(route?.kind==='ping')currentPing=null;route=null;if(text)notifyRoute(text,kind);snapshotTimer=0;}
@@ -1098,11 +1106,12 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       if(routeDistance(route)<ROUTE_ARRIVE){const name=route.name;clearRoute('Chegou! '+(route.kind==='ping'?'Ping alcançado':name),'arrived');playSfx('pickup');}
     }
     function routeView():RouteView|null{if(!route)return null;routeProbe.set(route.x,terrainHeight(route.x,route.z)+1,route.z).project(camera);return{id:route.id,kind:route.kind,name:route.name,x:route.x,z:route.z,distance:Math.round(routeDistance(route)*10)/10,screen:{x:routeProbe.x,y:routeProbe.y}};}
-    /** Marcadores do mapa: só o que já foi visto em tela. */
+    /** Marcos fixos e marcadores dinâmicos já vistos em tela. */
     function mapMarkers():WorldSnapshot['events']{
       if(mistHides(weatherEvent,elapsed)){const e=enemyList.find(enemy=>enemy.heroId===weatherEvent?.elite);const p=e?.sprite.position;if(!e||!p||Math.hypot(p.x-player.position.x,p.z-player.position.z)>=ZABUZA_MIST.reveal)return [];return [{id:'mega-'+e.uid,name:megaName(e),x:p.x,z:p.z,icon:'💀',kind:'enemy',portrait:e.heroId,active:true}];}
       return [
       ...(portal?[{id:'portal',name:portalTitle(portal.kind),x:portal.x,z:portal.z,icon:portal.kind==='arena'?'bijuu-portal':'🌀',kind:'event' as const,active:true}]:[]),
+      ...(villageActive?(civicScene?.landmarks??[]).map(point=>({...point,kind:'landmark' as const})):[]),
       ...events.filter(e=>e.discovered).map(e=>({id:e.id,name:e.name,x:e.x,z:e.z,icon:e.icon,kind:'event' as const,active:e.active})),
       ...(totem&&totemDiscovered?[{id:'naruto-totem',name:'Naruto Totem',x:totem.sprite.position.x,z:totem.sprite.position.z,icon:'🍥',kind:'enemy' as const,portrait:'naruto',active:true}]:[]),
       // Rodada 55: corpo caído esperando o E (retrato + ⛓) no minimapa e no mapa.
@@ -1516,6 +1525,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function openBijuuArena(){
       arena=true;villageActive=false;traversal.reset();weatherEvent=undefined;weather='Arena da Bijuu';
       if(civicScene)civicScene.root.visible=false;
+      if(legacyMemorial)legacyMemorial.visible=false;
       boundary.root.visible=false;
       scene.background=new THREE.Color('#282441');scene.fog=new THREE.Fog('#282441',15,55);
       for(const object of decor)object.visible=false;

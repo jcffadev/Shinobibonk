@@ -27,12 +27,17 @@ const palettes:Record<MapId,{wall:Surface[];roof:Surface[];base:Surface;trim:Sur
   nevoa:{wall:['plaster','stone','plaster'],roof:['blue','slate','blue'],base:'stone',trim:'dark'},
 };
 
-export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,ground:Ground,solids:Solids) {
+export function loadArchitectureAtlas() {
   const atlas=new THREE.TextureLoader().load(ARCHITECTURE_ATLAS);
   atlas.colorSpace=THREE.SRGBColorSpace;
   atlas.magFilter=THREE.NearestFilter;
   atlas.minFilter=THREE.LinearMipmapLinearFilter;
   atlas.anisotropy=2;
+  return atlas;
+}
+
+export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,ground:Ground,solids:Solids) {
+  const atlas=loadArchitectureAtlas();
   const material=new THREE.MeshStandardMaterial({map:atlas,vertexColors:true,roughness:.84,flatShading:true});
   const lanternMaterial=new THREE.MeshBasicMaterial({map:atlas,vertexColors:true});
   const batches=new Map<string,{items:THREE.BufferGeometry[];lit:boolean;name:string}>();
@@ -130,17 +135,18 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
   }
 
   const placards:THREE.Texture[]=[];
-  function plaque(text:string,ink:string,back:string,x:number,y:number,z:number,w:number,h:number) {
+  function plaque(text:string,ink:string,back:string,x:number,y:number,z:number,w:number,h:number,round=false) {
     const canvas=document.createElement('canvas');
-    canvas.width=128;canvas.height=64;
+    canvas.width=128;canvas.height=round?128:64;
     const ctx=canvas.getContext('2d')!;
-    ctx.fillStyle=ink;ctx.fillRect(0,0,128,64);
-    ctx.fillStyle=back;ctx.fillRect(4,4,120,56);
-    ctx.fillStyle=ink;ctx.font='bold 42px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText(text,64,34,114);
+    ctx.fillStyle=ink;ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle=back;ctx.fillRect(4,4,canvas.width-8,canvas.height-8);
+    ctx.fillStyle=ink;ctx.font=round?'bold 84px serif':'bold 42px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(text,64,canvas.height/2+2,114);
     const map=new THREE.CanvasTexture(canvas);
     map.colorSpace=THREE.SRGBColorSpace;
-    const label=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map}));
+    const shape=round?new THREE.CircleGeometry(w/2,32):new THREE.PlaneGeometry(w,h);
+    const label=new THREE.Mesh(shape,new THREE.MeshBasicMaterial({map}));
     if(frontage?.turns){
       const turn=frontage.turns,rx=frontage.x+(z-frontage.z)*turn;
       z=frontage.z-(x-frontage.x)*turn;
@@ -166,8 +172,12 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
       sash(towerX,y+2.68,z+.96,.52,.65,1,false,'wood');
       solids.add(towerX,z-.22,.72,true,y+h+.76);
     }
-    box('moss',x,y+h*.85,doorZ+.16,1.9,1.65,.16);
-    plaque('忍','#4a2721','#d98f78',x,y+h*.85,doorZ+.254,1.61,1.38);
+    const badge=new THREE.CylinderGeometry(.5,.5,1,32).rotateX(Math.PI/2);
+    const badgeMesh=badge.toNonIndexed();
+    add(badgeMesh,'moss',x,y+h*.85,doorZ+.19,1.86,1.86,.26,0x8fab7b);
+    add(badgeMesh,'vermillion',x,y+h*.85,doorZ+.32,1.53,1.53,.062,0xffab92);
+    badgeMesh.dispose();badge.dispose();
+    plaque('忍','#362523','#bc6550',x,y+h*.85,doorZ+.353,1.46,1.46,true);
     solids.addBox(x,z,w/2,d/2,y+h*.88+.73);
   }
 
@@ -311,7 +321,8 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
       box(trim,x+side*(w*.55),y+pier+body*.61,z,.047,.49,.05);
     }
   }
-  for(const lot of layout.lots??villageLots(layout.map,0)){
+  const lots=layout.lots??villageLots(layout.map,0);
+  for(const lot of lots){
     frontage=lot;
     building(lot);
   }
@@ -530,5 +541,5 @@ export function createVillageArchitecture(root:THREE.Group,layout:VillageLayout,
     root.add(mesh);meshes.push(mesh);
   }
   boxSource.dispose();sphere.dispose();cylinders.forEach(geo=>geo.dispose());roofs.forEach(geo=>geo.dispose());
-  return {textures:[atlas,...placards]};
+  return {atlas,textures:[atlas,...placards],academy:lots.find(lot=>lot.style==='academy')};
 }

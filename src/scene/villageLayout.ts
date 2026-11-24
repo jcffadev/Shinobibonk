@@ -2,6 +2,7 @@ import type { MapId } from '../game/maps';
 import { MathUtils } from 'three';
 import { inHagoromoClearing, KONOHA_SQUARES, KONOHA_STATUES, villageLots, villageRandom, type UrbanLot } from './villageDistricts';
 import { leafRiver } from './water';
+import { ACADEMY_COURT } from './leafLandmarkLayout';
 
 export type MapLayout = 'mapas_basicos' | 'vilas';
 export const missionMapLayout = (save?: { mapLayout?: MapLayout } | null): MapLayout =>
@@ -94,6 +95,7 @@ export function villageSurface(layout: VillageLayout, x: number, z: number): 'ro
     if(inHagoromoClearing(x,z))return;
     if(((x-10)/25)**2+((z+67)/9.3)**2<1)return 'rock';
     if(KONOHA_SQUARES.some(square=>Math.abs(x-square.x)<square.rx&&Math.abs(z-square.z)<square.rz))return 'plaza';
+    if(Math.abs(x-ACADEMY_COURT.x)<ACADEMY_COURT.rx&&Math.abs(z-ACADEMY_COURT.z)<ACADEMY_COURT.rz)return 'road';
     if(z>8&&z<layout.bounds.south&&Math.abs(x)<2.65)return 'road';
   }
   const trail = Math.sin((z + 8) * .08) * .8;
@@ -124,6 +126,10 @@ export function villageGroundBands(layout:VillageLayout, x:number, z:number) {
     road=Math.min(road,box(x-lane,z-(north+south)/2,laneHalfWidth,(south-north)/2,.55));
   for(const crossing of layout.crossings)
     road=Math.min(road,box(x,z-crossing,layout.bounds.x,crossingHalfWidth,.6));
+  if(layout.map==='folha'){
+    const court=ACADEMY_COURT;
+    road=Math.min(road,box(x-court.x,z-court.z,court.rx,court.rz,1.15));
+  }
   let plaza=box(x-layout.plaza.x,z-layout.plaza.z,9.6,4.8,1.4);
   if(layout.map==='folha')for(const square of KONOHA_SQUARES)
     plaza=Math.min(plaza,box(x-square.x,z-square.z,square.rx,square.rz,1.2));

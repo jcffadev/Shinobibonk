@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'o balanço da Academia se move depois de colocado na vila', arquivo: 'src/scene/villageScenery.ts', de: 'swing?.update(elapsed);', para: '' },
   { regra: 'shinobi dobra o joelho antes do tombo', arquivo: 'src/scene/fallenShinobi.ts', de: 'bend=THREE.MathUtils.smoothstep(t,stagger,kneel);', para: 'bend=0;' },
   { regra: 'estátua recebe arte de costas na própria célula', arquivo: 'src/scene/landmarkRelief.ts', de: '(index-1+.5-x)*.5', para: '(.5-x)*.5' },
   { regra: 'base do Monte Hokage entra no chão', arquivo: 'src/scene/landmarkRelief.ts', de: 'embedBase(faceGeometry,face.position.y,face.position.z);', para: '' },
