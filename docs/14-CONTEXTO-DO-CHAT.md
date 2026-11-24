@@ -2730,3 +2730,12 @@ Foram abertas seis folhas de contato com 1.026 recortes das 114 versões em uso.
 > Continue
 
 Entraram as nove correções da auditoria. Chiriku usa o traje da referência do anime no retrato e em todas as ações. Jūgo e Obito Máscara Branca receberam proporções novas também no pulo e no dash. As três Sakuras, Kushina, Tobi Akatsuki e Hanabi Adulta tiveram o repouso e o ataque harmonizados com a corrida. A conferência visual em partida continua pendente.
+
+## Contagem e pendências da revisão chibi · 24/11/2026
+
+> Não eram 9 ou 8 personagens?
+> Cade?
+
+> O que falta fazer?
+
+Foram oito versões na primeira entrega e nove versões, de seis personagens, na segunda. As nove artes estão no build da cópia principal, na seleção e na ficha de cada versão correspondente. A fila registra a validação em partida e o restante das frentes de arte, gameplay, mapas e ranking.

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 24/11/2026 · Contagem das duas entregas de revisão chibi
+
+- O registro do elenco distingue as oito versões redesenhadas na primeira entrega das nove versões ajustadas após a auditoria. As duas entregas somam 17 versões trabalhadas nas 114 jogáveis. Foram conferidos os nove retratos no build da cópia principal.
+
 ## 24/11/2026 · Ajuste nas nove versões da auditoria chibi
 
 - Chiriku, Jūgo Taka e Obito Máscara Branca receberam novas proporções no retrato, no repouso, no ataque e nas acrobacias. Chiriku também recebeu corrida nas cinco vistas com o traje do Templo do Fogo.
