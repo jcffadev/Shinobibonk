@@ -2706,3 +2706,11 @@ O nome “Sengetsu” foi interpretado como Gengetsu Hōzuki, que aparecia na pr
 > Agora sim, eles ficaram bons, corrija o restante que eu te pedi, você fez a parte do balanço de konoha e a pedra lá do cemitério ainda está horrivel eu ja te passei referências, refaça também e não achei no mapa o balanço...
 
 Os três shinobis aprovados foram integrados em `bb092d0`. O balanço foi construído à esquerda da entrada da Academia e recebeu cordas e assento animados. O novo pátio de terra batida fica aberto para a rua. A Pedra Memorial ocupa a clareira a oeste da praça e tem corpo facetado, inscrições, lajes laterais, piso e flores. Os dois marcos são localizáveis com rota pelo mapa (M/Tab) desde o início de uma missão na vila. A validação em partida segue pendente.
+
+## Estado da fila e revisão chibi · 24/11/2026
+
+> o que podemos melhorar? o que esta em fila?
+>
+> voce revisou todos os personagens e verificou se todos estão em estilo chibbi? usando referencias boas do anime?
+
+As 114 versões foram comparadas em seleção, repouso, corrida e ações. Oito receberam folhas novas. Gengetsu, Sakumo e Orochimaru Akatsuki têm as referências canônicas da revisão registradas no documento do elenco. Ainda falta validar cada versão com a referência da sua fase e ver a fluidez em partida. A fila propõe fechar essa revisão, depois conferir jutsus e Susanoo, percorrer as quatro vilas e validar o ranking público.

@@ -1,6 +1,13 @@
-# Fila atual do ShinobiBonk · 12/11/2026
+# Fila atual do ShinobiBonk · 24/11/2026
 
-O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registros de rodadas anteriores.
+## Próximas prioridades sugeridas
+
+1. Concluir a auditoria visual do elenco por versão. As 114 versões passaram pela comparação chibi em folhas de contato. Oito foram redesenhadas. Falta registrar uma boa referência da fase para cada versão e conferir a aparência e as transições em partida, incluindo Jūzō como jogador e ajudante.
+2. Finalizar os Susanoo de Sasuke e Itachi e revisar os jutsus que usam efeitos compartilhados. Documentar o efeito na obra, a área de acerto e os valores de status. Usar o simulador antes de propor mudanças de balanceamento.
+3. Percorrer as quatro vilas no jogo, com foco em água, escadas, escalada, NPCs, Balanço da Academia e Pedra Memorial. Medir o desempenho com horda nas qualidades gráficas.
+4. Validar o ranking público na hospedagem e definir a verificação competitiva dos resultados antes de ampliar os modos e equipes.
+
+Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
 ## Balanço da Academia e Pedra Memorial · 24/11/2026
 
@@ -60,7 +67,7 @@ O primeiro bloco registra a fila atual. Os blocos seguintes preservam os registr
 1. **PENDENTE DE VALIDAÇÃO E2E.** Revisar os quatro mapas na seleção normal do jogo e comparar a entrada, escala, densidade, ruas, paisagem, eventos, clima e leitura em giros de câmera com as respectivas referências. Verificar em partida os apoios das escadas, paredes e telhados.
 2. **PENDENTE DE VALIDAÇÃO E2E.** Conferir os Susanoo por usuário em partida, incluindo a silhueta contra fundos claros e a arma no quadro de impacto. A arte pintada dedicada de Sasuke e Itachi continua na fila. [Referências e escopo](24-AUDITORIA-DE-EFEITOS.md#susanoo-por-portador--23112026).
 3. **PENDENTE DE DECISÃO.** Entregar a revisão de jutsus e status após os mapas. Tabela por técnica com versão, referência, forma, alcance, acertos, potência, recarga, status, chance inicial e efetiva, duração, acúmulos, resistências e reações. Mostrar interações com itens e builds, simular de início e fim da missão e apresentar mudanças como propostas.
-4. Continuam na fila as artes de queda ajoelhada, corrida do Jūzō, revisão de todos os jutsus e acabamento das fusões.
+4. Continuam na fila o refinamento da queda ajoelhada, a validação em partida da nova corrida do Jūzō, a revisão dos jutsus e o acabamento das fusões.
 
 ## Retomada conferida em 23/11/2026 (registro anterior)
 

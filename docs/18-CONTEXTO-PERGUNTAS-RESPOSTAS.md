@@ -442,6 +442,10 @@ Antes de gerar, confirme a fase em cenas e materiais oficiais. Compare rosto, tr
 
 O balanço fica à esquerda da entrada da Academia, no pátio de terra batida. A Pedra Memorial permanece na clareira a oeste da praça, com corpo facetado, inscrições, lajes, piso e flores. Em novas missões de Konoha, os dois nomes aparecem no mapa desde o início e aceitam rota. A [revisão de mapas](01-CAMERA-MAPAS-EVENTOS.md#pátio-da-academia-e-pedra-memorial) registra o acesso e as referências. A conferência em partida segue pendente.
 
+### Todos os personagens foram conferidos no estilo chibi e com referência do anime? · 24/11/2026
+
+As 114 versões jogáveis foram comparadas com o padrão chibi de Naruto Academia em recortes de seleção, repouso, corrida e ações. Oito receberam atlas novos. O [registro do elenco](21-ELASTAO-DE-HEROIS.md) detalha as fontes do anime para Gengetsu, Sakumo e Orochimaru Akatsuki. A validação canônica documentada das 114 versões e a conferência visual em partida ficam na [fila](13-PENDENCIAS-PARA-CONTINUAR.md).
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

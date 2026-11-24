@@ -4,7 +4,7 @@
 
 ## Revisão chibi das 114 versões · 24/11/2026
 
-A comparação em folhas de contato usou o Naruto Academia como referência para cabeça, torso e pernas compactos, preservando o traje e as diferenças de cada versão. Haku, Hanzō Salamandra, Nagato, Sasori e Jūzō receberam novos atlas nesta entrega. A revisão seguinte redesenhou e integrou Gengetsu, Sakumo e Orochimaru Akatsuki com as referências abaixo. O registro liga a mesma versão à seleção, ficha, jogo, aliados e encontros. Veja os recortes na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
+A comparação em folhas de contato usou o Naruto Academia como referência para cabeça, torso e pernas compactos, preservando o traje e as diferenças de cada versão. Haku, Hanzō Salamandra, Nagato, Sasori e Jūzō receberam novos atlas nesta entrega. A revisão seguinte redesenhou e integrou Gengetsu, Sakumo e Orochimaru Akatsuki com as referências abaixo. O registro liga a mesma versão à seleção, ficha, jogo, aliados e encontros. A comparação verifica proporção e coerência das folhas. Ainda falta registrar a referência canônica da fase para cada versão e conferir o resultado na partida. Veja os recortes na [matriz de vistas](development/COBERTURA-DE-VISTAS.md).
 
 ### Referências de Gengetsu, Sakumo e Orochimaru Akatsuki
 

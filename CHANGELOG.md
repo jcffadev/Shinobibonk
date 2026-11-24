@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 24/11/2026 · Fila de revisão de arte
+
+- A documentação registra a diferença entre a comparação chibi das 114 versões, as oito artes refeitas e a validação de referências por versão ainda pendente. Jūzō tem folha nova e segue para conferência em partida. A fila também reúne os jutsus, a vistoria das vilas e a validação do ranking público.
+
 ## 24/11/2026 · Balanço da Academia e Pedra Memorial de Konoha
 
 - O pátio da Academia ganhou a árvore com raízes, duas cordas e um assento que balança. Os lotes da frente cedem espaço ao pátio de terra batida. A entrada tem o emblema redondo da Academia.
