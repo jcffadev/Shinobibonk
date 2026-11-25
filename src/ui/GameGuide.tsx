@@ -30,7 +30,7 @@ const climateNotes:Record<WeatherEventId,string>={
 
 const fieldEvents=[
   ['Naruto Totem','Aos '+clock(TOTEM_RULES.start)+' de missão ('+clock(ZONE_SECONDS-TOTEM_RULES.start)+' no relógio da primeira zona), aparece um totem que invoca clones. Destrua-o antes de '+clock(TOTEM_RULES.end)+' de missão para ganhar '+TOTEM_RULES.levels+' níveis.'],
-  ['Emboscadas e corpos shinobi','Emboscadas podem começar conforme o tempo passa. Investigar um corpo no chão provoca uma emboscada. Derrote todos os atacantes para ganhar um nível.'],
+  ['Emboscadas e corpos shinobi','Emboscadas podem começar conforme o tempo passa. Investigar um corpo no chão provoca uma emboscada de 10 ninjas, 1 deles elite, e soma 5% de inimigos na partida. Derrote todos para ganhar um pergaminho de recompensa (1 item).'],
   ['Shuriken Amaldiçoada','Pegue a shuriken para ganhar +8% de dano total em troca de enfrentar uma emboscada.'],
   ['Altares de defesa','Entre no círculo e permaneça até concluir a defesa. Escolha uma de três bênçãos. A raridade altera a força da recompensa.'],
   ['Emboscada da Akatsuki','Ao se aproximar da nuvem vermelha no mapa, Zetsu emerge. Clique nele ou aperte E para enfrentar a Akatsuki na dificuldade atual. Derrote o grupo inteiro para ganhar três pergaminhos grátis.'],

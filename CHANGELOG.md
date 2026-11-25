@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 25/11/2026 · Armadilha do ninja caído: 10 ninjas sempre, 1 elite e 1 item (Claude Code)
+
+- **Pedido do usuário:** "armadilha do ninja deitado no chão deveria dar 1 item por matar os ninjas que invoca, além disso não está invocando ninjas · a ideia é invocar 10 ninjas e 1 deles sendo elite".
+- **Causa de não invocar:** os ninjas da armadilha eram limitados pela vaga até o teto de inimigos vivos. Com a horda cheia, a conta dava 0, ninguém aparecia e a emboscada ficava ativa para sempre, bloqueando outros corpos.
+- **Correção** (`startFieldAmbush` no GameCanvas e `FALLEN_TRAP`/`trapIsElite` em `src/game/fallenTrap.ts`):
+  - o corpo invoca sempre os 10 ninjas num anel de 10 m, e **1 deles é elite**;
+  - vencer a emboscada solta um **pergaminho de recompensa grátis (1 item)** onde caiu o último ninja, no lugar do +1 nível;
+  - os +5% de inimigos na partida continuam.
+- A Shuriken Amaldiçoada continua com a emboscada limitada pelo teto. O Guia foi atualizado.
+- **Testes:** 1 teste novo e 1 conferência ajustada em `tests/armadilha-ninja-caido.test.mjs` (o mínimo subiu para 278), mais 2 mutações novas verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** investigar um corpo com a horda cheia e pegar o pergaminho no fim.
+
 ## 25/11/2026 · Opção "Pegar sozinha a única carta" (Claude Code)
 
 - **Pedido do usuário:** "Coloque uma opção nas configurações, quando não tiver mais opção de escolha no pool, tiver só 1, com a opção marcada, ele pega automático sem aparecer para selecionar."

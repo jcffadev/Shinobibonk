@@ -99,6 +99,8 @@ const MUTATIONS = [
   { regra: "armadura da Bijū é 3× a do Guardião", arquivo: 'src/game/bijuu.ts', de: "armorMultiplier: 3 };", para: "armorMultiplier: 1.35 };" },
   { regra: "Bijū usa só os planos da zona (até 3)", arquivo: 'src/game/bijuu.ts', de: "Math.min(GUARDIAN_RULES.shikamaruMaxPlans, zonePlans)", para: "zonePlans" },
   { regra: "vida de chefe nunca vira infinito", arquivo: 'src/game/missions.ts', de: "Number.isFinite(hp)?Math.min(BOSS_HP_LIMIT,hp):BOSS_HP_LIMIT", para: "hp" },
+  { regra: "armadilha invoca 10 mesmo com a horda cheia", arquivo: 'src/scene/GameCanvas.tsx', de: "const count=body?FALLEN_TRAP.enemies:Math.min(", para: "const count=body?Math.min(FALLEN_TRAP.enemies,Math.max(0,threatNow().cap-enemyList.length)):Math.min(" },
+  { regra: "1 elite na armadilha", arquivo: 'src/game/fallenTrap.ts', de: "export const FALLEN_TRAP = { enemies: 10, elites: 1,", para: "export const FALLEN_TRAP = { enemies: 10, elites: 0," },
   { regra: "única carta só com a opção", arquivo: 'src/game/settings.ts', de: "return enabled && offers?.length === 1 && !offers[0].disabled;", para: "return offers?.length === 1 && !offers[0].disabled;" },
   { regra: "afinidade em corações", arquivo: 'src/ui/AllyCards.tsx', de: "{i < level ? '♥' : '♡'}", para: "{i <= level ? '♥' : '♡'}" },
   { regra: "horda anima no Treinamento do Hagoromo", arquivo: 'src/scene/GameCanvas.tsx', de: ":movingEnemy?Math.floor(animClock*10+sprite.id%4)%4:1;", para: ":movingEnemy?Math.floor(elapsed*10+sprite.id%4)%4:1;" },

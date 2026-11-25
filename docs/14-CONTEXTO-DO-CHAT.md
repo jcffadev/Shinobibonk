@@ -2921,3 +2921,12 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - Nova opção em Configurações → Controles: **Pegar sozinha a única carta** (desligada por padrão). Com ela ligada, a carta única é escolhida sem abrir a tela e aparece um aviso.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> armadilha do ninja deitado no chão deveria dar 1 item por matar os ninjas que invoca, além disso não está invocando ninjas
+> a ideia é invocar 10 ninjas e 1 deles sendo elite
+
+**Resposta.**
+
+- Não invocava porque a conta respeitava o teto de inimigos vivos: com a horda cheia dava 0 e a emboscada nunca terminava.
+- Agora surgem sempre 10 ninjas, 1 elite, e vencer solta um pergaminho de recompensa grátis (1 item) no lugar do +1 nível.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
