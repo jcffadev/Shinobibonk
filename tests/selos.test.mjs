@@ -43,9 +43,7 @@ test('no máximo a cada 2,5 s por personagem; Ultimate sempre; ligado no lançam
   assert.equal(sealDue(12.5, 10), true);
   assert.equal(sealDue(10.1, 10, true), true);
   const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
-  assert.ok(canvas.includes('if(!t.ultimate)showHandSeals(t,casterPosition,casterId);'));
-  assert.ok(canvas.includes('playTechniqueSound(t,true,heroId);showHandSeals(t,player.position,heroId);'));
-  assert.ok(canvas.includes('if(hiddenEffects||!sealDue(elapsed,lastSeal.get(casterId),t.ultimate))return;'));
+  assert.ok(!canvas.includes('showHandSeals') && !canvas.includes('sealLabel('), 'sem texto de selo acima da cabeça (25/11: o usuário quer a animação, não o texto)');
 });
 
 test('sorteio espalha os 12 selos e não repete o mesmo seguido (25/11: o Madara só mostrava Dragão)', () => {

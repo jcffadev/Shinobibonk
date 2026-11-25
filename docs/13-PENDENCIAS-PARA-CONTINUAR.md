@@ -66,7 +66,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 ## Selos de mão · 25/11/2026
 
-- Sequência de selos em texto acima de quem lança Ninjutsu, Genjutsu ou Ultimate (`src/game/handSeals.ts`). **PENDENTE DE VALIDAÇÃO E2E:** ver se o texto não polui a tela com muitos aliados e se a Grande Bola de Fogo mostra os 6 selos.
+- O texto dos selos acima da cabeça foi retirado: o usuário quer a **animação** do corpo fazendo os selos. **Codex:** animar os selos de cada personagem usando a lógica pronta em `src/game/handSeals.ts` (sequências, 0,1 s por selo, intervalo de 2,5 s). Hoje só Naruto e Zabuza têm a pose de selo.
 - Regra do usuário (25/11): o Claude Code não faz mais gráficos nem animações; a parte visual fica para o Codex.
 
 ## Fusões por receita · 25/11/2026

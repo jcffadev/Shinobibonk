@@ -3,8 +3,10 @@ import type { Technique } from './heroes.ts';
 /**
  * Selos de mão (pedido do usuário em 15/11: "Posições de mãos que todos os personagens devem fazer… aleatoriamente para
  * soltar as habilidades… Se você souber… para determinada jutsu… ótimo… TODOS os personagens"; plano em docs/01).
- * 25/11/2026: sem arte nova (o usuário pediu para usar só o que já existe). O corpo faz o selo com a pose que já existe
- * (Naruto e Zabuza); a sequência aparece com o texto flutuante do jogo, um selo a cada 0,1 s, acima do personagem.
+ * 25/11/2026: o texto dos selos acima da cabeça foi retirado (usuário: "Os selos em cima do personagem é errado, eu queria a
+ * animaçao dos selos, não eles aparecendo em cima da cabeça"). Este módulo fica como a lógica para a ANIMAÇÃO dos selos
+ * (Codex): qual sequência cada técnica faz (`sealSequence`), o passo entre selos (`SEAL_RULES.step`) e o intervalo por
+ * personagem (`sealDue`). Hoje o corpo faz a pose de selo que já existe (Naruto e Zabuza, `handSealArt`).
  */
 export const HAND_SEALS = {
   rato: { kanji: '子', name: 'Rato' }, boi: { kanji: '丑', name: 'Boi' }, tigre: { kanji: '寅', name: 'Tigre' },

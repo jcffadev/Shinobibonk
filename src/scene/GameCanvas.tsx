@@ -40,7 +40,6 @@ import { MEMORIAL } from './leafLandmarkLayout';
 import { loadArchitectureAtlas } from './villageArchitecture';
 import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type ShinraState } from '../game/shinraTensei';
 import { createDamageNumbers } from './damageNumbers';
-import { SEAL_RULES, sealDue, sealLabel, sealSequence } from '../game/handSeals';
 import { EVENT_DUEL_BY_ID, duelOpponent, duelReady } from '../game/events';
 import { bijuuDefense, bijuuPlans, bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, bijuuVitality, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
@@ -1883,14 +1882,6 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       let age=0;
       visuals.push({object:effect.group,life:KUROARI_TIME,tick:dt=>effect.tick(age+=dt)});
     }
-    /** Selos de mão (docs/01): a sequência sobe acima de quem lança, um selo a cada 0,1 s, no máximo a cada 2,5 s por personagem. */
-    const lastSeal=new Map<string,number>();
-    function showHandSeals(t:Technique,at:THREE.Vector3,casterId:string){
-      if(hiddenEffects||!sealDue(elapsed,lastSeal.get(casterId),t.ultimate))return;
-      const seals=sealSequence(t);if(!seals.length)return;
-      lastSeal.set(casterId,elapsed);
-      seals.forEach((seal,k)=>pendingHits.push({time:k*SEAL_RULES.step,run:()=>{if(hiddenEffects)return;const label=damageNumbers.spawnText(sealLabel(seal),'#ffe29a');label.position.set(at.x,at.y+2.6,at.z);numbers.push({sprite:label,life:.6});}}));
-    }
     function castTechnique(t:Technique,casterPosition:THREE.Vector3,g:SkillGrowth,ally=false,instant=false,allyMotion?:ReturnType<typeof createPlayerMotion>,part=false,casterId=heroId,effectLevel?:number):boolean{
       const merge=!part&&merges.get(t.name);
       if(merge&&merge.kind==='combine'){
@@ -1981,11 +1972,10 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         // além do 1º repete o acerto 0,14 s depois (mesma regra de chance fracionária do projétil; Ultimate fora).
         {const extra=extraStrikes(stats.projectiles,stats.projectileChance,!!t.ultimate);for(let k=1;k<=extra;k++)pendingHits.push({time:Math.max(0,delay)+k*.14,run:resolve});}}
       const motion=ally?allyMotion:playerMotion;
-      if(!t.ultimate)showHandSeals(t,casterPosition,casterId);
       if(!t.ultimate)motion?.attack(t.school==='Taijutsu'||academyThrow,direction.dot(v2)<0,false,t.school!=='Taijutsu'?undefined:t.name==='Furacão da Folha'||t.name==='Lótus Primária'?'kick':'punch',!academyThrow,direction.dot(v1)>.001,t.school==='Taijutsu'?.22:Math.max(.25,IMPACT_DELAY.other/Math.max(.3,stats.projectileSpeed)));
       if(!ally)playTechniqueSound(t,false,heroId);return true;
     }
-    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);showHandSeals(t,player.position,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=selectCombatTarget(enemyList,player.position,ultRadius,activeFocus()),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
+    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=selectCombatTarget(enemyList,player.position,ultRadius,activeFocus()),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
         particles.footprint(t,player.position,aim,player.position,ultRadius,ultRadius,0);
         if(susanooStyle)susanoo.trigger(susanooStyle,player.position,aim,near?.sprite.position??player.position,ultRadius,true);
         else if(puppetArt(t.name))showPuppet(player.position,near?.sprite.position??player.position,puppetArt(t.name));

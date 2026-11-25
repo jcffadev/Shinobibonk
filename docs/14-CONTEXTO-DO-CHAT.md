@@ -3090,3 +3090,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Tab: o mouse gira a câmera; segurar o botão direito mostra a kunai para clicar num NPC e marcar a rota.
 - NPCs dos eventos e o Teuchi olham sempre para o jogador.
 - **Testes:** tipos, testes (315) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Manter os selos
+> Os selos em cima do personagem é errado, eu queria a animaçao dos selos, não eles aparecendo em cima da cabeça.
+
+**Resposta.** O texto acima da cabeça saiu. A animação dos selos é gráfica e fica com o Codex; a lógica das sequências ficou pronta em `src/game/handSeals.ts`. **Publicado no GitHub.**

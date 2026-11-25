@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Selos: sai o texto acima da cabeça (Claude Code)
+
+- **Pedido do usuário:** "Os selos em cima do personagem é errado, eu queria a animaçao dos selos, não eles aparecendo em cima da cabeça."
+- **GameCanvas:** saiu `showHandSeals` (o texto "寅 Tigre" subindo acima de quem lança). O corpo continua com a pose de selo que já existia (Naruto e Zabuza).
+- **`src/game/handSeals.ts` fica como lógica para a animação dos selos**, que é do Codex: `sealSequence`, `SEAL_RULES.step` e `sealDue`. Plano em docs/01.
+- **Testes:** o teste dos selos agora confere que não há texto de selo no jogo.
+
 ## 25/11/2026 · Tab gira a câmera e NPCs olham para o jogador (Claude Code)
 
 - **Pedidos do usuário:** "Quando apertamos tab deve ser possível girar a tela"; "Com o TAB deve ser possível selecionar um npc para marcar a rota, também deve ser possivel continuar girando a câmera."; "Os npcs tem que olhar pro jogador, ficar sempre olhando pra ele... mesmo se girarmos a câmera."
