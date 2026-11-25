@@ -2969,3 +2969,15 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Na invocação, o Guardião e a Bijū medem o dano de alvo único da build atual (nível, itens, afixos, crítico, recarga) e ficam com vida para no mínimo 30 s (Guardião) e 60 s (Bijū), +33% por plano.
 - No simulador, os Guardiões passaram de segundos para 25 a 56 s, e a Bijū dura ao menos 1 a 2 min. No Kage com 3 planos, menos personagens sobrevivem, porque ficam mais tempo na horda.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> o dano% deve ser responsável por aumentar todos os danos do personagem, ele seria um dano adaptativo, sabe, ne?
+> na realidade pare, o espinhos seria com armadura
+> e sim dano% do dano do espinhos
+> Armadura × dano do personagem
+
+**Resposta.**
+
+- O dano% já entra no dano-base e multiplica técnicas, ultimate, ajudantes, queimadura, veneno, explosões e efeitos de item. A exceção eram os Espinhos (dano fixo).
+- Os Espinhos agora causam armadura × dano do personagem (Espinhos 100%, Samurai 150%).
+- Simulador de status novo (`scripts/simulate-status.mjs`), com a medição preliminar em docs/20.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

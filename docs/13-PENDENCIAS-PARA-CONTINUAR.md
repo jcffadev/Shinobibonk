@@ -34,6 +34,11 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Espinhos e pacote de status · 25/11/2026
+
+- Validar em partida o contragolpe dos Espinhos (armadura × dano do personagem) em níveis baixos e altos.
+- Pacote de status: medição feita com `scripts/simulate-status.mjs`. Falta decidir a proposta de ajuste (Esfera Katon em cadeia forte demais; itens de controle e 1 Hyoton perto de zero).
+
 ## Tab, drops, Hagoromo e chefes · 25/11/2026
 
 - Validar em partida o clique de rota com Tab segurado enquanto se mantém WASD, o retorno do mouse à câmera e o desaparecimento dos marcadores de NPC após o uso.

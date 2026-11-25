@@ -521,6 +521,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Piso de vida dos chefes (25/11): `src/game/bossScaling.ts` (`BOSS_POWER`, `singleTargetDps`, `expectedHit`, `bossHpWithFloor`); `playerBossDps` e `guardianHpNow` no GameCanvas.
 
+- Espinhos (25/11): `thornsDamage` em `src/game/combat.ts` (armadura × dano do personagem). Simulador de status: `scripts/simulate-status.mjs` (`statusFight`, `measureBuild`, `summarizeStatus`, `STRESS`).
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

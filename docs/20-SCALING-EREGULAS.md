@@ -2,6 +2,19 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Espinhos e medição do pacote de status · 25/11/2026 (Claude Code)
+
+**Espinhos** (decisão do usuário: "Armadura × dano do personagem"; antes: dano fixo de 25 e 40):
+- Contragolpe = `thorns` × armadura × dano do personagem (`thornsDamage`). O dano do personagem já inclui nível e dano%, então o dano% aumenta os Espinhos, como os outros danos.
+- Armadura de Espinhos 100% por cópia; Armadura Samurai 150%, somando os +20 de armadura dela.
+- Naruto sem itens de dano: ~22 no nível 1, ~550 no 30 e ~25 mil no 114.
+
+**Pacote de status (Rodada 103): ferramenta nova `scripts/simulate-status.mjs`.** A build do bot enfrenta por 30 s uma horda de inimigos individuais (comuns e elites) com as regras de `statusRules.ts` e a ordem do `hit` do GameCanvas. Compara cada item de status (1 cópia) com +10% e +30% de dano. Medição preliminar no Chunin, 115 versões, semente 17:
+- Na partida normal (3:00 e 8:00) o golpe vale 8× a 18× a vida do comum: tudo morre num golpe, então nem status nem +30% de dano mudam os abates.
+- Horda cheia aos 8:00 com 3 golpes por inimigo: Esfera Katon +18% de abates e −27% de golpes recebidos (explosão em cadeia: a explosão queima, o vizinho morre queimando e explode); Espelho de Haku +14% e −41%; Hyoton ×5 + Quebra-Gelo +19% e −49%; Anel do Veneno ×5 + Erva ×2 +9%. Fio de Aço, Incenso, Correntes, Erva, Cinco Elementos e 1 Hyoton ficam perto de zero.
+- Nenhuma técnica congela: o gelo vem só de itens.
+- Proposta de ajuste: próxima entrega, aguardando decisão do usuário.
+
 ## Guardiões e Bijū no Final Swarm · 25/11/2026
 
 O Guardião pode ser invocado a qualquer momento, inclusive depois de 15 minutos de Final Swarm. A armadura base sobe 30 pontos por minuto da missão e mais 90 por minuto de Final Swarm. A parcela da zona é 28 pontos por faixa. A redução de dano é `armadura / (100 + armadura)`. Cada plano do Shikamaru soma 33% à armadura e à ameaça usada para o HP e o dano da zona. Até três planos rendem um pergaminho adicional cada. A Bijū aplica o multiplicador da arena, carrega a pressão e o tempo excedente da zona final e considera os planos acumulados na missão.

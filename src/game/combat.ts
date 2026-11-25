@@ -28,6 +28,11 @@ export const GROWTH_ROLLS={damage:{base:[22.5,40,67.5,112.5,187.5],spread:[11,15
 t * habilidades do jogo"). Aplicada no cálculo do golpe (GameCanvas, hit()); os kits dos chefes já escalam por fase em bossCombat.ts e não usam este fator.
  */
 export const TECHNIQUE_SCALE=1.2;
+/**
+ * Espinhos (25/11/2026, decisão do usuário: "Armadura × dano do personagem"): o contragolpe é `thorns` × armadura × dano do
+ * personagem (que já inclui nível e dano%). Armadura de Espinhos 100% por cópia, Armadura Samurai 150%.
+ */
+export const thornsDamage=(thorns:number,armor:number,damage:number)=>Math.max(0,thorns)*Math.max(0,armor)*Math.max(0,damage);
 export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rarity:Rarity;growth:SkillGrowth}{
  const tier=rollRarityTier(luck,rng);
  const keys:(keyof SkillGrowth)[]=technique.setup?['damage','haste','duration']:['area','haste'];if(!technique.setup&&(technique.status||technique.burn))keys.push('duration');

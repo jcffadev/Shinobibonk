@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 25/11/2026 · Espinhos escalam com armadura × dano e simulador de status (Claude Code)
+
+- **Pedido do usuário:** "o dano% deve ser responsável por aumentar todos os danos do personagem"; "o espinhos seria com armadura"; "e sim dano% do dano do espinhos"; decisão "Armadura × dano do personagem".
+- **`src/game/combat.ts`:** `thornsDamage(thorns, armadura, dano)`. O contragolpe dos Espinhos deixa de ser fixo (25 e 40) e passa a armadura × dano do personagem, que inclui nível e dano%.
+- **`src/game/catalog.ts`:** Armadura de Espinhos 100% por cópia, Armadura Samurai 150%, com textos novos.
+- **GameCanvas:** o contragolpe usa a fórmula, também com o ajuste de dano da dificuldade.
+- **Novo `scripts/simulate-status.mjs`:** mede o pacote de status com inimigos individuais e as regras do jogo. Resultados preliminares em [docs/20](docs/20-SCALING-EREGULAS.md).
+- **Testes:** 1 teste novo em `tests/espinhos.test.mjs` (o mínimo subiu para 287) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** apanhar com a Armadura de Espinhos em níveis diferentes e ver o número do contragolpe.
+
 ## 25/11/2026 · Guardiões e Bijū escalam com o poder atual do jogador (Claude Code)
 
 - **Pedido do usuário:** "Precisamos do scale dos portais e das bijus escalem bastante e considerem o nivel atual no nosso personagem na partida para não nascer com a vida baixa demais e morrer com 1 ataque apenas".

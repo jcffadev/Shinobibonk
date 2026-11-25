@@ -69,7 +69,7 @@ import { YOUTH_FIGHTER_HP, YOUTH_GOALS, YOUTH_TEXT, rollYouthChallenge, tickYout
 import { HAGOROMO, HAGOROMO_WAVES, TOOL_BY_ID, chooseTool, createHagoromo, addHagoromoKills, hagoromoRecharges, nextHagoromoStage, rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots, type HagoromoEncounterHud, type HagoromoState, type SageTool } from '../game/hagoromoTraining';
 import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
-import { NO_GROWTH, rollGrowth, growthText, SENJUTSU, hasSenjutsu, techniqueHitDamage, techniquePassiveMultiplier, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
+import { NO_GROWTH, rollGrowth, growthText, SENJUTSU, hasSenjutsu, techniqueHitDamage, techniquePassiveMultiplier, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, thornsDamage, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
 import type { Bonuses } from '../game/catalog';
 import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSignatureVisual, disposeObject } from './techniqueEffects';
 import { createParticleFx } from './particleFx';
@@ -1380,7 +1380,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
         addRing(player.position,'#ff535a',.8);
       }
       if(slow>0){playerSlow=Math.max(playerSlow,slow);eventToast='Você foi atingido e está lento!';}
-      if(attacker&&ex('thorns')>0&&enemyList.includes(attacker))takeDamage(attacker,ex('thorns'),'#ffd27a',false,0,'Espinhos');
+      if(attacker&&ex('thorns')>0&&enemyList.includes(attacker))takeDamage(attacker,thornsDamage(ex('thorns'),stats.armor,stats.damage)*damageMultiplier*tune().playerDamage,'#ffd27a',false,0,'Espinhos');
       if(ex('rush')>0)rushTimer=3;
       if(ex('smoke')>0&&Math.random()<ex('smoke')){invulnerability=1.5;eventToast='Fumaça densa: invisível por 1,5 s';}
       if(ex('freezeOnHit')>0&&freezeCd<=0){freezeCd=20;for(const e of enemyList)if(Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<5)freezeTarget(e,3);addRing(player.position,'#9fe7ff',5);eventToast='Espelho de Gelo: inimigos congelados!';}

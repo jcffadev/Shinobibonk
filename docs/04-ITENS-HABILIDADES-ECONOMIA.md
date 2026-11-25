@@ -193,7 +193,7 @@ O catálogo de ~80 itens apresentado na conversa é uma **proposta de design**.
   - **Gatilhos por acerto**: queimar, envenenar, dormir, prender (paralisar) e congelar parcialmente. Há também +% de dano de queimadura/veneno.
   - **Defesa**:
     - roubo de vida (Raiz Vampira, Concha Sanguinária);
-    - espinhos (Armadura de Espinhos, Armadura Samurai);
+    - espinhos (Armadura de Espinhos, Armadura Samurai): desde 25/11/2026 o contragolpe é armadura × dano do personagem (nível e dano% inclusos), 100% por cópia na de Espinhos e 150% na Samurai (`thornsDamage` em `src/game/combat.ts`);
     - escudo a cada 14 s (Escudo de Chakra);
     - invisibilidade ao ser atingido (Fumaça Densa);
     - gelo ao ser atingido (Espelho de Gelo de Haku);
