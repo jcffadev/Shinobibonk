@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 25/11/2026 · Aba Eventos: Prova Chūnin (Claude Code)
+
+- **Pedidos do usuário:** "A parte da aba de eventos e tudo mais, você pode fazer, se ficar ruim a gente mexe com o Codex... Faz o que tu quer fazer, pode seguir com o plano."; "A principio a primeira season só vai ter personagens da academia e genins, então se baseie nisso para a gente ir liberando personagens, os chunnins e tudo mais..."
+- **Novo `src/game/events.ts`:** a Prova Chūnin com 15 duelos da obra em três fases (Floresta da Morte, Preliminares e Final) e o elenco da temporada 1 (Academia e Genin). Joga-se com um lado; o outro aparece depois do minuto e dos abates e, selado, fica liberado na conta. Partindo dos iniciais, a corrente libera os 16 genin do evento.
+- **Conta:** `eventDuelsDone` e `completeEventDuel` guardam quem venceu cada duelo.
+- **GameCanvas:** prop `eventDuel`; o oponente nasce como "Shinobi para selar" e selar marca o duelo. A run de evento desliga as missões de desbloqueio comuns e salva o duelo.
+- **Interface:** nova `src/ui/EventsPage.tsx` (aba Eventos, com progresso, fases e cartões de duelo), botão "Eventos" no menu e na escolha de mapa; "Tentar de novo" repete o duelo. Sem arte nova.
+- **Testes:** `tests/eventos.test.mjs` com 5 testes (mínimo 309) e 3 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Selos de mão (Claude Code)
 
 - **Pedidos do usuário:** "Sim, selos"; "lembrando que você não fará mais questões de gráficos/animações, coisa do tipo, tente implementar o que já tem feito".

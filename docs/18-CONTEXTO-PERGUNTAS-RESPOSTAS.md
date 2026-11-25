@@ -533,6 +533,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Selos de mão (25/11): `src/game/handSeals.ts` (`sealSequence`, `sealDue`, `SEAL_RULES`) e `showHandSeals` no GameCanvas. Desde 25/11 o Claude Code não faz arte nem animação nova.
 
+- Eventos do anime (25/11): `src/game/events.ts` (`CHUNIN_EXAM`, `SEASON_ONE_ROSTER`, `duelOpponent`, `duelReady`), `completeEventDuel` em `account.ts`, `src/ui/EventsPage.tsx` e prop `eventDuel` no GameCanvas.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

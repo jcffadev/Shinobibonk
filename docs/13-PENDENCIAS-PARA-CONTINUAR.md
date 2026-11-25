@@ -4,7 +4,7 @@
 
 **Claude Code · Balanceamento**
 
-> Fila combinada com o usuário em 25/11: (1) avanço da arena por dificuldade e planos; (2) dano de nível alto × Final Swarm; (3) calibrar o pacote de status; (4) fusões (**receitas, cartão novo e ficha aplicados em 25/11**; Codex: ícones e efeitos próprios); (5) selos de mão (**lógica feita em 25/11**, sem arte nova; Codex: folhas de selo dos outros personagens); (6) **novo:** missões de evento inspiradas no anime que liberam personagens — ex.: aba Eventos com o mapa da Prova Chūnin; completar todos os objetivos com determinados personagens libera os Chūnin na conta. O usuário descartou árvores bloqueando, velocidade de elites, Orochimaru Sannin e desempenho de menus.
+> Fila combinada com o usuário em 25/11: (1) avanço da arena por dificuldade e planos; (2) dano de nível alto × Final Swarm; (3) calibrar o pacote de status; (4) fusões (**receitas, cartão novo e ficha aplicados em 25/11**; Codex: ícones e efeitos próprios); (5) selos de mão (**lógica feita em 25/11**, sem arte nova; Codex: folhas de selo dos outros personagens); (6) **feito em 25/11 (Prova Chūnin, ver "Eventos do anime" abaixo):** missões de evento inspiradas no anime que liberam personagens — ex.: aba Eventos com o mapa da Prova Chūnin; completar todos os objetivos com determinados personagens libera os Chūnin na conta. O usuário descartou árvores bloqueando, velocidade de elites, Orochimaru Sannin e desempenho de menus.
 
 1. **MEDIDO em 25/11** (`scripts/simulate-bosses.mjs`, [docs/20](20-SCALING-EREGULAS.md#medição-de-guardiões-e-bijū--25112026-claude-code)). Números finitos garantidos por `BOSS_HP_LIMIT`. **DECIDIDO e implementado:** Bijū com 3× a armadura e só os planos da zona 3. Falta sentir a luta em partida. Pedido original: calibrar Guardiões e Bijū com invocações normais e aos +1, +7, +15 minutos e além do Final Swarm. HP da zona pode alcançar trilhões e quadrilhões sem teto de gameplay. Manter os valores numéricos finitos dentro do intervalo suportado e testar precisão de dano e passagem de fase em lutas muito longas.
 2. Tomar cerca de **20× a armadura bruta** do Guardião equivalente como alvo inicial para a Bijū. Calibrar o efeito de armadura real no tempo de combate, com janela para desvio e dano sempre possível. Comparar defesa efetiva e dano por golpe para builds novas e fortes.
@@ -33,6 +33,26 @@
 4. Validar a hospedagem e a migração do ranking com conta de teste. Implementar o verificador de resultados do servidor antes de classificar partidas em equipe. A função Netlify foi testada com um provedor simulado. [Ranking e clãs](development/RANKING-E-CLAS.md).
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
+
+## Eventos do anime · Prova Chūnin · 25/11/2026
+
+**Pedidos do usuário:** "A parte da aba de eventos e tudo mais, você pode fazer, se ficar ruim a gente mexe com o Codex... Faz o que tu quer fazer, pode seguir com o plano." e "A principio a primeira season só vai ter personagens da academia e genins, então se baseie nisso para a gente ir liberando personagens, os chunnins e tudo mais..."
+
+- **Regra** (`src/game/events.ts`): cada evento é uma lista de duelos da obra. O jogador joga com um dos lados (ou outra versão da mesma família, como Naruto Genin no lado do Naruto). O outro lado aparece na partida como "Shinobi para selar" depois do minuto e dos abates do duelo. Derrotar e selar libera o oponente na conta (como nas missões de desbloqueio) e marca o duelo (`completeEventDuel`, chave `sb_event_duels_v1`).
+- O duelo abre quando um dos lados já é jogável. Partindo de Naruto, Sasuke e Sakura, a corrente libera os 16 genin do evento (Trio do Som incluído).
+- **Elenco da temporada 1** (`SEASON_ONE_ROSTER`): Academia e Genin. Os chūnin entram numa próxima temporada.
+- Na run de evento, as missões de desbloqueio comuns ficam desligadas; o oponente volta a cada 30 s se sumir antes de ser selado. A run de evento é salva com o duelo (`SavedRun.eventDuel`) e "Tentar de novo" repete o mesmo duelo.
+- **Interface:** botão "Eventos" no topo do menu e na tela "Escolha o mapa"; a aba mostra o progresso, as fases e cada duelo com os retratos, a condição e "Jogar com…". Visual simples, sem arte nova; o Codex pode refazer.
+
+| Fase | Duelos (lado A × lado B) | Condição |
+|---|---|---|
+| Floresta da Morte | Sasuke × Zaku · Sakura × Kin · Lee × Dosu | Folha · Genin · 2 min e 150 abates |
+| Preliminares | Shino × Zaku · Sakura × Ino · Temari × Tenten · Shikamaru × Kin · Naruto × Kiba · Neji × Hinata · Gaara × Lee · Chōji × Dosu | Folha · Genin · 3 min e 250 abates |
+| Final | Naruto × Neji · Sasuke × Gaara · Shikamaru × Temari · Shino × Kankurō | Folha · Chunin · 4 min e 400 abates |
+
+- **PENDENTE DE VALIDAÇÃO E2E:** jogar um duelo até selar o oponente, ver o aviso e a marca ✓ na aba; checar a aba no celular.
+- **Antes de publicar:** com `TEST_UNLOCK_ALL` ligado, todos os duelos aparecem abertos.
+- **Próximos passos possíveis:** recompensa por completar o evento; versões Chūnin (próxima temporada, arte com o Codex); mapa próprio da Floresta da Morte e da arena (Codex).
 
 ## Selos de mão · 25/11/2026
 

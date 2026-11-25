@@ -19,10 +19,11 @@ const DIFF_TEXT: Record<Difficulty, string> = { Genin: 'Treinamento de novato', 
  * "Escolha o mapa" (referência do usuário): abas dos mapas no topo, prévia grande da região com guardiões por zona e
  * painel "Preparar partida" (modo, dificuldade, progresso, build, mochila e predefinições da Bolsa). Enter começa.
  */
-export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, tactics, onApplyTactic, arsenalControls, onStart, onBack, onChangeHero, onEditPlan, onBag }: {
+export function MapSelect({ onEvents, heroId, mapId, onMap, mission, onMission, planned, tactics, onApplyTactic, arsenalControls, onStart, onBack, onChangeHero, onEditPlan, onBag }: {
   heroId: string; mapId: MapId; onMap: (id: MapId) => void; mission: Difficulty; onMission: (d: Difficulty) => void;
   planned: string[]; tactics: MissionTactic[]; onApplyTactic: (index: number) => void; arsenalControls: ArsenalControlsProps;
   onStart: () => void; onBack: () => void; onChangeHero: () => void; onEditPlan: () => void; onBag: () => void;
+  /** Abre a aba Eventos (25/11/2026). */ onEvents?: () => void;
 }) {
   const map = MAP_BY_ID[mapId], hero = HERO_BY_ID[heroId], progress = mapProgress()[mapId] ?? [];
   const mapOpen = isMapUnlocked(mapId), canStart = mapOpen && isHeroPlayable(heroId) && isDifficultyUnlocked(mapId, mission);
@@ -33,7 +34,7 @@ export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, t
   }, [canStart, onStart, onBack]);
 
   return <div className="ms-page" style={{ ['--map' as string]: map.color }}>
-    <header className="ms-top"><button type="button" className="ms-back" onClick={onBack}><kbd>Esc</kbd> Voltar</button><h1>Escolha o mapa</h1></header>
+    <header className="ms-top"><button type="button" className="ms-back" onClick={onBack}><kbd>Esc</kbd> Voltar</button><h1>Escolha o mapa</h1>{onEvents && <button type="button" className="ms-back ms-events" onClick={onEvents}>Eventos · Prova Chūnin</button>}</header>
     <nav className="ms-tabs">{MAPS.map((m) => {
       const done = mapProgress()[m.id] ?? [];
       const open = isMapUnlocked(m.id), prev = MAP_BY_ID[MAP_ORDER[MAP_ORDER.indexOf(m.id) - 1] as MapId];

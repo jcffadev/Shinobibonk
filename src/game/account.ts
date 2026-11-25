@@ -44,6 +44,14 @@ export function sealForAccount(id: string) {
   const sealed = sealedHeroes(); sealed.add(id); write(SEALED_KEY, [...sealed]);
 }
 
+/** Eventos do anime (25/11/2026): duelos vencidos, `{ [duelo]: shinobi que venceu }` (src/game/events.ts). */
+const EVENT_DUELS_KEY = 'sb_event_duels_v1';
+export function eventDuelsDone(): Record<string, string> { return read<Record<string, string>>(EVENT_DUELS_KEY, {}); }
+export function completeEventDuel(id: string, heroId: string) {
+  const done = eventDuelsDone(); if (done[id]) return false;
+  done[id] = heroId; write(EVENT_DUELS_KEY, done); return true;
+}
+
 export function researchProgress(): Record<string, number> { return read<Record<string, number>>(RESEARCH_KEY, {}); }
 export function addResearch(technique: string, amount: number) {
   const all = researchProgress();

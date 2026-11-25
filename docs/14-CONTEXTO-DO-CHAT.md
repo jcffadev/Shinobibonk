@@ -3031,3 +3031,12 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Selos de mão sem arte nova: a sequência aparece em texto acima de quem lança ("寅 Tigre"), com as sequências da obra, o selo em cruz do Kage Bunshin e no máximo uma vez a cada 2,5 s. O corpo usa a pose de selo que já existia.
 - Daqui em diante, gráficos e animações ficam com o Codex.
 - **Testes:** tipos, testes (304) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> A parte da aba de eventos e tudo mais, você pode fazer, se ficar ruim a gente mexe com o Codex... Faz o que tu quer fazer, pode seguir com o plano.
+> A principio a primeira season só vai ter personagens da academia e genins, então se baseie nisso para a gente ir liberando personagens, os chunnins e tudo mais...
+
+**Resposta.**
+
+- Aba Eventos com a Prova Chūnin: 15 duelos da obra em três fases. Joga-se com um lado; o outro aparece na partida e, selado, fica liberado na conta. A corrente parte de Naruto, Sasuke e Sakura e libera os 16 genin do evento.
+- Temporada 1 só com Academia e Genin; chūnin numa próxima temporada. Sem arte nova.
+- **Testes:** tipos, testes (309) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
