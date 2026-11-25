@@ -37,11 +37,11 @@ export function Portrait({ id, frame }: { id?: string; frame?: ProfileFrame }) {
   return <span className="league-portrait" data-frame={isProfileFrame(frame)?frame:undefined}>{id && HERO_BY_ID[id] ? <CardPortrait id={id} decorative /> : <b aria-hidden="true">忍</b>}</span>;
 }
 
-function MemberLine({ entry, rank, open }: { entry: Standing; rank: number; open: () => void }) {
+function MemberLine({ entry, rank, open, title }: { entry: Standing; rank: number; open: () => void; /** Título de evento do próprio jogador (ex.: Chūnin). */ title?: string }) {
   const { member, featured, score } = entry;
   return <button type="button" className={`league-row rank-${rank}`} onClick={open}>
     <span className="league-place">{rank}</span><Portrait id={member.avatar ?? featured.heroId} frame={member.frame}/>
-    <span className="league-name"><b>{member.name}{member.clan && <small className="league-tag">{member.clan}</small>}</b>
+    <span className="league-name"><b>{member.name}{member.clan && <small className="league-tag">{member.clan}</small>}{title && <small className="league-tag league-title">{title}</small>}</b>
       <small>{heroName(featured.heroId)}</small></span>
     <strong className="league-score" title={exact(score) + ' abates'}>{compactNumber(score)}</strong>
   </button>;
@@ -171,7 +171,7 @@ function ClanBoard({ board, standings, profileId, act, onMember }: {
   </div>;
 }
 
-export function LeagueScreen({ board, profileId, start, onBack, act }: {
+export function LeagueScreen({ board, profileId, start, onBack, act, ownTitle }: { ownTitle?: string;
   board: League; profileId: number; start: LeagueStart; onBack: () => void; act: (update: (state: League) => League) => void;
 }) {
   const season = useSeason();
@@ -223,10 +223,10 @@ export function LeagueScreen({ board, profileId, start, onBack, act }: {
                 <span>Top {TOP_LIMIT} · {exact(scoped.length)} {scoped.length === 1 ? 'perfil' : 'perfis'}</span></div>
               {byHero&&<HeroRankPicker hero={hero} choose={setHero} places={heroPlaces}/>}
               {pod.length > 0 ? <div className="league-podium">{pod.map((row, i) =>
-                <MemberLine key={row.member.id} entry={row} rank={i + 1} open={() => setSelected(row.member.id)}/>
+                <MemberLine key={row.member.id} entry={row} rank={i + 1} title={row.member.id === profileId ? ownTitle : undefined} open={() => setSelected(row.member.id)}/>
               )}</div> : <p className="league-empty">Ainda não há missões registradas com estes filtros.</p>}
               {scoped.length > 3 && <div className="league-rows">{scoped.slice(3, TOP_LIMIT).map((row, i) =>
-                <MemberLine key={row.member.id} entry={row} rank={i + 4} open={() => setSelected(row.member.id)}/>
+                <MemberLine key={row.member.id} entry={row} rank={i + 4} title={row.member.id === profileId ? ownTitle : undefined} open={() => setSelected(row.member.id)}/>
               )}</div>}
               <button type="button" className="league-personal" disabled={!board.members[profileId]} onClick={() => setSelected(profileId)}>
                 <span><b>Minha colocação</b><small>{mine < 0 ? 'Sem registro neste filtro' : exact(scoped[mine].score) + ' abates'}</small></span>

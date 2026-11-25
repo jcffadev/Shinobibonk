@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { EVENTS, duelAvailable, eventProgress, type EventDuel } from '../game/events';
-import { eventDuelsDone, isHeroPlayable } from '../game/account';
+import { EVENTS, duelAvailable, eventPhases, eventProgress, type EventDuel } from '../game/events';
+import { eventDuelsDone, eventPrizesClaimed, isHeroPlayable } from '../game/account';
 import { HERO_BY_ID, familyOf } from '../game/heroes';
 import { MAP_BY_ID } from '../game/maps';
 import { HeroPortrait } from './RunSheet';
@@ -15,7 +15,7 @@ export function EventsPage({ heroId, onPlay, onBack }: { heroId: string; onPlay:
   const [, setTick] = useState(0);
   useEffect(() => { const on = () => setTick(n => n + 1); window.addEventListener('shinobi-account', on); return () => window.removeEventListener('shinobi-account', on); }, []);
   useEffect(() => { const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onBack(); }; window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey); }, [onBack]);
-  const done = eventDuelsDone();
+  const done = eventDuelsDone(), claimed = new Set(eventPrizesClaimed());
   // Joga com a versão escolhida quando ela é da mesma família do lado (ex.: Naruto Genin no lado do Naruto).
   const playAs = (side: string) => familyOf(heroId) === familyOf(side) && isHeroPlayable(heroId) ? heroId : side;
   return <div className="ev-page">
@@ -28,6 +28,10 @@ export function EventsPage({ heroId, onPlay, onBack }: { heroId: string; onPlay:
           <div><small>EVENTO DO ANIME</small><h2>{event.title}</h2><p>{event.story}</p><p className="ev-reward">{event.reward}</p></div>
           <div className="ev-progress" aria-label="Progresso do evento"><b>{progress.finished}/{progress.total}</b><small>duelos vencidos</small><i style={{ width: Math.round(progress.finished / progress.total * 100) + '%' }}/></div>
         </div>
+        <ul className="ev-prizes" aria-label="Prêmios do evento">
+          {eventPhases(event, done).map(p => <li key={p.phase} className={claimed.has(event.id + ':' + p.phase) ? 'got' : ''}><b>{p.phase}</b><span>🍜 {p.lamens.toLocaleString('pt-BR')} Lamens</span><small>{claimed.has(event.id + ':' + p.phase) ? '✓ recebido' : `${p.finished}/${p.total} duelos`}</small></li>)}
+          <li className={claimed.has(event.id + ':completo') ? 'got final' : 'final'}><b>Prova completa</b><span>🍜 {event.prizes.complete.toLocaleString('pt-BR')} Lamens · título "{event.prizes.title}" · moldura Jade</span><small>{claimed.has(event.id + ':completo') ? '✓ recebido' : `${progress.finished}/${progress.total} duelos`}</small></li>
+        </ul>
         {phases.map(phase => <div className="ev-phase" key={phase}><h3>{phase}</h3><div className="ev-duels">
           {event.duels.filter(d => d.phase === phase).map(d => <DuelCard key={d.id} duel={d} winner={done[d.id]} playAs={playAs} onPlay={onPlay}/>)}
         </div></div>)}

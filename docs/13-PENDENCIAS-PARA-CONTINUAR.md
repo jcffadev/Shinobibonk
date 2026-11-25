@@ -38,7 +38,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 - Simulador corrigido (geometria dos golpes e preparo) e novo `scripts/simulate-early.mjs`. Medição em docs/20.
 - Raio da Área 1,2 → 1,8 **aplicado em 25/11**. **PENDENTE DE VALIDAÇÃO E2E:** ver o círculo maior do Rasengan, da Bola de Fogo e do Caixão de Areia em partida. Os 6 que pareciam abaixo da média eram efeito do simulador (só o kit, sem as básicas); com o pool real ficam perto da mediana. Próximo possível: começo do Kage com Naruto Academia e Itachi, e o topo (Quarto Raikage, Kushina, Chōji, Sai) com mais sementes.
-- **Prêmio por completar a Prova Chūnin:** aguardando a escolha do usuário.
+- **Prêmio da Prova Chūnin: feito em 25/11** (Escolha do usuário: "Lamens", "Título Chūnin", "Moldura de perfil" e "Lamens por fase"). Floresta 300, Preliminares 600 e Final 600 Lamens; prova completa 2.000 Lamens, título "Chūnin" no topo e no ranking local e moldura Jade. **PENDENTE DE VALIDAÇÃO E2E:** ver o crédito de Lamens, o título e a moldura travada no seletor. O título não vai para o ranking online (precisa do servidor).
 
 ## Eventos do anime · Prova Chūnin · 25/11/2026
 

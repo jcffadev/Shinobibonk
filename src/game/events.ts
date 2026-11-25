@@ -16,7 +16,13 @@ export type EventDuel = {
   id: string; phase: string; sides: readonly [string, string];
   map: MapId; difficulty: Difficulty; minute: number; kills: number; title: string; story: string;
 };
-export type AnimeEvent = { id: string; title: string; season: number; story: string; reward: string; duels: readonly EventDuel[] };
+/**
+ * Prêmios do evento (25/11/2026 — escolha do usuário: Lamens no fim, título, moldura e Lamens por fase). Lamens são dados
+ * uma vez (`claimEventPrize` em account.ts); título e moldura ficam liberados enquanto o evento estiver completo.
+ */
+export type EventPrizes = { phase: Readonly<Record<string, number>>; complete: number; title: string; frame: string };
+export type AnimeEvent = { id: string; title: string; season: number; story: string; reward: string; prizes: EventPrizes; duels: readonly EventDuel[] };
+export type EventPrize = { id: string; label: string; lamens: number };
 
 /** Elenco da 1ª temporada: Academia e Genin (inclui o Trio do Som, que era genin na Prova Chūnin). */
 export const SEASON_ONE_ROSTER = [
@@ -32,7 +38,8 @@ const duel = (base: typeof FOREST, a: string, b: string, title: string, story: s
 export const CHUNIN_EXAM: AnimeEvent = {
   id: 'prova-chunin', season: 1, title: 'Prova Chūnin',
   story: 'Os genin de Konoha, Suna e do Som disputam a promoção a chūnin: a sobrevivência na Floresta da Morte, as lutas preliminares e a final diante das vilas.',
-  reward: 'Cada duelo vencido libera o oponente na conta. Os chūnin chegam numa próxima temporada.',
+  reward: 'Cada duelo vencido libera o oponente na conta. Fechar cada fase dá Lamens; vencer os 15 duelos dá 2.000 Lamens, o título "Chūnin" e a moldura Jade.',
+  prizes: { phase: { 'Floresta da Morte': 300, 'Preliminares': 600, 'Final': 600 }, complete: 2000, title: 'Chūnin', frame: 'jade' },
   duels: [
     duel(FOREST, 'sasuke', 'zaku', 'O Selo Amaldiçoado', 'Sasuke desperta o Selo Amaldiçoado e enfrenta Zaku para proteger o time.'),
     duel(FOREST, 'sakura', 'kin', 'A Determinação de Sakura', 'Sakura corta o cabelo e enfrenta o Trio do Som sozinha.'),
@@ -72,4 +79,27 @@ export const duelReady = (d: EventDuel, elapsed: number, kills: number) => elaps
 export function eventProgress(e: AnimeEvent, done: Readonly<Record<string, string>>) {
   const finished = e.duels.filter(d => done[d.id]).length;
   return { finished, total: e.duels.length, complete: finished === e.duels.length };
+}
+
+/** Fases do evento na ordem da obra, com os duelos feitos de cada uma. */
+export function eventPhases(e: AnimeEvent, done: Readonly<Record<string, string>>) {
+  return [...new Set(e.duels.map(d => d.phase))].map(phase => {
+    const duels = e.duels.filter(d => d.phase === phase);
+    return { phase, finished: duels.filter(d => done[d.id]).length, total: duels.length, lamens: e.prizes.phase[phase] ?? 0 };
+  });
+}
+/** Prêmios em Lamens já conquistados (fases fechadas e o evento completo). */
+export function eventPrizes(e: AnimeEvent, done: Readonly<Record<string, string>>): EventPrize[] {
+  const out: EventPrize[] = eventPhases(e, done).filter(p => p.finished === p.total && p.lamens > 0)
+    .map(p => ({ id: `${e.id}:${p.phase}`, label: `${e.title} · ${p.phase}`, lamens: p.lamens }));
+  if (eventProgress(e, done).complete) out.push({ id: `${e.id}:completo`, label: `${e.title} completa`, lamens: e.prizes.complete });
+  return out;
+}
+/** Título mostrado no perfil e no ranking (o do último evento completo). */
+export const earnedTitle = (done: Readonly<Record<string, string>>, events: readonly AnimeEvent[] = EVENTS) =>
+  [...events].reverse().find(e => eventProgress(e, done).complete)?.prizes.title;
+/** Molduras de perfil que algum evento libera, e se cada uma já foi conquistada. */
+export function frameLock(frame: string, done: Readonly<Record<string, string>>, events: readonly AnimeEvent[] = EVENTS) {
+  const owner = events.find(e => e.prizes.frame === frame);
+  return owner && !eventProgress(owner, done).complete ? `Vença a ${owner.title} inteira` : undefined;
 }

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Prêmios da Prova Chūnin (Claude Code)
+
+- **Escolha do usuário: "Lamens", "Título Chūnin", "Moldura de perfil" e "Lamens por fase".**
+- **`src/game/events.ts`:** `prizes` no evento (Floresta 300 · Preliminares 600 · Final 600 · completa 2.000 Lamens · título "Chūnin" · moldura `jade`), `eventPhases`, `eventPrizes`, `earnedTitle` e `frameLock`.
+- **Conta:** `claimEventPrize` guarda os prêmios já creditados (`sb_event_prizes_v1`), para cada um valer uma vez.
+- **Tela:** `main.tsx` credita os Lamens ao fechar fase ou prova; título ao lado do nome no topo e na linha do jogador no ranking local; moldura Jade travada no seletor até completar a prova (quem já usa continua com ela); a aba Eventos mostra os prêmios e o que já foi recebido.
+- **Testes:** 2 testes novos em `tests/eventos.test.mjs` (mínimo 312) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Simulador com o pool real da partida (Claude Code)
 
 - **Pedido do usuário:** "Sim, os 6".

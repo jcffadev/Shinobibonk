@@ -3067,3 +3067,10 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Os 6 só pareciam fracos porque o simulador não deixava aprender as técnicas básicas do pool. Corrigido; com o pool real eles ficam perto da média e nenhum personagem precisou de ajuste.
 - O raio da Área 1,8 foi conferido de novo e continua equilibrando sem deixar ninguém forte demais.
 - **Testes:** tipos e testes (310). **Publicado no GitHub.**
+
+> Prêmio da Prova Chūnin · Lamens, título Chūnin, moldura de perfil e Lamens por fase
+
+**Resposta.**
+
+- Fechar cada fase dá Lamens (Floresta 300, Preliminares 600, Final 600). Vencer os 15 duelos dá 2.000 Lamens, o título "Chūnin" ao lado do nome (topo e ranking local) e libera a moldura Jade. Cada prêmio vale uma vez.
+- **Testes:** tipos, testes (312) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

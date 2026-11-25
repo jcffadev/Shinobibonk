@@ -52,6 +52,14 @@ export function completeEventDuel(id: string, heroId: string) {
   done[id] = heroId; write(EVENT_DUELS_KEY, done); return true;
 }
 
+/** Prêmios de evento já creditados (ids de `eventPrizes`), para cada um valer uma vez só. */
+const EVENT_PRIZES_KEY = 'sb_event_prizes_v1';
+export function eventPrizesClaimed(): string[] { return read<string[]>(EVENT_PRIZES_KEY, []); }
+export function claimEventPrize(id: string) {
+  const claimed = eventPrizesClaimed(); if (claimed.includes(id)) return false;
+  write(EVENT_PRIZES_KEY, [...claimed, id]); return true;
+}
+
 export function researchProgress(): Record<string, number> { return read<Record<string, number>>(RESEARCH_KEY, {}); }
 export function addResearch(technique: string, amount: number) {
   const all = researchProgress();

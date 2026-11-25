@@ -58,3 +58,28 @@ test('aba Eventos e duelo ligados no jogo', () => {
     "else if(!arena&&!hagoromoEvent&&!testRun&&!sealing&&accountEncounters<2"]) assert.ok(canvas.includes(wired), wired);
   for (const wired of ["{page === 'events' && <EventsPage", 'eventDuel={page===\'game\'?eventDuel:undefined}', 'onRetry={retryRun}', "onClick={()=>changePage('events')}>Eventos</button>"]) assert.ok(main.includes(wired), wired);
 });
+
+const { eventPrizes, eventPhases, earnedTitle, frameLock } = await import('../src/game/events.ts');
+const { claimEventPrize, eventPrizesClaimed } = await import('../src/game/account.ts');
+
+test('prêmios: Lamens por fase fechada, 2.000 ao completar, título Chūnin e moldura Jade (25/11)', () => {
+  assert.deepEqual(CHUNIN_EXAM.prizes, { phase: { 'Floresta da Morte': 300, 'Preliminares': 600, 'Final': 600 }, complete: 2000, title: 'Chūnin', frame: 'jade' });
+  const forest = Object.fromEntries(CHUNIN_EXAM.duels.filter(d => d.phase === 'Floresta da Morte').map(d => [d.id, 'sasuke']));
+  assert.deepEqual(eventPrizes(CHUNIN_EXAM, forest), [{ id: 'prova-chunin:Floresta da Morte', label: 'Prova Chūnin · Floresta da Morte', lamens: 300 }]);
+  assert.deepEqual(eventPhases(CHUNIN_EXAM, forest).map(p => p.finished + '/' + p.total), ['3/3', '0/8', '0/4']);
+  const all = Object.fromEntries(CHUNIN_EXAM.duels.map(d => [d.id, 'naruto']));
+  assert.equal(eventPrizes(CHUNIN_EXAM, all).reduce((a, p) => a + p.lamens, 0), 3500);
+  assert.equal(earnedTitle(forest), undefined); assert.equal(earnedTitle(all), 'Chūnin');
+  assert.ok(frameLock('jade', forest)); assert.equal(frameLock('jade', all), undefined); assert.equal(frameLock('gold', {}), undefined, 'outras molduras seguem livres');
+});
+
+test('cada prêmio é creditado uma vez e ligado na tela', () => {
+  assert.equal(claimEventPrize('prova-chunin:Final'), true);
+  assert.equal(claimEventPrize('prova-chunin:Final'), false);
+  assert.ok(eventPrizesClaimed().includes('prova-chunin:Final'));
+  const main = fs.readFileSync(new URL('../src/main.tsx', import.meta.url), 'utf8');
+  const picker = fs.readFileSync(new URL('../src/ui/ProfilePortraitPicker.tsx', import.meta.url), 'utf8');
+  assert.ok(main.includes('for(const prize of eventPrizes(event,done))if(claimEventPrize(prize.id))gain+=prize.lamens;'));
+  assert.ok(main.includes('{accountTitle&&<small className="account-title"'));
+  assert.ok(picker.includes('frameLock(id,eventDuelsDone())'));
+});
