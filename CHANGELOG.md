@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 24/11/2026 · Foco de combate e sobrevivência na Zona 1
+
+- Técnicas priorizam o inimigo fixado pelo botão direito dentro do alcance efetivo. Disparos em V e múltiplos têm um tiro central sob foco. Arremessos com preparo conferem a mira ao sair.
+- O projétil simples para no primeiro contato ao longo da trajetória, mesmo com dois inimigos cruzados no mesmo quadro. Onda, Em V e ricochete conservam suas regras de acerto.
+- Simulados 2.070 cenários de 13 minutos na Zona 1. No Kage com desvio médio e catálogo aberto, 301 de 345 chegaram aos 8 minutos, 292 aos 10 e 45 aos 13. [Medições](docs/20-SCALING-EREGULAS.md#sobrevivência-na-zona-1--24112026).
+- **PENDENTE DE VALIDAÇÃO E2E.** Conferir a mira com um Mega Elite atrás de inimigos comuns, os disparos em V, o preparo e a passagem de 10 minutos na mesma zona.
+
+## 24/11/2026 · Shikamaru e auditoria do dano
+
+- O NPC do Plano do Shikamaru usa o Estrategista de frente, perfil e costas, inclusive na troca entre câmeras.
+- A ficha usa o cálculo de dano por acerto do combate, mostra Genjutsu e exibe os dois danos de uma combinação. O simulador passa a usar afinidade, passivas e a linha de escola correta, inclusive mega crítico por expectativa.
+- Corrigidos Genjutsu no dano dos ajudantes, bônus repetido do mesmo elemento e lentidão contada duas vezes para o Selo dos Cinco Elementos.
+- Conferidos os bônus de 25 itens em 218 técnicas ofensivas e 115 ultimates. A curva do dano-base foi conferida até o nível 2.000. A comparação de 1.380 simulações registra por onde o dano ultrapassa o HP da horda e mantém a curva atual para decisão de balanceamento.
+
 ## 24/11/2026 · Nível máximo para fundir e combinar
 
 - A Oficina dos Sapos Sábios só monta e aplica pares com os dois ataques no teto de nível da partida. Com o Pergaminho Proibido, o requisito sobe para o nível 11. A oficina informa o requisito quando faltam técnicas elegíveis. O planejador continua aceitando pares para a próxima missão.

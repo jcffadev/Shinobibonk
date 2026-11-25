@@ -8,6 +8,8 @@ As novas animações do Susanoo de Sasuke e Itachi e os Espelhos de Haku estão 
 
 A Oficina dos Sapos Sábios exige duas técnicas de ataque no [teto vigente da missão](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios).
 
+O NPC do Shikamaru mantém o traje do Estrategista ao girar a câmera. A ficha calcula o dano por acerto com os mesmos bônus diretos do combate. [Fórmulas e escala](20-SCALING-EREGULAS.md).
+
 ## Como classificar
 
 - **CONFIRMADO**: decisão passada pelo usuário.
@@ -41,7 +43,7 @@ Em 15/11, o primeiro Mega Elite da partida passou a ter no máximo 3.000 HP. O M
 
 O WASD retém as teclas que permanecem pressionadas ao passar por escolhas e Treinamento. Subir de nível continua dando 3 s de invulnerabilidade. A HUD indica a proteção e mostra em vermelho as perdas reais de HP. A câmera e a movimentação de chão serão preservadas na reforma dos mapas, que será mostrada em capturas antes de entrar na versão de teste.
 
-- Shinobi e inimigos em pixel art numa cena 3D. Mover o mouse gira e inclina a câmera. Clique direito fixa o alvo e o scroll controla o zoom.
+- Shinobi e inimigos em pixel art numa cena 3D. Mover o mouse gira e inclina a câmera. Clique direito fixa o alvo. Cada técnica prioriza esse inimigo no seu próprio alcance, e um projétil simples para ao encontrar outro inimigo na trajetória. O scroll controla o zoom.
 - Missões nomeiam a dificuldade como Genin, Chunin, Jonin e Kage.
 - Teclas: M abre o mapa completo; Tab o mapa rápido; P a ficha; G o ping “Aqui”; E interage.
 - Ultimate manual no R. **A tecla Y é obrigatória** e alterna a Ultimate automática; o selo AUTO no botão R faz o mesmo por clique e mostra o estado.

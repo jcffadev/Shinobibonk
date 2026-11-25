@@ -39,6 +39,6 @@ Para estátuas com silhueta humana, prepare arte própria para o verso no mesmo 
 
 ## Margens, NPCs e variação regional
 
-Subdivida o terreno junto à água e compartilhe os vértices com a malha vizinha. Mantenha o leito em tons contínuos para a transparência revelar profundidade sem quadricular a superfície. Use malhas articuladas para os NPCs de evento, com olhos, cabeça e braços próprios e pés no plano do chão. Confira o clique nas malhas filhas ao girar a câmera.
+Subdivida o terreno junto à água e compartilhe os vértices com a malha vizinha. Mantenha o leito em tons contínuos para a transparência revelar profundidade sem quadricular a superfície. Use malhas articuladas para os NPCs de evento, com olhos, cabeça e braços próprios e pés no plano do chão. Confira o clique nas malhas filhas ao girar a câmera. Use o mesmo ID de versão para o retrato, o perfil e as costas de cada NPC. O Plano do Shikamaru usa a fase Estrategista.
 
 Use as mesmas faixas de cobertura das ruas para Suna, Iwa e Kiri. Diferencie os bairros pelos marcos, revestimentos e coberturas da região. Posicione os lotes novos fora das áreas de água e teste a ligação entre a praça, os bairros e os pontos secos de evento.

@@ -476,6 +476,15 @@ A versão 115 tem missão de selamento em Iwa Kage usando Kakashi Hokage, arte p
 
 A oficina verificava apenas se as duas técnicas foram aprendidas. Agora verifica o teto ao listar a oferta e ao confirmar. O catálogo de planejamento pode ser consultado antes da partida. [Regra da oficina](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios).
 
+### Como funciona o foco e o que acontece após 8 minutos? · 24/11/2026
+
+- **Implementado e testado por código.** A mira prioriza o alvo fixado ao alcance da técnica. O projétil simples para no primeiro inimigo da trajetória. Em V e disparos múltiplos reservam um tiro central sob foco.
+- **Medido em simulação.** O Final Swarm começa aos 10 minutos na mesma zona. O Kage com desvio médio e catálogo aberto teve 45 sobreviventes de 345 aos 13 minutos. O simulador escolhe técnicas, afixos, pílulas e itens usando as ofertas da run. [Resultados completos](20-SCALING-EREGULAS.md#sobrevivência-na-zona-1--24112026).
+
+### Como o Shikamaru e os cálculos de dano foram revisados? · 24/11/2026
+
+O NPC fixa a versão Estrategista. O dano por escola e elemento agora tem um cálculo comum à ficha e ao acerto. Os itens de dano direto foram cruzados com todos os pools e ultimates. A curva sobe continuamente por nível, mas avança mais rápido que a vida do inimigo comum principalmente a partir do quinto minuto. A [auditoria de dano e itens](04-ITENS-HABILIDADES-ECONOMIA.md#dano-por-acerto-e-itens--24112026) e o [registro de escala](20-SCALING-EREGULAS.md#comparação-com-a-vida-dos-monstros--24112026) mantêm os valores para decisão de balanceamento.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { cardinalWalkArt, handSealArt, lateralWalkArt } from '../game/directionalArt';
-import { portraitRegion } from '../game/evolution';
+import { formAt, portraitRegion } from '../game/evolution';
+import { familyOf } from '../game/heroes';
 
 const eventNpcs = {
-  shikamaru: 'shikamaru',
+  shikamaru: 'shikamaru-estrategista',
   orochimaru: 'orochimaru',
   ebisu: 'ebisu',
   iruka: 'iruka',
@@ -104,8 +105,8 @@ export function createMissionNpcs() {
     const root = new THREE.Group();
     root.name = 'npc-pixel-' + id;
     const front = portraitRegion(id);
-    const family = id === 'naruto-genin' ? 'naruto' : id;
-    const form = id === 'naruto-genin' ? 10 : 1;
+    const family = familyOf(id);
+    const form = formAt(id).level;
     const cardinal = cardinalWalkArt(family, form), lateral = lateralWalkArt(family, form);
     const views = extraViews.has(id) ? { path: '/assets/shinobis/' + id + '-perfil-costas-v1.png', cols: 2, rows: 1 } : undefined;
     const side = views ? { ...views, index: 0 } : lateral && cellAt(lateral, 4 * lateral.row + 1);

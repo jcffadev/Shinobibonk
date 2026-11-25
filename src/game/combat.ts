@@ -1,6 +1,7 @@
 import { luckRarityWeights, type Bonuses, type Item, type Rarity, type StatKey } from './catalog.ts';
 import { bonusText } from './allies.ts';
-import type { Technique, Element } from './heroes';
+import { DETERMINATION, NATURE_BONUS, familyOf, type Technique, type Element } from './heroes.ts';
+import type { Stats } from './progression.ts';
 export type SkillGrowth={damage:number;area:number;haste:number;duration:number};
 export const NO_GROWTH:SkillGrowth={damage:0,area:0,haste:0,duration:0};
 export const RARITY_ORDER:Rarity[]=['Comum','Incomum','Raro','Épico','Lendário'];
@@ -36,31 +37,35 @@ export function growthText(g:SkillGrowth,technique?:Technique){const labels=tech
 
 /** Chave de bônus por elemento de técnica (itens "Pergaminho Katon" etc.). */
 export const ELEMENT_KEY:Record<Element,StatKey>={Fogo:'elFogo',Água:'elAgua',Vento:'elVento',Terra:'elTerra',Raio:'elRaio',Madeira:'elMadeira',Areia:'elAreia',Sombra:'elSombra',Neutro:'elNeutro',Sábio:'elSabio'};
+const DAMAGE_ELEMENTS=Object.keys(ELEMENT_KEY) as Element[];
 const ELEMENT_BY_KEY=Object.fromEntries(Object.entries(ELEMENT_KEY).map(([e,k])=>[k,e])) as Record<string,Element>;
 const has=(item:Item,...keys:StatKey[])=>keys.some(k=>(item.bonuses[k]||0)!==0);
 /** Bônus que melhoram qualquer técnica do jogador. */
 const UNIVERSAL:StatKey[]=['sage','damage','crit','critDamage','attackSpeed','area','dot','eliteDamage','controlledDamage','statusStack','lowHpDamage','noHitDamage','killDamage','bigCrit','execute','burnChance','poisonChance','sleepChance','rootChance','chillChance','statusDamage','skillCap'];
 
-export function affectedTechniques(item:Item,techniques:Technique[]):string[]{
+function matchesDamageElement(t:Technique, element:Element, sageInfused:boolean){
+ return t.ultimate||t.element===element||t.secondaryElement===element||element==='Sábio'&&sageInfused;
+}
+
+export function affectedTechniques(item:Item,techniques:Technique[],sageInfused=false):string[]{
  const b=item.bonuses;
  // Pergaminhos de elemento (Katon, Suiton…): listam só as técnicas do MESMO elemento. O pequeno +dano total que
  // eles também dão vale para tudo, mas não é listado por técnica (confundia: "Katon melhora técnica de Água").
  const elements=(Object.keys(b) as StatKey[]).filter(k=>ELEMENT_BY_KEY[k]&&(b[k]||0)>0).map(k=>ELEMENT_BY_KEY[k]);
- if(elements.length)return techniques.filter(t=>!t.setup&&elements.includes(t.element)).map(t=>t.name);
+ if(elements.length)return techniques.filter(t=>!t.setup&&elements.some(element=>matchesDamageElement(t,element,sageInfused))).map(t=>t.name);
  // Setups (buff puro) não são melhorados por itens de ataque.
  return techniques.filter(t=>!t.setup).filter(t=>has(item,...UNIVERSAL)
    ||b.projectileSpeed
    ||((b.projectiles||b.bounce)&&['Projétil','Em V'].includes(t.shape))
-   ||(b.normal||b.armorPhysical)&&t.school==='Taijutsu'
-   ||b.element&&t.school==='Ninjutsu'
-   ||b.genjutsu&&t.school==='Genjutsu'
-   ||(b[ELEMENT_KEY[t.element]]||0)>0
+   ||(b.normal||b.armorPhysical)&&(t.ultimate||t.school==='Taijutsu')
+   ||b.element&&(t.ultimate||t.school==='Ninjutsu')
+   ||b.genjutsu&&(t.ultimate||t.school==='Genjutsu')
    ||b.status&&t.status
    ||b.duration&&(t.status||t.burn)).map(t=>t.name);
 }
 /** Linha "Melhora: …" das cartas e da ficha. Pergaminho de elemento sem técnica daquele elemento avisa isso em vez de listar outras. */
-export function affectedTechniquesText(item:Item,techniques:Technique[]):string{
- const names=affectedTechniques(item,techniques);
+export function affectedTechniquesText(item:Item,techniques:Technique[],sageInfused=false):string{
+ const names=affectedTechniques(item,techniques,sageInfused);
  if(names.length)return 'Melhora: '+names.join(' / ');
  const elements=(Object.keys(item.bonuses) as StatKey[]).filter(k=>ELEMENT_BY_KEY[k]&&(item.bonuses[k]||0)>0).map(k=>ELEMENT_BY_KEY[k]);
  return elements.length?`Nenhuma técnica de ${elements.join('/')} aprendida ainda.`:'Melhora atributos de suporte ou sobrevivência.';
@@ -93,7 +98,40 @@ export function itemAttribute(item:Item){
  */
 export const SENJUTSU={chance:.25,multiplier:1.5,label:'Senjutsu (modo sábio)',color:'#f5da86'};
 /** Uma técnica tem a linha Senjutsu quando é Ninjutsu e está infundida com o elemento Sábio (próprio, item Selo de Senjutsu ou Modo Sábio ativo). */
-export function hasSenjutsu(t:Technique,sageInfused:boolean){return !t.setup&&t.school==='Ninjutsu'&&(t.element==='Sábio'||sageInfused);}
+export function hasSenjutsu(t:Technique,sageInfused:boolean){return !t.setup&&t.school==='Ninjutsu'&&(t.element==='Sábio'||t.secondaryElement==='Sábio'||sageInfused);}
+type TechniqueDamageStats=Pick<Stats,'damage'|'physical'|'ninjutsu'|'genjutsu'|'armor'|'extra'>;
+
+/** Dano por acerto antes de crítico, passivas situacionais e defesa do alvo. */
+export function techniqueHitDamage(t:Technique, g:SkillGrowth, stats:TechniqueDamageStats,
+ options:{ affinity?:Element; sageInfused?:boolean; trained?:boolean; ally?:boolean }={}){
+ if(t.setup)return 0;
+ const school=t.ultimate?stats.physical*stats.ninjutsu*stats.genjutsu
+   :t.school==='Taijutsu'?stats.physical:t.school==='Ninjutsu'?stats.ninjutsu:stats.genjutsu;
+ const hit=stats.damage*t.power*TECHNIQUE_SCALE*(1+g.damage)*school;
+ if(options.ally)return hit;
+ const secondary=t.secondaryElement;
+ const extra=stats.extra;
+ let elemental=1;
+ if(t.ultimate){
+  for(const element of DAMAGE_ELEMENTS)elemental+=extra[ELEMENT_KEY[element]]??0;
+ }else{
+  elemental+=extra[ELEMENT_KEY[t.element]]??0;
+  if(secondary&&secondary!==t.element)elemental+=extra[ELEMENT_KEY[secondary]]??0;
+  if(options.sageInfused&&t.element!=='Sábio'&&secondary!=='Sábio')elemental*=1+(extra.elSabio??0);
+ }
+ const affinity=t.element!=='Neutro'&&t.element===options.affinity?NATURE_BONUS:1;
+ const armor=t.ultimate||t.school==='Taijutsu'?1+Math.min(.5,stats.armor*(extra.armorPhysical??0)):1;
+ return hit*elemental*affinity*armor*(options.trained?1.15:1);
+}
+
+export function techniquePassiveMultiplier(heroId:string,t:Technique,healthShare:number,sageInfused:boolean){
+ const determination=DETERMINATION[heroId];
+ if(determination!==undefined)return 1+determination*(1-healthShare);
+ const family=familyOf(heroId);
+ if(family==='hashirama'&&(t.element==='Sábio'||sageInfused))return 1.2;
+ return family==='tenten'&&(t.element==='Neutro'||t.shape==='Projétil'||t.shape==='Em V')?1.5:1;
+}
+
 export function senjutsuText(level=1){return `${SENJUTSU.label}: ${Math.round(techniqueProc(SENJUTSU.chance,level)*100)}% de chance por acerto de causar dano adicional de ${String(SENJUTSU.multiplier).replace('.',',')}× o dano normal.`;}
 
 /**

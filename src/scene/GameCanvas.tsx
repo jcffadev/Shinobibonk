@@ -7,6 +7,7 @@ import { createBossCombat, BIJUU_SIZE, type BossState } from './bossCombat';
 import { createPickupShadows, groundDropAnchor, makeDropSprite, SCROLL_STYLES } from './dropSprites';
 import { currentSettings, translateKey, pixelRatioFor, CAMERA_ZOOM, CAMERA_VIEW, perspectiveDistance } from '../game/settings';
 import { createMovementInput } from '../game/movementInput';
+import { firstProjectileContact, projectileContact, projectileSpread, selectCombatTarget } from '../game/targetFocus';
 import { AKATSUKI_AMBUSH, AKATSUKI_MEMBERS, akatsukiAmbushHp, zetsuEmergence, type AmbushMemberSave } from '../game/akatsukiAmbush';
 import { ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, ENEMY_XP_MULTIPLIER, lootScale, xpDropValue, xpLoot, eliteHpRamp, capMegaEliteHp, megaEliteHp, rollMegaSchedule, type EnemyTier } from '../game/enemyTiers';
 import { sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain, RESEARCH_RULES } from '../game/account';
@@ -54,18 +55,18 @@ import { playBijuu } from '../audio/music';
 import { choiceCount, choiceUses, weaponPrice, jiraiyaRolls, prioritySlots, PRIORITY_WEIGHT } from '../game/preparation';
 import { merchantPrice, merchantRerollPrice, itemSalePrice } from '../game/itemTrade';
 import { ITEM_BY_NAME, currentItemName, rollItems, type Item, type Rarity, type StatKey } from '../game/catalog';
-import { HEROES, HERO_BY_ID, familyOf, versionForEncounter, DETERMINATION, skillPool, heroAffinity, isProjectileUltimate, NATURE_BONUS, sandSynergy, ultimateBase, type Technique, type Control } from '../game/heroes';
+import { HEROES, HERO_BY_ID, familyOf, versionForEncounter, skillPool, heroAffinity, isProjectileUltimate, sandSynergy, ultimateBase, type Technique, type Control } from '../game/heroes';
 import { activeSynergies, synergyBonuses, type ActiveSynergy } from '../game/synergy';
 import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVitality, guardianDefense } from '../game/missions';
 import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DURATION, weatherWait, planZoneWeather, type WeatherEventId, type WeatherPlan } from '../game/maps';
 import { canLockTarget, mistVisibility, ZABUZA_MIST } from '../game/zabuzaMist';
-import { addChill, addPoisonStack, chillSlow, controlResist, deathBurstKind, freezeTarget, isFrozen, poisonMultiplier, reactionsFor, STATUS_RULES, statusDamageMultiplier, tickStatus } from '../game/statusRules';
+import { addChill, addPoisonStack, chillSlow, controlResist, damageStatusCount, deathBurstKind, freezeTarget, isFrozen, poisonMultiplier, reactionsFor, STATUS_RULES, statusDamageMultiplier, tickStatus } from '../game/statusRules';
 import { FALLEN_TRAP, trapRing } from '../game/fallenTrap';
 import { YOUTH_FIGHTER_HP, YOUTH_GOALS, YOUTH_TEXT, rollYouthChallenge, tickYouth, youthBonuses, youthChallengeText, youthSpots, type YouthChallengeId, type YouthDifficulty, type YouthRun } from '../game/youthTraining';
 import { HAGOROMO, HAGOROMO_WAVES, TOOL_BY_ID, chooseTool, createHagoromo, addHagoromoKills, hagoromoRecharges, rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots, type HagoromoState, type SageTool } from '../game/hagoromoTraining';
 import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
-import { NO_GROWTH, rollGrowth, growthText, ELEMENT_KEY, SENJUTSU, hasSenjutsu, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
+import { NO_GROWTH, rollGrowth, growthText, SENJUTSU, hasSenjutsu, techniqueHitDamage, techniquePassiveMultiplier, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
 import type { Bonuses } from '../game/catalog';
 import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSignatureVisual, disposeObject } from './techniqueEffects';
 import { createParticleFx } from './particleFx';
@@ -1058,6 +1059,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Prioridade: guardião/chefe > Mega Elite / Shinobi para selar > elite amarelo > maior HP, entre os inimigos visíveis até 30 m.
     // As técnicas miram o alvo fixo quando ele está no alcance; clicar de novo solta. Mover o mouse gira a câmera.
     let lockedTarget:Enemy|null=null;
+    const activeFocus=()=>canLockTarget(zabuzaMistActive)?lockedTarget:null;
     const targetMarker=new THREE.Mesh(new THREE.RingGeometry(.9,1.15,32),new THREE.MeshBasicMaterial({color:'#ff3355',transparent:true,opacity:.9,side:THREE.DoubleSide,depthWrite:false}));targetMarker.rotation.x=-Math.PI/2;targetMarker.visible=false;
     const targetPriority=(e:Enemy)=>e.guardian||e.boss?4:e.megaElite||e.account?3:e.elite?2:1;
     function toggleTargetLock(){if(lockedTarget){lockedTarget=null;eventToast='Alvo solto.';return;}if(!canLockTarget(zabuzaMistActive)){eventToast='Névoa do Zabuza: não dá para fixar alvo.';return;}const visible=enemyList.filter(e=>!e.clone&&viewFrustum.containsPoint(e.sprite.position)&&Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<30);visible.sort((a,b)=>targetPriority(b)-targetPriority(a)||b.hp-a.hp);lockedTarget=visible[0]??null;eventToast=lockedTarget?'Alvo fixado: '+(lockedTarget.heroId?HERO_BY_ID[lockedTarget.heroId]?.name??'inimigo':lockedTarget.elite?'elite':'inimigo')+' (clique direito solta)':'Nenhum inimigo visível para fixar.';}
@@ -1651,29 +1653,28 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         if(!hiddenEffects)addRing(at.setY(terrainHeight(b.x,b.z)+.1),fire?'#ff9b46':'#9fe7ff',fire?D.fireRadius:D.iceRadius);
       }
     }
-    /** Multiplicador de dano dos itens para uma técnica do jogador contra este inimigo. */
-    function itemDamageBonus(enemy:Enemy,t:Technique){
-      const elements=t.ultimate?[...new Set(Object.values(ELEMENT_KEY))]:[ELEMENT_KEY[t.element],...(t.secondaryElement?[ELEMENT_KEY[t.secondaryElement]]:[])];
-      let bonus=(1+elements.reduce((sum,key)=>sum+ex(key),0))*(t.ultimate||t.school==='Genjutsu'?stats.genjutsu:1);
-      // Natureza do shinobi: técnicas do elemento base (afinidade) causam ×NATURE_BONUS.
-      if(t.element!=='Neutro'&&t.element===heroNature)bonus*=NATURE_BONUS;
-      // Infusão Sábia (Selo de Senjutsu ou Modo Sábio ativo): a técnica também conta como elemento Sábio.
-      if(!t.ultimate&&t.element!=='Sábio'&&(stats.sage>0||sageModeActive()))bonus*=1+ex('elSabio');
+    /** Bônus condicionais do jogador, avaliados no momento do impacto. */
+    function conditionalDamageBonus(enemy:Enemy){
+      let bonus=1;
       if(!enemy.account&&(enemy.elite||enemy.megaElite||enemy.guardian||enemy.bijuu))bonus*=1+ex('eliteDamage');
       if((enemy.controlTime||0)>0||(enemy.slow||0)>0)bonus*=1+ex('controlledDamage');
-      const statuses=[(enemy.controlTime||0)>0,(enemy.burn||0)>0,!!enemy.poison,(enemy.slow||0)>0].filter(Boolean).length;
-      bonus*=1+Math.min(.3,statuses*ex('statusStack'));
+      bonus*=1+Math.min(.3,damageStatusCount(enemy)*ex('statusStack'));
       bonus*=1+ex('lowHpDamage')*Math.min(1,Math.max(0,(1-hp/stats.maxHp)/.75));
       bonus*=1+Math.min(ex('noHitDamage'),timeSinceHit*.04);
       bonus*=1+Math.min(.3,Math.floor(kills/100)*ex('killDamage'));
-      if(t.ultimate||t.school==='Taijutsu')bonus*=1+Math.min(.5,stats.armor*ex('armorPhysical'));
       if(ex('bigCrit')>0&&Math.random()<ex('bigCrit'))bonus*=8;
       // Rodada 103: congelado +25% (Quebra-Gelo +50%) e o golpe que acorda +60%.
       bonus*=statusDamageMultiplier(enemy,ex('shatter'));
       return bonus;
     }
-    function hit(enemy:Enemy,t:Technique,g:SkillGrowth,origin:THREE.Vector3,ally=false,effectLevel=ally||t.ultimate?1:(skillLevels[t.name]||1)){if(!enemyList.includes(enemy))return;const critical=techniqueCritical(t,effectLevel),crit=rollCritical(stats.crit+critical.chance,stats.critDamage+critical.damage),school=t.ultimate?stats.physical*stats.ninjutsu:t.school==='Taijutsu'?stats.physical:t.school==='Ninjutsu'?stats.ninjutsu:1,sage=t.element==='Sábio'||stats.sage>0||(!ally&&sageModeActive()),passive=!ally&&DETERMINATION[heroId]!==undefined?1+DETERMINATION[heroId]*(1-hp/stats.maxHp):!ally&&familyOf(heroId)==='hashirama'&&sage?1.2:!ally&&familyOf(heroId)==='tenten'&&(t.element==='Neutro'||t.shape==='Projétil'||t.shape==='Em V')?1.5:1;
-      const damage=stats.damage*t.power*TECHNIQUE_SCALE*(1+g.damage)*(!ally&&config.trained?.includes(t.name)?1.15:1)*school*passive*crit.multiplier*(ally?.65*stats.allyDamage:damageMultiplier*tune().playerDamage*itemDamageBonus(enemy,t));
+    function hit(enemy:Enemy,t:Technique,g:SkillGrowth,origin:THREE.Vector3,ally=false,effectLevel=ally||t.ultimate?1:(skillLevels[t.name]||1)){
+      if(!enemyList.includes(enemy))return;
+      const critical=techniqueCritical(t,effectLevel);
+      const crit=rollCritical(stats.crit+critical.chance,stats.critDamage+critical.damage);
+      const sageInfused=!ally&&(stats.sage>0||sageModeActive());
+      const hitDamage=techniqueHitDamage(t,g,stats,{ally,affinity:heroNature,sageInfused,trained:config.trained?.includes(t.name)});
+      const passive=ally?1:techniquePassiveMultiplier(heroId,t,hp/stats.maxHp,sageInfused);
+      const damage=hitDamage*crit.multiplier*passive*(ally?.65*stats.allyDamage:damageMultiplier*tune().playerDamage*conditionalDamageBonus(enemy));
       if(!ally)toolHitHooks(enemy,damage,crit.tier>0);
       const frozenBefore=isFrozen(enemy),poisonBefore=enemy.poison;
       if(enemy.control==='Dormir')enemy.controlTime=0;
@@ -1706,7 +1707,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(!hiddenEffects)particles.impact(t,enemy.sprite.position);
       takeDamage(enemy,damage,t.color,ally,crit.tier,t.name);
       // Linha Senjutsu (modo sábio): Ninjutsu infundido com Sábio tem chance de um golpe extra de 1,5× o dano deste acerto.
-      if(!ally&&hasSenjutsu(t,stats.sage>0||sageModeActive())&&enemyList.includes(enemy)&&Math.random()<(senjutsuOverride??techniqueProc(SENJUTSU.chance,effectLevel))){senjutsuProcs++;takeDamage(enemy,damage*SENJUTSU.multiplier,SENJUTSU.color,false,crit.tier,t.name);}
+      if(!ally&&hasSenjutsu(t,sageInfused)&&enemyList.includes(enemy)&&Math.random()<(senjutsuOverride??techniqueProc(SENJUTSU.chance,effectLevel))){senjutsuProcs++;takeDamage(enemy,damage*SENJUTSU.multiplier,SENJUTSU.color,false,crit.tier,t.name);}
     }
     /** Setup (buff puro): só ativa com inimigo a até 9 m; sem acúmulo, reativar renova a duração. Não usa velocidade de ataque nem velocidade de projétil. */
     function activateSetup(t:Technique,g:SkillGrowth){
@@ -1731,18 +1732,22 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       let age=0;
       visuals.push({object:effect.group,life:KUROARI_TIME,tick:dt=>effect.tick(age+=dt)});
     }
-    function castTechnique(t:Technique,origin:THREE.Vector3,g:SkillGrowth,ally=false,instant=false,allyMotion?:ReturnType<typeof createPlayerMotion>,part=false,casterId=heroId,effectLevel?:number):boolean{
+    function castTechnique(t:Technique,casterPosition:THREE.Vector3,g:SkillGrowth,ally=false,instant=false,allyMotion?:ReturnType<typeof createPlayerMotion>,part=false,casterId=heroId,effectLevel?:number):boolean{
       const merge=!part&&merges.get(t.name);
       if(merge&&merge.kind==='combine'){
         const sources=merge.names.map(name=>techniques.find(tech=>tech.name===name));
         const extra=sources[0]&&sources[1]?combineBonus(sources[0],sources[1]):undefined;
-        const casts=merge.names.map((name,index)=>{const source=sources[index];const base=growth[name]??NO_GROWTH;return source&&extra&&castTechnique(combinedPart(source,extra),origin,{damage:g.damage+base.damage,area:g.area+base.area,haste:g.haste+base.haste,duration:g.duration+base.duration},ally,instant,allyMotion,true,casterId,skillLevels[t.name]||1);});
+        const casts=merge.names.map((name,index)=>{const source=sources[index];const base=growth[name]??NO_GROWTH;return source&&extra&&castTechnique(combinedPart(source,extra),casterPosition,{damage:g.damage+base.damage,area:g.area+base.area,haste:g.haste+base.haste,duration:g.duration+base.duration},ally,instant,allyMotion,true,casterId,skillLevels[t.name]||1);});
         return casts.some(Boolean);
       }
       if(t.setup)return ally?false:activateSetup(t,g);
       // Modo Sábio: taijutsu corpo a corpo do jogador vira golpe em área ao redor (raio ×1,8, escala com área).
       const sageArea=!ally&&sageModeActive()&&t.school==='Taijutsu'&&t.shape==='Corpo a corpo';
-      const range=ATTACK_SCALE*t.range*(sageArea?1.8:1)*(1+Math.min(1,(level-1)*.005))*Math.sqrt(stats.area*(1+g.area));const target=(lockedTarget&&enemyList.includes(lockedTarget)&&Math.hypot(lockedTarget.sprite.position.x-origin.x,lockedTarget.sprite.position.z-origin.z)<=range)?lockedTarget:enemyList.filter(e=>Math.hypot(e.sprite.position.x-origin.x,e.sprite.position.z-origin.z)<=range).sort((a,b)=>a.sprite.position.distanceToSquared(origin)-b.sprite.position.distanceToSquared(origin))[0];if(!target)return false;const direction=target.sprite.position.clone().sub(origin);direction.y=0;direction.normalize();
+      const range=ATTACK_SCALE*t.range*(sageArea?1.8:1)*(1+Math.min(1,(level-1)*.005))*Math.sqrt(stats.area*(1+g.area));
+      const target=selectCombatTarget(enemyList,casterPosition,range,activeFocus());
+      if(!target)return false;
+      const origin=casterPosition.clone();
+      const direction=target.sprite.position.clone().sub(origin).setY(0).normalize();
       const projectile=!t.gravity&&['Projétil','Em V','Onda'].includes(t.shape);
       const academyThrow=!ally&&heroId==='naruto'&&projectile&&/shuriken|kunai/i.test(t.name);
       if(t.name==='Kage Bunshin'||t.name==='Técnica de Substituição'){
@@ -1761,9 +1766,35 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         const impact=target.sprite.position.clone();
         if(!hiddenEffects)showPuppet(origin,impact);
         pendingHits.push({time:KUROARI_STRIKE,run:()=>{const radius=ATTACK_SCALE*1.2*Math.sqrt(stats.area*(1+g.area));areas.mark({...t,shape:'Área'},origin,direction,impact,radius,range,0,0,hiddenEffects);if(!hiddenEffects&&!areas.enabled())particles.footprint(t,origin,direction,impact,radius,range,0);for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-impact.x,enemy.sprite.position.z-impact.z)<radius)hit(enemy,t,g,impact);}});
-      }else if(projectile){const launch=()=>{const count=t.shape==='Em V'?2:1;/* Projétil fracionário (sinergia da Folha, afinidade): chance por disparo de +1. */const chance=stats.projectileChance,projectiles=Math.floor(stats.projectiles)+Math.floor(chance)+(Math.random()<chance%1?1:0);for(let i=0;i<Math.min(12,count+projectiles-1);i++){const spread=t.shape==='Em V'?(i%2?.2:-.2):(i-(projectiles-1)/2)*.1,aim=direction.clone().applyAxisAngle(new THREE.Vector3(0,1,0),spread),object=hasSignatureVisual(t,true)?cachedTechniqueVisual(t,()=>makeHero(ally?'naruto':heroId,ally?1:level)):new THREE.Object3D();if(!hasSignatureVisual(t,true))object.userData.particleHead=true;object.position.copy(origin);animateTechniqueVisual(object,0,aim);object.scale.multiplyScalar(ATTACK_SCALE);object.visible=!hiddenEffects;scene.add(object);shots.push({mesh:object,direction:aim,remaining:range,range,speed:(t.name.includes('Bunshin')?6:10)*stats.projectileSpeed,radius:ATTACK_SCALE*(t.shape==='Onda'?.85:.4)*Math.sqrt(stats.area*(1+g.area)),technique:t,origin:origin.clone(),hit:new Set(),growth:g,ally,effectLevel,bounces:!ally&&(t.shape==='Projétil'||t.shape==='Em V')?stats.bounce:0});/* Rodada 55: trajeto real do tiro (raio do acerto = radius+.4). */if(!ally&&i<3){const s=shots[shots.length-1];areas.lane(t,s.origin,s.direction,s.range,s.radius+.4,s.range/Math.max(.1,s.speed),hiddenEffects);}}};
-        if(academyThrow&&!instant)pendingHits.push({time:.12,run:launch});
-        else launch();
+      }else if(projectile){
+        const launch=(launchOrigin:THREE.Vector3,aimTarget:Enemy)=>{
+          const aimDirection=aimTarget.sprite.position.clone().sub(launchOrigin).setY(0).normalize();
+          if(aimDirection.lengthSq()===0)aimDirection.copy(v1);
+          const fan=t.shape==='Em V',wave=t.shape==='Onda',count=fan?2:1;
+          const chance=stats.projectileChance;
+          const projectiles=Math.floor(stats.projectiles)+Math.floor(chance)+(Math.random()<chance%1?1:0);
+          const focused=aimTarget===activeFocus();
+          const radius=ATTACK_SCALE*(wave?.85:.4)*Math.sqrt(stats.area*(1+g.area));
+          const speed=(t.name.includes('Bunshin')?6:10)*stats.projectileSpeed;
+          const signature=hasSignatureVisual(t,true),axis=new THREE.Vector3(0,1,0);
+          for(let i=0;i<Math.min(12,count+projectiles-1);i++){
+            const aim=aimDirection.clone().applyAxisAngle(axis,projectileSpread(fan,i,projectiles,focused));
+            const object=signature?cachedTechniqueVisual(t,()=>makeHero(ally?'naruto':heroId,ally?1:level)):new THREE.Object3D();
+            if(!signature)object.userData.particleHead=true;
+            object.position.copy(launchOrigin);
+            animateTechniqueVisual(object,0,aim);
+            object.scale.multiplyScalar(ATTACK_SCALE);
+            object.visible=!hiddenEffects;
+            scene.add(object);
+            shots.push({mesh:object,direction:aim,remaining:range,range,speed,radius,technique:t,origin:launchOrigin.clone(),hit:new Set(),growth:g,ally,effectLevel,bounces:!ally&&!wave?stats.bounce:0});
+            if(!ally&&i<3)areas.lane(t,launchOrigin,aim,range,radius+.4,range/Math.max(.1,speed),hiddenEffects);
+          }
+        };
+        if(academyThrow&&!instant)pendingHits.push({time:.12,run:()=>{
+          const current=selectCombatTarget(enemyList,casterPosition,range,activeFocus());
+          if(current)launch(casterPosition,current);
+        }});
+        else launch(origin,target);
       }
       else{const center=aimedCenter(t,sageArea)==='target'?target.sprite.position.clone():origin.clone(),radius=t.shape==='Área'||t.shape==='Órbita'?ATTACK_SCALE*(t.shape==='Área'?1.2:1.7)*Math.sqrt(stats.area*(1+g.area)):t.shape==='Corpo a corpo'&&!sageArea?Math.max(MELEE_IMPACT.min,range*MELEE_IMPACT.share):range;
         // Golpes e lançamentos sem projétil têm um preparo curto até o acerto, reduzido pela velocidade de projétil.
@@ -1794,7 +1825,7 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
       if(!t.ultimate)motion?.attack(t.school==='Taijutsu'||academyThrow,direction.dot(v2)<0,false,t.school!=='Taijutsu'?undefined:t.name==='Furacão da Folha'||t.name==='Lótus Primária'?'kick':'punch',!academyThrow,direction.dot(v1)>.001,t.school==='Taijutsu'?.22:Math.max(.25,IMPACT_DELAY.other/Math.max(.3,stats.projectileSpeed)));
       if(!ally)playTechniqueSound(t,false,heroId);return true;
     }
-    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=enemyList.find(e=>Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<ultRadius),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
+    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=selectCombatTarget(enemyList,player.position,ultRadius,activeFocus()),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
         particles.footprint(t,player.position,aim,player.position,ultRadius,ultRadius,0);
         if(susanooStyle)susanoo.trigger(susanooStyle,player.position,aim,near?.sprite.position??player.position,ultRadius,true);
         else if(puppetArt(t.name))showPuppet(player.position,near?.sprite.position??player.position,puppetArt(t.name));
@@ -2040,10 +2071,37 @@ function interact(){const fallen=closestFallenMega();if(fallen){removeFallenMega
         const cf=stableFacing(sprite.userData,dir.dot(v1),dir.dot(v2));
         clone.motion.update(dt,terrainHeight(sprite.position.x,sprite.position.z),1,1,true,cf.back,cf.left,clone.level,0,false,cf.diagonal,0,0,Math.abs(dir.dot(v1))<.26&&Math.abs(dir.dot(v2))>.32);
       }
-      for(let i=shots.length-1;i>=0;i--){const shot=shots[i],travel=Math.min(shot.remaining,shot.speed*dt);shot.mesh.position.addScaledVector(shot.direction,travel);shot.mesh.position.y=terrainHeight(shot.mesh.position.x,shot.mesh.position.z)+1.1;shot.remaining-=travel;animateTechniqueVisual(shot.mesh,dt,shot.direction);if(!hiddenEffects)particles.trail(shot.technique,shot,shot.mesh.position,shot.direction,shot.radius,dt,!!shot.mesh.userData.particleHead);
-        for(const enemy of [...enemyList])if(!shot.hit.has(enemy)&&Math.hypot(enemy.sprite.position.x-shot.mesh.position.x,enemy.sprite.position.z-shot.mesh.position.z)<shot.radius+.4){shot.hit.add(enemy);hit(enemy,shot.technique,shot.growth,shot.origin,shot.ally,shot.effectLevel);if(shot.technique.shape==='Projétil')shot.remaining=0;}
-        // Ricochete (Seixo Polido do Rio): ao terminar, o projétil salta para o inimigo mais próximo ainda não atingido (até 6 m).
-        if(shot.remaining<=0&&shot.bounces>0&&shot.hit.size>0){const next=enemyList.filter(e=>!shot.hit.has(e)&&Math.hypot(e.sprite.position.x-shot.mesh.position.x,e.sprite.position.z-shot.mesh.position.z)<6).sort((a,b)=>a.sprite.position.distanceToSquared(shot.mesh.position)-b.sprite.position.distanceToSquared(shot.mesh.position))[0];if(next){shot.bounces--;shot.direction.copy(next.sprite.position).sub(shot.mesh.position);shot.direction.y=0;shot.direction.normalize();shot.remaining=Math.min(shot.range,6.5);}}
+      for(let i=shots.length-1;i>=0;i--){
+        const shot=shots[i],position=shot.mesh.position;
+        const travel=Math.min(shot.remaining,shot.speed*dt),radius=shot.radius+.4;
+        const singleHit=shot.technique.shape==='Projétil';
+        const contact=singleHit?firstProjectileContact(enemyList,position,shot.direction,travel,radius,shot.hit):undefined;
+        if(!singleHit){
+          for(const enemy of [...enemyList]){
+            if(enemy.hp<=0||shot.hit.has(enemy)||projectileContact(position,shot.direction,travel,radius,enemy.sprite.position)===Infinity)continue;
+            shot.hit.add(enemy);
+            hit(enemy,shot.technique,shot.growth,shot.origin,shot.ally,shot.effectLevel);
+          }
+        }
+        position.addScaledVector(shot.direction,contact?.distance??travel);
+        position.y=terrainHeight(position.x,position.z)+1.1;
+        shot.remaining-=travel;
+        animateTechniqueVisual(shot.mesh,dt,shot.direction);
+        if(!hiddenEffects)particles.trail(shot.technique,shot,position,shot.direction,shot.radius,dt,!!shot.mesh.userData.particleHead);
+        if(contact){
+          shot.remaining=0;
+          shot.hit.add(contact.target);
+          hit(contact.target,shot.technique,shot.growth,shot.origin,shot.ally,shot.effectLevel);
+        }
+        if(shot.remaining<=0&&shot.bounces>0&&shot.hit.size>0){
+          const next=selectCombatTarget(enemyList,position,Math.min(shot.range,6),activeFocus(),shot.hit);
+          if(next){
+            shot.bounces--;
+            shot.direction.copy(next.sprite.position).sub(position).setY(0).normalize();
+            if(shot.direction.lengthSq()===0)shot.direction.copy(v1);
+            shot.remaining=Math.min(shot.range,6.5);
+          }
+        }
         if(shot.remaining<=0){scene.remove(shot.mesh);disposeObject(shot.mesh);shots.splice(i,1);}}
       for(let i=drops.length-1;i>=0;i--){const drop=drops[i];{const base=(drop.mesh.userData.baseScale||1)*(drop.magnet ? .72 : 1);if(drop.type==='ryu')drop.mesh.scale.set(base*Math.max(.36,Math.abs(Math.cos(elapsed*3.2+i))),base,1);else{const pulse=1+Math.sin(elapsed*4+i)*.06;drop.mesh.scale.set(base*pulse,base*pulse,1);}}const ddx=player.position.x-drop.mesh.position.x,ddz=player.position.z-drop.mesh.position.z,dist=Math.hypot(ddx,ddz);
         if(!drop.magnet&&elapsed-drop.born>=DROP_RULES.settle&&(dist<stats.pickup||elapsed<globalMagnetUntil)){drop.magnet=true;drop.speed=DROP_RULES.magnetSpeed*.4;drop.mesh.userData.globalPull=elapsed<globalMagnetUntil;}

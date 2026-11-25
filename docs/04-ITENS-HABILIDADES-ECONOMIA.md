@@ -1,5 +1,15 @@
 # Pool, habilidades, itens, economia
 
+## Dano por acerto e itens · 24/11/2026
+
+`techniqueHitDamage` calcula o valor comum ao impacto, à ficha e ao simulador. Parte do dano-base atual do personagem, que já inclui dano total, e aplica o poder da técnica, a escala das técnicas de 1,2×, os afixos acumulados, a escola, o bônus do elemento e a afinidade principal. Técnica treinada recebe 1,15×. O jogador também pode ter bônus de armadura por item no Taijutsu. A Ultimate usa os multiplicadores das três escolas e a soma dos bônus elementais, como definido nas regras do jogo.
+
+Bônus da mesma linha somam. Exemplo com um acerto de 100 sem os itens. O Selo de Ninjutsu leva o acerto a 115. Um Pergaminho Katon soma uma etapa de Fogo de 28% e outra de dano total de 3%. Com os dois itens, o mesmo golpe Katon chega a 151,616 antes das defesas. Se o personagem já tiver +20% de Ninjutsu, o selo leva a ficha de 120% para 135% de Ninjutsu, ou +12,5% sobre o dano anterior dessa etapa.
+
+Fusões contam cada natureza presente uma vez. A combinação aplica o cálculo a cada técnica original e exibe os dois valores. Infusão Sábia acrescenta Sábio às técnicas e permite o acerto adicional de Senjutsu no Ninjutsu. O Selo dos Cinco Elementos conta lentidão uma vez, mesmo quando os dois campos internos indicam o mesmo status. Crítico, condição do alvo, dano contra elites, dano periódico e defesa são calculados no acerto ou no efeito correspondente. A ficha mostra o dano por acerto antes desses efeitos e da defesa.
+
+A revisão por código cobriu 218 técnicas ofensivas de todos os pools, as 115 ultimates e os 25 itens com bônus direto de dano total, escola, elemento ou armadura convertida em dano. No comparativo de 690 simulações por lado (Genin e Kage), atualizar o cálculo do simulador elevou a mediana do primeiro acerto no minuto 1 de 213 para 242 no Genin e de 326 para 366 no Kage, em parte por incluir afinidade. Isso corrige a estimativa, já que a afinidade já era aplicada em combate. [Curva por nível e comparação com a horda](20-SCALING-EREGULAS.md#comparação-com-a-vida-dos-monstros--24112026).
+
 ## Técnicas únicas, compartilhadas e pesquisa (IMPLEMENTADO em 06/11/2026, pedido do usuário)
 - Cada shinobi tem **1–2 técnicas únicas**; o resto do kit (4 técnicas) vem de uma biblioteca de **26 técnicas compartilhadas** (`L` em `src/game/heroes.ts`). Duplicatas foram removidas (Shuriken Uchiha/do Corvo/Gêmeas, Punho Senju/Demolidor/da Hokage, Palma Gentil/do Vazio, Rasengan de Minato/do Sábio, Modo Sábio dos Sapos, Portão da Dor, Katon, Mar de Serpentes, Receptor de Chakra, Mísseis Asura, Dragão Aquático, Impacto Sísmico, Escudo de Sansho, Chuva Venenosa, Chute da Juventude). Total: 67 técnicas.
 - **Elemento** (revisado em 06/11/2026): o shinobi só aprende Neutro + o **elemento base** (afinidade; Naruto = Vento) + os elementos do próprio kit + Sábio se for usuário do Modo Sábio. As outras naturezas canônicas não contam (o Naruto só teria todas no Modo Sábio dos Seis Caminhos, que o jogo não tem). **Técnicas do elemento base causam ×1,5 de dano** (`NATURE_BONUS`), indicado no Plano de build. Lee e Tenten só Neutro.

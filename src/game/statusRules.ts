@@ -70,6 +70,13 @@ export function tickStatus(e: StatusTarget, dt: number) {
   if ((e.wet ?? 0) > 0) e.wet = Math.max(0, (e.wet ?? 0) - dt);
 }
 
+/** Lentidão pode ocupar os dois campos do estado, mas conta uma única vez. */
+export function damageStatusCount(e: StatusTarget & { slow?: number; poison?: unknown }) {
+  const control = (e.controlTime ?? 0) > 0;
+  const slowed = (e.slow ?? 0) > 0 || (control && e.control === 'Lentidão');
+  return Number(control && e.control !== 'Lentidão') + Number(slowed) + Number((e.burn ?? 0) > 0) + Number(Boolean(e.poison));
+}
+
 /** Dano extra no alvo: congelado +25% (+ Quebra-Gelo), dormindo +60% (o golpe acorda). */
 export function statusDamageMultiplier(e: StatusTarget, shatter = 0) {
   if (isFrozen(e)) return 1 + STATUS_RULES.freeze.damageBonus + shatter;

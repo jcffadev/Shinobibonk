@@ -10,10 +10,10 @@
 //   eventos de mapa (altar, roleta, NPCs) ficam fora. A horda é aproximada por um disco em volta do jogador
 //   (densidade CROWD.density) e cada forma de técnica acerta a fração do disco que a área dela cobre.
 // Uso: node scripts/simulate-run.mjs [heroi] [Genin|Chunin|Jonin|Kage] [minutos] [semente] [novo|maximo]
-import { HEROES, HERO_BY_ID, familyOf } from '../src/game/heroes.ts';
+import { HEROES, HERO_BY_ID, heroAffinity } from '../src/game/heroes.ts';
 import { calculateStats, zoneThreat, zoneCurse, ZONE_DIFFICULTY, MISSION_TIER, xpToLevelUp, effectiveLootLuck, incomingDamage, normalHpFactor, AMBUSH_RULES } from '../src/game/progression.ts';
 import { ENEMY_TIERS, BASE_LOOT, xpDropValue, xpLoot, lootScale, megaEliteHp, rollMegaSchedule, eliteSpawnChance, eliteHpRamp } from '../src/game/enemyTiers.ts';
-import { attackCooldown, techniqueCritical, TECHNIQUE_SCALE, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
+import { attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
 import { techniqueLevelCap } from '../src/game/techniqueMerge.ts';
 import { ITEMS, rollItems } from '../src/game/catalog.ts';
 import { PILLS, canGrantPill, grantPill } from '../src/game/pills.ts';
@@ -60,18 +60,19 @@ export function targetsPerCast(t, stats, n) {
   return Math.min(n, Math.max(1, CROWD.density * Math.min(shapeArea(t, stats.area), crowdArea)) * shots);
 }
 
-/** Dano médio de um acerto (crítico pela média), como hit()/itemDamageBonus() no GameCanvas, sem a defesa do alvo. */
-export function hitDamage(heroId, t, g, stats, level) {
-  const c = techniqueCritical(t, level), chance = Math.min(1, stats.crit + c.chance), mult = stats.critDamage + c.damage;
-  const school = t.school === 'Taijutsu' ? stats.physical : t.school === 'Ninjutsu' ? stats.ninjutsu : 1;
-  const tenten = familyOf(heroId) === 'tenten' && (t.element === 'Neutro' || t.shape === 'Projétil' || t.shape === 'Em V') ? 1.5 : 1;
-  const el = 1 + (stats.extra[ELEMENT_KEY[t.element]] || 0) + (t.secondaryElement ? stats.extra[ELEMENT_KEY[t.secondaryElement]] || 0 : 0);
-  return stats.damage * t.power * TECHNIQUE_SCALE * (1 + g.damage) * school * tenten * el * (t.school === 'Genjutsu' ? stats.genjutsu : 1) * (1 + chance * (mult - 1));
+/** Dano médio por acerto antes da defesa, usando os multiplicadores da partida. */
+export function hitDamage(heroId, t, g, stats, level, healthShare = 1) {
+  const c = techniqueCritical(t, level);
+  const chance = Math.max(0, stats.crit + c.chance), mult = stats.critDamage + c.damage;
+  const critical = chance < 1 ? 1 + chance * (mult - 1) : mult + .5 * Math.min(1, chance - 1);
+  const sageInfused = stats.sage > 0;
+  return techniqueHitDamage(t, g, stats, { affinity: heroAffinity(heroId), sageInfused })
+    * techniquePassiveMultiplier(heroId, t, healthShare, sageInfused) * critical;
 }
 
 /** Nota que o bot dá a um bônus (item ou pílula): ofensivo primeiro, depois sobrevivência. */
 function bonusScore(b, techs) {
-  const els = new Set(techs.map(t => ELEMENT_KEY[t.element]));
+  const els = new Set(techs.flatMap(t => [ELEMENT_KEY[t.element], t.secondaryElement && ELEMENT_KEY[t.secondaryElement]]));
   let s = 0;
   for (const [k, v] of Object.entries(b)) {
     if (k === 'damage') s += v * 400; else if (k === 'attackSpeed') s += v * 300; else if (els.has(k)) s += v * 220;
@@ -127,7 +128,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     dirty = true;
   };
   /** Dano por segundo contra 1 alvo com `defense` (chefes). */
-  const singleDps = defense => techs().filter(t => !t.setup && t.power > 0).reduce((sum, t) => sum + hitDamage(heroId, t, s.growth[t.name] ?? NO_GROWTH, stats, s.skills[t.name]) * (1 - defense) / attackCooldown(t, s.skills[t.name], s.growth[t.name] ?? NO_GROWTH, stats.attackSpeed), 0);
+  const singleDps = defense => techs().filter(t => !t.setup && t.power > 0).reduce((sum, t) => sum + hitDamage(heroId, t, s.growth[t.name] ?? NO_GROWTH, stats, s.skills[t.name], s.hp/stats.maxHp) * (1 - defense) / attackCooldown(t, s.skills[t.name], s.growth[t.name] ?? NO_GROWTH, stats.attackSpeed), 0);
   // A partida começa com a escolha de nível 1 (choiceLevel=1 no GameCanvas): a 1ª técnica sai daqui.
   offer(); refresh();
   const timeline = [];
@@ -137,7 +138,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
       normalHp: Math.round(normalHp), playerHp: Math.round(s.hp), maxHp: stats.maxHp, damagePct: Math.round(stats.damage / calculateStats(heroId, 1).damage * 100), attackSpeedPct: Math.round(stats.attackSpeed * 100),
       areaPct: Math.round(stats.area * 100), projectiles: +stats.projectiles.toFixed(1), critPct: Math.round(stats.crit * 100), critDamagePct: Math.round(stats.critDamage * 100), armor: Math.round(stats.armor),
       items: Object.values(s.items).reduce((a, b) => a + b, 0), skills: { ...s.skills },
-      firstSkillHit: first ? Math.round(hitDamage(heroId, first, s.growth[first.name] ?? NO_GROWTH, stats, s.skills[first.name])) : 0, totalDamage: s.damage, swarm: +threat.swarm.toFixed(2) });
+      firstSkillHit: first ? Math.round(hitDamage(heroId, first, s.growth[first.name] ?? NO_GROWTH, stats, s.skills[first.name], s.hp/stats.maxHp)) : 0, totalDamage: s.damage, swarm: +threat.swarm.toFixed(2) });
   };
   const end = minutes * 60;
   let lastKps = 0;
@@ -158,7 +159,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     for (const t of techs()) {
       if (t.setup || !(t.power > 0)) continue;
       const lv = s.skills[t.name], g = s.growth[t.name] ?? NO_GROWTH, cd = attackCooldown(t, lv, g, stats.attackSpeed);
-      const hit = hitDamage(heroId, t, g, stats, lv), tg = targetsPerCast(t, stats, s.alive);
+      const hit = hitDamage(heroId, t, g, stats, lv, s.hp/stats.maxHp), tg = targetsPerCast(t, stats, s.alive);
       kps += tg * Math.min(1, hit / avgEhp) / cd; dealt += tg * Math.min(hit, avgEhp) / cd;
     }
     const kills = Math.min(s.alive, kps);

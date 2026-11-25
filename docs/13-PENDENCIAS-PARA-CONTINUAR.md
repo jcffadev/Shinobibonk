@@ -9,6 +9,16 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Foco e Final Swarm · 24/11/2026
+
+- Conferir em partida o foco em Mega Elite com inimigos comuns na trajetória. Incluir ataques em V, projéteis extras e arremessos com preparo.
+- Conferir sobrevivência e pressão da horda entre 8 e 13 minutos no Kage, sem invocar o Guardião. [Simulação e limites](20-SCALING-EREGULAS.md#sobrevivência-na-zona-1--24112026).
+
+## Shikamaru e progressão do dano · 24/11/2026
+
+- O NPC mantém as vistas do Estrategista. O teste em Node gira as câmeras perspectiva e ortográfica e verifica as fileiras de cada ângulo. Falta conferir o acabamento em partida.
+- A ficha e o combate usam os mesmos multiplicadores de dano direto. A auditoria indica que a curva do personagem e seus afixos superam rapidamente o HP da horda, com novo salto na zona 2. Falta decidir e testar uma curva de balanceamento. [Medições](20-SCALING-EREGULAS.md#comparação-com-a-vida-dos-monstros--24112026).
+
 ## Nível máximo na Oficina dos Sapos · 24/11/2026
 
 - As duas técnicas precisam atingir o teto vigente antes de fundir ou combinar. Falta conferir em partida a mensagem de requisito e as duas abas antes e depois de atingir o teto. [Regra da oficina](10-PLANEJAMENTO-FUSAO-PROGRESSAO-V05.md#oficina-dos-sapos-sábios).

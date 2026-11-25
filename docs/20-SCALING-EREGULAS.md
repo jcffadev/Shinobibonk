@@ -56,11 +56,29 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 
 ## 6. Atributos do jogador — `progression.ts` (`calculateStats`)
 
-- **Dano do herói**: `base × heroDamageScale(level) × (1 + %dano + Treinamento×4%)` (Gaara: bônus extra por armadura). `heroDamageScale(nível)` = `(1 + 0,03×n) × (1 + n/75)³` (n = nível−1):
+- **Dano-base do herói:** `base × heroDamageScale(nível) × (1 + bônus de dano total + Treinamento efetivo × 0,04)`. Gaara aplica também o fator de armadura. A passiva Treinamento contribui com 8% do efeito no Nv. 1 e chega ao efeito completo no Nv. 25.
+- **Crescimento do personagem:** `heroDamageScale = (0,74 + 0,26 × min(1, n/14)) × (1 + 0,04 × n) × (1 + n/72)³`, com `n = nível − 1`.
 
-  | Nível | 1 | 10 | 25 | 50 | 100 | 150 |
-  |---|---|---|---|---|---|---|
-  | Escala de dano | 1,0 | 1,8 | 4,0 | 11,2 | 49,6 | 146 |
+  | Nível do personagem | 1 | 10 | 22 | 50 | 100 | 200 | 415 |
+  | --- | --- | --- | --- | --- | --- | --- | --- |
+  | Dano-base em relação ao Nv. 1 | 1,00× | 2,37× | 5,36× | 18,99× | 89,79× | 645,63× | 7.298× |
+
+### Comparação com a vida dos monstros · 24/11/2026
+
+O dano sem itens e com o afixo da técnica fixo cresceu em todos os níveis de 1 a 2.000 nas 115 versões verificadas. Mesmo com o ganho percentual de cada novo nível desacelerando, o termo cúbico combinado ao linear produz uma escala absoluta que aumenta bem mais rápido que a vida dos inimigos comuns nas primeiras zonas.
+
+A simulação usou 1.380 partidas de até 12 minutos (115 versões × 4 dificuldades × sementes 17, 101 e 252), conta nova e desvio médio. Os números abaixo são medianas entre as partidas que chegaram ao minuto. A razão compara o acerto bruto médio da primeira técnica, incluindo a expectativa de crítico, com o HP de um monstro comum.
+
+| Dificuldade | Minuto 1 | Minuto 5 | Minuto 8 | Minuto 12 |
+| --- | --- | --- | --- | --- |
+| Genin | 4,57× | 37,85× | 78,67× | 411,64× |
+| Chunin | 5,35× | 31,46× | 43,03× | 271,80× |
+| Jonin | 4,72× | 20,69× | 28,52× | 178,74× |
+| Kage | 3,45× | 13,71× | 20,13× | 152,01× |
+
+No minuto 12 as medianas já estão na segunda zona. A ameaça volta para o início da nova zona enquanto o nível, os afixos e os itens seguem com o jogador. Esse salto pede revisão de balanceamento. A auditoria preserva a curva e o XP atuais. O modelo aproxima a horda e não inclui movimentação real, ultimates nem procs condicionais.
+
+### Demais atributos
 
 - **HP** (Rodada 55, **PROPOSTO**): `(46 + 0,085×min(215, hp base)) × heroHpScale(nível) + vida plana + bônus` × `(1 + healthPct)`, com `heroHpScale = 1 + 0,04n/(1+n/150)` (`HP_GROWTH`; teto assintótico ×7). Antes (rodada 54): `1 + 0,032n + 0,00022n²`. Naruto sem itens: Nv. 1 **57** · 10 **76** (era 74) · 50 **141** (era 176) · 100 **193** (era 361) · 200 **252** (era 917) · 415 **308** (era 2.961).
 - **Velocidade de ataque**: `1 + 0,008×n + % + Agilidade×2%` (mín. 0,2).
@@ -114,6 +132,35 @@ Painel com **41 multiplicadores** (Inimigos · Elites/Mega · Personagem · Ganh
 ## Abertura e XP por zona · 14/11/2026
 
 A abertura interpola de 0,34 a 1 no primeiro minuto. Em Genin, o primeiro quadro calcula teto 12 e 0,68 inimigos por segundo antes da reposição. O [diagnóstico de XP](development/DIAGNOSTICO-XP-ZONA.md) detalha a curva em níveis 100, 300 e 582 e a distinção entre relógio da zona e da missão.
+
+## Sobrevivência na Zona 1 · 24/11/2026
+
+Foram simuladas 2.070 partidas de até 13 minutos, sem invocar o Guardião. Cada grupo usa as 115 versões jogáveis e três sementes (17, 101 e 252). A conta simulada começa sem passivas permanentes. O catálogo fica aberto nos cinco primeiros grupos e o último restringe o sorteio a itens comuns. O bot escolhe técnicas, afixos de melhoria e pílulas nos níveis, treina quando o pool acaba, gasta Ryu nas kunais e recebe loot dos Mega Elites que consegue derrotar no tempo estimado. A coluna mostra quem estava vivo em cada minuto.
+
+| Dificuldade e cenário | 8 min | 10 min | 11 min | 12 min | 13 min |
+|---|---:|---:|---:|---:|---:|
+| Genin, desvio médio | 333 | 331 | 188 | 188 | 180 |
+| Chunin, desvio médio | 331 | 328 | 258 | 258 | 236 |
+| Jonin, desvio médio | 322 | 318 | 104 | 103 | 33 |
+| Kage, desvio médio | 301 | 292 | 159 | 134 | 45 |
+| Kage, desvio bom | 315 | 302 | 168 | 149 | 55 |
+| Kage, desvio médio e itens comuns | 295 | 285 | 146 | 124 | 35 |
+
+### Evolução do Kage com catálogo completo e desvio médio
+
+Medianas entre os sobreviventes de cada instante. O golpe inclui a expectativa do crítico e vem antes da defesa do alvo.
+
+| Minuto da zona | Nível | HP de um comum | Golpe da primeira técnica | Itens |
+|---|---:|---:|---:|---:|
+| 8 | 77 | 1.052 | 21.172 | 17 |
+| 10 | 96 | 1.594 | 39.783 | 18 |
+| 11 | 114 | 8.742 | 65.956 | 18 |
+| 12 | 131 | 15.417 | 106.253 | 18 |
+| 13 | 151 | 26.379 | 198.108 | 18 |
+
+O Final Swarm inicia após 10:00 na mesma zona. No Kage, sem bônus de densidade, o teto normal chega a 1.160 em 10:00. Durante os quatro primeiros minutos do Final Swarm, o teto base é 800. A subida para 1.600 termina aos 17:00 da zona (+7:00 de Final Swarm). O multiplicador base de HP e dano salta para aproximadamente 3,02 no primeiro segundo do Final Swarm e chega a 9,07 aos 13:00. A armadura base passa de 30% para o teto de 85% no primeiro segundo.
+
+A curva concentra a pressão na virada dos 10 minutos. A sobrevivência de 13 minutos varia bastante com a build e o desvio simulado. O modelo agrega a horda em passos de um segundo e estima a esquiva e a cobertura dos golpes. Posicionamento, efeitos de clima, eventos, altares, mercador, fusões e coleta física ficam fora da simulação. A distribuição dos nascimentos por quadro segue o motor da partida e precisa de conferência em jogo. Os números de balanceamento ficaram como estavam.
 
 ## 13. Números de dano na tela — `GameCanvas.tsx`
 

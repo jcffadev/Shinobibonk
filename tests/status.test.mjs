@@ -1,10 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { STATUS_RULES, addChill, chillSlow, controlResist, freezeTarget, isFrozen, tickStatus, statusDamageMultiplier, addPoisonStack, poisonMultiplier, reactionsFor, deathBurstKind } from '../src/game/statusRules.ts';
+import { STATUS_RULES, addChill, chillSlow, controlResist, damageStatusCount, freezeTarget, isFrozen, tickStatus, statusDamageMultiplier, addPoisonStack, poisonMultiplier, reactionsFor, deathBurstKind } from '../src/game/statusRules.ts';
 import { ITEMS } from '../src/game/catalog.ts';
 
 const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+
+test('o Selo dos Cinco Elementos conta lentidão apenas uma vez',()=>{
+  assert.equal(damageStatusCount({control:'Lentidão',controlTime:1,slow:1}),1);
+  assert.equal(damageStatusCount({control:'Paralisar',controlTime:1,slow:1,burn:2,poison:{}}),4);
+  assert.equal(damageStatusCount({control:'Lentidão',controlTime:1,slow:0}),1);
+});
 
 test('Resfriado: −12% por acúmulo, 3 acúmulos congelam por 1,5 s e somem sem frio novo (rodada 103)', () => {
   const e = {};

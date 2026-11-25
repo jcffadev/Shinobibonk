@@ -2761,3 +2761,38 @@ Kakashi dos Dois Mangekyō entra como 115ª versão, com folhas chibi próprias 
 > Revisar porque os sapos estão deixando fazer fusão/combinação antes das habilidades estarem lv máximo
 
 A oficina só verificava se as técnicas haviam sido aprendidas. As duas abas e a confirmação agora usam o teto vigente da partida para cada técnica. A regra de um uso por zona e o planejamento antes da missão continuam válidos.
+
+
+## NPC Shikamaru e auditoria de dano · 24/11/2026
+
+> o npc do shikamaru esta mudando a sprite de jounin para geenin quando vira a camera
+
+> precisa corrigir
+
+> como esta o scale das habilidades comparando a % que a gente pega de itens que buffam todas as linhas de dano do jogo?
+> Exemplo:
+> Habilidade de Ninjutsu, pegamos item de Ninjutsu os calculos estão corretos para os buffs?
+> Revise todas as habilidades, estou achando que o calculo está errado
+
+> Verifique a progressão de dano do jogo, também verifique a questão se os números estão progredindo corretamente com o level do personagem, se os cálculos estão escalando de forma OK.
+
+O NPC usava o retrato de colete com os recortes laterais da fase Genin. Frente, perfil e costas agora vêm do Estrategista. Combate, ficha e simulador compartilham o cálculo do dano por acerto. Foram corrigidos o Genjutsu de suporte e a contagem repetida de elemento ou lentidão. O Selo de Ninjutsu já acrescentava 15 pontos percentuais à linha correta. As simulações indicam que o dano cresce muito mais rápido que o HP dos monstros comuns por volta da metade da primeira zona, com outro salto na entrada da segunda. A curva permanece como medida, para a decisão de balanceamento.
+
+## Alvo fixado e sobrevivência na primeira zona · 24/11/2026
+
+> Lembrando que o desafio do jogo é na sobrevivência, estava jogando no Kage e stava percebendo que ao focar com o botão direito, as vezes parecia que estava jogando mirando no personagem, mas se tivesse minion a frente, ele acertava o minion, isso esta em teoria certo, ele deve bater em quem tem o range, mas ele deve sempre focar o alvo foco, se o inimigo estiver na distância das habilidades
+
+> Faça simulações no final swarm também, faça um teste dele passando os 8m, indo sei la tentando sobreviver em uns 13m na zona1
+
+> Na sua simulação, você pega upgrades?
+> Sai pegando os devidos itens?
+
+Cada técnica usa o próprio alcance para priorizar o foco. Arremessos com preparo conferem a mira antes de sair. Um projétil simples pode ser interceptado e termina no primeiro contato. O bot pega afixos de técnica, pílulas e itens das kunais e dos Mega Elites vencidos. A [simulação](20-SCALING-EREGULAS.md#sobrevivência-na-zona-1--24112026) inclui 2.070 partidas na Zona 1, com resultados por dificuldade e por minuto.
+
+## Atualização do GitHub · 25/11/2026
+
+> continue o que voce estava fazendo
+
+> mas, primeiro quero que atualize o github completo
+
+A publicação reúne a correção do NPC do Shikamaru, a auditoria do dano, o foco de combate e as medições do Final Swarm. A pasta principal acompanha o mesmo commit da branch `main`.

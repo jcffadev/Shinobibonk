@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'foco tem prioridade quando a técnica alcança', arquivo: 'src/game/targetFocus.ts', de: '&& enemies.includes(locked)) return locked;', para: '&& enemies.includes(locked)) {}' },
   { regra: 'o balanço da Academia se move depois de colocado na vila', arquivo: 'src/scene/villageScenery.ts', de: 'swing?.update(elapsed);', para: '' },
   { regra: 'shinobi dobra o joelho antes do tombo', arquivo: 'src/scene/fallenShinobi.ts', de: 'bend=THREE.MathUtils.smoothstep(t,stagger,kneel);', para: 'bend=0;' },
   { regra: 'estátua recebe arte de costas na própria célula', arquivo: 'src/scene/landmarkRelief.ts', de: '(index-1+.5-x)*.5', para: '(.5-x)*.5' },
@@ -32,6 +33,8 @@ const MUTATIONS = [
   { regra: "Jiton é Vento + Terra", arquivo: "src/game/techniqueMerge.ts", de: "natures:['Vento','Terra'],name:'Jiton", para: "natures:['Vento','Raio'],name:'Jiton" },
   { regra: "linhagem recebe as naturezas da Kekkei Genkai", arquivo: "src/game/heroes.ts", de: "heroAffinity(heroId),...lineageNatures(familyOf(heroId))]);", para: "heroAffinity(heroId)]);" },
   { regra: "combinação mantém ×1,5", arquivo: "src/game/techniqueMerge.ts", de: "power:source.power*1.5*(", para: "power:source.power*(" },
+  { regra: 'NPC do Shikamaru usa a mesma versão nas três vistas', arquivo: 'src/scene/missionNpcs.ts', de: "shikamaru: 'shikamaru-estrategista',", para: "shikamaru: 'shikamaru'," },
+  { regra: 'itens de Ninjutsu multiplicam o dano dos Ninjutsus', arquivo: 'src/game/combat.ts', de: "t.school==='Ninjutsu'?stats.ninjutsu:stats.genjutsu;", para: "t.school==='Ninjutsu'?1:stats.genjutsu;" },
   { regra: 'Sapos exigem duas técnicas no nível máximo vigente', arquivo: 'src/game/techniqueMerge.ts', de: '(levels[t.name] ?? 0) >= techniqueLevelCap(t, extraCap)', para: '(levels[t.name] ?? 0) > 0' },
   { regra: 'fusão não ultrapassa o nível 7', arquivo: 'src/game/techniqueMerge.ts', de: 'FUSION_LEVEL_CAP = 7', para: 'FUSION_LEVEL_CAP = 12' },
   { regra: 'ranking usa a melhor missão por região', arquivo: 'src/game/league.ts', de: 'if (!previous || compareRun(run, previous) < 0) best.set(run.map, run);', para: 'if (!previous || compareRun(run, previous) > 0) best.set(run.map, run);' },
