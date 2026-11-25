@@ -2930,3 +2930,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Não invocava porque a conta respeitava o teto de inimigos vivos: com a horda cheia dava 0 e a emboscada nunca terminava.
 - Agora surgem sempre 10 ninjas, 1 elite, e vencer solta um pergaminho de recompensa grátis (1 item) no lugar do +1 nível.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Remover onde está o X para melhorar a visualização das pilulas (print do planejador, aba Pílulas)
+
+**Resposta.**
+
+- Painel lateral removido só na aba Pílulas; a grade dos cartões ocupa a largura toda.
+- Fila combinada a seguir: avanço da arena por dificuldade e planos, dano de nível alto contra o Final Swarm, calibrar o pacote de status, fusões, selos de mão e missões de evento inspiradas no anime para liberar personagens (ex.: Prova Chūnin). O resto da lista anterior foi descartado pelo usuário.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

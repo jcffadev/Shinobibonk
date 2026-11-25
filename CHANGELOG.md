@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25/11/2026 · Planejador: aba Pílulas sem o painel lateral (Claude Code)
+
+- **Pedido do usuário** (print com X no painel da direita): "Remover onde está o X para melhorar a visualização das pílulas".
+- **`src/ui/BuildPlanner.tsx`:** na aba Pílulas o painel lateral de detalhes não aparece mais, porque os cartões já mostram efeito, descrição e quantidade. A grade ocupa a largura toda (`.build-workspace.no-detail` em `src/mission-planner.css`). As abas Habilidades e Itens continuam com o painel.
+- **Testes:** 1 teste novo em `tests/interface.test.mjs` (o mínimo subiu para 279) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** abrir a aba Pílulas no planejador da missão.
+
 ## 25/11/2026 · Armadilha do ninja caído: 10 ninjas sempre, 1 elite e 1 item (Claude Code)
 
 - **Pedido do usuário:** "armadilha do ninja deitado no chão deveria dar 1 item por matar os ninjas que invoca, além disso não está invocando ninjas · a ideia é invocar 10 ninjas e 1 deles sendo elite".

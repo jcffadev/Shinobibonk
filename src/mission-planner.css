@@ -195,3 +195,5 @@
 .planner-card-info>div{display:grid;grid-template-columns:78px 1fr;gap:6px;align-items:baseline}
 .planner-card-info dt{opacity:.7;font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:.04em}
 .planner-card-info dd{margin:0}
+/* 25/11/2026: aba Pílulas sem painel lateral — a grade usa a largura toda. */
+.build-workspace.no-detail,.mission-planner .build-workspace.no-detail{grid-template-columns:minmax(0,1fr)}

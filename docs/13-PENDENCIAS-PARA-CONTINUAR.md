@@ -4,6 +4,8 @@
 
 **Claude Code · Balanceamento**
 
+> Fila combinada com o usuário em 25/11: (1) avanço da arena por dificuldade e planos; (2) dano de nível alto × Final Swarm; (3) calibrar o pacote de status; (4) fusões (aguarda aprovação das receitas em docs/10); (5) selos de mão (plano em docs/01); (6) **novo:** missões de evento inspiradas no anime que liberam personagens — ex.: aba Eventos com o mapa da Prova Chūnin; completar todos os objetivos com determinados personagens libera os Chūnin na conta. O usuário descartou árvores bloqueando, velocidade de elites, Orochimaru Sannin e desempenho de menus.
+
 1. **MEDIDO em 25/11** (`scripts/simulate-bosses.mjs`, [docs/20](20-SCALING-EREGULAS.md#medição-de-guardiões-e-bijū--25112026-claude-code)). Números finitos garantidos por `BOSS_HP_LIMIT`. **DECIDIDO e implementado:** Bijū com 3× a armadura e só os planos da zona 3. Falta sentir a luta em partida. Pedido original: calibrar Guardiões e Bijū com invocações normais e aos +1, +7, +15 minutos e além do Final Swarm. HP da zona pode alcançar trilhões e quadrilhões sem teto de gameplay. Manter os valores numéricos finitos dentro do intervalo suportado e testar precisão de dano e passagem de fase em lutas muito longas.
 2. Tomar cerca de **20× a armadura bruta** do Guardião equivalente como alvo inicial para a Bijū. Calibrar o efeito de armadura real no tempo de combate, com janela para desvio e dano sempre possível. Comparar defesa efetiva e dano por golpe para builds novas e fortes.
 3. Simular Genin, Chunin, Jonin e Kage com zero a três planos do Shikamaru. Registrar HP, defesa, dano, tempo até derrotar e progressão da arena. Preservar os quatro pergaminhos grátis com três planos e a invocação voluntária.

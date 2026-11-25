@@ -6,8 +6,6 @@ import { createPortal } from 'react-dom';
 import { ITEMS, ITEM_BY_NAME, type Rarity } from '../game/catalog';
 import { PILL_NAMES, PILL_MAX, pillDescription } from '../game/pills';
 import { plannerCardInfo } from '../game/plannerCards';
-import { pillStatPreview } from '../game/pillPreview';
-import { PillStatPreview } from './PillStatPreview';
 import { techniquePool, HERO_BY_ID, heroAffinity, familyOf, type PoolTechnique, type Technique } from '../game/heroes';
 import { sealedHeroes, researchProgress } from '../game/account';
 import { ArsenalControls, type ArsenalControlsProps } from './ArsenalControls';
@@ -163,7 +161,8 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
     </section>
    : <>
     <div className="build-view-filters"><button aria-pressed={view==='all'} onClick={()=>setView('all')}>Todos</button><button aria-pressed={view==='planned'} onClick={()=>setView('planned')}>Planejado</button>{tab==='Itens'&&<button aria-pressed={view==='archived'} onClick={()=>setView('archived')}>Arquivados</button>}{tab==='Habilidades'&&<><button aria-pressed={view==='archived'} onClick={()=>setView('archived')}>Deixar em casa</button><small>{trained.length}/{trainingSlots} treinadas · {archivedSkills.length}/{archiveLimit} bloqueadas</small></>}</div>
-    <div className="build-workspace">
+    {/* 25/11/2026 (pedido do usuário, print com X): sem o painel lateral na aba Pílulas — os cartões já mostram efeito, descrição e quantidade. */}
+    <div className={`build-workspace${tab==='Pílulas'?' no-detail':''}`}>
      <div className="build-tech-list">
       <div className={`planner-card-grid ${tab==='Habilidades'?'planner-tech-grid':''}`}>
         {visible.map(e=>{
@@ -179,7 +178,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
         })}
       </div>
      </div>
-     <aside className="build-detail" aria-label="Detalhes da opção">{focused?<><header className="planner-detail-heading">{focused.icon}<h2>{focused.name}</h2></header><p><BuffText text={focused.description}/></p>{tab==='Itens'&&<PlannerRarity rarity={ITEM_BY_NAME[focused.name].rarity} max={ITEM_BY_NAME[focused.name].max}/>}{tab==='Pílulas'&&<PillStatPreview title="No Nv. 1 do shinobi, com 1 nível da pílula" lines={pillStatPreview(focused.name,base,hero.id,1)}/>}{preview&&<><dl className="technique-base-data"><div><dt>Nível para aprender</dt><dd>{preview.unlockLevel} na missão</dd></div><div><dt>Status da técnica</dt><dd>{techniqueStatusText(preview)}</dd></div><div><dt>Chance crítica inicial</dt><dd>{preview.setup?'—':Math.round((base.crit+techniqueCritical(preview).chance)*100)+'%'}</dd></div><div><dt>Dano crítico inicial</dt><dd>{preview.setup?'—':Math.round((base.critDamage+techniqueCritical(preview).damage)*100)+'%'}</dd></div><div><dt>Recarga base</dt><dd>{(preview.setup?setupNumbers(preview).cooldown:attackCooldown(preview,1)).toLocaleString('pt-BR')} s</dd></div></dl><TechniquePreview technique={preview} heroId={hero.id}/><small>Prévia em alvos de treino</small></>}{planned.includes(focused.name)&&!focused.archived&&<b>Planejado</b>}{fusionRecipes(focused.name).map(recipe=><b key={recipe} className="fusion-badge" title="Requisito para Fusão">⚗ Requisito para Fusão: {recipe}</b>)}</>:<p>Nenhuma opção com estes filtros.</p>}</aside>
+     {tab!=='Pílulas'&&<aside className="build-detail" aria-label="Detalhes da opção">{focused?<><header className="planner-detail-heading">{focused.icon}<h2>{focused.name}</h2></header><p><BuffText text={focused.description}/></p>{tab==='Itens'&&<PlannerRarity rarity={ITEM_BY_NAME[focused.name].rarity} max={ITEM_BY_NAME[focused.name].max}/>}{preview&&<><dl className="technique-base-data"><div><dt>Nível para aprender</dt><dd>{preview.unlockLevel} na missão</dd></div><div><dt>Status da técnica</dt><dd>{techniqueStatusText(preview)}</dd></div><div><dt>Chance crítica inicial</dt><dd>{preview.setup?'—':Math.round((base.crit+techniqueCritical(preview).chance)*100)+'%'}</dd></div><div><dt>Dano crítico inicial</dt><dd>{preview.setup?'—':Math.round((base.critDamage+techniqueCritical(preview).damage)*100)+'%'}</dd></div><div><dt>Recarga base</dt><dd>{(preview.setup?setupNumbers(preview).cooldown:attackCooldown(preview,1)).toLocaleString('pt-BR')} s</dd></div></dl><TechniquePreview technique={preview} heroId={hero.id}/><small>Prévia em alvos de treino</small></>}{planned.includes(focused.name)&&!focused.archived&&<b>Planejado</b>}{fusionRecipes(focused.name).map(recipe=><b key={recipe} className="fusion-badge" title="Requisito para Fusão">⚗ Requisito para Fusão: {recipe}</b>)}</>:<p>Nenhuma opção com estes filtros.</p>}</aside>}
     </div>
    </>}
  </div>;

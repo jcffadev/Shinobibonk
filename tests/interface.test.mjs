@@ -86,3 +86,11 @@ test('catálogo de fusões: ícone enquadrado e descrição do que a fusão faz 
   assert.ok(!css.includes('.fusion-catalog-entry>span{'), 'a regra do texto não pega mais o ícone');
   assert.match(css, /.fusion-catalog-icon{flex:0 0 44px;width:44px;height:44px;[^}]*overflow:hidden/);
 });
+
+test('planejador: aba Pílulas sem o painel lateral, grade na largura toda (25/11)', () => {
+
+  const planner = fs.readFileSync(new URL('../src/ui/BuildPlanner.tsx', import.meta.url), 'utf8');
+  assert.ok(planner.includes("{tab!=='Pílulas'&&<aside className=\"build-detail\""), 'painel some só na aba Pílulas');
+  assert.ok(planner.includes("build-workspace${tab==='Pílulas'?' no-detail':''}"));
+  assert.match(fs.readFileSync(new URL('../src/mission-planner.css', import.meta.url), 'utf8'), /\.build-workspace\.no-detail[^{]*\{grid-template-columns:minmax\(0,1fr\)\}/);
+});
