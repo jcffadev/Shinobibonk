@@ -66,6 +66,21 @@ Fundir ou combinar exige duas técnicas de ataque no teto vigente da partida. O 
 
 Fundir e Combinar aparecem em abas separadas, com ícones dos dois ataques, lista de pares e acesso à ficha. Uma união válida consome o único uso compartilhado da zona. Fechar ou trocar a aba preserva esse uso. A run salva o número da zona consumida. A zona seguinte libera outra operação. Não é possível reutilizar uma técnica já incorporada em outra união. A fusão começa no nível 1 com ×2 da média de dano e afixos somados. A combinação mantém os dois ataques no mesmo espaço, cada um com ×1,5 de dano.
 
+## Receitas aplicadas · 25/11/2026 (Claude Code)
+
+**Decisões do usuário:** "Aprovar e incluir Gelo" e, para Taijutsu e Genjutsu, "Incluir as duas".
+
+- `FUSION_RECIPES` em `src/game/techniqueMerge.ts`, na ordem de prioridade:
+  - **7 de assinatura**, com técnicas pelo nome: Ōdama Rasengan (Kage Bunshin + Rasengan), Shuriken Kage Bunshin (Kage Bunshin + Shuriken), Enton: Espada de Kagutsuchi (Amaterasu + Susanoo), Bijūdama Rasenshuriken (Bijūdama + Rasenshuriken), Chidori Senbon (Chidori + Chuva de Senbon), Fūton: Rasenshuriken (Rasengan + qualquer Ninjutsu de Vento) e Katon: Gamayu Endan (Óleo Flamejante + qualquer Ninjutsu de Fogo).
+  - **8 Kekkei Genkai** (as de antes).
+  - **7 de natureza**, dois Ninjutsu do mesmo elemento: Gōka Mekkyaku, Daibakufu, Shinkū Taigyoku, Doryū Taiga, Kirin, Ryūsa Bakuryū e **Hyōton: Sensatsu Suishō** (Gelo, incluída pelo usuário).
+  - **2 de escola:** Kage Buyō (2 Taijutsu) e Magen: Narakumi (2 Genjutsu).
+- **Par sem receita só combina.** `mergedTechnique` devolve `undefined` para fundir sem receita. A "Fusão · A / B" genérica só existe para partidas salvas antes (`legacyFusion`).
+- **Atributos somados:** dano (A + B) × bônus de natureza ou linhagem; o status da receita soma a chance do mesmo status das duas técnicas (teto 95%); outro status vira secundário; queimadura, veneno, lentidão e gravidade passam para a fusão. Alcance e recarga ficam com o maior. Os afixos de nível continuam somados na Oficina.
+- **Sem raridade:** o cartão do planejador mostra o tipo (Kekkei Genkai, Fusão de natureza, Fusão de escola, Fusão assinatura ou Combinação).
+- **Cobertura** (115 versões): 3 sem fusão só com o próprio pool e **0** com todos selados; toda receita tem quem aprenda.
+- **Falta:** o cartão novo (item 4 abaixo), a ficha ao passar o mouse (item 5) e os ícones e efeitos próprios das receitas novas (Codex). Hoje elas usam uma célula do atlas de efeitos e o visual do elemento.
+
 ## Fusões — estado em 15/11/2026 e plano para continuar (passagem para outro agente)
 
 Pedido do usuário (rodada 88): "Deixar anotado tudo que você tem sobre as fusões, para outro agente continuar depois se for preciso".
@@ -92,7 +107,7 @@ Pedido do usuário (rodada 88): "Deixar anotado tudo que você tem sobre as fus�
 ### Decisões do usuário (15/11/2026)
 
 1. **Só receitas** (aprovado): par sem receita só pode ser **Combinado**, não fundido. A "Fusão · A / B" genérica deixa de existir.
-2. **Lista de receitas** (proposta montada pela Narutopedia, **aguardando aprovação** do usuário):
+2. **Lista de receitas** (proposta montada pela Narutopedia, **aprovada em 25/11/2026** com Gelo e as duas opcionais):
    - **Kekkei Genkai**, um Ninjutsu de cada natureza: as 8 atuais.
    - **Comuns**, dois Ninjutsu da mesma natureza:
 

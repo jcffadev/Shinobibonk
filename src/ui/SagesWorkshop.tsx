@@ -17,7 +17,7 @@ export function SagesWorkshop({world,heroId,onSheet}:{world:WorldSnapshot;heroId
    <button role="tab" aria-selected={kind==='fuse'} onClick={()=>change('fuse')}>Fundir<small>Uma nova técnica, nível 1</small></button>
    <button role="tab" aria-selected={kind==='combine'} onClick={()=>change('combine')}>Combinar<small>Duas técnicas no mesmo espaço</small></button>
   </div>
-  <p className="sages-help">{kind==='fuse'?'Soma os afixos e elementos. O dano inicial é duas vezes a média das técnicas.':'Mantém os dois ataques. Cada técnica causa ×1,5 de dano e ocupa o mesmo espaço.'}</p>
+  <p className="sages-help">{kind==='fuse'?'Só funde par com receita. A nova técnica soma o dano, os afixos e os efeitos das duas.':'Mantém os dois ataques. Cada técnica causa ×1,5 de dano e ocupa o mesmo espaço.'}</p>
   <div className="sages-pairs" role="tabpanel">
    {world.sagesUsed?<p className="sages-empty">A oficina foi usada nesta zona. Outra união fica disponível na próxima zona.</p>:cards.length?cards.map((card,index)=>{
     const [a,b]=card.merge!.names;
@@ -25,7 +25,7 @@ export function SagesWorkshop({world,heroId,onSheet}:{world:WorldSnapshot;heroId
      <div className="sages-pair-art"><SkillIcon heroId={heroId} name={a}/><span>+</span><SkillIcon heroId={heroId} name={b}/></div>
      <div><h2>{kekkeiFusion(card.name)?.name??a}</h2><h3>{kekkeiFusion(card.name)?a+' + '+b:b}</h3><p>{kekkeiFusion(card.name)?card.description:kind==='fuse'?'Nova técnica · afixos somados · nível 1':'Duas técnicas · um espaço · ×1,5 de dano'}</p></div><kbd>{index+1}</kbd>
     </button>;
-   }):<p className="sages-empty">Evolua duas técnicas de ataque até o nível máximo para usar a oficina.</p>}
+   }):<p className="sages-empty">{kind==='fuse'?'Nenhum par com receita no nível máximo. Veja as receitas na aba Fusões do planejamento ou use Combinar.':'Evolua duas técnicas de ataque até o nível máximo para usar a oficina.'}</p>}
   </div>
   <footer><RunSheetButton onClick={onSheet}/><button className="button secondary-button" onClick={()=>window.dispatchEvent(new KeyboardEvent('keydown',{key:'x'}))}>Voltar à missão <kbd>X</kbd></button></footer>
  </section></div>;

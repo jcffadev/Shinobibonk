@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 25/11/2026 · Fusões só por receita, com atributos somados (Claude Code)
+
+- **Decisões do usuário:** "Aprovar e incluir Gelo"; "Incluir as duas" (Taijutsu e Genjutsu).
+- **`FUSION_RECIPES`** (`src/game/techniqueMerge.ts`): 7 de assinatura, 8 Kekkei Genkai, 7 de natureza (com Hyōton: Sensatsu Suishō para dois Ninjutsu de Gelo) e 2 de escola (Kage Buyō, Magen: Narakumi). A de assinatura vence as outras.
+- **Par sem receita só combina.** Partidas salvas com a fusão genérica antiga continuam com ela (`legacyFusion`).
+- **A fusão soma os atributos das duas técnicas:** dano A + B com o bônus, chance do mesmo status somada à da receita (teto 95%), outro status como secundário, queimadura, veneno, lentidão e gravidade.
+- **Interface:** o cartão do planejador mostra o tipo da fusão em vez de raridade; a Oficina e o guia explicam a regra; par sem receita mostra "pode ser Combinado".
+- **Cobertura:** com a conta completa, as 115 versões têm fusão e toda receita tem quem aprenda.
+- **Testes:** 6 testes novos em `tests/fusoes.test.mjs` (mínimo 296) e 3 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Pacote de status calibrado (Claude Code)
 
 - **Decisão do usuário:** "Sim, aplicar" (proposta medida em `scripts/simulate-status.mjs`).

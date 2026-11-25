@@ -204,3 +204,70 @@ test('modelo salvo de itens fica no planejamento, acima das Táticas salvas, e s
   assert.ok(!characters.includes('<ArsenalControls'), 'não fica mais na escolha do shinobi');
   assert.ok(!planner.includes('Salvar arsenal da conta'), 'sem o segundo botão de salvar');
 });
+
+// 25/11/2026 — receitas aprovadas pelo usuário ("Aprovar e incluir Gelo"; "Incluir as duas"): só funde par com receita.
+import { FUSION_RECIPES, fusionRecipe, legacyFusion, FUSION_STATUS_CAP } from '../src/game/techniqueMerge.ts';
+
+test('receitas: 7 de assinatura, 8 Kekkei Genkai, 7 de natureza (com Gelo) e 2 de escola, sem nome repetido', () => {
+  const count = kind => FUSION_RECIPES.filter(r => r.kind === kind).length;
+  assert.deepEqual([count('assinatura'), count('kekkei'), count('natureza'), count('escola')], [7, 8, 7, 2]);
+  assert.equal(new Set(FUSION_RECIPES.map(r => r.name)).size, FUSION_RECIPES.length);
+  assert.ok(FUSION_RECIPES.some(r => r.name === 'Hyōton: Sensatsu Suishō' && r.element === 'Gelo'));
+  const tai = { ...ninja('Neutro', 'T1'), school: 'Taijutsu' }, tai2 = { ...tai, name: 'T2' };
+  const gen = { ...ninja('Sombra', 'G1'), school: 'Genjutsu' }, gen2 = { ...gen, name: 'G2', element: 'Neutro' };
+  assert.equal(fusionRecipe(tai, tai2).name, 'Kage Buyō');
+  assert.equal(fusionRecipe(gen, gen2).name, 'Magen: Narakumi');
+  assert.equal(fusionRecipe(ninja('Gelo', 'I1'), ninja('Gelo', 'I2')).name, 'Hyōton: Sensatsu Suishō');
+});
+
+test('par sem receita não funde, só combina', () => {
+  const a = ninja('Neutro', 'N1'), b = ninja('Sombra', 'S1');
+  assert.equal(fusionRecipe(a, b), undefined);
+  assert.equal(mergedTechnique({ kind: 'fuse', names: [a.name, b.name] }, [a, b]), undefined);
+  assert.equal(mergedTechnique({ kind: 'combine', names: [a.name, b.name] }, [a, b]).name, 'N1 + S1');
+  const tai = { ...ninja('Neutro', 'T1'), school: 'Taijutsu' };
+  assert.equal(mergedTechnique({ kind: 'fuse', names: ['T1', 'N1'] }, [tai, a]), undefined, 'Taijutsu + Ninjutsu Neutro não tem receita');
+  const legacy = legacyFusion({ kind: 'fuse', names: [a.name, b.name] }, [a, b]);
+  assert.equal(legacy.name, 'Fusão · N1 / S1', 'run salva antes de 25/11 mantém a fusão antiga');
+});
+
+test('a de assinatura vence a de natureza e a de escola', () => {
+  const rasengan = ninja('Vento', 'Rasengan'), wind = ninja('Vento', 'Grande Vendaval');
+  assert.equal(fusionRecipe(rasengan, wind).name, 'Fūton: Rasenshuriken');
+  assert.equal(fusionRecipe(wind, ninja('Vento', 'Corte do Leque')).name, 'Fūton: Shinkū Taigyoku');
+  assert.equal(fusionRecipe(ninja('Fogo', 'Óleo Flamejante'), ninja('Fogo', 'Bola de Fogo')).name, 'Katon: Gamayu Endan');
+  const tai = name => ({ ...ninja('Neutro', name), school: 'Taijutsu' });
+  assert.equal(fusionRecipe(tai('Kage Bunshin'), tai('Shuriken')).name, 'Shuriken Kage Bunshin');
+  assert.equal(fusionRecipe(ninja('Neutro', 'Bijūdama'), ninja('Vento', 'Rasenshuriken')).name, 'Bijūdama Rasenshuriken');
+  assert.equal(fusionRecipe(ninja('Raio', 'Chidori'), tai('Chuva de Senbon')).name, 'Chidori Senbon');
+  assert.equal(fusionRecipe(ninja('Fogo', 'Amaterasu'), ninja('Neutro', 'Susanoo')).name, 'Enton: Espada de Kagutsuchi');
+});
+
+test('fusão soma os atributos das duas técnicas e o bônus (25/11)', () => {
+  const water = ninja('Água', 'W', { power: 2, status: 'Lentidão', statusChance: .2, poison: true });
+  const water2 = ninja('Água', 'W2', { power: 3, status: 'Paralisar', statusChance: .1, burn: true, gravity: 'pull' });
+  const f = mergedTechnique({ kind: 'fuse', names: ['W', 'W2'] }, [water, water2]);
+  assert.equal(f.name, 'Fusão · Suiton: Daibakufu');
+  assert.ok(Math.abs(f.power - 5 * 1.15) < 1e-9, 'A + B × mesma natureza');
+  assert.equal(f.status, 'Lentidão'); assert.ok(Math.abs(f.statusChance - (.3 + .2)) < 1e-9, 'chance da receita + a do mesmo status');
+  assert.equal(f.secondaryStatus, 'Paralisar'); assert.ok(Math.abs(f.secondaryStatusChance - .1) < 1e-9);
+  assert.ok(f.burn && f.poison && f.gravity === 'pull', 'queimadura, veneno e gravidade somados');
+  const ice = mergedTechnique({ kind: 'fuse', names: ['I1', 'I2'] }, [ninja('Gelo', 'I1', { status: 'Congelar', statusChance: .9 }), ninja('Gelo', 'I2', { status: 'Congelar', statusChance: .9 })]);
+  assert.equal(ice.statusChance, FUSION_STATUS_CAP, 'chance somada tem teto');
+});
+
+test('todas as receitas têm quem aprenda e toda versão tem fusão com a conta completa', () => {
+  const all = new Set(HEROES.map(h => h.id)), reach = new Set();
+  for (const h of HEROES) {
+    const list = fusionCatalog(techniquePool(h.id, all), familyOf(h.id));
+    assert.ok(list.length > 0, h.id + ' sem fusão com todos selados');
+    for (const f of list) reach.add(f.name);
+  }
+  for (const r of FUSION_RECIPES) assert.ok(reach.has(r.name), 'ninguém aprende ' + r.name);
+});
+
+test('sem raridade no cartão de fusão', () => {
+  const planner = read('src/ui/BuildPlanner.tsx');
+  assert.ok(!/Fusão · Épico|Combinação · Raro|Kekkei Genkai · Épico/.test(planner));
+  assert.ok(planner.includes("<small>{recipe?FUSION_KIND_LABEL[recipe.kind]:'Combinação'}</small>"));
+});

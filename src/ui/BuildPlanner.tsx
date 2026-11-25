@@ -9,7 +9,7 @@ import { plannerCardInfo } from '../game/plannerCards';
 import { techniquePool, HERO_BY_ID, heroAffinity, familyOf, type PoolTechnique, type Technique } from '../game/heroes';
 import { sealedHeroes, researchProgress } from '../game/account';
 import { ArsenalControls, type ArsenalControlsProps } from './ArsenalControls';
-import { combineBonus, fusionBonus, fusionCatalog, fusionDisplayName, fusionRecipeText, isMergedName, kekkeiFusion, mergedTechnique } from '../game/techniqueMerge';
+import { combineBonus, FUSION_KIND_LABEL, fusionBonus, fusionCatalog, fusionDisplayName, fusionRecipeText, isMergedName, kekkeiFusion, mergedTechnique } from '../game/techniqueMerge';
 /** Origem da técnica no pool (regra do usuário: 1–2 únicas por shinobi; compartilhadas por vila/elemento; únicas de outros só após selar). */
 function sourceText(t:PoolTechnique){const who=HERO_BY_ID[t.origin]?.name??t.origin;if(t.source==='kit')return 'Kit próprio.';if(t.source==='basica')return 'Básica da Academia (sempre disponível).';if(t.source==='vila')return 'Compartilhada · mesma vila ('+who+').';if(t.source==='elemento')return 'Compartilhada · mesmo elemento '+t.element+' ('+who+').';return t.locked?'Única de '+who+' · bloqueada até selar '+who+' pela 1ª vez.':'Única de '+who+' (selado).';}
 import { attackCooldown,setupNumbers,itemSchools,itemElement,itemAttribute,techniqueCritical,techniqueDetail,techniqueSchool,techniqueStatusText } from '../game/combat';
@@ -187,21 +187,21 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
 function FusionCard({heroId,pair,kind,pool}:{heroId:string;pair:[string,string];kind:'fuse'|'combine';pool:readonly Technique[]}){
  const result=mergedTechnique({kind,names:pair},pool,familyOf(heroId));
  const [first,second]=pair.map(name=>pool.find(technique=>technique.name===name));
- if(!result||!first||!second)return <div className="planner-fusion-card"><p>Par indisponível no pool atual.</p></div>;
+ if(!result||!first||!second)return <div className="planner-fusion-card"><p>{kind==='fuse'&&first&&second?'Este par não tem receita de fusão. Ele pode ser Combinado.':'Par indisponível no pool atual.'}</p></div>;
  const recipe=kekkeiFusion(result.name);
  const fused=kind==='fuse', parts=fused?[result]:[first,second];
  const effects=fused?[result.status,result.secondaryStatus,result.burn?'Queimadura':null,result.poison?'Dano contínuo':null,result.gravity?'Gravidade':null]:
   parts.flatMap(technique=>[technique.status,technique.burn?'Queimadura':null]);
  const projectiles=parts.some(t=>['Projétil','Em V'].includes(t.shape));
  return <article className={`planner-fusion-card ${fused?'is-fusion':'is-combination'}`}>
-  <div className="fusion-result-heading"><SkillIcon heroId={heroId} name={result.name}/><div><small>{recipe?'Kekkei Genkai · Épico':fused?'Fusão · Épico':'Combinação · Raro'}</small><h3>{recipe?.name??result.name}</h3></div></div>
+  <div className="fusion-result-heading"><SkillIcon heroId={heroId} name={result.name}/><div><small>{recipe?FUSION_KIND_LABEL[recipe.kind]:'Combinação'}</small><h3>{recipe?.name??result.name}</h3></div></div>
   <div className="fusion-sources">{[first,second].map(technique=><span key={technique.name}><SkillIcon heroId={heroId} name={technique.name}/>{technique.name}</span>)}</div>
   <div className="fusion-tags">
    {[...new Set([first.element,second.element])].map(element=><span key={element} style={{color:ELEMENT_COLOR[element]}}>{element}</span>)}
    {[...new Set(parts.flatMap(t=>[t.school,t.shape]))].map(label=><span key={label}>{label}</span>)}
   </div>
   <dl>
-   <div><dt>Dano</dt><dd>{fused?'2× a média · afixos somados'+(fusionBonus(first,second,familyOf(heroId))>0?' · +15% ('+(first.element===second.element?'mesma natureza':'Kekkei Genkai da linhagem')+')':''):'1,5× por técnica · '+combineBonus(first,second).label}</dd></div>
+   <div><dt>Dano</dt><dd>{fused?'A + B · afixos e efeitos somados'+(fusionBonus(first,second,familyOf(heroId))>0?' · +15% ('+(first.element===second.element?'mesma natureza':'Kekkei Genkai da linhagem')+')':''):'1,5× por técnica · '+combineBonus(first,second).label}</dd></div>
    <div><dt>Recarga no Nv. 1</dt><dd>{attackCooldown(result,1).toLocaleString('pt-BR',{maximumFractionDigits:2})} s</dd></div>
    {effects.some(Boolean)&&<div><dt>Efeitos</dt><dd>{fused?techniqueStatusText(result):[...new Set(effects.filter(Boolean))].join(' · ')}</dd></div>}
    <div><dt>Melhorias</dt><dd>Dano, área, recarga{effects.some(Boolean)?', duração de status':''}{projectiles?', projéteis':''}</dd></div>

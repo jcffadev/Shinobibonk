@@ -3006,3 +3006,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - Pacote de status aplicado: a Esfera Katon não explode em cadeia, 2 acúmulos de Resfriado congelam e Fio, Incenso, Hyoton e Anel têm o dobro de chance.
 - **Testes:** tipos, testes (290) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Sim, fusões · Aprovar e incluir Gelo · Incluir as duas
+
+**Resposta.**
+
+- Fusões agora só por receita (24): assinatura, Kekkei Genkai, natureza (com Gelo) e escola (Taijutsu e Genjutsu). O par sem receita só combina, e a fusão soma os atributos das duas técnicas.
+- Com a conta completa, todas as 115 versões têm fusão. Faltam o cartão novo e a ficha ao passar o mouse.
+- **Testes:** tipos, testes (296) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

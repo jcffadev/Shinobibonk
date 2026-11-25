@@ -527,6 +527,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Pacote de status calibrado (25/11): `STATUS_RULES.chill.stacksToFreeze` = 2, `burstBurn` em `statusRules.ts`/GameCanvas (Katon sem cadeia), chances dos itens em `catalog.ts`.
 
+- Fusões por receita (25/11): `FUSION_RECIPES`, `fusionRecipe`, `fusionByName` (alias `kekkeiFusion`), `FUSION_KIND_LABEL` e `legacyFusion` em `src/game/techniqueMerge.ts`; regra e lista em docs/10.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.
