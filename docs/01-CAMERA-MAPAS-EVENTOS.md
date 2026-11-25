@@ -241,7 +241,12 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 
 1. **Arte das construções de cada vila:** os pedidos, com descrição pronta para o gerador de arte, estão acima, em "Pedidos de arte para o gerador do usuário". Toda construção nova precisa de área plana (`LEAF_PLACES` / `REGIONAL_PLACES`) e entra no teste de chão plano.
 2. **Água:** respingos em partículas ao correr e no dash, ondas de aliados e inimigos, anel de chakra no ritmo dos passos e arte própria do brilho (comentário "PARA O CODEX APRIMORAR" em `water.ts`).
-3. **Selos de mão** (pedido do usuário: "Posições de mãos que todos os personagens devem fazer… aleatoriamente para soltar as habilidades… Se você souber… para determinada jutsu… ótimo… TODOS os personagens"). **Plano já desenhado, nada implementado:**
+3. **Selos de mão** (pedido do usuário: "Posições de mãos que todos os personagens devem fazer… aleatoriamente para soltar as habilidades… Se você souber… para determinada jutsu… ótimo… TODOS os personagens"). **Lógica implementada em 25/11/2026 pelo Claude Code, sem arte nova** (pedido do usuário: "lembrando que você não fará mais questões de gráficos/animações, coisa do tipo, tente implementar o que já tem feito"):
+   - `src/game/handSeals.ts`: os 12 selos, as sequências da tabela abaixo, o selo em cruz do Kage Bunshin, 2 a 4 selos fixos pelo nome nas outras técnicas de Ninjutsu e Genjutsu, nada no Taijutsu, Ultimate sempre e no máximo uma sequência a cada 2,5 s por personagem.
+   - `showHandSeals` no `GameCanvas` (jogador, aliados e companheiros): a sequência sobe acima de quem lança com o texto flutuante que já existe ("寅 Tigre"), um selo a cada 0,1 s. Some com "Ocultar meus ataques".
+   - O corpo faz o selo com a pose que já existia (Naruto e Zabuza).
+   - **Fica para o Codex:** folhas de selo dos outros personagens (layout 4 × 4 de `handSealArt`) e, se quiser, um selo desenhado no lugar do texto.
+   - Plano original:
    - **Os 12 selos:** Rato 子, Boi 丑, Tigre 寅, Coelho 卯, Dragão 辰, Serpente 巳, Cavalo 午, Carneiro 未, Macaco 申, Pássaro 酉, Cachorro 戌, Javali 亥.
    - **Todos os personagens:** um selo flutuando acima da cabeça com o kanji do animal e o nome em português, mostrando a sequência um a um, cerca de 0,1 s por selo.
      - Aparece ao lançar Ninjutsu ou Genjutsu, no máximo a cada ~2,5 s, porque as técnicas são automáticas e o selo não pode virar ruído. Na Ultimate aparece sempre. Taijutsu não tem selo.

@@ -3022,3 +3022,12 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Cartão de fusão refeito: tipo, nome, ingredientes, natureza/escola/forma, descrição, "Como funciona", "Quais melhorias afetam" e ficha. A lista do catálogo segue o mesmo estilo.
 - Ficha ao passar o mouse no catálogo e nos espaços do plano, com dano base, dano final, recarga, status, condição e níveis.
 - **Testes:** tipos, testes (300) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Sim, selos
+> lembrando que você não fará mais questões de gráficos/animações, coisa do tipo, tente implementar o que já tem feito
+
+**Resposta.**
+
+- Selos de mão sem arte nova: a sequência aparece em texto acima de quem lança ("寅 Tigre"), com as sequências da obra, o selo em cruz do Kage Bunshin e no máximo uma vez a cada 2,5 s. O corpo usa a pose de selo que já existia.
+- Daqui em diante, gráficos e animações ficam com o Codex.
+- **Testes:** tipos, testes (304) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

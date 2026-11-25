@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Selos de mão (Claude Code)
+
+- **Pedidos do usuário:** "Sim, selos"; "lembrando que você não fará mais questões de gráficos/animações, coisa do tipo, tente implementar o que já tem feito".
+- **Novo `src/game/handSeals.ts`:** os 12 selos (Rato 子 … Javali 亥), as sequências da obra (Grande Bola de Fogo, Fênix de Fogo, Chidori/Raikiri, Invocação, Parede de Terra, início do Dragão de Água), o selo em cruz do Kage Bunshin e 2 a 4 selos fixos pelo nome nas outras técnicas de Ninjutsu e Genjutsu. Taijutsu não tem selo; a Ultimate sempre tem.
+- **GameCanvas (`showHandSeals`):** ao lançar, a sequência sobe acima do jogador, aliado ou companheiro com o texto flutuante que já existe, um selo a cada 0,1 s, no máximo uma vez a cada 2,5 s por personagem. Some com "Ocultar meus ataques". Nenhuma arte nova; a pose de selo continua a que já existia (Naruto e Zabuza).
+- **Testes:** `tests/selos.test.mjs` com 4 testes (mínimo 304) e 3 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Cartão novo de fusão e ficha ao passar o mouse (Claude Code)
 
 - **Pedido do usuário:** "Sim, fazer o cartão" (docs/10, itens 4 e 5).

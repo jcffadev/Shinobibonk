@@ -4,7 +4,7 @@
 
 **Claude Code · Balanceamento**
 
-> Fila combinada com o usuário em 25/11: (1) avanço da arena por dificuldade e planos; (2) dano de nível alto × Final Swarm; (3) calibrar o pacote de status; (4) fusões (**receitas, cartão novo e ficha aplicados em 25/11**; Codex: ícones e efeitos próprios); (5) selos de mão (plano em docs/01); (6) **novo:** missões de evento inspiradas no anime que liberam personagens — ex.: aba Eventos com o mapa da Prova Chūnin; completar todos os objetivos com determinados personagens libera os Chūnin na conta. O usuário descartou árvores bloqueando, velocidade de elites, Orochimaru Sannin e desempenho de menus.
+> Fila combinada com o usuário em 25/11: (1) avanço da arena por dificuldade e planos; (2) dano de nível alto × Final Swarm; (3) calibrar o pacote de status; (4) fusões (**receitas, cartão novo e ficha aplicados em 25/11**; Codex: ícones e efeitos próprios); (5) selos de mão (**lógica feita em 25/11**, sem arte nova; Codex: folhas de selo dos outros personagens); (6) **novo:** missões de evento inspiradas no anime que liberam personagens — ex.: aba Eventos com o mapa da Prova Chūnin; completar todos os objetivos com determinados personagens libera os Chūnin na conta. O usuário descartou árvores bloqueando, velocidade de elites, Orochimaru Sannin e desempenho de menus.
 
 1. **MEDIDO em 25/11** (`scripts/simulate-bosses.mjs`, [docs/20](20-SCALING-EREGULAS.md#medição-de-guardiões-e-bijū--25112026-claude-code)). Números finitos garantidos por `BOSS_HP_LIMIT`. **DECIDIDO e implementado:** Bijū com 3× a armadura e só os planos da zona 3. Falta sentir a luta em partida. Pedido original: calibrar Guardiões e Bijū com invocações normais e aos +1, +7, +15 minutos e além do Final Swarm. HP da zona pode alcançar trilhões e quadrilhões sem teto de gameplay. Manter os valores numéricos finitos dentro do intervalo suportado e testar precisão de dano e passagem de fase em lutas muito longas.
 2. Tomar cerca de **20× a armadura bruta** do Guardião equivalente como alvo inicial para a Bijū. Calibrar o efeito de armadura real no tempo de combate, com janela para desvio e dano sempre possível. Comparar defesa efetiva e dano por golpe para builds novas e fortes.
@@ -33,6 +33,11 @@
 4. Validar a hospedagem e a migração do ranking com conta de teste. Implementar o verificador de resultados do servidor antes de classificar partidas em equipe. A função Netlify foi testada com um provedor simulado. [Ranking e clãs](development/RANKING-E-CLAS.md).
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
+
+## Selos de mão · 25/11/2026
+
+- Sequência de selos em texto acima de quem lança Ninjutsu, Genjutsu ou Ultimate (`src/game/handSeals.ts`). **PENDENTE DE VALIDAÇÃO E2E:** ver se o texto não polui a tela com muitos aliados e se a Grande Bola de Fogo mostra os 6 selos.
+- Regra do usuário (25/11): o Claude Code não faz mais gráficos nem animações; a parte visual fica para o Codex.
 
 ## Fusões por receita · 25/11/2026
 
