@@ -147,11 +147,12 @@ test('cada dificuldade escala os monstros de forma sentida e na mesma proporçã
 test('simulador: geometria dos golpes igual à do jogo e bônus do preparo (25/11/2026)', async () => {
   const { targetsPerCast } = await import('../scripts/simulate-run.mjs');
   const { ATTACK_SCALE } = await import('../src/game/worldScale.ts');
-  const { MELEE_IMPACT, CONE_COS } = await import('../src/game/combat.ts');
+  const { MELEE_IMPACT, CONE_COS, SHAPE_RADIUS } = await import('../src/game/combat.ts');
+  assert.deepEqual(SHAPE_RADIUS, { area: 1.8, orbit: 1.7 }, 'raio da Área 1,8 desde 25/11');
   const stats = { area: 1, projectiles: 1, bounce: 0 }, many = 10000;
   const t = (shape, range) => ({ shape, range });
   const ratio = (a, b) => targetsPerCast(a, stats, many) / targetsPerCast(b, stats, many);
-  const r = ATTACK_SCALE * 1.6, melee = Math.PI * Math.max(MELEE_IMPACT.min, r * MELEE_IMPACT.share) ** 2, area = Math.PI * (ATTACK_SCALE * 1.2) ** 2;
+  const r = ATTACK_SCALE * 1.6, melee = Math.PI * Math.max(MELEE_IMPACT.min, r * MELEE_IMPACT.share) ** 2, area = Math.PI * (ATTACK_SCALE * SHAPE_RADIUS.area) ** 2;
   assert.ok(Math.abs(ratio(t('Corpo a corpo', 1.6), t('Área', 4.5)) - melee / area) < 1e-9, 'corpo a corpo usa o raio do impacto, não o alcance');
   const cone = Math.acos(CONE_COS) * (ATTACK_SCALE * 2.8) ** 2;
   assert.ok(Math.abs(ratio(t('Cone', 2.8), t('Área', 4.5)) - cone / area) < 1e-9, 'cone com o alcance em escala de ataque');

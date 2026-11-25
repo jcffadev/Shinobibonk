@@ -20,7 +20,7 @@
 - **Testes de solução:**
   - preparo sem ocupar espaço de técnica: quase não muda (Naruto Shippuden continua morrendo aos 3–5 min);
   - trocar a ordem (4º ataque no Nv 12, Modo Sábio no Nv 20): quase não muda;
-  - **raio da Área 1,2 → 1,8 (PROPOSTO, aguarda decisão):** capacidade aos 3 min sem ninguém abaixo de 1,09 no Jonin; mediana e p90 iguais (2,2 e 3,0). Na partida inteira, abaixo de 0,5× cai de 11 para 6, o pior sobe de 0,17× para 0,39×, a faixa p10–p90 fica 0,58×–1,16× e a mediana quase não muda (Genin conta nova 43,8 → 44,2 min).
+  - **raio da Área 1,2 → 1,8 — APLICADO em 25/11/2026 (decisão do usuário: "Sim, aplicar"; `SHAPE_RADIUS` em `combat.ts`, usado no GameCanvas, no Kuroari e no simulador). O círculo das 56 técnicas de Área passa de 0,84 m para 1,26 m de raio (×2,25 de chão); o dano por acerto não muda. Medição:** capacidade aos 3 min sem ninguém abaixo de 1,09 no Jonin; mediana e p90 iguais (2,2 e 3,0). Na partida inteira, abaixo de 0,5× cai de 11 para 6, o pior sobe de 0,17× para 0,39×, a faixa p10–p90 fica 0,58×–1,16× e a mediana quase não muda (Genin conta nova 43,8 → 44,2 min).
 
 ## Elemento Gelo e bônus de elemento em todos os danos · 25/11/2026 (Claude Code)
 

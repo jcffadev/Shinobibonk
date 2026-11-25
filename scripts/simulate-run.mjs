@@ -13,7 +13,7 @@
 import { HEROES, HERO_BY_ID, heroAffinity } from '../src/game/heroes.ts';
 import { calculateStats, zoneThreat, zoneCurse, ZONE_DIFFICULTY, MISSION_TIER, xpToLevelUp, effectiveLootLuck, incomingDamage, normalHpFactor, AMBUSH_RULES } from '../src/game/progression.ts';
 import { ENEMY_TIERS, BASE_LOOT, xpDropValue, xpLoot, lootScale, megaEliteHp, rollMegaSchedule, eliteSpawnChance, eliteHpRamp } from '../src/game/enemyTiers.ts';
-import { CONE_COS, MELEE_IMPACT, setupNumbers, attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
+import { SHAPE_RADIUS, CONE_COS, MELEE_IMPACT, setupNumbers, attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
 import { techniqueLevelCap } from '../src/game/techniqueMerge.ts';
 import { expectedHit, bossHpWithFloor, BOSS_POWER } from '../src/game/bossScaling.ts';
 import { ITEMS, rollItems } from '../src/game/catalog.ts';
@@ -46,8 +46,8 @@ function shapeArea(t, area) {
   const a = Math.sqrt(area), range = ATTACK_SCALE * (t.range ?? 4.5) * a;
   switch (t.shape) {
     case 'Corpo a corpo': return Math.PI * Math.max(MELEE_IMPACT.min, range * MELEE_IMPACT.share) ** 2;
-    case 'Área': return Math.PI * (ATTACK_SCALE * 1.2 * a) ** 2;
-    case 'Órbita': return Math.PI * (ATTACK_SCALE * 1.7 * a) ** 2;
+    case 'Área': return Math.PI * (ATTACK_SCALE * SHAPE_RADIUS.area * a) ** 2;
+    case 'Órbita': return Math.PI * (ATTACK_SCALE * SHAPE_RADIUS.orbit * a) ** 2;
     case 'Cone': return Math.acos(CONE_COS) * range * range;
     case 'Linha': return range * 2 * ATTACK_SCALE * .65 * a;
     case 'Onda': return range * 2 * (ATTACK_SCALE * .85 * a + .4);

@@ -232,3 +232,8 @@ export function aimedCenter(t:{shape:string;gravity?:string},sageArea=false):'ta
 export const MELEE_IMPACT={share:.6,min:.6};
 /** Cone das técnicas: cosseno do meio-ângulo (o mesmo no desenho e no acerto; techniqueAreas.ts reexporta). */
 export const CONE_COS=.65;
+/**
+ * Raio (× ATTACK_SCALE × √área) do círculo de Área e de Órbita. 25/11/2026 (decisão do usuário: "Sim, aplicar"): Área 1,2 → 1,8,
+ * porque os kits de Área limpavam ~1,2 inimigo/s contra ~6,3 do Em V e caíam no pico dos 3–5 min (medição em docs/20).
+ */
+export const SHAPE_RADIUS={area:1.8,orbit:1.7};

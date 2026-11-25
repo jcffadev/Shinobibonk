@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Raio da Área 1,2 → 1,8 (Claude Code)
+
+- **Decisão do usuário:** "Sim, aplicar". Pergunta: "o que seria esse raio da área?" — o círculo em volta do alvo que as 56 técnicas de Área (Rasengan, Bola de Fogo, Caixão de Areia…) acertam; passa de 0,84 m para 1,26 m de raio, sem mudar o dano.
+- **`SHAPE_RADIUS`** em `src/game/combat.ts` (Área 1,8 · Órbita 1,7), usado no acerto do GameCanvas, no golpe do Kuroari e no simulador. A marca no chão acompanha.
+- **Efeito medido:** no Jonin, capacidade aos 3 min sem ninguém abaixo de 1,09 (antes 0,49); mediana e p90 iguais. Partida inteira: abaixo de 0,5× da mediana cai de 11 para 6; mediana quase igual.
+- **Testes:** valor conferido em `tests/balanceamento.test.mjs` e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Revisão do scale e do começo de partida (Claude Code)
 
 - **Pedidos do usuário:** "Reveja o scale de todos os personagens e veja o early game de todos os persoagens"; "Morrer se o player jogar mal, deve morrer, mesmo na dificuldade mais fácil..."; "Não é pros personagens ficarem brokens, é para ficar balanceados."

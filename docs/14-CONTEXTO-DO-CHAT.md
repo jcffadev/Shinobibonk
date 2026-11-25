@@ -3051,3 +3051,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - O dano escala bem em todo o elenco. O que separa os personagens é o formato dos ataques: kits de Área (Naruto Shippuden, Hashirama Sábio, Lee, Sasuke Shippuden) não acompanham a horda aos 3–5 min, mesmo jogando bem.
 - Proposta: raio da Área 1,2 → 1,8. Puxa os piores para perto da média sem subir a mediana nem o topo. Aguarda decisão.
 - **Testes:** tipos, testes (310) e build. **Publicado no GitHub.**
+
+> Sim, aplicar
+> o que seria esse raio da área?
+
+**Resposta.**
+
+- É o círculo em volta do alvo que as 56 técnicas de Área acertam (Rasengan, Bola de Fogo, Caixão de Areia…). Passou de 0,84 m para 1,26 m de raio; o dano por acerto não muda e a marca no chão acompanha.
+- **Testes:** tipos, testes (310) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

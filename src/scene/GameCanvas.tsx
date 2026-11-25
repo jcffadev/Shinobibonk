@@ -84,7 +84,7 @@ import { buildAltarOffers, extraStrikes } from '../game/altarRewards';
 import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
 import { castProgress, blendFog, mistHides, isChanneling, CAST_DISTANCE } from '../game/weatherCast';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
-import { rollRarityTier, RARITY_ORDER } from '../game/combat';
+import { rollRarityTier, RARITY_ORDER, SHAPE_RADIUS } from '../game/combat';
 import { ROULETTE_CASAS, ROULETTE_BY_ID, ROULETTE_RULES, BLESSINGS, BAD_LUCK, SLOT_COMBOS, slotKakuzuRyu, rouletteWeights, roulettePressure, rollRoulette, rouletteCost, seededRng, spendBonuses, type SlotComboId, type RoulettePrize, type RouletteView } from '../game/roulette';
 
 export type LevelOffer = { merge?:TechniqueMerge; id: string; kind: 'skill'|'pill'|'item'|'stat'; name: string; rarity: Rarity; icon: string; description: string; planned?: boolean; price?:number; growth?:SkillGrowth; bonus?:Bonuses; deal?:StatDeal; disabled?:string; /** Tela de substituição de ajudantes (choiceLevel −7): id do ajudante e se é o recém-derrotado. */ allyId?:string; allyNew?:boolean };
@@ -1915,7 +1915,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         // Kankuro continua sendo aplicado via hit() (stats.poison), como já acontecia.
         const impact=target.sprite.position.clone();
         if(!hiddenEffects)showPuppet(origin,impact);
-        pendingHits.push({time:KUROARI_STRIKE,run:()=>{const radius=ATTACK_SCALE*1.2*Math.sqrt(stats.area*(1+g.area));areas.mark({...t,shape:'Área'},origin,direction,impact,radius,range,0,0,hiddenEffects);if(!hiddenEffects&&!areas.enabled())particles.footprint(t,origin,direction,impact,radius,range,0);for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-impact.x,enemy.sprite.position.z-impact.z)<radius)hit(enemy,t,g,impact);}});
+        pendingHits.push({time:KUROARI_STRIKE,run:()=>{const radius=ATTACK_SCALE*SHAPE_RADIUS.area*Math.sqrt(stats.area*(1+g.area));areas.mark({...t,shape:'Área'},origin,direction,impact,radius,range,0,0,hiddenEffects);if(!hiddenEffects&&!areas.enabled())particles.footprint(t,origin,direction,impact,radius,range,0);for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-impact.x,enemy.sprite.position.z-impact.z)<radius)hit(enemy,t,g,impact);}});
       }else if(projectile){
         const launch=(launchOrigin:THREE.Vector3,aimTarget:Enemy)=>{
           const aimDirection=aimTarget.sprite.position.clone().sub(launchOrigin).setY(0).normalize();
@@ -1946,7 +1946,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         }});
         else launch(origin,target);
       }
-      else{const center=aimedCenter(t,sageArea)==='target'?target.sprite.position.clone():origin.clone(),radius=t.shape==='Área'||t.shape==='Órbita'?ATTACK_SCALE*(t.shape==='Área'?1.2:1.7)*Math.sqrt(stats.area*(1+g.area)):t.shape==='Corpo a corpo'&&!sageArea?Math.max(MELEE_IMPACT.min,range*MELEE_IMPACT.share):range;
+      else{const center=aimedCenter(t,sageArea)==='target'?target.sprite.position.clone():origin.clone(),radius=t.shape==='Área'||t.shape==='Órbita'?ATTACK_SCALE*(t.shape==='Área'?SHAPE_RADIUS.area:SHAPE_RADIUS.orbit)*Math.sqrt(stats.area*(1+g.area)):t.shape==='Corpo a corpo'&&!sageArea?Math.max(MELEE_IMPACT.min,range*MELEE_IMPACT.share):range;
         // Golpes e lançamentos sem projétil têm um preparo curto até o acerto, reduzido pela velocidade de projétil.
         let areaTelegraphed=false;
         const resolve=()=>{
