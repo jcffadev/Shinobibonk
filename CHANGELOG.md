@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 25/11/2026 · Elemento Gelo e bônus de elemento em todos os danos (Claude Code)
+
+- **Pedidos do usuário:** "todas as linhas de dano na realidade"; "sim, é legal os efeitos dos elementos que temos também fazer parte do calculo"; "o elemento gelo, você colocou como resfriar, pesquise, deveria ser gelo".
+- **`src/game/combat.ts`:**
+  - `elementMultiplier` dá o bônus de um elemento.
+  - Os ajudantes passam a somar o bônus de elemento da técnica deles.
+  - `ELEMENT_KEY.Gelo = 'elGelo'`.
+- **GameCanvas:** queimadura e explosão da Katon usam +% de Fogo; os estilhaços do Espelho de Haku usam +% de Gelo.
+- **Gelo (Hyōton) como elemento:**
+  - Tipo `Element`, cor, ícone 氷, célula de visual e área.
+  - Técnicas do Haku passam a Gelo com Congelar.
+  - A fusão Água + Vento passa a Gelo (`KekkeiRecipe.element`).
+  - Pergaminho Hyoton ganha +28% de Gelo.
+  - O visual usa o de Água por enquanto.
+- **Simulador de status:** as mesmas regras.
+- **Testes:** 2 testes novos em `tests/elementos.test.mjs` (o mínimo subiu para 289) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** jogar com o Haku (visual das técnicas de Gelo, ícone e cor) e ver a queimadura subir com o Pergaminho Katon.
+
 ## 25/11/2026 · Espinhos escalam com armadura × dano e simulador de status (Claude Code)
 
 - **Pedido do usuário:** "o dano% deve ser responsável por aumentar todos os danos do personagem"; "o espinhos seria com armadura"; "e sim dano% do dano do espinhos"; decisão "Armadura × dano do personagem".

@@ -2,6 +2,21 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Elemento Gelo e bônus de elemento em todos os danos · 25/11/2026 (Claude Code)
+
+**Pedidos do usuário:** "todas as linhas de dano na realidade"; "sim, é legal os efeitos dos elementos que temos também fazer parte do calculo"; "o elemento gelo, você colocou como resfriar, pesquise, deveria ser gelo".
+
+- **Regra:** todo dano parte do dano do personagem (nível e dano%) e soma o bônus da própria linha.
+  - Queimadura e explosão da Esfera Katon: +% de Fogo.
+  - Estilhaços do Espelho de Haku: +% de Gelo.
+  - Ajudantes: +% de escola (já tinham) e +% do elemento da técnica deles.
+- **Gelo (Hyōton)** virou elemento próprio (`elGelo`), como Madeira. No anime é a natureza de linhagem do clã Yuki, que junta Água e Vento.
+  - Técnicas do Haku (Senbon de Gelo, Espelhos Demoníacos de Gelo): Gelo, com Congelar (acúmulos de Resfriado). A afinidade do Haku passa a Gelo (×1,5).
+  - Fusão Água + Vento (Hyōton: Domo de Gelo): elemento Gelo.
+  - Pergaminho Hyoton: +28% de dano de técnicas de Gelo, além do Resfriado e da armadura.
+  - O visual de Gelo usa o de Água por enquanto (arte própria com o Codex). Ícone 氷 e cor #90eafb.
+- Medição da proposta de status refeita com as regras novas (36 builds dos 8:00, 3 golpes): Esfera Katon +18% · −32% (proposta +6% · −8%); Espelho de Haku +16% · −47% (proposta +18% · −54%); o resto igual à tabela abaixo.
+
 ## Espinhos e medição do pacote de status · 25/11/2026 (Claude Code)
 
 **Espinhos** (decisão do usuário: "Armadura × dano do personagem"; antes: dano fixo de 25 e 40):
@@ -12,7 +27,7 @@
 **Pacote de status (Rodada 103): ferramenta nova `scripts/simulate-status.mjs`.** A build do bot enfrenta por 30 s uma horda de inimigos individuais (comuns e elites) com as regras de `statusRules.ts` e a ordem do `hit` do GameCanvas. Compara cada item de status (1 cópia) com +10% e +30% de dano. Medição preliminar no Chunin, 115 versões, semente 17:
 - Na partida normal (3:00 e 8:00) o golpe vale 8× a 18× a vida do comum: tudo morre num golpe, então nem status nem +30% de dano mudam os abates.
 - Horda cheia aos 8:00 com 3 golpes por inimigo: Esfera Katon +18% de abates e −27% de golpes recebidos (explosão em cadeia: a explosão queima, o vizinho morre queimando e explode); Espelho de Haku +14% e −41%; Hyoton ×5 + Quebra-Gelo +19% e −49%; Anel do Veneno ×5 + Erva ×2 +9%. Fio de Aço, Incenso, Correntes, Erva, Cinco Elementos e 1 Hyoton ficam perto de zero.
-- Nenhuma técnica congela: o gelo vem só de itens.
+- Correção: as técnicas de gelo do Haku já congelavam (perfil de status de `statusProfiles.ts`); desde 25/11 elas são do elemento Gelo.
 - Variantes medidas (`node scripts/simulate-status.mjs proposta Chunin 3 17`, 36 builds dos 8:00, horda cheia com 3 golpes por inimigo; abates · golpes recebidos, 1 cópia somada à build):
   - Katon sem cadeia (a queimadura que vem da explosão não explode de novo): Esfera Katon cai de +17% · −31% para +7% · −8%.
   - Congelar com 2 acúmulos em vez de 3: Quebra-Gelo sobe de +4% · −12% para +13% · −37%; Espelho de Haku de +14% · −45% para +17% · −52%.

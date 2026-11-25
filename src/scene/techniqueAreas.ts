@@ -23,7 +23,7 @@ export const CONE_COS = .65;
 
 const ELEMENT_COLOR: Record<string, string> = {
   Neutro: '#eef4ff', Fogo: '#ff6a2b', Água: '#36b2ff', Vento: '#5ff0c2', Terra: '#e0a456', Raio: '#a9b9ff',
-  Madeira: '#7fe04c', Areia: '#f2c46e', Sombra: '#b37bff', Sábio: '#ffd148',
+  Madeira: '#7fe04c', Areia: '#f2c46e', Sombra: '#b37bff', Sábio: '#ffd148', Gelo: '#9cecff',
 };
 
 const VERT = /* glsl */`

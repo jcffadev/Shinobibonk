@@ -2,6 +2,8 @@ import type { Element, Technique } from './heroes';
 
 type KekkeiRecipe = Pick<Technique,'shape'|'color'|'status'|'statusChance'|'burn'|'poison'> & {
   natures: readonly [Element,Element]; name: string; summary: string; icon: number;
+  /** Elemento próprio da Kekkei Genkai (Hyōton → Gelo, 25/11/2026); sem ele, a fusão usa as duas naturezas. */
+  element?: Element;
 };
 /**
  * Kekkei Genkai de duas naturezas (Narutopedia: https://naruto.fandom.com/wiki/Kekkei_Genkai). Valem para QUALQUER
@@ -9,7 +11,7 @@ type KekkeiRecipe = Pick<Technique,'shape'|'color'|'status'|'statusChance'|'burn
  * Rodada 71: + Jiton (Vento + Terra) e Bakuton (Terra + Raio).
  */
 export const KEKKEI_RECIPES: readonly KekkeiRecipe[] = [
-  {natures:['Água','Vento'],name:'Hyōton: Domo de Gelo',shape:'Área',color:'#90eafb',status:'Congelar',statusChance:.55,summary:'Ergue um domo de gelo no ponto atingido. Pode congelar os alvos dentro dele.',icon:17},
+  {natures:['Água','Vento'],element:'Gelo',name:'Hyōton: Domo de Gelo',shape:'Área',color:'#90eafb',status:'Congelar',statusChance:.55,summary:'Ergue um domo de gelo no ponto atingido. Pode congelar os alvos dentro dele.',icon:17},
   {natures:['Terra','Água'],name:'Mokuton: Nascimento da Floresta',shape:'Área',color:'#8bd464',status:'Paralisar',statusChance:.45,summary:'Árvores brotam do chão e os galhos podem prender os inimigos na área.',icon:8},
   {natures:['Fogo','Terra'],name:'Yōton: Torrente de Lava',shape:'Onda',color:'#ee783b',burn:true,status:'Lentidão',statusChance:.24,summary:'Espalha uma torrente corrosiva na direção do alvo, com chance de queimar e desacelerar.',icon:23},
   {natures:['Água','Fogo'],name:'Futton: Névoa Corrosiva',shape:'Área',color:'#dcc0d8',statusChance:0,poison:true,summary:'Libera uma nuvem corrosiva que pode continuar causando dano após o impacto.',icon:22},
@@ -120,7 +122,7 @@ export function mergedTechnique(plan:TechniqueMerge, pool:readonly Technique[], 
   const recipe=fused?kekkeiRecipe(a,b):undefined;
   const bonus=fused?1+fusionBonus(a,b,family):1;
   if(recipe)return {
-    name:'Fusão · '+recipe.name,school:'Ninjutsu',element:recipe.natures[0],secondaryElement:recipe.natures[1],
+    name:'Fusão · '+recipe.name,school:'Ninjutsu',element:recipe.element??recipe.natures[0],secondaryElement:recipe.element?undefined:recipe.natures[1],
     shape:recipe.shape,color:recipe.color,status:recipe.status,statusChance:recipe.statusChance,burn:recipe.burn,poison:recipe.poison,
     power:(a.power+b.power)*bonus,range:Math.max(a.range,b.range),cooldown:Math.max(a.cooldown,b.cooldown),unlockLevel:1,
   };

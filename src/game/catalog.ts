@@ -5,7 +5,7 @@ export type Rarity = 'Comum' | 'Incomum' | 'Raro' | 'Épico' | 'Lendário';
  */
 export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'crit'|'critDamage'|'cool'|'gold'|'exp'|'area'|'projectiles'|'projectileChance'|'dodge'|'duration'|'dot'|'status'|'attackSpeed'|'projectileSpeed'|'luck'|'pickup'|'pickupFlat'|'regen'|'support'|'allyDamage'|'allySpeed'|'allyBuff'|'sage'
   // Dano por elemento da técnica (+%) e Genjutsu (escola)
-  |'elFogo'|'elAgua'|'elVento'|'elTerra'|'elRaio'|'elMadeira'|'elAreia'|'elSombra'|'elNeutro'|'elSabio'|'genjutsu'
+  |'elFogo'|'elAgua'|'elVento'|'elTerra'|'elRaio'|'elMadeira'|'elAreia'|'elSombra'|'elNeutro'|'elSabio'|'elGelo'|'genjutsu'
   // Mecânicas de item
   |'healthPct'|'regenMult'|'eliteDamage'|'controlledDamage'|'statusStack'|'lowHpDamage'|'noHitDamage'|'killDamage'|'armorPhysical'|'bigCrit'
   |'lifesteal'|'thorns'|'killHeal'|'execute'|'burnChance'|'poisonChance'|'sleepChance'|'rootChance'|'chillChance'|'statusDamage'
@@ -83,7 +83,7 @@ export const ITEMS:Item[] = [
   item('blood-shell','Concha Sanguinária','Incomum',15,ANY,'Recupera 0,8% do dano causado como HP.',{lifesteal:.008}),
   item('emergency-fruit','Fruta Medicinal','Incomum',13,ANY,'+10 HP máximo; abaixo de 30% de HP, recupera 35% (a cada 45 s).',{health:10,emergencyHeal:1}),
   item('dense-smoke','Fumaça Densa','Incomum',0,ANY,'Ao ser atingido: 25% de chance de ficar invisível (invulnerável) por 1,5 s; +3% de evasão.',{smoke:.25,dodge:.03}),
-  item('hyoton','Pergaminho Hyoton','Incomum',10,5,'6% de chance por acerto de Resfriar (−12% de movimento por acúmulo; 3 acúmulos ou inimigo molhado congelam por 1,5 s) e +3 de armadura.',{chillChance:.06,defense:3}),
+  item('hyoton','Pergaminho Hyoton','Incomum',10,5,'+28% de dano de técnicas de Gelo, 6% de chance por acerto de Resfriar (−12% de movimento por acúmulo; 3 acúmulos ou inimigo molhado congelam por 1,5 s) e +3 de armadura.',{elGelo:.28,chillChance:.06,defense:3}),
   item('poison','Anel do Veneno','Incomum',15,5,'6% de chance por acerto de envenenar e +10 pontos percentuais de chance de status.',{poisonChance:.06,status:.1}),
   item('taunt-flute','Flauta Provocadora','Incomum',2,5,'+12% de inimigos no mapa, +10% de experiência e +5 de Sorte.',{enemyCount:.12,exp:.1,luck:5}),
   item('tracker','Olhos do Rastreador','Incomum',7,ANY,'+25 pontos percentuais de chance de status (Genjutsu). Técnicas sem status passam a aplicar lentidão.',{status:.25}),

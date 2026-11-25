@@ -17,7 +17,7 @@ const strike = (name: string, school: School, element: Element, shape: Shape, vi
   ({ name, school, element, shape, visual, status, secondaryElement });
 
 const [taijutsu, ninjutsu, genjutsu] = ['Taijutsu', 'Ninjutsu', 'Genjutsu'] as const;
-const [neutral, fire, water, wind, earth, lightning, wood, sand, shadow] = ['Neutro', 'Fogo', 'Água', 'Vento', 'Terra', 'Raio', 'Madeira', 'Areia', 'Sombra'] as const;
+const [neutral, fire, water, wind, earth, lightning, wood, sand, shadow, ice] = ['Neutro', 'Fogo', 'Água', 'Vento', 'Terra', 'Raio', 'Madeira', 'Areia', 'Sombra', 'Gelo'] as const;
 const [melee, projectile, line, wave, area, cone, orbit] = ['Corpo a corpo', 'Projétil', 'Linha', 'Onda', 'Área', 'Cone', 'Órbita'] as const;
 const leaf = 'Vila da Folha', cloud = 'Vila da Nuvem', stone = 'Vila da Pedra', mist = 'Vila da Névoa', desert = 'Vila da Areia', rain = 'Vila da Chuva';
 type Kit = readonly [Signature, Signature];
@@ -116,7 +116,7 @@ export const ROSTER_EXPANSION: readonly Expansion[] = [
   entry('sasori','Sasori','Akatsuki',desert,[106,28,7,6.7],'Veneno do Escorpião · veneno de 30% e +15% duração de status.',{dot:.3,duration:.15},
     [strike('Hiruko: Cauda de Escorpião',taijutsu,neutral,line,'chains','Lentidão'),strike('Terceiro Kazekage: Areia de Ferro',ninjutsu,sand,area,'iron','Paralisar')],'Performance das Cem Marionetes',['areia','Jonin',5,530],'O Escorpião da Areia','Atravesse o arsenal de marionetes do Escorpião.',['kankuro']),
   entry('haku','Haku','Caçador da Névoa',mist,[85,26,4,7.2],'Espelhos de Gelo · +12% movimento e +8 pontos de chance crítica.',{move:.12,crit:.08},
-    [strike('Senbon de Gelo',ninjutsu,water,projectile,'ice','Lentidão',wind),strike('Espelhos Demoníacos de Gelo',ninjutsu,water,orbit,'ice','Atordoar',wind)],'Labirinto de Espelhos',['nevoa','Chunin',3,335],'Os Espelhos da Ponte','Encontre Haku depois do encontro com Zabuza.',['zabuza']),
+    [strike('Senbon de Gelo',ninjutsu,ice,projectile,'ice','Congelar'),strike('Espelhos Demoníacos de Gelo',ninjutsu,ice,orbit,'ice','Congelar')],'Labirinto de Espelhos',['nevoa','Chunin',3,335],'Os Espelhos da Ponte','Encontre Haku depois do encontro com Zabuza.',['zabuza']),
   entry('chiriku','Chiriku','Templo do Fogo',leaf,[104,26,8,6.7],'Defesa do Templo · +7 armadura e +12% taijutsu.',{defense:7,normal:.12},
     [strike('Taijutsu dos Monges',taijutsu,neutral,cone,'palms','Atordoar'),strike('Assassinato de Mil Braços',ninjutsu,neutral,area,'palms','Empurrar')],'Ira dos Mil Braços',['folha','Chunin',4,350],'O Monge do Fogo','Visite o Templo do Fogo e enfrente seu guardião.',['asuma']),
   entry('sakumo','Sakumo Hatake','Canino Branco',leaf,[105,28,6,7.15],'Fio de Chakra Branco · +16% taijutsu e +7 pontos de chance crítica.',{normal:.16,crit:.07},

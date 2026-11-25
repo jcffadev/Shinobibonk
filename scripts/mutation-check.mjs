@@ -101,6 +101,8 @@ const MUTATIONS = [
   { regra: "vida de chefe nunca vira infinito", arquivo: 'src/game/missions.ts', de: "Number.isFinite(hp)?Math.min(BOSS_HP_LIMIT,hp):BOSS_HP_LIMIT", para: "hp" },
   { regra: "armadilha invoca 10 mesmo com a horda cheia", arquivo: 'src/scene/GameCanvas.tsx', de: "const count=body?FALLEN_TRAP.enemies:Math.min(", para: "const count=body?Math.min(FALLEN_TRAP.enemies,Math.max(0,threatNow().cap-enemyList.length)):Math.min(" },
   { regra: "1 elite na armadilha", arquivo: 'src/game/fallenTrap.ts', de: "export const FALLEN_TRAP = { enemies: 10, elites: 1,", para: "export const FALLEN_TRAP = { enemies: 10, elites: 0," },
+  { regra: "ajudantes usam o bônus de elemento", arquivo: 'src/game/combat.ts', de: " if(options.ally)return hit*elemental;", para: " if(options.ally)return hit;" },
+  { regra: "Haku usa o elemento Gelo", arquivo: 'src/game/rosterExpansion.ts', de: "strike('Senbon de Gelo',ninjutsu,ice,", para: "strike('Senbon de Gelo',ninjutsu,water," },
   { regra: "Espinhos usam armadura × dano", arquivo: 'src/game/combat.ts', de: "Math.max(0,thorns)*Math.max(0,armor)*Math.max(0,damage);", para: "Math.max(0,thorns)*25;" },
   { regra: "Guardião dura 30 s contra o dano atual", arquivo: 'src/game/bossScaling.ts', de: "export const BOSS_POWER = { guardianSeconds: 30,", para: "export const BOSS_POWER = { guardianSeconds: 3," },
   { regra: "piso pelo poder vale na vida do Guardião", arquivo: 'src/game/bossScaling.ts', de: "export const bossHpWithFloor = (formulaHp: number, dps: number, seconds: number, plans = 0) => Math.max(formulaHp, bossPowerFloor(dps, seconds, plans));", para: "export const bossHpWithFloor = (formulaHp: number, dps: number, seconds: number, plans = 0) => formulaHp;" },

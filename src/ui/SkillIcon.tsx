@@ -20,7 +20,7 @@ const namedIcons: Record<string,number> = {
   'Mil Mãos de Madeira':13,'Meteorito':14,'Tengai Shinsei':14,'Bijūdama Rasenshuriken':4,'Kamui':15,'Oito Portões':17,
 };
 const expansionIcons:Record<string,number>={impact:17,wheel:18,fang:18,mark:16,swarm:7,mind:15,staff:13,elements:14,lightning:10,blade:1,cube:14,scan:22,gold:12,poison:7,lava:8,steam:9,water:5,fire:8,spiral:2,ink:7,roots:13,palms:16,shark:9,chains:24,paths:23,iron:12,ice:19,wings:11};
-const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:14,Sombra:15,Sábio:22,Neutro:18};
+const elementIcon = {Fogo:8,Água:5,Vento:11,Raio:10,Madeira:13,Areia:12,Terra:14,Sombra:15,Sábio:22,Neutro:18,Gelo:5};
 // Arte do atlas por técnica ou família. O ícone vetorial cobre técnicas sem célula dedicada.
 export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:number;name:string}){
   // Versões (naruto-shippuden…) usam a arte da família.
@@ -56,7 +56,7 @@ export function SkillIcon({heroId:versionId,index=0,name}:{heroId:string;index?:
     :/Katon/.test(name)?8:/Suiton/.test(name)?5:/Raiton/.test(name)?10:/Doton/.test(name)?14:/Fuuton/.test(name)?11:undefined);
   if(cell!==undefined)return <span className="skill-art atlas-skill-art" role="img" aria-label={name} style={{backgroundPosition:`${cell%5*25}% ${Math.floor(cell/5)*25}%`}}/>;
   const color=technique?.color??(heroId==='gaara'?'#e4be77':heroId==='hashirama'?'#8bdd83':heroId==='madara'?'#ff845b':'#64d8ff');
-  const glyph=name.includes('Rasengan')?'spiral':name.includes('Sapo')?'toad':name.includes('Bunshin')?'clone':technique?({Madeira:'roots',Areia:technique.shape==='Área'?'coffin':'spikes',Fogo:'fire',Sombra:'armor',Sábio:'forest',Água:'wave',Vento:'wave',Raio:'spikes',Terra:'meteor',Neutro:technique.shape==='Corpo a corpo'?'wood':'star'}[technique.element]):heroId==='hashirama'?['wood','spikes','roots','forest','forest'][Math.min(index,4)]:heroId==='gaara'?['spikes','coffin','wave','spikes','wave'][Math.min(index,4)]:heroId==='madara'?['star','fire','armor','fire','meteor'][Math.min(index,4)]:['star','spiral','clone','wave','spiral'][Math.min(index,4)];
+  const glyph=name.includes('Rasengan')?'spiral':name.includes('Sapo')?'toad':name.includes('Bunshin')?'clone':technique?({Madeira:'roots',Areia:technique.shape==='Área'?'coffin':'spikes',Fogo:'fire',Sombra:'armor',Sábio:'forest',Água:'wave',Gelo:'spikes',Vento:'wave',Raio:'spikes',Terra:'meteor',Neutro:technique.shape==='Corpo a corpo'?'wood':'star'}[technique.element]):heroId==='hashirama'?['wood','spikes','roots','forest','forest'][Math.min(index,4)]:heroId==='gaara'?['spikes','coffin','wave','spikes','wave'][Math.min(index,4)]:heroId==='madara'?['star','fire','armor','fire','meteor'][Math.min(index,4)]:['star','spiral','clone','wave','spiral'][Math.min(index,4)];
   return <svg className="skill-art" viewBox="0 0 48 48" role="img" aria-label={name}><rect x="2" y="2" width="44" height="44" rx="10" fill="#172038" stroke={color} strokeWidth="2"/><g fill={color} stroke="#f2f5e7" strokeWidth="1" strokeLinejoin="round">
     {glyph==='toad'&&<><path d="M8 40Q8 26 24 25Q40 26 40 40Z" fill="#d9773f"/><circle cx="16" cy="19" r="6" fill="#d9773f"/><circle cx="32" cy="19" r="6" fill="#d9773f"/><circle cx="16" cy="19" r="2.4" fill="#1b1b1b"/><circle cx="32" cy="19" r="2.4" fill="#1b1b1b"/><path d="M15 33Q24 38 33 33" fill="none" stroke="#5a2a14" strokeWidth="2"/><path d="M6 44H42" stroke={color} strokeWidth="3"/></>}
     {glyph==='star'&&<path d="M24 7 28 18 41 15 31 25 40 38 26 31 16 42 17 28 6 22 19 20Z"/>}

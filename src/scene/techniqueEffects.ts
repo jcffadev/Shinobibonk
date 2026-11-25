@@ -515,8 +515,8 @@ export function techniqueVisual(t: Technique, clone?: () => THREE.Sprite): THREE
       flame.rotation.set(.4,0,x);
     }
     grains(core,6,.07,.16);
-  } else if (t.element==='Água'||t.element==='Vento') {
-    const water=t.element==='Água';
+  } else if (t.element==='Água'||t.element==='Gelo'||t.element==='Vento') {
+    const water=t.element!=='Vento';
     for(let i=0;i<3;i++){
       const flow=ring(.37+i*.12,water?(i%2?'#c2f7ff':'#43b6e7'):'#ccfbde',Math.PI*.95);
       flow.rotation.set(Math.PI/2,.05+i*.18,-Math.PI/2);

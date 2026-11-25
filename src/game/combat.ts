@@ -46,8 +46,10 @@ export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rar
 export function growthText(g:SkillGrowth,technique?:Technique){const labels=technique?.setup?{damage:'força do buff',area:'área',haste:'recarga do buff',duration:'duração do buff'}:{damage:'dano',area:'raio de área',haste:'velocidade de ataque',duration:'duração'};return (Object.entries(g) as [keyof SkillGrowth,number][]).filter(([,n])=>n>0).map(([key,n])=>`+${Math.round(n*100)}% ${labels[key]}`).join(' · ');}
 
 /** Chave de bônus por elemento de técnica (itens "Pergaminho Katon" etc.). */
-export const ELEMENT_KEY:Record<Element,StatKey>={Fogo:'elFogo',Água:'elAgua',Vento:'elVento',Terra:'elTerra',Raio:'elRaio',Madeira:'elMadeira',Areia:'elAreia',Sombra:'elSombra',Neutro:'elNeutro',Sábio:'elSabio'};
+export const ELEMENT_KEY:Record<Element,StatKey>={Fogo:'elFogo',Água:'elAgua',Vento:'elVento',Terra:'elTerra',Raio:'elRaio',Madeira:'elMadeira',Areia:'elAreia',Sombra:'elSombra',Neutro:'elNeutro',Sábio:'elSabio',Gelo:'elGelo'};
 const DAMAGE_ELEMENTS=Object.keys(ELEMENT_KEY) as Element[];
+/** Bônus da linha de um elemento (25/11/2026: queimadura, explosão da Katon e ajudantes também usam o bônus do elemento). */
+export const elementMultiplier=(extra:Partial<Record<string,number>>,element:Element)=>1+(extra[ELEMENT_KEY[element]]??0);
 const ELEMENT_BY_KEY=Object.fromEntries(Object.entries(ELEMENT_KEY).map(([e,k])=>[k,e])) as Record<string,Element>;
 const has=(item:Item,...keys:StatKey[])=>keys.some(k=>(item.bonuses[k]||0)!==0);
 /** Bônus que melhoram qualquer técnica do jogador. */
@@ -118,7 +120,6 @@ export function techniqueHitDamage(t:Technique, g:SkillGrowth, stats:TechniqueDa
  const school=t.ultimate?stats.physical*stats.ninjutsu*stats.genjutsu
    :t.school==='Taijutsu'?stats.physical:t.school==='Ninjutsu'?stats.ninjutsu:stats.genjutsu;
  const hit=stats.damage*t.power*TECHNIQUE_SCALE*(1+g.damage)*school;
- if(options.ally)return hit;
  const secondary=t.secondaryElement;
  const extra=stats.extra;
  let elemental=1;
@@ -129,6 +130,8 @@ export function techniqueHitDamage(t:Technique, g:SkillGrowth, stats:TechniqueDa
   if(secondary&&secondary!==t.element)elemental+=extra[ELEMENT_KEY[secondary]]??0;
   if(options.sageInfused&&t.element!=='Sábio'&&secondary!=='Sábio')elemental*=1+(extra.elSabio??0);
  }
+ // 25/11/2026: ajudantes também usam o bônus de escola (já no `hit`) e de elemento da técnica deles.
+ if(options.ally)return hit*elemental;
  const affinity=t.element!=='Neutro'&&t.element===options.affinity?NATURE_BONUS:1;
  const armor=t.ultimate||t.school==='Taijutsu'?1+Math.min(.5,stats.armor*(extra.armorPhysical??0)):1;
  return hit*elemental*affinity*armor*(options.trained?1.15:1);

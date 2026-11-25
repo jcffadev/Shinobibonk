@@ -2987,3 +2987,15 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 **Resposta.**
 
 - Proposta do pacote de status medida no simulador: Esfera Katon sem explosão em cadeia, congelar com 2 acúmulos e chances de Fio, Incenso, Hyoton e Anel ×2. Tabela em docs/20. **Aguardando decisão.** Só o simulador mudou. **Publicado no GitHub.**
+
+> os status também tem que ser influenciados pelo dano %
+> todos os danos elementais tem que scalar junto com o dano %
+> todas as linhas de dano na realidade
+> sim, é legal os efeitos dos elementos que temos também fazer parte do calculo
+> é que o elemento gelo, você colocou como resfriar, pesquise, deveria ser gelo...
+
+**Resposta.**
+
+- Todos os danos já cresciam com o dano%. Agora queimadura, explosão da Katon, estilhaços do Haku e ajudantes também somam o bônus do elemento.
+- Gelo (Hyōton, clã Yuki, Água + Vento) virou elemento próprio: técnicas do Haku, fusão Água + Vento e +28% de Gelo no Pergaminho Hyoton.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

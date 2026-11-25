@@ -18,7 +18,7 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { HEROES, heroAffinity } from '../src/game/heroes.ts';
 import { ITEM_BY_NAME } from '../src/game/catalog.ts';
 import { calculateStats } from '../src/game/progression.ts';
-import { attackCooldown, techniqueProc, BURN_CHANCE, POISON_CHANCE, NO_GROWTH } from '../src/game/combat.ts';
+import { attackCooldown, techniqueProc, BURN_CHANCE, POISON_CHANCE, NO_GROWTH, elementMultiplier } from '../src/game/combat.ts';
 import { expectedHit } from '../src/game/bossScaling.ts';
 import { STATUS_RULES, addChill, freezeTarget, isFrozen, chillSlow, tickStatus, damageStatusCount, statusDamageMultiplier, addPoisonStack, poisonMultiplier, reactionsFor, deathBurstKind, controlResist } from '../src/game/statusRules.ts';
 import { ZONE_SECONDS } from '../src/game/worldScale.ts';
@@ -127,12 +127,12 @@ export function statusFight(build, { items = build.items, runBuffs = {}, status 
     // Explosões na morte (até 12 por quadro, como no jogo).
     for (const b of bursts.splice(0, STATUS_RULES.deathBurst.perFrame)) {
       const D = STATUS_RULES.deathBurst, fire = b.k === 'fire';
-      for (const e of near(b, fire ? D.fireRadius : D.iceRadius)) { take(e, stats.damage * (fire ? D.fireDamage * (1 + ex('statusDamage')) : D.iceDamage), 'burst'); if (e.hp > 0) { if (fire) { if (!(e.burn > 0)) e.burstBurn = true; e.burn = Math.max(e.burn ?? 0, 2 * stats.duration); } else chill(e, 1); } }
+      for (const e of near(b, fire ? D.fireRadius : D.iceRadius)) { take(e, stats.damage * (fire ? D.fireDamage * (1 + ex('statusDamage')) * elementMultiplier(stats.extra, 'Fogo') : D.iceDamage * elementMultiplier(stats.extra, 'Gelo')), 'burst'); if (e.hp > 0) { if (fire) { if (!(e.burn > 0)) e.burstBurn = true; e.burn = Math.max(e.burn ?? 0, 2 * stats.duration); } else chill(e, 1); } }
     }
     // Queimadura, veneno e tempos de controle.
     for (const e of enemies) {
       if (e.hp <= 0) continue;
-      if ((e.burn ?? 0) > 0) { e.burn = Math.max(0, e.burn - DT); take(e, stats.damage * .15 * DT * (1 + ex('statusDamage')), 'dot'); }
+      if ((e.burn ?? 0) > 0) { e.burn = Math.max(0, e.burn - DT); take(e, stats.damage * .15 * DT * (1 + ex('statusDamage')) * elementMultiplier(stats.extra, 'Fogo'), 'dot'); }
       if (e.poison && e.hp > 0) { const d = Math.min(DT, e.poison.remaining); e.poison.remaining -= d; take(e, e.poison.dps * d * poisonMultiplier(e.poisonStacks), 'dot'); if (e.poison.remaining <= 0) { e.poison = undefined; e.poisonStacks = 0; } }
       e.controlTime = Math.max(0, (e.controlTime || 0) - DT); e.slow = Math.max(0, (e.slow || 0) - DT); tickStatus(e, DT);
     }

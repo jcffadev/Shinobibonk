@@ -14,8 +14,8 @@ import { HEROES, HERO_BY_ID, HERO_CLAN, ORGANIZATIONS, familyOf, heroAffinity, h
 import { matchesSearch } from './PoolFilters';
 
 /** Cores dos selos de elemento (mesma paleta das técnicas em heroes.ts). */
-export const ELEMENT_COLOR: Record<Element, string> = { Neutro: '#d7e6ff', Fogo: '#ff7c45', Água: '#5fb6ef', Vento: '#8de8ca', Terra: '#c7a16c', Raio: '#b3c5ff', Madeira: '#8bd464', Areia: '#ddae70', Sombra: '#ad84e8', Sábio: '#f5da86' };
-const ELEMENT_GLYPH: Record<Element, string> = { Neutro: '◇', Fogo: '火', Água: '水', Vento: '風', Terra: '土', Raio: '雷', Madeira: '木', Areia: '砂', Sombra: '影', Sábio: '仙' };
+export const ELEMENT_COLOR: Record<Element, string> = { Neutro: '#d7e6ff', Fogo: '#ff7c45', Água: '#5fb6ef', Vento: '#8de8ca', Terra: '#c7a16c', Raio: '#b3c5ff', Madeira: '#8bd464', Areia: '#ddae70', Sombra: '#ad84e8', Sábio: '#f5da86', Gelo: '#90eafb' };
+const ELEMENT_GLYPH: Record<Element, string> = { Neutro: '◇', Fogo: '火', Água: '水', Vento: '風', Terra: '土', Raio: '雷', Madeira: '木', Areia: '砂', Sombra: '影', Sábio: '仙', Gelo: '氷' };
 
 /** Organizações + clãs de origem (clãs ausentes de ORGANIZATIONS, como Nara e Uzumaki, entram pelo HERO_CLAN). */
 function heroGroups(id: string): string[] {

@@ -1,5 +1,7 @@
 import * as THREE from 'three';
-import type { Technique } from '../game/heroes';
+import type { Element, Technique } from '../game/heroes';
+/** Gelo usa por enquanto o visual de Água (a arte própria de gelo fica com o Codex). */
+const look = (e: Element): Element => e === 'Gelo' ? 'Água' : e;
 import { currentSettings } from '../game/settings';
 
 /**
@@ -226,7 +228,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
 
   function paletteOf(t: Technique): Palette {
     const n = t.name;
-    switch (t.element) {
+    switch (look(t.element)) {
       case 'Fogo': return n === 'Amaterasu' ? PAL.blackFire : (t.color === '#69c9ff' || t.color === '#81e5ff') ? PAL.blueFire : PAL.fire;
       case 'Água': return PAL.water;
       case 'Vento': return /Rasen|Chakra/.test(n) ? PAL.chakraBlue : PAL.wind;
@@ -302,7 +304,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
 
   // ---------- Formas ----------
   function cone(t: Technique, p: Palette, ox: number, oy: number, oz: number, dx: number, dz: number, range: number) {
-    const el = t.element, n = t.name, spread = .8;
+    const el = look(t.element), n = t.name, spread = .8;
     const dir = (a: number): [number, number] => { const c = Math.cos(a), s = Math.sin(a); return [dx * c - dz * s, dx * s + dz * c]; };
     if (el === 'Fogo') {
       // Baforada: chamas saem da boca, abrem até a largura real do cone e somem em fumaça.
@@ -364,7 +366,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
   }
 
   function line(t: Technique, p: Palette, ox: number, oy: number, oz: number, dx: number, dz: number, range: number, half: number) {
-    const el = t.element, n = t.name, px = -dz, pz = dx;
+    const el = look(t.element), n = t.name, px = -dz, pz = dx;
     const ex = ox + dx * range, ez = oz + dz * range;
     if (el === 'Raio') {
       // Chidori/Raikiri: chakra crepitando na mão + relâmpagos sequenciais até o fim da linha.
@@ -445,7 +447,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
   }
 
   function area(t: Technique, p: Palette, cx: number, cy: number, cz: number, R: number) {
-    const el = t.element, n = t.name, g = gy(cx, cz);
+    const el = look(t.element), n = t.name, g = gy(cx, cz);
     if (el === 'Fogo' && n === 'Amaterasu') {
       for (let i = N(44); i-- > 0;) { const a = Math.random() * 6.283, r = Math.sqrt(Math.random()) * R; emit(false, cx + Math.cos(a) * r, g + .1, cz + Math.sin(a) * r, 0, rand(1.2, 2.4), 0, rand(.5, .8), .25, .55, p.edge, .95, p.dark, 0, FLAME, BILL, rand(0, .2)); spin(rand(-2, 2)); }
       for (let i = N(14); i-- > 0;) { const a = Math.random() * 6.283, r = Math.sqrt(Math.random()) * R; emit(true, cx + Math.cos(a) * r, g + .3, cz + Math.sin(a) * r, 0, 1.5, 0, .5, .2, .4, p.core, .5, p.mid, 0, FLAME, BILL, rand(0, .2)); }
@@ -622,7 +624,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
   /** Rastro contínuo dos projéteis (chamado por quadro, sem alocação além do acumulador por tiro). */
   function trail(t: Technique, key: object, pos: THREE.Vector3, dir: THREE.Vector3, radius: number, dt: number, head: boolean) {
     if (hidden) return;
-    const p = paletteOf(t), el = t.element, wave = t.shape === 'Onda', x = pos.x, y = pos.y - .1, z = pos.z, px = -dir.z, pz = dir.x;
+    const p = paletteOf(t), el = look(t.element), wave = t.shape === 'Onda', x = pos.x, y = pos.y - .1, z = pos.z, px = -dir.z, pz = dir.x;
     const rate = (wave ? 90 : 45) * density, acc = (trailAcc.get(key) ?? 0) + rate * dt;
     let n = Math.floor(acc); trailAcc.set(key, acc - n);
     if (head) {
@@ -660,7 +662,7 @@ export function createParticleFx(scene: THREE.Scene, ground: (x: number, z: numb
     impactsThisFrame++; recentImpacts++;
     const p = paletteOf(t), x = pos.x, y = pos.y + .1, z = pos.z;
     emit(true,x,gy(x,z)+.075,z,0,0,0,.22,.48,.78,p.core,.85,p.mid,0,RING,GROUND);
-    switch (t.element) {
+    switch (look(t.element)) {
       case 'Fogo': for (let i = 0; i < 4; i++) { emit(true, x + tri() * .2, y, z + tri() * .2, tri(), rand(.8, 1.8), tri(), .35, .25, .45, p.core, .9, p.edge, 0, FLAME, BILL); spin(rand(-3, 3)); } sparks(x, y, z, 3, 3, p, .35); break;
       case 'Água': for (let i = 0; i < 6; i++) { const a = i * 1.05; emit(true, x, y, z, Math.cos(a) * 1.6, rand(1.5, 3), Math.sin(a) * 1.6, .4, .12, .06, p.core, .9, p.mid, 0, GLOW, BILL); grav(9); } break;
       case 'Vento': for (let k = 0; k < 2; k++) { const a = rand(0, 3.14); emit(true, x, y, z, 0, 0, 0, .14, .07, .04, p.core, 1, p.mid, 0, STREAK, AXIS); axis(Math.cos(a) * .9, k ? .5 : -.5, Math.sin(a) * .9); } break;
