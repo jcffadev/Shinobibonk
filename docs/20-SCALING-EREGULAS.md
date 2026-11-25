@@ -120,7 +120,7 @@ No Genin, o golpe chega a 43× a vida de um comum no minuto 5 e a 126× no minut
 | Nível ÷110 + swarm ×2 | 6,6 · 11 · 6,4 (40) · 10 (12) | 11 · 15 · 12 (49) · 12 (29) | 15 · 24 · 12 (82) · 10 (80) |
 | ÷110 + afixos ½ + swarm ×2 | 4,0 · 5,9 · 6,6 (14) · 19 (4) | 6,4 · 8,7 · 8,8 (28) · 7,6 (16) | 8,0 · 13 · 6,8 (74) · 8,8 (47) |
 
-**PROPOSTO, aguardando decisão do usuário:** "afixos ½ + swarm ×2". Os afixos de dano das técnicas caem pela metade e o Final Swarm entra com ×2 em vez de ×3. Dentro da zona, o excesso cai cerca de 40% (Kage: 20× → 12× aos 10 min; Genin: 126× → 70×), e a sobrevivência no Final Swarm fica perto da atual. Os parâmetros estão expostos para o ajuste: `HERO_DAMAGE_CURVE` (progression.ts), `GROWTH_ROLLS` (combat.ts) e `FINAL_SWARM.multiplier`.
+**APLICADO em 25/11/2026 (decisão do usuário: "Sim, aplicar"):** "afixos ½ + swarm ×2". `GROWTH_ROLLS.damage` agora tem base 22,5/40/67,5/112,5/187,5 e spread 11/15/22,5/35/55, e `FINAL_SWARM.multiplier` passou a 2. A defesa do Final Swarm entra em 60% e chega ao teto de 85% no 1º minuto. Medição depois da mudança, igual à opção: Kage com golpe/HP de 6,6× aos 5 min e 12× aos 10, e 47 vivos no minuto 11; Genin com 24× e 70×. Antes, a opção proposta era: Os afixos de dano das técnicas caem pela metade e o Final Swarm entra com ×2 em vez de ×3. Dentro da zona, o excesso cai cerca de 40% (Kage: 20× → 12× aos 10 min; Genin: 126× → 70×), e a sobrevivência no Final Swarm fica perto da atual. Os parâmetros estão expostos para o ajuste: `HERO_DAMAGE_CURVE` (progression.ts), `GROWTH_ROLLS` (combat.ts) e `FINAL_SWARM.multiplier`.
 
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 
@@ -164,6 +164,8 @@ Kage (tier 2,6) multiplica HP/dano por 2,6 e o teto por ×1,24 (teto duro 1.600;
 `ZONE_DIFFICULTY` (IMPLEMENTADO, 11/11): **zona 1 ×1 · zona 2 ×1,18 · zona 3 ×1,38** — aplicada em `GameCanvas` a HP, dano, spawn e pressão de roleta. Zona dura `ZONE_SECONDS = 600` s (10 min).
 
 ## 4. Final Swarm (tempo extra da zona) — `progression.ts`
+
+> **25/11/2026:** o multiplicador de entrada passou de ×3 para **×2** (decisão do usuário, junto com os afixos de dano pela metade). O texto abaixo é o registro anterior.
 
 `FINAL_SWARM` (IMPLEMENTADO, atualizado nas rodadas 48/49): ao zerar o relógio da zona — **×3** na hora (HP, dano, defesa, quantidade/spawn) + **+25%/min** sobrevivido; armadura até 0,85; **teto 1.600 inimigos** (era 8.000 — rodada 48) com **rampa progressiva (rodada 49)**: até **+4 min** (240 s) o teto é **min(teto normal, 800)**; depois sobe linearmente até **1.600** em **+7 min** (420 s) — `ramp800Cap:800 · ramp800Seconds:240 · rampSeconds:420`; **clamp por quadro** em `GameCanvas.tsx` (remove excedentes comuns, **nunca** boss/guardião/mega elite) + cap na emboscada (`startFieldAmbush`); reposição: spawn ≥ teto÷4 s (horda volta em ~4 s); spawns num anel de **14–28 m** do jogador.
 

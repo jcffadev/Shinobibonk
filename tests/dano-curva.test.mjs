@@ -28,3 +28,8 @@ test('simulador de dano: partes do golpe multiplicam até o golpe inteiro e as o
   assert.ok(low.full < at.full, 'curva mais lenta → golpe menor');
   assert.equal(summarizeDamage([{ marks }], [1, 5]).length, 2);
 });
+
+test('curva aplicada em 25/11: afixos de dano pela metade e Final Swarm entrando com ×2', () => {
+  assert.deepEqual(GROWTH_ROLLS.damage, { base: [22.5, 40, 67.5, 112.5, 187.5], spread: [11, 15, 22.5, 35, 55] });
+  assert.equal(FINAL_SWARM.multiplier, 2);
+});

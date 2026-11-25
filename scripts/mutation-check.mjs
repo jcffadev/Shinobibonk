@@ -101,6 +101,8 @@ const MUTATIONS = [
   { regra: "vida de chefe nunca vira infinito", arquivo: 'src/game/missions.ts', de: "Number.isFinite(hp)?Math.min(BOSS_HP_LIMIT,hp):BOSS_HP_LIMIT", para: "hp" },
   { regra: "armadilha invoca 10 mesmo com a horda cheia", arquivo: 'src/scene/GameCanvas.tsx', de: "const count=body?FALLEN_TRAP.enemies:Math.min(", para: "const count=body?Math.min(FALLEN_TRAP.enemies,Math.max(0,threatNow().cap-enemyList.length)):Math.min(" },
   { regra: "1 elite na armadilha", arquivo: 'src/game/fallenTrap.ts', de: "export const FALLEN_TRAP = { enemies: 10, elites: 1,", para: "export const FALLEN_TRAP = { enemies: 10, elites: 0," },
+  { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
+  { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },
   { regra: "simulador dá 1 + planos pergaminhos por Guardião", arquivo: 'scripts/simulate-run.mjs', de: "const scrolls = 1 + Math.min(GUARDIAN_RULES.shikamaruMaxPlans, plans);", para: "const scrolls = 1;" },
   { regra: "aba Pílulas sem painel lateral", arquivo: 'src/ui/BuildPlanner.tsx', de: "{tab!=='Pílulas'&&<aside className=\"build-detail\"", para: "{tab!=='Pílula'&&<aside className=\"build-detail\"" },

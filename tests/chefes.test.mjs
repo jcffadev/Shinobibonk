@@ -43,7 +43,8 @@ test('chefes sem teto de gameplay, mas sempre finitos e com dano que desconta vi
 test('simulador de chefes mede Guardião nos marcos e Bijū com opções de armadura', () => {
   const g = guardianProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17 });
   assert.ok(g.normal && g.normal.hp > 0 && g.normal.ttk > 0 && Number.isFinite(g.normal.ttk));
-  const more = guardianProbe({ heroId: 'naruto', mission: 'Genin', plans: 3, seed: 17 });
+  // Desde 25/11 (afixos de dano ½) o Naruto Academia não segura 3 planos desde o segundo 0 no simulador; 1 plano basta aqui.
+  const more = guardianProbe({ heroId: 'naruto', mission: 'Genin', plans: 1, seed: 17 });
   assert.ok(more.normal.def > g.normal.def, 'planos do Shikamaru somam armadura');
   const b = bijuuProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17 });
   assert.ok(b && b['chegada'].hp >= 4600);
@@ -53,7 +54,8 @@ test('simulador de chefes mede Guardião nos marcos e Bijū com opções de arma
 
 test('missão até a arena: 1 + planos pergaminhos por Guardião (4 com 3 planos) e Bijū medida na chegada', async () => {
   const { missionProbe, summarizeMission } = await import('../scripts/simulate-bosses.mjs');
-  const three = missionProbe({ heroId: 'naruto', mission: 'Genin', plans: 3, seed: 17, summonAt: 160 });
+  // Sasuke chega à arena no Genin com 3 planos desde o segundo 0 (o simulador aplica os planos do início da zona).
+  const three = missionProbe({ heroId: 'sasuke', mission: 'Genin', plans: 3, seed: 17, summonAt: 160 });
   assert.ok(three.bosses.length >= 1);
   for (const b of three.bosses) { assert.equal(b.scrolls, 4, 'quatro pergaminhos grátis com três planos'); assert.ok(b.ttk >= 1 && b.hp > 0 && b.def > 0 && b.def < 1); }
   const none = missionProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17, summonAt: 160 });

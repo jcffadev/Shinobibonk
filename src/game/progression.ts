@@ -141,7 +141,8 @@ export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
  * - defesa em profundidade: hard cap 1600 por quadro em GameCanvas (remove excedentes comuns, nunca bosses)
  *   e cap na emboscada de campo (startFieldAmbush) — nada passa de 1600 por qualquer rota de spawn.
  */
-export const FINAL_SWARM={multiplier:3,growthPerMinute:.25,maxArmor:.85,maxEnemies:1600,rampMinutes:7,ramp800Cap:800,ramp800Seconds:240,rampSeconds:420,refillSeconds:4,spawnRing:[14,28] as const};
+/** 25/11/2026 — decisão do usuário: o Final Swarm entra com ×2 (antes ×3), junto com os afixos de dano pela metade (GROWTH_ROLLS). */
+export const FINAL_SWARM={multiplier:2,growthPerMinute:.25,maxArmor:.85,maxEnemies:1600,rampMinutes:7,ramp800Cap:800,ramp800Seconds:240,rampSeconds:420,refillSeconds:4,spawnRing:[14,28] as const};
 /** Multiplicador do FINAL SWARM para `overtimeSeconds` sobrevividos após o relógio zerar (1 = fora do swarm). */
 export function finalSwarmFactor(overtimeSeconds:number,rank:Difficulty='Genin'){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60)*(1+SWARM_COMPOUND.perMinute*MISSION_HP[rank])**(overtimeSeconds/60):1;}
 /** Rodada 76: no Final Swarm a ameaça também compõe por minuto, mais rápido nas dificuldades altas (Genin +perMinute, Kage +2×perMinute). */

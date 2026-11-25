@@ -17,7 +17,12 @@ export function rollRarityTier(luck:number,rng=Math.random):number{
  * sempre vem no level-up de técnica de ataque e cresce muito com a raridade. Área/recarga/duração e buffs (setups) usam a tabela menor.
  * Revisão 11/11/2026 (pedido do usuário: "aumente o scale de dano e % de todas as habilidades do jogo"): base ×1,5 e spread maior em todas as raridades.
  */
-export const GROWTH_ROLLS={damage:{base:[45,80,135,225,375],spread:[22,30,45,70,110]},other:{base:[15,27,38,45,60],spread:[11,14,14,21,21]}};
+/**
+ * Afixos das técnicas por raridade (Comum → Lendário), em %: valor = base + sorteio × spread.
+ * 25/11/2026 — decisão do usuário ("Sim, aplicar", após scripts/simulate-damage.mjs): o dano caiu pela metade
+ * (antes base 45/80/135/225/375 · spread 22/30/45/70/110), junto com o Final Swarm entrando em ×2.
+ */
+export const GROWTH_ROLLS={damage:{base:[22.5,40,67.5,112.5,187.5],spread:[11,15,22.5,35,55]},other:{base:[15,27,38,45,60],spread:[11,14,14,21,21]}};
 /**
  * Escala global de dano das técnicas do jogador e dos ajudantes (revisão 11/11/2026 — pedido do usuário: "aumente o scale de dano e % de todas as
 t * habilidades do jogo"). Aplicada no cálculo do golpe (GameCanvas, hit()); os kits dos chefes já escalam por fase em bossCombat.ts e não usam este fator.

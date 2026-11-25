@@ -122,7 +122,8 @@ assert.equal(xpToLevelUp(1),30);assert.ok(xpToLevelUp(1000)>xpToLevelUp(500));
 const overtime=18*60,runSeconds=10*60+overtime;
 const hpLate=guardianVitality(difficultyAt('Genin',runSeconds,1,overtime).hp,runSeconds,runSeconds,overtime,1);
 // O Guardião do Genin aos +18 min de Final Swarm deve alcançar bilhões sem limitar as invocações tardias.
-assert.ok(hpLate>=32e9&&hpLate<36e9,`HP tardio do guardião: ${hpLate}`);
+// 25/11: Final Swarm ×2 (antes ×3) → ~22,7 bilhões (antes ~34).
+assert.ok(hpLate>=21e9&&hpLate<25e9,`HP tardio do guardião: ${hpLate}`);
 assert.ok(guardianDefense(runSeconds,false,overtime)>.95);
 assert.ok(guardianDefense(runSeconds,true,overtime,3)>guardianDefense(runSeconds,false,overtime));
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);
@@ -248,16 +249,17 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
 // 8 min = 695 (era 1189), 10 min = 936 (era 1.600), teto 1600 aos ~15 min (era ~10 min). Spawn em lote crescente; FINAL SWARM ×3 imediato e crescendo.
 {const d8=difficultyAt('Genin',480),d10=difficultyAt('Genin',600),sw=difficultyAt('Genin',600,1,1e-3),sw5=difficultyAt('Genin',900,1,300);
  assert.ok(d8.cap>=650&&d8.cap<750,'escada de vivos reduzida ~695 aos 8 min');assert.ok(d10.cap===936,'~936 aos 10 min');assert.equal(difficultyAt('Genin',900).cap,1600,'teto 1600 aos 15 min');assert.ok(d8.spawnPerSecond>40,'spawn em lote');
- assert.ok(Math.abs(sw.hp/d10.hp-3)<.01&&Math.abs(sw.damage/d10.damage-3)<.01,'FINAL SWARM triplica HP e dano');
+ assert.ok(Math.abs(sw.hp/d10.hp-2)<.01&&Math.abs(sw.damage/d10.damage-2)<.01,'FINAL SWARM dobra HP e dano (decisão de 25/11; antes ×3)');
  // Com a nova pressão do Genin, a armadura aos 10 min é 39% e o Final Swarm ainda sobe ao teto de 85%.
  assert.ok(Math.abs(d10.armor-.39)<1e-9,'Genin tem 39% de armadura aos 10 min');
- assert.equal(sw.armor,.85,'FINAL SWARM eleva a defesa ao teto de 85%');
+ // 25/11: com o Final Swarm em ×2 a defesa entra em 60% e chega ao teto de 85% no 1º minuto (antes entrava direto em 85%).
+ assert.ok(Math.abs(sw.armor-.6)<1e-3,'FINAL SWARM entra com 60% de defesa');assert.equal(difficultyAt('Genin',660,1,60).armor,.85,'e sobe ao teto de 85% em 1 min');
  assert.ok(sw5.hp/difficultyAt('Genin',900).hp>3.9,'FINAL SWARM cresce com o tempo sobrevivido');assert.ok(d10.hp>15,'HP ×16 aos 10 min');}
 // Sorte: raridade primeiro, depois o item; raridade vazia desce para a mais próxima abaixo (Sorte alta não cai em Comum à toa).
 {const pool=[...ITEMS.filter(i=>i.rarity==='Comum'),...ITEMS.filter(i=>i.rarity==='Incomum').slice(0,3),...ITEMS.filter(i=>i.rarity==='Raro').slice(0,2)];let commons=0;const r3=rng;
  for(let i=0;i<5000;i++)commons+=Number(rollItems(pool,{},360,1,r3)[0].rarity==='Comum');assert.ok(commons/5000<.06,'Sorte 360 com poucos raros desbloqueados: Comum < 6%');
  const {rollGrowth,rollRarityTier}=await import('../src/game/combat.ts');let lc=0;for(let i=0;i<5000;i++)lc+=Number(rollRarityTier(360,r3)===0);assert.ok(lc/5000<.06&&lc>0,'Sorte 360: Comum raro mas nunca 0%');
- const g=rollGrowth(0,HEROES.find(h=>h.id==='naruto').techniques[0],()=>0);assert.ok(g.growth.damage>=.3,'técnica de ataque sempre ganha dano');
+ const g=rollGrowth(0,HEROES.find(h=>h.id==='naruto').techniques[0],()=>0);assert.ok(g.growth.damage>=.2,'técnica de ataque sempre ganha dano (mínimo Comum +23% desde 25/11; antes +45%)');
  const PL=await import('../src/game/pills.ts');const pills={'Pílula do Soldado':8};PL.grantPill(pills,'Pílula do Soldado');assert.equal(pills['Pílula do Soldado'],9,'cada escolha vale um nível');
  assert.match(PL.pillOfferText('Pílula do Soldado',8,0,'Lendário'),/\+20%.*Nv\. 8 → 9/);
  assert.deepEqual(PL.pillBonuses({'Pílula de Incenso':1}),{enemyCount:.10,threat:.05,gold:.12});

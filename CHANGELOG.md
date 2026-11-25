@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 25/11/2026 · Curva de dano: afixos pela metade e Final Swarm ×2 (Claude Code)
+
+- **Decisão do usuário:** "Sim, aplicar", sobre a proposta medida em `scripts/simulate-damage.mjs`.
+- **`src/game/combat.ts`:** os afixos de dano das técnicas (`GROWTH_ROLLS.damage`) caíram pela metade. Comum agora dá +23% a +34% por nível da técnica (antes +45% a +67%), e Lendário +188% a +243% (antes +375% a +485%).
+- **`src/game/progression.ts`:** o Final Swarm entra com **×2** em vez de ×3 (HP, dano, defesa e quantidade), e continua crescendo com o tempo. A defesa entra em 60% e chega a 85% no 1º minuto. O aviso de Final Swarm mostra o valor novo.
+- **Resultado no simulador** (mediana do golpe ÷ vida de um comum, e vivos em 115):
+  - Kage: 20× → 12× aos 10 min, com 47 vivos no minuto 11 (antes 53).
+  - Genin: 126× → 70× aos 10 min.
+  - Chunin: os vivos no Final Swarm não mudaram (82).
+- **Efeito nos chefes:** o Guardião tardio do Genin aos +18 min cai de ~34 para ~23 bilhões de HP, porque o Final Swarm pesa menos.
+- **Testes:**
+  - 1 teste novo em `tests/dano-curva.test.mjs` (o mínimo subiu para 283) e 2 mutações novas, verificadas à mão.
+  - Em `verify-rules`, as conferências do Final Swarm (×2, defesa de 60% → 85%), do HP tardio do Guardião e do afixo mínimo passaram para a regra nova.
+  - Dois testes de chefes trocaram o personagem do caso: no simulador os planos valem desde o segundo 0, e o Naruto Academia com 3 planos não chega mais ao Guardião.
+  - **PENDENTE DE VALIDAÇÃO E2E:** sentir a curva em partida.
+
 ## 25/11/2026 · Medição do dano de nível alto contra o Final Swarm (Claude Code)
 
 - **Pedido:** item da fila de balanceamento: revisar a relação entre dano de nível alto, excesso de proteção e pressão do Final Swarm, isolando cada variável.

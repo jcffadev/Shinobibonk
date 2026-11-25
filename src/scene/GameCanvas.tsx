@@ -1990,9 +1990,9 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       if(!sealing)pickupClock+=dt;
       if(!sealing&&!hagoromoEvent){elapsed+=dt;
         // FINAL SWARM (pedido do usuário): o relógio zerar NÃO encerra a run. Aviso grande, o relógio passa a contar o tempo sobrevivido
-        // (+mm:ss) e a dificuldade triplica (HP, dano, defesa, quantidade) e cresce com o tempo (FINAL_SWARM em progression.ts).
+        // (+mm:ss) e a dificuldade sobe ×FINAL_SWARM.multiplier (2 desde 25/11; HP, dano, defesa, quantidade) e cresce com o tempo.
         // O guardião/portal continuam funcionando: vencer o guardião e entrar no portal leva à próxima zona (relógio novo) ou à arena.
-        if(overtimeNow()>0&&!finalSwarmAnnounced){finalSwarmAnnounced=true;eventToast='FINAL SWARM! O tempo acabou: sobreviva o máximo que puder · dificuldade ×3 e subindo.';playSfx('ultimate');snapshotTimer=0;}
+        if(overtimeNow()>0&&!finalSwarmAnnounced){finalSwarmAnnounced=true;eventToast='FINAL SWARM! O tempo acabou: sobreviva o máximo que puder · dificuldade ×'+FINAL_SWARM.multiplier+' e subindo.';playSfx('ultimate');snapshotTimer=0;}
         else if(overtimeNow()<=0)finalSwarmAnnounced=false;}if(sealing?.phase==='sealing'){sealTimer+=dt;if(sealTimer>=2.7){if(sealing.account){sealForAccount(sealing.heroId);eventToast=sealing.target+' foi selado e agora está DESBLOQUEADO na sua conta para as próximas missões';}else{recruitAlly(sealing.heroId);eventToast=sealing.target+' foi selado e agora luta ao seu lado';}/* Rodada 47 (pedido do usuário: "se não tiver escolha de substituição, continuar a missão instantaneamente") — o jutsu termina e a missão
  * continua na hora: próximo candidato (ou volta à run), sem a tela/botão "Continuar missão". O 'complete' nunca mais fica visível. */nextSeal();recaptureAfterChoice();}}if(!sealing){if(!arena&&!hagoromoEvent&&zoneElapsed()>=(megaSchedule[megaElitesSpawned]??Infinity)/Math.max(.1,tune().megaRate)&&enemyList.length<(overtimeNow()>0?FINAL_SWARM.maxEnemies:ENEMY_SCALING.maxEnemies)){spawnEnemy(false,true);megaElitesSpawned++;eventToast='Alerta: um Mega Elite surgiu naturalmente nesta zona!';}
       if(!hagoromoEvent&&(!testRun||weatherEvent))tickWeather();

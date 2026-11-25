@@ -2954,3 +2954,10 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - O nível (termo cúbico) e os afixos de dano das técnicas respondem por quase todo o dano. Aos 10 min, o golpe vale 20× (Kage) a 126× (Genin) a vida de um comum, então a horda nunca se acumula.
 - Baixar só o dano mata o jogador no salto de ×3 do Final Swarm. Proposta: afixos de dano pela metade + Final Swarm entrando com ×2. Nenhum número de jogo mudou; aguarda decisão.
 - **Testes:** tipos, testes e build. **Publicado no GitHub.**
+
+> Sim, aplicar
+
+**Resposta.**
+
+- Os afixos de dano das técnicas caíram pela metade e o Final Swarm agora entra com ×2. No simulador, o excesso de dano na zona caiu cerca de 40% e a sobrevivência no Final Swarm ficou perto da anterior.
+- Conferências de regras atualizadas para a regra nova. **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
