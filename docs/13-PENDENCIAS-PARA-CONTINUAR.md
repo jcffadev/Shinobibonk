@@ -40,6 +40,8 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 ## HUD dos ajudantes · 25/11/2026
 
+- **Atualizado pelo Claude Code:** corações de afinidade, passiva, ataque e combo voltaram ao cartão, a pedido do usuário. Conferir a altura com a equipe cheia.
+
 - Conferir retratos, quebra dos nomes longos e abertura de sinergias em partida, com equipe cheia, telas estreitas e escala do HUD entre 60% e 140%. Os testes em Node conferem os atlas e o texto renderizado da lista e da ficha. [HUD e ficha](02-FICHA-HUD-RANKING.md#hud-em-partida).
 
 ## Dano recebido e itens 3D · 25/11/2026

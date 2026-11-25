@@ -2,7 +2,14 @@
 
 ## HUD em partida
 
-O painel dos ajudantes fica abaixo da ficha do jogador. Cada linha mostra o retrato de corpo inteiro da seleção, nome completo e nível de afinidade. A recarga fica numa barra comum. Em espaços baixos, a lista rola entre a ficha e o inventário. Em telas estreitas, a barra da missão ocupa a linha acima da lista. As sinergias aparecem num painel recolhível, fechado na configuração inicial. Passivas e técnicas de apoio podem ser lidas na ficha (P).
+O painel dos ajudantes fica abaixo da ficha do jogador. Em espaços baixos, a lista rola entre a ficha e o inventário. Cada cartão mostra (25/11/2026, pedido do usuário: "o jogador tem que saber o que cada um faz e o combo faz, também mostrar como está os ataques deles, afinidade coloque coraçãozinhos"):
+
+- retrato de corpo inteiro, nome completo e a **afinidade em corações** (cheios até o nível atual, vazios até 5);
+- a **passiva** com o valor de agora e, enquanto a afinidade não chega ao máximo, o valor máximo;
+- o **ataque**: nome da técnica, % do seu dano, recarga em segundos e uma barra da recarga comum, na cor da técnica;
+- as etiquetas das **sinergias** de que ele participa.
+
+O painel de sinergias abaixo da lista começa aberto e explica o que cada combo faz. Recolher continua salvo entre partidas. Passar o mouse mostra os detalhes completos. Em telas estreitas, a barra da missão ocupa a linha acima da lista. As sinergias aparecem num painel recolhível, fechado na configuração inicial. Passivas e técnicas de apoio podem ser lidas na ficha (P).
 
 O botão do Hagoromo indica de **0/3** a **3/3** portais ao lado do atalho. O contador continua legível sem carga e durante o treinamento. O tooltip mostra os abates que faltam para a próxima chave. Dentro da clareira, o retrato acompanha um painel de raridade, ondas, inimigos restantes e fase do chefe. Ao finalizar a luta, o mesmo painel indica que é possível recolher os drops antes de apertar E para sair. A vida de chefes usa T para trilhões e Q para quadrilhões.
 

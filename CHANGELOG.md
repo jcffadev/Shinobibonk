@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 25/11/2026 · HUD dos ajudantes com corações, passiva, ataque e combo (Claude Code)
+
+- **Pedido do usuário:** "Eu tinha pedido pro codex deixar minimalista a parte do hud dos ajudantes, mas o jogador tem que saber o que cada um faz e o combo faz, também mostrar como está os ataques deles, afinidade coloque coraçãozinhos".
+- **`src/ui/AllyCards.tsx`:** cada cartão continua compacto e passou a mostrar:
+  - a afinidade em corações (`AffinityHearts`);
+  - a passiva com o valor atual e o máximo;
+  - o ataque com dano, recarga e barra, na cor da técnica;
+  - as etiquetas de sinergia.
+- **Sinergias:** o painel começa aberto. Recolher continua salvo entre partidas.
+- **`src/main.tsx`:** passa o nível e os atributos para o cartão. Estilos em `src/allies.css`.
+- **Testes:** 1 teste novo em `tests/hud-ajudantes.test.mjs` (o mínimo subiu para 276) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver os cartões com a equipe cheia, em telas estreitas e na escala do HUD de 60% a 140%.
+
 ## 25/11/2026 · Animação da horda no Treinamento do Hagoromo (Claude Code)
 
 - **Pedido do usuário:** "Os personagens na luta com Hagoromo estão todos sem animação... conserte isso".

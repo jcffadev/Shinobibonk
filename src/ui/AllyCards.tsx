@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BuffText } from './BuffText';
 import '../allies.css';
 import { HERO_BY_ID } from '../game/heroes';
-import { ALLY_BUFFS, AFFINITY_RULES, affinityLevel, affinityFactor, affinityProgress, allyBuffText, maxAffinityPoints } from '../game/allies';
+import { ALLY_BUFFS, AFFINITY_RULES, affinityLevel, affinityFactor, affinityProgress, allyAttackInterval, allyBuffText, maxAffinityPoints } from '../game/allies';
 import { NPC_ALLIES } from '../game/npcs';
 import { activeSynergies, synergiesOf, villageOf, type ActiveSynergy } from '../game/synergy';
 import type { LevelOffer } from '../scene/GameCanvas';
@@ -14,7 +14,8 @@ import { RunSheetButton } from './RunSheet';
 const allyInfo = (id: string): { name: string; village: string } | undefined => HERO_BY_ID[id] ?? NPC_ALLIES[id];
 
 const SYNERGY_COLLAPSED_KEY = 'shinobibonk.hud.synergiesCollapsed';
-const readCollapsed = () => { try { return localStorage.getItem(SYNERGY_COLLAPSED_KEY) !== '0'; } catch { return true; } };
+// 25/11: as sinergias começam abertas (o jogador precisa saber o que o combo faz); recolher continua salvo.
+const readCollapsed = () => { try { return localStorage.getItem(SYNERGY_COLLAPSED_KEY) === '1'; } catch { return false; } };
 
 /** Sinergias ativas abaixo da lista da equipe, com preferência salva entre partidas. */
 function SynergyPanel({ synergies }: { synergies: ActiveSynergy[] }) {
@@ -44,14 +45,30 @@ function AffinityRow({ points }: { points: number }) {
   </div>;
 }
 
-export function AllyCards({ synergies = [], allies, affinity = {}, slots, charge }: {
+/** Afinidade em corações: cheios até o nível atual, vazios até o máximo (pedido do usuário, 25/11/2026). */
+export function AffinityHearts({ points }: { points: number }) {
+  const level = affinityLevel(points), max = AFFINITY_RULES.max;
+  return <span className="ally-hearts" role="img" aria-label={`Afinidade ${level}/${max}`} title={`Afinidade ${level}/${max} · passiva a ${Math.round(affinityFactor(points) * 100)}%. Sobe com o tempo na equipe e com abates.`}>
+    {Array.from({ length: max }, (_, i) => <i key={i} className={i < level ? 'on' : undefined} aria-hidden="true">{i < level ? '♥' : '♡'}</i>)}
+  </span>;
+}
+
+/** Atributos de apoio usados no cartão (vêm de world.stats; sem eles, valores base). */
+type AllyStats = { allyBuff: number; allyDamage: number; allySpeed: number; attackSpeed: number };
+const BASE_ALLY_STATS: AllyStats = { allyBuff: 1, allyDamage: 1, allySpeed: 1, attackSpeed: 1 };
+const fmt = (value: number) => value.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
+
+export function AllyCards({ synergies = [], allies, affinity = {}, slots, charge, level = 1, stats = BASE_ALLY_STATS }: {
   synergies?: ActiveSynergy[];
   allies: string[];
   affinity?: Record<string, number>;
   slots: number;
   charge: number;
+  level?: number;
+  stats?: AllyStats;
 }) {
   if (!allies.length) return null;
+  const interval = allyAttackInterval(level, stats.allySpeed, stats.attackSpeed), power = Math.round(65 * stats.allyDamage);
   return <aside className="ally-cards" aria-labelledby="ally-hud-title">
     <div className="ally-cards-heading">
       <h2 id="ally-hud-title">Ajudantes <span className="ally-count">{allies.length}/{slots}</span></h2>
@@ -62,12 +79,20 @@ export function AllyCards({ synergies = [], allies, affinity = {}, slots, charge
         {allies.map(id => {
           const name = allyInfo(id)?.name;
           if (!name) return null;
-          const level = affinityLevel(affinity[id] ?? maxAffinityPoints());
-          return <li className="ally-card" key={id}>
+          // 25/11 (pedido do usuário): minimalista, mas mostrando o que cada um faz, o ataque e a afinidade em corações.
+          const points = affinity[id] ?? maxAffinityPoints(), buff = ALLY_BUFFS[id], mine = synergiesOf(id, synergies);
+          const technique = HERO_BY_ID[id] ? HERO_BY_ID[id].techniques.find((t) => !t.setup && t.unlockLevel <= level) : NPC_ALLIES[id]?.technique;
+          const atMax = affinityLevel(points) >= AFFINITY_RULES.max;
+          return <li className="ally-card" key={id} style={technique ? { ['--ally' as string]: technique.color } : undefined}>
             <span className="ally-portrait"><CardPortrait id={id} fullBody decorative/></span>
             <div className="ally-info">
-              <strong>{name}</strong>
-              <small>Afinidade {level}/{AFFINITY_RULES.max}</small>
+              <div className="ally-name-row"><strong>{name}</strong><AffinityHearts points={points}/></div>
+              {buff && <p className="ally-buff" title={`Passiva de ${name}: ${buff.title}. Agora: ${allyBuffText(id, stats.allyBuff, points)}. Com afinidade máxima: ${allyBuffText(id, stats.allyBuff)}.`}><b>{buff.title}</b> <BuffText text={allyBuffText(id, stats.allyBuff, points)}/>{!atMax && <span className="ally-max"> · máx. <BuffText text={allyBuffText(id, stats.allyBuff)}/></span>}</p>}
+              {technique && <div className="ally-skill" title={`${technique.name}: ${technique.school} · ${technique.element} · ${power}% do seu dano · a cada ${fmt(interval)} s`}>
+                <span>⚔ {technique.name}</span><small>{power}% · {fmt(interval)} s</small>
+                <i><s style={{ width: `${Math.round(Math.max(0, Math.min(1, charge)) * 100)}%` }}/></i>
+              </div>}
+              {mine.length > 0 && <div className="ally-synergy-tags">{mine.map((s) => <em key={s.id} className={s.kind} title={`${s.name}: ${s.text}`}>{s.icon} {s.tag}</em>)}</div>}
             </div>
           </li>;
         })}

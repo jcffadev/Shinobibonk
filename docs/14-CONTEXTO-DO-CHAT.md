@@ -2907,3 +2907,10 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - Causa: a caminhada da horda era calculada pelo relógio da missão, que para durante o treinamento. Agora usa um relógio só de animação, que sempre anda.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Eu tinha pedido pro codex deixar minimilista a parte do hud dos ajudantes, mas o jogador tem que saber o que cada um faz e o combo faz, também mostrar como está os ataques deles, afinidade coloque coraçãozinhos...
+
+**Resposta.**
+
+- Cada cartão mostra a afinidade em corações, a passiva (agora e o máximo), o ataque (dano, recarga e barra) e as etiquetas de sinergia. O painel de sinergias começa aberto.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

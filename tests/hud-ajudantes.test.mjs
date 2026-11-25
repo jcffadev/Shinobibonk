@@ -54,3 +54,20 @@ test('a ficha conserva a passiva, o ataque e a recarga real do ajudante',async()
   assert.ok(detail.includes(cooldown+' s'));
   assert.match(read('src/scene/GameCanvas.tsx'),/allyAttackInterval\(level,stats\.allySpeed,stats\.attackSpeed\)/);
 });
+
+test('cartão do ajudante: afinidade em corações, o que ele faz, o ataque e o combo (25/11)',()=>{
+  const stats={allyBuff:1,allyDamage:1.2,allySpeed:1.3,attackSpeed:1.25};
+  const html=markup(AllyCards,{allies:['iruka'],affinity:{iruka:0},slots:3,charge:.5,level:9,stats});
+  assert.equal((html.match(/<i class="on" aria-hidden="true">♥<\/i>/g)||[]).length,1,'1 coração cheio na afinidade 1');
+  assert.equal((html.match(/♡/g)||[]).length,4,'4 corações vazios até o máximo');
+  const text=html.replace(/<[^>]*>/g,'');
+  assert.ok(text.includes(allyBuffText('iruka',1,0)),'mostra a passiva atual');
+  assert.ok(text.includes('máx.'),'mostra a passiva máxima enquanto não chega ao máximo');
+  const technique=HERO_BY_ID.iruka.techniques.find(t=>!t.setup&&t.unlockLevel<=9);
+  assert.ok(text.includes(technique.name),'mostra o ataque');
+  assert.ok(text.includes(allyAttackInterval(9,1.3,1.25).toLocaleString('pt-BR',{maximumFractionDigits:1})+' s')&&text.includes('78%'),'mostra dano e recarga do ataque');
+  const full=markup(AllyCards,{allies:['iruka'],affinity:{iruka:1e9},slots:3,charge:.5});
+  assert.equal((full.match(/♥/g)||[]).length,5); assert.ok(!full.replace(/<[^>]*>/g,'').includes('máx.'));
+  assert.match(read('src/ui/AllyCards.tsx'),/getItem\(SYNERGY_COLLAPSED_KEY\) === '1'/,'sinergias começam abertas');
+  assert.match(read('src/main.tsx'),/charge=\{world\.allyCharge\} level=\{world\.level\} stats=\{world\.stats\}/);
+});
