@@ -1,4 +1,6 @@
 import type { Element, Shape, Technique } from './heroes.ts';
+import { finiteBossHp, guardianArmor, guardianVitality } from './missions.ts';
+import { ZONE_SECONDS } from './worldScale.ts';
 
 const attack = (name: string, shape: Shape, element: Element, color: string, power: number, range: number, slow = false): Technique =>
   ({ name, shape, element, color, power, range, school:'Ninjutsu', cooldown:0, statusChance:0, unlockLevel:1, slow });
@@ -51,4 +53,19 @@ export function bijuuFacesAway(previous: boolean, away: number | undefined) {
   if (away > .26) return true;
   if (away < .1) return false;
   return previous;
+}
+
+/**
+ * Vida e defesa da Bijū na arena (usadas pelo GameCanvas e pelo simulador de chefes, scripts/simulate-bosses.mjs).
+ * HP: `hpMultiplier` × o Guardião da zona 3 no mesmo tempo de Final Swarm, sem teto (trilhões e quadrilhões valem).
+ * Defesa: `armorMultiplier` × a armadura BRUTA do Guardião equivalente, convertida em redução `a/(100+a)` — nunca chega
+ * a 100%, então todo golpe desconta vida.
+ */
+export const BIJUU_RULES = { hpMultiplier: 2.4, minHp: 4600, armorMultiplier: 1.35 };
+export function bijuuVitality(threatHp: number, runSeconds: number, overtimeSeconds: number) {
+  return finiteBossHp(Math.max(BIJUU_RULES.minHp, Math.round(guardianVitality(threatHp, runSeconds, ZONE_SECONDS + overtimeSeconds, overtimeSeconds, 3) * BIJUU_RULES.hpMultiplier)));
+}
+export function bijuuDefense(runSeconds: number, overtimeSeconds: number, plans: number, armorMultiplier: number = BIJUU_RULES.armorMultiplier) {
+  const armor = guardianArmor(runSeconds, false, overtimeSeconds, 3, plans) * armorMultiplier;
+  return armor / (100 + armor);
 }

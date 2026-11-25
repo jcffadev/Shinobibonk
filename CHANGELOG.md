@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 25/11/2026 · Medição de Guardiões e Bijū no simulador (Claude Code)
+
+- **Pedido:** fila do Claude Code em docs/13 (balanceamento): calibrar Guardiões e Bijū nos marcos +1, +7 e +15 min e além, simular de 0 a 3 planos do Shikamaru, partir de cerca de 20× a armadura do Guardião para a Bijū e manter os números finitos.
+- **Novo `scripts/simulate-bosses.mjs`:** mede o Guardião da zona 1 em cada marco e a Bijū com a build de quem venceu a zona 3, com opções de armadura de 1,35× a 20×. Grava `artifacts/simulate-<rótulo>.json` (não versionado).
+- **`scripts/simulate-run.mjs`:** aceita `plans` (planos do Shikamaru por zona) e uma sonda `probe` por segundo.
+- **Bijū:** a vida e a defesa saíram do GameCanvas para `bijuuVitality` e `bijuuDefense` (`src/game/bijuu.ts`, `BIJUU_RULES`). `guardianArmor` expõe a armadura bruta. **Nenhum número de jogo mudou.**
+- **Limite numérico:** `BOSS_HP_LIMIT` (1e300) impede a vida de virar infinito depois de cerca de 24 h de Final Swarm. Não é teto de gameplay.
+- **Resultado:** 20× a armadura deixaria a Bijū do Kage sem planos com 39 min de luta (hoje são 3 min), e com 3 planos por zona com 14 h. Tabelas e leituras em [docs/20](docs/20-SCALING-EREGULAS.md#medição-de-guardiões-e-bijū--25112026-claude-code). **Multiplicador final aguardando decisão do usuário.**
+- **Testes:** 3 testes novos em `tests/chefes.test.mjs` (o mínimo subiu para 274) e 2 mutações novas, verificadas à mão. Simulação de modelo, não validação em partida.
+
 ## 25/11/2026 · Drops fixos, Hagoromo e pose de selamento
 
 - Novos drops são registrados mesmo com milhares de recompensas no chão. A busca usa células de proximidade para a coleta e células visíveis para renderizar. XP, Ryu, chakra e cura permanecem no ponto onde caíram, até serem atraídos.

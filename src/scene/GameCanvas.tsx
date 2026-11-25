@@ -40,7 +40,7 @@ import { MEMORIAL } from './leafLandmarkLayout';
 import { loadArchitectureAtlas } from './villageArchitecture';
 import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type ShinraState } from '../game/shinraTensei';
 import { createDamageNumbers } from './damageNumbers';
-import { bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, rollBijuu } from '../game/bijuu';
+import { bijuuDefense, bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, bijuuVitality, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
 import { createVillageLayout, villageGroundBands, missionMapLayout, shuffledVillageSites, villageDeck, villageSurface, type MapLayout } from './villageLayout';
 import { createVillageGround, villageWater } from './villageTerrain';
@@ -1656,9 +1656,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const overtime=saved?.overtime??arrivalOvertime;
       const curse=zoneCurse(zoneDifficulty,plansUsed,ex('threat'));
       const threat=zoneThreat(mission,ZONE_SECONDS+overtime,curse,overtime,ex('enemyCount'),t=>tuneThreat(t,tune()));
-      const maxHp=saved?.maxHp??Math.max(4600,Math.round(guardianVitality(threat.hp,elapsed,ZONE_SECONDS+overtime,overtime,3)*2.4));
+      const maxHp=saved?.maxHp??bijuuVitality(threat.hp,elapsed,overtime);
       const bossDamageScale=guardianAttackMultiplier(elapsed,overtime,3,true)*threat.damage/Math.max(.01,threatNow().damage);
-      const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1*bossDamageScale,bossDamageScale,summonedOvertime:overtime,defense:guardianDefense(elapsed,true,overtime,3,plansUsed),uid:++megaUid,seen:true};
+      const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1*bossDamageScale,bossDamageScale,summonedOvertime:overtime,defense:bijuuDefense(elapsed,overtime,plansUsed),uid:++megaUid,seen:true};
       enemyList.push(beast);bossCombat.attach(beast,maxHp,true);playBijuu();
       // Rodada 58: poeira de chakra no ponto onde a bijū surge (some no modo H).
       if(!hiddenEffects)for(const [r,c] of [[2.2,'#d8c6ff'],[3.6,'#9f7bff']] as const)addRing(sprite.position,c,r);

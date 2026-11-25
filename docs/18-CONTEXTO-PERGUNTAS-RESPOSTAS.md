@@ -509,6 +509,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** A fila tem responsáveis e critérios de verificação. O índice de drops mantém as posições originais. O Hagoromo ganhou retrato, selo, indicador de fase e coleta antes de sair. As versões capturáveis usam a pose ajoelhada. **PENDENTE.** Gesto da mão no peito conforme as referências e calibração da defesa das Bijū.
 
+### Chefes · 25/11/2026
+
+- Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

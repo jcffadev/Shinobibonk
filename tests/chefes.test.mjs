@@ -1,0 +1,49 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { zoneThreat, zoneCurse, ZONE_DIFFICULTY } from '../src/game/progression.ts';
+import { guardianVitality, guardianDefense, guardianArmor, finiteBossHp, BOSS_HP_LIMIT } from '../src/game/missions.ts';
+import { BIJUU_RULES, bijuuVitality, bijuuDefense } from '../src/game/bijuu.ts';
+import { guardianProbe, bijuuProbe } from '../scripts/simulate-bosses.mjs';
+
+const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+
+test('Bijū: vida e defesa vêm das funções compartilhadas com o simulador (calibração 25/11)', () => {
+  assert.ok(canvas.includes('const maxHp=saved?.maxHp??bijuuVitality(threat.hp,elapsed,overtime);'));
+  assert.ok(canvas.includes('defense:bijuuDefense(elapsed,overtime,plansUsed),'));
+  // Mesmo valor que a fórmula anterior (armadura do Guardião da zona 3 × 1,35 e HP × 2,4, mínimo 4.600).
+  for (const [t, ov, plans] of [[1800, 0, 0], [2400, 420, 3], [3000, 900, 9]]) {
+    assert.ok(Math.abs(bijuuDefense(t, ov, plans) - guardianDefense(t, true, ov, 3, plans)) < 1e-12);
+    const hp = zoneThreat('Kage', 600 + ov, zoneCurse(ZONE_DIFFICULTY[3], plans, 0), ov, 0).hp;
+    assert.equal(bijuuVitality(hp, t, ov), Math.max(4600, Math.round(guardianVitality(hp, t, 600 + ov, ov, 3) * 2.4)));
+  }
+  assert.equal(BIJUU_RULES.armorMultiplier, 1.35);
+  // Mais armadura bruta → mais defesa, sem chegar a 100%.
+  assert.ok(bijuuDefense(3000, 900, 9, 20) > bijuuDefense(3000, 900, 9) && bijuuDefense(3000, 900, 9, 20) < 1);
+  assert.ok(Math.abs(guardianDefense(1200, false, 60, 1, 2) - guardianArmor(1200, false, 60, 1, 2) / (100 + guardianArmor(1200, false, 60, 1, 2))) < 1e-12);
+});
+
+test('chefes sem teto de gameplay, mas sempre finitos e com dano que desconta vida', () => {
+  // Trilhões e quadrilhões valem: o Guardião da zona 1 aos +50 min passa de 1 quatrilhão.
+  const ov = 3000, th = zoneThreat('Kage', 600 + ov, zoneCurse(1, 3, 0), ov, 0);
+  assert.ok(guardianVitality(th.hp, 600 + ov, 600 + ov, ov, 1) > 1e15);
+  // ~25 h de Final Swarm: a conta bruta estoura, o limite numérico segura.
+  const far = 1500 * 60, thFar = zoneThreat('Kage', 600 + far, zoneCurse(ZONE_DIFFICULTY[3], 9, 0), far, 0);
+  assert.ok(Number.isFinite(bijuuVitality(thFar.hp, 600 + far, far)));
+  assert.equal(finiteBossHp(Infinity), BOSS_HP_LIMIT); assert.equal(finiteBossHp(5), 5);
+  // Defesa nunca zera o dano, nem com 20× a armadura e dia inteiro de Final Swarm.
+  assert.ok(1 - bijuuDefense(90000, 86400, 9, 20) > 1e-6);
+  // Precisão: com vida acima de 2^53, um golpe de 1 bilionésimo da vida ainda desconta.
+  let hp = 1.6e18; const before = hp; hp -= hp * 1e-9; assert.ok(hp < before);
+});
+
+test('simulador de chefes mede Guardião nos marcos e Bijū com opções de armadura', () => {
+  const g = guardianProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17 });
+  assert.ok(g.normal && g.normal.hp > 0 && g.normal.ttk > 0 && Number.isFinite(g.normal.ttk));
+  const more = guardianProbe({ heroId: 'naruto', mission: 'Genin', plans: 3, seed: 17 });
+  assert.ok(more.normal.def > g.normal.def, 'planos do Shikamaru somam armadura');
+  const b = bijuuProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17 });
+  assert.ok(b && b['chegada'].hp >= 4600);
+  assert.ok(b['chegada'].options[20] > b['chegada'].options[1.35] * 10, '20× de armadura alonga muito a luta');
+  assert.ok(b['+15'].hp > b['chegada'].hp);
+});

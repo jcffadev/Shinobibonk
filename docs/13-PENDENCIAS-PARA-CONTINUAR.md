@@ -4,7 +4,7 @@
 
 **Claude Code · Balanceamento**
 
-1. Calibrar Guardiões e Bijū com invocações normais e aos +1, +7, +15 minutos e além do Final Swarm. HP da zona pode alcançar trilhões e quadrilhões sem teto de gameplay. Manter os valores numéricos finitos dentro do intervalo suportado e testar precisão de dano e passagem de fase em lutas muito longas.
+1. **MEDIDO em 25/11** (`scripts/simulate-bosses.mjs`, [docs/20](20-SCALING-EREGULAS.md#medição-de-guardiões-e-bijū--25112026-claude-code)). Números finitos garantidos por `BOSS_HP_LIMIT`. **Aguardando decisão do usuário** sobre o multiplicador de armadura da Bijū e a soma dos planos. Pedido original: calibrar Guardiões e Bijū com invocações normais e aos +1, +7, +15 minutos e além do Final Swarm. HP da zona pode alcançar trilhões e quadrilhões sem teto de gameplay. Manter os valores numéricos finitos dentro do intervalo suportado e testar precisão de dano e passagem de fase em lutas muito longas.
 2. Tomar cerca de **20× a armadura bruta** do Guardião equivalente como alvo inicial para a Bijū. Calibrar o efeito de armadura real no tempo de combate, com janela para desvio e dano sempre possível. Comparar defesa efetiva e dano por golpe para builds novas e fortes.
 3. Simular Genin, Chunin, Jonin e Kage com zero a três planos do Shikamaru. Registrar HP, defesa, dano, tempo até derrotar e progressão da arena. Preservar os quatro pergaminhos grátis com três planos e a invocação voluntária.
 4. Revisar a relação entre dano de nível alto, excesso de proteção e pressão do Final Swarm somente após isolar cada variável da curva do chefe.

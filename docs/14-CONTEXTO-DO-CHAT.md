@@ -2874,3 +2874,21 @@ Tab preserva WASD e o cursor marca rotas com a simulação em andamento. O uso d
 > Tipo o personagens colocando a mão no peito, sei la, caindo de joelhos aos poucos e ficando ajoelhado ai a gente vai e captura os personagens fazemos a selagem, consegue fazer isso para todos?
 
 A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e integração ao Qwen. Codex assume arte e animação. Os drops ficam onde caíram e o HUD apresenta T e Q. Na clareira, o jogador vê o retrato e fase do treino e pode recolher os drops após vencer o chefe, até decidir sair com E. A descida e a espera ajoelhada foram aplicadas a todas as versões capturáveis. A mão no peito será refinada usando as referências que chegarão.
+
+## 25/11/2026 — verificação geral e medição de Guardiões e Bijū
+
+> Quero que você verifique tudo que fizemos e está publicado, tanto na pasta do projeto, quanto no git... O Codex separou uma lista do que tem a fazer
+
+**Resposta.**
+
+- A pasta e o GitHub estavam iguais em `fbdea8a`, com as rodadas 97 a 103 na `main`. Tipos, os 271 testes e o build passaram.
+- A branch `vilas-em-validacao` tem 1 commit fora da `main`, e a cópia de trabalho dela tem 19 alterações do Codex sem commit.
+
+> Guardiões e Bijū
+
+**Resposta.**
+
+- Novo simulador de chefes. 20× a armadura deixaria a Bijū do Kage com 39 min de luta sem planos e 14 h com 3 planos por zona; a regra atual dá cerca de 3 min e 1 h.
+- Os números do jogo não mudaram. O multiplicador final aguarda decisão do usuário.
+- **Testes:** tipos, testes e build. A luta na tela continua **PENDENTE DE VALIDAÇÃO E2E**.
+- **Publicado no GitHub.**

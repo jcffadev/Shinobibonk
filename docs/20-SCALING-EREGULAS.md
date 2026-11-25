@@ -12,6 +12,47 @@ Em Kage, na zona 1, o cálculo dá 4,45 milhões de HP e 85,8% de redução aos 
 
 O usuário confirmou HP sem teto de gameplay para chefes de zona, incluindo trilhões e quadrilhões. O HUD já apresenta T e Q. A curva atual cresce com espera e Final Swarm. A próxima revisão deve validar o intervalo numérico suportado sem truncar a vida por um limite arbitrário. A defesa aproximadamente 20 vezes maior para a Bijū entra na fila de calibração. Use o multiplicador na armadura bruta como ponto de partida, antes da conversão para redução de dano, e valide se os golpes continuam descontando HP. Os parâmetros da curva atual seguem os valores deste documento até essa rodada de balanceamento.
 
+## Medição de Guardiões e Bijū · 25/11/2026 (Claude Code)
+
+**Ferramenta:** `scripts/simulate-bosses.mjs` (sem navegador). Usa as mesmas fórmulas do jogo: `guardianVitality`, `guardianDefense`, `bijuuVitality` e `bijuuDefense`. A vida e a defesa da Bijū saíram do GameCanvas para `src/game/bijuu.ts` (`BIJUU_RULES`), sem mudar nenhum número.
+
+- **Cenário A:** o bot fica na zona 1 sem invocar o Guardião. Em cada marco, mede quanto tempo levaria para derrubá-lo ali com o dano de alvo único da build.
+- **Cenário B:** o bot vence a zona 3 cedo. Com a build final, mede a Bijū chegando com 0, +1, +7 e +15 min de Final Swarm.
+- **Amostra:** 115 versões × 4 dificuldades × 0 a 3 planos por zona, semente 17. A Bijū usa os planos somados na missão (até 9).
+- **Limites:** o modelo não tem ultimate, aliados, procs, fusões nem desvio real. O dano real tende a ser maior, então os tempos abaixo são de pior caso.
+
+**Guardião da zona 1** (mediana: HP · defesa · tempo de luta):
+
+| Dificuldade · planos | Normal (2:40) | 10:00 | +1 min | +7 min | +15 min |
+|---|---:|---:|---:|---:|---:|
+| Genin · 0 | 2,9 mil HP · 72,6% · 1,3 s | 68 mil · 82,9% · 0,2 s | 750 mil · 85,8% · 1,2 s (16 vivos) | ninguém vivo | ninguém vivo |
+| Kage · 0 | 8,9 mil · 72,6% · 2,3 s | 366 mil · 82,9% · 1,9 s | 4,4 mi · 85,8% · 13 s (53 vivos) | 635 mi · 93,0% · 4,6 h (1 vivo) | ninguém vivo |
+| Kage · 3 | 17,7 mil · 84,1% · 8 s | 727 mil · 90,6% · 6 s | 8,7 mi · 92,3% · 33 s (11 vivos) | ninguém vivo | ninguém vivo |
+| Chunin · 3 | 8,5 mil · 84,1% · 6 s | 240 mil · 90,6% · 5 s | 2,7 mi · 92,3% · 35 s | 274 mi · 96,3% · 85 s (5 vivos) | 36 bi · 97,8% · 14 min (5 vivos) |
+
+O Guardião cai em segundos até +1 min. No Final Swarm, quase ninguém sobrevive até +7 min no modelo. Quem sobrevive enfrenta lutas de minutos a horas, porque a vida dobra a cada 6 min e a armadura sobe 90 por minuto.
+
+**Bijū na chegada:** mediana do tempo de luta para cada opção de armadura, em vezes a armadura bruta do Guardião equivalente:
+
+| Dificuldade | Planos por zona | 1,35× (atual) | 3× | 5× | 10× | 20× |
+|---|---:|---:|---:|---:|---:|---:|
+| Genin | 0 | 60 s | 2 min | 3,3 min | 6,5 min | 13 min |
+| Genin | 3 | 14 min | 32 min | 52 min | 1,7 h | 3,4 h |
+| Chunin | 0 | 1,7 min | 3,5 min | 5,6 min | 11 min | 22 min |
+| Jonin | 0 | 1,7 min | 3,5 min | 5,6 min | 11 min | 22 min |
+| Kage | 0 | 2,9 min | 6 min | 9,7 min | 19 min | 39 min |
+| Kage | 1 | 12,5 min | 27 min | 43 min | 1,4 h | 2,9 h |
+| Kage | 3 | 58 min | 2,1 h | 3,6 h | 7 h | 14 h |
+
+Leituras:
+- A defesa é uma redução proporcional (`a/(100+a)`). **20× a armadura equivale a cerca de 17× mais vida.** Por exemplo, com 86,7% de redução sobram 13,3% do dano, e com 99,2% sobram 0,8%.
+- Os planos já pesam muito na Bijū. Ela soma os planos da missão inteira (até 9), e cada plano aumenta em 33% tanto a vida quanto a armadura. Com 3 planos por zona, a luta no Kage já leva cerca de 1 hora com a regra atual.
+- Chegar atrasada ao Final Swarm pesa muito: a vida da Bijū sobe de 11 a 12 vezes só no primeiro minuto. Sem planos, a luta no Kage passa de 3 min na chegada para 43 min aos +1 e para cerca de 9 dias aos +7.
+
+**Limite numérico:** `BOSS_HP_LIMIT` (1e300) em `src/game/missions.ts`. Não é teto de gameplay: a conta só passaria de `Infinity` depois de cerca de 24 h de Final Swarm. Acima de 2^53 de vida, cada golpe ainda desconta, desde que seja maior que 1 quatrilionésimo da vida. A defesa nunca chega a 100%, nem com 20× aos +24 h.
+
+**PROPOSTO, aguardando decisão do usuário:** qual multiplicador de armadura usar e se os planos da Bijū devem contar só os da última zona (até 3) em vez da missão inteira. Os números continuam como estavam.
+
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 
 Como segundo avanço da família, parte de ×1,24 de HP e dano de base, +2 de armadura e +0,16 m/s de movimento em relação ao Kakashi Jōnin. A passiva da versão acrescenta +12% de Ninjutsu e +5 pontos de evasão, conforme a progressão de passivas do elenco. A missão em Iwa Kage usa Kakashi Hokage, 7 minutos e 950 abates. Nas sementes 17, 101 e 252, Kakashi Jōnin, Hokage e Dois Mangekyō chegaram à zona 2 no simulador em Kage, conta nova, até 12 minutos. O simulador aproxima a horda e deixa as ultimates fora do cálculo.

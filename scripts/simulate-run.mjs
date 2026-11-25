@@ -85,7 +85,7 @@ function bonusScore(b, techs) {
   return s;
 }
 
-export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30, seed = 1, account = 'novo', allItems = true, policy = POLICY, record = 60, skill = 'medio', xpScale = 1 } = {}) {
+export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30, seed = 1, account = 'novo', allItems = true, policy = POLICY, record = 60, skill = 'medio', xpScale = 1, plans = 0, probe } = {}) {
   const pressureK = SKILL[skill] ?? CROWD.pressureK;
   const rnd = rng32(seed), hero = HERO_BY_ID[heroId], permanent = account === 'maximo' ? maxAccount() : {};
   const pool = allItems ? ITEMS : ITEMS.filter(i => i.rarity === 'Comum');
@@ -145,7 +145,8 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
   while (s.t < end && !s.dead && !s.victory) {
     if (dirty) refresh();
     const overtime = Math.max(0, s.zoneT - ZONE_SECONDS);
-    const curse = zoneCurse(ZONE_DIFFICULTY[s.zone], 0, ex('threat'));
+    // `plans`: Planos do Shikamaru usados em cada zona (0–3), como no jogo (zoneCurse e guardianDefense).
+    const curse = zoneCurse(ZONE_DIFFICULTY[s.zone], plans, ex('threat'));
     const threat = zoneThreat(mission, s.zoneT, curse, overtime, ex('enemyCount'));
     // Horda: nascimentos até o teto + emboscadas (8 + 2 × zona, AMBUSH_RULES).
     s.alive = Math.min(threat.cap, s.alive + threat.spawnPerSecond);
@@ -184,7 +185,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     }
     // Guardião: invocado em policy.guardianAt; derrotado → item grátis e próxima zona. Na zona 3 em modo sem fim, fica no Final Swarm.
     const endlessHere = policy.endless && s.zone === 3;
-    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) guardian = { hp: guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone), def: guardianDefense(s.t, false, overtime, s.zone), at: s.t };
+    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) guardian = { hp: guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone), def: guardianDefense(s.t, false, overtime, s.zone, plans), at: s.t };
     if (guardian) {
       guardian.hp -= singleDps(guardian.def) * (1 + ex('eliteDamage'));
       if (guardian.hp <= 0) {
@@ -199,6 +200,8 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     s.hp = Math.min(stats.maxHp, s.hp - incoming + heal);
     if (s.hp <= 0) { if (s.revives > 0) { s.revives--; s.hp = stats.maxHp * .35; } else s.dead = true; }
     s.t++; s.zoneT++;
+    // Sonda opcional (scripts/simulate-bosses.mjs): estado do segundo para medir lutas contra chefes.
+    if (probe) probe({ t: s.t, zone: s.zone, zoneT: s.zoneT, overtime, threat, level: s.level, hp: s.hp, dead: s.dead, victory: s.victory, singleDps, stats, mission, plans, threatBonus: ex('threat'), eliteDamage: ex('eliteDamage') });
     if (s.t % record === 0 || s.dead || s.victory) snapshot(threat, normalHp, lastKps);
   }
   return { heroId, mission, seed, account, endedAt: +(s.t / 60).toFixed(1), dead: s.dead, victory: s.victory, zone: s.zone, level: s.level, kills: Math.round(s.kills), megaKills: s.megaKills, guardians: s.guardians, totalDamage: s.damage, items: s.items, pills: s.pills, timeline };
