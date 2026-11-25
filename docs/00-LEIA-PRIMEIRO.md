@@ -14,6 +14,8 @@ O clarão de dano cobre a cena durante o impacto. Com pouca vida, a vinheta fica
 
 Os ajudantes usam uma lista compacta, com o mesmo enquadramento dos retratos da ficha e os nomes completos. Pressione **P** para ver os detalhes do apoio. [HUD e ficha](02-FICHA-HUD-RANKING.md#hud-em-partida).
 
+Drops de monstros permanecem onde caíram até entrar no alcance de coleta. O Hagoromo aguarda E após o chefe para dar tempo de recolher os drops. Shinobis capturáveis descem aos joelhos e aguardam o selamento na mesma posição. [Fila por agente](13-PENDENCIAS-PARA-CONTINUAR.md#divisão-entre-os-agentes--25112026).
+
 Tab mantém a missão ativa e aceita cliques de rota. Os drops dos abates continuam recolhíveis no treino do Hagoromo. O marcador do Guardião está no mapa da zona. A defesa, o HP e o dano dos chefes escalam com a espera e os planos do Shikamaru. [Escala dos chefes](20-SCALING-EREGULAS.md#guardiões-e-bijū-no-final-swarm--25112026).
 
 ## Como classificar

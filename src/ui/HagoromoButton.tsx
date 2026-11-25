@@ -1,32 +1,22 @@
-import { HAGOROMO, TOOL_BY_ID } from '../game/hagoromoTraining';
-
-/**
- * Rodada 97 — botão do Treinamento do Hagoromo (pedido do usuário: "coloque o ícone/foto do hagoromo e a tecla de acionamento
- * ao pequeno embaixo e 3 bolinhas para serem preenchidas em cima do icone"). Retrato em pixel art desenhado aqui (cabelo claro
- * espetado com os chifres, Rinnegan, tomoe vermelho na testa, manto branco de gola alta); sem imagem externa.
- */
-const PX: [number, number, number, number, string][] = [
-  // fundo
-  [0, 0, 16, 16, '#3b2a5c'],
-  // cabelo e chifres
-  [3, 1, 10, 4, '#e8e0d4'], [2, 2, 1, 3, '#e8e0d4'], [13, 2, 1, 3, '#e8e0d4'], [4, 0, 2, 1, '#e8e0d4'], [10, 0, 2, 1, '#e8e0d4'],
-  [3, 0, 1, 2, '#cfc3b2'], [12, 0, 1, 2, '#cfc3b2'], [2, 5, 2, 6, '#e8e0d4'], [12, 5, 2, 6, '#e8e0d4'],
-  // rosto
-  [4, 4, 8, 7, '#ecdcc8'], [4, 4, 8, 1, '#d8c6ae'],
-  // tomoe vermelho na testa
-  [7, 4, 2, 2, '#d3262e'],
-  // Rinnegan (anéis roxos)
-  [5, 7, 2, 1, '#9f8fe0'], [9, 7, 2, 1, '#9f8fe0'], [5, 6, 2, 1, '#6b5aa8'], [9, 6, 2, 1, '#6b5aa8'],
-  // boca e barba curta
-  [7, 9, 2, 1, '#8a6e58'], [6, 10, 4, 1, '#d8c6ae'],
-  // manto branco de gola alta com magatama
-  [3, 11, 10, 5, '#f4f1ea'], [5, 11, 6, 1, '#d9d3c6'], [4, 13, 1, 1, '#2b2b2b'], [6, 13, 1, 1, '#2b2b2b'], [9, 13, 1, 1, '#2b2b2b'], [11, 13, 1, 1, '#2b2b2b'],
-];
+import { HAGOROMO, TOOL_BY_ID, type HagoromoEncounterHud } from '../game/hagoromoTraining';
 
 export function HagoromoPortrait({ size = 40 }: { size?: number }) {
-  return <svg className="hagoromo-portrait" width={size} height={size} viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true">
-    {PX.map(([x, y, w, h, c], i) => <rect key={i} x={x} y={y} width={w} height={h} fill={c} />)}
-  </svg>;
+  return <img className="hagoromo-portrait" src="/assets/hagoromo-portrait-v1.png" width={size} height={size} alt="" draggable={false} />;
+}
+
+export function HagoromoStatus({ stage, boss }: { stage:HagoromoEncounterHud; boss:string }) {
+  return <section className="guardian-banner hagoromo-status" data-phase={stage.phase} aria-label="Treinamento do Hagoromo">
+    <HagoromoPortrait size={42} />
+    <div className="hagoromo-status-copy">
+      <small>Treinamento do Hagoromo · {stage.rarity}</small>
+      {stage.phase==='wave' && <strong>Onda {stage.wave}/{stage.total} · {stage.remaining} restantes</strong>}
+      {stage.phase==='boss' && <strong>{boss || 'O Mega Elite chegou'}</strong>}
+      {stage.phase==='complete' && <strong>Treino concluído · recolha os drops e aperte E para voltar</strong>}
+      <div className="hagoromo-wave-pips" aria-hidden="true">
+        {Array.from({length:stage.total},(_,i)=><i key={i} className={stage.phase!=='wave'||i+1<stage.wave?'done':i+1===stage.wave?'current':''} />)}
+      </div>
+    </div>
+  </section>;
 }
 
 export function HagoromoButton({ keys, progress, need, active, recharge, keyLabel }: { keys: number; progress: number; need: number; active: boolean; recharge: boolean; keyLabel: string }) {

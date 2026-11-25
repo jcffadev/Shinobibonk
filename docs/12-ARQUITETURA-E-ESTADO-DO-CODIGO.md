@@ -4,7 +4,7 @@ Atualizado em 11/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Mapa de arquivos
 
-`movementInput.ts` controla a pressão e a soltura do Tab sem limpar o estado físico do movimento. `GameCanvas.tsx` encaminha o mouse para o mapa rápido pelo mesmo cursor virtual dos painéis, com a simulação ativa. `drops.ts` seleciona pilhas para consolidação, e `GameCanvas.tsx` mede a coleta em um relógio de simulação separado do cronômetro da zona. `hagoromoTraining.ts` define as transições das ondas à recompensa. `missions.ts` calcula a armadura, o HP e o multiplicador de dano do Guardião e da Bijū.
+`movementInput.ts` controla a pressão e a soltura do Tab sem limpar o estado físico do movimento. `GameCanvas.tsx` encaminha o mouse para o mapa rápido pelo mesmo cursor virtual dos painéis, com a simulação ativa. `drops.ts` mantém as recompensas em células de chão e em um conjunto separado enquanto estão em trânsito. `GameCanvas.tsx` consulta células próximas para a coleta e as que cruzam o campo de visão para renderização. O relógio de simulação da coleta é separado do cronômetro da zona. `hagoromoVisual.ts` apresenta o selo de fase na clareira. `hagoromoTraining.ts` define as transições das ondas à recompensa. `missions.ts` calcula a armadura, o HP e o multiplicador de dano do Guardião e da Bijū.
 
 `targetFocus.ts` escolhe o alvo em distância horizontal e mede o contato dos projéteis no caminho percorrido a cada quadro. `GameCanvas.tsx` usa a mesma seleção no preparo, no lançamento e no ricochete. Cone e linha partem da posição do lançamento. O alcance e as áreas de cada técnica seguem as regras de combate.
 

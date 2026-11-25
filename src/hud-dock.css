@@ -151,7 +151,17 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .hagoromo-button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 6px 4px;border-radius:10px;border:2px solid #6b5aa8;background:#241b36;color:#efe7ff;cursor:pointer;overflow:hidden}
 .hagoromo-button.ready{opacity:1;border-color:#c9b8ff;box-shadow:0 0 10px #8f78e080}
 .hagoromo-button.active{opacity:1;border-color:#ffd64a}
-.hagoromo-button .hagoromo-portrait{image-rendering:pixelated;border-radius:6px;position:relative;z-index:1}
+.hagoromo-portrait{object-fit:contain;image-rendering:pixelated;position:relative;z-index:1}
+.game-shell .hagoromo-status{display:flex;gap:10px;align-items:center;width:max-content;max-width:min(90vw,480px);padding:7px 14px 8px 9px;border-color:#a68be0;background:linear-gradient(100deg,#322643f5,#171323f5);text-align:left;pointer-events:none}
+.game-shell .hagoromo-status[data-phase=boss]{border-color:#eea8ee}
+.game-shell .hagoromo-status[data-phase=complete]{border-color:#98dcae}
+.hagoromo-status-copy{display:grid;gap:4px;min-width:0;line-height:1.1}
+.hagoromo-status-copy small{color:#e3d0fa;font-size:10px;letter-spacing:.06em}
+.hagoromo-status-copy strong{font:700 clamp(11px,1.2vw,14px)/1.2 var(--fonte-ui,system-ui);color:#fff7ff}
+.hagoromo-wave-pips{display:flex;gap:3px}
+.hagoromo-wave-pips i{width:13px;height:3px;border-radius:3px;background:#6d598f}
+.hagoromo-wave-pips .current{background:#e9d6ff;box-shadow:0 0 5px #d6baff80}
+.hagoromo-wave-pips .done{background:#a68be0}
 .hagoromo-button-footer{display:flex;align-items:center;gap:4px;z-index:1;font-size:11px;line-height:1.15}
 .hagoromo-button-footer kbd,.hagoromo-button-footer b{padding:2px 4px;border-radius:4px}
 .hagoromo-button-footer kbd{color:#fff;background:#392b55;font-family:inherit;font-weight:800}

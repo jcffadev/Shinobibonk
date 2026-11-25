@@ -51,6 +51,8 @@ Não execute testes E2E com navegador sem autorização explícita.
 - Propostas extraídas do material são PROPOSTAS (aguardando o usuário), nunca parâmetros aprovados.
 
 ## Regras de colaboração
+
+- Direção de 25/11/2026: Codex cuida de arte, imagem, efeitos, animação e apresentação 3D. Claude Code e Qwen cuidam da calibração de balanceamento e regressões de sistemas. Consulte a divisão vigente em [docs/13](docs/13-PENDENCIAS-PARA-CONTINUAR.md#divisão-entre-os-agentes--25112026).
 - Pasta principal do projeto confirmada em 12/11/2026: `C:\Shinobibonk projeto - Copia\ShinobiBonk_Codex_Projeto_Completo`.
 - Fale em português do Brasil. Seja objetivo, técnico e explícito.
 - Classifique fatos como CONFIRMADO, IMPLEMENTADO, TESTADO, PROPOSTO ou PENDENTE. Não declare funcionalidade testada sem execução real.
@@ -65,6 +67,7 @@ Não execute testes E2E com navegador sem autorização explícita.
 ## Invariantes de design
 - 4 habilidades comuns em slots 1–4, ativadas **somente automaticamente**, slot 4 desbloqueável na progressão permanente.
 - Ultimate natural disponível desde nível 1: R manual; a **tecla Y é obrigatória** e alterna o uso automático (o selo AUTO embutido no botão R faz o mesmo por clique). Não remover Y. A recarga é passiva por tempo e pode receber aceleradores por drop azul (orbe de chakra); Chakra também é usado por ninjas Taijutsu. Itens não concedem Chakra diretamente.
+- Drops de novos abates permanecem onde caíram, independentemente de quantos já estão no chão. A atração local e o ímã global acionado pelo jogador iniciam o movimento do drop.
 - Drops no chão devem ser distinguíveis (decisão do usuário em 06/11/2026): Chakra/carga da Ultimate = orbe azul; XP = essência roxa (maior para elite/mega elite/guardião); Ryu = moeda dourada com 両; bolinho de arroz = cura 35% do HP máximo (até 2,5% por abate); pílula rosa; item laranja.
 - M abre mapa completo; minimapa permanente superior direito. Eventos ficam visíveis após entrar em tela. Guardião, seu selo, portais de progressão, Bijū e chefe do Hagoromo são objetivos registrados ao surgir. NPCs usados deixam os mapas da zona. Tab abre o mapa rápido com clique para traçar rota e mantém a movimentação. P abre ficha/build/itens/pool.
 - HUD: nível superior esquerdo, pílulas acima das habilidades, inventário com ícones/quantidades inferior esquerdo; habilidades e pílulas no canto inferior direito.

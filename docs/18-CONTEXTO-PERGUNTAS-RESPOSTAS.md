@@ -23,6 +23,8 @@ Survivor/roguelite de ninja (temática Naruto, identidade 100% original) para na
 
 ## 2. Direção atual
 
+**25/11/2026.** Codex assume imagem, arte, animação e apresentação visual. Claude Code e Qwen assumem balanceamento e regressões de sistemas. A fila por responsável está em [docs/13](13-PENDENCIAS-PARA-CONTINUAR.md#divisão-entre-os-agentes--25112026).
+
 **25/11/2026.** O momento da invocação do Guardião é uma decisão do jogador. A ameaça do chefe continua crescendo no Final Swarm. O mapa rápido continua interativo durante o movimento e os objetivos de progressão têm destaque em partida.
 
 **14/11/2026.** Prioridade para igualar a cobertura de animações e conferir a seleção da direção real por folha, em todo o elenco. Testes de navegador suspensos para Claude Code, Qwen e Codex até nova autorização explícita. Ver [política central](development/TESTING_POLICY.md).
@@ -46,6 +48,8 @@ Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos ba
 **Atualização da rodada 52:** a cópia em `C:\Shinobibonk projeto - Copia` é a pasta principal. A Home tem trilha ao carregar, o Arsenal e as Táticas são selecionáveis na preparação e o Mega Elite caído espera E no campo.
 
 ## 3. Decisões permanentes do usuário
+
+**25/11/2026.** Cada drop permanece onde caiu até ser atraído pelo jogador. Novos abates continuam deixando drops independentemente das recompensas já no chão. Guardiões crescem sem teto artificial de HP, e a defesa das Bijū deve ser calibrada como muito superior à dos Guardiões. Na derrota para captura, o shinobi fica ajoelhado até o selamento.
 
 - **24/11/2026 · Oficina dos Sapos Sábios.** Fundir ou combinar só com os dois ataques no nível máximo da partida.
 
@@ -500,6 +504,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 ### Por que os drops sumiam e os chefes podiam ser deletados ao entrar? · 25/11/2026
 
 **IMPLEMENTADO.** A coleta usa um relógio independente e a consolidação mantém drops perto do abate. O treino isola a horda da zona, anuncia o chefe e mostra a contagem de portais no HUD. A entrada protege Guardiões, Bijū e o chefe do treino. A invocação tardia cresce em HP, dano e armadura, considerando os planos do Shikamaru. Tab permite traçar rotas sem interromper o movimento. NPC já usado deixa o mapa. O Benihisago entrega 150% do preço de um pergaminho pago a cada 100 abates. A aparência e o fluxo da partida aguardam verificação visual.
+
+### Como dividir arte, balanceamento e regressões? · 25/11/2026
+
+**IMPLEMENTADO.** A fila tem responsáveis e critérios de verificação. O índice de drops mantém as posições originais. O Hagoromo ganhou retrato, selo, indicador de fase e coleta antes de sair. As versões capturáveis usam a pose ajoelhada. **PENDENTE.** Gesto da mão no peito conforme as referências e calibração da defesa das Bijū.
 
 ## 5. Estado atual do projeto
 

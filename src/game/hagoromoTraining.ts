@@ -35,6 +35,8 @@ export const SAGE_TOOLS: readonly SageTool[] = [
 ];
 export const TOOL_BY_ID: Record<string, SageTool> = Object.fromEntries(SAGE_TOOLS.map(t => [t.id, t]));
 
+export type HagoromoEncounterHud = { rarity:Rarity; wave:number; total:number; remaining:number; phase:'wave'|'boss'|'complete' };
+
 export type HagoromoState = { keys: number; progress: number; tools: string[] };
 export const createHagoromo = (): HagoromoState => ({ keys: 0, progress: 0, tools: [] });
 

@@ -8,6 +8,10 @@ O Guardião pode ser invocado a qualquer momento, inclusive depois de 15 minutos
 
 Em Kage, na zona 1, o cálculo dá 4,45 milhões de HP e 85,8% de redução aos +1 min de Final Swarm sem planos. Com três planos, são 8,86 milhões e 92,3%. Aos +15 min são 136,47 bilhões e 95,8% sem planos, ou 271,57 bilhões e 97,8% com três. A base anterior dava 2,59 milhões e 80,0% aos +1 min, e 30,33 bilhões e 86,9% aos +15 min sem planos. O multiplicador de dano aplicado em cima da ameaça da missão cresce com tempo e zona. A simulação de referência com Naruto Academia Kage e invocações cedo chegou à zona 3 aos 25 min nas duas versões. A janela de desvio e o impacto dos golpes na arena seguem pendentes de teste em partida.
 
+### Próxima calibração · Claude Code
+
+O usuário confirmou HP sem teto de gameplay para chefes de zona, incluindo trilhões e quadrilhões. O HUD já apresenta T e Q. A curva atual cresce com espera e Final Swarm. A próxima revisão deve validar o intervalo numérico suportado sem truncar a vida por um limite arbitrário. A defesa aproximadamente 20 vezes maior para a Bijū entra na fila de calibração. Use o multiplicador na armadura bruta como ponto de partida, antes da conversão para redução de dano, e valide se os golpes continuam descontando HP. Os parâmetros da curva atual seguem os valores deste documento até essa rodada de balanceamento.
+
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 
 Como segundo avanço da família, parte de ×1,24 de HP e dano de base, +2 de armadura e +0,16 m/s de movimento em relação ao Kakashi Jōnin. A passiva da versão acrescenta +12% de Ninjutsu e +5 pontos de evasão, conforme a progressão de passivas do elenco. A missão em Iwa Kage usa Kakashi Hokage, 7 minutos e 950 abates. Nas sementes 17, 101 e 252, Kakashi Jōnin, Hokage e Dois Mangekyō chegaram à zona 2 no simulador em Kage, conta nova, até 12 minutos. O simulador aproxima a horda e deixa as ultimates fora do cálculo.

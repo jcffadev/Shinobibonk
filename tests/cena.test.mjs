@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { load, installCanvasStub, memoryStorage } from './helpers/load.mjs';
-import { collectedXp, dropCanMagnetize, dropPileAtLimit, magnetSpeed, xpCollectedAtPortal, GLOBAL_PULL_SECONDS } from '../src/game/drops.ts';
+import { collectedXp, createGroundDropIndex, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal, GLOBAL_PULL_SECONDS } from '../src/game/drops.ts';
 
 import { COLLISION_RULES, createSolids } from '../src/scene/collision.ts';
 
@@ -23,34 +23,34 @@ function body(extra = {}) {
 }
 function run(b, seconds, hidden = false, step = 1 / 60) { for (let t = 0; t < seconds; t += step) b.update(step, hidden); }
 
-test('Mega Elite cambaleia, baixa um joelho e assenta antes de poder selar', () => {
+test('Mega Elite cambaleia, baixa os joelhos e estabiliza antes de poder selar', () => {
   const { b } = body(), T = F.FALLEN_TIMING;
   assert.equal(b.debug().phase, 'stagger');
   b.update(T.kneel-.045,false);
   assert.equal(b.debug().phase,'kneel');
-  assert.ok(b.debug().knee>.8,'joelho dobra antes do tombo');
+  assert.ok(b.debug().knee>.8,'joelho dobra durante a descida');
   assert.equal(b.ready,false);
-  b.update(T.fall-T.kneel-.04,false);
-  assert.equal(b.debug().phase,'fall');
-  b.update(.13,false);
+  b.update(.12,false);
   assert.equal(b.debug().phase,'settle');
   assert.equal(b.ready,false);
-  b.update(T.settle-T.fall,false);
-  assert.equal(b.debug().phase,'down');
+  b.update(T.settle-T.kneel,false);
   assert.equal(b.ready,true);
-  assert.ok(Math.abs(b.debug().angle - Math.PI / 2) < 1e-3, `deitado a 90°: ${b.debug().angle}`);
-  run(b, 30); assert.equal(b.debug().phase, 'down', 'continua deitado até ser capturado');
+  assert.equal(b.debug().knee,1);
+  assert.ok(b.debug().angle<.4,'tronco continua elevado');
+  run(b, 30);
+  assert.equal(b.debug().phase,'kneeling','continua ajoelhado até ser capturado');
 });
 
-test('corpo deitado acompanha a encosta com os pés e o tronco apoiados',()=>{
+test('pose ajoelhada mantém apoio no terreno e a silhueta acima da encosta',()=>{
   const ground=(x,z)=>.15*x+.1*z;
   const {scene,b}=body({ground});
-  b.update(F.FALLEN_TIMING.settle+.1,false);
   const vertices=scene.getObjectByName('shinobi-em-queda').geometry.attributes.position;
-  for(let i=0;i<vertices.count;i++){
-    const clearance=vertices.getY(i)-ground(vertices.getX(i),vertices.getZ(i));
-    assert.ok(Math.abs(clearance-.055)<.002);
-  }
+  const getClearance=()=>Array.from({length:vertices.count},(_,i)=>vertices.getY(i)-ground(vertices.getX(i),vertices.getZ(i)));
+  const standing=Math.max(...getClearance());
+  b.update(F.FALLEN_TIMING.settle+.1,false);
+  const clearance=getClearance();
+  assert.ok(Math.abs(Math.min(...clearance)-.055)<.002,'pés ancorados no chão');
+  assert.ok(Math.max(...clearance)<standing*.85 && Math.max(...clearance)>standing*.55,'tronco está mais baixo e ainda elevado');
 });
 
 test('pergaminhos e drops usam a base do desenho e têm sombra de contato reutilizada',async()=>{
@@ -138,18 +138,18 @@ test('pergaminho grátis: farol e marcação no minimapa, no Tab e no M sem prec
   assert.match(overlay, /pk\.kind === 'sealDrop' \|\| dist\(world, pk\.x, pk\.z\) < 30/, 'minimapa mostra o pergaminho a qualquer distância');
 });
 
-test('corpo cai para longe do jogador e fica dentro do alcance de captura (10 m)', () => {
+test('a descida mantém o ponto da derrota como centro do raio de captura', () => {
   const { b } = body();
-  assert.ok(b.position.x > 5, 'jogador à esquerda → cai para a direita');
-  assert.ok(Math.hypot(b.position.x, b.position.z) <= 10, 'continua alcançável');
-  const left = body({ x: -5, awayFrom: new THREE.Vector3(0, 0, 0) }).b;
-  assert.ok(left.position.x < -5, 'jogador à direita → cai para a esquerda');
+  assert.deepEqual([b.position.x,b.position.z],[5,0]);
+  run(b, F.FALLEN_TIMING.settle+.1);
+  assert.deepEqual([b.position.x,b.position.z],[5,0]);
+  assert.equal(b.debug().areaRadius,10);
 });
 
-test('save restaurado (instant): já aparece deitado no ponto salvo', () => {
+test('save restaurado (instant): já aparece ajoelhado no ponto salvo', () => {
   const { b } = body({ instant: true, x: 3, z: 4 });
   run(b, F.FALLEN_TIMING.settle + .1);
-  assert.equal(b.debug().phase, 'down');
+  assert.equal(b.debug().phase, 'kneeling');
   assert.deepEqual([b.position.x, b.position.z], [3, 4]);
 });
 
@@ -225,15 +225,30 @@ test('colisão de marco grande termina a 3 m e casa mantém a base sólida', () 
   assert.equal(solids.resolve({x:30,z:.2}), true);
 });
 
-test('XP, Ryu e chakra seguem perto do abate mesmo com o estoque lotado', () => {
-  const close = { distance:1, magnet:false };
-  const far = { distance:60, magnet:false };
-  const moving = { distance:0, magnet:true };
-  assert.equal(dropPileAtLimit([far], 2, 2), null);
-  assert.deepEqual(dropPileAtLimit([far, close, moving], 3, 2), { index:1, relocate:false });
-  assert.deepEqual(dropPileAtLimit([moving, far], 2, 2), { index:1, relocate:true });
-  assert.deepEqual(dropPileAtLimit([close, far], 2, 2), { index:0, relocate:false });
-  assert.deepEqual(dropPileAtLimit([moving, moving], 2, 2), { index:0, relocate:false });
+test('10 mil drops ficam no ponto de origem e continuam disponíveis ao voltar', () => {
+  const storage=createGroundDropIndex(drop=>drop);
+  const near={x:1,y:0,z:1}, far={x:-62,y:2,z:-63}, above={x:1,y:4,z:1};
+  storage.add(near);storage.add(far);storage.add(above);
+  for(let i=0;i<10000;i++)storage.add({x:16+i%70,y:1,z:20+i%35});
+  assert.equal(storage.size,10003);
+  assert.deepEqual([...storage.near(1,1,2)],[near,above]);
+  assert.deepEqual([...storage.near(-62,-63,.2)],[far]);
+  assert.equal([...storage.near(0,0,160)].length,10003);
+  assert.deepEqual([...storage.near(-89,-89,1)],[]);
+  const first=[...storage.cells()][0];
+  assert.deepEqual([first.minY,first.maxY],[0,4]);
+  storage.startPull(near);storage.startPull(near);
+  assert.deepEqual([...storage.near(1,1,2)],[above]);
+  assert.deepEqual([...storage.pulled()],[near]);
+  assert.equal([...storage.all()].length,10003);
+  storage.collect(near);
+  assert.deepEqual([...storage.near(-62,-63,.2)],[far]);
+  assert.deepEqual(far,{x:-62,y:2,z:-63});
+  assert.equal([...storage.ground()].length,10002);
+  storage.startPull(far);
+  assert.deepEqual([...storage.near(-62,-63,.2)],[]);
+  storage.clear();
+  assert.equal(storage.size,0);
   assert.equal(dropCanMagnetize(.34, .35, 1, 3, true), false);
   assert.equal(dropCanMagnetize(.35, .35, 1, 3, false), true);
   assert.equal(dropCanMagnetize(.35, .35, 8, 3, false), false);
@@ -241,7 +256,8 @@ test('XP, Ryu e chakra seguem perto do abate mesmo com o estoque lotado', () => 
   const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.match(canvas, /if\(!sealing\)pickupClock\+=dt;\s*if\(!sealing&&!hagoromoEvent\)\{elapsed\+=dt/);
   assert.match(canvas, /born:pickupClock/);
-  assert.match(canvas, /restDrop\(drop\.mesh,position\.x,position\.z/);
+  assert.match(canvas, /drops\.add\(\{mesh,type,value,name,born:pickupClock/);
+  assert.match(canvas, /dropFrustum\.intersectsBox\(dropBounds\)/);
 });
 
 test('fade usa profundidade e sobreposição da câmera, sem atingir inimigos atrás ou ao lado', async () => {

@@ -1,5 +1,28 @@
 # Fila atual do ShinobiBonk · 25/11/2026
 
+## Divisão entre os agentes · 25/11/2026
+
+**Claude Code · Balanceamento**
+
+1. Calibrar Guardiões e Bijū com invocações normais e aos +1, +7, +15 minutos e além do Final Swarm. HP da zona pode alcançar trilhões e quadrilhões sem teto de gameplay. Manter os valores numéricos finitos dentro do intervalo suportado e testar precisão de dano e passagem de fase em lutas muito longas.
+2. Tomar cerca de **20× a armadura bruta** do Guardião equivalente como alvo inicial para a Bijū. Calibrar o efeito de armadura real no tempo de combate, com janela para desvio e dano sempre possível. Comparar defesa efetiva e dano por golpe para builds novas e fortes.
+3. Simular Genin, Chunin, Jonin e Kage com zero a três planos do Shikamaru. Registrar HP, defesa, dano, tempo até derrotar e progressão da arena. Preservar os quatro pergaminhos grátis com três planos e a invocação voluntária.
+4. Revisar a relação entre dano de nível alto, excesso de proteção e pressão do Final Swarm somente após isolar cada variável da curva do chefe.
+
+**Qwen · Regressões e integração**
+
+1. Conferir a integração de Guardião → portal → próxima zona → Bijū → saída. Incluir entrada de chefe com build de dano alto, pausa, retomar partida, saves antigos e recompensa do Shikamaru.
+2. Estressar a coleta por zona com XP, moedas, chakra e cura largados em regiões diferentes. Voltar a uma região deve recuperar os mesmos drops, e novos monstros continuam recompensando. Conferir o ímã global e o retorno à clareira do Hagoromo.
+3. Conferir Tab com WASD segurado, clique de rota, retorno do cursor e exclusão de marcadores após o primeiro uso do NPC. Registrar as verificações que ainda dependem de partida visual.
+4. Depois de fechar as regressões de missão, retomar verificação do ranking hospedado, validação de resultados em equipe e formatos de coop. Consultar a documentação do ranking.
+
+**Codex · Arte, animação e apresentação**
+
+1. Conferir em partida retrato, selo animado, contador e avisos de onda, chefe e saída no Hagoromo.
+2. Refinar a queda de captura com a mão ao peito a partir das referências do usuário. A descida gradual e a pose ajoelhada já usam o controlador comum a todas as versões capturáveis.
+3. Revisar os 13 jutsus da auditoria, a transição da área de acerto aos impactos e a entrada das nove Bijū. Continuar a revisão das transições do elenco e do material 3D dos mapas.
+4. Conferir desempenho visual com horda máxima, água, vegetação, sombras, efeitos e zoom. A validação gráfica em navegador segue a política vigente.
+
 ## Próximas prioridades sugeridas
 
 1. Conferir o elenco em partida, com foco nas 17 versões ajustadas e no Jūzō como jogador e ajudante. Conferir também a missão e as ações do novo Kakashi dos Dois Mangekyō. O controlador passou pelos oito rumos, ações e retorno ao repouso nas 115 versões. Completar as referências específicas das 97 versões restantes. [Auditoria chibi](development/AUDITORIA-CHIBI-ELENCO.md).

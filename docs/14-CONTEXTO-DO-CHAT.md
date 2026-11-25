@@ -2858,3 +2858,19 @@ Os ajudantes agora usam retratos de corpo inteiro da seleção, nomes com quebra
 As quatro vilas e os itens de chão em 3D estão integrados. As animações e as referências do elenco ficam registradas na auditoria chibi. A fila visual cobre as transições das 115 versões, os jutsus ainda genéricos, a entrada da Bijū, o volume da vegetação e o FPS real. A divisão de trabalho entre os agentes permanece em discussão.
 
 Tab preserva WASD e o cursor marca rotas com a simulação em andamento. O uso de um NPC retira seu marcador até a próxima zona. O estoque de drops consolida XP, Ryu e chakra junto aos novos abates quando necessário. A coleta no Hagoromo usa um relógio que continua durante o evento. O treino mostra os portais disponíveis de 0/3 a 3/3, separa a horda da zona e anuncia o chefe antes da luta. Guardião e Bijū também têm entrada protegida, marcador e escalonamento no Final Swarm. Os quatro pergaminhos com três planos do Shikamaru estão preservados. O Benihisago dá +15% de Ryu, +10% de XP e deposita 150% do preço atual de um pergaminho pago a cada 100 abates.
+
+
+## Drops fixos, divisão de trabalho e queda · 25/11/2026
+
+> A vida pode subir até trilhoes, quadrilhoes, não limite seus cálculos para os boss de zona, a defesa das bijuus tem que ser sei la 20x mais que os bosses de zona
+>
+> Faça uma lista de coisas a fazer para o claude e o qwen trabalhar
+>
+> As partes de gráfico, imagem, tudo que for relacionado a isso, você quem vai trabalhar
+> Inclusive revise a questão do hagoromo...
+> O drop tem que ficar no chão onde está, mas os monstros novos TEM que continuar dropando, depois o jogador deve ir e coletar a que ficou longe
+
+> Faça a animção que eu te pedi dos personagens morrendo, mas... faça algo bonito vou te dar referencias
+> Tipo o personagens colocando a mão no peito, sei la, caindo de joelhos aos poucos e ficando ajoelhado ai a gente vai e captura os personagens fazemos a selagem, consegue fazer isso para todos?
+
+A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e integração ao Qwen. Codex assume arte e animação. Os drops ficam onde caíram e o HUD apresenta T e Q. Na clareira, o jogador vê o retrato e fase do treino e pode recolher os drops após vencer o chefe, até decidir sair com E. A descida e a espera ajoelhada foram aplicadas a todas as versões capturáveis. A mão no peito será refinada usando as referências que chegarão.

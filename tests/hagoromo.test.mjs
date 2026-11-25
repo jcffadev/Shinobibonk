@@ -72,8 +72,10 @@ test('a partida liga o evento: tecla C, clareira, hordas, Mega Elite, recompensa
     'if(!sealing&&!hagoromoEvent){elapsed+=dt;',
     'if(hagoromoEvent&&!enemy.hagoromo)continue;',
     'waveSpots(HAGOROMO_ARENA.x,HAGOROMO_ARENA.z,count)',
-    'outsideEnemies:enemyList.splice(0),outsideDrops:drops.splice(0)',
-    'for(const drop of drops)creditDrop(drop);',
+    'outsideEnemies:enemyList.splice(0),outsideDrops:drops',
+    'drops=hagoromoGround;',
+    'if(hagoromoEvent.completed)finishHagoromo();',
+    'stage:hagoromoStage()',
     'm.arrivalGuard=1;',
     'enemy.boss?.arrival!==undefined',
     "events.filter(mapEventAvailable)",
@@ -91,6 +93,9 @@ test('a partida liga o evento: tecla C, clareira, hordas, Mega Elite, recompensa
   assert.ok(main.includes("world.choice.level===-11?'TREINAMENTO DO HAGOROMO'"));
   const hud = fs.readFileSync(new URL('../src/ui/HagoromoButton.tsx', import.meta.url), 'utf8');
   assert.ok(hud.includes('<b>{keys}/{HAGOROMO.maxKeys}</b>'));
+  assert.ok(hud.includes('/assets/hagoromo-portrait-v1.png'));
+  assert.ok(main.includes('<HagoromoStatus stage={world.hagoromo.stage}'));
+  assert.match(canvas, /hagoromoSeal\.update\(hagoromoPhase\(\),dt,hiddenEffects\)/);
 });
 
 test('clareira do treinamento plana em todos os mapas e longe da água e do começo', async () => {

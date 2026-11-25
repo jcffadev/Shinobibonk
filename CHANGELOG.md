@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Drops fixos, Hagoromo e pose de selamento
+
+- Novos drops são registrados mesmo com milhares de recompensas no chão. A busca usa células de proximidade para a coleta e células visíveis para renderizar. XP, Ryu, chakra e cura permanecem no ponto onde caíram, até serem atraídos.
+- O Hagoromo recebeu um retrato original em pixel art, selo animado na clareira, contador de ondas e aviso de conclusão. Depois da última luta, é possível recolher os drops. Aperte E para sair e escolher a ferramenta. Drops restantes ficam naquela clareira para outra visita na mesma zona.
+- Todos os shinobis capturáveis usam descida gradual até os joelhos e esperam o selamento nessa pose. A mão no peito fica para a revisão com as referências do usuário.
+- Indicadores de chefes exibem T e Q. A fila separa a arte e a apresentação do Codex da calibração de chefes e das regressões a cargo do Claude Code e do Qwen. A defesa da Bijū de aproximadamente 20 vezes a do Guardião fica na fila de balanceamento.
+- Tipos, regras, 271 testes e build passaram sem navegador. O índice preservou a posição de um drop antigo após mais de 10 mil novos registros. A conferência da pose com câmera em movimento e da clareira em partida permanece pendente.
+
 ## 25/11/2026 · Mapa rápido, recompensas e chefes
 
 - Segurar Tab abre o mapa rápido e a kunai do cursor pode marcar rotas sem pausar a missão ou interromper WASD. Soltar Tab devolve o mouse à câmera. NPCs usados saem dos mapas da zona. Compras e serviços que admitem novas interações continuam disponíveis no cenário.

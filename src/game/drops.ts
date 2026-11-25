@@ -13,20 +13,67 @@ export function dropCanMagnetize(age:number,settle:number,distance:number,radius
   return age>=settle && (distance<radius || globalPull);
 }
 
-type DropPile = { distance:number; magnet:boolean };
+type GroundPosition = { x:number; y:number; z:number };
+type DropCell<T> = { key:string; x:number; z:number; minY:number; maxY:number; entries:Set<T> };
+export const DROP_CELL_SIZE=8;
 
-/** Consolida perto do abate. Se só houver pilhas distantes, traz a mais antiga para o abate novo. */
-export function dropPileAtLimit(piles:readonly DropPile[],limit:number,mergeRadius:number) {
-  if(piles.length<limit) return null;
-  let nearby=-1, oldest=-1, nearest=mergeRadius;
-  for(const [index,pile] of piles.entries()){
-    if(pile.magnet)continue;
-    if(oldest<0)oldest=index;
-    if(pile.distance<=nearest){nearby=index;nearest=pile.distance;}
+/** Indexa o ponto onde cada drop caiu. Só o ímã pode tirá-lo da célula para movê-lo. */
+export function createGroundDropIndex<T>(position:(drop:T)=>GroundPosition) {
+  const cells=new Map<string,DropCell<T>>();
+  const grounded=new Map<T,DropCell<T>>();
+  const moving=new Set<T>();
+  const cellIndex=(value:number)=>Math.floor(value/DROP_CELL_SIZE);
+  const cellKey=(x:number,z:number)=>x+':'+z;
+
+  function detach(drop:T) {
+    const cell=grounded.get(drop);
+    if(!cell)return false;
+    grounded.delete(drop);
+    cell.entries.delete(drop);
+    if(!cell.entries.size)cells.delete(cell.key);
+    return true;
   }
-  if(nearby>=0)return {index:nearby,relocate:false};
-  // Todos já estão a caminho do jogador: uma pilha em trânsito pode levar o novo valor.
-  return oldest<0?{index:0,relocate:false}:{index:oldest,relocate:true};
+
+  function* near(x:number,z:number,radius:number) {
+    const minX=cellIndex(x-radius),maxX=cellIndex(x+radius),minZ=cellIndex(z-radius),maxZ=cellIndex(z+radius);
+    if((maxX-minX+1)*(maxZ-minZ+1)>cells.size){
+      for(const cell of cells.values()){
+        if(cell.x>=minX&&cell.x<=maxX&&cell.z>=minZ&&cell.z<=maxZ)yield* cell.entries;
+      }
+      return;
+    }
+    for(let cx=minX;cx<=maxX;cx++)for(let cz=minZ;cz<=maxZ;cz++){
+      const cell=cells.get(cellKey(cx,cz));
+      if(cell)yield* cell.entries;
+    }
+  }
+  function* all() {
+    yield* grounded.keys();
+    yield* moving;
+  }
+  return {
+    get size(){return grounded.size+moving.size;},
+    add(drop:T){
+      const point=position(drop),x=cellIndex(point.x),z=cellIndex(point.z),key=cellKey(x,z);
+      let cell=cells.get(key);
+      if(!cell){
+        cell={key,x,z,minY:point.y,maxY:point.y,entries:new Set()};
+        cells.set(key,cell);
+      }
+      cell.minY=Math.min(cell.minY,point.y);
+      cell.maxY=Math.max(cell.maxY,point.y);
+      cell.entries.add(drop);
+      grounded.set(drop,cell);
+    },
+    startPull(drop:T){if(detach(drop))moving.add(drop);},
+    collect(drop:T){moving.delete(drop);},
+    clear(){cells.clear();grounded.clear();moving.clear();},
+    cells:()=>cells.values(),
+    ground:()=>grounded.keys(),
+    pulled:()=>moving.values(),
+    near,
+    all,
+  };
 }
 
 /** Aplica o ganho de XP a cada orbe, inclusive aos orbes em coleta na troca de zona. */

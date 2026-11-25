@@ -2,6 +2,10 @@
 
 Durante a missão, a lista mostra a afinidade individual e a recarga compartilhada. A ficha (P) mostra o efeito atual da passiva, o valor com afinidade máxima, a técnica, a frequência de ataque e os bônus de sinergia. [HUD dos ajudantes](02-FICHA-HUD-RANKING.md#hud-em-partida).
 
+## Queda para selamento · 25/11/2026
+
+O Mega Elite capturável e o shinobi de desbloqueio cambaleiam, descem gradualmente aos joelhos e ficam ajoelhados, com leve respiração. O ponto do abate ancora o círculo de 10 m, e o selamento só é liberado quando a pose estabiliza. Um encontro restaurado do save começa ajoelhado no ponto salvo. O controlador atende todas as versões capturáveis. O refinamento da mão no peito e a conferência de silhueta em partida ficam para as referências da próxima entrega visual.
+
 ## Capacidade CONFIRMADA
 3 aliados base; +1 vaga por **um item da run**; +1 por **uma passiva permanente** adquirida com Lamens; máximo 5. Jogador não conta.
 

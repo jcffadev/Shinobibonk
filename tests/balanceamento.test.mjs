@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { damageLabel } from '../src/game/format.ts';
+import { compactNumber, damageLabel } from '../src/game/format.ts';
 import { HEROES, SHAPE_COOLDOWN, SHAPE_POWER } from '../src/game/heroes.ts';
 import { attackCooldown, techniqueCooldownScale } from '../src/game/combat.ts';
 import { ENEMY_TIERS, commonEnemyProjectile, xpLoot, lootScale, megaEliteHp, capMegaEliteHp } from '../src/game/enemyTiers.ts';
@@ -15,6 +15,9 @@ const close = (a, b, eps = 1e-9) => Math.abs(a - b) < eps;
 test('números de dano curtos: 50, 1K, 123.1K, 1M, 1B, 1T, 1Q (pedido do usuário)', () => {
   const cases = [[50, '50'], [100, '100'], [999.4, '999'], [999.6, '1K'], [1000, '1K'], [1050, '1.1K'], [10000, '10K'], [123148, '123.1K'], [999950, '1M'], [1e6, '1M'], [1.25e7, '12.5M'], [1e9, '1B'], [1e12, '1T'], [1e15, '1Q'], [4.6e21, '4.6Sx'], [3e36, '3e36']];
   for (const [value, label] of cases) assert.equal(damageLabel(value), label, String(value));
+  assert.equal(compactNumber(2.4e12), '2,4T');
+  assert.equal(compactNumber(3.2e15), '3,2Q');
+  assert.equal(compactNumber(1e18), '1,0e+18');
   assert.match(src('scene/damageNumbers.ts'), /const label = damageLabel\(amount\)/, 'os números flutuantes usam o formato curto');
 });
 

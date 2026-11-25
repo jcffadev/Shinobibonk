@@ -113,7 +113,13 @@ Mapa procedural, spawn configurável por zona, balanceamento e multiplayer segue
 
 Segure **Tab**, mire a kunai do cursor no ícone de um NPC e clique para criar a rota. Solte **Tab** para devolver o mouse à câmera. WASD continua funcionando com o mapa rápido aberto. O mapa completo (**M**) pausa a missão. O marcador de um NPC desaparece após o primeiro serviço usado naquela zona. Serviços que aceitam novas interações continuam acessíveis pelo cenário. Abrir e cancelar o menu preserva o marcador.
 
-O selo do Guardião é marcado ao iniciar cada zona. O Guardião, as Bijū e os portais de progressão são registrados quando surgem. Na névoa, o mapa continua escuro, com os objetivos já ativos e o Zabuza quando estiver a menos de 5 m. O treino do Hagoromo suspende a horda de fora da clareira. O Mega Elite aparece após a última onda e o HUD exibe sua vida. Ao terminar, o jogador volta ao ponto de origem e recebe os drops restantes da clareira.
+O selo do Guardião é marcado ao iniciar cada zona. O Guardião, as Bijū e os portais de progressão são registrados quando surgem. Na névoa, o mapa continua escuro, com os objetivos já ativos e o Zabuza quando estiver a menos de 5 m. O treino do Hagoromo suspende a horda de fora da clareira. O Mega Elite aparece após a última onda e o HUD exibe sua vida. O HUD mostra a raridade, o progresso das ondas e a vida do chefe. Um selo no chão marca a clareira e muda de cor conforme o evento. Após derrotar o Mega Elite, o jogador pode andar e recolher os drops antes de apertar **E** para voltar e escolher uma ferramenta. O que ficou no chão permanece na clareira para outra visita na mesma zona.
+
+## Drops no chão · 25/11/2026
+
+XP, Ryu, chakra e cura permanecem onde caíram. Cada abate continua podendo deixar seus próprios drops mesmo quando já há milhares no mapa. A área de coleta do jogador ativa o ímã ao se aproximar. O ímã global do morro de arroz é uma exceção deliberada e alcança toda a zona. Na travessia do portal, o chão da zona anterior é descartado conforme a regra da troca de zona.
+
+O retrato do Hagoromo foi produzido como arte original para o HUD, com referência ao Rinnegan, às marcas, ao cabelo e ao manto da fase de Sábio dos Seis Caminhos. [Hagoromo no anime](https://naruto-official.com/en/news/01_1355).
 
 ## H e opções gráficas
 Modo H: ocultar números flutuantes, trilhas e efeitos ofensivos opcionais, mas manter lógica de colisão, dano, status e animação de hit simplificada. **IMPLEMENTADO** para projéteis, anéis, visuais e números. Não existe menu de configurações gráficas; as opções a seguir são futuras: densidade visual, LOD de inimigos, minimapa 15/30/60 FPS, partículas, qualidade, limite de FPS e transparência da HUD.

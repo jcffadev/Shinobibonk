@@ -2,8 +2,8 @@
 export function compactNumber(value: number): string {
   if (!Number.isFinite(value)) return '∞';
   const abs = Math.abs(value), sign = value < 0 ? '-' : '';
-  if (abs >= 1e15) return sign + abs.toExponential(1).replace('.', ',');
-  const units: [number, string][] = [[1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, ' mil']];
+  if (abs >= 1e18) return sign + abs.toExponential(1).replace('.', ',');
+  const units: [number, string][] = [[1e15, 'Q'], [1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, ' mil']];
   for (const [size, suffix] of units) if (abs >= size) return sign + (abs / size).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + suffix;
   return sign + Math.round(abs).toLocaleString('pt-BR');
 }

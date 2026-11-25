@@ -3,8 +3,8 @@ import * as THREE from 'three';
 /**
  * Rodada 55 — corpo caído do Mega Elite (contorno vermelho) e do Shinobi para selar (contorno ciano).
  *
- * A arte da forma é separada em segmentos de perna e tronco durante o cambaleio, apoio de joelho e tombo.
- * No repouso a malha acompanha o chão, com respiração leve. Seu centro é a referência dos 10 m do E.
+ * A arte da forma é separada em perna e tronco durante o cambaleio e a descida aos joelhos.
+ * A pose ajoelhada acompanha o chão, com respiração leve. O ponto da queda ancora o raio de 10 m do E.
  *
  * Luz: halo no chão na cor do contorno (disco suave + anel), que acompanha o relevo, pulsa devagar e em baixa
  * intensidade (mistura normal, sem aditivo → não estoura nem gera bloom), sem névoa (fog:false) para ser visto
@@ -16,11 +16,11 @@ import * as THREE from 'three';
  * - Área de captura: círculo no chão com o raio do E (`areaRadius`, 10 m), na cor do contorno, preenchimento
  *   bem fraco e borda marcada, acompanhando o relevo. Pulsa devagar; no modo H fica fixo.
  */
-export const FALLEN_TIMING = { stagger: .24, kneel: .63, fall: 1.09, settle: 1.36 } as const;
-type FallPhase = 'stagger' | 'kneel' | 'fall' | 'settle' | 'down';
+export const FALLEN_TIMING = { stagger: .26, kneel: .92, settle: 1.23 } as const;
+type FallPhase = 'stagger' | 'kneel' | 'settle' | 'kneeling';
 
 export type FallenBody = {
-  /** Centro do corpo deitado no chão (fixo no mundo). */
+  /** Ponto da derrota no chão (fixo no mundo). */
   readonly position: THREE.Vector3;
   readonly ready: boolean;
   update(dt: number, hidden: boolean): void;
@@ -34,14 +34,14 @@ type Options = {
   map: THREE.Texture;
   width: number;
   height: number;
-  /** Ponto da derrota (pés). Com `instant`, é o centro do corpo já deitado (restauração do save). */
+  /** Ponto dos pés na derrota ou ponto ancorado na restauração do save. */
   x: number;
   z: number;
   ground: (x: number, z: number) => number;
   color: string;
-  /** Direita da câmera no chão no instante da derrota: o corpo cai ao longo dela. */
+  /** Direita da câmera no chão no instante da derrota. */
   right: THREE.Vector3;
-  /** Posição do jogador: o corpo cai para o lado oposto. */
+  /** Posição do jogador usada para escolher o lado do apoio. */
   awayFrom?: THREE.Vector3;
   instant?: boolean;
   /** Raio da área de captura desenhada no chão (o alcance do E). Padrão: FALLEN_AREA.radius. */
@@ -131,13 +131,9 @@ export function createFallenBody(o: Options): FallenBody {
   const right = new THREE.Vector3(o.right.x, 0, o.right.z);
   if (right.lengthSq() < 1e-6) right.set(1, 0, 0);
   right.normalize();
-  // Cai para longe do jogador (ao longo da direita da câmera no instante da derrota).
   const side = o.awayFrom && ((o.x - o.awayFrom.x) * right.x + (o.z - o.awayFrom.z) * right.z) < 0 ? -1 : 1;
-  const feet = new THREE.Vector3(o.x, 0, o.z);
-  const rest = o.instant ? feet.clone() : feet.clone().addScaledVector(right, side * h / 2);
-  if (o.instant) feet.copy(rest).addScaledVector(right, -side * h / 2);
-  const restY = ground(rest.x, rest.z);
-  rest.y = restY;
+  const restY = ground(o.x,o.z);
+  const rest = new THREE.Vector3(o.x,restY,o.z);
 
   const bodyGeo=new THREE.PlaneGeometry(1,1,4,20);
   const outlineGeo=bodyGeo.clone();
@@ -176,59 +172,49 @@ export function createFallenBody(o: Options): FallenBody {
   let angle = 0, knee = 0, haloShown = 0, beamShown = 0, areaShown = 0;
   let phase: FallPhase = 'stagger';
   const tint = new THREE.Color();
-  const front=new THREE.Vector3(-right.z,0,right.x);
   const poseUv=bodyGeo.attributes.uv,vertices=bodyGeo.attributes.position,edgeVertices=outlineGeo.attributes.position;
 
   const place = (hidden: boolean) => {
-    const { stagger, kneel, fall, settle } = FALLEN_TIMING;
-    let lean: number,bend=0;
+    const { stagger, kneel, settle } = FALLEN_TIMING;
+    const bend=THREE.MathUtils.smoothstep(t,stagger,kneel);
+    let lean=.28;
     if (t < stagger) {
       phase = 'stagger';
       const k = t / stagger;
-      lean = Math.sin(t * 22) * .1 * (1 - k) + .14 * k;
-    } else if(t<kneel){
+      lean = Math.sin(t * 20) * .09 * (1 - k) + .14 * k;
+    } else if (t < kneel) {
       phase='kneel';
-      bend=THREE.MathUtils.smoothstep(t,stagger,kneel);
-      lean=.14+.24*bend;
-    } else if (t < fall) {
-      phase = 'fall';
-      const k = (t - kneel) / (fall - kneel);
-      bend=1-THREE.MathUtils.smoothstep(k,0,.98);
-      lean = .38 + (Math.PI / 2 - .38) * k * k;
+      lean=.14+.25*bend;
     } else if (t < settle) {
-      phase = 'settle';
-      lean = Math.PI / 2 - .08 * Math.sin(Math.PI * (t - fall) / (settle - fall));
+      phase='settle';
+      lean=THREE.MathUtils.lerp(.39,.28,THREE.MathUtils.smoothstep(t,kneel,settle));
     } else {
-      phase = 'down';
-      lean = Math.PI / 2;
+      phase='kneeling';
     }
     angle = lean;
     knee=bend;
-    const shinAngle=lean-1.17*bend,thighAngle=lean+1.48*bend,torsoAngle=lean+.13*bend;
+    const shinAngle=lean-1.79*bend,thighAngle=lean+.61*bend,torsoAngle=lean+.04*bend;
     const shinSin=Math.sin(shinAngle),thighSin=Math.sin(thighAngle),torsoSin=Math.sin(torsoAngle);
     const shinCos=Math.cos(shinAngle),thighCos=Math.cos(thighAngle),torsoCos=Math.cos(torsoAngle);
-    const flat=THREE.MathUtils.smoothstep(lean,.56,Math.PI/2);
-    const width=w*(phase==='down'?1+.019*Math.sin(t*2.3):1);
-    // Os pés permanecem no ponto original. O joelho recua, o quadril baixa, depois o tronco apoia no terreno.
+    const breath=phase==='kneeling'?1+.014*Math.sin((t-settle)*2.7):1;
+    // A canela se apoia no chão enquanto a coxa baixa. Cabeça e tronco ficam acima do ponto de captura.
     for(let i=0;i<poseUv.count;i++){
       const v=poseUv.getY(i);
-      const shin=Math.min(v,.23),thigh=Math.min(Math.max(0,v-.23),.21),torso=Math.max(0,v-.44);
+      const shin=Math.min(v,.23),thigh=Math.min(Math.max(0,v-.23),.21),torso=Math.max(0,v-.44)*breath;
       const lateral=h*side*(shin*shinSin+thigh*thighSin+torso*torsoSin);
       const vertical=h*(shin*shinCos+thigh*thighCos+torso*torsoCos);
-      const across=(poseUv.getX(i)-.5)*width;
-      const x=feet.x+lateral*right.x,z=feet.z+lateral*right.z;
-      // Oriente a largura pelo tronco para o rosto não esticar quando a cabeça se inclina.
-      const acrossUpright=(1-flat)*across;
-      const dx=right.x*torsoCos*acrossUpright+front.x*flat*across;
-      const dz=right.z*torsoCos*acrossUpright+front.z*flat*across;
+      const across=(poseUv.getX(i)-.5)*w;
+      const x=rest.x+lateral*right.x,z=rest.z+lateral*right.z;
+      const dx=right.x*torsoCos*across,dz=right.z*torsoCos*across;
       const support=ground(x+dx,z+dz);
-      const y=support+Math.max(0,vertical-torsoSin*side*acrossUpright*THREE.MathUtils.smoothstep(v,.25,.53))+.055;
+      const leanY=torsoSin*side*across*THREE.MathUtils.smoothstep(v,.43,.63);
+      const y=support+Math.max(0,vertical-leanY)+.055;
       vertices.setXYZ(i,x+dx,y,z+dz);
       edgeVertices.setXYZ(i,x+1.08*dx,y+.013,z+1.08*dz);
     }
     vertices.needsUpdate=edgeVertices.needsUpdate=true;
     // Tinta de impacto que volta ao branco durante a queda.
-    const hitMix = Math.max(0, 1 - t / FALLEN_TIMING.fall);
+    const hitMix = Math.max(0, 1 - t / FALLEN_TIMING.kneel);
     body.material.color.copy(tint.setRGB(1, 1 - .45 * hitMix, 1 - .45 * hitMix));
     // Sombra e luz aparecem conforme o corpo chega ao chão.
     const grounded = THREE.MathUtils.smoothstep(t,kneel,settle);
@@ -242,7 +228,7 @@ export function createFallenBody(o: Options): FallenBody {
     beam.material.opacity = beamShown;
     beam.visible = !hidden && beamShown > .001;
     // Poeira na batida no chão (não aparece no modo H).
-    const dustT = t - fall;
+    const dustT = t - kneel;
     dust.visible = !hidden && dustT >= 0 && dustT < .5;
     if (dust.visible) { dust.scale.setScalar(1 + dustT * 2.6); dust.material.opacity = .55 * (1 - dustT / .5); }
   };
@@ -250,7 +236,7 @@ export function createFallenBody(o: Options): FallenBody {
 
   return {
     position: rest,
-    get ready(){return phase==='down';},
+    get ready(){return phase==='kneeling';},
     update(dt: number, hidden: boolean) { t += dt; place(hidden); },
     debug: () => ({ phase, angle: +angle.toFixed(3), knee:+knee.toFixed(3), halo: +haloShown.toFixed(3), beam: +beamShown.toFixed(3), area: +areaShown.toFixed(3), areaRadius, x: +rest.x.toFixed(2), z: +rest.z.toFixed(2) }),
     dispose() {
