@@ -43,10 +43,15 @@ export function sealSequence(t: Pick<Technique, 'name' | 'school' | 'ultimate'>)
   const known = KNOWN.find(([pattern]) => pattern.test(t.name));
   if (known) return known[1].map(id => HAND_SEALS[id]);
   if (t.school === 'Taijutsu' && !t.ultimate) return [];
-  let h = hash(t.name);
+  let h = hash(t.name) || 1;
   const count = SEAL_RULES.minRandom + h % (SEAL_RULES.maxRandom - SEAL_RULES.minRandom + 1);
   const out: { kanji: string; name: string }[] = [];
-  for (let i = 0; i < count; i++) { h = (h * 1103515245 + 12345) >>> 0; out.push(HAND_SEALS[ORDER[h % ORDER.length]]); }
+  // Sorteio pelos bits altos de um xorshift (25/11/2026: o LCG pelos bits baixos repetia Dragão, Macaco e Rato), sem o mesmo selo duas vezes seguidas.
+  for (let i = 0; i < count; i++) {
+    let pick: HandSeal;
+    do { h ^= h << 13; h >>>= 0; h ^= h >>> 17; h ^= h << 5; h >>>= 0; pick = ORDER[(h >>> 8) % ORDER.length]; } while (out.length && out.at(-1) === HAND_SEALS[pick]);
+    out.push(HAND_SEALS[pick]);
+  }
   return out;
 }
 

@@ -47,3 +47,16 @@ test('no máximo a cada 2,5 s por personagem; Ultimate sempre; ligado no lançam
   assert.ok(canvas.includes('playTechniqueSound(t,true,heroId);showHandSeals(t,player.position,heroId);'));
   assert.ok(canvas.includes('if(hiddenEffects||!sealDue(elapsed,lastSeal.get(casterId),t.ultimate))return;'));
 });
+
+test('sorteio espalha os 12 selos e não repete o mesmo seguido (25/11: o Madara só mostrava Dragão)', () => {
+  const count = {}; let total = 0;
+  for (const h of HEROES) for (const t of h.techniques) {
+    if (t.school === 'Taijutsu') continue;
+    const seq = sealSequence(t);
+    for (let i = 1; i < seq.length; i++) if (!/Fogo|Fênix|Chidori|Raikiri|Invocação|Parede|Dragão de Água/.test(t.name)) assert.notEqual(seq[i].name, seq[i - 1].name, t.name);
+    for (const s of seq) { count[s.name] = (count[s.name] || 0) + 1; total++; }
+  }
+  assert.equal(Object.keys(count).length, 12);
+  for (const [name, n] of Object.entries(count)) assert.ok(n / total < .15, `${name}: ${(n / total * 100).toFixed(1)}%`);
+  assert.ok(!sealSequence({ name: 'Susanoo Perfeito', school: 'Ninjutsu', ultimate: true }).every(s => s.name === 'Dragão'));
+});

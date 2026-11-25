@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25/11/2026 · Selos do Madara mostravam só Dragão (Claude Code)
+
+- **Pergunta do usuário:** "porque no ataque do madara ta aparecendo umas coisas, tipo dragão em cima do ataque dele?" — é o texto dos selos de mão ("辰 Dragão"). O sorteio fixo dos selos (técnicas sem sequência da obra) repetia quase sempre Dragão, Macaco e Rato; a Susanoo Perfeito tinha 3 Dragões seguidos.
+- **`src/game/handSeals.ts`:** o sorteio usa os bits altos de um xorshift e não repete o mesmo selo seguido. Agora os 12 selos aparecem distribuídos (nenhum acima de 15%).
+- **Testes:** 1 teste novo em `tests/selos.test.mjs` (mínimo 313) e 1 mutação nova, verificada à mão.
+
 ## 25/11/2026 · Prêmios da Prova Chūnin (Claude Code)
 
 - **Escolha do usuário: "Lamens", "Título Chūnin", "Moldura de perfil" e "Lamens por fase".**

@@ -3074,3 +3074,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - Fechar cada fase dá Lamens (Floresta 300, Preliminares 600, Final 600). Vencer os 15 duelos dá 2.000 Lamens, o título "Chūnin" ao lado do nome (topo e ranking local) e libera a moldura Jade. Cada prêmio vale uma vez.
 - **Testes:** tipos, testes (312) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> porque no ataque do madara ta aparecendo umas coisas, tipo dragão em cima do ataque dele?
+
+**Resposta.** É o texto dos selos de mão. O sorteio repetia Dragão, Macaco e Rato; corrigido para espalhar os 12 selos sem repetir seguido. **Publicado no GitHub.**
