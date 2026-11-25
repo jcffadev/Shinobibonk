@@ -2812,3 +2812,9 @@ A publicação reúne a correção do NPC do Shikamaru, a auditoria do dano, o f
 > a questão do projetil dos inimigos você mudou em todas as dificuldades, certo?
 
 O golpe que tira HP produz um clarão vermelho mais visível e um baque com estalo mais presente. O Genin ganha pressão a partir do minuto 1. Os projéteis comuns ficam 15% mais lentos no Genin, Chunin, Jonin e Kage, conservando o alcance. Os itens do chão e as armas comuns agora têm modelos 3D. A medição dos lotes foi feita sem navegador e o FPS da partida completa ainda precisa de medição no navegador e no executável Windows.
+
+## HUD dos ajudantes · 25/11/2026
+
+> Preicsamos ajustar o layout do hud dos ajudantes, não esta padronizado para todos, imagens e as vezes ficam cortado os textos, deixe de forma mais minimalista
+
+Os ajudantes agora usam retratos de corpo inteiro da seleção, nomes com quebra de linha, afinidade e uma barra de recarga compartilhada. O mesmo enquadramento aparece na troca e na ficha (P). A ficha reúne passivas, técnica e sinergias. A lista rola se faltar espaço. Foram conferidos os nomes, células dos atlas e a ficha em Node. Falta a conferência visual em partida.

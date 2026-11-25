@@ -12,6 +12,8 @@ Nas quatro vilas, os NPCs de missão usam a pixel art original com movimento de 
 
 Os pergaminhos, drops e armas comuns da missão usam malhas 3D. Quando o shinobi perde HP, a cena recebe um clarão vermelho com som de impacto. [Modelos e desempenho](docs/development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
 
+O HUD dos ajudantes mostra retrato, nome, afinidade e a recarga compartilhada da equipe. Os detalhes ficam na ficha (P). [HUD e ficha](docs/02-FICHA-HUD-RANKING.md#hud-em-partida).
+
 O hub inclui ranking local de temporada, Top 100, clãs e fichas com builds e missões. [Regras do ranking e proposta de publicação online](docs/development/RANKING-E-CLAS.md).
 
 ## Começar

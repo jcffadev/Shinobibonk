@@ -2,6 +2,8 @@
 
 ## HUD em partida
 
+O painel dos ajudantes fica abaixo da ficha do jogador. Cada linha mostra o retrato de corpo inteiro da seleção, nome completo e nível de afinidade. A recarga fica numa barra comum. Em espaços baixos, a lista rola entre a ficha e o inventário. Em telas estreitas, a barra da missão ocupa a linha acima da lista. As sinergias aparecem num painel recolhível, fechado na configuração inicial. Passivas e técnicas de apoio podem ser lidas na ficha (P).
+
 O cartão de HP indica **Protegido** durante a invulnerabilidade temporária e **Debug** durante o God mode. Golpes que tiram vida mostram um número vermelho com sinal de menos, além do flash do personagem e do som de dano, mesmo se uma cura repuser o HP no quadro. O número respeita a configuração de números de dano e a tecla H.
 HP, XP, nível, Chakra/recarga da Ultimate, tempo, abates individuais, inimigos vivos, mapa/bioma, dificuldade, dinheiro da partida, slots 1–4, R, aliados 3/5, minimapa, evento ativo, meta Top 1 e colocação dinâmica. A meta deve comparar a run atual inclusive com recordes **do próprio jogador** salvos localmente. Ranking global entre jogadores exige servidor e validação antitrapaça; não alegar online quando apenas local.
 
@@ -43,7 +45,7 @@ Atualizar a posição e distância até o Top 1 após cada abate. Guardar partid
   - Itens no canto inferior direito.
   - FPS e inimigos vivos no centro inferior.
   - Faixa do guardião com HP e progresso da defesa do altar.
-  - **Cartões de ajudantes** à esquerda, abaixo do herói, no padrão da referência do usuário: retrato, nome, selo da aldeia ou SINERGIA, buff, técnica com barra de recarga, elemento, escola e % de dano.
+  - **Ajudantes** à esquerda, abaixo do herói, com retrato, nome e afinidade. A ficha (P) mostra as passivas, ataques e sinergias de cada ajudante.
 - **IMPLEMENTADO na ficha (P)**, em `src/ui/RunSheet.tsx`:
   - Atributos finais derivados de `calculateStats`.
   - Escala de dificuldade.

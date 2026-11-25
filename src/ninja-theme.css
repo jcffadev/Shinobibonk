@@ -43,8 +43,8 @@ kbd{font-family:var(--fonte-texto)}
 .pincel{height:14px;background:#2a1c14;border:2px solid #120b07;border-radius:3px 9px 4px 10px;overflow:hidden}
 
 /* Texto de ganho/perda legível sobre papel (cartas, ficha em papel). */
-.pergaminho .tone-buff,.synergy-panel .tone-buff,.level-choice-card .tone-buff,.local-panel .tone-buff,.detail-panel .tone-buff{color:#23741f}
-.pergaminho .tone-debuff,.synergy-panel .tone-debuff,.level-choice-card .tone-debuff,.local-panel .tone-debuff,.detail-panel .tone-debuff{color:#a3201a}
+.pergaminho .tone-buff,.level-choice-card .tone-buff,.local-panel .tone-buff,.detail-panel .tone-buff{color:#23741f}
+.pergaminho .tone-debuff,.level-choice-card .tone-debuff,.local-panel .tone-debuff,.detail-panel .tone-debuff{color:#a3201a}
 
 /* ═════════════════════════════ 1 · HUD EM COMBATE ═════════════════════════════ */
 
@@ -80,22 +80,7 @@ kbd{font-family:var(--fonte-texto)}
 .game-shell .debug-toggle,.game-shell .debug-panel{top:calc((16px + var(--mm-size) + 32px) * var(--mm-zoom) + 8px)}
 
 /* Sinergias: pergaminho recolhível. */
-.synergy-panel{border:0;border-top:3px solid var(--papel3);border-bottom:3px solid var(--papel3);border-radius:4px;background:var(--bg-pergaminho);box-shadow:var(--sombra-papel);padding:5px 18px;color:var(--tinta)}
-.synergy-panel .ally-cards-title,.synergy-panel .synergy-toggle{color:var(--selo2);text-shadow:none;font-weight:900;font-size:11.5px;letter-spacing:.06em}
-.synergy-panel .synergy-toggle:hover,.synergy-panel .synergy-toggle:focus-visible{color:var(--selo)}
-.synergy-panel.collapsed{padding:3px 18px}
-.synergy-row b{color:var(--tinta)}
-.synergy-row p{color:var(--tinta2)}
-.synergy-row em{background:var(--folha)}
-/* Cartões de ajudantes: placas de madeira; a cor do ajudante vira um filete à esquerda. */
-.ally-cards-title{color:#f3dfb8}
-.ally-card{border:2px solid var(--madeira-borda);border-radius:8px;background:var(--bg-placa);box-shadow:inset 4px 0 0 var(--ally),var(--sombra-placa)}
-.ally-portrait{border-color:var(--madeira-borda);background:#e9cf9c;box-shadow:0 0 0 2px var(--ally)}
-.ally-info header b{color:#fff6e0}
-.ally-buff{color:#f3e2c0}
-.ally-buff b{color:#ffe08a}
-.ally-meta,.ally-max{color:#e2c999}
-.ally-skill i,.ally-affinity i{background:#24160c;border:1px solid #120b07}
+.ally-affinity i{background:#24160c;border:1px solid #120b07}
 .ally-passive{background:#2a1c14;color:#f3dfb8}
 
 /* Pílulas acima das técnicas: contas redondas com contorno de tinta (fundo da linha continua transparente). */
@@ -334,8 +319,6 @@ kbd{font-family:var(--fonte-texto)}
 @media (max-width:680px){.home-hero{display:none}.home-fala{padding-right:0}.hub-vilas-tira{display:none}}
 
 /* Ajustes de encaixe (conferidos em 1280×720 e 1600×900). */
-/* Cartões não encolhem dentro da coluna com rolagem (antes o texto vazava sobre o cartão de cima). */
-.ally-cards>*{flex-shrink:0}
 /* Barra do hub numa linha só também em 1280 px. */
 .hub-nav{gap:5px;margin-left:16px}
 .hub-nav button{padding:7px 10px;font-size:11.5px;white-space:nowrap}
@@ -345,14 +328,6 @@ kbd{font-family:var(--fonte-texto)}
   .home-hero{top:8px;right:12px;width:84px;height:96px}
   .home-hero .hero-sprite{width:84px;height:96px}
   .home-fala{padding-right:92px;min-height:96px}
-}
-/* Telas baixas: cartões de ajudantes no modo compacto (o mesmo que já vale para 4+ ajudantes). */
-@media (max-height:780px){
-  .ally-cards .ally-card{min-height:40px;padding:3px 8px 3px 4px;gap:6px}
-  .ally-cards .ally-portrait{width:32px;height:32px}
-  .ally-cards .ally-portrait .hero-sprite{width:30px;height:36px;margin-top:6px}
-  .ally-cards .ally-info>:nth-child(n+3){display:none}
-  .ally-cards .ally-buff{font-size:11px}
 }
 /* Detalhe do shinobi: o nome no título maior não pode empurrar os atributos para fora do pergaminho. */
 .character-layout .detail-panel{padding:18px 20px;min-width:0}

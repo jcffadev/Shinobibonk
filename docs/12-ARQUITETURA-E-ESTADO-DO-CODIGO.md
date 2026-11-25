@@ -277,11 +277,7 @@ Na arena final, `bijuuSpawnPoint` posiciona a entrada a partir do yaw da câmera
 - **Topo** (`game-topbar` em `main.tsx`, layout em `src/hud-layout.css`): grade em três blocos — missão + clima/zona (esquerda), relógio grande ou "FINAL SWARM +m:ss" (centro), Ryu curto e kunai/shuriken (direita) — e uma linha secundária menor com os preços de kunai, shuriken, roletar do mercador e giro da roleta, todos em `compactNumber`. Avisos (`.world-toast`, ex.: emboscada) ficam abaixo da barra, em `top:140px`.
 - **Ryu em formato curto**: `compactNumber` (`src/game/format.ts`) no HUD, nos preços da barra, no Caça-Níquel da Tsunade (valor exato no `title`), no diálogo do mercador/prêmio (`ItemTradeDialog`) e nos toasts/interações de `GameCanvas.tsx` que mostram Ryu.
 - **Faixas e telas**: faixa do guardião com HP, progresso da defesa do altar, interação próxima ("Aperte E").
-- **Cartões de ajudantes** (`src/ui/AllyCards.tsx` + `src/allies.css`, à esquerda em `top:150px`), um por aliado selado:
-  - retrato redondo com moldura na cor da 1ª técnica, nome e selo da aldeia (FOLHA/AREIA/SOM/CHUVA) ou "SINERGIA";
-  - buff único com o valor efetivo (`allyBuffText(id, allyBuff)`; o nome do buff aparece no tooltip), mais "+12 armadura / +15% dano" da Areia;
-  - nome da técnica com a barra de recarga compartilhada dos aliados (`allyCharge` no snapshot);
-  - elemento, escola, % de dano (65 × `allyDamage`) e intervalo.
+- **Ajudantes** (`AllyCards.tsx` e `allies.css`): lista uniforme no bloco da ficha do jogador. Usa `CardPortrait` com enquadramento de corpo inteiro, nome com quebra de linha, afinidade e uma barra baseada em `allyCharge`. `RunSheet.tsx` apresenta os efeitos já calculados em `allies.ts` e `synergy.ts`. A ficha e o `GameCanvas` usam o mesmo intervalo de ataque em `allyAttackInterval`.
 - **Resumo pós-run** (`RunSummary`), na vitória ou derrota:
   - resultado, forma final e chefe ativo;
   - 12 indicadores: tempo, nível, zona, abates, dano total, DPS médio, dano dos aliados, Ryu, kunai, shuriken, ameaça e suportes;
@@ -298,7 +294,7 @@ Na arena final, `bijuuSpawnPoint` posiciona a entrada a partir do yaw da câmera
   - `.skill-dock` (canto inferior esquerdo, `bottom:96px`) empilha a linha de pílulas (`.vitamin-row`: ícones de 30 px, até 2 linhas, depois rolagem) acima da barra de técnicas (4 espaços + botão R com o selo AUTO), sem sobreposição.
   - Ajuda de teclas em `left:124px; bottom:14px`, à direita do botão "← Preparação".
   - Itens no canto inferior direito: ícones de 25 px, no máximo 3 linhas (`max-height:90px`) com rolagem e contador de quantidade com fundo escuro; FPS e inimigos vivos no centro inferior.
-- **Ajudantes** (`AllyCards.tsx`, `allies.css`): com 4+ ajudantes os cartões ficam compactos e a coluna para antes do dock, com rolagem. O painel SINERGIAS recolhe/expande pelo título; o estado fica em `localStorage` (`shinobibonk.hud.synergiesCollapsed`, com try/catch).
+- **Encaixe dos ajudantes**: `hud-layout.css` organiza a ficha do jogador e a lista. Em telas estreitas, o HUD usa uma linha separada para a barra da missão. A área da lista rola conforme a altura. O painel de sinergias abre pelo título e guarda a preferência em `shinobibonk.hud.synergiesCollapsed`.
   - Até 700 px de largura, o bloco fica em `bottom:50px`, com pílulas de 26 px em 1 linha.
 - **Ficha (P)**: atributos, escala de dificuldade, técnicas com dano e afixos acumulados, itens, pílulas, aliados e sinergia.
 - **Cartas**: cartas de recompensa com botões Atualizar/Pular/Banir; painel de selamento com retrato e animação; telas de vitória e derrota.

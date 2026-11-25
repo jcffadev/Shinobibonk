@@ -176,6 +176,12 @@ export function bonusText(bonuses: Bonuses): string {
   return Object.entries(bonuses).map(([key, value]) => LABEL[key as StatKey]?.(value as number) ?? `+${num(value as number)} ${key}`).join(' · ');
 }
 
+/** Intervalo compartilhado de ataque dos ajudantes na partida. */
+export function allyAttackInterval(level: number, allySpeed: number, attackSpeed: number) {
+  const opening = .65 * Math.max(0, 1 - (level - 1) / 14);
+  return (1.5 + opening) / Math.max(.1, allySpeed * (1 + (attackSpeed - 1) * .5));
+}
+
 /** Texto do buff com os valores efetivos, ex.: "+12% dano total". */
 export function allyBuffText(id: string, strength = 1, affinity?: number): string {
   return bonusText(allyBuffBonuses(id, strength, affinity));

@@ -14,7 +14,7 @@ import { ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, ENEMY_XP_MULTIPLIER, commonEn
 import { sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain, RESEARCH_RULES } from '../game/account';
 import { createTotemBar } from './narutoTotem';
 import { NPC_ALLIES, NPC_RULES, TOTEM_RULES, dealBonuses, dealLabel, dealText, pctText, rollEbisuDeals, rollIrukaLegendary, rollIrukaLesson, type StatDeal } from '../game/npcs';
-import { alliesBonuses, allyBuffText, affinityLevel, affinityFactor, maxAffinityPoints, AFFINITY_RULES, ALLY_BUFFS } from '../game/allies';
+import { alliesBonuses, allyAttackInterval, allyBuffText, affinityLevel, affinityFactor, maxAffinityPoints, AFFINITY_RULES, ALLY_BUFFS } from '../game/allies';
 import { readSettings, saveSettings } from '../game/settings';
 import { DebugPanel, type DebugApi } from '../ui/DebugPanel';
 import { compactNumber } from '../game/format';
@@ -561,7 +561,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     let senjutsuOverride:number|null=null,senjutsuProcs=0;
     const sageModeActive=()=>activeSetups.some(s=>s.sage);
     /** Intervalo do ataque dos ajudantes: velocidade dos ajudantes × metade do bônus de velocidade de ataque do herói. */
-    const allyInterval=()=>(1.5+.65*Math.max(0,1-(level-1)/14))/Math.max(.1,stats.allySpeed*(1+(stats.attackSpeed-1)*.5));
+    const allyInterval=()=>allyAttackInterval(level,stats.allySpeed,stats.attackSpeed);
     const refreshStats=(healGrowth=false)=>{const oldMax=stats.maxHp;
       // Buffs da run = escolhas de "Powerlevel" + buff único de cada ajudante (× força de suporte) + sinergia da Areia. Recalculado das fontes a cada quadro.
       const buffs:Bonuses={...runBuffs};for(const [key,value] of Object.entries(toolBonuses(hagoromo.tools)))buffs[key as keyof Bonuses]=(buffs[key as keyof Bonuses]||0)+(value as number);for(const [key,value] of Object.entries(alliesBonuses(allies,stats.allyBuff,allyAffinity)))buffs[key as keyof Bonuses]=(buffs[key as keyof Bonuses]||0)+(value as number);

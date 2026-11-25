@@ -1,35 +1,46 @@
-/* Cartões dos ajudantes: lado esquerdo, abaixo do cartão do herói (padrão da referência do usuário). */
-.ally-cards{position:absolute;z-index:4;left:18px;top:150px;display:flex;flex-direction:column;gap:7px;width:250px;pointer-events:none}
-.ally-cards-title{padding-left:4px;color:#d7ccba;font-size:11px;font-weight:900;letter-spacing:.08em;text-shadow:0 1px 2px #000}
-.ally-card{--ally:#7fd3ff;position:relative;display:flex;align-items:center;gap:8px;min-height:58px;padding:6px 10px 6px 6px;border:2px solid var(--ally);border-radius:16px 12px 12px 16px;background:linear-gradient(90deg,#32251cf2,#3f2f24e6);box-shadow:0 3px 10px #0008}
-.ally-portrait{display:grid;place-items:center;flex:none;width:46px;height:46px;overflow:hidden;border:2px solid var(--ally);border-radius:50%;background:#4f3b2d}
-.ally-portrait .hero-sprite{width:42px;height:50px;margin-top:8px}
-.ally-info{flex:1;min-width:0;display:grid;gap:2px}
-.ally-info header{display:flex;align-items:center;gap:6px}
-.ally-info header b{overflow:hidden;color:#fff;font-size:13px;white-space:nowrap;text-overflow:ellipsis}
-.ally-info header em{padding:1px 6px;border-radius:7px;background:#2f9e5b;color:#eafff2;font-size:10.5px;font-style:normal;font-weight:900;letter-spacing:.05em}
-.ally-info header em.synergy{background:#d98c2b;color:#fff6e3}
-.ally-buff{margin:0;color:#f4ede0;font-size:11.5px;font-weight:700;line-height:1.2}
-.ally-buff b{margin-right:4px;color:#ffe08a}
+/* Lista da partida. O retrato mantém a moldura, e o nome pode ocupar mais de uma linha. */
+.ally-cards{display:flex;flex-direction:column;min-height:0;width:min(228px,100%);max-width:100%;gap:5px;background:#2b211bed;border:1px solid #b08a575e;border-radius:10px;color:#fff3df;box-shadow:0 2px 10px #0005;font-family:var(--fonte-texto,system-ui);pointer-events:auto}
+.ally-cards-heading{display:grid;gap:5px;padding:8px 10px 1px}
+.ally-cards-heading h2{display:flex;align-items:center;gap:8px;margin:0;color:#f1debb;font-size:12px;font-weight:800;line-height:1.1}
+.ally-count{margin-left:auto;color:#eac586;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+.ally-charge{display:block;appearance:none;width:100%;height:3px;overflow:hidden;border:0;border-radius:3px;background:#110c09;accent-color:#e9b56e}
+.ally-charge::-webkit-progress-bar{background:#110c09}
+.ally-charge::-webkit-progress-value{background:#e9b56e}
+.ally-charge::-moz-progress-bar{background:#e9b56e}
+.ally-cards-body{min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:0 6px 6px}
+.ally-list{display:grid;gap:3px;margin:0;padding:0;list-style:none}
+.ally-card{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px;min-height:44px;padding:4px 6px;border-radius:6px;background:#fff4d708}
+.ally-portrait,.replace-portrait{position:relative;display:block;flex:none;overflow:hidden;aspect-ratio:1;border:1px solid #aa8051;border-radius:8px;background:radial-gradient(ellipse at 50% 40%,#ead3a3,#aa825b)}
+.ally-portrait{width:35px}
+.ally-portrait .hero-sprite,.replace-portrait .hero-sprite{filter:none}
+.ally-info{display:grid;gap:2px;min-width:0}
+.ally-info strong,.synergy-row b{min-width:0;overflow-wrap:anywhere}
+.ally-info strong{font-size:12.5px;line-height:1.14}
+.ally-info small{color:#dec6a6;font-size:10.5px;line-height:1.1}
+
+.synergy-panel{margin-top:5px;border-top:1px solid #d4aa6638}
+.synergy-toggle{display:flex;align-items:center;gap:6px;width:100%;padding:7px 5px 4px;border:0;background:none;color:#ead3a5;text-align:left;font-size:11.5px;font-weight:800;cursor:pointer}
+.synergy-toggle:focus-visible{outline:1px solid #f0c988;border-radius:4px}
+.synergy-row{display:grid;grid-template-columns:16px minmax(0,1fr) auto;align-items:start;gap:1px 5px;padding:4px 5px;font-size:11px;line-height:1.2}
+.synergy-icon,.synergy-row em{color:#eac586}
+.synergy-row em{font-style:normal;font-weight:800}
+.synergy-row p{grid-column:2/-1;margin:0;color:#dec6a6;overflow-wrap:anywhere}
+.synergy-row .tone-buff{color:#abdf96}
+.synergy-row .tone-debuff{color:#ffae9e}
+
 .ally-passive{display:inline-block;margin-right:5px;padding:0 4px;border-radius:5px;background:#6e513d;color:#cfe0ff;font-size:10px;font-weight:900;letter-spacing:.06em;vertical-align:1px}
 .ally-synergy-tags{display:flex;flex-wrap:wrap;gap:3px}
 .ally-synergy-tags em{padding:0 5px;border-radius:6px;background:#2f9e5b;color:#eafff2;font-size:10px;font-style:normal;font-weight:900;letter-spacing:.04em}
 .ally-synergy-tags em.organizacao{background:#d98c2b;color:#fff6e3}
-/* Painel de sinergias: compacto, acima dos cartões de ajudantes. */
-.synergy-panel{display:grid;gap:3px;padding:6px 8px;border:2px solid #d98c2b;border-radius:12px;background:linear-gradient(90deg,#2a2016f2,#3f2f24e6);box-shadow:0 3px 10px #0008}
-.synergy-panel .ally-cards-title{padding-left:0;color:#ffcf8a}
-.synergy-row{display:grid;grid-template-columns:16px 1fr auto;align-items:center;column-gap:5px}
-.synergy-row .synergy-icon{font-size:13px;line-height:1}
-.synergy-row b{overflow:hidden;color:#fff;font-size:12px;white-space:nowrap;text-overflow:ellipsis}
-.synergy-row em{padding:0 5px;border-radius:6px;background:#2f9e5b;color:#eafff2;font-size:10.5px;font-style:normal;font-weight:900}
-.synergy-row.organizacao em{background:#d98c2b;color:#fff6e3}
-.synergy-row p{grid-column:2/4;margin:0;color:#f4ede0;font-size:11px;font-weight:700;line-height:1.15}
-.ally-skill{display:flex;align-items:center;gap:6px}
-.ally-skill span{flex:none;max-width:110px;overflow:hidden;color:var(--ally);font-size:11.5px;font-weight:800;white-space:nowrap;text-overflow:ellipsis}
-.ally-skill i{flex:1;height:5px;overflow:hidden;border-radius:3px;background:#1c140e}
-.ally-skill s{display:block;height:100%;background:var(--ally);transition:width .2s linear;text-decoration:none}
-.ally-meta{color:#b2a690;font-size:10.5px}
-@media(max-width:700px){.ally-cards{top:118px;left:8px;width:200px}.ally-meta{display:none}}
+
+.support-detail header{display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.support-detail h3,.support-detail p{overflow-wrap:anywhere}
+.support-detail p{margin:4px 0}
+@media(max-width:700px){
+  .ally-cards{width:min(216px,100%)}
+  .ally-portrait{width:32px}
+  .ally-card{min-height:40px}
+}
 
 /* Afinidade do ajudante (nível, barra e % da passiva). */
 .ally-affinity{display:flex;align-items:center;gap:5px}
@@ -37,7 +48,6 @@
 .ally-affinity i{flex:1;height:4px;overflow:hidden;border-radius:3px;background:#1c140e}
 .ally-affinity s{display:block;height:100%;background:linear-gradient(90deg,#ff7ab8,#ffd36e);text-decoration:none}
 .ally-affinity small{flex:none;color:#ffd9ec;font-size:10px;font-weight:900}
-.ally-max{color:#b2a690;font-weight:600}
 /* Tela de substituição de ajudantes (choiceLevel −7). */
 .replace-choice{max-width:1100px}
 .replace-grid{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
@@ -49,8 +59,7 @@
 .replace-card.is-new:hover{border-color:#ff5c7a}
 .replace-badge{padding:1px 6px;border-radius:6px;background:#6e513d;color:#cfe0ff;font-size:10.5px;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
 .replace-card.is-new .replace-badge{background:#c18242;color:#fff}
-.replace-portrait{display:grid;place-items:center;width:58px;height:58px;overflow:hidden;border:2px solid #7fd3ff;border-radius:50%;background:#4f3b2d}
-.replace-portrait .hero-sprite{width:52px;height:62px;margin-top:10px}
+.replace-portrait{width:58px}
 .replace-card b{color:#fff;font-size:14px}
 .replace-card em{padding:1px 6px;border-radius:7px;background:#2f9e5b;color:#eafff2;font-size:10.5px;font-style:normal;font-weight:900}
 .replace-card p{margin:0;font-size:12px;line-height:1.25}
@@ -66,11 +75,3 @@
 .settings-row input{margin-top:4px;width:18px;height:18px;flex:none}
 .settings-row small{display:block;color:#bfb29b;font-size:13px;line-height:1.35}
 .seal-skip-setting{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:10px;color:#d7ccba;font-size:12px;cursor:pointer}
-
-/* HUD (06/11/2026): com 4+ ajudantes os cartões ficam compactos e a coluna para antes do dock de técnicas (canto inferior esquerdo), com rolagem. */
-.ally-cards{max-height:calc(100vh - 150px - 230px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;pointer-events:auto}
-.ally-cards:has(.ally-card:nth-of-type(4)) .ally-card{min-height:40px;padding:3px 8px 3px 4px;gap:6px}
-.ally-cards:has(.ally-card:nth-of-type(4)) .ally-portrait{width:32px;height:32px}
-.ally-cards:has(.ally-card:nth-of-type(4)) .ally-portrait .hero-sprite{width:30px;height:36px;margin-top:6px}
-.ally-cards:has(.ally-card:nth-of-type(4)) .ally-info > :nth-child(n+3){display:none}
-.ally-cards:has(.ally-card:nth-of-type(4)) .ally-buff{font-size:11px}

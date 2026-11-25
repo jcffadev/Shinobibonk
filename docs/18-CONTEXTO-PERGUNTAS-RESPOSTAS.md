@@ -491,6 +491,10 @@ O NPC fixa a versão Estrategista. O dano por escola e elemento agora tem um cá
 - Kunais, shurikens e Fūma de inimigos comuns ficam 15% mais lentas em todas as dificuldades, com o mesmo alcance. O Genin ganha pressão gradual a partir do minuto 1. Nas simulações, a contagem de sobreviventes do Genin aos 13 minutos ficou em 180 de 345 nas duas versões. [Ajuste e medição](20-SCALING-EREGULAS.md#pressão-do-genin-e-armas-comuns).
 - Itens do chão e armas comuns usam modelos 3D. O teste em CPU mediu os lotes com 1.600 inimigos. A medição de FPS da partida completa e do instalador está pendente. [Teste dos lotes](development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
 
+### Como deixar o HUD dos ajudantes compacto e padronizado? · 25/11/2026
+
+Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade aparecem em cada linha, com quebra automática do nome. A equipe divide a barra de recarga e o detalhe de ataques e passivas fica na ficha (P). [HUD e ficha](02-FICHA-HUD-RANKING.md#hud-em-partida).
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

@@ -12,6 +12,8 @@ O NPC do Shikamaru mantém o traje do Estrategista ao girar a câmera. A ficha c
 
 O clarão de dano cobre a cena durante o impacto. Com pouca vida, a vinheta fica nas bordas. Itens do chão e armas comuns têm volume 3D. Os projéteis dos inimigos comuns viajam 15% mais devagar nas quatro dificuldades. [Balanceamento e ataque à distância](20-SCALING-EREGULAS.md#pressão-do-genin-e-armas-comuns).
 
+Os ajudantes usam uma lista compacta, com o mesmo enquadramento dos retratos da ficha e os nomes completos. Pressione **P** para ver os detalhes do apoio. [HUD e ficha](02-FICHA-HUD-RANKING.md#hud-em-partida).
+
 ## Como classificar
 
 - **CONFIRMADO**: decisão passada pelo usuário.

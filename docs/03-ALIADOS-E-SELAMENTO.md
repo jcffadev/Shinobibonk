@@ -1,5 +1,7 @@
 # Shinobis de apoio, selamento e sinergias
 
+Durante a missão, a lista mostra a afinidade individual e a recarga compartilhada. A ficha (P) mostra o efeito atual da passiva, o valor com afinidade máxima, a técnica, a frequência de ataque e os bônus de sinergia. [HUD dos ajudantes](02-FICHA-HUD-RANKING.md#hud-em-partida).
+
 ## Capacidade CONFIRMADA
 3 aliados base; +1 vaga por **um item da run**; +1 por **uma passiva permanente** adquirida com Lamens; máximo 5. Jogador não conta.
 

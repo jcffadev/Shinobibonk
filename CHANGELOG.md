@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · HUD compacto dos ajudantes
+
+- Os ajudantes de missão usam uma lista uniforme com retrato de corpo inteiro da seleção, nome com quebra de linha e nível de afinidade. A equipe tem uma barra de recarga compartilhada.
+- O painel acompanha a ficha do jogador, respeita a escala do HUD e rola quando falta altura. Em telas estreitas a barra da missão e a lista ficam em linhas distintas.
+- Passivas, técnica de ataque, recarga e bônus de sinergia também podem ser consultados na ficha (P). Os retratos da troca seguem a mesma moldura.
+- Testes em Node conferem nomes e atlas das versões do elenco e dos ajudantes NPC, equipe cheia e detalhes da ficha. A conferência visual em partida continua pendente.
+
 ## 25/11/2026 · Feedback de dano, Genin e itens 3D
 
 - O clarão vermelho cobre a cena por até 0,46 s quando há perda de HP. A vinheta pulsa nas bordas abaixo de 30% de vida. O som de dano ganhou um baque mais presente e um estalo com ataque mais rápido. Os controles de Gráficos e volume continuam ativos.
