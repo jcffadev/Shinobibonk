@@ -30,6 +30,8 @@ export type GameSettings = {
   resolution: Resolution; renderer: Renderer;
   // Controles
   mouseSensitivity: number; invertY: boolean; cameraDistance: number; cameraProjection: CameraProjection; autoUltimate: boolean;
+  /** 25/11/2026 (pedido do usuário): com só 1 carta de nível sobrando no pool, pega automático sem abrir a escolha. Desligado por padrão. */
+  autoPickSingle: boolean;
   // Teclas
   keys: Record<KeyAction, string>;
   // Interface
@@ -60,7 +62,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: MUSIC_DEFAULT, voiceLanguage: 'pt', muteInBackground: true,
   quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true, damageFlash: true,
   resolution: 'auto', renderer: 'directx',
-  mouseSensitivity: 1, invertY: false, cameraDistance: CAMERA_ZOOM.default, cameraProjection: 'perspectiva', autoUltimate: false,
+  mouseSensitivity: 1, invertY: false, cameraDistance: CAMERA_ZOOM.default, cameraProjection: 'perspectiva', autoUltimate: false, autoPickSingle: false,
   keys: { ...DEFAULT_KEYS },
   hudScale: 1, hudOpacity: 1, minimap: true, minimapScale: 1, toasts: true,
   playerName: 'Shinobi',
@@ -130,4 +132,9 @@ export function pixelRatioFor(s: GameSettings) {
   const dpr = window.devicePixelRatio || 1;
   const base = s.resolution === 'nativa' ? dpr : s.resolution === '900p' ? Math.min(dpr, 900 / Math.max(1, window.innerHeight)) : s.resolution === '720p' ? Math.min(dpr, 720 / Math.max(1, window.innerHeight)) : Math.min(dpr, 1.5);
   return Math.max(.4, base * (s.quality === 'alta' ? 1 : s.quality === 'media' ? .85 : .65));
+}
+
+/** Escolha automática: a opção está ligada e a oferta tem uma única carta disponível. */
+export function shouldAutoPick(offers: readonly { disabled?: unknown }[] | null | undefined, enabled: boolean) {
+  return enabled && offers?.length === 1 && !offers[0].disabled;
 }

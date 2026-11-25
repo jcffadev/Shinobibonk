@@ -2914,3 +2914,10 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - Cada cartão mostra a afinidade em corações, a passiva (agora e o máximo), o ataque (dano, recarga e barra) e as etiquetas de sinergia. O painel de sinergias começa aberto.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Coloque uma opção nas configurações, quando não tiver mais opção de escolha no pool, tiver só 1, com a opção marcada, ele pega automático sem aparecer para selecionar.
+
+**Resposta.**
+
+- Nova opção em Configurações → Controles: **Pegar sozinha a única carta** (desligada por padrão). Com ela ligada, a carta única é escolhida sem abrir a tela e aparece um aviso.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

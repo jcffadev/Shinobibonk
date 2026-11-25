@@ -16,7 +16,7 @@ import { sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain
 import { createTotemBar } from './narutoTotem';
 import { NPC_ALLIES, NPC_RULES, TOTEM_RULES, dealBonuses, dealLabel, dealText, pctText, rollEbisuDeals, rollIrukaLegendary, rollIrukaLesson, type StatDeal } from '../game/npcs';
 import { alliesBonuses, allyAttackInterval, allyBuffText, affinityLevel, affinityFactor, maxAffinityPoints, AFFINITY_RULES, ALLY_BUFFS } from '../game/allies';
-import { readSettings, saveSettings } from '../game/settings';
+import { readSettings, saveSettings, shouldAutoPick } from '../game/settings';
 import { DebugPanel, type DebugApi } from '../ui/DebugPanel';
 import { compactNumber } from '../game/format';
 import { createPlayerMotion, movementFacing, stableFacing } from './playerMotion';
@@ -732,6 +732,8 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const offers=rollLevelOffers();
       choiceData=offers.length?offers:null;
       snapshotTimer=0;
+      // 25/11/2026: opção "Pegar sozinha a única carta" (Configurações) — com 1 carta só, escolhe sem abrir a tela.
+      if(choiceData&&shouldAutoPick(choiceData,currentSettings().autoPickSingle)){const only=choiceData[0].name;chooseLevelOffer(0);eventToast='Escolha automática: '+only;return;}
       if(choiceData){keys.clear();return;}
       const attribute=grantTraining(),notice=POWERLEVEL_ATTRIBUTES[attribute]+' +0,6%';
       eventToast='Nível '+level+' · Treinamento: '+notice;

@@ -61,7 +61,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
       som: { volume: d.volume, sfxVolume: d.sfxVolume, voiceVolume: d.voiceVolume, musicVolume: d.musicVolume, voiceLanguage:d.voiceLanguage, muteInBackground: d.muteInBackground },
       graficos: { quality: d.quality, fpsLimit: d.fpsLimit, vsync: d.vsync, gpu: d.gpu, hideMyAttacks: d.hideMyAttacks, showTechniqueAreas: d.showTechniqueAreas, discreetDrops: d.discreetDrops, pickupFx: d.pickupFx, showFps: d.showFps, damageNumbers: d.damageNumbers, damageFlash: d.damageFlash },
       tela: { resolution: d.resolution, renderer: d.renderer },
-      controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, cameraProjection: d.cameraProjection, autoUltimate: d.autoUltimate, sealAnimation: d.sealAnimation },
+      controles: { mouseSensitivity: d.mouseSensitivity, invertY: d.invertY, cameraDistance: d.cameraDistance, cameraProjection: d.cameraProjection, autoUltimate: d.autoUltimate, autoPickSingle: d.autoPickSingle, sealAnimation: d.sealAnimation },
       teclas: { keys: { ...DEFAULT_KEYS } },
       interface: { hudScale: d.hudScale, hudOpacity: d.hudOpacity, minimap: d.minimap, minimapScale: d.minimapScale, toasts: d.toasts },
       idioma: {}, conta: {},
@@ -109,6 +109,7 @@ export function SettingsScreen({ settings, onChange, onClose, onResetAccount }: 
           <Card title="Vista da câmera" hint="Perspectiva mostra o horizonte; a ortográfica é a vista antiga. Vale na próxima missão"><Choice value={settings.cameraProjection} options={[{ value: 'perspectiva', label: 'Perspectiva' }, { value: 'ortografica', label: 'Ortográfica' }]} onChange={(v) => set({ cameraProjection: v })} /></Card>
           <Card title="Distância da câmera" hint="Também com a roda do mouse"><Slider value={settings.cameraDistance} min={CAMERA_ZOOM.min} max={CAMERA_ZOOM.max} step={.5} format={(v) => v.toFixed(1)} onChange={(v) => set({ cameraDistance: v })} /></Card>
           <Card title="Ultimate automática ao começar" hint="Y (ou o selo AUTO) continua alternando na partida"><Toggle value={settings.autoUltimate} onChange={(v) => set({ autoUltimate: v })} /></Card>
+          <Card title="Pegar sozinha a única carta" hint="Ao subir de nível com só 1 opção no pool, ela é escolhida sem abrir a tela"><Toggle value={settings.autoPickSingle} onChange={(v) => set({ autoPickSingle: v })} /></Card>
           <Card title="Card e animação de captura" hint="Desligado: o shinobi é selado direto com um aviso; equipe cheia ainda abre a troca"><Toggle value={settings.sealAnimation} onChange={(v) => set({ sealAnimation: v })} /></Card>
           <Card title="Mira manual e controle (gamepad)" hint="Em breve" />
         </>}

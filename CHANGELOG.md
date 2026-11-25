@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Opção "Pegar sozinha a única carta" (Claude Code)
+
+- **Pedido do usuário:** "Coloque uma opção nas configurações, quando não tiver mais opção de escolha no pool, tiver só 1, com a opção marcada, ele pega automático sem aparecer para selecionar."
+- **Configurações → Controles:** nova opção **Pegar sozinha a única carta**, desligada por padrão e salva entre partidas (`autoPickSingle` em `src/game/settings.ts`).
+- **Na partida:** ao subir de nível com uma única carta disponível, ela é escolhida sem abrir a tela, e um aviso mostra o que foi pego (`shouldAutoPick` em `openLevelReward`). Com 2 cartas ou mais, a escolha abre como sempre.
+- **Testes:** 1 teste novo em `tests/configuracoes.test.mjs` (o mínimo subiu para 277) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ligar a opção e subir de nível com o pool quase vazio.
+
 ## 25/11/2026 · HUD dos ajudantes com corações, passiva, ataque e combo (Claude Code)
 
 - **Pedido do usuário:** "Eu tinha pedido pro codex deixar minimalista a parte do hud dos ajudantes, mas o jogador tem que saber o que cada um faz e o combo faz, também mostrar como está os ataques deles, afinidade coloque coraçãozinhos".

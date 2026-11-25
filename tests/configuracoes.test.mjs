@@ -92,3 +92,18 @@ test('Ultimate automática e selamento direto continuam na próxima partida (rod
   assert.ok(main.includes('const next = { ...readSettings(), ...patch };'), 'uma opção não desfaz a outra');
   assert.ok(main.includes("window.addEventListener('shinobi-settings', sync)"), 'a tela acompanha o que a partida salvou');
 });
+
+test('pegar sozinha a única carta: opção desligada por padrão, salva e usada no nível (25/11)', async () => {
+  const S = await withSaved(undefined);
+  assert.equal(S.DEFAULT_SETTINGS.autoPickSingle, false);
+  assert.equal((await withSaved({ autoPickSingle: true, settingsVersion: 3 })).readSettings().autoPickSingle, true, 'escolha salva');
+  assert.equal(S.shouldAutoPick([{ name: 'a' }], true), true);
+  assert.equal(S.shouldAutoPick([{ name: 'a' }], false), false, 'só com a opção marcada');
+  assert.equal(S.shouldAutoPick([{ name: 'a' }, { name: 'b' }], true), false, 'com 2 ou mais abre a escolha');
+  assert.equal(S.shouldAutoPick([{ name: 'a', disabled: 'bloqueada' }], true), false);
+  assert.equal(S.shouldAutoPick([], true), false); assert.equal(S.shouldAutoPick(null, true), false);
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes("if(choiceData&&shouldAutoPick(choiceData,currentSettings().autoPickSingle)){const only=choiceData[0].name;chooseLevelOffer(0);"));
+  const screen = fs.readFileSync(new URL('../src/ui/SettingsScreen.tsx', import.meta.url), 'utf8');
+  assert.ok(screen.includes('set({ autoPickSingle: v })'), 'opção aparece nas Configurações');
+});
