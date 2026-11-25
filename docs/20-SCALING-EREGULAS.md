@@ -85,6 +85,43 @@ Leituras:
 - **Sobrevivência:** no Kage com 3 planos, só 59 a 67 de 115 vencem a zona 1. Quem morre cai na horda, não no Guardião.
 - **Conclusão:** o tamanho da luta com chefes é decidido pela curva de dano do jogador. Esse é o próximo item da fila (dano de nível alto × pressão do Final Swarm). Nenhum número de jogo mudou nesta medição.
 
+## Dano de nível alto × Final Swarm · 25/11/2026 (Claude Code)
+
+**Ferramenta:** `scripts/simulate-damage.mjs`. O bot fica na zona 1 sem invocar o Guardião, e o Final Swarm começa aos 10:00. Em cada minuto, o golpe da 1ª técnica (com o crítico esperado) é refeito ligando uma parte da build por vez. Amostra: 115 versões, semente 17, conta nova, desvio médio. Pior caso do modelo: sem ultimate, aliados, procs nem fusões.
+
+**De onde vem o dano (Kage, medianas):**
+
+| Kage · minuto da zona | 1 | 5 | 10 | 11 (Final Swarm) | 13 |
+|---|---:|---:|---:|---:|---:|
+| Vivos (de 115) | 115 | 103 | 96 | 53 | 14 |
+| Nível | 14 | 51 | 96 | 114 | 151 |
+| Golpe ÷ HP de um comum | 3,4× | 10× | 20× | 7,1× | 6,9× |
+| × nível | 3,4 | 22 | 97 | 156 | 364 |
+| × afixos de dano da técnica | 4,1 | 5,7 | 5,7 | 5,8 | 6,3 |
+| × itens | 1,2 | 1,9 | 2,3 | 2,3 | 2,6 |
+| × pílulas | 1,0 | 1,0 | 1,0 | 1,0 | 1,8 |
+| × treino | 1,0 | 1,0 | 1,0 | 1,0 | 1,1 |
+
+No Genin, o golpe chega a 43× a vida de um comum no minuto 5 e a 126× no minuto 10. A horda morre antes de se acumular, e o dano recebido fica perto de zero até o Final Swarm.
+
+**O que pesa:** o **nível** (`heroDamageScale`, termo cúbico `(1 + n/72)^3`) e os **afixos de dano das técnicas** (`GROWTH_ROLLS.damage`: +45% a +485% por nível da técnica, já ×4 a ×6 nos 3 primeiros minutos). Itens dão ×2 a ×3, e pílulas e treino pouco.
+
+**O acoplamento:** o excesso de dano é o que segura o jogador no salto de ×3 do Final Swarm. Baixar só o dano derruba a sobrevivência: no Kage, a opção "nível ÷110" leva os vivos no minuto 11 de 53 para 22. Por isso a curva precisa mudar junto com a entrada do Final Swarm.
+
+**Opções medidas** (mediana do golpe/HP de um comum e vivos em 115; nenhuma foi aplicada no jogo):
+
+| Opção (minutos 5 · 10 · 11 · 13) | Kage: golpe/HP (vivos) | Jonin | Chunin |
+|---|---|---|---|
+| Atual | 10 · 20 · 7,1 (53) · 6,9 (14) | 17 · 33 · 12 (69) · 19 (27) | 23 · 43 · 15 (82) · 14 (81) |
+| Afixos ½ | 6,6 · 12 · 6,1 (24) · 13 (3) | 9,9 · 16 · 12 (32) · 12 (16) | 12 · 25 · 8,6 (79) · 14 (54) |
+| Nível ÷110 | 6,6 · 11 · 5,3 (22) · 9,8 (4) | 11 · 15 · 12 (30) · 13 (10) | 15 · 24 · 9,2 (72) · 11 (39) |
+| Swarm ×2 | 10 · 20 · 9,7 (77) · 8,6 (41) | 17 · 33 · 16 (80) · 13 (75) | 23 · 43 · 22 (83) · 19 (82) |
+| **Afixos ½ + swarm ×2** | 6,6 · 12 · 7,6 (47) · 7,3 (19) | 9,9 · 16 · 12 (60) · 12 (36) | 12 · 25 · 13 (82) · 11 (81) |
+| Nível ÷110 + swarm ×2 | 6,6 · 11 · 6,4 (40) · 10 (12) | 11 · 15 · 12 (49) · 12 (29) | 15 · 24 · 12 (82) · 10 (80) |
+| ÷110 + afixos ½ + swarm ×2 | 4,0 · 5,9 · 6,6 (14) · 19 (4) | 6,4 · 8,7 · 8,8 (28) · 7,6 (16) | 8,0 · 13 · 6,8 (74) · 8,8 (47) |
+
+**PROPOSTO, aguardando decisão do usuário:** "afixos ½ + swarm ×2". Os afixos de dano das técnicas caem pela metade e o Final Swarm entra com ×2 em vez de ×3. Dentro da zona, o excesso cai cerca de 40% (Kage: 20× → 12× aos 10 min; Genin: 126× → 70×), e a sobrevivência no Final Swarm fica perto da atual. Os parâmetros estão expostos para o ajuste: `HERO_DAMAGE_CURVE` (progression.ts), `GROWTH_ROLLS` (combat.ts) e `FINAL_SWARM.multiplier`.
+
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 
 Como segundo avanço da família, parte de ×1,24 de HP e dano de base, +2 de armadura e +0,16 m/s de movimento em relação ao Kakashi Jōnin. A passiva da versão acrescenta +12% de Ninjutsu e +5 pontos de evasão, conforme a progressão de passivas do elenco. A missão em Iwa Kage usa Kakashi Hokage, 7 minutos e 950 abates. Nas sementes 17, 101 e 252, Kakashi Jōnin, Hokage e Dois Mangekyō chegaram à zona 2 no simulador em Kage, conta nova, até 12 minutos. O simulador aproxima a horda e deixa as ultimates fora do cálculo.

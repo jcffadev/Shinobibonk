@@ -2946,3 +2946,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Simulei a missão inteira até a arena nas 4 dificuldades, com 0 a 3 planos e invocação cedo ou às 9:00. Os 4 pergaminhos com 3 planos estão preservados, e o simulador agora também os dá.
 - Os Guardiões caem em segundos. A Bijū leva de 2 a 25 min para quem invoca cedo e segundos para quem espera. O que decide é a curva de dano do jogador, que é o próximo item.
 - **Testes:** tipos, testes e build. Nenhum número de jogo mudou. **Publicado no GitHub.**
+
+> Sim, seguir (dano de nível alto × Final Swarm)
+
+**Resposta.**
+
+- O nível (termo cúbico) e os afixos de dano das técnicas respondem por quase todo o dano. Aos 10 min, o golpe vale 20× (Kage) a 126× (Genin) a vida de um comum, então a horda nunca se acumula.
+- Baixar só o dano mata o jogador no salto de ×3 do Final Swarm. Proposta: afixos de dano pela metade + Final Swarm entrando com ×2. Nenhum número de jogo mudou; aguarda decisão.
+- **Testes:** tipos, testes e build. **Publicado no GitHub.**

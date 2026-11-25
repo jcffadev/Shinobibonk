@@ -204,7 +204,9 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     if (s.hp <= 0) { if (s.revives > 0) { s.revives--; s.hp = stats.maxHp * .35; } else s.dead = true; }
     s.t++; s.zoneT++;
     // Sonda opcional (scripts/simulate-bosses.mjs): estado do segundo para medir lutas contra chefes.
-    if (probe) probe({ t: s.t, zone: s.zone, zoneT: s.zoneT, overtime, threat, level: s.level, hp: s.hp, dead: s.dead, victory: s.victory, singleDps, stats, mission, plans, threatBonus: ex('threat'), eliteDamage: ex('eliteDamage') });
+    if (probe) probe({ t: s.t, zone: s.zone, zoneT: s.zoneT, overtime, threat, level: s.level, hp: s.hp, dead: s.dead, victory: s.victory, singleDps, stats, mission, plans, threatBonus: ex('threat'), eliteDamage: ex('eliteDamage'),
+      // Para isolar as partes do dano (scripts/simulate-damage.mjs): build completa do segundo.
+      heroId, items: s.items, pills: s.pills, powerlevel: s.powerlevel, growth: s.growth, skills: s.skills, permanent, techs: techs(), normalHp, alive: s.alive, hitsTaken: hits, incoming });
     if (s.t % record === 0 || s.dead || s.victory) snapshot(threat, normalHp, lastKps);
   }
   return { heroId, mission, seed, account, endedAt: +(s.t / 60).toFixed(1), dead: s.dead, victory: s.victory, zone: s.zone, level: s.level, kills: Math.round(s.kills), megaKills: s.megaKills, guardians: s.guardians, bosses: s.bosses, totalDamage: s.damage, items: s.items, pills: s.pills, timeline };

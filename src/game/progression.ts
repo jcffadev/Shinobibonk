@@ -11,9 +11,11 @@ export type Stats={sage:number;maxHp:number;damage:number;armor:number;moveSpeed
   /** Soma bruta de todos os bônus (itens, pílulas, buffs da run); a simulação lê daqui as mecânicas de item (elementos, procs, roubo de vida...). */
   extra:Bonuses};
 export const HERO_BASE=Object.fromEntries(HEROES.map(h=>[h.id,h.base]));
+/** Parâmetros da curva de dano por nível (lidos por heroDamageScale; o simulador de dano testa variações em memória). */
+export const HERO_DAMAGE_CURVE={open:.74,openLevels:14,perLevel:.04,cubicDivisor:72,power:3};
 export function heroDamageScale(level:number) {
-  const levels=Math.max(0,level-1);
-  return (.74+.26*Math.min(1,levels/14))*(1+levels*.04)*(1+levels/72)**3;
+  const levels=Math.max(0,level-1),c=HERO_DAMAGE_CURVE;
+  return (c.open+(1-c.open)*Math.min(1,levels/c.openLevels))*(1+levels*c.perLevel)*(1+levels/c.cubicDivisor)**c.power;
 }
 /**
  * Crescimento do HP base por nível (Rodada 55 — pedido do usuário: "Scale de HP ainda muito alto… level 415 e estou com

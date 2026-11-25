@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Medição do dano de nível alto contra o Final Swarm (Claude Code)
+
+- **Pedido:** item da fila de balanceamento: revisar a relação entre dano de nível alto, excesso de proteção e pressão do Final Swarm, isolando cada variável.
+- **Novo `scripts/simulate-damage.mjs`:** separa o golpe em nível, itens, pílulas, treino e afixos, mede a proteção do jogador e testa opções de curva em memória (`CURVE_OPTIONS`, `withCurve`).
+- **`src/game/progression.ts`:** `HERO_DAMAGE_CURVE` expõe os parâmetros de `heroDamageScale`, com os mesmos valores. A sonda do `simulate-run.mjs` passou a trazer a build completa.
+- **Resultado:** o nível e os afixos de dano das técnicas fazem o golpe chegar a 20× (Kage) e 126× (Genin) a vida de um comum aos 10 min. Só baixar o dano mata o jogador no Final Swarm. **Proposta: afixos de dano pela metade + Final Swarm entrando com ×2.** Tabelas em [docs/20](docs/20-SCALING-EREGULAS.md#dano-de-nível-alto--final-swarm--25112026-claude-code). **Nenhum número de jogo mudou**; aguarda decisão do usuário.
+- **Testes:** 2 testes novos em `tests/dano-curva.test.mjs` (o mínimo subiu para 282) e 1 mutação nova, verificada à mão.
+
 ## 25/11/2026 · Medição da missão até a arena por dificuldade e planos (Claude Code)
 
 - **Pedido:** item da fila de balanceamento: simular Genin, Chunin, Jonin e Kage com 0 a 3 planos, registrando HP, defesa, dano, tempo até derrotar e o avanço da arena, sem perder os 4 pergaminhos grátis com 3 planos.
