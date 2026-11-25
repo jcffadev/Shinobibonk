@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Tab gira a câmera e NPCs olham para o jogador (Claude Code)
+
+- **Pedidos do usuário:** "Quando apertamos tab deve ser possível girar a tela"; "Com o TAB deve ser possível selecionar um npc para marcar a rota, também deve ser possivel continuar girando a câmera."; "Os npcs tem que olhar pro jogador, ficar sempre olhando pra ele... mesmo se girarmos a câmera."
+- **Tab (mapa rápido):** o mouse continua girando a câmera. Segurar o botão direito mostra a kunai do cursor para clicar num NPC ou ponto do mapa e marcar a rota; soltar o direito volta a girar, e soltar o Tab some com a kunai. O mapa rápido mostra a dica.
+- **NPCs:** `update(…, lookAt)` em `src/scene/missionNpcs.ts` aponta a frente do NPC para o jogador; a câmera só escolhe a vista (frente, perfil ou costas). Vale para os NPCs dos eventos e o Teuchi.
+- **Testes:** 1 teste novo em `tests/vilas.test.mjs`, 1 em `tests/interface.test.mjs` (mínimo 315), o teste antigo do cursor atualizado para a regra nova do Tab e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Selos do Madara mostravam só Dragão (Claude Code)
 
 - **Pergunta do usuário:** "porque no ataque do madara ta aparecendo umas coisas, tipo dragão em cima do ataque dele?" — é o texto dos selos de mão ("辰 Dragão"). O sorteio fixo dos selos (técnicas sem sequência da obra) repetia quase sempre Dragão, Macaco e Rato; a Susanoo Perfeito tinha 3 Dragões seguidos.

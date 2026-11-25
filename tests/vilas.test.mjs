@@ -486,6 +486,25 @@ test('o NPC do Shikamaru mantém as vistas do Estrategista durante a rotação d
   npcs.dispose();
 });
 
+test('NPC sempre virado para o jogador, mesmo girando a câmera (25/11/2026)',async t=>{
+  useNpcPngs(t);
+  const {createMissionNpcs,missionNpcForEvent}=await load('/src/scene/missionNpcs.ts');
+  const {portraitRegion}=await load('/src/game/evolution.ts');
+  const npcs=createMissionNpcs(),id=missionNpcForEvent('shikamaru'),actor=npcs.create(id),visual=actor.root.getObjectByName('arte-original');
+  const camera=new THREE.PerspectiveCamera(52,1,.1,40),front=portraitRegion(id).path,player=new THREE.Vector3(0,0,-6);
+  camera.position.set(0,1,-8);camera.lookAt(0,.5,0);
+  actor.update(1,camera);
+  assert.notEqual(visual.material.map.name,front,'sem o jogador, a câmera atrás mostra as costas');
+  actor.update(1,camera,false,player);
+  assert.equal(visual.material.map.name,front,'com o jogador atrás, o NPC vira de frente para ele');
+  camera.position.set(6,1,0);camera.lookAt(0,.5,0);
+  actor.update(1,camera,false,player);
+  assert.equal(visual.material.map.name,'/assets/shinobi-motion/walk-side-8.png','girando a câmera, o NPC continua olhando o jogador (perfil)');
+  const canvas=readFileSync(new URL('../src/scene/GameCanvas.tsx',import.meta.url),'utf8');
+  assert.ok(canvas.includes('event.actor?.update(elapsed,camera,false,player.position);')&&canvas.includes('teuchiActor.update(elapsed,camera,false,player.position);'));
+  actor.dispose();npcs.dispose();
+});
+
 test('Naruto Totem alterna preparação e selo Genin, com a célula traseira na câmera oposta',async t=>{
   useNpcPngs(t);
   const {createMissionNpcs}=await load('/src/scene/missionNpcs.ts');

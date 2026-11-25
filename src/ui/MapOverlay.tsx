@@ -104,6 +104,7 @@ export function MapPanel({ world, quick }: { world: WorldSnapshot; quick: boolea
       {rows.length ? rows.map(m => <button className={`discovered-row${r?.id === m.id ? ' routed' : ''}${m.active === false ? ' used' : ''}`} key={m.id} disabled={m.active === false} onClick={() => route(m.id)} title={m.active === false ? 'Já usado nesta zona' : r?.id === m.id ? 'Limpar rota' : 'Traçar rota'}>
         <MarkerIcon m={m} size="mini" /><b>{m.name}<small>{markerGroup(m)}</small></b><small>{m.active === false ? 'usado' : r?.id === m.id ? '🎯 rota' : meters(dist(world, m.x, m.z))}</small>
       </button>) : <p>Explore olhando ao redor para revelar eventos e personagens no mapa.</p>}
+      {quick && <p className="map-quick-hint">Mouse gira a câmera · segure o botão direito para a kunai e clique para marcar a rota</p>}
       {!quick && <div className="map-legend">
         <span><i className="lg tone-npc" />NPC (retrato)</span><span><i className="lg tone-event" />Evento</span><span><i className="lg tone-elite" />Inimigo especial</span><span><i className="lg tone-pickup" />Recompensa no chão</span><span>📍 Ping</span>
         <p>Os objetivos principais são marcados automaticamente. Os demais aparecem quando você os encontra. Clique em um ícone para traçar ou limpar a rota.</p>

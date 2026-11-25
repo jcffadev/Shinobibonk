@@ -1196,9 +1196,11 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       ...fallenMegas.map(f=>({id:'fallen-'+f.candidate.heroId,name:f.candidate.target+(f.candidate.account?' · Shinobi para selar caído (E)':' · Mega Elite caído (E)'),x:f.body.position.x,z:f.body.position.z,icon:'⛓',kind:'enemy' as const,portrait:f.candidate.heroId,active:true})),
       ...enemyList.filter(e=>e.megaElite&&!e.guardian&&e.seen&&e.uid!==undefined).map(markerForBoss)];}
     const quickMap=createQuickMapInput(open=>showPanel(open?'quickmap':null));
+    /** Botão direito segurado com o Tab aberto: a kunai do cursor aparece para marcar rota. */
+    let quickCursor=false;
     function showPanel(next:GamePanel){
       if(next===null)suppressUnlockPauseUntil.current=performance.now()+800;
-      if(next!=='quickmap')quickMap.clear();
+      if(next!=='quickmap'){quickMap.clear();quickCursor=false;}
       panelRef.current=next;
       onPanelRef.current(next);
     }
@@ -1279,7 +1281,14 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const cursor=createVirtualCursor({elementFromPoint:(x,y)=>document.elementFromPoint(x,y),width:()=>window.innerWidth,height:()=>window.innerHeight,
       draw:(x,y,visible)=>{cursorEl.style.display=visible?'block':'none';cursorEl.style.transform=`translate(${x}px,${y}px)`;}});
     /** Tela de interface aberta durante a missão (o ponteiro fica preso e a kunai virtual aparece). */
-    const overlayUi=()=>enabledRef.current&&(panelRef.current==='quickmap'||!cameraCanMove())&&!debugOpenRef.current&&!defeated&&!victory;
+    /**
+     * Tab (25/11/2026 — pedido do usuário: "Quando apertamos tab deve ser possível girar a tela"): com o mapa rápido aberto o
+     * mouse gira a câmera; segurar o botão direito mostra a kunai do cursor para marcar rota no mapa.
+     */
+    const onQuickCursor=(e:MouseEvent)=>{if(!e.isTrusted||e.button!==2||panelRef.current!=='quickmap')return;quickCursor=e.type==='mousedown';};
+    document.addEventListener('mousedown',onQuickCursor,true);document.addEventListener('mouseup',onQuickCursor,true);
+    runCleanups.push(()=>{document.removeEventListener('mousedown',onQuickCursor,true);document.removeEventListener('mouseup',onQuickCursor,true);});
+    const overlayUi=()=>enabledRef.current&&((panelRef.current==='quickmap'&&quickCursor)||!cameraCanMove())&&!debugOpenRef.current&&!defeated&&!victory;
     const forwardButton=(e:MouseEvent)=>{if(!e.isTrusted||!cursor.isActive())return;e.preventDefault();e.stopImmediatePropagation();if(e.type==='mousedown')cursor.down(e.button);else if(e.type==='mouseup')cursor.up(e.button);};
     const forwardWheel=(e:WheelEvent)=>{if(!e.isTrusted||!cursor.isActive())return;e.stopImmediatePropagation();cursor.wheel(e.deltaY);};
     for(const type of ['mousedown','mouseup','click','contextmenu','pointerdown','pointerup','auxclick'])document.addEventListener(type,forwardButton as EventListener,true);
@@ -2367,8 +2376,8 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         for(const e of enemyList)if(e.boss)e.boss.bar.visible=true;
         enemyRenderer.sync(enemyList,enemyOpacity,dt);
       }const renderTime=performance.now()/1000;
-      for(const event of events)if(event.obj.visible)event.actor?.update(elapsed,camera);
-      if(teuchi.visible)teuchiActor.update(elapsed,camera);
+      for(const event of events)if(event.obj.visible)event.actor?.update(elapsed,camera,false,player.position);
+      if(teuchi.visible)teuchiActor.update(elapsed,camera,false,player.position);
       if(totem?.fixedArt){
         totem.fixedArt.root.visible=totem.sprite.visible;
         if(totem.sprite.visible)totem.fixedArt.update(elapsed,camera,totemCloneTimer<.24);

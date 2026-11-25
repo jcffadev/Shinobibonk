@@ -42,6 +42,8 @@ export function createMissionNpcs() {
   const worldYaw = new THREE.Quaternion();
   const heading = new THREE.Vector3();
   const up = new THREE.Vector3(0, 1, 0);
+  const npcAt = new THREE.Vector3();
+  const facing = new THREE.Quaternion();
   let canvas: HTMLCanvasElement | undefined;
 
   function textureFor(path: string) {
@@ -142,8 +144,13 @@ export function createMissionNpcs() {
     let showingSeal = false;
     const phase = id.length * .87;
 
-    function update(time: number, camera: THREE.Camera, action = false) {
+    /**
+     * `lookAt` (25/11/2026 — pedido do usuário: "Os npcs tem que olhar pro jogador, ficar sempre olhando pra ele... mesmo se
+     * girarmos a câmera"): a frente do NPC aponta para o jogador e a câmera só escolhe a vista (frente, perfil ou costas).
+     */
+    function update(time: number, camera: THREE.Camera, action = false, lookAt?: THREE.Vector3) {
       root.getWorldPosition(viewFrom);
+      npcAt.copy(viewFrom);
       if (camera instanceof THREE.OrthographicCamera) {
         camera.getWorldDirection(viewFrom).negate();
       } else {
@@ -151,7 +158,11 @@ export function createMissionNpcs() {
       }
       if (Math.hypot(viewFrom.x, viewFrom.z) > .001) {
         root.getWorldQuaternion(worldYaw);
-        heading.copy(viewFrom).applyQuaternion(worldYaw.invert());
+        const towardX = lookAt ? lookAt.x - npcAt.x : 0, towardZ = lookAt ? lookAt.z - npcAt.z : 0;
+        if (lookAt && Math.hypot(towardX, towardZ) > .05) facing.setFromAxisAngle(up, Math.atan2(towardX, towardZ));
+        else facing.copy(worldYaw);
+        heading.copy(viewFrom).applyQuaternion(facing.invert());
+        worldYaw.invert();
         const angle = Math.atan2(heading.x, heading.z);
         view = facingView(Math.abs(angle), view);
         // Só a malha de desenho acompanha o ângulo de leitura. A direção no

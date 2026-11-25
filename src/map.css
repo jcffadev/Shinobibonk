@@ -89,3 +89,4 @@
 .mist-map .world-map,.minimap.mist-map{background:#141b25}
 .mist-map :is(.map-terrain,.map-grid,.map-north,.map-south){opacity:.08}
 .mist-map .discovered-list{background:#202836;color:#f3eee5}
+.map-quick-hint{margin:6px 0 0;font-size:12px;color:#e3dbce;text-align:center}

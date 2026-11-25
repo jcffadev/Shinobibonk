@@ -3078,3 +3078,15 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > porque no ataque do madara ta aparecendo umas coisas, tipo dragão em cima do ataque dele?
 
 **Resposta.** É o texto dos selos de mão. O sorteio repetia Dragão, Macaco e Rato; corrigido para espalhar os 12 selos sem repetir seguido. **Publicado no GitHub.**
+
+> Quando apertamos tab deve ser possível girar a tela
+> O que é isso de sorteio dos selos????
+> Os npcs tem que olhar pro jogador, ficar sempre olhando pra ele... mesmo se girarmos a câmera.
+> Com o TAB deve ser possível selecionar um npc para marcar a rota, também deve ser possivel continuar girando a câmera.
+
+**Resposta.**
+
+- Sorteio dos selos: técnicas sem sequência da obra recebem 2 a 4 selos fixos pelo nome; o erro que repetia Dragão foi corrigido.
+- Tab: o mouse gira a câmera; segurar o botão direito mostra a kunai para clicar num NPC e marcar a rota.
+- NPCs dos eventos e o Teuchi olham sempre para o jogador.
+- **Testes:** tipos, testes (315) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

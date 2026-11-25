@@ -34,6 +34,10 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Tab e NPCs · 25/11/2026
+
+- Tab: mouse gira a câmera; botão direito segurado mostra a kunai para marcar rota. NPCs dos eventos e Teuchi sempre virados para o jogador. **PENDENTE DE VALIDAÇÃO E2E:** girar a câmera com o Tab aberto, marcar rota num NPC e andar em volta dos NPCs.
+
 ## Revisão do scale de todos os personagens · 25/11/2026
 
 - Simulador corrigido (geometria dos golpes e preparo) e novo `scripts/simulate-early.mjs`. Medição em docs/20.

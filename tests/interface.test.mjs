@@ -94,3 +94,12 @@ test('planejador: aba Pílulas sem o painel lateral, grade na largura toda (25/1
   assert.ok(planner.includes("build-workspace${tab==='Pílulas'?' no-detail':''}"));
   assert.match(fs.readFileSync(new URL('../src/mission-planner.css', import.meta.url), 'utf8'), /\.build-workspace\.no-detail[^{]*\{grid-template-columns:minmax\(0,1fr\)\}/);
 });
+
+test('Tab: mouse gira a câmera e o botão direito segurado mostra a kunai para marcar rota (25/11/2026)', () => {
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes("const overlayUi=()=>enabledRef.current&&((panelRef.current==='quickmap'&&quickCursor)||!cameraCanMove())"), 'kunai só com o direito segurado');
+  assert.ok(canvas.includes("quickCursor=e.type==='mousedown';"));
+  assert.ok(canvas.includes("if(next!=='quickmap'){quickMap.clear();quickCursor=false;}"), 'soltar o Tab some com a kunai');
+  const map = fs.readFileSync(new URL('../src/ui/MapOverlay.tsx', import.meta.url), 'utf8');
+  assert.ok(map.includes('Mouse gira a câmera · segure o botão direito para a kunai'));
+});
