@@ -38,7 +38,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 - Validar em partida o contragolpe dos Espinhos (armadura × dano do personagem) em níveis baixos e altos.
 - Gelo: validar o Haku em partida e pedir ao Codex o visual próprio de Gelo (hoje usa o de Água).
-- Pacote de status: medição feita com `scripts/simulate-status.mjs`. **Aguardando decisão do usuário:** Katon sem cadeia + congelar com 2 acúmulos + chances de Fio, Incenso, Hyoton e Anel ×2 (tabela em docs/20).
+- Pacote de status: **aplicado em 25/11** (Katon sem cadeia, congelar com 2 acúmulos, chances de Fio, Incenso, Hyoton e Anel ×2). **PENDENTE DE VALIDAÇÃO E2E:** ver a Esfera Katon sem explosões em sequência, o Haku e o Pergaminho Hyoton congelando com 2 acúmulos e se o controle não ficou forte demais.
 
 ## Tab, drops, Hagoromo e chefes · 25/11/2026
 

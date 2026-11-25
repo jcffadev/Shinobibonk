@@ -4,7 +4,7 @@ import type { Control } from './heroes.ts';
  * Rodada 103 — pacote de status (pedido do usuário: "vamos ter que aumentar um pouco os itens que tem efeito de congelar
  * para balancear e o dano..."; depois "Sim, implementar"). Lógica pura (testada em tests/status.test.mjs).
  *
- * - **Resfriado:** cada acúmulo tira 12% do movimento; 3 acúmulos congelam por 1,5 s. Sem novo frio por 3 s, some.
+ * - **Resfriado:** cada acúmulo tira 12% do movimento; 2 acúmulos congelam por 1,5 s (eram 3 até 25/11/2026). Sem novo frio por 3 s, some.
  * - **Congelado:** não age e recebe +25% de dano. Com o item Quebra-Gelo, o golpe quebra o gelo (+50%) e os estilhaços
  *   resfriam quem está a até 3 m.
  * - **Reações:** Água molha por 5 s. Molhado + gelo congela na hora; molhado + Raio eletrocuta (até 3 vizinhos a 6 m levam
@@ -13,11 +13,11 @@ import type { Control } from './heroes.ts';
  * - **Sono:** o golpe que acorda causa +60%.
  * - **Veneno:** acumula até 8; cada acúmulo além do primeiro dá +15% de dano por segundo.
  * - **Itens na morte:** Esfera Katon (quem morre queimando pode explodir) e Espelho de Gelo de Haku (quem morre congelado
- *   solta estilhaços que resfriam).
+ *   solta estilhaços que resfriam). A queimadura que nasce da explosão não explode de novo (sem reação em cadeia, 25/11/2026).
  * Valores PROPOSTOS — calibrar no simulador.
  */
 export const STATUS_RULES = {
-  chill: { slowPerStack: .12, stacksToFreeze: 3, decay: 3, techniqueStacks: 2 },
+  chill: { slowPerStack: .12, stacksToFreeze: 2, decay: 3, techniqueStacks: 2 },
   freeze: { seconds: 1.5, damageBonus: .25 },
   wet: { seconds: 5 },
   electro: { targets: 3, radius: 6, share: .4 },
@@ -33,6 +33,7 @@ export type StatusTarget = {
   control?: Control; controlTime?: number;
   megaElite?: boolean; guardian?: boolean; bijuu?: boolean;
   chill?: number; chillTime?: number; wet?: number; poisonStacks?: number; burn?: number;
+  /** A queimadura atual veio da explosão da Esfera Katon (não explode de novo). */ burstBurn?: boolean;
 };
 
 /** Multiplicador da duração de controle (1 = sem resistência). */
@@ -52,7 +53,7 @@ export function freezeTarget(e: StatusTarget, seconds: number = STATUS_RULES.fre
   e.chill = 0; e.chillTime = 0; e.wet = 0;
 }
 
-/** Soma acúmulos de Resfriado. Molhado congela na hora; 3 acúmulos congelam. Devolve true se congelou. */
+/** Soma acúmulos de Resfriado. Molhado congela na hora; 2 acúmulos congelam. Devolve true se congelou. */
 export function addChill(e: StatusTarget, stacks = 1) {
   const c = STATUS_RULES.chill;
   if ((e.wet ?? 0) > 0 || (e.chill ?? 0) + stacks >= c.stacksToFreeze) { freezeTarget(e); return true; }
@@ -105,6 +106,6 @@ export function reactionsFor(e: StatusTarget, elements: readonly (string | undef
 /** Explosão na morte: 'fire' (queimando + Esfera Katon, 50%), 'ice' (congelado + Espelho de Gelo de Haku). */
 export function deathBurstKind(e: StatusTarget, fireItem: number, iceItem: number, roll: number): 'fire' | 'ice' | undefined {
   if (iceItem > 0 && isFrozen(e)) return 'ice';
-  if (fireItem > 0 && (e.burn ?? 0) > 0 && roll < STATUS_RULES.deathBurst.fireChance) return 'fire';
+  if (fireItem > 0 && (e.burn ?? 0) > 0 && !e.burstBurn && roll < STATUS_RULES.deathBurst.fireChance) return 'fire';
   return undefined;
 }

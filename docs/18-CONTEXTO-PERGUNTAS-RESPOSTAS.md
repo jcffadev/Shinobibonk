@@ -525,6 +525,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Elemento Gelo e bônus de elemento (25/11): `elementMultiplier` e `ELEMENT_KEY.Gelo` em `src/game/combat.ts`; `KekkeiRecipe.element` em `techniqueMerge.ts`; `look()` em `particleFx.ts` (Gelo usa o visual de Água).
 
+- Pacote de status calibrado (25/11): `STATUS_RULES.chill.stacksToFreeze` = 2, `burstBurn` em `statusRules.ts`/GameCanvas (Katon sem cadeia), chances dos itens em `catalog.ts`.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

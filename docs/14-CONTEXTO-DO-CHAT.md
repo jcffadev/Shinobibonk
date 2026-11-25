@@ -2999,3 +2999,10 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Todos os danos já cresciam com o dano%. Agora queimadura, explosão da Katon, estilhaços do Haku e ajudantes também somam o bônus do elemento.
 - Gelo (Hyōton, clã Yuki, Água + Vento) virou elemento próprio: técnicas do Haku, fusão Água + Vento e +28% de Gelo no Pergaminho Hyoton.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Sim, aplicar
+
+**Resposta.**
+
+- Pacote de status aplicado: a Esfera Katon não explode em cadeia, 2 acúmulos de Resfriado congelam e Fio, Incenso, Hyoton e Anel têm o dobro de chance.
+- **Testes:** tipos, testes (290) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

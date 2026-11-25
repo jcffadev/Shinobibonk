@@ -49,7 +49,7 @@ export const ITEMS:Item[] = [
   // Rodada 96: itens com nome de técnica viravam item na bolsa ao planejar a técnica (bug relatado pelo usuário); nomes próprios.
   item('smoke','Esfera de Fumaça','Comum',0,ANY,'+4,5 pontos percentuais de evasão.',{dodge:.045}),
   item('exorcist','Etiqueta Exorcista','Comum',1,ANY,'+16% de dano contra elites, mega elites e guardiões.',{eliteDamage:.16}),
-  item('wire','Fio de Aço Ninja','Comum',1,5,'4% de chance por acerto de prender o inimigo (Paralisar 1,2 s).',{rootChance:.04}),
+  item('wire','Fio de Aço Ninja','Comum',1,5,'8% de chance por acerto de prender o inimigo (Paralisar 1,2 s).',{rootChance:.08}),
   item('pickup','Ímã de Chakra','Comum',5,ANY,'+1,6 m de alcance de coleta.',{pickupFlat:1.6}),
   item('bandana','Bandana Reforçada','Comum',4,ANY,'+6 pontos de armadura.',{defense:6}),
   item('tanzaku','Amuleto Tanzaku','Comum',2,ANY,'+10 de Sorte e +3 pontos percentuais de chance crítica.',{luck:10,crit:.03}),
@@ -63,7 +63,7 @@ export const ITEMS:Item[] = [
 
   // ───── Incomum ─────
   item('adrenaline','Selo de Adrenalina','Incomum',5,3,'Ao ser atingido: +20% de movimento e +12% de velocidade de ataque por 3 s.',{rush:1}),
-  item('sleep-incense','Incenso do Sono','Incomum',2,3,'2,5% de chance por acerto de fazer o inimigo Dormir por 2 s.',{sleepChance:.025}),
+  item('sleep-incense','Incenso do Sono','Incomum',2,3,'5% de chance por acerto de fazer o inimigo Dormir por 2 s.',{sleepChance:.05}),
   item('vampire-root','Raiz Vampira','Incomum',13,ANY,'Recupera 3% do dano causado como HP.',{lifesteal:.03}),
   item('chains','Correntes de Contenção','Incomum',15,5,'+20% de dano contra inimigos atordoados, paralisados, adormecidos ou lentos.',{controlledDamage:.2}),
   item('katon-orb','Esfera Katon','Incomum',7,5,'5% de chance por acerto de queimar e +10% de dano de status (queimadura/veneno). Inimigo que morre queimando pode explodir e queimar quem está perto.',{burnChance:.05,statusDamage:.1,fireBurst:1}),
@@ -83,8 +83,8 @@ export const ITEMS:Item[] = [
   item('blood-shell','Concha Sanguinária','Incomum',15,ANY,'Recupera 0,8% do dano causado como HP.',{lifesteal:.008}),
   item('emergency-fruit','Fruta Medicinal','Incomum',13,ANY,'+10 HP máximo; abaixo de 30% de HP, recupera 35% (a cada 45 s).',{health:10,emergencyHeal:1}),
   item('dense-smoke','Fumaça Densa','Incomum',0,ANY,'Ao ser atingido: 25% de chance de ficar invisível (invulnerável) por 1,5 s; +3% de evasão.',{smoke:.25,dodge:.03}),
-  item('hyoton','Pergaminho Hyoton','Incomum',10,5,'+28% de dano de técnicas de Gelo, 6% de chance por acerto de Resfriar (−12% de movimento por acúmulo; 3 acúmulos ou inimigo molhado congelam por 1,5 s) e +3 de armadura.',{elGelo:.28,chillChance:.06,defense:3}),
-  item('poison','Anel do Veneno','Incomum',15,5,'6% de chance por acerto de envenenar e +10 pontos percentuais de chance de status.',{poisonChance:.06,status:.1}),
+  item('hyoton','Pergaminho Hyoton','Incomum',10,5,'+28% de dano de técnicas de Gelo, 12% de chance por acerto de Resfriar (−12% de movimento por acúmulo; 2 acúmulos ou inimigo molhado congelam por 1,5 s) e +3 de armadura.',{elGelo:.28,chillChance:.12,defense:3}),
+  item('poison','Anel do Veneno','Incomum',15,5,'12% de chance por acerto de envenenar e +10 pontos percentuais de chance de status.',{poisonChance:.12,status:.1}),
   item('taunt-flute','Flauta Provocadora','Incomum',2,5,'+12% de inimigos no mapa, +10% de experiência e +5 de Sorte.',{enemyCount:.12,exp:.1,luck:5}),
   item('tracker','Olhos do Rastreador','Incomum',7,ANY,'+25 pontos percentuais de chance de status (Genjutsu). Técnicas sem status passam a aplicar lentidão.',{status:.25}),
   item('ninjutsu','Selo de Ninjutsu','Incomum',11,ANY,'+15% de dano de Ninjutsu e da Ultimate.',{element:.15}),

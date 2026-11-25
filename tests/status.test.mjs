@@ -12,11 +12,11 @@ test('o Selo dos Cinco Elementos conta lentidão apenas uma vez',()=>{
   assert.equal(damageStatusCount({control:'Lentidão',controlTime:1,slow:0}),1);
 });
 
-test('Resfriado: −12% por acúmulo, 3 acúmulos congelam por 1,5 s e somem sem frio novo (rodada 103)', () => {
+test('Resfriado: −12% por acúmulo, 2 acúmulos congelam por 1,5 s e somem sem frio novo (rodada 103; 2 desde 25/11)', () => {
   const e = {};
   assert.equal(addChill(e, 1), false); assert.equal(e.chill, 1); assert.equal(chillSlow(e), 1 - .12);
-  assert.equal(addChill(e, 1), false); assert.ok(Math.abs(chillSlow(e) - .76) < 1e-9);
-  assert.equal(addChill(e, 1), true, 'terceiro acúmulo congela');
+  assert.equal(STATUS_RULES.chill.stacksToFreeze, 2);
+  assert.equal(addChill(e, 1), true, 'segundo acúmulo congela');
   assert.ok(isFrozen(e)); assert.equal(e.controlTime, STATUS_RULES.freeze.seconds); assert.equal(e.chill, 0);
   const f = {}; addChill(f, 1); tickStatus(f, 3.01); assert.equal(f.chill, 0, 'Resfriado some após 3 s');
   assert.equal(STATUS_RULES.chill.techniqueStacks, 2, 'técnica de gelo dá 2 acúmulos');
@@ -60,4 +60,15 @@ test('veneno acumula até 8 (+15% por acúmulo) e itens explodem na morte (rodad
   assert.equal(byId('katon-orb').bonuses.fireBurst, 1); assert.equal(byId('haku-mirror').bonuses.iceBurst, 1);
   assert.ok(canvas.includes('queueDeathBurst(enemy);const defeatedAt'));
   assert.ok(canvas.includes("if(Math.random()<ex('chillChance'))chillEnemy(enemy,1);"), 'Hyoton dá acúmulos');
+});
+
+test('proposta aplicada (25/11): Katon sem cadeia e chances de item ×2', () => {
+  assert.equal(deathBurstKind({ burn: 1, burstBurn: true }, 1, 0, .1), undefined, 'queimadura da explosão não explode de novo');
+  assert.equal(deathBurstKind({ burn: 1, burstBurn: false }, 1, 0, .1), 'fire');
+  assert.ok(canvas.includes('if(fire){if(!((e.burn??0)>0))e.burstBurn=true;'), 'explosão marca a queimadura nova');
+  assert.ok(canvas.includes("if(Math.random()<ex('burnChance')){enemy.burn=2*stats.duration;enemy.burstBurn=false;}"), 'queimadura de item volta a explodir');
+  assert.ok(canvas.includes('enemy.burn=Math.max(enemy.burn??0,2*stats.duration*(1+g.duration));enemy.burstBurn=false;'), 'queimadura de técnica volta a explodir');
+  const b = id => ITEMS.find(i => i.id === id).bonuses;
+  assert.equal(b('wire').rootChance, .08); assert.equal(b('sleep-incense').sleepChance, .05);
+  assert.equal(b('hyoton').chillChance, .12); assert.equal(b('poison').poisonChance, .12);
 });

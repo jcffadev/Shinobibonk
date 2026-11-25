@@ -39,7 +39,7 @@ const DT = .1, SECONDS = 30, ENEMY_LIMIT = 900;
  * Luta de `SECONDS` s contra a horda. `build` = sonda do simulate-run; `items`/`runBuffs` mudam a ficha; `status:false`
  * desliga todos os status (referência).
  */
-export function statusFight(build, { items = build.items, runBuffs = {}, status = true, seed = 1, skill = 'medio', hitRatio, chain = true } = {}) {
+export function statusFight(build, { items = build.items, runBuffs = {}, status = true, seed = 1, skill = 'medio', hitRatio } = {}) {
   const rnd = rng32(seed), stats = calculateStats(build.heroId, build.level, items, build.pills, 0, build.permanent, runBuffs, build.powerlevel);
   const ex = k => stats.extra[k] || 0, aff = heroAffinity(build.heroId), pressureK = SKILL[skill];
   const techs = build.techs.filter(t => !t.setup && t.power > 0);
@@ -62,7 +62,7 @@ export function statusFight(build, { items = build.items, runBuffs = {}, status 
     if (e.hp <= 0) return;
     const d = dmg * (1 - e.def), dealt = Math.min(e.hp, d);
     out[kind] += dealt; e.hp -= d;
-    if (e.hp <= 0) { out.kills++; if (status) { const k = deathBurstKind(chain || !e.burstBurn ? e : { ...e, burn: 0 }, ex('fireBurst'), ex('iceBurst'), rnd()); if (k) bursts.push({ x: e.x, z: e.z, k }); } }
+    if (e.hp <= 0) { out.kills++; if (status) { const k = deathBurstKind(e, ex('fireBurst'), ex('iceBurst'), rnd()); if (k) bursts.push({ x: e.x, z: e.z, k }); } }
   };
   const chill = (e, n) => addChill(e, n);
   const hit = (e, t) => {
@@ -177,8 +177,6 @@ export function measureBuild(build, seed = 1, fight = {}) {
   for (const d of DAMAGE_REFS) add(`+${Math.round(d * 100)}% dano`, {}, { damage: d });
   for (const name of STATUS_ITEMS) add(name, { [name]: 1 });
   for (const [name, extra] of Object.entries(STATUS_COMBOS)) add(name, extra);
-  // Proposta: a queimadura que vem da explosão não explode de novo (sem reação em cadeia).
-  add('Esfera Katon sem cadeia', { 'Esfera Katon': 1 }, {}, { chain: false });
   return row;
 }
 
@@ -205,15 +203,11 @@ export function summarizeStatus(rows) {
 
 /**
  * Variantes de regra para a proposta de calibração (só no simulador): `rules` muda STATUS_RULES, `items` muda bônus de
- * itens e `chain:false` tira a reação em cadeia da Esfera Katon. Tudo volta ao valor original depois da medição.
+ * itens. A proposta de 25/11/2026 (Katon sem cadeia, congela com 2, chances ×2) já está no jogo. Tudo volta ao valor original depois da medição.
  */
 export const STATUS_VARIANTS = [
   ['atual', {}],
-  ['Katon sem cadeia', { chain: false }],
-  ['congela com 2 acúmulos', { rules: { chill: { stacksToFreeze: 2 } } }],
   ['Resfriado dura 5 s', { rules: { chill: { decay: 5 } } }],
-  ['chances de item ×2', { items: { 'Fio de Aço Ninja': { rootChance: .08 }, 'Incenso do Sono': { sleepChance: .05 }, 'Pergaminho Hyoton': { chillChance: .12 }, 'Anel do Veneno': { poisonChance: .12 } } }],
-  ['proposta (Katon sem cadeia + congela com 2 + chances ×2)', { chain: false, rules: { chill: { stacksToFreeze: 2 } }, items: { 'Fio de Aço Ninja': { rootChance: .08 }, 'Incenso do Sono': { sleepChance: .05 }, 'Pergaminho Hyoton': { chillChance: .12 }, 'Anel do Veneno': { poisonChance: .12 } } }],
 ];
 export function withVariant(v, fn) {
   const undo = [];
@@ -225,7 +219,7 @@ export function withVariant(v, fn) {
 export function measureVariants(builds, seed, only) {
   const out = {};
   for (const [name, v] of STATUS_VARIANTS.filter(([n]) => !only || only.includes(n))) out[name] = withVariant(v, () => Object.fromEntries(STRESS.map(([mark, ratio]) => {
-    const rows = builds.map(b => ({ heroId: b.heroId, marks: { [mark]: measureBuild(b, seed, { hitRatio: ratio, chain: v.chain ?? true }) } }));
+    const rows = builds.map(b => ({ heroId: b.heroId, marks: { [mark]: measureBuild(b, seed, { hitRatio: ratio }) } }));
     return [mark, summarizeStatus(rows)[mark]];
   })));
   return out;

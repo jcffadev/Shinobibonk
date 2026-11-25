@@ -33,7 +33,11 @@
   - Congelar com 2 acúmulos em vez de 3: Quebra-Gelo sobe de +4% · −12% para +13% · −37%; Espelho de Haku de +14% · −45% para +17% · −52%.
   - Resfriado durando 5 s em vez de 3: sem efeito (o inimigo morre antes). Descartada.
   - Chances dos itens ×2 (Fio 8%, Incenso 5%, Hyoton 12%, Anel 12%): ganhos pequenos; Anel ×5 + Erva ×2 sobe de +9% para +13%.
-- **PROPOSTO, aguardando decisão do usuário:** as três juntas.
+- **APLICADO em 25/11/2026 (decisão do usuário: "Sim, aplicar"):** as três juntas.
+  - `STATUS_RULES.chill.stacksToFreeze` = 2 (`src/game/statusRules.ts`). Como as técnicas de gelo dão 2 acúmulos, um acerto de Gelo que aplica o status já congela.
+  - A queimadura criada pela explosão da Esfera Katon fica marcada (`burstBurn`) e não explode de novo. Queimadura de técnica, de item ou do Amaterasu tira a marca e volta a poder explodir.
+  - Fio de Aço Ninja 8% de Paralisar, Incenso do Sono 5% de Dormir, Pergaminho Hyoton 12% de Resfriar e Anel do Veneno 12% de envenenar.
+  - O simulador passou a usar as regras do jogo direto; a variante "proposta" saiu de `STATUS_VARIANTS`.
 
 | Item ou combinação | Atual | Proposta |
 |---|---|---|

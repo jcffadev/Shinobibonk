@@ -128,7 +128,7 @@ export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerS
 export { ALTAR_BUFF_BASE, ALTAR_BUFF_POOL } from '../game/altarRewards';
 /** Bolinho de arroz: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .025, heal: .35 };
-type Enemy = { arrivalGuard?:number; bossDamageScale?:number; summonedAt?:number; summonedOvertime?:number; /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:MissionNpc; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
+type Enemy = { arrivalGuard?:number; bossDamageScale?:number; summonedAt?:number; summonedOvertime?:number; /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; /** Queimadura vinda da explosão da Esfera Katon (não explode de novo). */ burstBurn?:boolean; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:MissionNpc; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
 type MapPickup = { id:string; kind:'kunai'|'shuriken'|'ryu'|'sealDrop'|'cursedShuriken'|'ninjaBody'; name:string; x:number; z:number; mesh:THREE.Object3D; active:boolean; discovered?:boolean };
 type Projectile = {mesh:THREE.Object3D;direction:THREE.Vector3;remaining:number;speed:number;radius:number;technique:Technique;origin:THREE.Vector3;hit:Set<Enemy>;growth:SkillGrowth;ally?:boolean;bounces:number;effectLevel?:number;range:number};
 /** Setup (buff puro) ativo no jogador. */
@@ -1403,7 +1403,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const target=near.sort((a,b)=>b.hp-a.hp)[0];if(!target)return;
       const damage=stats.damage*4*ex('beam')*damageMultiplier*tune().playerDamage,center=target.sprite.position.clone();
       addRing(center,'#2a1630',2.5);
-      for(const e of [...enemyList]){const d=Math.hypot(e.sprite.position.x-center.x,e.sprite.position.z-center.z);if(e===target||d<2.5){e.burn=3*stats.duration;takeDamage(e,e===target?damage:damage*.5,'#3b1f45',false,0,'Amaterasu');}}
+      for(const e of [...enemyList]){const d=Math.hypot(e.sprite.position.x-center.x,e.sprite.position.z-center.z);if(e===target||d<2.5){e.burn=3*stats.duration;e.burstBurn=false;takeDamage(e,e===target?damage:damage*.5,'#3b1f45',false,0,'Amaterasu');}}
     }
     const bossCombat=createBossCombat({scene,player,height:itemSurface,zone:()=>zone,hidden:()=>hiddenEffects,susanoo,
       hitPlayer:(base,slow,gravity,center)=>{if(!damagePlayer(base*threatNow().damage,undefined,slow)||!gravity||!center)return;const direction=center.clone().sub(player.position).setY(0), distance=direction.length();const step=gravity==='push'?-2:Math.min(2.25,Math.max(0,distance-.7));player.position.addScaledVector(direction.normalize(),step);if(!arena)solids.resolve(player.position);},viewRight:()=>v2,viewForward:()=>v1});
@@ -1761,7 +1761,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
     function takeDamage(enemy:Enemy,damage:number,color:string,fromAlly=false,tier=0,name='Status'){if(!enemyList.includes(enemy)||enemy.arrivalGuard||enemy.boss?.arrival!==undefined)return;if(enemy.defense)damage*=1-enemy.defense;if(enemy.account&&damage>=1)damage=Math.max(damage,(enemy.maxHp||1)*.10);const dealt=Math.min(enemy.hp,damage);if(fromAlly)allyDamage+=dealt;else{totalDamage+=dealt;skillDamage[name]=(skillDamage[name]||0)+dealt;if(ex('lifesteal')>0&&!defeated)hp=Math.min(stats.maxHp,hp+dealt*ex('lifesteal'));}enemy.hp-=damage;
       // Lâmina do Carrasco: inimigos comuns abaixo de 8% (+4 pontos por cópia extra) morrem na hora.
       const executeAt=ex('execute')>0?.04*(ex('execute')/.08+1):0;if(executeAt>0&&enemy.hp>0&&!enemy.megaElite&&!enemy.guardian&&!enemy.totem&&enemy.hp<(enemy.maxHp||0)*executeAt)enemy.hp=0;damageNumber(enemy.sprite.position,damage,tier);if(enemy.hp<=0)removeEnemy(enemy);else if(!hiddenEffects){enemy.sprite.material.color.set(color);}}
-    /** Rodada 103: Resfriado (3 acúmulos ou molhado congelam). */
+    /** Rodada 103: Resfriado (2 acúmulos ou molhado congelam). */
     function chillEnemy(enemy:Enemy,stacks:number){if(addChill(enemy,stacks)&&!hiddenEffects)addRing(enemy.sprite.position,'#9fe7ff',1.1);}
     const near=(at:THREE.Vector3,radius:number,skip?:Enemy)=>enemyList.filter(e=>e!==skip&&!e.totem&&Math.hypot(e.sprite.position.x-at.x,e.sprite.position.z-at.z)<radius);
     /** Rodada 103: Quebra-Gelo e reações elementais do golpe. */
@@ -1784,7 +1784,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         for(const e of near(at,fire?D.fireRadius:D.iceRadius)){
           takeDamage(e,stats.damage*(fire?D.fireDamage*(1+ex('statusDamage'))*elementMultiplier(stats.extra,'Fogo'):D.iceDamage*elementMultiplier(stats.extra,'Gelo')),fire?'#ff9b46':'#9fe7ff',false,0,fire?'Esfera Katon':'Espelho de Gelo de Haku');
           if(!enemyList.includes(e))continue;
-          if(fire)e.burn=Math.max(e.burn??0,2*stats.duration);else chillEnemy(e,1);
+          if(fire){if(!((e.burn??0)>0))e.burstBurn=true;e.burn=Math.max(e.burn??0,2*stats.duration);}else chillEnemy(e,1);
         }
         if(!hiddenEffects)addRing(at.setY(terrainHeight(b.x,b.z)+.1),fire?'#ff9b46':'#9fe7ff',fire?D.fireRadius:D.iceRadius);
       }
@@ -1826,11 +1826,11 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         else if(t.secondaryStatus==='Congelar')chillEnemy(enemy,1);
         else if(!enemy.controlTime){enemy.control=t.secondaryStatus;enemy.controlTime=.65*stats.duration*(1+g.duration)*controlResist(enemy);}
       }
-      if(stats.poison>0)enemy.poison={remaining:3*stats.duration*(1+g.duration),dps:damage*stats.poison*(1+ex('statusDamage'))/3};if(t.burn&&Math.random()<techniqueProc(BURN_CHANCE,effectLevel,stats.status))enemy.burn=Math.max(enemy.burn??0,2*stats.duration*(1+g.duration));
+      if(stats.poison>0)enemy.poison={remaining:3*stats.duration*(1+g.duration),dps:damage*stats.poison*(1+ex('statusDamage'))/3};if(t.burn&&Math.random()<techniqueProc(BURN_CHANCE,effectLevel,stats.status)){enemy.burn=Math.max(enemy.burn??0,2*stats.duration*(1+g.duration));enemy.burstBurn=false;}
       if(t.poison&&Math.random()<techniqueProc(POISON_CHANCE,effectLevel,stats.status)){const duration=3*stats.duration*(1+g.duration);enemy.poison={remaining:duration,dps:Math.max(enemy.poison?.dps??0,damage*.45*(1+ex('statusDamage'))/duration)};}
       // Gatilhos por acerto dos itens (só técnicas do jogador).
       if(!ally){
-        if(Math.random()<ex('burnChance'))enemy.burn=2*stats.duration;
+        if(Math.random()<ex('burnChance')){enemy.burn=2*stats.duration;enemy.burstBurn=false;}
         if(Math.random()<ex('poisonChance'))enemy.poison={remaining:3*stats.duration,dps:damage*.35*(1+ex('statusDamage'))/3};
         if(Math.random()<ex('sleepChance')){enemy.control='Dormir';enemy.controlTime=2*stats.duration*controlResist(enemy);}
         if(Math.random()<ex('rootChance')){enemy.control='Paralisar';enemy.controlTime=1.2*stats.duration*controlResist(enemy);}

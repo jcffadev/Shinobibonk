@@ -106,6 +106,8 @@ const MUTATIONS = [
   { regra: "Espinhos usam armadura × dano", arquivo: 'src/game/combat.ts', de: "Math.max(0,thorns)*Math.max(0,armor)*Math.max(0,damage);", para: "Math.max(0,thorns)*25;" },
   { regra: "Guardião dura 30 s contra o dano atual", arquivo: 'src/game/bossScaling.ts', de: "export const BOSS_POWER = { guardianSeconds: 30,", para: "export const BOSS_POWER = { guardianSeconds: 3," },
   { regra: "piso pelo poder vale na vida do Guardião", arquivo: 'src/game/bossScaling.ts', de: "export const bossHpWithFloor = (formulaHp: number, dps: number, seconds: number, plans = 0) => Math.max(formulaHp, bossPowerFloor(dps, seconds, plans));", para: "export const bossHpWithFloor = (formulaHp: number, dps: number, seconds: number, plans = 0) => formulaHp;" },
+  { regra: "queimadura da explosão Katon não explode de novo", arquivo: 'src/game/statusRules.ts', de: "(e.burn ?? 0) > 0 && !e.burstBurn && roll <", para: "(e.burn ?? 0) > 0 && roll <" },
+  { regra: "Resfriado congela com 2 acúmulos", arquivo: 'src/game/statusRules.ts', de: "stacksToFreeze: 2,", para: "stacksToFreeze: 3," },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

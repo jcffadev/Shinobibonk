@@ -136,7 +136,7 @@ assert.equal(armored.armor,gaara.armor+6);assert.ok(Math.abs(armored.damage/gaar
 const xp=calculateStats('naruto',1,{'Pergaminho de Estudo':1});assert.equal(xp.xpGain,1.25);assert.equal(xp.pickup,4.5);
 const cursed=calculateStats('naruto',1,{'Selo Amaldiçoado':1});assert.equal(cursed.maxHp,Math.round(n1.maxHp*.9));assert.ok(Math.abs(cursed.damage/n1.damage-1.3)<1e-8);
 const fury=calculateStats('hashirama',1,{'Fúria da Kyuubi':1});assert.ok(Math.abs(fury.regen/calculateStats('hashirama',1).regen-.75)<1e-8);
-assert.equal(calculateStats('naruto',1,{'Pergaminho Genjutsu':1}).genjutsu,1.28);assert.equal(calculateStats('naruto',1,{'Fio de Aço Ninja':2}).extra.rootChance,.08);
+assert.equal(calculateStats('naruto',1,{'Pergaminho Genjutsu':1}).genjutsu,1.28);assert.equal(calculateStats('naruto',1,{'Fio de Aço Ninja':2}).extra.rootChance,.16);
 for(const id of ['choji','kiba','shino','ino','kurenai','iruka','sai','yamato','shisui','obito','hiashi','hanabi','kisame','zabuza','suigetsu','mangetsu','karin','hiruzen','raikage-terceiro','raikage-quarto','killer-b','onoki','ao','rasa','hanzo','mei','naruto-hokage','tobi-akatsuki','obito-guerra','nagato','sasori','chiriku','sakumo'])assert.ok(HERO_BY_ID[id],id+' disponível no elenco');
 assert.ok(!skillPool('naruto').some(t=>t.name==='Rasenshuriken do Sétimo'),'versões de Naruto mantêm kits próprios');
 assert.ok(!skillPool('tobirama',new Set(['gengetsu'])).some(t=>t.name==='Jōki Bōi'),'afinidade por água não ensina a técnica exclusiva');

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 25/11/2026 · Pacote de status calibrado (Claude Code)
+
+- **Decisão do usuário:** "Sim, aplicar" (proposta medida em `scripts/simulate-status.mjs`).
+- **Esfera Katon sem cadeia:** a queimadura que nasce da explosão fica marcada (`burstBurn`) e não explode de novo. Queimadura de técnica, de item ou do Amaterasu volta a poder explodir.
+- **Congelar com 2 acúmulos de Resfriado** em vez de 3 (`STATUS_RULES.chill.stacksToFreeze`).
+- **Chances de item ×2:** Fio de Aço Ninja 8%, Incenso do Sono 5%, Pergaminho Hyoton 12%, Anel do Veneno 12%. Textos dos itens atualizados.
+- **Efeito medido** (Chūnin, 36 builds dos 8:00, horda com 3 golpes por inimigo; abates · golpes recebidos): Esfera Katon +18% · −32% → +6% · −8%; Espelho de Haku +16% · −47% → +18% · −54%; Quebra-Gelo +4% · −12% → +13% · −39%; Hyoton ×5 + Quebra-Gelo +21% · −60% → +24% · −75%.
+- **Simulador:** `simulate-status.mjs` usa a regra do jogo direto (saiu a opção `chain` e as variantes da proposta).
+- **Testes:** 1 teste novo em `tests/status.test.mjs` (mínimo 290), teste do Resfriado ajustado para 2 acúmulos e `verify-rules` com o Fio ×2 = 16%. 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Elemento Gelo e bônus de elemento em todos os danos (Claude Code)
 
 - **Pedidos do usuário:** "todas as linhas de dano na realidade"; "sim, é legal os efeitos dos elementos que temos também fazer parte do calculo"; "o elemento gelo, você colocou como resfriar, pesquise, deveria ser gelo".
