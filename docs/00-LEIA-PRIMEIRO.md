@@ -10,6 +10,8 @@ A Oficina dos Sapos Sábios exige duas técnicas de ataque no [teto vigente da m
 
 O NPC do Shikamaru mantém o traje do Estrategista ao girar a câmera. A ficha calcula o dano por acerto com os mesmos bônus diretos do combate. [Fórmulas e escala](20-SCALING-EREGULAS.md).
 
+O clarão de dano cobre a cena durante o impacto. Com pouca vida, a vinheta fica nas bordas. Itens do chão e armas comuns têm volume 3D. Os projéteis dos inimigos comuns viajam 15% mais devagar nas quatro dificuldades. [Balanceamento e ataque à distância](20-SCALING-EREGULAS.md#pressão-do-genin-e-armas-comuns).
+
 ## Como classificar
 
 - **CONFIRMADO**: decisão passada pelo usuário.

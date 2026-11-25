@@ -446,6 +446,10 @@ A água usa borda que perde opacidade na margem, leito contínuo e maior resolu�
 
 A arte anterior de Shikamaru, Orochimaru, Ebisu, Iruka, Zetsu, Tsunade, Tenten, Guy, Sapos Sábios e Teuchi volta à cena. A malha do sprite anima tronco e cabeça, com os pés na altura do chão. O ponto de interação e o rumo do ator permanecem fixos. Os shinobis com vistas próprias usam perfil e costas conforme o ângulo. Ebisu, Teuchi e Sapos Sábios preservam a vista original de frente e têm uma folha suplementar de perfil e costas. A animação de repouso também funciona nesses ângulos, com uma única figura visível a cada instante. Naruto Totem alterna entre preparação e selo do Naruto Genin com vistas dianteira e traseira. O mercador é representado pela construção.
 
+## Itens da missão com volume · 25/11/2026
+
+Os pergaminhos pagos mantêm duas aparências. A recompensa de kunai usa pergaminho aberto e a de shuriken usa pergaminho fechado. Os pergaminhos grátis têm ferragens verdes. A Shuriken Amaldiçoada, as moedas, os bolinhos, as pílulas e as essências de XP e chakra também têm volume. As malhas repousam no terreno e mantêm a orientação no mundo ao girar a câmera. A coleta por ímã faz o item girar ao sair do chão. [Modelos e desempenho](development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
+
 ## Pátio da Academia e Pedra Memorial
 
 O balanço fica à esquerda de quem olha para a Academia, no bairro noroeste de Konoha. O pátio de terra batida liga a rua transversal à entrada com o emblema redondo. As cordas e o assento oscilam juntos sob o galho. O tronco e as raízes mantêm suas posições no mundo. A textura da copa usa um recorte das folhas do atlas local `environment-v2.png`.

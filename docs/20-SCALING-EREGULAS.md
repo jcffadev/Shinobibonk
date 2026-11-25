@@ -162,6 +162,14 @@ O Final Swarm inicia após 10:00 na mesma zona. No Kage, sem bônus de densidade
 
 A curva concentra a pressão na virada dos 10 minutos. A sobrevivência de 13 minutos varia bastante com a build e o desvio simulado. O modelo agrega a horda em passos de um segundo e estima a esquiva e a cobertura dos golpes. Posicionamento, efeitos de clima, eventos, altares, mercador, fusões e coleta física ficam fora da simulação. A distribuição dos nascimentos por quadro segue o motor da partida e precisa de conferência em jogo. Os números de balanceamento ficaram como estavam.
 
+## Pressão do Genin e armas comuns
+
+A partir do minuto 1 de cada zona, o Genin sobe até **+7% de dano**, **+0,06 ao multiplicador base de frequência de ataque** e **até +9 pontos percentuais de armadura para a horda antes do Final Swarm**, atingindo esses bônus aos 5 minutos. Vale o teto de armadura correspondente à fase. A taxa de nascimento, o HP dos monstros e a progressão de XP ficam com os valores anteriores. Chunin, Jonin e Kage continuam com a curva anterior.
+
+Numa comparação antes e depois com as mesmas regras de build, 115 versões e três sementes, os resultados de sobrevivência do Genin permaneceram em 333/345 aos 8 minutos e 180/345 aos 13 minutos, na Zona 1. O modelo agrega os inimigos e a esquiva em passos de um segundo. A diferença de pressão precisa ser conferida nos ataques e no deslocamento em partida.
+
+As armas de inimigos comuns viajam mais devagar nos quatro ranks. Kunai e shuriken passam de 12 para 10,2 m/s, e Fūma de 8 para 6,8 m/s. A duração aumenta conforme a redução da velocidade para conservar 15 m e 10 m de alcance nominal, respectivamente. A velocidade das técnicas de chefes e Mega Elites segue a regra anterior.
+
 ## 13. Números de dano na tela — `GameCanvas.tsx`
 
 Teto de números simultâneos **300** (era 60; revisão 11/11 — o usuário pode deixar spammando) com pool de sprites + cache LRU de textura.

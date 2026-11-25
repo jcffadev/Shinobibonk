@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'clarão de dano acompanha a perda de HP e a opção da tela', arquivo: 'src/game/damageFeedback.ts', de: 'return options.enabled ? flashOpacity(flash, now)', para: 'return true ? flashOpacity(flash, now)' },
+  { regra: 'armas comuns 15% mais lentas e com o mesmo alcance', arquivo: 'src/game/enemyTiers.ts', de: 'const speed = fuma ? 6.8 : 10.2;', para: 'const speed = fuma ? 8 : 12;' },
   { regra: 'foco tem prioridade quando a técnica alcança', arquivo: 'src/game/targetFocus.ts', de: '&& enemies.includes(locked)) return locked;', para: '&& enemies.includes(locked)) {}' },
   { regra: 'o balanço da Academia se move depois de colocado na vila', arquivo: 'src/scene/villageScenery.ts', de: 'swing?.update(elapsed);', para: '' },
   { regra: 'shinobi dobra o joelho antes do tombo', arquivo: 'src/scene/fallenShinobi.ts', de: 'bend=THREE.MathUtils.smoothstep(t,stagger,kneel);', para: 'bend=0;' },

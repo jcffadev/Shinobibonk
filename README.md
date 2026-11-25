@@ -10,6 +10,8 @@ As 115 versões do elenco usam a corrida com braços para trás no deslocamento 
 
 Nas quatro vilas, os NPCs de missão usam a pixel art original com movimento de repouso, vistas direcionais quando disponíveis e interação no mesmo ponto do cenário. [Mapas e eventos](docs/01-CAMERA-MAPAS-EVENTOS.md). Em novas missões de Konoha, abra o mapa para traçar uma rota até **Academia · Balanço** ou **Pedra Memorial**.
 
+Os pergaminhos, drops e armas comuns da missão usam malhas 3D. Quando o shinobi perde HP, a cena recebe um clarão vermelho com som de impacto. [Modelos e desempenho](docs/development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
+
 O hub inclui ranking local de temporada, Top 100, clãs e fichas com builds e missões. [Regras do ranking e proposta de publicação online](docs/development/RANKING-E-CLAS.md).
 
 ## Começar

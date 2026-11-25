@@ -16,6 +16,12 @@ export const ENEMY_TIERS: Record<EnemyTier, { hp: number; damage: number; defens
   account: { hp: 180, damage: 1.5, defense: .25, speed: 1, loot: 0 },
 };
 /** Chance de um inimigo comum surgir como elite amarelo (× tuning.eliteRate). */
+/** Armas comuns em m/s. A duração mantém o alcance anterior de cada arma. */
+export function commonEnemyProjectile(fuma: boolean) {
+  const speed = fuma ? 6.8 : 10.2;
+  return { speed, life: (fuma ? 10 : 15) / speed };
+}
+
 export const ELITE_CHANCE = .08;
 export const eliteSpawnChance = (rate = 1, bonus = 0) => Math.min(1, Math.max(0, ELITE_CHANCE * rate * (1 + bonus)));
 /** Drops base de um inimigo normal (EXP, Ryu, Chakra) e chances. Elites e mega elites garantem Ryu e Chakra. */

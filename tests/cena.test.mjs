@@ -53,10 +53,16 @@ test('corpo deitado acompanha a encosta com os pés e o tronco apoiados',()=>{
 });
 
 test('pergaminhos e drops usam a base do desenho e têm sombra de contato reutilizada',async()=>{
-  const {groundDropAnchor,createPickupShadows}=await load('/src/scene/dropSprites.ts');
-  assert.ok(groundDropAnchor('kunai',4)>groundDropAnchor('kunai',0),'pergaminho fechado é mais baixo no quadro');
-  assert.equal(groundDropAnchor('shuriken',4),groundDropAnchor('kunaiFree',4));
-  assert.ok(groundDropAnchor('coin')<.2);
+  const {createPickupShadows}=await load('/src/scene/dropSprites.ts');
+  const {createDropModels,restDrop}=await load('/src/scene/dropModels.ts');
+  const models = createDropModels(new THREE.Scene(),260);
+  const coin=models.mesh('ryu');
+  assert.ok(Math.abs(coin.geometry.boundingBox.min.y)<1e-6);
+  restDrop(coin,3,1,x=>x*.35,1.3);
+  assert.ok(Math.abs(coin.position.y-1.062)<1e-6);
+  const up=new THREE.Vector3(0,1,0).applyQuaternion(coin.quaternion);
+  assert.ok(up.x<-.3,'o modelo inclina com a superfície');
+  models.dispose();
   const shadows=createPickupShadows(x=>x*.35);
   const a=shadows.place(0,0,1.6),b=shadows.place(4,3,1);
   const normal=new THREE.Vector3(0,1,0).applyQuaternion(a.quaternion);
@@ -378,10 +384,49 @@ test('pergaminhos no chão com vários desenhos da obra (rodada 92)', async () =
   assert.ok(D.SCROLL_STYLES.some(s => !s.open) && D.SCROLL_STYLES.some(s => s.open), 'abertos e fechados');
   assert.ok(['天', '地'].every(k => kanji.has(k)), 'Céu e Terra do exame Chunin');
   assert.equal(D.scrollStyle(D.SCROLL_STYLES.length + 2), D.SCROLL_STYLES[2], 'índice dá a volta');
-  const a = D.makeDropSprite('kunai', 1, 3), b = D.makeDropSprite('kunai', 1, 3), c = D.makeDropSprite('kunai', 1, 4);
-  assert.equal(a.material, b.material, 'mesmo estilo compartilha material');
-  assert.notEqual(a.material, c.material, 'estilos diferentes, desenhos diferentes');
-  assert.equal(D.makeDropSprite('item', 5).material, D.makeDropSprite('item', 5).material, 'outros drops não mudam');
+  const {createDropModels,pickupScrollVariant}=await load('/src/scene/dropModels.ts');
+  const drops=createDropModels(new THREE.Scene(),260);
+  const a=drops.mesh('scroll',3), b=drops.mesh('scroll',3), c=drops.mesh('scroll',4);
+  assert.equal(a.geometry,b.geometry,'o mesmo estilo compartilha a malha');
+  assert.notEqual(a.geometry,c.geometry);
+  assert.equal(a.material,c.material,'todos os estilos usam o material compartilhado');
+  assert.ok(a.geometry.boundingBox.max.y>.1 && c.geometry.boundingBox.max.y>a.geometry.boundingBox.max.y);
+  for (const roll of [0,.22,.75,.99]) {
+    assert.equal(D.scrollStyle(pickupScrollVariant('kunai',roll)).open,true);
+    assert.equal(D.scrollStyle(pickupScrollVariant('shuriken',roll)).open,false);
+  }
+  drops.dispose();
+});
+
+test('drops de monstro em 3D agrupam as instâncias por tipo e omitem os que estão fora da câmera', async () => {
+  const {createDropModels,monsterDropScale}=await load('/src/scene/dropModels.ts');
+  const scene=new THREE.Scene(), models=createDropModels(scene,260);
+  const cam=new THREE.PerspectiveCamera(50,16/9,.1,100);
+  cam.position.set(0,8,9);
+  cam.lookAt(0,0,0);
+  cam.updateMatrixWorld();
+  const frustum=new THREE.Frustum().setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(cam.projectionMatrix,cam.matrixWorldInverse));
+  const kinds=['xp','ryu','chakra','onigiri','item','pill'];
+  const drops=Array.from({length:260},(_,i)=>{
+    const type=kinds[i%6], mesh=new THREE.Object3D();
+    mesh.scale.setScalar(monsterDropScale(type,6,false));
+    if(i>=250)mesh.position.set(75,1,55);
+    return {type,mesh};
+  });
+  const thrown=['kunai','shuriken','fuma'];
+  const shots=Array.from({length:80},(_,i)=>({type:thrown[i%3],object:new THREE.Object3D()}));
+  models.update(drops,frustum,shots);
+  assert.equal(scene.children.length,9);
+  assert.equal(scene.children.reduce((n,mesh)=>n+mesh.count,0),330);
+  for(const mesh of scene.children) {
+    assert.ok(mesh.isInstancedMesh);
+    assert.ok(mesh.geometry.boundingBox.max.y>.08,'malha tem volume');
+    assert.ok(mesh.instanceMatrix.updateRanges[0].count<=mesh.count*16);
+  }
+  models.update([],frustum);
+  assert.ok(scene.children.every(mesh=>mesh.count===0&&!mesh.visible),'coleta e troca de zona limpam as instâncias');
+  models.dispose();
+  assert.equal(scene.children.length,0);
 });
 
 test('Pedra Memorial de Konoha numa clareira plana (rodada 92)', async () => {

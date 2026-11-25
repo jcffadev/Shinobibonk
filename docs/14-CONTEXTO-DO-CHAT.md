@@ -2796,3 +2796,19 @@ Cada técnica usa o próprio alcance para priorizar o foco. Arremessos com prepa
 > mas, primeiro quero que atualize o github completo
 
 A publicação reúne a correção do NPC do Shikamaru, a auditoria do dano, o foco de combate e as medições do Final Swarm. A pasta principal acompanha o mesmo commit da branch `main`.
+
+## Perigo, projéteis comuns e itens no chão · 25/11/2026
+
+> Precisamos colocar mais em evidência e por um som um pouco mais evidente ao receber dano, para dar sensaç
+
+> sensação de perigo no jogador
+
+> O que eu to sentindo, no modo genin esta muito fácil, praticamente impossível morrer, já no modo kage ja esta difícil, tem que ser mesmo... mas, talvez os ataque básicos dos monstros normais estão rápido demais, diminuir um pouco a velocidade dos projéteis
+
+> Refazer os designs dos pergaminhos no chão/shurikens, na realidade temos que ter tudo no mapa em 3D
+
+> Para ficar de igual com a qualidade que temos agora do nosso mapa, também verificar o FPS de como ficou isso, lembrando que ele deveria rodar em brownser e por setup.exe no computador do jogador e tem que ser fluído da mesma forma
+
+> a questão do projetil dos inimigos você mudou em todas as dificuldades, certo?
+
+O golpe que tira HP produz um clarão vermelho mais visível e um baque com estalo mais presente. O Genin ganha pressão a partir do minuto 1. Os projéteis comuns ficam 15% mais lentos no Genin, Chunin, Jonin e Kage, conservando o alcance. Os itens do chão e as armas comuns agora têm modelos 3D. A medição dos lotes foi feita sem navegador e o FPS da partida completa ainda precisa de medição no navegador e no executável Windows.

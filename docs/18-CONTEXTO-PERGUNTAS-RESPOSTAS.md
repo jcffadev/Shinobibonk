@@ -485,6 +485,12 @@ A oficina verificava apenas se as duas técnicas foram aprendidas. Agora verific
 
 O NPC fixa a versão Estrategista. O dano por escola e elemento agora tem um cálculo comum à ficha e ao acerto. Os itens de dano direto foram cruzados com todos os pools e ultimates. A curva sobe continuamente por nível, mas avança mais rápido que a vida do inimigo comum principalmente a partir do quinto minuto. A [auditoria de dano e itens](04-ITENS-HABILIDADES-ECONOMIA.md#dano-por-acerto-e-itens--24112026) e o [registro de escala](20-SCALING-EREGULAS.md#comparação-com-a-vida-dos-monstros--24112026) mantêm os valores para decisão de balanceamento.
 
+### Como reforçar o perigo, ajustar projéteis e dar volume aos itens? · 25/11/2026
+
+- Perder HP gera um clarão vermelho sobre a cena e um baque com estalo mais presente. A opção Gráficos controla o clarão e a vinheta. O som segue o volume de efeitos.
+- Kunais, shurikens e Fūma de inimigos comuns ficam 15% mais lentas em todas as dificuldades, com o mesmo alcance. O Genin ganha pressão gradual a partir do minuto 1. Nas simulações, a contagem de sobreviventes do Genin aos 13 minutos ficou em 180 de 345 nas duas versões. [Ajuste e medição](20-SCALING-EREGULAS.md#pressão-do-genin-e-armas-comuns).
+- Itens do chão e armas comuns usam modelos 3D. O teste em CPU mediu os lotes com 1.600 inimigos. A medição de FPS da partida completa e do instalador está pendente. [Teste dos lotes](development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

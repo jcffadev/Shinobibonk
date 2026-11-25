@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Feedback de dano, Genin e itens 3D
+
+- O clarão vermelho cobre a cena por até 0,46 s quando há perda de HP. A vinheta pulsa nas bordas abaixo de 30% de vida. O som de dano ganhou um baque mais presente e um estalo com ataque mais rápido. Os controles de Gráficos e volume continuam ativos.
+- Kunais, shurikens e shurikens Fūma comuns voam 15% mais devagar nas quatro dificuldades, com o mesmo alcance. O Genin ganha pressão entre os minutos 1 e 5 por dano, frequência de ataque e armadura. A abertura e os demais ranks preservam a curva anterior.
+- Pergaminhos abertos e fechados, recompensa gratuita, shuriken amaldiçoada, morro de bolinhos e drops de monstros usam malhas 3D. As armas dos inimigos comuns também usam volume. Drops abundantes e armas compartilham até nove lotes.
+- Medição isolada em Node com 1.600 inimigos, 260 drops e 80 armas em voo. Preparação dos itens e armas em 0,033 ms no percentil 95, com nove chamadas de desenho. FPS do jogo completo no navegador e uma rodada do instalador Windows continuam pendentes. [Medição](docs/development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
+
 ## 24/11/2026 · Foco de combate e sobrevivência na Zona 1
 
 - Técnicas priorizam o inimigo fixado pelo botão direito dentro do alcance efetivo. Disparos em V e múltiplos têm um tiro central sob foco. Arremessos com preparo conferem a mira ao sair.

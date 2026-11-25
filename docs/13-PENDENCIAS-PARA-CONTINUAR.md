@@ -1,4 +1,4 @@
-# Fila atual do ShinobiBonk · 24/11/2026
+# Fila atual do ShinobiBonk · 25/11/2026
 
 ## Próximas prioridades sugeridas
 
@@ -8,6 +8,12 @@
 4. Validar a hospedagem e a migração do ranking com conta de teste. Implementar o verificador de resultados do servidor antes de classificar partidas em equipe. A função Netlify foi testada com um provedor simulado. [Ranking e clãs](development/RANKING-E-CLAS.md).
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
+
+## Dano recebido e itens 3D · 25/11/2026
+
+- Conferir em partida o som de dano na horda, o clarão e a vinheta com pouca vida, inclusive com gráficos reduzidos.
+- Verificar a pressão do Genin do minuto 1 ao 5 e o tempo de desvio de kunais e shurikens nos quatro ranks.
+- Conferir os pergaminhos, a shuriken amaldiçoada e as moedas ao girar a câmera. Medir FPS da partida completa no navegador e no executável Windows quando houver empacotamento. O teste em Node mediu a preparação dos lotes, com horda máxima simulada. A conversão deste lote cobre os itens do chão e as armas comuns. A vegetação que usa sprites nos mapas ainda precisa de volume para concluir a conversão do cenário. [Modelos e medição](development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
 
 ## Foco e Final Swarm · 24/11/2026
 

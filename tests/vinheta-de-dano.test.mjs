@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
-  DAMAGE_FEEDBACK as F, createDamageFlash, flashOpacity, flashStrength, hurtSoundAllowed, lowHpOpacity, registerHit,
+  DAMAGE_FEEDBACK as F, createDamageFlash, flashOpacity, flashStrength, hurtSoundAllowed, impactOpacity, lowHpOpacity, registerHit,
   sfxGain, vignetteOpacity,
 } from '../src/game/damageFeedback.ts';
 
@@ -55,12 +55,23 @@ test('golpe mais forte dentro do intervalo reforça o piscar sem reiniciá-lo', 
   assert.equal(registerHit(flash, 200, 0, 100), false, 'sem dano não registra');
 });
 
-test('novo piscar nunca começa mais fraco que o que ainda está na tela', () => {
+test('golpe leve depois do intervalo usa a intensidade do novo golpe', () => {
   const flash = createDamageFlash();
   registerHit(flash, 0, 80, 100);
   registerHit(flash, F.minGapMs, 1, 100);
-  assert.ok(flash.strength >= flashStrength(1, 100));
-  assert.ok(flashOpacity(flash, F.minGapMs) > flashStrength(1, 100) - 1e-9);
+  assert.equal(flashOpacity(flash, F.minGapMs), flashStrength(1, 100), 'não mantém o pico do golpe forte que já passou');
+});
+
+test('clarão no centro só acompanha a perda real de HP e respeita as opções', () => {
+  const flash = createDamageFlash(), on = { enabled: true };
+  assert.equal(impactOpacity(flash, 0, on), 0);
+  assert.equal(registerHit(flash, 5, 0, 100), false);
+  assert.equal(impactOpacity(flash, 5, on), 0);
+  registerHit(flash, 10, 1, 100);
+  assert.ok(impactOpacity(flash, 10, on) >= .65);
+  assert.equal(impactOpacity(flash, 10, { enabled: false }), 0);
+  assert.equal(impactOpacity(flash, 10, { enabled: true, hiddenEffects: true }), flashStrength(1, 100) * F.hiddenEffectsFactor);
+  assert.equal(impactOpacity(flash, 10 + F.flashMs, on), 0, 'só a vinheta de vida baixa permanece');
 });
 
 test('vida baixa: vinheta fraca e contínua, mais forte quanto menos vida', () => {
@@ -106,7 +117,7 @@ test('o jogo usa as funções testadas (GameCanvas, sfx, Configurações e CSS)'
   const canvas = read('../src/scene/GameCanvas.tsx');
   assert.match(canvas, /registerHit\(damageFlash,/);
   assert.match(canvas, /playHurt\(flashStrength\(/);
-  assert.match(canvas, /vignetteOpacity\(damageFlash,.*currentSettings\(\)\.damageFlash/, 'vinheta respeita a opção damageFlash');
+  assert.match(canvas, /const damageOptions=\{enabled:enabledRef\.current&&currentSettings\(\)\.damageFlash,hiddenEffects\}/, 'vinheta respeita a opção damageFlash');
   const sfx = read('../src/audio/sfx.ts');
   assert.match(sfx, /export function playHurt/);
   assert.match(sfx, /hurtSoundAllowed\(lastHurt/);
@@ -115,7 +126,9 @@ test('o jogo usa as funções testadas (GameCanvas, sfx, Configurações e CSS)'
   assert.match(read('../src/ui/SettingsScreen.tsx'), /set\(\{ damageFlash: v \}\)/);
   const css = read('../src/style.css').match(/\.player-damage-vignette \{[^}]*\}/)?.[0] ?? '';
   assert.match(css, /pointer-events:none/);
-  assert.match(css, /rgba\(150,0,14,0\) 48%/, 'centro transparente: só bordas e cantos');
+  assert.match(css, /rgba\(150,0,14,0\) 48%/, 'o alerta de vida baixa continua nas bordas');
+  assert.match(read('../src/style.css'), /\.player-damage-impact \{[^}]*rgba\(230,22,32,\.29\) 0%/, 'o clarão de dano alcança o centro');
+  assert.match(canvas, /impactOpacity\(damageFlash,now,damageOptions\)/);
 });
 
 test('proteção de nível continua e só o HP perdido produz número vermelho', async () => {
@@ -145,5 +158,7 @@ test('dano bem visível e audível: vinheta forte, personagem pisca vermelho e b
   assert.ok(HURT_BLINK.on !== HURT_BLINK.off && parseInt(HURT_BLINK.on.slice(1, 3), 16) > 220 && parseInt(HURT_BLINK.on.slice(3, 5), 16) < 80, 'pico em vermelho vivo');
   const sfx = fs.readFileSync(new URL('../src/audio/sfx.ts', import.meta.url), 'utf8');
   assert.match(sfx, /tones: \[\[246, 72\], \[262, 76\]\]/, 'duas serras desafinadas (dissonância)');
+  assert.match(sfx, /HURT_SOUND = \{ seconds: \.2, gain: \.125,/, 'o baque tem mais presença no mix');
+  assert.match(sfx, /sweep\(1750, 340, \.095, \(\.11 \+ \.08 \* force\) \* vol, true, \.008\)/, 'o estalo começa em 8 ms');
   assert.ok(sfx.includes("osc.type = 'sawtooth'"));
 });

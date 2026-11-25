@@ -5,8 +5,8 @@ import fs from 'node:fs';
 import { damageLabel } from '../src/game/format.ts';
 import { HEROES, SHAPE_COOLDOWN, SHAPE_POWER } from '../src/game/heroes.ts';
 import { attackCooldown, techniqueCooldownScale } from '../src/game/combat.ts';
-import { ENEMY_TIERS, xpLoot, lootScale, megaEliteHp, capMegaEliteHp } from '../src/game/enemyTiers.ts';
-import { MISSION_TIER, MISSION_HP, normalHpFactor, difficultyAt, AMBUSH_RULES, SPAWN_RING, finalSwarmFactor, xpToLevelUp, XP_RULES } from '../src/game/progression.ts';
+import { ENEMY_TIERS, commonEnemyProjectile, xpLoot, lootScale, megaEliteHp, capMegaEliteHp } from '../src/game/enemyTiers.ts';
+import { MISSION_TIER, MISSION_HP, GENIN_PRESSURE, normalHpFactor, difficultyAt, AMBUSH_RULES, SPAWN_RING, finalSwarmFactor, xpToLevelUp, XP_RULES } from '../src/game/progression.ts';
 import { simulateRun } from '../scripts/simulate-run.mjs';
 
 const src = file => fs.readFileSync(new URL('../src/' + file, import.meta.url), 'utf8');
@@ -41,6 +41,28 @@ test('vida do monstro comum 13 e por dificuldade 1/1,3/1,6/2 (elites e chefes ig
   assert.deepEqual({ ...MISSION_HP }, { Genin: 1, Chunin: 1.3, Jonin: 1.6, Kage: 2 });
   for (const rank of Object.keys(MISSION_TIER)) assert.ok(close(normalHpFactor(rank) * MISSION_TIER[rank], MISSION_HP[rank]));
   assert.match(src('scene/GameCanvas.tsx'), /hpBase\*threat\.hp\*\(tier==='normal'&&!challenge\?normalHpFactor\(mission\):1\)/);
+});
+
+test('Genin ganha pressão entre os minutos 1 e 5 sem acelerar o nascimento da horda', () => {
+  const opening=difficultyAt('Genin',60), five=difficultyAt('Genin',300);
+  const other=difficultyAt('Chunin',300);
+  assert.equal(opening.armor,.03);
+  assert.equal(five.armor,5*.03+GENIN_PRESSURE.armor);
+  assert.equal(other.armor,5*.03);
+  assert.ok(five.attackRate < other.attackRate && five.damage < other.damage);
+  assert.ok(close(five.attackRate,1+5*.08+GENIN_PRESSURE.attackRate));
+  assert.ok(close(five.damage,(1.45+5*.2)*1.06**5*(1+GENIN_PRESSURE.damage)));
+  assert.equal(five.spawnPerSecond,32);
+});
+
+test('projéteis comuns viajam 15% mais devagar, com o mesmo alcance em metros', () => {
+  for (const [fuma,previous] of [[false,12],[true,8]]) {
+    const projectile=commonEnemyProjectile(fuma);
+    assert.ok(close(projectile.speed,previous*.85));
+    assert.ok(close(projectile.speed*projectile.life,previous*1.25));
+  }
+  assert.match(src('scene/GameCanvas.tsx'), /enemyShots\.push\(\{object,type,direction,\.\.\.commonEnemyProjectile\(fuma\)/);
+  assert.doesNotMatch(src('scene/bossCombat.ts'), /commonEnemyProjectile/);
 });
 
 test('primeiro Mega Elite tem teto de 3.000 HP em toda dificuldade, e os seguintes escalam', () => {

@@ -6,7 +6,7 @@
  * tela dão umas piscadas em vermelho… mais o som do hit recebido pelo personagem principal").
  *
  * Lógica pura (sem DOM, sem áudio, sem Three.js): o GameCanvas só chama estas funções e aplica o resultado na vinheta
- * `.player-damage-vignette` (gradiente radial vermelho só nas bordas) e no som `playHurt`.
+ * `.player-damage-vignette` (bordas e vida baixa), `.player-damage-impact` (clarão sobre a cena) e som `playHurt`.
  * - Intensidade do piscar cresce com o dano em relação à vida máxima e some em `flashMs`.
  * - Limite de frequência: com vários monstros batendo, um novo piscar só começa depois de `minGapMs`; golpes no meio só
  *   reforçam o piscar atual (sem reiniciar o brilho) — não vira estroboscópio.
@@ -15,24 +15,24 @@
  */
 export const DAMAGE_FEEDBACK = {
   /** Duração do piscar (ms). */
-  flashMs: 420,
+  flashMs: 460,
   /** Intervalo mínimo entre o início de dois piscares (ms). */
-  minGapMs: 360,
+  minGapMs: 380,
   /** Opacidade mínima de um golpe qualquer e teto do piscar. */
-  minStrength: .5,
+  minStrength: .65,
   maxStrength: 1,
   /** Quanto cada fração da vida máxima perdida soma à opacidade (10% da vida → +0,24). */
-  damageScale: 3,
+  damageScale: 2.4,
   /** Abaixo desta fração da vida a vinheta fraca e contínua aparece. */
   lowHpRatio: .3,
   /** Opacidade da vinheta de vida baixa: no limite (`lowHpMin`) e quase sem vida (`lowHpMax`). */
   lowHpMin: .12,
-  lowHpMax: .34,
+  lowHpMax: .38,
   /** Pulso lento da vida baixa (vezes por segundo) e quanto ele varia. */
   lowHpPulseHz: 1.1,
   lowHpPulseDepth: .25,
   /** Com H (efeitos ocultos) a vinheta fica mais discreta. */
-  hiddenEffectsFactor: .55,
+  hiddenEffectsFactor: .75,
   /** Intervalo mínimo entre dois sons de "hit recebido" (ms). */
   sfxGapMs: 320,
 } as const;
@@ -68,8 +68,8 @@ export function registerHit(flash: DamageFlash, now: number, damage: number, max
     flash.strength = Math.max(flash.strength, strength);
     return false;
   }
-  flash.startedAt = now;
   flash.strength = Math.max(strength, flashOpacity(flash, now));
+  flash.startedAt = now;
   return true;
 }
 
@@ -81,6 +81,11 @@ export function lowHpOpacity(hp: number, maxHp: number, now: number): number {
   const base = DAMAGE_FEEDBACK.lowHpMin + (DAMAGE_FEEDBACK.lowHpMax - DAMAGE_FEEDBACK.lowHpMin) * depth;
   const pulse = 1 - DAMAGE_FEEDBACK.lowHpPulseDepth * (.5 + .5 * Math.sin(now / 1000 * Math.PI * 2 * DAMAGE_FEEDBACK.lowHpPulseHz));
   return base * pulse;
+}
+
+/** Clarão sobre a cena inteira. A vida baixa só mantém a vinheta das bordas. */
+export function impactOpacity(flash: DamageFlash, now: number, options: { enabled: boolean; hiddenEffects?: boolean }): number {
+  return options.enabled ? flashOpacity(flash, now) * (options.hiddenEffects ? DAMAGE_FEEDBACK.hiddenEffectsFactor : 1) : 0;
 }
 
 /** Opacidade final da vinheta: o maior entre piscar e vida baixa; 0 com a opção desligada ou fora da partida. */

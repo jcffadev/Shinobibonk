@@ -2,7 +2,7 @@ import type { Technique } from '../game/heroes';
 import { familyOf } from '../game/heroes';
 import { currentSettings } from '../game/settings';
 import { hurtSoundAllowed, sfxGain } from '../game/damageFeedback';
-type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui' | 'explosion' | 'hurt';
+type Sound = 'attack' | 'impact' | 'pickup' | 'ultimate' | 'ui' | 'explosion';
 let lastHurt = -Infinity;
 let context: AudioContext | null = null;
 
@@ -20,17 +20,11 @@ function audio(): AudioContext | null {
 export function playSfx(kind: Sound) {
   const S = currentSettings(); if (S.muteInBackground && document.hidden) return;
   const vol = sfxGain(S); if (vol <= .001) return;
-  if (kind === 'hurt') {
-    const time = performance.now();
-    if (!hurtSoundAllowed(lastHurt, time)) return;
-    lastHurt = time;
-  }
   const ctx = audio(); if (!ctx) return;
   const now = ctx.currentTime;
   const notes: Record<Sound, [number, number, OscillatorType][]> = {
     attack: [[520, .07, 'triangle'], [760, .08, 'square']],
     impact: [[180, .1, 'sawtooth'], [90, .12, 'triangle']],
-    hurt: [[135, .13, 'triangle'], [78, .12, 'sine']],
     pickup: [[660, .07, 'sine'], [880, .1, 'sine'], [1180, .12, 'sine']],
     ultimate: [[220, .12, 'sawtooth'], [330, .16, 'triangle'], [660, .25, 'sine']],
     ui: [[440, .055, 'sine']],
@@ -51,25 +45,25 @@ export function playSfx(kind: Sound) {
 }
 
 /**
- * Som de "hit recebido" do personagem principal (rodada 83): os dois tons graves do `hurt` + um estalo curto de ruído
+ * Som de impacto do personagem principal: um baque grave e um estalo curto de ruído
  * que cresce com a força do golpe (`intensity` 0–1, a mesma do piscar vermelho). Respeita volume geral × efeitos e o
  * limite de frequência de `hurtSoundAllowed` (vários monstros batendo não empilham sons).
  */
 /** Rodada 90: baque de dano — duas serras desafinadas (dissonância) descendo em `seconds`. */
-export const HURT_SOUND = { seconds: .2, gain: .09, tones: [[246, 72], [262, 76]] as const } as const;
+export const HURT_SOUND = { seconds: .2, gain: .125, tones: [[246, 72], [262, 76]] as const } as const;
 
 export function playHurt(intensity: number) {
   const S = currentSettings(); if (S.muteInBackground && document.hidden) return;
   const vol = sfxGain(S); if (vol <= .001) return;
-  if (!hurtSoundAllowed(lastHurt, performance.now())) return;
-  playSfx('hurt');
-  const force = Math.min(1, Math.max(0, intensity));
-  sweep(1100, 220, .11, (.07 + .1 * force) * vol, true);
-  // Rodada 90 ("som meio negativo de dano"): baque grave dissonante — duas serras desafinadas descendo, com filtro abafado.
+  const time = performance.now();
+  if (!hurtSoundAllowed(lastHurt, time)) return;
   const ctx = audio(); if (!ctx) return;
+  lastHurt = time;
+  const force = Math.min(1, Math.max(0, intensity));
+  sweep(1750, 340, .095, (.11 + .08 * force) * vol, true, .008);
   const now = ctx.currentTime, filter = ctx.createBiquadFilter(), gain = ctx.createGain();
   filter.type = 'lowpass'; filter.frequency.setValueAtTime(1400, now); filter.frequency.exponentialRampToValueAtTime(260, now + HURT_SOUND.seconds);
-  gain.gain.setValueAtTime(.0001, now); gain.gain.exponentialRampToValueAtTime((HURT_SOUND.gain + .05 * force) * vol, now + .015); gain.gain.exponentialRampToValueAtTime(.0001, now + HURT_SOUND.seconds);
+  gain.gain.setValueAtTime(.0001, now); gain.gain.exponentialRampToValueAtTime((HURT_SOUND.gain + .05 * force) * vol, now + .009); gain.gain.exponentialRampToValueAtTime(.0001, now + HURT_SOUND.seconds);
   filter.connect(gain); gain.connect(ctx.destination);
   for (const [from, to] of HURT_SOUND.tones) {
     const osc = ctx.createOscillator(); osc.type = 'sawtooth';
@@ -102,7 +96,7 @@ function speak(name:string, intro=false) {
   lastVoice=performance.now();synth.speak(utterance);return true;
 }
 
-function sweep(frequency:number,end:number,length:number,strength:number,noise=false){
+function sweep(frequency:number,end:number,length:number,strength:number,noise=false,attack=.024){
   const settings=currentSettings();
   if(strength<=.001||(settings.muteInBackground&&document.hidden))return;
   const ctx=audio();if(!ctx)return;
@@ -111,7 +105,7 @@ function sweep(frequency:number,end:number,length:number,strength:number,noise=f
   filter.frequency.setValueAtTime(frequency,now);
   filter.frequency.exponentialRampToValueAtTime(end,now+length);
   gain.gain.setValueAtTime(.0001,now);
-  gain.gain.exponentialRampToValueAtTime(strength,now+.024);
+  gain.gain.exponentialRampToValueAtTime(strength,now+attack);
   gain.gain.exponentialRampToValueAtTime(.0001,now+length);
   filter.connect(gain);gain.connect(ctx.destination);
   if(noise){
