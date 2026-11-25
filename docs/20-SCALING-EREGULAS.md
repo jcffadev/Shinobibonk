@@ -122,6 +122,32 @@ No Genin, o golpe chega a 43× a vida de um comum no minuto 5 e a 126× no minut
 
 **APLICADO em 25/11/2026 (decisão do usuário: "Sim, aplicar"):** "afixos ½ + swarm ×2". `GROWTH_ROLLS.damage` agora tem base 22,5/40/67,5/112,5/187,5 e spread 11/15/22,5/35/55, e `FINAL_SWARM.multiplier` passou a 2. A defesa do Final Swarm entra em 60% e chega ao teto de 85% no 1º minuto. Medição depois da mudança, igual à opção: Kage com golpe/HP de 6,6× aos 5 min e 12× aos 10, e 47 vivos no minuto 11; Genin com 24× e 70×. Antes, a opção proposta era: Os afixos de dano das técnicas caem pela metade e o Final Swarm entra com ×2 em vez de ×3. Dentro da zona, o excesso cai cerca de 40% (Kage: 20× → 12× aos 10 min; Genin: 126× → 70×), e a sobrevivência no Final Swarm fica perto da atual. Os parâmetros estão expostos para o ajuste: `HERO_DAMAGE_CURVE` (progression.ts), `GROWTH_ROLLS` (combat.ts) e `FINAL_SWARM.multiplier`.
 
+## Piso de vida dos chefes pelo poder do jogador · 25/11/2026 (Claude Code)
+
+**Pedido do usuário:** "Precisamos do scale dos portais e das bijus escalem bastante e considerem o nivel atual no nosso personagem na partida para não nascer com a vida baixa demais e morrer com 1 ataque apenas".
+
+**Regra** (`src/game/bossScaling.ts`):
+- Na invocação, o jogo calcula o dano de alvo único da build naquele instante (`singleTargetDps`). Entram nível, itens, pílulas, afixos, crítico esperado, recarga, bônus contra elites e a defesa do próprio chefe.
+- A vida do Guardião fica no mínimo em **30 s** desse dano, e a da Bijū em **60 s**. Cada plano do Shikamaru soma 33% (`BOSS_POWER`).
+- A fórmula da zona (tempo, Final Swarm, dificuldade) continua valendo quando der mais. O aviso "E · invocar o guardião" já mostra a vida com o piso.
+- Ultimate, aliados e procs não entram na estimativa, então a luta real tende a ser um pouco mais curta.
+
+**Medição** (cenário C de `scripts/simulate-bosses.mjs`, 115 versões, semente 17; o simulador usa o mesmo piso e a mesma estimativa de dano):
+
+| Dificuldade · planos · invocação | Guardiões (luta mediana) antes → agora | Bijū na chegada antes → agora | Vencem a zona 1 (de 115) antes → agora |
+|---|---|---|---|
+| Genin · 0 · cedo | 2 s → 25 a 29 s | 2 min → 2,9 min | 115 → 115 |
+| Genin · 0 · 9:00 | 1 s → 28 a 29 s | 1 s → 60 s | 110 → 110 |
+| Genin · 3 · 9:00 | 1 s → 51 a 56 s | 5 s → 2 min | 110 → 104 |
+| Kage · 0 · cedo | 3 a 4 s → 25 a 28 s | 6 min → 11 min | 109 → 103 |
+| Kage · 0 · 9:00 | 2 s → 29 s | 10 s → 60 s | 97 → 90 |
+| Kage · 3 · cedo | 8 a 13 s → 43 a 51 s | 25 min → 23 min | 67 → 46 |
+| Kage · 3 · 9:00 | 3 a 6 s → 53 a 56 s | 27 s → 2 min | 59 → 40 |
+
+"Antes" é a medição anterior desta mesma data (commit 1edfc53), ainda com a curva antiga. "Agora" já tem a curva nova (afixos ½ e Final Swarm ×2) e o piso.
+
+Efeito colateral: com lutas mais longas, o jogador fica mais tempo na horda. No Kage com 3 planos, menos personagens vencem a zona 1. Se ficar pesado em partida, dá para baixar `guardianSeconds` ou o peso dos planos no piso.
+
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 
 Como segundo avanço da família, parte de ×1,24 de HP e dano de base, +2 de armadura e +0,16 m/s de movimento em relação ao Kakashi Jōnin. A passiva da versão acrescenta +12% de Ninjutsu e +5 pontos de evasão, conforme a progressão de passivas do elenco. A missão em Iwa Kage usa Kakashi Hokage, 7 minutos e 950 abates. Nas sementes 17, 101 e 252, Kakashi Jōnin, Hokage e Dois Mangekyō chegaram à zona 2 no simulador em Kage, conta nova, até 12 minutos. O simulador aproxima a horda e deixa as ultimates fora do cálculo.

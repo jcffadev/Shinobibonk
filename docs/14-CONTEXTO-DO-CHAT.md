@@ -2961,3 +2961,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - Os afixos de dano das técnicas caíram pela metade e o Final Swarm agora entra com ×2. No simulador, o excesso de dano na zona caiu cerca de 40% e a sobrevivência no Final Swarm ficou perto da anterior.
 - Conferências de regras atualizadas para a regra nova. **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Precisamos do scale dos portais e das bijus escalem bastante e considerem o nivel atual no nosso personagem na partida para não nascer com a vida baixa demais e morrer com 1 ataque apenas
+
+**Resposta.**
+
+- Na invocação, o Guardião e a Bijū medem o dano de alvo único da build atual (nível, itens, afixos, crítico, recarga) e ficam com vida para no mínimo 30 s (Guardião) e 60 s (Bijū), +33% por plano.
+- No simulador, os Guardiões passaram de segundos para 25 a 56 s, e a Bijū dura ao menos 1 a 2 min. No Kage com 3 planos, menos personagens sobrevivem, porque ficam mais tempo na horda.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

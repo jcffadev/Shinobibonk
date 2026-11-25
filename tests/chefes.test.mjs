@@ -9,7 +9,7 @@ import { guardianProbe, bijuuProbe } from '../scripts/simulate-bosses.mjs';
 const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
 
 test('Bijū: vida e defesa vêm das funções compartilhadas com o simulador (calibração 25/11)', () => {
-  assert.ok(canvas.includes('const maxHp=saved?.maxHp??bijuuVitality(threat.hp,elapsed,overtime);'));
+  assert.ok(canvas.includes('const maxHp=saved?.maxHp??bossHpWithFloor(bijuuVitality(threat.hp,elapsed,overtime),'), 'Bijū usa a fórmula com piso pelo poder do jogador (25/11)');
   assert.ok(canvas.includes('defense:bijuuDefense(elapsed,overtime,bijuuPlans(shikamaruPlans)),'));
   assert.ok(canvas.includes("const curse=zoneCurse(zoneDifficulty,bijuuPlans(shikamaruPlans),ex('threat'));"), 'HP da Bijū usa só os planos da zona');
   // Decisão de 25/11: armadura 3× a do Guardião equivalente; HP × 2,4 (mínimo 4.600), como antes.

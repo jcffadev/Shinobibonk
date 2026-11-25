@@ -64,6 +64,7 @@ import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DU
 import { canLockTarget, mistVisibility, ZABUZA_MIST } from '../game/zabuzaMist';
 import { addChill, addPoisonStack, chillSlow, controlResist, damageStatusCount, deathBurstKind, freezeTarget, isFrozen, poisonMultiplier, reactionsFor, STATUS_RULES, statusDamageMultiplier, tickStatus } from '../game/statusRules';
 import { FALLEN_TRAP, trapIsElite, trapRing } from '../game/fallenTrap';
+import { BOSS_POWER, bossHpWithFloor, singleTargetDps } from '../game/bossScaling';
 import { YOUTH_FIGHTER_HP, YOUTH_GOALS, YOUTH_TEXT, rollYouthChallenge, tickYouth, youthBonuses, youthChallengeText, youthSpots, type YouthChallengeId, type YouthDifficulty, type YouthRun } from '../game/youthTraining';
 import { HAGOROMO, HAGOROMO_WAVES, TOOL_BY_ID, chooseTool, createHagoromo, addHagoromoKills, hagoromoRecharges, nextHagoromoStage, rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots, type HagoromoEncounterHud, type HagoromoState, type SageTool } from '../game/hagoromoTraining';
 import { UNLOCK_MISSIONS, missingRequirements } from '../game/unlockMissions';
@@ -1473,7 +1474,9 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     function zoneElapsed(){return Math.max(0,elapsed-zoneStart);}
     /** FINAL SWARM: segundos sobrevividos depois que o relógio da zona zerou (0 = relógio ainda correndo; arena não tem swarm). */
     function overtimeNow(){return arena?0:Math.max(0,zoneElapsed()-ZONE_SECONDS);}
-    const guardianHpNow=(hp=threatNow().hp)=>guardianVitality(hp,elapsed,zoneElapsed(),overtimeNow(),zone);
+    /** 25/11/2026: dano de alvo único da build atual contra um chefe com `defense` (piso de vida dos chefes, src/game/bossScaling.ts). */
+    const playerBossDps=(defense:number)=>singleTargetDps({heroId,techniques,skillLevels,growth,stats,defense,affinity:heroNature,sageInfused:stats.sage>0||sageModeActive(),healthShare:hp/stats.maxHp,trained:config.trained,multiplier:damageMultiplier*tune().playerDamage*(1+ex('eliteDamage'))});
+    const guardianHpNow=(hp=threatNow().hp)=>bossHpWithFloor(guardianVitality(hp,elapsed,zoneElapsed(),overtimeNow(),zone),playerBossDps(guardianDefense(elapsed,false,overtimeNow(),zone,shikamaruPlans)),BOSS_POWER.guardianSeconds,shikamaruPlans);
     function summonGuardian(){if(guardianSpawned||arena||portal)return null;guardianSpawned=true;const seal=events.find(e=>e.id==='guardian-seal');if(seal)seal.active=false;const g=spawnEnemy(false,true,true);g.seen=true;g.arrivalGuard=1;snapshotTimer=0;if(seal){g.sprite.position.set(seal.x,standHeight(seal.x,seal.z)+g.sprite.scale.y*.46,seal.z);addRing(g.sprite.position,'#ffd07c',2.3);}eventToast='Guardião invocado! '+HERO_BY_ID[g.heroId!].name+' · HP ×'+(g.hpMultiplier??1).toFixed(2)+(shikamaruPlans?' · Plano do Shikamaru '+shikamaruPlans+'/'+GUARDIAN_RULES.shikamaruMaxPlans:'');return g;}
     const gamabuntaSheet=new THREE.TextureLoader().load('/assets/gamabunta-oil-v1.png');
     gamabuntaSheet.colorSpace=THREE.SRGBColorSpace;
@@ -1660,7 +1663,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const overtime=saved?.overtime??arrivalOvertime;
       const curse=zoneCurse(zoneDifficulty,bijuuPlans(shikamaruPlans),ex('threat'));
       const threat=zoneThreat(mission,ZONE_SECONDS+overtime,curse,overtime,ex('enemyCount'),t=>tuneThreat(t,tune()));
-      const maxHp=saved?.maxHp??bijuuVitality(threat.hp,elapsed,overtime);
+      const maxHp=saved?.maxHp??bossHpWithFloor(bijuuVitality(threat.hp,elapsed,overtime),playerBossDps(bijuuDefense(elapsed,overtime,bijuuPlans(shikamaruPlans))),BOSS_POWER.bijuuSeconds,bijuuPlans(shikamaruPlans));
       const bossDamageScale=guardianAttackMultiplier(elapsed,overtime,3,true)*threat.damage/Math.max(.01,threatNow().damage);
       const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1*bossDamageScale,bossDamageScale,summonedOvertime:overtime,defense:bijuuDefense(elapsed,overtime,bijuuPlans(shikamaruPlans)),uid:++megaUid,seen:true};
       enemyList.push(beast);bossCombat.attach(beast,maxHp,true);playBijuu();

@@ -14,6 +14,7 @@ import { HEROES } from '../src/game/heroes.ts';
 import { zoneThreat, zoneCurse, ZONE_DIFFICULTY } from '../src/game/progression.ts';
 import { guardianVitality, guardianDefense } from '../src/game/missions.ts';
 import { bijuuVitality, bijuuDefense, bijuuPlans } from '../src/game/bijuu.ts';
+import { bossHpWithFloor, BOSS_POWER } from '../src/game/bossScaling.ts';
 import { ZONE_SECONDS } from '../src/game/worldScale.ts';
 import { simulateRun } from './simulate-run.mjs';
 
@@ -31,8 +32,8 @@ export function guardianProbe({ heroId, mission, plans, seed }) {
   simulateRun({ heroId, mission, plans, seed, minutes: (GUARDIAN_MARKS.at(-1)[1] + 5) / 60, policy: { guardianAt: Infinity, bossFightLimit: 120, endless: true }, record: 3600,
     probe: p => {
       if (!marks.has(p.zoneT) || p.zone !== 1 || p.dead) return;
-      const hp = guardianVitality(p.threat.hp, p.t, p.zoneT, p.overtime, 1), def = guardianDefense(p.t, false, p.overtime, 1, plans);
-      const dps = p.singleDps(def) * (1 + p.eliteDamage);
+      const def = guardianDefense(p.t, false, p.overtime, 1, plans), dps = p.singleDps(def) * (1 + p.eliteDamage);
+      const hp = bossHpWithFloor(guardianVitality(p.threat.hp, p.t, p.zoneT, p.overtime, 1), dps, BOSS_POWER.guardianSeconds, plans);
       marks.set(p.zoneT, { hp, def, dps, ttk: ttk(hp, dps), level: p.level, hitShare: dps / hp });
     } });
   return Object.fromEntries(GUARDIAN_MARKS.map(([name, at]) => [name, marks.get(at)]));
@@ -49,8 +50,8 @@ export function bijuuProbe({ heroId, mission, plans, seed }) {
   for (const [name, overtime] of BIJUU_MARKS) {
     const t = end.t + overtime;
     const threat = zoneThreat(mission, ZONE_SECONDS + overtime, zoneCurse(ZONE_DIFFICULTY[3], used, end.threatBonus), overtime, 0);
-    const hp = bijuuVitality(threat.hp, t, overtime), def = bijuuDefense(t, overtime, used);
-    const dps = end.singleDps(def) * (1 + end.eliteDamage);
+    const def = bijuuDefense(t, overtime, used), dps = end.singleDps(def) * (1 + end.eliteDamage);
+    const hp = bossHpWithFloor(bijuuVitality(threat.hp, t, overtime), dps, BOSS_POWER.bijuuSeconds, used);
     // Opções de armadura (× a armadura bruta do Guardião equivalente) para a calibração pedida em docs/13 (alvo inicial 20×).
     const options = Object.fromEntries(ARMOR_OPTIONS.map(m => [m, ttk(hp, end.singleDps(bijuuDefense(t, overtime, used, m)) * (1 + end.eliteDamage))]));
     out[name] = { hp, def, dps, ttk: ttk(hp, dps), level: end.level, hitShare: dps / hp, guardianDef: guardianDefense(t, false, overtime, 3, used), options };
@@ -72,7 +73,7 @@ export function missionProbe({ heroId, mission, plans, seed, summonAt }) {
   if (end) {
     const used = bijuuPlans(plans), overtime = end.overtime, t = end.t;
     const threat = zoneThreat(mission, ZONE_SECONDS + overtime, zoneCurse(ZONE_DIFFICULTY[3], used, end.threatBonus), overtime, 0);
-    const hp = bijuuVitality(threat.hp, t, overtime), def = bijuuDefense(t, overtime, used), dps = end.singleDps(def) * (1 + end.eliteDamage);
+    const def = bijuuDefense(t, overtime, used), dps = end.singleDps(def) * (1 + end.eliteDamage), hp = bossHpWithFloor(bijuuVitality(threat.hp, t, overtime), dps, BOSS_POWER.bijuuSeconds, used);
     bijuu = { hp, def, ttk: ttk(hp, dps), arrival: t / 60, level: end.level };
   }
   return { dead: run.dead, victory: run.victory, endedAt: run.endedAt, bosses: run.bosses.map(b => ({ ...b, ttk: b.killedAt - b.summonedAt })), scrolls: run.bosses.reduce((n, b) => n + b.scrolls, 0), bijuu };

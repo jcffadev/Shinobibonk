@@ -15,6 +15,7 @@ import { calculateStats, zoneThreat, zoneCurse, ZONE_DIFFICULTY, MISSION_TIER, x
 import { ENEMY_TIERS, BASE_LOOT, xpDropValue, xpLoot, lootScale, megaEliteHp, rollMegaSchedule, eliteSpawnChance, eliteHpRamp } from '../src/game/enemyTiers.ts';
 import { attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
 import { techniqueLevelCap } from '../src/game/techniqueMerge.ts';
+import { expectedHit, bossHpWithFloor, BOSS_POWER } from '../src/game/bossScaling.ts';
 import { ITEMS, rollItems } from '../src/game/catalog.ts';
 import { PILLS, canGrantPill, grantPill } from '../src/game/pills.ts';
 import { PASSIVES, weaponPrice, choiceCount } from '../src/game/preparation.ts';
@@ -62,12 +63,8 @@ export function targetsPerCast(t, stats, n) {
 
 /** Dano médio por acerto antes da defesa, usando os multiplicadores da partida. */
 export function hitDamage(heroId, t, g, stats, level, healthShare = 1) {
-  const c = techniqueCritical(t, level);
-  const chance = Math.max(0, stats.crit + c.chance), mult = stats.critDamage + c.damage;
-  const critical = chance < 1 ? 1 + chance * (mult - 1) : mult + .5 * Math.min(1, chance - 1);
-  const sageInfused = stats.sage > 0;
-  return techniqueHitDamage(t, g, stats, { affinity: heroAffinity(heroId), sageInfused })
-    * techniquePassiveMultiplier(heroId, t, healthShare, sageInfused) * critical;
+  // Mesma estimativa usada no jogo para o piso de vida dos chefes (src/game/bossScaling.ts · expectedHit).
+  return expectedHit(heroId, t, g, stats, level, { affinity: heroAffinity(heroId), sageInfused: stats.sage > 0, healthShare });
 }
 
 /** Nota que o bot dá a um bônus (item ou pílula): ofensivo primeiro, depois sobrevivência. */
@@ -185,7 +182,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     }
     // Guardião: invocado em policy.guardianAt; derrotado → item grátis e próxima zona. Na zona 3 em modo sem fim, fica no Final Swarm.
     const endlessHere = policy.endless && s.zone === 3;
-    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) { const hp = guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone); guardian = { hp, maxHp: hp, def: guardianDefense(s.t, false, overtime, s.zone, plans), at: s.t, zone: s.zone, level: s.level }; }
+    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) { const def0 = guardianDefense(s.t, false, overtime, s.zone, plans), hp = bossHpWithFloor(guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone), singleDps(def0) * (1 + ex('eliteDamage')), BOSS_POWER.guardianSeconds, plans); guardian = { hp, maxHp: hp, def: guardianDefense(s.t, false, overtime, s.zone, plans), at: s.t, zone: s.zone, level: s.level }; }
     if (guardian) {
       guardian.hp -= singleDps(guardian.def) * (1 + ex('eliteDamage'));
       if (guardian.hp <= 0) {

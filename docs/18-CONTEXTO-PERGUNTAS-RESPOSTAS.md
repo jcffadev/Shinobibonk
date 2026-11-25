@@ -519,6 +519,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Armadilha do corpo (25/11): `FALLEN_TRAP.elites`, `trapIsElite`; 10 ninjas sempre (sem limite do teto), recompensa `spawnPickup('sealDrop',…)`.
 
+- Piso de vida dos chefes (25/11): `src/game/bossScaling.ts` (`BOSS_POWER`, `singleTargetDps`, `expectedHit`, `bossHpWithFloor`); `playerBossDps` e `guardianHpNow` no GameCanvas.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

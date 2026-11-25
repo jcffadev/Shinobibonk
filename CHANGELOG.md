@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 25/11/2026 · Guardiões e Bijū escalam com o poder atual do jogador (Claude Code)
+
+- **Pedido do usuário:** "Precisamos do scale dos portais e das bijus escalem bastante e considerem o nivel atual no nosso personagem na partida para não nascer com a vida baixa demais e morrer com 1 ataque apenas".
+- **Novo `src/game/bossScaling.ts`:**
+  - `singleTargetDps` mede o dano de alvo único da build no momento da invocação: nível, itens, pílulas, afixos, crítico, recarga e a defesa do chefe.
+  - `bossHpWithFloor` garante ao Guardião pelo menos **30 s** desse dano e à Bijū **60 s**, com +33% por plano do Shikamaru (`BOSS_POWER`).
+  - A fórmula da zona continua valendo quando for maior.
+- **GameCanvas:** `guardianHpNow`, também mostrado no aviso de invocação, e a vida da Bijū usam o piso.
+- **Simulador:** `simulate-run.mjs` e `simulate-bosses.mjs` usam a mesma estimativa (`expectedHit`) e o mesmo piso.
+- **Resultado no simulador:**
+  - Guardiões passam de 1 a 13 s para 25 a 56 s.
+  - A Bijū dura no mínimo 1 min, ou 2 min com 3 planos, em vez de segundos.
+  - No Kage com 3 planos, menos personagens vencem a zona 1 (67 → 46), porque ficam mais tempo na horda.
+  - Tabela em [docs/20](docs/20-SCALING-EREGULAS.md#piso-de-vida-dos-chefes-pelo-poder-do-jogador--25112026-claude-code).
+- **Testes:** 3 testes novos em `tests/chefes-piso.test.mjs` (o mínimo subiu para 286) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** invocar o Guardião e a Bijū com uma build forte e ver a vida e a duração da luta.
+
 ## 25/11/2026 · Curva de dano: afixos pela metade e Final Swarm ×2 (Claude Code)
 
 - **Decisão do usuário:** "Sim, aplicar", sobre a proposta medida em `scripts/simulate-damage.mjs`.
