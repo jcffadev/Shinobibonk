@@ -121,12 +121,10 @@ assert.ok(heroDamageScale(500)>7000&&heroDamageScale(1000)>90000);
 assert.equal(xpToLevelUp(1),30);assert.ok(xpToLevelUp(1000)>xpToLevelUp(500));
 const overtime=18*60,runSeconds=10*60+overtime;
 const hpLate=guardianVitality(difficultyAt('Genin',runSeconds,1,overtime).hp,runSeconds,runSeconds,overtime,1);
-// Rodada 47 — faixa atualizada: o usuário pediu early game +200% (hpBase 1,6→3,2 em ENEMY_SCALING; dano do herói ×0,55→×0,41).
-// O HP tardio do guardião é proporcional a hpBase (1,17^min amplifica ~81× aos 28 min): 1,06e9 → ≈1,23e9. Se o usuário
-// ajustar o scale da dificuldade, atualize esta faixa junto com ENEMY_SCALING (progression.ts) e a nota na docs/14.
-// Rodada 76: no Final Swarm a ameaça também compõe +10%/min × MISSION_HP (SWARM_COMPOUND): ×1,1^18 ≈ ×5,56 → ≈6,8e9.
-assert.ok(hpLate>=6.1e9&&hpLate<7.5e9,`HP tardio do guardião: ${hpLate}`);
-assert.ok(guardianDefense(runSeconds)>.85&&guardianDefense(runSeconds,true)>guardianDefense(runSeconds));
+// O Guardião do Genin aos +18 min de Final Swarm deve alcançar bilhões sem limitar as invocações tardias.
+assert.ok(hpLate>=32e9&&hpLate<36e9,`HP tardio do guardião: ${hpLate}`);
+assert.ok(guardianDefense(runSeconds,false,overtime)>.95);
+assert.ok(guardianDefense(runSeconds,true,overtime,3)>guardianDefense(runSeconds,false,overtime));
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);
 // Rodada 50 — base 9.500 ±5% por nascimento (rng fixo 0,5 = variação neutra = 9.500).
 assert.equal(megaEliteHp(55,1,()=>.5),9500);assert.ok(megaEliteHp(595,1,()=>.5)>8e5);

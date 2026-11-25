@@ -67,7 +67,7 @@ test('GameCanvas: Zabuza surge à vista, faz selos, névoa engrossa e só depois
   assert.match(canvas, /if\(w\.cast\)\{const spot=solids\.freeSpot\(THREE\.MathUtils\.clamp\(player\.position\.x\+v1\.x\*CAST_DISTANCE/, 'aparece à frente do jogador, dentro da tela');
   assert.match(canvas, /castEnd:w\.cast\?elapsed\+w\.cast\.seconds:undefined/);
   assert.match(canvas, /eventToast=w\.cast\?w\.cast\.line:/, 'fala da técnica');
-  assert.match(canvas, /const channeling=isChanneling\(weatherEvent,enemy\.heroId,elapsed\);const stunned=channeling\|\|/, 'parado durante os selos');
+  assert.match(canvas, /const channeling=!hagoromoEvent&&isChanneling\(weatherEvent,enemy\.heroId,elapsed\);[^\n]*const stunned=channeling\|\|/, 'parado durante os selos');
   assert.match(canvas, /if\(channeling&&motion\)\{[^}]*motion\.attack\(false,left,true,undefined,true,back\);/, 'repete os selos');
   assert.match(canvas, /blendFog\(active,castProgress\(elapsed,weatherEvent\?\.castEnd/, 'névoa engrossando');
   assert.ok(!/weatherEvent\?\.id==='mist'/.test(canvas), 'toda verificação de névoa passa por mistHides');

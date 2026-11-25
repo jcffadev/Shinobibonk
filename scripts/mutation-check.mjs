@@ -11,6 +11,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'Tab bloqueia navegação também no auto-repeat', arquivo: 'src/game/movementInput.ts', de: 'event.preventDefault();\n      if (event.repeat) return;', para: 'if (event.repeat) return;\n      event.preventDefault();' },
+  { regra: 'estoque de XP distante volta à área do abate', arquivo: 'src/game/drops.ts', de: '{index:oldest,relocate:true}', para: '{index:oldest,relocate:false}' },
+  { regra: 'Hagoromo invoca o chefe antes de oferecer a recompensa', arquivo: 'src/game/hagoromoTraining.ts', de: "?'wave':'boss'", para: "?'wave':'reward'" },
   { regra: 'clarão de dano acompanha a perda de HP e a opção da tela', arquivo: 'src/game/damageFeedback.ts', de: 'return options.enabled ? flashOpacity(flash, now)', para: 'return true ? flashOpacity(flash, now)' },
   { regra: 'armas comuns 15% mais lentas e com o mesmo alcance', arquivo: 'src/game/enemyTiers.ts', de: 'const speed = fuma ? 6.8 : 10.2;', para: 'const speed = fuma ? 8 : 12;' },
   { regra: 'foco tem prioridade quando a técnica alcança', arquivo: 'src/game/targetFocus.ts', de: '&& enemies.includes(locked)) return locked;', para: '&& enemies.includes(locked)) {}' },

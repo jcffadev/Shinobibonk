@@ -2,6 +2,12 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Guardiões e Bijū no Final Swarm · 25/11/2026
+
+O Guardião pode ser invocado a qualquer momento, inclusive depois de 15 minutos de Final Swarm. A armadura base sobe 30 pontos por minuto da missão e mais 90 por minuto de Final Swarm. A parcela da zona é 28 pontos por faixa. A redução de dano é `armadura / (100 + armadura)`. Cada plano do Shikamaru soma 33% à armadura e à ameaça usada para o HP e o dano da zona. Até três planos rendem um pergaminho adicional cada. A Bijū aplica o multiplicador da arena, carrega a pressão e o tempo excedente da zona final e considera os planos acumulados na missão.
+
+Em Kage, na zona 1, o cálculo dá 4,45 milhões de HP e 85,8% de redução aos +1 min de Final Swarm sem planos. Com três planos, são 8,86 milhões e 92,3%. Aos +15 min são 136,47 bilhões e 95,8% sem planos, ou 271,57 bilhões e 97,8% com três. A base anterior dava 2,59 milhões e 80,0% aos +1 min, e 30,33 bilhões e 86,9% aos +15 min sem planos. O multiplicador de dano aplicado em cima da ameaça da missão cresce com tempo e zona. A simulação de referência com Naruto Academia Kage e invocações cedo chegou à zona 3 aos 25 min nas duas versões. A janela de desvio e o impacto dos golpes na arena seguem pendentes de teste em partida.
+
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 
 Como segundo avanço da família, parte de ×1,24 de HP e dano de base, +2 de armadura e +0,16 m/s de movimento em relação ao Kakashi Jōnin. A passiva da versão acrescenta +12% de Ninjutsu e +5 pontos de evasão, conforme a progressão de passivas do elenco. A missão em Iwa Kage usa Kakashi Hokage, 7 minutos e 950 abates. Nas sementes 17, 101 e 252, Kakashi Jōnin, Hokage e Dois Mangekyō chegaram à zona 2 no simulador em Kage, conta nova, até 12 minutos. O simulador aproxima a horda e deixa as ultimates fora do cálculo.

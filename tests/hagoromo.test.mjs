@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
-  HAGOROMO, HAGOROMO_WAVES, SAGE_TOOLS, TOOL_BY_ID, addHagoromoKills, chooseTool, createHagoromo, hagoromoRecharges,
+  HAGOROMO, HAGOROMO_WAVES, SAGE_TOOLS, TOOL_BY_ID, addHagoromoKills, chooseTool, createHagoromo, hagoromoRecharges, nextHagoromoStage,
   rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots,
 } from '../src/game/hagoromoTraining.ts';
 
@@ -29,6 +29,16 @@ test('raridades e hordas pedidas pelo usuário', () => {
   const spots = waveSpots(10, 10, 50, seeded(3));
   assert.equal(spots.length, 50);
   for (const p of spots) { const d = Math.hypot(p.x - 10, p.z - 10); assert.ok(d >= HAGOROMO.waveRing[0] - 1e-9 && d <= HAGOROMO.waveRing[1] + 1e-9, 'horda em volta do jogador'); }
+});
+
+test('em cada raridade, a próxima horda e o chefe só vêm depois do último inimigo', () => {
+  for (const [rarity, { waves }] of Object.entries(HAGOROMO_WAVES)) {
+    for(let wave=0;wave<waves;wave++) assert.equal(nextHagoromoStage(rarity, wave, false, false), 'wave');
+    assert.equal(nextHagoromoStage(rarity, waves, true, false), 'wait');
+    assert.equal(nextHagoromoStage(rarity, waves, false, false), 'boss');
+    assert.equal(nextHagoromoStage(rarity, waves, true, true), 'wait');
+    assert.equal(nextHagoromoStage(rarity, waves, false, true), 'reward');
+  }
 });
 
 test('9 ferramentas do Sábio (2·2·2·2·1), cada uma com atributo e subefeito', () => {
@@ -61,6 +71,13 @@ test('a partida liga o evento: tecla C, clareira, hordas, Mega Elite, recompensa
     "addHagoromoKills(hagoromo, 1, { inEvent: !!hagoromoEvent, recharge: hagoromoRecharges('classico', hagoromoBossDown) })",
     'if(!sealing&&!hagoromoEvent){elapsed+=dt;',
     'if(hagoromoEvent&&!enemy.hagoromo)continue;',
+    'waveSpots(HAGOROMO_ARENA.x,HAGOROMO_ARENA.z,count)',
+    'outsideEnemies:enemyList.splice(0),outsideDrops:drops.splice(0)',
+    'for(const drop of drops)creditDrop(drop);',
+    'm.arrivalGuard=1;',
+    'enemy.boss?.arrival!==undefined',
+    "events.filter(mapEventAvailable)",
+    "event.active&&event.uses===0",
     'if(enemy.guardian){hagoromoBossDown=true;',
     'scheduleWeather();hagoromoBossDown=false;',
     'if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&',
@@ -72,6 +89,8 @@ test('a partida liga o evento: tecla C, clareira, hordas, Mega Elite, recompensa
   assert.ok(settings.includes("hagoromo: 'c'"), 'tecla C remapeável');
   assert.ok(main.includes('<HagoromoButton') && main.includes('<SageToolSlots'), 'botão e vagas na HUD');
   assert.ok(main.includes("world.choice.level===-11?'TREINAMENTO DO HAGOROMO'"));
+  const hud = fs.readFileSync(new URL('../src/ui/HagoromoButton.tsx', import.meta.url), 'utf8');
+  assert.ok(hud.includes('<b>{keys}/{HAGOROMO.maxKeys}</b>'));
 });
 
 test('clareira do treinamento plana em todos os mapas e longe da água e do começo', async () => {

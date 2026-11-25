@@ -148,11 +148,11 @@ test('todas as poses que a arena usa existem nos atlas dianteiros', () => {
 
 test('a chegada espera pela folha animada e o fade da horda não altera a opacidade', async () => {
   const { combat, host, scene } = setup();
-  for (let i = 0; i < 60; i++) combat.update(host, 1 / 30, true);
+  for (let i = 0; i < 60; i++) assert.equal(combat.update(host, 1 / 30, true), true, 'entrada segura permanece ativa');
   assert.equal(host.sprite.material.visible, false, 'nenhum quadro vazio é desenhado');
   assert.equal(host.boss.arrival, B.BIJUU_ARRIVAL, 'a entrada ainda está pronta para tocar');
   fakeImage(host.boss.motionMap);
-  combat.update(host, 1 / 30, false);
+  assert.equal(combat.update(host, 1 / 30, false), true);
   assert.equal(host.sprite.material.visible, true);
   const before = host.sprite.material.opacity;
   assert.ok(before > 0 && before < 1);

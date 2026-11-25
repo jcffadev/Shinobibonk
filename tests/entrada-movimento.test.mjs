@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createMovementInput } from '../src/game/movementInput.ts';
+import { createMovementInput, createQuickMapInput } from '../src/game/movementInput.ts';
 
 test('movimento físico mantém diagonais, inversão por prioridade e remapeamento até soltar', () => {
   const input = createMovementInput();
@@ -24,8 +24,8 @@ test('movimento físico mantém diagonais, inversão por prioridade e remapeamen
 test('progressão, escolhas e colisão conservam a entrada até keyup ou perda de foco', () => {
   const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.match(canvas, /movementInput\.press\(e\.code\|\|rawKey,key\);if\(document\.querySelector/);
-  assert.match(canvas, /const onKeyUp=[^\n]+movementInput\.release\(e\.code\|\|raw\)/);
-  assert.match(canvas, /const onBlur=\(\)=>\{keys\.clear\(\);movementInput\.clear\(\)/);
+  assert.match(canvas, /const onKeyUp=[\s\S]+?movementInput\.release\(e\.code\|\|raw\)/);
+  assert.match(canvas, /const onBlur=\(\)=>\{\s*keys\.clear\(\);movementInput\.clear\(\)/);
   assert.equal(canvas.match(/movementInput\.clear\(\)/g)?.length, 1);
   assert.match(canvas, /const \{vertical,horizontal\}=movementInput\.axes\(\)/);
   const movement=canvas.slice(canvas.indexOf('moving=dir.lengthSq()>0'),canvas.indexOf('// Rodada 93: Shinra Tensei — o Pain levita'));
@@ -34,6 +34,36 @@ test('progressão, escolhas e colisão conservam a entrada até keyup ou perda d
   assert.match(movement, /else solids\.resolve\(player\.position\)/);
   assert.doesNotMatch(movement, /moving\s*=\s*false|movementInput\.clear/);
   assert.match(canvas, /const walking=moving&&!defeated/);
+});
+
+test('Tab consome auto-repeat, mantém WASD e fecha só o mapa que abriu', () => {
+  const movement = createMovementInput();
+  movement.press('KeyW', 'w');
+  const actions = [];
+  const map = createQuickMapInput(open => actions.push(open));
+  let prevented = 0;
+  const tab = { repeat:false, altKey:false, ctrlKey:false, metaKey:false, preventDefault:() => { prevented++; } };
+  map.press(tab, true, false);
+  map.press({ ...tab, repeat:true }, true, true);
+  map.release(true);
+  assert.deepEqual(actions, [true, false]);
+  assert.equal(prevented, 2);
+  assert.deepEqual(movement.axes(), { vertical:1, horizontal:0 });
+  map.press({ ...tab, altKey:true }, true, false);
+  map.press(tab, false, false);
+  assert.equal(prevented, 2);
+  map.press(tab, true, true);
+  map.release(true);
+  assert.deepEqual(actions, [true, false, false]);
+  map.press(tab, true, false);
+  map.clear();
+  map.release(true);
+  assert.deepEqual(actions, [true, false, false, true]);
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  const css = fs.readFileSync(new URL('../src/map.css', import.meta.url), 'utf8');
+  assert.match(canvas, /const overlayUi=\(\)=>[^\n]+panelRef\.current==='quickmap'/);
+  assert.match(canvas, /if\(cursor\.isActive\(\)\)cursor\.move/);
+  assert.match(css, /\.quickmap-backdrop \.world-map\{pointer-events:auto\}/);
 });
 
 test('pool vazio treina uma vez e fecha a escolha também ao banir a última carta ou atualizar', () => {

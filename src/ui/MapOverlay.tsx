@@ -106,7 +106,7 @@ export function MapPanel({ world, quick }: { world: WorldSnapshot; quick: boolea
       </button>) : <p>Explore olhando ao redor para revelar eventos e personagens no mapa.</p>}
       {!quick && <div className="map-legend">
         <span><i className="lg tone-npc" />NPC (retrato)</span><span><i className="lg tone-event" />Evento</span><span><i className="lg tone-elite" />Inimigo especial</span><span><i className="lg tone-pickup" />Recompensa no chão</span><span>📍 Ping</span>
-        <p>Só aparece o que já foi visto na câmera. Clique num ícone para traçar rota (clique de novo para limpar); clique numa área livre para pingar. Ao chegar a menos de 3 m a rota é limpa.</p>
+        <p>Os objetivos principais são marcados automaticamente. Os demais aparecem quando você os encontra. Clique em um ícone para traçar ou limpar a rota.</p>
       </div>}
     </aside>
   </div>;

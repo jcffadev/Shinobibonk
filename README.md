@@ -12,6 +12,8 @@ Nas quatro vilas, os NPCs de missão usam a pixel art original com movimento de 
 
 Os pergaminhos, drops e armas comuns da missão usam malhas 3D. Quando o shinobi perde HP, a cena recebe um clarão vermelho com som de impacto. [Modelos e desempenho](docs/development/CRIAR-MAPAS-JOGAVEIS.md#itens-da-missão-em-3d).
 
+Segure **Tab** para marcar rotas no mapa rápido enquanto se move. O contador junto do atalho do Hagoromo mostra quantos portais estão disponíveis. Guardiões e a Bijū escalam com o tempo e os planos do Shikamaru. [Mapas e eventos](docs/01-CAMERA-MAPAS-EVENTOS.md#mapa-rápido-e-objetivos--25112026) · [Escala de chefes](docs/20-SCALING-EREGULAS.md#guardiões-e-bijū-no-final-swarm--25112026).
+
 O HUD dos ajudantes mostra retrato, nome, afinidade e a recarga compartilhada da equipe. Os detalhes ficam na ficha (P). [HUD e ficha](docs/02-FICHA-HUD-RANKING.md#hud-em-partida).
 
 O hub inclui ranking local de temporada, Top 100, clãs e fichas com builds e missões. [Regras do ranking e proposta de publicação online](docs/development/RANKING-E-CLAS.md).

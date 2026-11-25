@@ -2,9 +2,10 @@
 // Three.js roda no Node; só o canvas 2D das texturas é simulado (installCanvasStub). Nenhum navegador.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import * as THREE from 'three';
 import { load, installCanvasStub, memoryStorage } from './helpers/load.mjs';
-import { collectedXp, magnetSpeed, xpCollectedAtPortal, GLOBAL_PULL_SECONDS } from '../src/game/drops.ts';
+import { collectedXp, dropCanMagnetize, dropPileAtLimit, magnetSpeed, xpCollectedAtPortal, GLOBAL_PULL_SECONDS } from '../src/game/drops.ts';
 
 import { COLLISION_RULES, createSolids } from '../src/scene/collision.ts';
 
@@ -222,6 +223,25 @@ test('colisão de marco grande termina a 3 m e casa mantém a base sólida', () 
   assert.equal(solids.big[1].r, .99);
   assert.equal(solids.resolveBig({x:30,z:.2}), false);
   assert.equal(solids.resolve({x:30,z:.2}), true);
+});
+
+test('XP, Ryu e chakra seguem perto do abate mesmo com o estoque lotado', () => {
+  const close = { distance:1, magnet:false };
+  const far = { distance:60, magnet:false };
+  const moving = { distance:0, magnet:true };
+  assert.equal(dropPileAtLimit([far], 2, 2), null);
+  assert.deepEqual(dropPileAtLimit([far, close, moving], 3, 2), { index:1, relocate:false });
+  assert.deepEqual(dropPileAtLimit([moving, far], 2, 2), { index:1, relocate:true });
+  assert.deepEqual(dropPileAtLimit([close, far], 2, 2), { index:0, relocate:false });
+  assert.deepEqual(dropPileAtLimit([moving, moving], 2, 2), { index:0, relocate:false });
+  assert.equal(dropCanMagnetize(.34, .35, 1, 3, true), false);
+  assert.equal(dropCanMagnetize(.35, .35, 1, 3, false), true);
+  assert.equal(dropCanMagnetize(.35, .35, 8, 3, false), false);
+  assert.equal(dropCanMagnetize(.35, .35, 8, 3, true), true);
+  const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.match(canvas, /if\(!sealing\)pickupClock\+=dt;\s*if\(!sealing&&!hagoromoEvent\)\{elapsed\+=dt/);
+  assert.match(canvas, /born:pickupClock/);
+  assert.match(canvas, /restDrop\(drop\.mesh,position\.x,position\.z/);
 });
 
 test('fade usa profundidade e sobreposição da câmera, sem atingir inimigos atrás ou ao lado', async () => {

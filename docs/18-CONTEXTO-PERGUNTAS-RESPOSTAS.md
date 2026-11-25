@@ -23,6 +23,8 @@ Survivor/roguelite de ninja (temática Naruto, identidade 100% original) para na
 
 ## 2. Direção atual
 
+**25/11/2026.** O momento da invocação do Guardião é uma decisão do jogador. A ameaça do chefe continua crescendo no Final Swarm. O mapa rápido continua interativo durante o movimento e os objetivos de progressão têm destaque em partida.
+
 **14/11/2026.** Prioridade para igualar a cobertura de animações e conferir a seleção da direção real por folha, em todo o elenco. Testes de navegador suspensos para Claude Code, Qwen e Codex até nova autorização explícita. Ver [política central](development/TESTING_POLICY.md).
 
 Rodada 53: manter somente personagens da obra Naruto, com técnicas e efeitos baseados no anime. Elenco atual e limites de fidelidade em [docs/21](21-ELASTAO-DE-HEROIS.md) e [docs/24](24-AUDITORIA-DE-EFEITOS.md).
@@ -494,6 +496,10 @@ O NPC fixa a versão Estrategista. O dano por escola e elemento agora tem um cá
 ### Como deixar o HUD dos ajudantes compacto e padronizado? · 25/11/2026
 
 Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade aparecem em cada linha, com quebra automática do nome. A equipe divide a barra de recarga e o detalhe de ataques e passivas fica na ficha (P). [HUD e ficha](02-FICHA-HUD-RANKING.md#hud-em-partida).
+
+### Por que os drops sumiam e os chefes podiam ser deletados ao entrar? · 25/11/2026
+
+**IMPLEMENTADO.** A coleta usa um relógio independente e a consolidação mantém drops perto do abate. O treino isola a horda da zona, anuncia o chefe e mostra a contagem de portais no HUD. A entrada protege Guardiões, Bijū e o chefe do treino. A invocação tardia cresce em HP, dano e armadura, considerando os planos do Shikamaru. Tab permite traçar rotas sem interromper o movimento. NPC já usado deixa o mapa. O Benihisago entrega 150% do preço de um pergaminho pago a cada 100 abates. A aparência e o fluxo da partida aguardam verificação visual.
 
 ## 5. Estado atual do projeto
 

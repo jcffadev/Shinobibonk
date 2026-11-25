@@ -9,6 +9,12 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Tab, drops, Hagoromo e chefes · 25/11/2026
+
+- Validar em partida o clique de rota com Tab segurado enquanto se mantém WASD, o retorno do mouse à câmera e o desaparecimento dos marcadores de NPC após o uso.
+- Conferir a coleta de XP, Ryu e chakra com várias centenas de inimigos e em uma sequência longa de Final Swarm. Conferir a coleta e o surgimento do chefe em todas as raridades do Hagoromo.
+- Verificar a entrada dos Guardiões e da Bijū em builds de nível alto e invocações nos marcos +1, +7 e +15 minutos do Final Swarm. Conferir os quatro pergaminhos grátis com três planos e os portais das zonas, da arena e de saída. A validação visual aguarda autorização para navegador.
+
 ## HUD dos ajudantes · 25/11/2026
 
 - Conferir retratos, quebra dos nomes longos e abertura de sinergias em partida, com equipe cheia, telas estreitas e escala do HUD entre 60% e 140%. Os testes em Node conferem os atlas e o texto renderizado da lista e da ficha. [HUD e ficha](02-FICHA-HUD-RANKING.md#hud-em-partida).

@@ -4,6 +4,8 @@
 
 O painel dos ajudantes fica abaixo da ficha do jogador. Cada linha mostra o retrato de corpo inteiro da seleção, nome completo e nível de afinidade. A recarga fica numa barra comum. Em espaços baixos, a lista rola entre a ficha e o inventário. Em telas estreitas, a barra da missão ocupa a linha acima da lista. As sinergias aparecem num painel recolhível, fechado na configuração inicial. Passivas e técnicas de apoio podem ser lidas na ficha (P).
 
+O botão do Hagoromo indica de **0/3** a **3/3** portais ao lado do atalho. O contador continua legível sem carga e durante o treinamento. O tooltip mostra os abates que faltam para a próxima chave.
+
 O cartão de HP indica **Protegido** durante a invulnerabilidade temporária e **Debug** durante o God mode. Golpes que tiram vida mostram um número vermelho com sinal de menos, além do flash do personagem e do som de dano, mesmo se uma cura repuser o HP no quadro. O número respeita a configuração de números de dano e a tecla H.
 HP, XP, nível, Chakra/recarga da Ultimate, tempo, abates individuais, inimigos vivos, mapa/bioma, dificuldade, dinheiro da partida, slots 1–4, R, aliados 3/5, minimapa, evento ativo, meta Top 1 e colocação dinâmica. A meta deve comparar a run atual inclusive com recordes **do próprio jogador** salvos localmente. Ranking global entre jogadores exige servidor e validação antitrapaça; não alegar online quando apenas local.
 

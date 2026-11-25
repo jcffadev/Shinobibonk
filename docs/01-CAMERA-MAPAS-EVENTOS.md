@@ -65,7 +65,7 @@ As referências vieram de outro jogo; por decisão do usuário, nenhum nome ou t
 - **Arsenal da Tenten (CONFIRMADO; IMPLEMENTADO; antes "Sharingan de Kakashi", trocado a pedido do usuário em 06/11/2026)**: NPC com sprite da Tenten no mapa (id `arsenal`). Ao interagir com E, o jogador escolhe um item que já carrega e ganha mais uma cópia dele, respeitando o limite do item. Pode ser usado uma vez por zona, e cancelar não gasta o uso.
 - **Emboscadas (IMPLEMENTADO)**: a cada 18–30 s surgem 8 + 2×zona inimigos ao redor do jogador.
 - **Tempo e clima (CONFIRMADO; IMPLEMENTADO)**: um clima sorteado a cada zona. Névoa reduz a visibilidade; tempestade de areia reduz o movimento em 27%. Outros climas por bioma estão **PENDENTES**.
-- **Descoberta (CONFIRMADO)**: minimapa e mapa M mostram ícones só depois de o evento ser visto pela câmera. **IMPLEMENTADO**: teste de frustum da câmera até 40 m, com registro persistente. Oclusão por terreno ou árvores está **PENDENTE**. Tab abre o mapa rápido e P abre a ficha.
+- **Descoberta (CONFIRMADO)**: o minimapa e o mapa M registram eventos que entram no campo da câmera. O selo do Guardião e os objetivos ativos são exceções e aparecem imediatamente. **IMPLEMENTADO**: teste de frustum da câmera até 40 m, com registro persistente. Oclusão por terreno ou árvores está **PENDENTE**. Tab abre o mapa rápido e P abre a ficha.
 
 ## Mapas e física · revisão de 11/11/2026
 
@@ -108,6 +108,12 @@ Mapa procedural, spawn configurável por zona, balanceamento e multiplayer segue
 - **Chegada**: a menos de 3 m (ou ao usar o evento a até 4,2 m) aparece **"Chegou!"** e o rastreio é limpo. Um alvo consumido, derrotado ou coletado limpa a rota com aviso.
 - G continua marcando ping na posição do jogador, sem rota. O minimapa mantém o norte para cima, enquanto a seta da tela segue a câmera.
 - Mega elites e guardiões passam a ser registrados quando aparecem na câmera (até 40 m). Hooks de teste: `__shinobiTest.mapRoute`.
+
+## Mapa rápido e objetivos · 25/11/2026
+
+Segure **Tab**, mire a kunai do cursor no ícone de um NPC e clique para criar a rota. Solte **Tab** para devolver o mouse à câmera. WASD continua funcionando com o mapa rápido aberto. O mapa completo (**M**) pausa a missão. O marcador de um NPC desaparece após o primeiro serviço usado naquela zona. Serviços que aceitam novas interações continuam acessíveis pelo cenário. Abrir e cancelar o menu preserva o marcador.
+
+O selo do Guardião é marcado ao iniciar cada zona. O Guardião, as Bijū e os portais de progressão são registrados quando surgem. Na névoa, o mapa continua escuro, com os objetivos já ativos e o Zabuza quando estiver a menos de 5 m. O treino do Hagoromo suspende a horda de fora da clareira. O Mega Elite aparece após a última onda e o HUD exibe sua vida. Ao terminar, o jogador volta ao ponto de origem e recebe os drops restantes da clareira.
 
 ## H e opções gráficas
 Modo H: ocultar números flutuantes, trilhas e efeitos ofensivos opcionais, mas manter lógica de colisão, dano, status e animação de hit simplificada. **IMPLEMENTADO** para projéteis, anéis, visuais e números. Não existe menu de configurações gráficas; as opções a seguir são futuras: densidade visual, LOD de inimigos, minimapa 15/30/60 FPS, partículas, qualidade, limite de FPS e transparência da HUD.
@@ -388,7 +394,7 @@ Confirmação do usuário em 15/11: preservar a câmera e a movimentação atuai
 | Incomum | Espada | +12% de dano físico (Taijutsu) | Crítico abre um corte em linha que atravessa 3 inimigos com 50% do dano |
 | Raro | Bashōsen (leque) | +1 projétil | A cada 8 s, uma rajada de vento empurra e corta tudo a 8 m na direção do movimento |
 | Raro | Kōkinjō (corda dourada) | +15% de dano em elites e Mega Elites | Ao acertar elite, prende com a corda por 1,5 s (atordoa); no máximo 1 a cada 10 s por alvo |
-| Épico | Benihisago (cabaça vermelha) | +15% de Ryu e +10% de XP | Ao derrotar 100 monstros, recebe uma grande quantidade de Ryu (escala com a zona) |
+| Épico | Benihisago (cabaça vermelha) | +15% de Ryu e +10% de XP | A cada 100 abates, deposita 150% do preço atual de um pergaminho pago na bolsa |
 | Épico | Kohaku no Jōhei (jarro de âmbar) | +12% de chance crítica | Crítico estoura uma bomba de fumaça shinobi: lentidão e cegueira (inimigos erram golpes) a 4 m por 2 s |
 | Lendário | Shichiseiken (Espada de Sete Estrelas) | +25% de dano total | A cada 7 s, sete lâminas de luz caem sobre os 7 inimigos mais fortes a 15 m |
 

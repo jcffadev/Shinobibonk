@@ -2818,3 +2818,43 @@ O golpe que tira HP produz um clarão vermelho mais visível e um baque com esta
 > Preicsamos ajustar o layout do hud dos ajudantes, não esta padronizado para todos, imagens e as vezes ficam cortado os textos, deixe de forma mais minimalista
 
 Os ajudantes agora usam retratos de corpo inteiro da seleção, nomes com quebra de linha, afinidade e uma barra de recarga compartilhada. O mesmo enquadramento aparece na troca e na ficha (P). A ficha reúne passivas, técnica e sinergias. A lista rola se faltar espaço. Foram conferidos os nomes, células dos atlas e a ficha em Node. Falta a conferência visual em partida.
+
+
+## Tab, drops, Hagoromo e chefes · 25/11/2026
+
+> Ao apertar TAB ainda esta travando o personagem as vezes
+
+> Não está aparecendo o Boss Fight na parte do Hagoromo, o personagem também não está coletando os itens dropados no chão dos monstros normais.
+
+> As boss fights, bijus, portais, hagoromo, tem que aparecer
+
+> Novamente parou de dropar coisas... tem algo bugando, estou lv 240 e só dropa cura dos monstros
+
+> Talvez porque fica EXP em algum lugar sem coletar... quando deu efeito de imã e veio varios itens, acabei passando de level... isso não pode acontecer, verifique.
+
+> Quando ja utilizarmos um NPC na zona, ele some do M/Tab
+
+> Porque Benihisago esta me dadando Ryu?
+> Explique o buff
+
+> Preciso saber quantos portais do Hagoromo eu tenho... colocar algo visual no C ali do HUD para eu conseguir enxergar
+
+> estou no final swarm +1m
+> O boss nem apareceu, foi deletado... ele precisa escalar o HP para aparecer milhoes/bilhoes se necessário e ter uma defesa elevada...
+> Exemplo...
+> A defesa do boss por zona/biju tem que evoluir constantemente umas 10x a mais que os mega elites do jogo para chegar um momento de realmente ficar dificil de matar, ser uma escolha estratégica do player quando invoca-lo... se eu quiser invocar com +15M de final swarm, eu posso fazer isso... Mas, eu vou ter que lidar com as consequências, porque seu dano/hp/armadura estarão muito altas a recompensa ao derrota-lo ainda se mantém referente ao Shikamaru de buffar 3x... também tem que considerar isso no buff
+
+> Ser possível selecionar com o mouse quando apertar TAB e traçar a rota no npc...
+> Mas, isso nao pode travar/engasgar, tem que ser progressivo
+
+> Não sei se foi o dano do personagem, esse balanceamento... mas, a bijuu nem apareceu no final do jogo...
+
+> Arrume isso, teste e me fale como está
+
+> Me dê a lista e como estamos com o que te pedi
+> referente as gerações de animações/3d
+> To pensando em te deixar só com a parte de elementos gráficos, geração de imagens e depois fazer os balanceamentos via claude/qwen
+
+As quatro vilas e os itens de chão em 3D estão integrados. As animações e as referências do elenco ficam registradas na auditoria chibi. A fila visual cobre as transições das 115 versões, os jutsus ainda genéricos, a entrada da Bijū, o volume da vegetação e o FPS real. A divisão de trabalho entre os agentes permanece em discussão.
+
+Tab preserva WASD e o cursor marca rotas com a simulação em andamento. O uso de um NPC retira seu marcador até a próxima zona. O estoque de drops consolida XP, Ryu e chakra junto aos novos abates quando necessário. A coleta no Hagoromo usa um relógio que continua durante o evento. O treino mostra os portais disponíveis de 0/3 a 3/3, separa a horda da zona e anuncia o chefe antes da luta. Guardião e Bijū também têm entrada protegida, marcador e escalonamento no Final Swarm. Os quatro pergaminhos com três planos do Shikamaru estão preservados. O Benihisago dá +15% de Ryu, +10% de XP e deposita 150% do preço atual de um pergaminho pago a cada 100 abates.

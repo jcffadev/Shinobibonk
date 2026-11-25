@@ -31,15 +31,15 @@ export function HagoromoPortrait({ size = 40 }: { size?: number }) {
 
 export function HagoromoButton({ keys, progress, need, active, recharge, keyLabel }: { keys: number; progress: number; need: number; active: boolean; recharge: boolean; keyLabel: string }) {
   const ready = keys > 0 && !active;
-  const title = active ? 'Treinamento do Hagoromo em andamento'
-    : ready ? `Treinamento do Hagoromo · ${keys}/${HAGOROMO.maxKeys} chaves · ${keyLabel} para começar`
-    : recharge ? `Treinamento do Hagoromo · ${need - progress} abates para a próxima chave` : 'Treinamento do Hagoromo · sem recarga depois do chefe da zona';
+  const status = active ? 'em andamento' : ready ? `${keyLabel} para começar`
+    : recharge ? `${need - progress} abates para o próximo portal` : 'sem recarga depois do chefe da zona';
+  const title = `Treinamento do Hagoromo · ${keys} de ${HAGOROMO.maxKeys} portais disponíveis · ${status}`;
   return <button type="button" className={`hagoromo-button${ready ? ' ready' : ''}${active ? ' active' : ''}`} title={title} aria-label={title}
-    onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'c' }))}>
+    onClick={() => window.dispatchEvent(new Event('shinobi-hagoromo'))}>
     <span className="hagoromo-keys" aria-hidden="true">{Array.from({ length: HAGOROMO.maxKeys }, (_, i) => <i key={i} className={i < keys ? 'on' : ''} />)}</span>
     <HagoromoPortrait />
     {!ready && !active && recharge && <span className="hagoromo-charge" style={{ height: `${Math.min(100, progress / Math.max(1, need) * 100)}%` }} aria-hidden="true" />}
-    <small>{keyLabel}</small>
+    <span className="hagoromo-button-footer"><kbd>{keyLabel}</kbd><b>{keys}/{HAGOROMO.maxKeys}</b></span>
   </button>;
 }
 

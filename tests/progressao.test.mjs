@@ -4,8 +4,35 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { xpToLevelUp, heroHpScale, HP_GROWTH, calculateStats, difficultyAt, zoneThreat, zoneCurse, ZONE_DIFFICULTY, ENEMY_SCALING, FINAL_SWARM, MISSION_TIER, MISSION_HP } from '../src/game/progression.ts';
 import { lootScale, xpDropValue } from '../src/game/enemyTiers.ts';
+import { guardianAttackMultiplier, guardianDefense, guardianVitality } from '../src/game/missions.ts';
 import { HEROES } from '../src/game/heroes.ts';
 import { close } from './helpers/load.mjs';
+
+test('Guardiões e Bijū ganham HP, armadura e dano sem teto de tempo no Final Swarm', () => {
+  for (const mission of Object.keys(MISSION_TIER)) {
+    const stat = (overtime, plans) => {
+      const time = 600 + overtime;
+      const threat = zoneThreat(mission, time, zoneCurse(1, plans, 0), overtime, 0);
+      return {
+        hp:guardianVitality(threat.hp, time, time, overtime, 1),
+        defense:guardianDefense(time, false, overtime, 1, plans),
+        damage:threat.damage*guardianAttackMultiplier(time, overtime, 1),
+      };
+    };
+    const onTime = stat(0, 0), late = stat(60, 0), extreme = stat(900, 0), plans = stat(900, 3);
+    for (const attribute of ['hp', 'defense', 'damage']) {
+      assert.ok(onTime[attribute] < late[attribute] && late[attribute] < extreme[attribute], attribute);
+      assert.ok(extreme[attribute] < plans[attribute], attribute + ' com três planos');
+    }
+    assert.ok(plans.defense < 1);
+    assert.ok(guardianDefense(1500, true, 900, 3, 3) > plans.defense);
+    assert.ok(guardianAttackMultiplier(1500, 900, 3, true) > guardianAttackMultiplier(1500, 900, 1));
+    if (mission === 'Kage') {
+      assert.ok(late.hp >= 1e6);
+      assert.ok(extreme.hp >= 1e9);
+    }
+  }
+});
 
 const LEVELS = [1, 2, 10, 50, 100, 200, 415, 1000, 5000];
 

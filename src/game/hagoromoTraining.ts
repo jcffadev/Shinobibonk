@@ -89,6 +89,13 @@ export function toolBonuses(owned: readonly string[]): Bonuses {
   return total;
 }
 
+/** Próxima etapa depois que o último inimigo da etapa atual foi derrotado. */
+export function nextHagoromoStage(rarity:Rarity,wavesStarted:number,enemiesRemaining:boolean,bossSpawned:boolean) {
+  if(enemiesRemaining)return 'wait';
+  if(bossSpawned)return 'reward';
+  return wavesStarted<HAGOROMO_WAVES[rarity].waves?'wave':'boss';
+}
+
 /** Posições de uma horda: anel entre `waveRing[0]` e `waveRing[1]` m em volta de (x, z). */
 export function waveSpots(x: number, z: number, count: number, rng: () => number = Math.random) {
   const [inner, outer] = HAGOROMO.waveRing;

@@ -31,7 +31,7 @@ type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir
 export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number; motionTime:number; recoil:number; motionMap?:THREE.Texture; motionRow?:number;
   /** Rodada 55: espelho com histerese, posição anterior (andar = deslocamento real) e quadro exibido (testes). */
   flip?:boolean; lastX?:number; lastZ?:number; walkBlend?:number; pose?:number;
-  /** Rodada 58: segundos restantes da entrada (a bijū surge do chão; só visual). */
+  /** Rodada 58: segundos restantes da entrada (a bijū surge do chão antes de receber dano). */
   arrival?:number; fallbackArt?:THREE.Texture|null; motionFailed?:boolean;
   /** Rodada 59: folha de costas (quando existir) e a vista atual (true = de costas, andando para longe da câmera). */
   backMap?:THREE.Texture; away?:boolean };
@@ -39,12 +39,12 @@ export type BossState = { name: string; maxHp: number; guardian: boolean; cooldo
  * Bijū (Rodada 58 — pedido: "Corrigir o aparecimento das bijuus, animação"):
  * - tamanho na tela: as células dos atlas `bijuu/motion-v1-*` são quadradas (256×256), então a largura = altura
  *   (antes 5 × 5,5: esticava 10% na vertical);
- * - entrada: surge do chão em BIJUU_ARRIVAL s (escala e opacidade), sem mudar dano nem tempo de ataque.
+ * - entrada: surge do chão em BIJUU_ARRIVAL s (escala e opacidade) antes de começar o combate.
  */
 export const BIJUU_SIZE = 5.5, BIJUU_ARRIVAL = 1.2;
 /** Curva da entrada (0 → 1), suave no fim. */
 export function arrivalProgress(remaining:number){const k=1-Math.max(0,Math.min(BIJUU_ARRIVAL,remaining))/BIJUU_ARRIVAL;return 1-(1-k)*(1-k);}
-export type BossHost = { sprite: THREE.Sprite; hp: number; heroId?: string; guardian?: boolean; boss?: BossState };
+export type BossHost = { sprite: THREE.Sprite; hp: number; heroId?: string; guardian?: boolean; bossDamageScale?:number; boss?: BossState };
 
 export type BossContext = {
   scene: THREE.Scene;
@@ -200,7 +200,7 @@ export function createBossCombat(ctx: BossContext) {
     if (playerInside(c)) {
       const t=c.technique;
       const controls=Boolean(t.status&&t.status!=='Empurrar')&&Math.random()<techniqueProc(t.statusChance);
-      ctx.hitPlayer(BOSS_RULES.baseDamage*c.power,controls?BOSS_RULES.slowSeconds:0,t.gravity,c.center);
+      ctx.hitPlayer(BOSS_RULES.baseDamage*c.power*(host.bossDamageScale??1),controls?BOSS_RULES.slowSeconds:0,t.gravity,c.center);
     }
     if (!ctx.hidden() && !c.susanoo) {
       const visual = techniqueVisual(c.technique);
@@ -228,7 +228,7 @@ export function createBossCombat(ctx: BossContext) {
       const progress = 1 - Math.max(0, state.cast.windup) / state.cast.total;
       state.cast.marker.traverse((child) => { if (child instanceof THREE.Mesh) (child.material as THREE.MeshBasicMaterial).opacity = .18 + progress * .5; });
       if (state.cast.windup <= 0) fire(host, state);
-    } else if (canAct && (!phase || host.sprite.material.visible)) {
+    } else if (canAct && (!phase || state.arrival===undefined)) {
       state.cooldown -= dt;
       if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.2,1.35,.68][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
     }
@@ -286,7 +286,7 @@ export function createBossCombat(ctx: BossContext) {
     if (Math.abs(ratio - state.lastRatio) > .004 || state.hpText!==hpText || state.cast) {
       state.lastRatio = ratio;state.hpText=hpText;drawBar(state, ratio);
     }
-    return Boolean(state.cast);
+    return Boolean(state.cast||state.arrival!==undefined);
   }
 
   /** Efeitos de impacto (somem sozinhos). */

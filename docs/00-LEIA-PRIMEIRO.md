@@ -14,6 +14,8 @@ O clarão de dano cobre a cena durante o impacto. Com pouca vida, a vinheta fica
 
 Os ajudantes usam uma lista compacta, com o mesmo enquadramento dos retratos da ficha e os nomes completos. Pressione **P** para ver os detalhes do apoio. [HUD e ficha](02-FICHA-HUD-RANKING.md#hud-em-partida).
 
+Tab mantém a missão ativa e aceita cliques de rota. Os drops dos abates continuam recolhíveis no treino do Hagoromo. O marcador do Guardião está no mapa da zona. A defesa, o HP e o dano dos chefes escalam com a espera e os planos do Shikamaru. [Escala dos chefes](20-SCALING-EREGULAS.md#guardiões-e-bijū-no-final-swarm--25112026).
+
 ## Como classificar
 
 - **CONFIRMADO**: decisão passada pelo usuário.

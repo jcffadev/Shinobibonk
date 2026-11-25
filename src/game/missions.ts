@@ -12,10 +12,19 @@ export function guardianHpMultiplier(zoneElapsed:number){const t=Math.max(0,zone
 
 export function guardianVitality(threatHp:number,runSeconds:number,zoneSeconds:number,overtimeSeconds:number,zone:number) {
   const minutes=Math.max(0,runSeconds)/60;
-  const endurance=(1+.32*minutes)*2**(Math.max(0,overtimeSeconds)/405);
+  const overtime=Math.max(0,overtimeSeconds);
+  const endurance=(1+.32*minutes)*(1+.70*Math.sqrt(overtime/60))*2**(overtime/360);
   return Math.round(260*threatHp*guardianHpMultiplier(zoneSeconds)*endurance*(1+.35*(zone-1)));
 }
 
-export function guardianDefense(runSeconds:number,boss=false) {
-  return .65+.25*(1-Math.exp(-Math.max(0,runSeconds)/720))+(boss?.04:0);
+/** +30 de armadura por minuto da missão e +90 por minuto do Final Swarm.
+ * Armadura crescente nunca dá imunidade. Cada plano soma 33% ao total, como na ameaça da zona. */
+export function guardianDefense(runSeconds:number,boss=false,overtimeSeconds=0,zone=1,plans=0) {
+  const armor=(185+Math.max(0,runSeconds)/60*30+Math.max(0,overtimeSeconds)/60*90+28*Math.max(0,zone-1))
+    *(boss?1.35:1)*(1+.33*plans);
+  return armor/(100+armor);
+}
+
+export function guardianAttackMultiplier(runSeconds:number,overtimeSeconds:number,zone:number,boss=false) {
+  return (1.2+.06*Math.max(0,runSeconds)/60+.13*Math.max(0,overtimeSeconds)/60+.14*Math.max(0,zone-1))*(boss?1.25:1);
 }

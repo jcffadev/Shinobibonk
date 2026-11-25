@@ -102,7 +102,7 @@ test('roda do mouse rola a lista debaixo do cursor', () => {
 test('GameCanvas: tela aberta na missão mantém o ponteiro preso e liga o cursor virtual', () => {
   const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.match(canvas, /if\(pointerLocked\(\)&&!cameraCanMove\(\)&&!ui\)document\.exitPointerLock\(\);cursor\.setActive\(pointerLocked\(\)&&ui\);/, 'só solta o ponteiro fora das telas da missão');
-  assert.match(canvas, /const overlayUi=\(\)=>enabledRef\.current&&!cameraCanMove\(\)&&!debugOpenRef\.current&&!defeated&&!victory;/, 'telas da missão; debug, derrota e vitória soltam o mouse');
+  assert.match(canvas, /const overlayUi=\(\)=>enabledRef\.current&&\(panelRef\.current==='quickmap'\|\|!cameraCanMove\(\)\)&&!debugOpenRef\.current&&!defeated&&!victory;/, 'telas da missão; debug, derrota e vitória soltam o mouse');
   assert.match(canvas, /const forwardButton=\(e:MouseEvent\)=>\{if\(!e\.isTrusted\|\|!cursor\.isActive\(\)\)return;/, 'eventos sintéticos não reentram');
   assert.match(canvas, /const onLockedMove=\(e:MouseEvent\)=>\{if\(!e\.isTrusted\)return;/);
   assert.match(canvas, /window\.addEventListener\('blur',onBlur\)/, 'Alt+Tab / tecla Windows (perda de foco) continua pausando');

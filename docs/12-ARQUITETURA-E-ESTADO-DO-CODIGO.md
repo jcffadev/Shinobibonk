@@ -4,6 +4,8 @@ Atualizado em 11/11/2026 após leitura do código, `tsc -b`, `vite build` e `scr
 
 ## Mapa de arquivos
 
+`movementInput.ts` controla a pressão e a soltura do Tab sem limpar o estado físico do movimento. `GameCanvas.tsx` encaminha o mouse para o mapa rápido pelo mesmo cursor virtual dos painéis, com a simulação ativa. `drops.ts` seleciona pilhas para consolidação, e `GameCanvas.tsx` mede a coleta em um relógio de simulação separado do cronômetro da zona. `hagoromoTraining.ts` define as transições das ondas à recompensa. `missions.ts` calcula a armadura, o HP e o multiplicador de dano do Guardião e da Bijū.
+
 `targetFocus.ts` escolhe o alvo em distância horizontal e mede o contato dos projéteis no caminho percorrido a cada quadro. `GameCanvas.tsx` usa a mesma seleção no preparo, no lançamento e no ricochete. Cone e linha partem da posição do lançamento. O alcance e as áreas de cada técnica seguem as regras de combate.
 
 `combat.ts` centraliza o dano por acerto em `techniqueHitDamage`, usado pela cena, pela ficha e pelo simulador. A cena resolve os bônus condicionais, o crítico e a defesa do alvo. [Auditoria de itens e dano](04-ITENS-HABILIDADES-ECONOMIA.md#dano-por-acerto-e-itens--24112026).

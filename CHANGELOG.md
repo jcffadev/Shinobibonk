@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 25/11/2026 · Mapa rápido, recompensas e chefes
+
+- Segurar Tab abre o mapa rápido e a kunai do cursor pode marcar rotas sem pausar a missão ou interromper WASD. Soltar Tab devolve o mouse à câmera. NPCs usados saem dos mapas da zona. Compras e serviços que admitem novas interações continuam disponíveis no cenário.
+- XP, Ryu, chakra e bolinhos têm vagas próprias nos lotes de drops. No limite, pilhas compactam perto do abate e podem trazer o valor de uma pilha antiga deixada longe. O ímã tem um relógio independente do cronômetro da missão.
+- O Hagoromo mostra os portais como **0/3** a **3/3**. As hordas e o chefe surgem dentro da clareira, separados dos inimigos da zona. As recompensas da clareira são creditadas ao concluir o treino.
+- Guardião, chefe do Hagoromo e Bijū têm uma janela de entrada antes de receber dano. O Guardião, os portais de progressão e a Bijū têm marcadores imediatos. Os portais usam a altura da superfície navegável.
+- Guardiões ganham HP, dano e armadura com a espera e o Final Swarm. A Bijū herda a pressão da terceira zona na entrada. Os planos do Shikamaru se aplicam à defesa, ao HP e ao dano dos chefes, além de renderem até quatro pergaminhos grátis no Guardião da zona.
+- Tipos, regras, build e 271 testes passaram sem navegador. A simulação de 10.000 abates preservou o total de XP entre o que foi coletado normalmente e o que restou no chão. A validação em partida segue pendente para o cursor do Tab em movimento, a leitura dos chefes sob a câmera, o impacto do balanceamento e as animações em horda máxima.
+
 ## 25/11/2026 · HUD compacto dos ajudantes
 
 - Os ajudantes de missão usam uma lista uniforme com retrato de corpo inteiro da seleção, nome com quebra de linha e nível de afinidade. A equipe tem uma barra de recarga compartilhada.

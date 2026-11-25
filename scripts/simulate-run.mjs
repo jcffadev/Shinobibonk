@@ -184,7 +184,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     }
     // Guardião: invocado em policy.guardianAt; derrotado → item grátis e próxima zona. Na zona 3 em modo sem fim, fica no Final Swarm.
     const endlessHere = policy.endless && s.zone === 3;
-    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) guardian = { hp: guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone), def: guardianDefense(s.t, true), at: s.t };
+    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) guardian = { hp: guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone), def: guardianDefense(s.t, false, overtime, s.zone), at: s.t };
     if (guardian) {
       guardian.hp -= singleDps(guardian.def) * (1 + ex('eliteDamage'));
       if (guardian.hp <= 0) {
