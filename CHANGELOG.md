@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 25/11/2026 · Bijū com 3× a armadura e só os planos da zona (Claude Code)
+
+- **Decisão do usuário:** "3× e planos só da zona", depois da medição de Guardiões e Bijū.
+- **`src/game/bijuu.ts`:**
+  - `BIJUU_RULES.armorMultiplier` passou de 1,35 para **3** (× a armadura bruta do Guardião equivalente).
+  - `bijuuPlans`: só os planos da zona 3 (até 3) pesam no HP e na defesa da Bijū. Antes contavam os da missão inteira, até 9.
+  - A recompensa em lámens continua contando todos os planos.
+- **Textos:** o aviso do plano só fala da Bijū na zona 3, e o Guia explica que os planos da última zona fortalecem a Bijū.
+- **Resultado no simulador** (mediana na chegada, pior caso): Kage passa de 3 para 6 min sem planos e de 58 para 33 min com 3 planos por zona; Genin sem planos passa de 1 para 2 min. Tabela em [docs/20](docs/20-SCALING-EREGULAS.md#medição-de-guardiões-e-bijū--25112026-claude-code).
+- **Testes:** testes de chefes atualizados e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** sentir a luta com a Bijū em partida.
+
 ## 25/11/2026 · Medição de Guardiões e Bijū no simulador (Claude Code)
 
 - **Pedido:** fila do Claude Code em docs/13 (balanceamento): calibrar Guardiões e Bijū nos marcos +1, +7 e +15 min e além, simular de 0 a 3 planos do Shikamaru, partir de cerca de 20× a armadura do Guardião para a Bijū e manter os números finitos.

@@ -3,21 +3,24 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { zoneThreat, zoneCurse, ZONE_DIFFICULTY } from '../src/game/progression.ts';
 import { guardianVitality, guardianDefense, guardianArmor, finiteBossHp, BOSS_HP_LIMIT } from '../src/game/missions.ts';
-import { BIJUU_RULES, bijuuVitality, bijuuDefense } from '../src/game/bijuu.ts';
+import { BIJUU_RULES, bijuuVitality, bijuuDefense, bijuuPlans } from '../src/game/bijuu.ts';
 import { guardianProbe, bijuuProbe } from '../scripts/simulate-bosses.mjs';
 
 const canvas = readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
 
 test('Bijū: vida e defesa vêm das funções compartilhadas com o simulador (calibração 25/11)', () => {
   assert.ok(canvas.includes('const maxHp=saved?.maxHp??bijuuVitality(threat.hp,elapsed,overtime);'));
-  assert.ok(canvas.includes('defense:bijuuDefense(elapsed,overtime,plansUsed),'));
-  // Mesmo valor que a fórmula anterior (armadura do Guardião da zona 3 × 1,35 e HP × 2,4, mínimo 4.600).
-  for (const [t, ov, plans] of [[1800, 0, 0], [2400, 420, 3], [3000, 900, 9]]) {
-    assert.ok(Math.abs(bijuuDefense(t, ov, plans) - guardianDefense(t, true, ov, 3, plans)) < 1e-12);
+  assert.ok(canvas.includes('defense:bijuuDefense(elapsed,overtime,bijuuPlans(shikamaruPlans)),'));
+  assert.ok(canvas.includes("const curse=zoneCurse(zoneDifficulty,bijuuPlans(shikamaruPlans),ex('threat'));"), 'HP da Bijū usa só os planos da zona');
+  // Decisão de 25/11: armadura 3× a do Guardião equivalente; HP × 2,4 (mínimo 4.600), como antes.
+  assert.equal(bijuuPlans(9), 3); assert.equal(bijuuPlans(2), 2); assert.equal(bijuuPlans(-1), 0);
+  for (const [t, ov, plans] of [[1800, 0, 0], [2400, 420, 3], [3000, 900, 3]]) {
+    const a = guardianArmor(t, false, ov, 3, plans) * 3; assert.ok(Math.abs(bijuuDefense(t, ov, plans) - a / (100 + a)) < 1e-12);
+    assert.ok(bijuuDefense(t, ov, plans) > guardianDefense(t, true, ov, 3, plans), 'mais dura que a regra antiga (1,35×)');
     const hp = zoneThreat('Kage', 600 + ov, zoneCurse(ZONE_DIFFICULTY[3], plans, 0), ov, 0).hp;
     assert.equal(bijuuVitality(hp, t, ov), Math.max(4600, Math.round(guardianVitality(hp, t, 600 + ov, ov, 3) * 2.4)));
   }
-  assert.equal(BIJUU_RULES.armorMultiplier, 1.35);
+  assert.equal(BIJUU_RULES.armorMultiplier, 3);
   // Mais armadura bruta → mais defesa, sem chegar a 100%.
   assert.ok(bijuuDefense(3000, 900, 9, 20) > bijuuDefense(3000, 900, 9) && bijuuDefense(3000, 900, 9, 20) < 1);
   assert.ok(Math.abs(guardianDefense(1200, false, 60, 1, 2) - guardianArmor(1200, false, 60, 1, 2) / (100 + guardianArmor(1200, false, 60, 1, 2))) < 1e-12);

@@ -40,7 +40,7 @@ import { MEMORIAL } from './leafLandmarkLayout';
 import { loadArchitectureAtlas } from './villageArchitecture';
 import { advanceShinra, shinraDone, shinraLift, startShinra, SHINRA, type ShinraState } from '../game/shinraTensei';
 import { createDamageNumbers } from './damageNumbers';
-import { bijuuDefense, bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, bijuuVitality, rollBijuu } from '../game/bijuu';
+import { bijuuDefense, bijuuPlans, bijuuSpawnPoint, BIJUU_BY_ID, bijuuLamens, bijuuVitality, rollBijuu } from '../game/bijuu';
 import { createSolids, COLLISION_RULES } from './collision';
 import { createVillageLayout, villageGroundBands, missionMapLayout, shuffledVillageSites, villageDeck, villageSurface, type MapLayout } from './villageLayout';
 import { createVillageGround, villageWater } from './villageTerrain';
@@ -1533,7 +1533,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       enemy.hp *= ratio;
       bossCombat.rescale(enemy, ratio);
     }
-    function useShikamaruPlan(){const max=GUARDIAN_RULES.shikamaruMaxPlans;if(shikamaruPlans>=max){eventToast=`Plano do Shikamaru: limite de ${max}/${max} atingido nesta zona`;return false;}shikamaruPlans++;plansUsed++;const ratio=(1+.33*shikamaruPlans)/(1+.33*(shikamaruPlans-1));for(const enemy of enemyList)rescaleEnemyHp(enemy,ratio);const ev=events.find(e=>e.id==='shikamaru');if(ev)ev.uses=shikamaruPlans;for(const e of enemyList)if(e.guardian&&e.guardianZone===zone){e.shikamaruPlans=shikamaruPlans;e.defense=guardianDefense(e.summonedAt??elapsed,false,e.summonedOvertime??overtimeNow(),zone,shikamaruPlans);}eventToast=`Plano do Shikamaru ${shikamaruPlans}/${max}: ${shikamaruPlans*33}% mais dificuldade nesta zona · Bijū mais forte por plano · ${1+shikamaruPlans} kunais`;return true;}
+    function useShikamaruPlan(){const max=GUARDIAN_RULES.shikamaruMaxPlans;if(shikamaruPlans>=max){eventToast=`Plano do Shikamaru: limite de ${max}/${max} atingido nesta zona`;return false;}shikamaruPlans++;plansUsed++;const ratio=(1+.33*shikamaruPlans)/(1+.33*(shikamaruPlans-1));for(const enemy of enemyList)rescaleEnemyHp(enemy,ratio);const ev=events.find(e=>e.id==='shikamaru');if(ev)ev.uses=shikamaruPlans;for(const e of enemyList)if(e.guardian&&e.guardianZone===zone){e.shikamaruPlans=shikamaruPlans;e.defense=guardianDefense(e.summonedAt??elapsed,false,e.summonedOvertime??overtimeNow(),zone,shikamaruPlans);}eventToast=`Plano do Shikamaru ${shikamaruPlans}/${max}: ${shikamaruPlans*33}% mais dificuldade nesta zona${zone===3?' · Bijū mais forte por plano':''} · ${1+shikamaruPlans} kunais`;return true;}
     const groundModels=createDropModels(scene,260);
     const dropFrustum=new THREE.Frustum(), dropProjection=new THREE.Matrix4(),dropBounds=new THREE.Box3();
     const renderedDrops:Drop[]=[];
@@ -1654,11 +1654,11 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
       const z=THREE.MathUtils.clamp(saved?.z??point.z,-WORLD_LIMIT,WORLD_LIMIT);
       sprite.position.set(x,itemSurface(x,z)+BIJUU_SIZE*.46,z);scene.add(sprite);
       const overtime=saved?.overtime??arrivalOvertime;
-      const curse=zoneCurse(zoneDifficulty,plansUsed,ex('threat'));
+      const curse=zoneCurse(zoneDifficulty,bijuuPlans(shikamaruPlans),ex('threat'));
       const threat=zoneThreat(mission,ZONE_SECONDS+overtime,curse,overtime,ex('enemyCount'),t=>tuneThreat(t,tune()));
       const maxHp=saved?.maxHp??bijuuVitality(threat.hp,elapsed,overtime);
       const bossDamageScale=guardianAttackMultiplier(elapsed,overtime,3,true)*threat.damage/Math.max(.01,threatNow().damage);
-      const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1*bossDamageScale,bossDamageScale,summonedOvertime:overtime,defense:bijuuDefense(elapsed,overtime,plansUsed),uid:++megaUid,seen:true};
+      const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1*bossDamageScale,bossDamageScale,summonedOvertime:overtime,defense:bijuuDefense(elapsed,overtime,bijuuPlans(shikamaruPlans)),uid:++megaUid,seen:true};
       enemyList.push(beast);bossCombat.attach(beast,maxHp,true);playBijuu();
       // Rodada 58: poeira de chakra no ponto onde a bijū surge (some no modo H).
       if(!hiddenEffects)for(const [r,c] of [[2.2,'#d8c6ff'],[3.6,'#9f7bff']] as const)addRing(sprite.position,c,r);

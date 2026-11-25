@@ -1,5 +1,5 @@
 import type { Element, Shape, Technique } from './heroes.ts';
-import { finiteBossHp, guardianArmor, guardianVitality } from './missions.ts';
+import { finiteBossHp, guardianArmor, guardianVitality, GUARDIAN_RULES } from './missions.ts';
 import { ZONE_SECONDS } from './worldScale.ts';
 
 const attack = (name: string, shape: Shape, element: Element, color: string, power: number, range: number, slow = false): Technique =>
@@ -61,7 +61,11 @@ export function bijuuFacesAway(previous: boolean, away: number | undefined) {
  * Defesa: `armorMultiplier` × a armadura BRUTA do Guardião equivalente, convertida em redução `a/(100+a)` — nunca chega
  * a 100%, então todo golpe desconta vida.
  */
-export const BIJUU_RULES = { hpMultiplier: 2.4, minHp: 4600, armorMultiplier: 1.35 };
+/** Decisão do usuário (25/11/2026, após a medição de scripts/simulate-bosses.mjs): "3× e planos só da zona" — armadura
+ * 3× a do Guardião equivalente (antes 1,35×) e só os planos da zona 3 (até 3) pesam na Bijū (antes: a missão inteira, até 9). */
+export const BIJUU_RULES = { hpMultiplier: 2.4, minHp: 4600, armorMultiplier: 3 };
+/** Planos do Shikamaru que valem para a Bijū: só os da última zona, no máximo 3. */
+export const bijuuPlans = (zonePlans: number) => Math.max(0, Math.min(GUARDIAN_RULES.shikamaruMaxPlans, zonePlans));
 export function bijuuVitality(threatHp: number, runSeconds: number, overtimeSeconds: number) {
   return finiteBossHp(Math.max(BIJUU_RULES.minHp, Math.round(guardianVitality(threatHp, runSeconds, ZONE_SECONDS + overtimeSeconds, overtimeSeconds, 3) * BIJUU_RULES.hpMultiplier)));
 }

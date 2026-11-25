@@ -51,7 +51,16 @@ Leituras:
 
 **Limite numérico:** `BOSS_HP_LIMIT` (1e300) em `src/game/missions.ts`. Não é teto de gameplay: a conta só passaria de `Infinity` depois de cerca de 24 h de Final Swarm. Acima de 2^53 de vida, cada golpe ainda desconta, desde que seja maior que 1 quatrilionésimo da vida. A defesa nunca chega a 100%, nem com 20× aos +24 h.
 
-**PROPOSTO, aguardando decisão do usuário:** qual multiplicador de armadura usar e se os planos da Bijū devem contar só os da última zona (até 3) em vez da missão inteira. Os números continuam como estavam.
+**DECIDIDO pelo usuário em 25/11/2026: "3× e planos só da zona".** Implementado em `BIJUU_RULES.armorMultiplier = 3` e `bijuuPlans` (só os planos da zona 3, até 3, pesam no HP e na defesa da Bijū). A recompensa em lámens continua contando os planos da missão inteira. Medição depois da mudança (mediana e p90 da luta na chegada):
+
+| Dificuldade | 0 planos | 1 plano | 2 planos | 3 planos |
+|---|---:|---:|---:|---:|
+| Genin | 2 min (4,2) | 3,6 min (6,6) | 6,8 min (11) | 8 min (14) |
+| Chunin | 3,5 min (5,9) | 6 min (9,1) | 8,2 min (13) | 11 min (20) |
+| Jonin | 3,5 min (6,4) | 5,6 min (11) | 7,6 min (18) | 13 min (27) |
+| Kage | 6 min (15) | 12 min (27) | 23 min (38) | 33 min (47) |
+
+Pior caso do modelo, sem ultimate, aliados, procs nem fusões. O Kage com 3 planos ainda passa de meia hora: se ficar pesado em partida, o próximo ajuste é o peso de cada plano na Bijū.
 
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 

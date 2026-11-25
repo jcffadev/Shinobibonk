@@ -6,21 +6,21 @@
 //   que o Guardião teria se fosse invocado ali (mesmas fórmulas do GameCanvas) e o tempo para derrotá-lo com o dano de
 //   alvo único da build naquele segundo.
 // Cenário B (Bijū): o bot invoca cedo e vence a zona 3; com a build final, mede a Bijū chegando com 0, +1, +7 e +15 min
-//   de Final Swarm. Planos do Shikamaru acumulados na missão = planos por zona × 3.
+//   de Final Swarm. Só os planos da zona 3 pesam na Bijū (decisão de 25/11).
 // Limites do modelo: os do simulador (sem desvio real, ultimate, aliados, procs e fusões). Serve para forma e comparação.
 // Uso: node scripts/simulate-bosses.mjs [rótulo] [sementes=1] [heróis=todos|n]
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { HEROES } from '../src/game/heroes.ts';
 import { zoneThreat, zoneCurse, ZONE_DIFFICULTY } from '../src/game/progression.ts';
 import { guardianVitality, guardianDefense } from '../src/game/missions.ts';
-import { bijuuVitality, bijuuDefense } from '../src/game/bijuu.ts';
+import { bijuuVitality, bijuuDefense, bijuuPlans } from '../src/game/bijuu.ts';
 import { ZONE_SECONDS } from '../src/game/worldScale.ts';
 import { simulateRun } from './simulate-run.mjs';
 
 export const MISSIONS = ['Genin', 'Chunin', 'Jonin', 'Kage'];
 /** Marcos (s de zona) para invocar o Guardião: normal (160 s), fim do relógio e Final Swarm +1, +7, +15, +30, +50 min. */
 export const GUARDIAN_MARKS = [['normal', 160], ['10:00', ZONE_SECONDS], ['+1', ZONE_SECONDS + 60], ['+7', ZONE_SECONDS + 420], ['+15', ZONE_SECONDS + 900], ['+30', ZONE_SECONDS + 1800], ['+50', ZONE_SECONDS + 3000]];
-export const ARMOR_OPTIONS = [1.35, 3, 5, 10, 20];
+export const ARMOR_OPTIONS = [1.35, 3, 5, 10, 20]; // 3× escolhido em 25/11
 export const BIJUU_MARKS = [['chegada', 0], ['+1', 60], ['+7', 420], ['+15', 900]];
 
 const ttk = (hp, dps) => dps > 0 ? hp / dps : Infinity;
@@ -44,7 +44,8 @@ export function bijuuProbe({ heroId, mission, plans, seed }) {
   simulateRun({ heroId, mission, plans, seed, minutes: 45, policy: { guardianAt: 160, bossFightLimit: 120, endless: false }, record: 3600,
     probe: p => { if (p.victory) end = p; } });
   if (!end) return null;
-  const used = plans * 3, out = {};
+  // Decisão de 25/11: só os planos da última zona pesam na Bijū (bijuuPlans).
+  const used = bijuuPlans(plans), out = {};
   for (const [name, overtime] of BIJUU_MARKS) {
     const t = end.t + overtime;
     const threat = zoneThreat(mission, ZONE_SECONDS + overtime, zoneCurse(ZONE_DIFFICULTY[3], used, end.threatBonus), overtime, 0);
