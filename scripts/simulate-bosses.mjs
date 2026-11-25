@@ -58,6 +58,39 @@ export function bijuuProbe({ heroId, mission, plans, seed }) {
   return out;
 }
 
+/** Invocação voluntária do Guardião: cedo (2:40 da zona) ou às 9:00 (política padrão do simulador). */
+export const SUMMON_POLICIES = [['cedo', 160], ['9:00', 540]];
+/**
+ * Cenário C (missão completa até a arena): o bot invoca o Guardião no tempo da política em cada zona, recebe 1 + planos
+ * pergaminhos por Guardião (até 4 com 3 planos) e, se vencer a zona 3, mede a Bijū na chegada com a build final.
+ */
+export function missionProbe({ heroId, mission, plans, seed, summonAt }) {
+  let end = null;
+  const run = simulateRun({ heroId, mission, plans, seed, minutes: 60, policy: { guardianAt: summonAt, bossFightLimit: 120, endless: false }, record: 3600,
+    probe: p => { if (p.victory) end = p; } });
+  let bijuu = null;
+  if (end) {
+    const used = bijuuPlans(plans), overtime = end.overtime, t = end.t;
+    const threat = zoneThreat(mission, ZONE_SECONDS + overtime, zoneCurse(ZONE_DIFFICULTY[3], used, end.threatBonus), overtime, 0);
+    const hp = bijuuVitality(threat.hp, t, overtime), def = bijuuDefense(t, overtime, used), dps = end.singleDps(def) * (1 + end.eliteDamage);
+    bijuu = { hp, def, ttk: ttk(hp, dps), arrival: t / 60, level: end.level };
+  }
+  return { dead: run.dead, victory: run.victory, endedAt: run.endedAt, bosses: run.bosses.map(b => ({ ...b, ttk: b.killedAt - b.summonedAt })), scrolls: run.bosses.reduce((n, b) => n + b.scrolls, 0), bijuu };
+}
+
+export function summarizeMission(rows) {
+  const out = [], keyOf = r => r.mission + '|' + r.plans + '|' + r.policy;
+  for (const key of [...new Set(rows.map(keyOf))]) {
+    const [mission, plansText, policy] = key.split('|'), group = rows.filter(r => keyOf(r) === key), n = group.length;
+    const zone = z => { const fights = group.map(r => r.result.bosses.find(b => b.zone === z)).filter(Boolean); return { reached: fights.length, hp: pct(fights.map(b => b.hp), .5), def: pct(fights.map(b => b.def), .5), ttk: pct(fights.map(b => b.ttk), .5), ttk90: pct(fights.map(b => b.ttk), .9), at: pct(fights.map(b => b.killedAt / 60), .5) }; };
+    const wins = group.filter(r => r.result.bijuu);
+    out.push({ mission, plans: Number(plansText), policy, n, zones: [zone(1), zone(2), zone(3)], arena: wins.length, arenaAt: pct(wins.map(r => r.result.bijuu.arrival), .5),
+      bijuuHp: pct(wins.map(r => r.result.bijuu.hp), .5), bijuuDef: pct(wins.map(r => r.result.bijuu.def), .5), bijuuTtk: pct(wins.map(r => r.result.bijuu.ttk), .5), bijuuTtk90: pct(wins.map(r => r.result.bijuu.ttk), .9),
+      scrolls: pct(group.map(r => r.result.scrolls), .5) });
+  }
+  return out;
+}
+
 const pct = (list, q) => { const s = list.filter(Number.isFinite).sort((a, b) => a - b); return s.length ? s[Math.min(s.length - 1, Math.floor(q * s.length))] : NaN; };
 export function summarize(rows) {
   const out = {};
@@ -85,6 +118,15 @@ if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/').replace(/^
     guardianRows.push({ heroId: hero.id, mission, plans, seed, marks: guardianProbe({ heroId: hero.id, mission, plans, seed }) });
     bijuuRows.push({ heroId: hero.id, mission, plans, seed, marks: bijuuProbe({ heroId: hero.id, mission, plans, seed }) });
   }
+  const missionRows = [];
+  for (const mission of MISSIONS) for (let plans = 0; plans <= 3; plans++) for (const [policy, summonAt] of SUMMON_POLICIES) for (const hero of heroes) for (const seed of seeds)
+    missionRows.push({ heroId: hero.id, mission, plans, policy, seed, result: missionProbe({ heroId: hero.id, mission, plans, seed, summonAt }) });
+  const arena = summarizeMission(missionRows);
+  console.log('\nMISSÃO ATÉ A ARENA · invocação cedo (2:40) ou às 9:00 · medianas · Guardião: chegaram · HP · defesa · luta (s) · minuto da vitória');
+  for (const r of arena) {
+    const z = r.zones.map((x, i) => 'z' + (i + 1) + ' ' + x.reached + '/' + r.n + ' ' + big(x.hp) + ' ' + (x.def * 100).toFixed(0) + '% ' + big(x.ttk) + 's @' + big(x.at)).join(' | ');
+    console.log(' ' + r.mission.padEnd(7) + ' ' + r.plans + ' ' + r.policy.padEnd(5) + ' ' + z + ' | arena ' + r.arena + '/' + r.n + ' @' + big(r.arenaAt) + ' min · Bijū ' + big(r.bijuuHp) + ' ' + (r.bijuuDef * 100).toFixed(1) + '% ' + big(r.bijuuTtk) + 's (p90 ' + big(r.bijuuTtk90) + ') · pergaminhos ' + r.scrolls);
+  }
   const g = summarize(guardianRows), b = summarize(bijuuRows);
   printSummary('GUARDIÃO DA ZONA 1 (invocado no marco)', g);
   printSummary('BIJŪ (build de quem venceu a zona 3)', b);
@@ -98,6 +140,6 @@ if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/').replace(/^
     console.log(` ${mission.padEnd(7)} ${String(plans).padStart(3)}    ${cells.map(c => `${big(c.ttk50)} (${big(c.ttk90)})`.padStart(16)).join('')}`);
   }
   mkdirSync('artifacts', { recursive: true });
-  writeFileSync(`artifacts/simulate-${label}.json`, JSON.stringify({ guardian: g, bijuu: b, armor }, null, 1));
+  writeFileSync(`artifacts/simulate-${label}.json`, JSON.stringify({ guardian: g, bijuu: b, armor, arena }, null, 1));
   console.log(`\nArquivo: artifacts/simulate-${label}.json (não versionado)`);
 }

@@ -101,6 +101,7 @@ const MUTATIONS = [
   { regra: "vida de chefe nunca vira infinito", arquivo: 'src/game/missions.ts', de: "Number.isFinite(hp)?Math.min(BOSS_HP_LIMIT,hp):BOSS_HP_LIMIT", para: "hp" },
   { regra: "armadilha invoca 10 mesmo com a horda cheia", arquivo: 'src/scene/GameCanvas.tsx', de: "const count=body?FALLEN_TRAP.enemies:Math.min(", para: "const count=body?Math.min(FALLEN_TRAP.enemies,Math.max(0,threatNow().cap-enemyList.length)):Math.min(" },
   { regra: "1 elite na armadilha", arquivo: 'src/game/fallenTrap.ts', de: "export const FALLEN_TRAP = { enemies: 10, elites: 1,", para: "export const FALLEN_TRAP = { enemies: 10, elites: 0," },
+  { regra: "simulador dá 1 + planos pergaminhos por Guardião", arquivo: 'scripts/simulate-run.mjs', de: "const scrolls = 1 + Math.min(GUARDIAN_RULES.shikamaruMaxPlans, plans);", para: "const scrolls = 1;" },
   { regra: "aba Pílulas sem painel lateral", arquivo: 'src/ui/BuildPlanner.tsx', de: "{tab!=='Pílulas'&&<aside className=\"build-detail\"", para: "{tab!=='Pílula'&&<aside className=\"build-detail\"" },
   { regra: "única carta só com a opção", arquivo: 'src/game/settings.ts', de: "return enabled && offers?.length === 1 && !offers[0].disabled;", para: "return offers?.length === 1 && !offers[0].disabled;" },
   { regra: "afinidade em corações", arquivo: 'src/ui/AllyCards.tsx', de: "{i < level ? '♥' : '♡'}", para: "{i <= level ? '♥' : '♡'}" },

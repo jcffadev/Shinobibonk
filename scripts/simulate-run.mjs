@@ -18,7 +18,7 @@ import { techniqueLevelCap } from '../src/game/techniqueMerge.ts';
 import { ITEMS, rollItems } from '../src/game/catalog.ts';
 import { PILLS, canGrantPill, grantPill } from '../src/game/pills.ts';
 import { PASSIVES, weaponPrice, choiceCount } from '../src/game/preparation.ts';
-import { guardianVitality, guardianDefense } from '../src/game/missions.ts';
+import { guardianVitality, guardianDefense, GUARDIAN_RULES } from '../src/game/missions.ts';
 import { ATTACK_SCALE } from '../src/game/worldScale.ts';
 import { POWERLEVEL_RATE, POWERLEVEL_ATTRIBUTES } from '../src/game/powerlevel.ts';
 import { ZONE_SECONDS } from '../src/game/worldScale.ts';
@@ -91,7 +91,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
   const pool = allItems ? ITEMS : ITEMS.filter(i => i.rarity === 'Comum');
   const maxSkills = permanent['Quarta técnica'] ? 4 : 3;
   const s = { t: 0, zone: 1, zoneT: 0, level: 1, xp: 0, kills: 0, ryu: 0, paid: 0, kunaisLeft: CROWD.kunaisPerZone, alive: 0, damage: 0,
-    items: {}, pills: {}, powerlevel: {}, skills: {}, growth: {}, revives: 0, hp: 0, dead: false, victory: false, megaKills: 0, guardians: 0, ambushAt: AMBUSH_RULES.first };
+    items: {}, pills: {}, powerlevel: {}, skills: {}, growth: {}, revives: 0, hp: 0, dead: false, victory: false, megaKills: 0, guardians: 0, ambushAt: AMBUSH_RULES.first, bosses: [] };
   let stats, megaPlan = rollMegaSchedule(rnd), openingMega = true, guardian = null, dirty = true;
   const techs = () => hero.techniques.filter(t => s.skills[t.name]);
   const refresh = () => { stats = calculateStats(heroId, s.level, s.items, s.pills, 0, permanent, {}, s.powerlevel); dirty = false; };
@@ -185,11 +185,14 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     }
     // Guardião: invocado em policy.guardianAt; derrotado → item grátis e próxima zona. Na zona 3 em modo sem fim, fica no Final Swarm.
     const endlessHere = policy.endless && s.zone === 3;
-    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) guardian = { hp: guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone), def: guardianDefense(s.t, false, overtime, s.zone, plans), at: s.t };
+    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) { const hp = guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone); guardian = { hp, maxHp: hp, def: guardianDefense(s.t, false, overtime, s.zone, plans), at: s.t, zone: s.zone, level: s.level }; }
     if (guardian) {
       guardian.hp -= singleDps(guardian.def) * (1 + ex('eliteDamage'));
       if (guardian.hp <= 0) {
-        s.guardians++; pickItem(); guardian = null;
+        // Como no jogo: o Guardião solta 1 pergaminho grátis + 1 por plano do Shikamaru (até 3 → 4 pergaminhos).
+        const scrolls = 1 + Math.min(GUARDIAN_RULES.shikamaruMaxPlans, plans);
+        s.bosses.push({ zone: guardian.zone, summonedAt: guardian.at, killedAt: s.t + 1, hp: guardian.maxHp, def: guardian.def, level: guardian.level, scrolls });
+        s.guardians++; for (let n = 0; n < scrolls; n++) pickItem(); guardian = null;
         if (s.zone === 3) { s.victory = true; } else { s.zone++; s.zoneT = 0; s.alive = 0; s.kunaisLeft = CROWD.kunaisPerZone; megaPlan = rollMegaSchedule(rnd); s.ambushAt = AMBUSH_RULES.first; }
       }
     }
@@ -204,7 +207,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     if (probe) probe({ t: s.t, zone: s.zone, zoneT: s.zoneT, overtime, threat, level: s.level, hp: s.hp, dead: s.dead, victory: s.victory, singleDps, stats, mission, plans, threatBonus: ex('threat'), eliteDamage: ex('eliteDamage') });
     if (s.t % record === 0 || s.dead || s.victory) snapshot(threat, normalHp, lastKps);
   }
-  return { heroId, mission, seed, account, endedAt: +(s.t / 60).toFixed(1), dead: s.dead, victory: s.victory, zone: s.zone, level: s.level, kills: Math.round(s.kills), megaKills: s.megaKills, guardians: s.guardians, totalDamage: s.damage, items: s.items, pills: s.pills, timeline };
+  return { heroId, mission, seed, account, endedAt: +(s.t / 60).toFixed(1), dead: s.dead, victory: s.victory, zone: s.zone, level: s.level, kills: Math.round(s.kills), megaKills: s.megaKills, guardians: s.guardians, bosses: s.bosses, totalDamage: s.damage, items: s.items, pills: s.pills, timeline };
 }
 
 const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/').split('/').pop());

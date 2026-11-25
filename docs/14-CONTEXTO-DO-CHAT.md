@@ -2938,3 +2938,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Painel lateral removido só na aba Pílulas; a grade dos cartões ocupa a largura toda.
 - Fila combinada a seguir: avanço da arena por dificuldade e planos, dano de nível alto contra o Final Swarm, calibrar o pacote de status, fusões, selos de mão e missões de evento inspiradas no anime para liberar personagens (ex.: Prova Chūnin). O resto da lista anterior foi descartado pelo usuário.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Sim, seguir (avanço da arena por dificuldade e planos)
+
+**Resposta.**
+
+- Simulei a missão inteira até a arena nas 4 dificuldades, com 0 a 3 planos e invocação cedo ou às 9:00. Os 4 pergaminhos com 3 planos estão preservados, e o simulador agora também os dá.
+- Os Guardiões caem em segundos. A Bijū leva de 2 a 25 min para quem invoca cedo e segundos para quem espera. O que decide é a curva de dano do jogador, que é o próximo item.
+- **Testes:** tipos, testes e build. Nenhum número de jogo mudou. **Publicado no GitHub.**

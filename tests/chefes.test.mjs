@@ -50,3 +50,17 @@ test('simulador de chefes mede Guardião nos marcos e Bijū com opções de arma
   assert.ok(b['chegada'].options[20] > b['chegada'].options[1.35] * 10, '20× de armadura alonga muito a luta');
   assert.ok(b['+15'].hp > b['chegada'].hp);
 });
+
+test('missão até a arena: 1 + planos pergaminhos por Guardião (4 com 3 planos) e Bijū medida na chegada', async () => {
+  const { missionProbe, summarizeMission } = await import('../scripts/simulate-bosses.mjs');
+  const three = missionProbe({ heroId: 'naruto', mission: 'Genin', plans: 3, seed: 17, summonAt: 160 });
+  assert.ok(three.bosses.length >= 1);
+  for (const b of three.bosses) { assert.equal(b.scrolls, 4, 'quatro pergaminhos grátis com três planos'); assert.ok(b.ttk >= 1 && b.hp > 0 && b.def > 0 && b.def < 1); }
+  const none = missionProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17, summonAt: 160 });
+  assert.ok(none.bosses.every(b => b.scrolls === 1));
+  if (three.victory) assert.ok(three.bijuu && three.bijuu.hp >= 4600 && Number.isFinite(three.bijuu.ttk));
+  const rows = summarizeMission([{ mission: 'Genin', plans: 3, policy: 'cedo', result: three }]);
+  assert.equal(rows[0].zones.length, 3); assert.equal(rows[0].n, 1);
+  const sim = (await import('node:fs')).readFileSync(new URL('../scripts/simulate-run.mjs', import.meta.url), 'utf8');
+  assert.ok(sim.includes('const scrolls = 1 + Math.min(GUARDIAN_RULES.shikamaruMaxPlans, plans);'), 'simulador segue a recompensa do jogo');
+});

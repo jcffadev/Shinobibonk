@@ -62,6 +62,29 @@ Leituras:
 
 Pior caso do modelo, sem ultimate, aliados, procs nem fusões. O Kage com 3 planos ainda passa de meia hora: se ficar pesado em partida, o próximo ajuste é o peso de cada plano na Bijū.
 
+## Missão até a arena por dificuldade e planos · 25/11/2026 (Claude Code)
+
+**Ferramenta:** cenário C de `scripts/simulate-bosses.mjs` (`missionProbe`). O bot invoca o Guardião em cada zona cedo (2:40) ou às 9:00. Cada Guardião solta 1 + planos pergaminhos grátis (até 4), agora também no simulador (`simulate-run.mjs`, antes era 1 item). Vencendo a zona 3, a Bijū é medida na chegada com a build final. Amostra: 115 versões, semente 17, conta nova, desvio médio. Pior caso do modelo: sem ultimate, aliados, procs nem fusões.
+
+| Dificuldade · planos | Invocação | Chegam à arena | Guardiões z1 · z2 · z3 (HP mediano, luta) | Arena aos | Bijū na chegada (HP · defesa · luta) | Pergaminhos |
+|---|---|---:|---|---:|---|---:|
+| Genin · 0 | cedo | 115/115 | 2,9 mil · 6,8 mil · 13 mil · 2 s cada | 8,1 min | 328 mil · 93,5% · 2 min | 3 |
+| Genin · 0 | 9:00 | 110/115 | 48 mil · 132 mil · 278 mil · 1 s cada | 27 min | 884 mil · 96,9% · 1 s | 3 |
+| Genin · 3 | cedo | 115/115 | 5,8 mil · 14 mil · 27 mil · 5 a 6 s | 8,2 min | 663 mil · 96,7% · 6 min | 12 |
+| Chunin · 3 | cedo | 110/115 | 8,5 mil · 20 mil · 39 mil · 6 a 7 s | 8,3 min | 1,2 mi · 96,7% · 9,6 min | 12 |
+| Jonin · 3 | cedo | 99/115 | 12 mil · 29 mil · 56 mil · 6 a 9 s | 8,3 min | 2,0 mi · 96,7% · 14 min | 12 |
+| Kage · 0 | cedo | 109/115 | 9,0 mil · 21 mil · 41 mil · 3 a 4 s | 8,1 min | 1,8 mi · 93,6% · 6 min | 3 |
+| Kage · 0 | 9:00 | 97/115 | 256 mil · 711 mil · 1,5 mi · 2 s | 27 min | 4,8 mi · 96,9% · 10 s | 3 |
+| Kage · 3 | cedo | 67/115 | 18 mil · 42 mil · 82 mil · 8 a 13 s | 8,5 min | 3,6 mi · 96,7% · 25 min | 12 |
+| Kage · 3 | 9:00 | 59/115 | 509 mil · 1,4 mi · 3,0 mi · 3 a 6 s | 27 min | 9,5 mi · 98,4% · 27 s | 12 |
+
+Leituras:
+- **Pergaminhos preservados:** 3 Guardiões × (1 + planos) dá 3, 6, 9 ou 12 na missão, ou seja, 4 por Guardião com 3 planos.
+- **Os Guardiões caem em segundos** em todas as dificuldades, mesmo com 3 planos (no máximo cerca de 13 s no Kage). O dano do jogador cresce muito mais que a vida deles.
+- **A Bijū depende do ritmo:** quem invoca cedo chega à arena aos 8 min, com a build ainda fraca, e luta de 2 a 25 min. Quem espera até 9:00 em cada zona chega aos 27 min e derruba a Bijū em segundos. A vida da Bijū sobe cerca de 3× entre 8 e 27 min, mas o dano do jogador sobe muito mais.
+- **Sobrevivência:** no Kage com 3 planos, só 59 a 67 de 115 vencem a zona 1. Quem morre cai na horda, não no Guardião.
+- **Conclusão:** o tamanho da luta com chefes é decidido pela curva de dano do jogador. Esse é o próximo item da fila (dano de nível alto × pressão do Final Swarm). Nenhum número de jogo mudou nesta medição.
+
 ## Kakashi dos Dois Mangekyō · 24/11/2026
 
 Como segundo avanço da família, parte de ×1,24 de HP e dano de base, +2 de armadura e +0,16 m/s de movimento em relação ao Kakashi Jōnin. A passiva da versão acrescenta +12% de Ninjutsu e +5 pontos de evasão, conforme a progressão de passivas do elenco. A missão em Iwa Kage usa Kakashi Hokage, 7 minutos e 950 abates. Nas sementes 17, 101 e 252, Kakashi Jōnin, Hokage e Dois Mangekyō chegaram à zona 2 no simulador em Kage, conta nova, até 12 minutos. O simulador aproxima a horda e deixa as ultimates fora do cálculo.

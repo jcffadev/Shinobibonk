@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 25/11/2026 · Medição da missão até a arena por dificuldade e planos (Claude Code)
+
+- **Pedido:** item da fila de balanceamento: simular Genin, Chunin, Jonin e Kage com 0 a 3 planos, registrando HP, defesa, dano, tempo até derrotar e o avanço da arena, sem perder os 4 pergaminhos grátis com 3 planos.
+- **`scripts/simulate-bosses.mjs`:** cenário C (`missionProbe`, `summarizeMission`, `SUMMON_POLICIES`). Mede cada Guardião (HP, defesa, luta, minuto) e a Bijū na chegada, com invocação cedo (2:40) ou às 9:00.
+- **`scripts/simulate-run.mjs`:** o Guardião solta 1 + planos pergaminhos (até 4), como no jogo; antes o simulador dava só 1 item. O resultado traz o registro `bosses` de cada luta.
+- **Resultado:** os 4 pergaminhos com 3 planos estão preservados. Os Guardiões caem em segundos. A Bijū leva de 2 a 25 min para quem invoca cedo e segundos para quem espera até 9:00. Tabela em [docs/20](docs/20-SCALING-EREGULAS.md#missão-até-a-arena-por-dificuldade-e-planos--25112026-claude-code).
+- **Nenhum número de jogo mudou.** O próximo passo é a curva de dano do jogador.
+- **Testes:** 1 teste novo em `tests/chefes.test.mjs` (o mínimo subiu para 280) e 1 mutação nova, verificada à mão. É medição de modelo, não validação em partida.
+
 ## 25/11/2026 · Planejador: aba Pílulas sem o painel lateral (Claude Code)
 
 - **Pedido do usuário** (print com X no painel da direita): "Remover onde está o X para melhorar a visualização das pílulas".
