@@ -34,6 +34,12 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Revisão do scale de todos os personagens · 25/11/2026
+
+- Simulador corrigido (geometria dos golpes e preparo) e novo `scripts/simulate-early.mjs`. Medição em docs/20.
+- **Aguardando decisão do usuário:** raio da Área 1,2 → 1,8. Depois disso, olhar os que ainda ficam abaixo de 0,5× (Hashirama Sábio, Lee Shippuden, Terceiro Raikage, Naruto Shippuden, Sasuke Shippuden, Haku) e o 1º minuto do Kage (9 versões precisam de 2 golpes).
+- **Prêmio por completar a Prova Chūnin:** aguardando a escolha do usuário.
+
 ## Eventos do anime · Prova Chūnin · 25/11/2026
 
 **Pedidos do usuário:** "A parte da aba de eventos e tudo mais, você pode fazer, se ficar ruim a gente mexe com o Codex... Faz o que tu quer fazer, pode seguir com o plano." e "A principio a primeira season só vai ter personagens da academia e genins, então se baseie nisso para a gente ir liberando personagens, os chunnins e tudo mais..."

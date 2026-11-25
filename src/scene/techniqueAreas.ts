@@ -19,7 +19,9 @@ import { currentSettings } from '../game/settings';
 const SLOTS = 64, GRID = 14, ROW = GRID + 1, VERTS = ROW * ROW;
 const CIRCLE = 0, SECTOR = 1, RECT = 2, CAPSULE = 3;
 /** Meia-abertura do Cone no hit: `delta.normalize().dot(direction) > .65`. */
-export const CONE_COS = .65;
+/** Ângulo do cone (cosseno do meio-ângulo); mora em combat.ts para o simulador ler sem a cena. */
+export { CONE_COS } from '../game/combat';
+import { CONE_COS } from '../game/combat';
 
 const ELEMENT_COLOR: Record<string, string> = {
   Neutro: '#eef4ff', Fogo: '#ff6a2b', Água: '#36b2ff', Vento: '#5ff0c2', Terra: '#e0a456', Raio: '#a9b9ff',

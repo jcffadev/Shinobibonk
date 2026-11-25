@@ -230,3 +230,5 @@ export function aimedCenter(t:{shape:string;gravity?:string},sageArea=false):'ta
 }
 /** Raio do círculo do corpo a corpo no alvo: 60% do alcance (mínimo 0,6 m), para acertar o alvo e quem está colado nele. */
 export const MELEE_IMPACT={share:.6,min:.6};
+/** Cone das técnicas: cosseno do meio-ângulo (o mesmo no desenho e no acerto; techniqueAreas.ts reexporta). */
+export const CONE_COS=.65;

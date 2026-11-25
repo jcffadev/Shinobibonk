@@ -2,6 +2,26 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Revisão do scale e do começo de partida de todos os personagens · 25/11/2026 (Claude Code)
+
+**Pedidos do usuário:** "Reveja o scale de todos os personagens e veja o early game de todos os persoagens"; "Morrer se o player jogar mal, deve morrer, mesmo na dificuldade mais fácil..."; "Não é pros personagens ficarem brokens, é para ficar balanceados."
+
+**Correções no simulador** (não mudam o jogo):
+- **Geometria dos golpes igual à do `castTechnique`:** antes o alcance entrava sem `ATTACK_SCALE` e o corpo a corpo usava o alcance inteiro como raio. Isso inflava corpo a corpo, cone, linha, onda e Em V contra Área e Órbita. Alvos por uso numa horda densa, agora: Projétil 1 · Corpo a corpo ~1,6 · Área ~2,4 · Linha ~3,2 · Cone ~3,6 · Onda ~6,9 · Em V ~9,4.
+- **Técnicas de preparo** (Modo Sábio, Portões, Byakugou…): o bônus entra pela fração do tempo em que fica ativo (`setupNumbers().uptime`). Antes o simulador ignorava o preparo.
+- `CONE_COS` passou para `src/game/combat.ts` (`techniqueAreas.ts` reexporta), para o simulador ler sem a cena.
+- **Novo `scripts/simulate-early.mjs`:** primeiros 5 min de todas as versões, com a **capacidade** (abates por segundo com a horda no teto ÷ nascimentos por segundo; abaixo de 1, a horda cresce).
+
+**Medição** (régua: jogador que desvia bem, `desvio bom`; morrer jogando mal continua valendo até no Genin):
+- **Dano:** sem problema de escala. A 1ª técnica mata o comum de um golpe no 1º minuto em quase todo o elenco (golpe ÷ vida: mediana 3,8× no Genin e 2,7× no Kage), e a sobra cresce com o tempo. No Kage, 9 versões precisam de 2 golpes no 1º minuto: Kankurō Aliança, Itachi, Orochimaru, Naruto Academia, Zetsu, Naruto Genin, Shino, Kin e Iruka.
+- **O que separa os personagens é o formato dos ataques.** Por segundo, um ataque de Área limpa ~1,2 inimigo e um Em V ~6,3. Kits com Área e preparo ocupando um dos 3 espaços ficam para trás no pico dos 3–5 min:
+  - capacidade aos 3 min (mediana 2,2 no Jonin): Naruto Shippuden 0,49 · Hashirama Sábio 0,78 · Sakura Byakugou 0,94 · Lee Shippuden e Lee Portões 1,05 · Tsunade Byakugou 1,07 · Kabuto Sábio 1,08;
+  - partida inteira (2.760 partidas, morte relativa à mediana): Naruto Shippuden 0,17× · Hashirama Sábio 0,28× · Lee Shippuden 0,31× · Sasuke Shippuden 0,34×. Faixa p10–p90: 0,52× a 1,22×. 11 versões abaixo de 0,5×.
+- **Testes de solução:**
+  - preparo sem ocupar espaço de técnica: quase não muda (Naruto Shippuden continua morrendo aos 3–5 min);
+  - trocar a ordem (4º ataque no Nv 12, Modo Sábio no Nv 20): quase não muda;
+  - **raio da Área 1,2 → 1,8 (PROPOSTO, aguarda decisão):** capacidade aos 3 min sem ninguém abaixo de 1,09 no Jonin; mediana e p90 iguais (2,2 e 3,0). Na partida inteira, abaixo de 0,5× cai de 11 para 6, o pior sobe de 0,17× para 0,39×, a faixa p10–p90 fica 0,58×–1,16× e a mediana quase não muda (Genin conta nova 43,8 → 44,2 min).
+
 ## Elemento Gelo e bônus de elemento em todos os danos · 25/11/2026 (Claude Code)
 
 **Pedidos do usuário:** "todas as linhas de dano na realidade"; "sim, é legal os efeitos dos elementos que temos também fazer parte do calculo"; "o elemento gelo, você colocou como resfriar, pesquise, deveria ser gelo".

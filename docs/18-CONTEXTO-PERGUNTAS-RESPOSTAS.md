@@ -535,6 +535,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Eventos do anime (25/11): `src/game/events.ts` (`CHUNIN_EXAM`, `SEASON_ONE_ROSTER`, `duelOpponent`, `duelReady`), `completeEventDuel` em `account.ts`, `src/ui/EventsPage.tsx` e prop `eventDuel` no GameCanvas.
 
+- Começo de partida de todo o elenco (25/11): `node scripts/simulate-early.mjs [dificuldades] [sementes] [conta] [desvio]`; capacidade = abates/s com a horda no teto ÷ nascimentos/s.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.

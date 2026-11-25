@@ -3040,3 +3040,14 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Aba Eventos com a Prova Chūnin: 15 duelos da obra em três fases. Joga-se com um lado; o outro aparece na partida e, selado, fica liberado na conta. A corrente parte de Naruto, Sasuke e Sakura e libera os 16 genin do evento.
 - Temporada 1 só com Academia e Genin; chūnin numa próxima temporada. Sem arte nova.
 - **Testes:** tipos, testes (309) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Reveja o scale de todos os personagens e veja o early game de todos os persoagens
+> Morrer se o player jogar mal, deve morrer, mesmo na dificuldade mais fácil...
+> Não é pros personagens ficarem brokens, é para ficar balanceados.
+
+**Resposta.**
+
+- O simulador tinha a geometria dos golpes diferente da do jogo e ignorava as técnicas de preparo; corrigido.
+- O dano escala bem em todo o elenco. O que separa os personagens é o formato dos ataques: kits de Área (Naruto Shippuden, Hashirama Sábio, Lee, Sasuke Shippuden) não acompanham a horda aos 3–5 min, mesmo jogando bem.
+- Proposta: raio da Área 1,2 → 1,8. Puxa os piores para perto da média sem subir a mediana nem o topo. Aguarda decisão.
+- **Testes:** tipos, testes (310) e build. **Publicado no GitHub.**

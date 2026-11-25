@@ -13,7 +13,7 @@
 import { HEROES, HERO_BY_ID, heroAffinity } from '../src/game/heroes.ts';
 import { calculateStats, zoneThreat, zoneCurse, ZONE_DIFFICULTY, MISSION_TIER, xpToLevelUp, effectiveLootLuck, incomingDamage, normalHpFactor, AMBUSH_RULES } from '../src/game/progression.ts';
 import { ENEMY_TIERS, BASE_LOOT, xpDropValue, xpLoot, lootScale, megaEliteHp, rollMegaSchedule, eliteSpawnChance, eliteHpRamp } from '../src/game/enemyTiers.ts';
-import { attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
+import { CONE_COS, MELEE_IMPACT, setupNumbers, attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
 import { techniqueLevelCap } from '../src/game/techniqueMerge.ts';
 import { expectedHit, bossHpWithFloor, BOSS_POWER } from '../src/game/bossScaling.ts';
 import { ITEMS, rollItems } from '../src/game/catalog.ts';
@@ -38,14 +38,17 @@ export const POLICY = { guardianAt: 540, bossFightLimit: 120, endless: true };
 export function rng32(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 const maxAccount = () => Object.fromEntries(PASSIVES.map(p => [p.name, p.max]));
 
-/** Área (m²) que cada forma cobre por uso, com o multiplicador de área do jogador (mesmas medidas do GameCanvas). */
+/**
+ * Área coberta por uso, com a mesma geometria do castTechnique do GameCanvas (25/11/2026: antes o alcance entrava sem
+ * ATTACK_SCALE e o corpo a corpo usava o alcance inteiro como raio, o que inflava corpo a corpo, cone, linha, onda e Em V).
+ */
 function shapeArea(t, area) {
-  const a = Math.sqrt(area), range = t.range ?? 4.5;
+  const a = Math.sqrt(area), range = ATTACK_SCALE * (t.range ?? 4.5) * a;
   switch (t.shape) {
-    case 'Corpo a corpo': return Math.PI * range * range;
+    case 'Corpo a corpo': return Math.PI * Math.max(MELEE_IMPACT.min, range * MELEE_IMPACT.share) ** 2;
     case 'Área': return Math.PI * (ATTACK_SCALE * 1.2 * a) ** 2;
     case 'Órbita': return Math.PI * (ATTACK_SCALE * 1.7 * a) ** 2;
-    case 'Cone': return Math.acos(.65) * range * range;
+    case 'Cone': return Math.acos(CONE_COS) * range * range;
     case 'Linha': return range * 2 * ATTACK_SCALE * .65 * a;
     case 'Onda': return range * 2 * (ATTACK_SCALE * .85 * a + .4);
     case 'Em V': return range * 2 * (ATTACK_SCALE * .4 * a + .4);
@@ -91,7 +94,9 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     items: {}, pills: {}, powerlevel: {}, skills: {}, growth: {}, revives: 0, hp: 0, dead: false, victory: false, megaKills: 0, guardians: 0, ambushAt: AMBUSH_RULES.first, bosses: [] };
   let stats, megaPlan = rollMegaSchedule(rnd), openingMega = true, guardian = null, dirty = true;
   const techs = () => hero.techniques.filter(t => s.skills[t.name]);
-  const refresh = () => { stats = calculateStats(heroId, s.level, s.items, s.pills, 0, permanent, {}, s.powerlevel); dirty = false; };
+  // Técnicas de preparo (Modo Sábio, Portões, Byakugou…): o bônus entra pela fração do tempo em que fica ativo (25/11/2026).
+  const setupBuffs = () => { const out = {}; for (const t of techs()) if (t.setup) { const n = setupNumbers(t, s.growth[t.name] ?? NO_GROWTH, s.skills[t.name]); for (const [k, v] of Object.entries(n.bonuses)) out[k] = (out[k] || 0) + v * n.uptime; } return out; };
+  const refresh = () => { stats = calculateStats(heroId, s.level, s.items, s.pills, 0, permanent, setupBuffs(), s.powerlevel); dirty = false; };
   refresh(); s.hp = stats.maxHp; s.revives = (stats.extra.revive35 || 0) + (stats.extra.revive60 || 0);
   const luckNow = () => effectiveLootLuck(stats.luck, s.t);
   const ex = k => stats.extra[k] || 0;

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Revisão do scale e do começo de partida (Claude Code)
+
+- **Pedidos do usuário:** "Reveja o scale de todos os personagens e veja o early game de todos os persoagens"; "Morrer se o player jogar mal, deve morrer, mesmo na dificuldade mais fácil..."; "Não é pros personagens ficarem brokens, é para ficar balanceados."
+- **Simulador (`scripts/simulate-run.mjs`):** geometria dos golpes igual à do jogo (alcance em `ATTACK_SCALE`, corpo a corpo pelo raio do impacto) e bônus das técnicas de preparo pela fração ativa. `CONE_COS` foi para `combat.ts`.
+- **Novo `scripts/simulate-early.mjs`:** primeiros 5 min de todas as versões, com capacidade de limpar a horda.
+- **Resultado:** o dano escala bem. O que separa os personagens é o formato dos ataques (Área limpa ~1,2 inimigo/s, Em V ~6,3). Proposta medida: raio da Área 1,2 → 1,8. Nada mudou no jogo; tabela em docs/20.
+- **Testes:** 1 teste novo em `tests/balanceamento.test.mjs` (mínimo 310) e 1 mutação nova, verificada à mão.
+
 ## 25/11/2026 · Aba Eventos: Prova Chūnin (Claude Code)
 
 - **Pedidos do usuário:** "A parte da aba de eventos e tudo mais, você pode fazer, se ficar ruim a gente mexe com o Codex... Faz o que tu quer fazer, pode seguir com o plano."; "A principio a primeira season só vai ter personagens da academia e genins, então se baseie nisso para a gente ir liberando personagens, os chunnins e tudo mais..."
