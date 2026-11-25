@@ -2900,3 +2900,10 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Bijū com 3× a armadura do Guardião equivalente e só os planos da zona 3 (até 3) no HP e na defesa. A recompensa continua contando todos os planos.
 - No simulador, o Kage leva 6 min sem planos e 33 min com 3 planos (antes 3 e 58 min).
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Os personagens na luta com Hagoromo estão todos sem animação... conserte isso
+
+**Resposta.**
+
+- Causa: a caminhada da horda era calculada pelo relógio da missão, que para durante o treinamento. Agora usa um relógio só de animação, que sempre anda.
+- **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

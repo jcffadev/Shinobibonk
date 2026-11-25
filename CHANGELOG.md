@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Animação da horda no Treinamento do Hagoromo (Claude Code)
+
+- **Pedido do usuário:** "Os personagens na luta com Hagoromo estão todos sem animação... conserte isso".
+- **Causa:** o relógio da missão (`elapsed`) para de propósito durante o treinamento, e o quadro de caminhada dos inimigos desenhados em lote era calculado a partir dele. Por isso a horda deslizava parada.
+- **Correção:** novo relógio só de animação (`animClock`, em `GameCanvas.tsx`), que sempre anda. A caminhada da horda e a aura do Modo Sábio usam esse relógio. O relógio da missão continua parado no treinamento.
+- **Testes:** 1 teste novo em `tests/hagoromo.test.mjs` (o mínimo subiu para 275) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver a horda e o Mega Elite andando na clareira do Hagoromo.
+
 ## 25/11/2026 · Bijū com 3× a armadura e só os planos da zona (Claude Code)
 
 - **Decisão do usuário:** "3× e planos só da zona", depois da medição de Guardiões e Bijū.

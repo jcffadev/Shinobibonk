@@ -109,3 +109,11 @@ test('clareira do treinamento plana em todos os mapas e longe da água e do come
   assert.ok(Math.hypot(HAGOROMO_ARENA.x, HAGOROMO_ARENA.z) > 40, 'longe do começo');
   assert.ok(TOOL_BY_ID.shichiseiken.rarity === 'Lendário');
 });
+
+test('Treinamento do Hagoromo: a horda continua animada com o relógio da missão parado (25/11)', async () => {
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('if(!sealing&&!hagoromoEvent){elapsed+=dt;'), 'o relógio da missão para no treinamento');
+  assert.ok(canvas.includes('      animClock+=dt;\n') || canvas.includes('      animClock+=dt;\r\n'), 'relógio de animação sempre anda');
+  assert.ok(canvas.includes(':movingEnemy?Math.floor(animClock*10+sprite.id%4)%4:1;'), 'caminhada da horda usa o relógio de animação');
+  assert.ok(!/Math\.floor\(elapsed\*\d+[^)]*\)%4/.test(canvas), 'nenhum quadro de animação preso ao elapsed');
+});

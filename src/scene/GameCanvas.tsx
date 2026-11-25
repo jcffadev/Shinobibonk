@@ -191,7 +191,7 @@ export function GameCanvas({ heroId, mission, mapId='folha', resume=null, itemPo
     // Rodada 97: Treinamento do Hagoromo — chaves, ferramentas do Sábio e o evento em andamento.
     const hagoromo=createHagoromo();let hagoromoBossDown=false,hagoromoEvent:{rarity:SageTool['rarity'];wave:number;origin:{x:number;z:number};mega:Enemy|null;completed:boolean;outsideEnemies:Enemy[];outsideDrops:ReturnType<typeof makeDropIndex>}|null=null;
     const hero=HERO_BY_ID[heroId]??HEROES[0],techniques=skillPool(hero.id,sealedHeroes()),growth:Record<string,SkillGrowth>={},cooldowns:Record<string,number>={},runBuffs:Bonuses={},skillDamage:Record<string,number>={};
-    let zoneStart=0,plansUsed=0,arena=false,bijuuReward=0,defeatedBijuu='',finalSwarmAnnounced=false,spawnBudget=0,pickupClock=0,globalMagnetUntil=0;
+    let zoneStart=0,plansUsed=0,arena=false,bijuuReward=0,defeatedBijuu='',finalSwarmAnnounced=false,spawnBudget=0,pickupClock=0,globalMagnetUntil=0,/** Relógio só de animação: nunca para (o elapsed da missão para no Treinamento do Hagoromo e deixava a horda congelada). */animClock=0;
     let portal:{kind:PortalKind;x:number;z:number;mesh:THREE.Group}|null=null;
     let totalDamage=0,hiddenEffects=currentSettings().hideMyAttacks,victory=false,zone=1,ambushTimer=AMBUSH_RULES.first,guardianSpawned=false,shikamaruPlans=0,defenseTime=0,defenseActive=false,defenseDone=false;
     const config=preparationRef.current,permanent={...config.permanent},uses=choiceUses(permanent),banned=new Set<string>();let banning=false,paidWeapons=0;
@@ -1982,6 +1982,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       if(!defeated&&!sealing&&ex('beam')>0){beamTimer-=dt;if(beamTimer<=0){beamTimer=6/Math.max(.2,stats.attackSpeed);castBeam();}}
       // Setups: a duração corre só fora do selamento; ao expirar, os atributos voltam a ser recalculados das fontes.
       if(!sealing){let expired=false;for(let i=activeSetups.length-1;i>=0;i--){activeSetups[i].remaining-=dt;if(activeSetups[i].remaining<=0){activeSetups.splice(i,1);expired=true;}}if(expired)refreshStats();}
+      animClock+=dt;
       if(!sealing)pickupClock+=dt;
       if(!sealing&&!hagoromoEvent){elapsed+=dt;
         // FINAL SWARM (pedido do usuário): o relógio zerar NÃO encerra a run. Aviso grande, o relógio passa a contar o tempo sobrevivido
@@ -2093,7 +2094,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
           sprite.userData.side=lateralEnemy&&movingEnemy&&!movingSpecial;
           sprite.userData.frame=striking?ENEMY_FRAME.attack:movingSpecial
             ? (enemy.jumping?ENEMY_FRAME.jump:ENEMY_FRAME.dash)+Math.min(3,Math.floor(progress*4))
-            :movingEnemy?Math.floor(elapsed*10+sprite.id%4)%4:1;
+            :movingEnemy?Math.floor(animClock*10+sprite.id%4)%4:1;
         }
         if(motion&&((striking&&(enemy.windup??0)+dt>.2)||(casting&&enemy.boss?.cast&&enemy.boss.cast.windup<=.2&&enemy.boss.cast.windup+dt>.2))){
           const cast=enemy.boss?.cast;
@@ -2331,7 +2332,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       playerMotion.fitHealthBar(zoom/Math.max(1,renderer.domElement.clientHeight),!playerOccluded);
       if(sandCloud){sandCloud.visible=jumpHeight>0&&!defeated&&keys.has(' ')&&sandGlideLeft>0&&jumpTime<=jumpDuration*.5;sandCloud.position.set(player.position.x,player.position.y-player.scale.y*.5-.18,player.position.z);}
       sageAura.sprite.visible=enabledRef.current&&!hiddenEffects&&(sageModeActive()||heroId==='kabuto-sabio')&&!defeated;
-      if(sageAura.sprite.visible){sageAura.sprite.position.copy(player.position);sageAura.sprite.position.y+=.43;sageAura.frame(Math.floor(elapsed*9)%4);}
+      if(sageAura.sprite.visible){sageAura.sprite.position.copy(player.position);sageAura.sprite.position.y+=.43;sageAura.frame(Math.floor(animClock*9)%4);}
       setFocusView(focusView,camera.matrixWorld.elements);
 
       if(!hagoromoEvent&&mistHides(weatherEvent,elapsed)){

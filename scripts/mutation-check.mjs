@@ -99,6 +99,7 @@ const MUTATIONS = [
   { regra: "armadura da Bijū é 3× a do Guardião", arquivo: 'src/game/bijuu.ts', de: "armorMultiplier: 3 };", para: "armorMultiplier: 1.35 };" },
   { regra: "Bijū usa só os planos da zona (até 3)", arquivo: 'src/game/bijuu.ts', de: "Math.min(GUARDIAN_RULES.shikamaruMaxPlans, zonePlans)", para: "zonePlans" },
   { regra: "vida de chefe nunca vira infinito", arquivo: 'src/game/missions.ts', de: "Number.isFinite(hp)?Math.min(BOSS_HP_LIMIT,hp):BOSS_HP_LIMIT", para: "hp" },
+  { regra: "horda anima no Treinamento do Hagoromo", arquivo: 'src/scene/GameCanvas.tsx', de: ":movingEnemy?Math.floor(animClock*10+sprite.id%4)%4:1;", para: ":movingEnemy?Math.floor(elapsed*10+sprite.id%4)%4:1;" },
   { regra: "3 acúmulos de Resfriado congelam", arquivo: 'src/game/statusRules.ts', de: "stacksToFreeze: 3,", para: "stacksToFreeze: 4," },
   { regra: "Mega Elite resiste 40% ao controle", arquivo: 'src/game/statusRules.ts', de: "resist: { mega: .4,", para: "resist: { mega: 0," },
   { regra: "golpe que acorda causa +60%", arquivo: 'src/game/statusRules.ts', de: "sleepWake: .6,", para: "sleepWake: 0," },

@@ -513,6 +513,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.
 
+- Animação: quadros de sprite usam `animClock` (sempre anda), nunca `elapsed` (para no Treinamento do Hagoromo e no selamento).
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.
