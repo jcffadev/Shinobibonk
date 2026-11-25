@@ -37,7 +37,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 ## Revisão do scale de todos os personagens · 25/11/2026
 
 - Simulador corrigido (geometria dos golpes e preparo) e novo `scripts/simulate-early.mjs`. Medição em docs/20.
-- Raio da Área 1,2 → 1,8 **aplicado em 25/11**. **PENDENTE DE VALIDAÇÃO E2E:** ver o círculo maior do Rasengan, da Bola de Fogo e do Caixão de Areia em partida. Próximo: olhar os que ainda ficam abaixo de 0,5× (Hashirama Sábio, Lee Shippuden, Terceiro Raikage, Naruto Shippuden, Sasuke Shippuden, Haku) e o 1º minuto do Kage (9 versões precisam de 2 golpes).
+- Raio da Área 1,2 → 1,8 **aplicado em 25/11**. **PENDENTE DE VALIDAÇÃO E2E:** ver o círculo maior do Rasengan, da Bola de Fogo e do Caixão de Areia em partida. Os 6 que pareciam abaixo da média eram efeito do simulador (só o kit, sem as básicas); com o pool real ficam perto da mediana. Próximo possível: começo do Kage com Naruto Academia e Itachi, e o topo (Quarto Raikage, Kushina, Chōji, Sai) com mais sementes.
 - **Prêmio por completar a Prova Chūnin:** aguardando a escolha do usuário.
 
 ## Eventos do anime · Prova Chūnin · 25/11/2026

@@ -2,6 +2,15 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Os 6 abaixo da média e o pool real da partida · 25/11/2026 (Claude Code)
+
+**Pedido do usuário:** "Sim, os 6" (Hashirama Sábio, Lee Shippuden, Terceiro Raikage, Naruto Shippuden, Sasuke Shippuden e Haku).
+
+- **Causa no simulador, não no jogo:** o simulador só deixava aprender as 4 técnicas do kit. No jogo, o pool da partida inclui as básicas da Academia, do elemento e da vila (Substituição em Órbita, Chute Giratório, Rajada…). Agora o simulador usa `skillPool(heroId)`, como o jogo (`SIM_KIT_ONLY=1` volta ao modo antigo, só para comparar).
+- **Com o pool real, os 6 ficam perto da mediana** (morte relativa: Hashirama Sábio 0,81 · Terceiro Raikage 0,81 · Naruto Shippuden 0,88 · Haku 0,89 · Lee Shippuden 1,00 · Sasuke Shippuden 1,02). **Nenhum ajuste de personagem foi feito.**
+- **Raio da Área 1,8 conferido com o pool real** (6 sementes, 5.520 partidas): faixa p10–p90 0,83–1,90 → 0,89–1,72; nenhum personagem abaixo de 0,5 nos dois casos; medianas sobem pouco (conta nova Jonin 36 → 40 min, Kage 27 → 30,5 min). Fica.
+- **O que sobra:** no Kage com conta nova, Naruto Academia e Itachi ainda caem no começo (a 1ª técnica não mata o comum de um golpe). No topo, Quarto Raikage (2,1×), Kushina (1,9×), Chōji e Sai (1,8×) vivem bem mais que a mediana. A medição do topo é ruidosa: a partida inteira é bimodal (cai perto da zona 3 ou passa de 75 min), então precisa de mais sementes antes de mexer.
+
 ## Revisão do scale e do começo de partida de todos os personagens · 25/11/2026 (Claude Code)
 
 **Pedidos do usuário:** "Reveja o scale de todos os personagens e veja o early game de todos os persoagens"; "Morrer se o player jogar mal, deve morrer, mesmo na dificuldade mais fácil..."; "Não é pros personagens ficarem brokens, é para ficar balanceados."

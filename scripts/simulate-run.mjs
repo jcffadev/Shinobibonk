@@ -10,7 +10,7 @@
 //   eventos de mapa (altar, roleta, NPCs) ficam fora. A horda é aproximada por um disco em volta do jogador
 //   (densidade CROWD.density) e cada forma de técnica acerta a fração do disco que a área dela cobre.
 // Uso: node scripts/simulate-run.mjs [heroi] [Genin|Chunin|Jonin|Kage] [minutos] [semente] [novo|maximo]
-import { HEROES, HERO_BY_ID, heroAffinity } from '../src/game/heroes.ts';
+import { HEROES, HERO_BY_ID, heroAffinity, skillPool } from '../src/game/heroes.ts';
 import { calculateStats, zoneThreat, zoneCurse, ZONE_DIFFICULTY, MISSION_TIER, xpToLevelUp, effectiveLootLuck, incomingDamage, normalHpFactor, AMBUSH_RULES } from '../src/game/progression.ts';
 import { ENEMY_TIERS, BASE_LOOT, xpDropValue, xpLoot, lootScale, megaEliteHp, rollMegaSchedule, eliteSpawnChance, eliteHpRamp } from '../src/game/enemyTiers.ts';
 import { SHAPE_RADIUS, CONE_COS, MELEE_IMPACT, setupNumbers, attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
@@ -93,7 +93,9 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
   const s = { t: 0, zone: 1, zoneT: 0, level: 1, xp: 0, kills: 0, ryu: 0, paid: 0, kunaisLeft: CROWD.kunaisPerZone, alive: 0, damage: 0,
     items: {}, pills: {}, powerlevel: {}, skills: {}, growth: {}, revives: 0, hp: 0, dead: false, victory: false, megaKills: 0, guardians: 0, ambushAt: AMBUSH_RULES.first, bosses: [] };
   let stats, megaPlan = rollMegaSchedule(rnd), openingMega = true, guardian = null, dirty = true;
-  const techs = () => hero.techniques.filter(t => s.skills[t.name]);
+  // Pool da partida como no jogo (kit + básicas da Academia, do elemento e da vila; 25/11/2026 — antes só as 4 do kit).
+  const kit = process.env.SIM_KIT_ONLY ? hero.techniques : skillPool(heroId);
+  const techs = () => kit.filter(t => s.skills[t.name]);
   // Técnicas de preparo (Modo Sábio, Portões, Byakugou…): o bônus entra pela fração do tempo em que fica ativo (25/11/2026).
   const setupBuffs = () => { const out = {}; for (const t of techs()) if (t.setup) { const n = setupNumbers(t, s.growth[t.name] ?? NO_GROWTH, s.skills[t.name]); for (const [k, v] of Object.entries(n.bonuses)) out[k] = (out[k] || 0) + v * n.uptime; } return out; };
   const refresh = () => { stats = calculateStats(heroId, s.level, s.items, s.pills, 0, permanent, setupBuffs(), s.powerlevel); dirty = false; };
@@ -111,7 +113,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
   /** Cartas de nível (mesma regra de rollLevelOffers): até 2 técnicas, o resto pílulas; sem nada, treina atributo. */
   const offer = () => {
     const learned = Object.keys(s.skills).length, cap = t => techniqueLevelCap(t, ex('skillCap'));
-    const skills = hero.techniques.filter(t => t.unlockLevel <= s.level && (s.skills[t.name] || 0) < cap(t) && ((s.skills[t.name] || 0) > 0 || learned < maxSkills));
+    const skills = kit.filter(t => t.unlockLevel <= s.level && (s.skills[t.name] || 0) < cap(t) && ((s.skills[t.name] || 0) > 0 || learned < maxSkills));
     const pills = PILLS.map(p => p.name).filter(n => canGrantPill(s.pills, n, ex('pillCap')));
     const total = choiceCount(permanent, luckNow(), rnd), cards = [];
     const take = list => list.splice(Math.floor(rnd() * list.length), 1)[0];

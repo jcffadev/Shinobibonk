@@ -122,6 +122,7 @@ const MUTATIONS = [
   { regra: "corrente da Prova Chūnin libera o Shikamaru", arquivo: 'src/game/events.ts', de: "duel(PRELIM, 'shikamaru', 'kin',", para: "duel(PRELIM, 'shikamaru', 'tenten'," },
   { regra: 'simulador usa o raio do impacto no corpo a corpo', arquivo: 'scripts/simulate-run.mjs', de: "case 'Corpo a corpo': return Math.PI * Math.max(MELEE_IMPACT.min, range * MELEE_IMPACT.share) ** 2;", para: "case 'Corpo a corpo': return Math.PI * range * range;" },
   { regra: 'raio da Área 1,8', arquivo: 'src/game/combat.ts', de: 'export const SHAPE_RADIUS={area:1.8,orbit:1.7};', para: 'export const SHAPE_RADIUS={area:1.2,orbit:1.7};' },
+  { regra: 'simulador usa o pool real da partida', arquivo: 'scripts/simulate-run.mjs', de: 'const kit = process.env.SIM_KIT_ONLY ? hero.techniques : skillPool(heroId);', para: 'const kit = hero.techniques;' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

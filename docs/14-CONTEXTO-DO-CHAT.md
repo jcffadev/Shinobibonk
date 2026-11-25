@@ -3059,3 +3059,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - É o círculo em volta do alvo que as 56 técnicas de Área acertam (Rasengan, Bola de Fogo, Caixão de Areia…). Passou de 0,84 m para 1,26 m de raio; o dano por acerto não muda e a marca no chão acompanha.
 - **Testes:** tipos, testes (310) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Sim, os 6
+
+**Resposta.**
+
+- Os 6 só pareciam fracos porque o simulador não deixava aprender as técnicas básicas do pool. Corrigido; com o pool real eles ficam perto da média e nenhum personagem precisou de ajuste.
+- O raio da Área 1,8 foi conferido de novo e continua equilibrando sem deixar ninguém forte demais.
+- **Testes:** tipos e testes (310). **Publicado no GitHub.**

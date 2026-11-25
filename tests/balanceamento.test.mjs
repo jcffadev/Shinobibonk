@@ -158,4 +158,5 @@ test('simulador: geometria dos golpes igual à do jogo e bônus do preparo (25/1
   assert.ok(Math.abs(ratio(t('Cone', 2.8), t('Área', 4.5)) - cone / area) < 1e-9, 'cone com o alcance em escala de ataque');
   const sim = fs.readFileSync(new URL('../scripts/simulate-run.mjs', import.meta.url), 'utf8');
   assert.ok(sim.includes('calculateStats(heroId, s.level, s.items, s.pills, 0, permanent, setupBuffs(), s.powerlevel)'), 'preparo entra pela fração ativa');
+  assert.ok(sim.includes('const kit = process.env.SIM_KIT_ONLY ? hero.techniques : skillPool(heroId);'), 'pool da partida como no jogo (básicas incluídas)');
 });

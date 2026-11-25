@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Simulador com o pool real da partida (Claude Code)
+
+- **Pedido do usuário:** "Sim, os 6".
+- **`scripts/simulate-run.mjs`:** as cartas de técnica saem de `skillPool(heroId)` (kit + básicas), como no jogo; antes só o kit de 4.
+- **Resultado:** os 6 personagens ficam perto da mediana (0,81 a 1,02); nenhum ajuste de personagem foi necessário. O raio da Área 1,8 foi conferido de novo com o pool real e continua equilibrando (p10–p90 0,83–1,90 → 0,89–1,72).
+- **Testes:** conferência no teste do simulador e 1 mutação verificada à mão.
+
 ## 25/11/2026 · Raio da Área 1,2 → 1,8 (Claude Code)
 
 - **Decisão do usuário:** "Sim, aplicar". Pergunta: "o que seria esse raio da área?" — o círculo em volta do alvo que as 56 técnicas de Área (Rasengan, Bola de Fogo, Caixão de Areia…) acertam; passa de 0,84 m para 1,26 m de raio, sem mudar o dano.
