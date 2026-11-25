@@ -79,7 +79,13 @@ Fundir e Combinar aparecem em abas separadas, com ícones dos dois ataques, list
 - **Atributos somados:** dano (A + B) × bônus de natureza ou linhagem; o status da receita soma a chance do mesmo status das duas técnicas (teto 95%); outro status vira secundário; queimadura, veneno, lentidão e gravidade passam para a fusão. Alcance e recarga ficam com o maior. Os afixos de nível continuam somados na Oficina.
 - **Sem raridade:** o cartão do planejador mostra o tipo (Kekkei Genkai, Fusão de natureza, Fusão de escola, Fusão assinatura ou Combinação).
 - **Cobertura** (115 versões): 3 sem fusão só com o próprio pool e **0** com todos selados; toda receita tem quem aprenda.
-- **Falta:** o cartão novo (item 4 abaixo), a ficha ao passar o mouse (item 5) e os ícones e efeitos próprios das receitas novas (Codex). Hoje elas usam uma célula do atlas de efeitos e o visual do elemento.
+- **Cartão novo e ficha (25/11, pedido "Sim, fazer o cartão"):** `src/game/fusionCard.ts` + `FusionCard` em `src/ui/BuildPlanner.tsx`.
+  - O cartão mostra o tipo (Kekkei Genkai, natureza, escola ou assinatura), o nome, os ingredientes "A + B", natureza, escola e forma, e a descrição.
+  - **Como funciona** (`fusionParts`): o golpe pela forma (projétil, leque, onda de choque, explosão no alvo, anel amplo, cone, linha, corpo a corpo) e uma parte por efeito (controle, lentidão, efeito secundário, queimadura, dano contínuo, gravidade), com a chance no Nv. 7.
+  - **Quais melhorias afetam** (`fusionUpgrades`): Área, Projéteis (disparo extra nos disparos; golpe extra nas outras formas), Recarga, Duração e Chance de status quando há efeito, e Ricochete só em projéteis. O que não ajuda aparece em "Não ajuda".
+  - A lista do catálogo mostra o tipo, os ingredientes e as partes.
+  - **Ficha ao passar o mouse** (`fusionSheet`), no catálogo e nos espaços de fusão do plano: tipo, efeito, condição, dano base, dano final com o shinobi no Nv. 1 sem itens, recarga, status e níveis.
+- **Falta:** ícones e efeitos próprios das receitas novas (Codex). Hoje elas usam uma célula do atlas de efeitos e o visual do elemento.
 
 ## Fusões — estado em 15/11/2026 e plano para continuar (passagem para outro agente)
 

@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Cartão novo de fusão e ficha ao passar o mouse (Claude Code)
+
+- **Pedido do usuário:** "Sim, fazer o cartão" (docs/10, itens 4 e 5).
+- **Novo `src/game/fusionCard.ts`:** `fusionParts` (como funciona, por forma e por efeito), `fusionUpgrades` (o que Área, Projéteis, Recarga, Duração, Chance de status e Ricochete mudam e o que não ajuda) e `fusionSheet` (tipo, condição, dano base, recarga, status e níveis).
+- **Planejador (`BuildPlanner.tsx`):** o cartão de fusão mostra tipo, nome, ingredientes, natureza/escola/forma, descrição, "Como funciona", "Quais melhorias afetam" e a ficha. A Combinação ganhou um cartão próprio e mais curto. A lista do catálogo segue o mesmo estilo.
+- **Ficha ao passar o mouse** no catálogo e nos espaços de fusão do plano, com o dano final do shinobi no Nv. 1 sem itens.
+- **Testes:** `tests/fusao-cartao.test.mjs` com 4 testes (mínimo 300) e 3 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver o cartão e a ficha na tela.
+
 ## 25/11/2026 · Fusões só por receita, com atributos somados (Claude Code)
 
 - **Decisões do usuário:** "Aprovar e incluir Gelo"; "Incluir as duas" (Taijutsu e Genjutsu).

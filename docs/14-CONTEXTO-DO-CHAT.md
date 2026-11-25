@@ -3014,3 +3014,11 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Fusões agora só por receita (24): assinatura, Kekkei Genkai, natureza (com Gelo) e escola (Taijutsu e Genjutsu). O par sem receita só combina, e a fusão soma os atributos das duas técnicas.
 - Com a conta completa, todas as 115 versões têm fusão. Faltam o cartão novo e a ficha ao passar o mouse.
 - **Testes:** tipos, testes (296) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Sim, fazer o cartão
+
+**Resposta.**
+
+- Cartão de fusão refeito: tipo, nome, ingredientes, natureza/escola/forma, descrição, "Como funciona", "Quais melhorias afetam" e ficha. A lista do catálogo segue o mesmo estilo.
+- Ficha ao passar o mouse no catálogo e nos espaços do plano, com dano base, dano final, recarga, status, condição e níveis.
+- **Testes:** tipos, testes (300) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

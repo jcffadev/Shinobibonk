@@ -269,5 +269,5 @@ test('todas as receitas têm quem aprenda e toda versão tem fusão com a conta 
 test('sem raridade no cartão de fusão', () => {
   const planner = read('src/ui/BuildPlanner.tsx');
   assert.ok(!/Fusão · Épico|Combinação · Raro|Kekkei Genkai · Épico/.test(planner));
-  assert.ok(planner.includes("<small>{recipe?FUSION_KIND_LABEL[recipe.kind]:'Combinação'}</small>"));
+  assert.ok(planner.includes("<div><small>{sheet.label}</small><h3>{recipe.name}</h3></div>"));
 });

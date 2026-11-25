@@ -123,6 +123,28 @@
 .planner-fusion-card dt {color:#b8c6de}
 .planner-fusion-card dd {margin:0}
 .planner-fusion-card p {font-size:.76rem;margin:4px 0 0;color:#b8c6de}
+/* 25/11/2026 — cartão novo de fusão (docs/10, item 4) e ficha ao passar o mouse (item 5). */
+.fusion-card-v2 {display:grid;gap:6px;border-color:#8a6bc0;background:linear-gradient(180deg,#2d2747,#22233a)}
+.fusion-card-v2.kind-kekkei {border-color:#d9a95b}
+.fusion-card-v2.kind-assinatura {border-color:#e07a5a}
+.fusion-card-v2 .fusion-result-heading > .skill-art {width:40px;height:40px}
+.fusion-card-v2 .fusion-result-heading small {text-transform:uppercase;letter-spacing:.04em;font-size:.68rem}
+.fusion-card-v2 .fusion-result-heading h3 {font-size:.95rem}
+.fusion-sources i {font-style:normal;color:#d5bdf3;margin-right:3px}
+.fusion-card-v2 .fusion-summary {margin:0;color:#e3dcf2;font-size:.78rem;line-height:1.35}
+.fusion-card-v2 h4 {margin:2px 0 3px;font-size:.74rem;color:#ffdc94;text-transform:uppercase;letter-spacing:.04em}
+.fusion-how ol,.fusion-upgrades ul {margin:0;padding:0;list-style:none;display:grid;gap:3px}
+.fusion-how li,.fusion-upgrades li {display:grid;grid-template-columns:minmax(78px,auto) 1fr;gap:6px;font-size:.74rem;line-height:1.3;border-radius:4px;background:#161d2e;padding:3px 6px}
+.fusion-how li b,.fusion-upgrades li b {color:#c9b6ff}
+.fusion-card-v2 .fusion-nohelp {font-size:.72rem;color:#9fb0c8;margin-top:3px}
+.fusion-card-v2 .fusion-sheet div {grid-template-columns:58px 1fr}
+.fusion-catalog-entry .fusion-kind {text-transform:uppercase;letter-spacing:.04em;font-size:.64rem;color:#d5bdf3}
+.fusion-catalog-entry.kind-assinatura .fusion-kind {color:#ffb199}
+.fusion-catalog-entry.kind-kekkei .fusion-kind {color:#ffd58a}
+.fusion-tip-sheet {margin:0;display:grid;gap:3px;font-size:.76rem}
+.fusion-tip-sheet div {display:grid;grid-template-columns:70px 1fr;gap:5px}
+.fusion-tip-sheet dt {color:#b3c5dc}
+.fusion-tip-sheet dd {margin:0}
 .account-area .archive-button {font-size:.73rem;padding:6px 9px;min-height:30px}
 @media(max-width:760px){
  .mission-planner .build-workspace {grid-template-columns:1fr}
@@ -130,7 +152,7 @@
 }
 @media(max-width:490px){.fusion-comparison {grid-template-columns:1fr}}
 
-.planner-tooltip {position:fixed;z-index:250;pointer-events:none;display:grid;gap:4px;max-width:min(270px,calc(100vw - 16px));border:1px solid #576985;border-radius:8px;background:#172236;color:#edf4ff;box-shadow:0 7px 20px #0009;padding:8px 10px;font-size:.8rem}
+.planner-tooltip {position:fixed;z-index:250;pointer-events:none;display:grid;gap:4px;max-width:min(300px,calc(100vw - 16px));border:1px solid #576985;border-radius:8px;background:#172236;color:#edf4ff;box-shadow:0 7px 20px #0009;padding:8px 10px;font-size:.8rem}
 .planner-tooltip b {color:#ffdc94}
 .planner-tooltip small {color:#b3c5dc}
 .planner-option-effect {display:block;margin-top:3px;color:#a1dfca}

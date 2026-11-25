@@ -12,7 +12,8 @@ import { ArsenalControls, type ArsenalControlsProps } from './ArsenalControls';
 import { combineBonus, FUSION_KIND_LABEL, fusionBonus, fusionCatalog, fusionDisplayName, fusionRecipeText, isMergedName, kekkeiFusion, mergedTechnique } from '../game/techniqueMerge';
 /** Origem da técnica no pool (regra do usuário: 1–2 únicas por shinobi; compartilhadas por vila/elemento; únicas de outros só após selar). */
 function sourceText(t:PoolTechnique){const who=HERO_BY_ID[t.origin]?.name??t.origin;if(t.source==='kit')return 'Kit próprio.';if(t.source==='basica')return 'Básica da Academia (sempre disponível).';if(t.source==='vila')return 'Compartilhada · mesma vila ('+who+').';if(t.source==='elemento')return 'Compartilhada · mesmo elemento '+t.element+' ('+who+').';return t.locked?'Única de '+who+' · bloqueada até selar '+who+' pela 1ª vez.':'Única de '+who+' (selado).';}
-import { attackCooldown,setupNumbers,itemSchools,itemElement,itemAttribute,techniqueCritical,techniqueDetail,techniqueSchool,techniqueStatusText } from '../game/combat';
+import { fusionParts, fusionSheet, fusionUpgrades } from '../game/fusionCard';
+import { NO_GROWTH,techniqueHitDamage,attackCooldown,setupNumbers,itemSchools,itemElement,itemAttribute,techniqueCritical,techniqueDetail,techniqueSchool,techniqueStatusText } from '../game/combat';
 import { ItemIcon } from './RunSheet';
 import { SkillIcon } from './SkillIcon';
 import { ELEMENT_COLOR } from './CharacterSelect';
@@ -29,7 +30,7 @@ function PlannerRarity({rarity,max}:{rarity:Rarity;max:number}){return <span cla
 
 export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,archiveItemLimit,toggleArchivedItem,arsenalControls,archivedSkills,archiveLimit,trainingSlots,trained,trainTechnique,toggleSkill,fusionPlan,addFusionPair,removeFusionPair,tactics,saveTactic,applyTactic,deleteTactic,updateTactic}:{hero:{id:string;name:string;skills:string[]};unlocked:string[];planned:string[];togglePlanned:(name:string)=>void;archivedItems:string[];archiveItemLimit:number;toggleArchivedItem:(id:string)=>void;arsenalControls:ArsenalControlsProps;archivedSkills:string[];archiveLimit:number;trainingSlots:number;trained:string[];trainTechnique:(name:string)=>void;toggleSkill:(name:string)=>void;fusionPlan:[string,string][];addFusionPair:(a:string,b:string)=>void;removeFusionPair:(index:number)=>void;tactics:MissionTactic[];saveTactic:(name:string)=>void;applyTactic:(index:number)=>void;deleteTactic:(index:number)=>void;updateTactic:(index:number)=>void;}){
  const [tab,setTab]=useState('Habilidades'),[filters,setFiltersState]=useState({...EMPTY_FILTERS}),[rarities,setRarities]=useState<Rarity[]>([]),[selected,setSelected]=useState(''),[view,setView]=useState<'all'|'planned'|'archived'>('all'),[,setTick]=useState(0);
- const [tip,setTip]=useState<{name:string;x:number;y:number}|null>(null);
+ const [tip,setTip]=useState<{name:string;x:number;y:number;pair?:[string,string]}|null>(null);
  const [fusionA,setFusionA]=useState(''),[fusionB,setFusionB]=useState('');
  useEffect(()=>{const on=()=>setTick(n=>n+1);window.addEventListener('shinobi-account',on);return ()=>window.removeEventListener('shinobi-account',on);},[]);
  const techniques=techniquePool(hero.id,sealedHeroes()),research=researchProgress();const researchOf=(t:PoolTechnique)=>t.source==='kit'||t.source==='basica'?1:research[t.name]||0;
@@ -67,7 +68,9 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  };
  const tipTechnique=tip?techniqueByName.get(tip.name):undefined;
  const tipItem=tip?ITEM_BY_NAME[tip.name]:undefined;
- const showTip=(name:string,node:HTMLElement)=>{const rect=node.getBoundingClientRect();setTip({name,x:Math.max(8,Math.min(rect.left,window.innerWidth-280)),y:rect.bottom+9});};
+ const showTip=(name:string,node:HTMLElement,pair?:[string,string])=>{const rect=node.getBoundingClientRect();setTip({name,pair,x:Math.max(8,Math.min(rect.left,window.innerWidth-300)),y:rect.bottom+9});};
+ const tipFusion=tip?.pair?mergedTechnique({kind:'fuse',names:tip.pair},techniques,familyOf(hero.id)):undefined;
+ const tipSheet=tip?.pair&&tipFusion?fusionSheet(tipFusion,tip.pair):undefined;
  const entryActions=(e:(typeof visible)[number])=><div className="build-cell-actions">
           {/* Rodada 47 — o botão Treinar aparece para TODAS as técnicas (não só as planejadas): treinar uma técnica
               ainda não planejada auto-planeja ela junto (treinamento sem planejamento era no-op). */}
@@ -80,8 +83,19 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
   setTab(next);setView('all');setSelected('');setFilters({...EMPTY_FILTERS});setRarities([]);
  }
  return <div className="mission-planner" onScrollCapture={()=>{if(tip)setTip(null);}}>
-  {tip&&createPortal(<aside role="tooltip" className="planner-tooltip" style={{left:tip.x,top:Math.min(tip.y,window.innerHeight-140)}}>
+  {tip&&createPortal(<aside role="tooltip" className="planner-tooltip" style={{left:tip.x,top:Math.max(8,Math.min(tip.y,window.innerHeight-(tip.pair?300:140)))}}>
     <b>{tip.name}</b>
+    {tipSheet&&tipFusion&&<dl className="fusion-tip-sheet" aria-label="Ficha da fusão">
+     <div><dt>Tipo</dt><dd>{tipSheet.label} · {tipSheet.recipe}</dd></div>
+     <div><dt>Efeito</dt><dd>{fusionParts(tipFusion).map(p=>p.kind).join(' · ')}</dd></div>
+     <div><dt>Condição</dt><dd>{tipSheet.condition}</dd></div>
+     <div><dt>Dano base</dt><dd>{tipSheet.base}</dd></div>
+     <div><dt>Dano final</dt><dd>{Math.round(techniqueHitDamage(tipFusion,NO_GROWTH,base)).toLocaleString('pt-BR')} por acerto com o {hero.name} no Nv. 1, sem itens</dd></div>
+     <div><dt>Recarga</dt><dd>{tipSheet.cooldown}</dd></div>
+     <div><dt>Status</dt><dd>{tipSheet.status}</dd></div>
+     <div><dt>Níveis</dt><dd>{tipSheet.cap}</dd></div>
+    </dl>}
+    {tip.pair&&!tipFusion&&<span>Par sem receita: só pode ser Combinado.</span>}
     {tipTechnique&&<><small>{tipTechnique.school} · {tipTechnique.element} · {tipTechnique.shape}</small><span>{techniqueStatusText(tipTechnique)}</span><small>Aprende no Nv. {tipTechnique.unlockLevel} · Recarga {(tipTechnique.setup?setupNumbers(tipTechnique).cooldown:attackCooldown(tipTechnique,1)).toLocaleString('pt-BR')} s</small></>}
     {tipItem&&<><PlannerRarity rarity={tipItem.rarity} max={tipItem.max}/><span>{tipItem.description}</span></>}
     {PILL_NAMES.includes(tip.name)&&<span>{pillDescription(tip.name)}</span>}
@@ -91,7 +105,7 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
   <section className="planner-categories" aria-label="Resumo do plano">
    {categories.map(category=><div className={tab===category?'active':''} key={category}>
     <button type="button" aria-pressed={tab===category} onClick={()=>selectTab(category)}>{category} <small>{plannedByCategory[category].length}</small></button>
-    <div className="planner-slots">{plannedByCategory[category].length?plannedByCategory[category].map((name,index)=><span key={name} onMouseEnter={event=>showTip(name,event.currentTarget)} onMouseLeave={()=>setTip(null)} onFocus={event=>showTip(name,event.currentTarget)} onBlur={()=>setTip(null)}>
+    <div className="planner-slots">{plannedByCategory[category].length?plannedByCategory[category].map((name,index)=><span key={name} onMouseEnter={event=>showTip(name,event.currentTarget,category==='Fusões'?fusionPlan[index]:undefined)} onMouseLeave={()=>setTip(null)} onFocus={event=>showTip(name,event.currentTarget,category==='Fusões'?fusionPlan[index]:undefined)} onBlur={()=>setTip(null)}>
      {category==='Habilidades'||category==='Fusões'?<SkillIcon heroId={hero.id} name={name}/>:<ItemIcon name={name}/>}
      <button type="button" className="planner-remove" aria-label={'Remover '+name+' do plano'} onClick={()=>{setTip(null);if(category==='Fusões')removeFusionPair(index);else togglePlanned(name);}}>×</button>
     </span>):<i aria-hidden="true"/>}</div>
@@ -124,8 +138,8 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
      <div className="planner-fusion-catalog" aria-label="Fusões disponíveis">
        {shownCatalog.map(f=>{const planIndex=fusionPlan.findIndex(p=>p.includes(f.pair[0])&&p.includes(f.pair[1])),done=planIndex>=0;
          // Rodada 82 (pedido do usuário: "Ao clicar na fusão, ela já fica selecionada"): 1 clique planeja; clicar de novo tira do plano.
-         return <button type="button" key={f.result.name} className={'fusion-catalog-entry'+(f.kekkei?' is-kekkei':'')} aria-pressed={done} disabled={!done&&fusionPlan.length>=4} title={done?'Clique para tirar do plano':fusionPlan.length>=4?'Limite de 4 fusões planejadas':'Clique para planejar'} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}>
-         <span className="fusion-catalog-icon"><SkillIcon heroId={hero.id} name={f.result.name}/></span><span className="fusion-catalog-text"><b>{f.name}</b><small>{fusionRecipeText(f.pair,f.kekkei?'Kekkei Genkai':'Fusão')}</small><small className="fusion-catalog-effect">{[f.result.element,f.result.secondaryElement].filter(Boolean).join(' + ')} · {f.result.shape} · {techniqueStatusText(f.result)}</small>{done&&<small className="fusion-catalog-planned">✓ Planejada</small>}</span>
+         return <button type="button" key={f.result.name} className={'fusion-catalog-entry kind-'+f.kind+(f.kekkei?' is-kekkei':'')} aria-pressed={done} disabled={!done&&fusionPlan.length>=4} onMouseEnter={event=>showTip(f.name,event.currentTarget,f.pair)} onMouseLeave={()=>setTip(null)} onFocus={event=>showTip(f.name,event.currentTarget,f.pair)} onBlur={()=>setTip(null)} title={done?'Clique para tirar do plano':fusionPlan.length>=4?'Limite de 4 fusões planejadas':'Clique para planejar'} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}>
+         <span className="fusion-catalog-icon"><SkillIcon heroId={hero.id} name={f.result.name}/></span><span className="fusion-catalog-text"><small className="fusion-kind">{FUSION_KIND_LABEL[f.kind]}</small><b>{f.name}</b><small>{f.pair[0]} + {f.pair[1]}</small><small className="fusion-catalog-effect">{[f.result.element,f.result.secondaryElement].filter(Boolean).join(' + ')} · {f.result.school} · {fusionParts(f.result).map(p=>p.kind).join(' · ')}</small>{done&&<small className="fusion-catalog-planned">✓ Planejada</small>}</span>
        </button>;})}
      </div>
      {!catalog.length&&<p className="planner-empty">Este pool ainda não tem duas técnicas que se fundem. Sele mais shinobis para liberar fusões.</p>}
@@ -189,26 +203,44 @@ function FusionCard({heroId,pair,kind,pool}:{heroId:string;pair:[string,string];
  const [first,second]=pair.map(name=>pool.find(technique=>technique.name===name));
  if(!result||!first||!second)return <div className="planner-fusion-card"><p>{kind==='fuse'&&first&&second?'Este par não tem receita de fusão. Ele pode ser Combinado.':'Par indisponível no pool atual.'}</p></div>;
  const recipe=kekkeiFusion(result.name);
- const fused=kind==='fuse', parts=fused?[result]:[first,second];
- const effects=fused?[result.status,result.secondaryStatus,result.burn?'Queimadura':null,result.poison?'Dano contínuo':null,result.gravity?'Gravidade':null]:
-  parts.flatMap(technique=>[technique.status,technique.burn?'Queimadura':null]);
- const projectiles=parts.some(t=>['Projétil','Em V'].includes(t.shape));
- return <article className={`planner-fusion-card ${fused?'is-fusion':'is-combination'}`}>
-  <div className="fusion-result-heading"><SkillIcon heroId={heroId} name={result.name}/><div><small>{recipe?FUSION_KIND_LABEL[recipe.kind]:'Combinação'}</small><h3>{recipe?.name??result.name}</h3></div></div>
-  <div className="fusion-sources">{[first,second].map(technique=><span key={technique.name}><SkillIcon heroId={heroId} name={technique.name}/>{technique.name}</span>)}</div>
+ const sources=<div className="fusion-sources">{[first,second].map((technique,i)=><span key={technique.name}>{i>0&&<i aria-hidden="true">+</i>}<SkillIcon heroId={heroId} name={technique.name}/>{technique.name}</span>)}</div>;
+ if(kind==='combine'||!recipe){
+  const effects=[first,second].flatMap(technique=>[technique.status,technique.burn?'Queimadura':null]).filter(Boolean);
+  return <article className="planner-fusion-card is-combination">
+   <div className="fusion-result-heading"><SkillIcon heroId={heroId} name={result.name}/><div><small>Combinação</small><h3>{result.name}</h3></div></div>
+   {sources}
+   <dl>
+    <div><dt>Dano</dt><dd>1,5× por técnica · {combineBonus(first,second).label}</dd></div>
+    <div><dt>Recarga no Nv. 1</dt><dd>{attackCooldown(result,1).toLocaleString('pt-BR',{maximumFractionDigits:2})} s</dd></div>
+    {effects.length>0&&<div><dt>Efeitos</dt><dd>{[...new Set(effects)].join(' · ')}</dd></div>}
+   </dl>
+   <p>As duas técnicas atacam juntas e usam o mesmo espaço.</p>
+  </article>;
+ }
+ const sheet=fusionSheet(result,pair),upgrades=fusionUpgrades(result),bonus=fusionBonus(first,second,familyOf(heroId));
+ // 25/11/2026 — cartão novo (docs/10, item 4): nome e tipo, ingredientes, natureza/escola/forma, descrição, como funciona,
+ // quais melhorias afetam e a ficha.
+ return <article className={'planner-fusion-card is-fusion fusion-card-v2 kind-'+recipe.kind}>
+  <div className="fusion-result-heading"><SkillIcon heroId={heroId} name={result.name}/><div><small>{sheet.label}</small><h3>{recipe.name}</h3></div></div>
+  {sources}
   <div className="fusion-tags">
-   {[...new Set([first.element,second.element])].map(element=><span key={element} style={{color:ELEMENT_COLOR[element]}}>{element}</span>)}
-   {[...new Set(parts.flatMap(t=>[t.school,t.shape]))].map(label=><span key={label}>{label}</span>)}
+   {[result.element,result.secondaryElement].filter((e):e is Technique['element']=>!!e).map(element=><span key={element} style={{color:ELEMENT_COLOR[element]}}>{element}</span>)}
+   <span>{result.school}</span><span>{result.shape}</span>
   </div>
-  <dl>
-   <div><dt>Dano</dt><dd>{fused?'A + B · afixos e efeitos somados'+(fusionBonus(first,second,familyOf(heroId))>0?' · +15% ('+(first.element===second.element?'mesma natureza':'Kekkei Genkai da linhagem')+')':''):'1,5× por técnica · '+combineBonus(first,second).label}</dd></div>
-   <div><dt>Recarga no Nv. 1</dt><dd>{attackCooldown(result,1).toLocaleString('pt-BR',{maximumFractionDigits:2})} s</dd></div>
-   {effects.some(Boolean)&&<div><dt>Efeitos</dt><dd>{fused?techniqueStatusText(result):[...new Set(effects.filter(Boolean))].join(' · ')}</dd></div>}
-   <div><dt>Melhorias</dt><dd>Dano, área, recarga{effects.some(Boolean)?', duração de status':''}{projectiles?', projéteis':''}</dd></div>
+  <p className="fusion-summary">{recipe.summary}</p>
+  <section className="fusion-how" aria-label="Como funciona"><h4>Como funciona</h4>
+   <ol>{fusionParts(result).map(part=><li key={part.kind}><b>{part.kind}</b><span>{part.text}</span></li>)}</ol>
+  </section>
+  <section className="fusion-upgrades" aria-label="Quais melhorias afetam"><h4>Quais melhorias afetam</h4>
+   <ul>{upgrades.helps.map(u=><li key={u.stat}><b>{u.stat}</b><span>{u.effect}</span></li>)}</ul>
+   {upgrades.noHelp.length>0&&<p className="fusion-nohelp">Não ajuda: {upgrades.noHelp.join('; ')}.</p>}
+  </section>
+  <dl className="fusion-sheet">
+   <div><dt>Dano</dt><dd>{sheet.base}{bonus>0?' · +15% ('+(first.element===second.element?'mesma natureza':'Kekkei Genkai da linhagem')+')':''} · afixos somados</dd></div>
+   <div><dt>Recarga</dt><dd>{sheet.cooldown} no Nv. 1</dd></div>
+   <div><dt>Status</dt><dd>{sheet.status}</dd></div>
+   <div><dt>Níveis</dt><dd>{sheet.cap}</dd></div>
   </dl>
-  {recipe&&<p>{recipe.summary}</p>}
-  <p>{fused?'Nova técnica do Nv. 1 ao Nv. 7.':'As duas técnicas usam o mesmo espaço.'}</p>
-  <div className="fusion-ingredients-detail">{[first,second].map(t=><div key={t.name}><b>{t.name}</b><small>{t.school} · {t.shape} · {techniqueStatusText(t)}</small></div>)}</div>
  </article>;
 }
 
