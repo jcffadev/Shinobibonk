@@ -16,6 +16,7 @@
 // Uso: node scripts/simulate-status.mjs [rótulo] [missão=Kage] [heróis=todos|n] [semente=17]
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { HEROES, heroAffinity } from '../src/game/heroes.ts';
+import { ITEM_BY_NAME } from '../src/game/catalog.ts';
 import { calculateStats } from '../src/game/progression.ts';
 import { attackCooldown, techniqueProc, BURN_CHANCE, POISON_CHANCE, NO_GROWTH } from '../src/game/combat.ts';
 import { expectedHit } from '../src/game/bossScaling.ts';
@@ -202,9 +203,53 @@ export function summarizeStatus(rows) {
   return out;
 }
 
+/**
+ * Variantes de regra para a proposta de calibração (só no simulador): `rules` muda STATUS_RULES, `items` muda bônus de
+ * itens e `chain:false` tira a reação em cadeia da Esfera Katon. Tudo volta ao valor original depois da medição.
+ */
+export const STATUS_VARIANTS = [
+  ['atual', {}],
+  ['Katon sem cadeia', { chain: false }],
+  ['congela com 2 acúmulos', { rules: { chill: { stacksToFreeze: 2 } } }],
+  ['Resfriado dura 5 s', { rules: { chill: { decay: 5 } } }],
+  ['chances de item ×2', { items: { 'Fio de Aço Ninja': { rootChance: .08 }, 'Incenso do Sono': { sleepChance: .05 }, 'Pergaminho Hyoton': { chillChance: .12 }, 'Anel do Veneno': { poisonChance: .12 } } }],
+  ['proposta (Katon sem cadeia + congela com 2 + chances ×2)', { chain: false, rules: { chill: { stacksToFreeze: 2 } }, items: { 'Fio de Aço Ninja': { rootChance: .08 }, 'Incenso do Sono': { sleepChance: .05 }, 'Pergaminho Hyoton': { chillChance: .12 }, 'Anel do Veneno': { poisonChance: .12 } } }],
+];
+export function withVariant(v, fn) {
+  const undo = [];
+  for (const [group, values] of Object.entries(v.rules ?? {})) for (const [k, val] of Object.entries(values)) { undo.push([STATUS_RULES[group], k, STATUS_RULES[group][k]]); STATUS_RULES[group][k] = val; }
+  for (const [name, values] of Object.entries(v.items ?? {})) for (const [k, val] of Object.entries(values)) { const b = ITEM_BY_NAME[name].bonuses; undo.push([b, k, b[k]]); b[k] = val; }
+  try { return fn(); } finally { for (const [o, k, val] of undo.reverse()) o[k] = val; }
+}
+/** Cada variante nas hordas de teste (STRESS) com as builds dos 8:00. */
+export function measureVariants(builds, seed, only) {
+  const out = {};
+  for (const [name, v] of STATUS_VARIANTS.filter(([n]) => !only || only.includes(n))) out[name] = withVariant(v, () => Object.fromEntries(STRESS.map(([mark, ratio]) => {
+    const rows = builds.map(b => ({ heroId: b.heroId, marks: { [mark]: measureBuild(b, seed, { hitRatio: ratio, chain: v.chain ?? true }) } }));
+    return [mark, summarizeStatus(rows)[mark]];
+  })));
+  return out;
+}
+
 const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/').split('/').pop());
 if (isMain) {
   const [label = 'status', mission = 'Kage', heroesArg = 'todos', seedArg = '17'] = process.argv.slice(2);
+  if (label === 'proposta') {
+    // node scripts/simulate-status.mjs proposta [missão] [a cada n versões] [semente]
+    const step = +heroesArg || 3, seed = +seedArg, started = Date.now();
+    const builds = HEROES.filter((_, i) => i % step === 0).map(h => statusBuilds({ heroId: h.id, mission, seed })['8:00']).filter(Boolean);
+    const result = measureVariants(builds, seed, process.env.VARIANTES?.split('|'));
+    mkdirSync('artifacts', { recursive: true });
+    writeFileSync('artifacts/simulate-status-proposta.json', JSON.stringify({ mission, seed, builds: builds.length, result }, null, 1));
+    const pct = v => (v >= 0 ? '+' : '') + Math.round(v * 100) + '%';
+    console.log(`${mission} · ${builds.length} builds dos 8:00 · ${((Date.now() - started) / 1000).toFixed(0)} s`);
+    for (const [name, marks] of Object.entries(result)) for (const [mark, sm] of Object.entries(marks)) {
+      console.log(`
+${name} · ${mark}: pacote ${pct(sm.package.kills)} abates, −${Math.round(sm.package.relief * 100)}% golpes`);
+      for (const [n, it] of Object.entries(sm.items)) console.log(`  ${n.padEnd(30)} abates ${pct(it.kills).padStart(5)} · golpes −${Math.round(it.relief * 100)}%`);
+    }
+    process.exit(0);
+  }
   const seed = +seedArg, heroes = heroesArg === 'todos' ? HEROES : HEROES.slice(0, +heroesArg);
   const rows = [], started = Date.now();
   for (const h of heroes) {

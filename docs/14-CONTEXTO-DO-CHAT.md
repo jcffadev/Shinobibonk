@@ -2981,3 +2981,9 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Os Espinhos agora causam armadura × dano do personagem (Espinhos 100%, Samurai 150%).
 - Simulador de status novo (`scripts/simulate-status.mjs`), com a medição preliminar em docs/20.
 - **Testes:** tipos, testes e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Sim, montar
+
+**Resposta.**
+
+- Proposta do pacote de status medida no simulador: Esfera Katon sem explosão em cadeia, congelar com 2 acúmulos e chances de Fio, Incenso, Hyoton e Anel ×2. Tabela em docs/20. **Aguardando decisão.** Só o simulador mudou. **Publicado no GitHub.**

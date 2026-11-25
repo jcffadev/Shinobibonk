@@ -13,7 +13,27 @@
 - Na partida normal (3:00 e 8:00) o golpe vale 8× a 18× a vida do comum: tudo morre num golpe, então nem status nem +30% de dano mudam os abates.
 - Horda cheia aos 8:00 com 3 golpes por inimigo: Esfera Katon +18% de abates e −27% de golpes recebidos (explosão em cadeia: a explosão queima, o vizinho morre queimando e explode); Espelho de Haku +14% e −41%; Hyoton ×5 + Quebra-Gelo +19% e −49%; Anel do Veneno ×5 + Erva ×2 +9%. Fio de Aço, Incenso, Correntes, Erva, Cinco Elementos e 1 Hyoton ficam perto de zero.
 - Nenhuma técnica congela: o gelo vem só de itens.
-- Proposta de ajuste: próxima entrega, aguardando decisão do usuário.
+- Variantes medidas (`node scripts/simulate-status.mjs proposta Chunin 3 17`, 36 builds dos 8:00, horda cheia com 3 golpes por inimigo; abates · golpes recebidos, 1 cópia somada à build):
+  - Katon sem cadeia (a queimadura que vem da explosão não explode de novo): Esfera Katon cai de +17% · −31% para +7% · −8%.
+  - Congelar com 2 acúmulos em vez de 3: Quebra-Gelo sobe de +4% · −12% para +13% · −37%; Espelho de Haku de +14% · −45% para +17% · −52%.
+  - Resfriado durando 5 s em vez de 3: sem efeito (o inimigo morre antes). Descartada.
+  - Chances dos itens ×2 (Fio 8%, Incenso 5%, Hyoton 12%, Anel 12%): ganhos pequenos; Anel ×5 + Erva ×2 sobe de +9% para +13%.
+- **PROPOSTO, aguardando decisão do usuário:** as três juntas.
+
+| Item ou combinação | Atual | Proposta |
+|---|---|---|
+| Esfera Katon (Incomum) | +17% · −31% | +6% · −8% |
+| Anel do Veneno (Incomum) | +3% · −3% | +4% · −4% |
+| Incenso do Sono (Incomum) | +1% · −1% | +1% · −3% |
+| Fio de Aço Ninja (Comum) | +0% · −2% | +0% · −3% |
+| Pergaminho Hyoton (Incomum) | +0% · −0% | +0% · −2% |
+| Quebra-Gelo (Raro) | +4% · −12% | +13% · −39% |
+| Espelho de Gelo de Haku (Lendário) | +14% · −45% | +17% · −53% |
+| Hyoton ×5 + Quebra-Gelo | +21% · −60% | +24% · −75% |
+| Anel do Veneno ×5 + Erva ×2 | +9% · −13% | +13% · −19% |
+| +10% / +30% de dano | +0% · −0% | +0% · −0% |
+
+Limites: o simulador não tem posição real, desvio, chefes nem elites com resistência a controle, então os itens de controle (Fio, Incenso, Correntes) aparecem subavaliados. Um item de +10% ou +30% de dano também não muda abates nessas hordas, porque o número de golpes para matar não muda.
 
 ## Guardiões e Bijū no Final Swarm · 25/11/2026
 
