@@ -513,6 +513,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** Vitória completa no Kage fica entre 2,9 mil e 3,1 mil Lamens. Toda parcela de `LAMEN_RULES` tem teto (tempo 30 min, abates 200, nível 100 níveis × 2, zonas +60, selados 4 × 20, vitória 100); Bijū = 60 × dificuldade × (1 + 0,33 × até 3 planos). Números grandes da ficha final usam K, M, B, T, Q.
 
+### Final Swarm com poucos monstros nas zonas 2 e 3? · 26/11/2026
+
+**IMPLEMENTADO.** O teto (800 até +4 min, 1.600 a partir de +7 min) estava certo; faltava ritmo de nascimento. `spawnBudgetFor` (progression.ts) repõe até o teto a cada quadro no Final Swarm, até `SPAWN_RULES.swarmPerFrame` (120). **PENDENTE.** Validar FPS e contagem no navegador; Bijū que não apareceu aguarda detalhes do usuário.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

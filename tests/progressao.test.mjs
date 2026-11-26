@@ -180,3 +180,29 @@ test('Final Swarm: degrau a cada 5 min com +50% de vida, +30% de dano e +2 ponto
   assert.ok(difficultyAt('Kage', 600 + 3600, 1, 3600).armor <= SWARM_STEP.armorCap);
 
 });
+
+test('Final Swarm repõe a horda até o teto em todas as zonas, mesmo com o herói matando rápido (26/11/2026)', async () => {
+  // "No final swarm só tava aparecendo 400 monstros… Isso para todas as zonas, na zona 1 a progressão funcionou direito":
+  // nas zonas 2 e 3 o herói mata mais rápido que o ritmo normal (teto ÷ 4 s = 200/s no começo do swarm) e a tela esvaziava.
+  const { spawnBudgetFor } = await import('../src/game/progression.ts');
+  const alive = (rank, overtime, killsPerSecond) => {
+    const th = difficultyAt(rank, 600 + overtime, 1, overtime); let count = 0, budget = 0, acc = 0; const dt = 1 / 60;
+    for (let f = 0; f < 15 * 60; f++) {
+      budget = spawnBudgetFor(budget, dt, th.spawnInterval, count, th.cap, true, 120, 2);
+      let made = 0; while (budget >= 1 && count < th.cap && made < 120) { count++; budget--; made++; }
+      if (count >= th.cap) budget = Math.min(budget, 1);
+      acc += killsPerSecond * dt; const k = Math.min(count, Math.floor(acc)); count -= k; acc -= k;
+    }
+    return { count, cap: th.cap };
+  };
+  for (const rank of ['Genin', 'Kage']) for (const [overtime, cap] of [[60, 800], [420, 1600]]) {
+    const r = alive(rank, overtime, 2000);
+    assert.equal(r.cap, cap);
+    assert.ok(r.count >= cap * .9, `${rank} +${overtime}s: ${r.count}/${cap}`);
+  }
+  // Fora do swarm o ritmo continua o normal (não repõe tudo de uma vez).
+  assert.ok(spawnBudgetFor(0, 1 / 60, .5, 0, 900, false, 40, 2) < 1);
+  assert.equal(spawnBudgetFor(0, 1 / 60, .5, 100, 900, true, 120, 2), 120);
+  const src = (await import('node:fs')).readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.match(src, /spawnBudget=spawnBudgetFor\(spawnBudget,dt,threat\.spawnInterval,enemyList\.length,threat\.cap,threat\.swarm>1,perFrame,SPAWN_RULES\.refill\)/);
+});

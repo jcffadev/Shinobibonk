@@ -143,6 +143,7 @@ const MUTATIONS = [
   { regra: 'Susanoo no pool de quem o usa na obra', arquivo: 'src/game/heroes.ts', de: '  if(!seen.has(L.susanoo.name)&&CANONICAL_TEACHING[L.susanoo.name]?.includes(family)', para: '  if(false&&!seen.has(L.susanoo.name)&&CANONICAL_TEACHING[L.susanoo.name]?.includes(family)' },
   { regra: 'Lamens: teto de 100 níveis contados', arquivo: 'src/game/rewards.ts', de: 'Math.min(r.levelCap, Math.floor(result.level) - 1)', para: 'Math.floor(result.level) - 1' },
   { regra: 'Lamens da Bijū contam no máximo 3 planos', arquivo: 'src/game/bijuu.ts', de: 'Math.min(BIJUU_LAMENS.maxPlans, plans)', para: 'plans' },
+  { regra: 'Final Swarm repõe a horda até o teto a cada quadro', arquivo: 'src/game/progression.ts', de: 'swarm?Math.max(paced,cap-alive):paced', para: 'paced' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

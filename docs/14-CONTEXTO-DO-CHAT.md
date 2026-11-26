@@ -3192,3 +3192,12 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Agora esses lamens, foi alenms demais, demais mesmo no máximo uma RUN bem sucedida nesse porte deveria dar em torno de 2.9k lamens a 3.1k e uns quebradinhos...
 
 **Resposta.** O nível rendia 4 Lamens por nível sem teto (23.584 na run de Nv 5.897). Agora 2 por nível até 100 níveis, selados até 4 e Bijū 60 por dificuldade com até 3 planos: a mesma run dá 3.038 (2.884 sem planos). A ficha final abrevia dano, DPS, Ryu, abates e atributos em K, M, B, T, Q; os Lamens ficam exatos. **Publicado no GitHub.**
+
+> No final swarm só tava aparecendo 400 monstros, precisamos que a progressão vá até os 1600, revise
+> Isso para todas as zonas, na zona 1 a progressão funcionou direito
+
+**Resposta.** O teto já subia até 1.600, mas a horda só nascia a teto ÷ 4 s; nas zonas 2 e 3 o herói matava mais rápido do que isso e a tela esvaziava. Agora o Final Swarm repõe até o teto a cada quadro. **Publicado no GitHub.** **PENDENTE DE VALIDAÇÃO E2E** (contagem na tela e FPS).
+
+> As bijus não apareceram
+
+**Resposta.** O caminho Guardião da zona 3 → portal da arena → Bijū está íntegro no código; pedido ao usuário em que ponto ela não apareceu.

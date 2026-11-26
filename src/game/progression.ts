@@ -148,6 +148,18 @@ export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
  */
 /** 25/11/2026 — decisão do usuário: o Final Swarm entra com ×2 (antes ×3), junto com os afixos de dano pela metade (GROWTH_ROLLS). */
 export const FINAL_SWARM={multiplier:2,growthPerMinute:.25,maxArmor:.85,maxEnemies:1600,rampMinutes:7,ramp800Cap:800,ramp800Seconds:240,rampSeconds:420,refillSeconds:4,spawnRing:[14,28] as const};
+/**
+ * Orçamento de nascimentos do quadro (26/11/2026 — usuário: "No final swarm só tava aparecendo 400 monstros, precisamos que a
+ * progressão vá até os 1600… Isso para todas as zonas, na zona 1 a progressão funcionou direito"). Fora do swarm: ritmo normal
+ * (1/spawnInterval, acelerado até ×(1+refill) quando a tela está vazia). No Final Swarm o quadro também repõe tudo o que falta
+ * até o teto (até `perFrame`): nas zonas 2 e 3 o herói já chega forte e a horda recomeça fraca, então ele matava mais rápido
+ * (~1.265 abates/s numa run de 76 min) do que o ritmo normal repunha (~1.200/s no máximo) e a tela parava em ~400.
+ */
+export function spawnBudgetFor(budget:number,dt:number,spawnInterval:number,alive:number,cap:number,swarm:boolean,perFrame:number,refill:number){
+  const deficit=Math.max(0,1-alive/Math.max(1,cap));
+  const paced=budget+dt/Math.max(.001,spawnInterval)*(1+refill*deficit);
+  return Math.min(perFrame,swarm?Math.max(paced,cap-alive):paced);
+}
 /** Multiplicador do FINAL SWARM para `overtimeSeconds` sobrevividos após o relógio zerar (1 = fora do swarm). */
 export function finalSwarmFactor(overtimeSeconds:number,rank:Difficulty='Genin'){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60)*(1+SWARM_COMPOUND.perMinute*MISSION_HP[rank])**(overtimeSeconds/60):1;}
 /** Rodada 76: no Final Swarm a ameaça também compõe por minuto, mais rápido nas dificuldades altas (Genin +perMinute, Kage +2×perMinute). */

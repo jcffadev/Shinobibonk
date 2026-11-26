@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 26/11/2026 · Final Swarm enche a tela até o teto em todas as zonas (Claude Code)
+
+- **Pedido do usuário:** "No final swarm só tava aparecendo 400 monstros, precisamos que a progressão vá até os 1600, revise" e "Isso para todas as zonas, na zona 1 a progressão funcionou direito".
+- **Causa:** no começo do Final Swarm a horda nascia a teto ÷ 4 s (200/s com teto 800). Nas zonas 2 e 3 o herói chega forte e a horda recomeça fraca, então ele matava mais rápido do que a horda repunha (a run de 76 min teve média de 1.265 abates/s) e a tela ficava quase vazia até +7 min.
+- **`spawnBudgetFor`** (`src/game/progression.ts`): no Final Swarm, cada quadro repõe o que falta até o teto (até 120 por quadro, `SPAWN_RULES.swarmPerFrame`). A rampa continua a mesma: 800 até +4 min, sobe até 1.600 em +7 min. Fora do swarm o ritmo é o de antes.
+- **Medição (sem navegador, 15 s a 60 quadros/s):** com 2.000 abates/s, +1 min de swarm ia de 0 para 766 vivos (teto 800) e +7 min de 741 para 1.566 (teto 1.600).
+- **Testes:** 1 teste novo em `tests/progressao.test.mjs` (mínimo 335) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver 1.600 na tela nas zonas 2 e 3 e conferir o FPS com a reposição.
+
 ## 26/11/2026 · Lamens com teto em toda parcela e ficha final abreviada (Claude Code)
 
 - **Pedido do usuário** (run de 76 min no Kage, Nv 5.897, deu 56.031 Lamens; 23.584 só do nível): "no máximo uma RUN bem sucedida nesse porte deveria dar em torno de 2.9k lamens a 3.1k e uns quebradinhos" e "abreviar os números em K, M, T, Q".

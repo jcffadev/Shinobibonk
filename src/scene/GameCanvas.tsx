@@ -79,7 +79,7 @@ import { createTechniqueAreas, CONE_COS } from './techniqueAreas';
 import { createVirtualCursor } from './virtualCursor';
 import { createSusanooFx } from './susanooFx';
 import { susanooStyleFor } from '../game/susanoo';
-import { zoneThreat, zoneCurse, calculateStats, incomingDamage, rollCritical, MISSION_TIER, normalHpFactor, SPAWN_RING, AMBUSH_RULES, ENEMY_SCALING, FINAL_SWARM, SWARM_STEP, swarmStep, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
+import { spawnBudgetFor, zoneThreat, zoneCurse, calculateStats, incomingDamage, rollCritical, MISSION_TIER, normalHpFactor, SPAWN_RING, AMBUSH_RULES, ENEMY_SCALING, FINAL_SWARM, SWARM_STEP, swarmStep, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
 import { buildAltarOffers, extraStrikes } from '../game/altarRewards';
 import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
 import { castProgress, blendFog, mistHides, isChanneling, CAST_DISTANCE } from '../game/weatherCast';
@@ -2103,7 +2103,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       if(!hagoromoEvent&&!choiceData&&!sealing&&!roulette&&!defeated&&!victory){const autoPickup=pickups.find(p=>p.active&&p.kind!=='cursedShuriken'&&p.kind!=='ninjaBody'&&p.kind!=='kunai'&&p.kind!=='shuriken'&&p.kind!=='ryu'&&Math.hypot(p.x-player.position.x,p.z-player.position.z)<1.8);if(autoPickup)collectPickup(autoPickup);}
       // Spawn em LOTE (antes: 1 inimigo por intervalo, ~5/s aos 8 min — o jogador matava mais rápido do que nascia e a horda ficava em ~60).
       // Orçamento contínuo = spawns/s × dt; abaixo do teto a reposição acelera (até ×SPAWN_RULES.refill com a tela vazia); máximo SPAWN_RULES.perFrame por quadro.
-      spawnTimer-=dt;if(!arena&&!hagoromoEvent&&spawnTimer<=0){const perFrame=threat.swarm>1?SPAWN_RULES.swarmPerFrame:SPAWN_RULES.perFrame,deficit=Math.max(0,1-enemyList.length/Math.max(1,threat.cap));spawnBudget=Math.min(perFrame,spawnBudget+dt/Math.max(.001,threat.spawnInterval)*(1+SPAWN_RULES.refill*deficit));let made=0;while(spawnBudget>=1&&enemyList.length<threat.cap&&made<perFrame){spawnEnemy();spawnBudget--;made++;}if(enemyList.length>=threat.cap)spawnBudget=Math.min(spawnBudget,1);}
+      spawnTimer-=dt;if(!arena&&!hagoromoEvent&&spawnTimer<=0){const perFrame=threat.swarm>1?SPAWN_RULES.swarmPerFrame:SPAWN_RULES.perFrame;spawnBudget=spawnBudgetFor(spawnBudget,dt,threat.spawnInterval,enemyList.length,threat.cap,threat.swarm>1,perFrame,SPAWN_RULES.refill);let made=0;while(spawnBudget>=1&&enemyList.length<threat.cap&&made<perFrame){spawnEnemy();spawnBudget--;made++;}if(enemyList.length>=threat.cap)spawnBudget=Math.min(spawnBudget,1);}
       // Rodada 49 — hard cap 1600 (defesa em profundidade — pedido: "final swarm não respeitando os 1600 monstros totais"):
       // se passar do teto (ex.: emboscada/roleta por cima do lote), remove os últimos inimigos comuns — nunca bosses.
       if(enemyList.length>FINAL_SWARM.maxEnemies){for(let i=enemyList.length-1;i>=0&&enemyList.length>FINAL_SWARM.maxEnemies;i--){const e=enemyList[i];if(e.guardian||e.bijuu||e.totem||e.megaElite||e.account||e.boss||e.clone)continue;const j=enemyList.indexOf(e);scene.remove(e.sprite);disposeEnemySprite(e);enemyList.splice(j,1);}}
