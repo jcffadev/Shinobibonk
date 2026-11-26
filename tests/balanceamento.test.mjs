@@ -92,8 +92,9 @@ test('Mega Elite natural e de clima compartilham o primeiro encontro, inclusive 
   assert.match(canvas, /openingMegaSpawned=camp\?\.openingMegaSpawned\?\?/);
   assert.match(canvas, /spawnEnemy\(false,true,false,event\.elite,false,event\.openingMega\)/);
   assert.match(canvas, /const maxHp = capMegaEliteHp\(enemy\.maxHp \* ratio, !!enemy\.openingMega\)/);
-  // 25/11/2026: o plano do Shikamaru reescala só o Guardião da zona (antes, todos os inimigos).
-  assert.match(canvas, /for\(const enemy of enemyList\)if\(enemy\.guardian&&!enemy\.bijuu&&enemy\.guardianZone===zone\)\{rescaleEnemyHp\(enemy,ratio\);/);
+  // 25/11/2026: o plano do Shikamaru não vale com o Guardião já invocado (e não reescala nenhum inimigo vivo).
+  assert.match(canvas, /function useShikamaruPlan\(\)\{const max=GUARDIAN_RULES\.shikamaruMaxPlans;[^\n]*if\(guardianSpawned\)\{eventToast='Plano do Shikamaru: o Guardião desta zona já foi invocado/);
+  assert.doesNotMatch(canvas, /for\(const enemy of enemyList\)rescaleEnemyHp\(enemy,ratio\)/);
   assert.match(canvas, /for\(const e of enemyList\)rescaleEnemyHp\(e,ratio\)/);
   const simulator = fs.readFileSync(new URL('../scripts/simulate-run.mjs', import.meta.url), 'utf8');
   assert.match(simulator, /megaEliteHp\([^\n]+, rnd, openingMega\);\s+openingMega = false;/);

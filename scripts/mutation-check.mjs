@@ -134,6 +134,7 @@ const MUTATIONS = [
   { regra: 'Zetsu visto pela distância até ele', arquivo: 'src/game/akatsukiAmbush.ts', de: 'Math.hypot(px - x, pz - z) <= AKATSUKI_AMBUSH.reveal', para: 'Math.hypot(px - x, pz) <= AKATSUKI_AMBUSH.reveal' },
   { regra: 'horda dá 30% menos dano', arquivo: 'src/game/enemyTiers.ts', de: 'export const PLAYER_HIT_RULES = { hordeDamage: .7, capShare: .4 };', para: 'export const PLAYER_HIT_RULES = { hordeDamage: 1, capShare: .4 };' },
   { regra: 'FPS livre por padrão (V-Sync desligado)', arquivo: 'src/game/settings.ts', de: "  quality: 'alta', fpsLimit: 0, vsync: false,", para: "  quality: 'alta', fpsLimit: 0, vsync: true," },
+  { regra: 'Shikamaru bloqueado com o Guardião invocado', arquivo: 'src/scene/GameCanvas.tsx', de: "if(guardianSpawned){eventToast='Plano do Shikamaru: o Guardião desta zona já foi invocado; os planos valem só antes de invocá-lo';return false;}", para: '' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

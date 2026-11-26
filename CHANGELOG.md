@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25/11/2026 · Plano do Shikamaru só antes de invocar o Guardião (Claude Code)
+
+- **Pedido do usuário:** "Não pode buffar o guardião no Shikamaru, se já invocamos ele Guardião."
+- **GameCanvas (`useShikamaruPlan`):** com o Guardião da zona já invocado, o plano é recusado com aviso; saiu o reforço do Guardião vivo.
+- **Testes:** teste antigo atualizado para a regra nova e 1 mutação nova, verificada à mão.
+
 ## 25/11/2026 · FPS livre por padrão (Claude Code)
 
 - **Pedido do usuário:** "Porque o FPS ta cravando no hz do monitor? Deixa livre ou sem essa configuração, temos opções de FPS nas configurações deixe o jogador escolher se for o caso."

@@ -3146,3 +3146,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Porque o FPS ta cravando no hz do monitor? Deixa livre ou sem essa configuração, temos opções de FPS nas configurações deixe o jogador escolher se for o caso.
 
 **Resposta.** O V-Sync vinha ligado por padrão. Agora o FPS sai livre e o jogador escolhe V-Sync e limite nas configurações. **Publicado no GitHub.**
+
+> Não pode buffar o guardião no Shikamaru, se já invocamos ele Guardião.
+
+**Resposta.** Com o Guardião já invocado, o plano do Shikamaru fica bloqueado naquela zona. **Publicado no GitHub.**
