@@ -123,7 +123,8 @@ const overtime=18*60,runSeconds=10*60+overtime;
 const hpLate=guardianVitality(difficultyAt('Genin',runSeconds,1,overtime).hp,runSeconds,runSeconds,overtime,1);
 // O Guardião do Genin aos +18 min de Final Swarm deve alcançar bilhões sem limitar as invocações tardias.
 // 25/11: Final Swarm ×2 (antes ×3) → ~22,7 bilhões (antes ~34).
-assert.ok(hpLate>=21e9&&hpLate<25e9,`HP tardio do guardião: ${hpLate}`);
+// 25/11 (degraus do Final Swarm, +50% de vida a cada 5 min → 3 degraus aos +18 min): ~22,7 × 1,5³ ≈ 76,7 bilhões.
+assert.ok(hpLate>=70e9&&hpLate<85e9,`HP tardio do guardião: ${hpLate}`);
 assert.ok(guardianDefense(runSeconds,false,overtime)>.95);
 assert.ok(guardianDefense(runSeconds,true,overtime,3)>guardianDefense(runSeconds,false,overtime));
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);

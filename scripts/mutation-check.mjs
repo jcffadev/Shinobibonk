@@ -138,6 +138,7 @@ const MUTATIONS = [
   { regra: 'ficha final guarda quem derrubou o jogador', arquivo: 'src/scene/GameCanvas.tsx', de: 'else{defeated=true;killedBy=lastHit;', para: 'else{defeated=true;' },
   { regra: 'regeneração base 1,0', arquivo: 'src/game/progression.ts', de: 'export const BASE_REGEN=1;', para: 'export const BASE_REGEN=0;' },
   { regra: 'elites entram suaves no começo', arquivo: 'src/game/enemyTiers.ts', de: 'export const ELITE_OPENING = { start: .25, seconds: 90 };', para: 'export const ELITE_OPENING = { start: 1, seconds: 90 };' },
+  { regra: 'degraus do Final Swarm a cada 5 min', arquivo: 'src/game/progression.ts', de: 'export const SWARM_STEP={seconds:300,hp:.5,damage:.3,armor:.02,armorCap:.95};', para: 'export const SWARM_STEP={seconds:300,hp:0,damage:0,armor:0,armorCap:.95};' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

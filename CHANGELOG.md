@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Degraus do Final Swarm a cada 5 min (Claude Code)
+
+- **Pedido do usuário:** "A cada 5min no final swarm ter um buff consideravel nos inimigos dano/armadura/vida"
+- **`SWARM_STEP`/`swarmStep`** (`src/game/progression.ts`): a cada 5 min de Final Swarm os inimigos ganham +50% de vida e +30% de dano (multiplicativo, por cima da escala que já existia) e +2 pontos de defesa, que passa do teto de 85% até 95%. Aviso na tela a cada degrau. Chefes que usam a ameaça da zona sobem junto.
+- Exemplo no Genin: vida ×584 aos +4:59 → ×882 aos +5:00; defesa 85% → 87%.
+- **Testes:** 1 teste novo (mínimo 326), `verify-rules` atualizado (Guardião do Genin aos +18 min ≈ 76,7 bilhões, antes 22,7) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Elites suaves no começo e regeneração base 1,0 (Claude Code)
 
 - **Pedidos do usuário:** "Diminuir um pouco a quantidade de elites que spawnam no começo do jogo, pelo menos 1m30 mais suavizado o spawn deles."; "Ajustar regeneração por segundo para todos os personagens, iniciar com 1,0 Alguns estão começando com menos de 1.0"

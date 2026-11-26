@@ -168,3 +168,15 @@ test('todo shinobi começa com pelo menos 1,0 HP/s de regeneração (25/11/2026)
   for (const h of HEROES) assert.ok(calculateStats(h.id, 1).regen >= 1, h.id);
   assert.ok(Math.abs(calculateStats('hashirama', 1).regen - 1.8) < 1e-9, 'a passiva de cura soma por cima');
 });
+
+test('Final Swarm: degrau a cada 5 min com +50% de vida, +30% de dano e +2 pontos de defesa (25/11/2026)', async () => {
+  const { SWARM_STEP, swarmStep, difficultyAt } = await import('../src/game/progression.ts');
+  assert.deepEqual(SWARM_STEP, { seconds: 300, hp: .5, damage: .3, armor: .02, armorCap: .95 });
+  assert.deepEqual([0, 299, 300, 899, 900].map(swarmStep), [0, 0, 1, 2, 3]);
+  const before = difficultyAt('Kage', 600 + 299.9, 1, 299.9), after = difficultyAt('Kage', 600 + 300, 1, 300);
+  assert.ok(after.hp / before.hp > 1.5, 'salto de vida no degrau');
+  assert.ok(after.damage / before.damage > 1.3, 'salto de dano no degrau');
+  assert.ok(after.armor > before.armor, 'mais defesa no degrau');
+  assert.ok(difficultyAt('Kage', 600 + 3600, 1, 3600).armor <= SWARM_STEP.armorCap);
+
+});

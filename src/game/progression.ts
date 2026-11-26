@@ -152,10 +152,17 @@ export const FINAL_SWARM={multiplier:2,growthPerMinute:.25,maxArmor:.85,maxEnemi
 export function finalSwarmFactor(overtimeSeconds:number,rank:Difficulty='Genin'){return overtimeSeconds>0?FINAL_SWARM.multiplier*(1+FINAL_SWARM.growthPerMinute*overtimeSeconds/60)*(1+SWARM_COMPOUND.perMinute*MISSION_HP[rank])**(overtimeSeconds/60):1;}
 /** Rodada 76: no Final Swarm a ameaça também compõe por minuto, mais rápido nas dificuldades altas (Genin +perMinute, Kage +2×perMinute). */
 export const SWARM_COMPOUND={perMinute:.1};
+/**
+ * Degraus do Final Swarm (25/11/2026 — usuário: "A cada 5min no final swarm ter um buff consideravel nos inimigos
+ * dano/armadura/vida"): a cada `seconds` de Final Swarm os inimigos ganham +`hp` de vida, +`damage` de dano (multiplicativo)
+ * e +`armor` de defesa, que pode passar do teto normal do swarm até `armorCap`.
+ */
+export const SWARM_STEP={seconds:300,hp:.5,damage:.3,armor:.02,armorCap:.95};
+export const swarmStep=(overtimeSeconds:number)=>overtimeSeconds>0?Math.floor(overtimeSeconds/SWARM_STEP.seconds):0;
 /** O Genin ganha pressão aos poucos, mantendo a abertura e os outros ranks. */
 export const GENIN_PRESSURE={startMinute:1,fullMinute:5,damage:.07,attackRate:.06,armor:.09};
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
-  const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds,rank);
+  const tier=MISSION_TIER[rank], minutes=Math.max(0,seconds)/60, S=ENEMY_SCALING, swarm=finalSwarmFactor(overtimeSeconds,rank), step=swarmStep(overtimeSeconds);
   // Revisão 11/11/2026: sem desconto de early game em nenhum rank — cada dificuldade escala em sua devida proporção (tier).
   const opening=.34+.66*Math.min(1,minutes);
   const geninPressure=rank==='Genin'?Math.max(0,Math.min(1,(minutes-GENIN_PRESSURE.startMinute)/(GENIN_PRESSURE.fullMinute-GENIN_PRESSURE.startMinute))):0;
@@ -168,11 +175,11 @@ export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeco
   const opened=swarm>1?1:Math.min(1,(minutes/OPENING.minutes)**2);
   const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):MISSION_HP[rank]*(1+OPENING.perMinute*minutes)*(1-opened)+baseSpawn*opened;
   const openCap=swarm>1?cap:Math.max(1,Math.round((OPENING.capBase+OPENING.capPerMinute*minutes)*MISSION_HP[rank]*(1-opened)+cap*opened));
-  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,Math.max(0,minutes-HP_RAMP.delay)*1.4/HP_RAMP.spread)*.19*(tier-1)/.4)*curse*swarm,damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm*(1+GENIN_PRESSURE.damage*geninPressure),
+  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,Math.max(0,minutes-HP_RAMP.delay)*1.4/HP_RAMP.spread)*.19*(tier-1)/.4)*curse*swarm*(1+SWARM_STEP.hp)**step,damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm*(1+GENIN_PRESSURE.damage*geninPressure)*(1+SWARM_STEP.damage)**step,
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08+GENIN_PRESSURE.attackRate*geninPressure)*curse,
     spawnPerSecond,spawnInterval:1/spawnPerSecond,
     cap:openCap,
-    armor:swarm>1?Math.min(FINAL_SWARM.maxArmor,minutes*S.armorPerMinute*swarm):Math.min(S.maxArmor,minutes*S.armorPerMinute+GENIN_PRESSURE.armor*geninPressure),swarm};
+    armor:swarm>1?Math.min(Math.min(SWARM_STEP.armorCap,FINAL_SWARM.maxArmor+SWARM_STEP.armor*step),minutes*S.armorPerMinute*swarm+SWARM_STEP.armor*step):Math.min(S.maxArmor,minutes*S.armorPerMinute+GENIN_PRESSURE.armor*geninPressure),swarm};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}
 export function rollCritical(chance:number,criticalMultiplier=2.5,rng=Math.random):{tier:0|1|2;multiplier:number}{

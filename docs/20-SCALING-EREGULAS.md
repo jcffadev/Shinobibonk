@@ -2,6 +2,10 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Degraus do Final Swarm · 25/11/2026 (Claude Code)
+
+- "A cada 5min no final swarm ter um buff consideravel nos inimigos dano/armadura/vida" → `SWARM_STEP = { seconds: 300, hp: .5, damage: .3, armor: .02, armorCap: .95 }`. Cada degrau multiplica vida ×1,5 e dano ×1,3 e soma 2 pontos de defesa (até 95%).
+
 ## Elites no começo e regeneração base · 25/11/2026 (Claude Code)
 
 - "Diminuir um pouco a quantidade de elites que spawnam no começo do jogo, pelo menos 1m30 mais suavizado o spawn deles." → `ELITE_OPENING = { start: .25, seconds: 90 }`: chance de elite de 2% no início, cheia (8%) aos 1m30.

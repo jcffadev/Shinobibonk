@@ -3160,3 +3160,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Ajustar regeneração por segundo para todos os personagens, iniciar com 1,0 Alguns estão começando com menos de 1.0
 
 **Resposta.** Elites começam em 2% e chegam a 8% aos 1m30; todos começam com 1,0 HP/s de regeneração (passivas somam). **Publicado no GitHub.**
+
+> A cada 5min no final swarm ter um buff consideravel nos inimigos dano/armadura/vida
+
+**Resposta.** A cada 5 min de Final Swarm: +50% de vida, +30% de dano e +2 pontos de defesa (até 95%), com aviso. **Publicado no GitHub.**
