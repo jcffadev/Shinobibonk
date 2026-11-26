@@ -1,0 +1,28 @@
+# 28 · Histórico de status de personagens e monstros
+
+Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os personagens e monstros para termos um track das alterações e suas respectivas datas/builds".
+
+- **Valores atuais:** [28-STATUS-PERSONAGENS-E-MONSTROS.md](28-STATUS-PERSONAGENS-E-MONSTROS.md), gerado pelo código (`node scripts/gen-status-doc.mjs`).
+- **Este arquivo:** uma linha por mudança de status, com data e build (commit). Ao mudar um número de personagem ou monstro: rode o gerador, acrescente a linha aqui e faça commit dos dois juntos.
+
+## 25/11/2026
+
+| Build | O que mudou | Antes → agora |
+|---|---|---|
+| `bae7eb6` | (base deste histórico) | — |
+| `3b6b905` | Final Swarm ganha um degrau a cada 5 min | +50% de vida, +30% de dano e +2 pontos de defesa por degrau (defesa até 95%) |
+| `7eb4b23` | Regeneração base de todo shinobi | 0 HP/s (108 de 115 versões) → 1,0 HP/s; passivas somam |
+| `7eb4b23` | Elites no começo da partida | 8% desde o 1º segundo → 2% no início, 8% aos 1m30 |
+| `2133eab` | Plano do Shikamaru | podia reforçar o Guardião já invocado → bloqueado depois da invocação |
+| `532a29e` | Dano da horda (comuns e elites, kunai e fūma) | ×1 → ×0,7 |
+| `532a29e` | Teto por golpe (horda e Mega Elite, inclusive a Ultimate) | sem teto → 40% da vida máxima; Guardião e Bijū sem teto |
+| `e8e98f7` | Kit do Nagato | Shuriken e Kunai Tática → Bansho Tenin (Nv 5) e Chibaku Tensei (Nv 12) |
+| `d9b4eea` | Bijū | incontrolável; atordoamento de 3 s na troca de fase; fúria +25% de dano por fase e +30% de armadura sobre o dano que passa |
+| `c4732a5` | Planos do Shikamaru | +33% na zona inteira → +33% só no Guardião (e na Bijū) |
+| `681c51d` | Raio das técnicas de Área | 1,2 → 1,8 (× ATTACK_SCALE × √área) |
+| `9a6f16d` | Pacote de status | Katon sem cadeia; congela com 2 acúmulos (eram 3); Fio 8%, Incenso 5%, Hyoton 12%, Anel 12% (eram a metade) |
+| `da369b2` | Gelo vira elemento | Haku, Domo de Gelo e Pergaminho Hyoton (+28% de Gelo) |
+| `2a78fdd` | Espinhos | dano fixo → armadura × dano do personagem (Samurai 1,5×) |
+| `ea83a19` | Guardiões e Bijū | piso de vida = 30 s (Guardião) e 60 s (Bijū) do dano atual do jogador, +33% por plano |
+| `b1a392c` | Afixos de dano das técnicas e Final Swarm | afixos pela metade; Final Swarm entra com ×2 (era ×3) |
+| `37a5986` | Bijū | 3× a armadura do Guardião e só os planos da última zona |

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25/11/2026 · Arquivo de status de personagens e monstros (Claude Code)
+
+- **Pedido do usuário:** "Crie um .md referente ao status de todos os personagens e monstros para termos um track das alterações e suas respectivas datas/builds."
+- **Novo `scripts/gen-status-doc.mjs`** gera [docs/28-STATUS-PERSONAGENS-E-MONSTROS.md](docs/28-STATUS-PERSONAGENS-E-MONSTROS.md) direto do código: regras gerais, tipos de monstro, vida/defesa/golpe de comum, elite, Mega Elite e Guardião por dificuldade e tempo, e a ficha das 115 versões (vida, dano, armadura, velocidade, crítico, regeneração, passiva, técnicas e Ultimate), com a data e o build.
+- **Novo [docs/28-HISTORICO-STATUS.md](docs/28-HISTORICO-STATUS.md):** uma linha por mudança de status com data e build; já traz as mudanças de 25/11.
+
 ## 25/11/2026 · Preço em cima dos itens do chão e da roleta (Claude Code)
 
 - **Pedido do usuário:** "Colocar o valor de custo das kunais/shurikens/pergaminhos/valor atual da roleta em cima do item no chão, pro jogador visualizar ao chegar perto"

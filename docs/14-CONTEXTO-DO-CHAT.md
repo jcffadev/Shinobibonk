@@ -3173,3 +3173,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Colocar o valor de custo das kunais/shurikens/pergaminhos/valor atual da roleta em cima do item no chão, pro jogador visualizar ao chegar perto
 
 **Resposta.** Lentidão: bateria completa (~2,5 min) a cada mudança; agora LEVE durante a edição e completa ao fechar. Preço em Ryu acima de kunai/shuriken/pergaminho e do Caça-Níquel a até 5 m; pergaminho de recompensa mostra "Grátis". **Publicado no GitHub.**
+
+> Crie um .md referente ao status de todos os personagens e monstros para termos um track das alterações e suas respectivas datas/builds.
+
+**Resposta.** `docs/28-STATUS-PERSONAGENS-E-MONSTROS.md` gerado pelo código (`scripts/gen-status-doc.mjs`) e `docs/28-HISTORICO-STATUS.md` com as mudanças, datas e builds. **Publicado no GitHub.**

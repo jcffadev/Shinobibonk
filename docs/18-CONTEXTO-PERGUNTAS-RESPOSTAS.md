@@ -539,6 +539,8 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 - Prêmios de evento (25/11): `prizes`, `eventPrizes`, `earnedTitle`, `frameLock` em `events.ts`; `claimEventPrize` em `account.ts`; crédito em `main.tsx`.
 
+- **Status de personagens e monstros (25/11):** valores em `docs/28-STATUS-PERSONAGENS-E-MONSTROS.md` (gerado por `node scripts/gen-status-doc.mjs`); histórico com datas e builds em `docs/28-HISTORICO-STATUS.md`. Ao mudar balanceamento: rodar o gerador e acrescentar a linha no histórico.
+
 ## 5. Estado atual do projeto
 
 **24/11/2026.** As quatro vilas já são usadas em novas missões na cópia principal. Em Konoha, a Academia e o memorial foram revisados após a integração. Os personagens aprovados Gengetsu, Sakumo e Orochimaru Akatsuki estão em `bb092d0`.
