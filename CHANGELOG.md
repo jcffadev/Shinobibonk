@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 26/11/2026 · Aviso ao Codex: mesclagem parada no ramo vilas-refinadas (Claude Code)
+
+- **Pedido do usuário:** "tem alguma coisa que codex deixou por fazer que se eu for subir a versão para teste vai dar erro?" → "Sim, avisar o Codex".
+- **Conferido:** o main está igual ao GitHub; build e 371 testes passam; as 118 referências de arte existem; o lockfile bate. A versão de teste pode sair do main.
+- **Aviso em docs/13:** a pasta do ramo `vilas-refinadas` está no meio de uma mesclagem com o main, com conflitos em `GameCanvas.tsx` e `tests/minimo.json`; o commit `f49e469` mexe em drops, preços, roleta e guizos, que mudaram no main no mesmo dia. Lista do que manter e dos testes a rodar antes de publicar. Nenhum código alterado.
+
 ## 26/11/2026 · Vazamento de memória: fila de explosões na morte e guizos (Claude Code)
 
 - **Relato do usuário:** "Da forma que estava derrubou o navegador falando que faltou memória... isso não pode acontecer nunca"

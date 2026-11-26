@@ -3295,3 +3295,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Da forma que estava derrubou o navegador falando que faltou memória... isso não pode acontecer nunca
 
 **Resposta.** A fila de explosões na morte crescia sem fim com milhares de abates por segundo; agora tem teto de 120. Guizos com modelo compartilhado e removidos da lista ao serem pegos. **Publicado no GitHub.**
+
+> tem alguma coisa que codex deixou por fazer que se eu for subir a versão para teste vai dar erro?
+> Sim, avisar o Codex
+
+**Resposta.** Main pronto (build, 371 testes, arte e lockfile conferidos). O Codex tem uma mesclagem com conflitos parada no ramo vilas-refinadas, fora do main; aviso com a lista do que manter em docs/13. **Publicado no GitHub.**
