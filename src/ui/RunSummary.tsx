@@ -6,6 +6,7 @@ import { SkillIcon } from './SkillIcon';
 import { ItemIcon, HeroPortrait, groups as STAT_GROUPS } from './RunSheet';
 import type { WorldSnapshot } from '../scene/GameCanvas';
 import type { LamenReward } from '../game/rewards';
+import { damageLabel } from '../game/format';
 import '../summary.css';
 
 import type { ResultStatus } from '../game/onlineRanking';
@@ -13,6 +14,8 @@ import type { LocalRank } from '../game/ranking';
 
 // Tela de estatísticas pós-run (somente leitura). Deriva tudo do WorldSnapshot final.
 const fmt=(value:number,digits=1)=>value.toLocaleString('pt-BR',{maximumFractionDigits:digits});
+/** Números grandes abreviados em K, M, B, T, Q, Qi… (26/11/2026 — usuário: "abreviar os números em K, M, T, Q"). Abaixo de mil, o número exato. */
+const big=(value:number,digits=1)=>Math.abs(value)>=1000?damageLabel(value):fmt(value,digits);
 const clock=(seconds:number)=>`${Math.floor(seconds/60)}:${String(Math.floor(seconds%60)).padStart(2,'0')}`;
 
 export function RunSummary({world,hero,mission,reward=null,rank=null,onlineRankStatus,onRetry,onPrepare,onMenu}:{world:WorldSnapshot;hero:{id:string;name:string};mission:string;reward?:LamenReward|null;rank?:LocalRank|null;onlineRankStatus?:ResultStatus|'sending';onRetry:()=>void;onPrepare:()=>void;onMenu:()=>void}){
@@ -26,9 +29,9 @@ export function RunSummary({world,hero,mission,reward=null,rank=null,onlineRankS
   const pills=Object.entries(world.pills);
   const form=formAt(hero.id,world.level).name;
   const metrics:[string,string][]=[
-    [clock(elapsed),'TEMPO SOBREVIVIDO'],[String(world.level),'NÍVEL'],[`Zona ${world.zone}`,'ZONA ALCANÇADA'],[fmt(world.kills,0),'ABATES'],
-    [fmt(world.totalDamage,0),'DANO TOTAL'],[fmt(dps),'DPS MÉDIO'],[fmt(world.allyDamage,0),'DANO ALIADOS'],[fmt(world.runMoney,0),'RYU'],
-    [String(world.kunai),'KUNAI'],[String(world.shuriken),'SHURIKEN'],[`×${fmt(world.difficultyScale,2)}`,'AMEAÇA FINAL'],[`${world.allies.length}/${world.stats.supportSlots}`,'SUPORTES'],
+    [clock(elapsed),'TEMPO SOBREVIVIDO'],[big(world.level,0),'NÍVEL'],[`Zona ${world.zone}`,'ZONA ALCANÇADA'],[big(world.kills,0),'ABATES'],
+    [big(world.totalDamage,0),'DANO TOTAL'],[big(dps),'DPS MÉDIO'],[big(world.allyDamage,0),'DANO ALIADOS'],[big(world.runMoney,0),'RYU'],
+    [String(world.kunai),'KUNAI'],[String(world.shuriken),'SHURIKEN'],[`×${big(world.difficultyScale,2)}`,'AMEAÇA FINAL'],[`${world.allies.length}/${world.stats.supportSlots}`,'SUPORTES'],
   ];
   return <div className="summary-backdrop" role="dialog" aria-modal="true" aria-label="Resumo da run">
     <section className={`summary-card ${world.victory?'won':'lost'}`}>
@@ -38,7 +41,7 @@ export function RunSummary({world,hero,mission,reward=null,rank=null,onlineRankS
           <small>MISSÃO {mission.toUpperCase()} · ENCERRADA</small>
           <h1>{world.victory?'Missão concluída!':'Seu shinobi caiu'}</h1>
           <p><b>{hero.name}</b> · {form} · Nv. {world.level}{world.bijuu?` · Bijū: ${world.bijuu}`:world.boss?` · Chefe: ${world.boss}`:''}</p>
-          {!world.victory&&world.killedBy&&<p className="summary-killer">Golpe final: <b>{world.killedBy.by}</b> · {fmt(world.killedBy.damage,0)} de dano ({fmt(world.killedBy.damage/Math.max(1,world.killedBy.maxHp)*100,0)}% da sua vida máxima)</p>}
+          {!world.victory&&world.killedBy&&<p className="summary-killer">Golpe final: <b>{world.killedBy.by}</b> · {big(world.killedBy.damage,0)} de dano ({fmt(world.killedBy.damage/Math.max(1,world.killedBy.maxHp)*100,0)}% da sua vida máxima)</p>}
           <p className="summary-hint">{world.victory?'Você derrotou a Bijū e atravessou o portal de saída.':'Fique fora dos círculos vermelhos antes do impacto.'}</p>
         </div>
       </header>
@@ -50,14 +53,14 @@ export function RunSummary({world,hero,mission,reward=null,rank=null,onlineRankS
       </section>}
       <div className="summary-body">
         {onlineRankStatus&&<p className="summary-col summary-ranking" role="status">{({sending:'Enviando resultado ao ranking…', accepted:'Resultado registrado na temporada.',review:'Resultado aguardando revisão do ranking.',queued:'Resultado pendente. O jogo tentará enviar novamente.',invalid:'O servidor não aceitou o resultado desta partida.'})[onlineRankStatus]}</p>}
-        {rank&&<section className="summary-col summary-ranking"><h2 className="stripe gold">Ranking local <small>Posição {rank.position} nesta região e dificuldade</small></h2><ol>{rank.top.map((entry,index)=><li key={index}><b>{HERO_BY_ID[entry.heroId]?.name??entry.heroId}</b><span>{entry.victory?'Vitória':'Zona '+entry.zone} · {entry.kills} abates · {clock(entry.elapsed)}</span></li>)}</ol></section>}
+        {rank&&<section className="summary-col summary-ranking"><h2 className="stripe gold">Ranking local <small>Posição {rank.position} nesta região e dificuldade</small></h2><ol>{rank.top.map((entry,index)=><li key={index}><b>{HERO_BY_ID[entry.heroId]?.name??entry.heroId}</b><span>{entry.victory?'Vitória':'Zona '+entry.zone} · {big(entry.kills,0)} abates · {clock(entry.elapsed)}</span></li>)}</ol></section>}
         <section className="summary-col">
           <h2 className="stripe blue">Dano por técnica <small>{damageRows.length} fontes</small></h2>
           {damageRows.length?<ol className="summary-damage">{damageRows.map(([name,value])=>{const t=techniqueByName[name],share=world.totalDamage>0?value/world.totalDamage*100:0;return <li key={name}>
             {t?<SkillIcon heroId={hero.id} name={name}/>:<span className="summary-dot"/>}
-            <div><b>{name}{world.skillLevels[name]?<small> Nv. {world.skillLevels[name]}</small>:null}</b><span className="summary-bar"><i style={{width:`${value/topDamage*100}%`}}/></span><small>{fmt(value,0)} · {fmt(share)}%{elapsed>0?` · ${fmt(value/elapsed)} DPS`:''}</small></div>
+            <div><b>{name}{world.skillLevels[name]?<small> Nv. {world.skillLevels[name]}</small>:null}</b><span className="summary-bar"><i style={{width:`${value/topDamage*100}%`}}/></span><small>{big(value,0)} · {fmt(share)}%{elapsed>0?` · ${big(value/elapsed)} DPS`:''}</small></div>
           </li>;})}</ol>:<p className="summary-empty">Nenhum dano registrado.</p>}
-          {world.allyDamage>0&&<p className="summary-note">Aliados causaram {fmt(world.allyDamage,0)} de dano ({allDamage>0?fmt(world.allyDamage/allDamage*100):0}% do dano combinado), contado à parte do dano total do herói.</p>}
+          {world.allyDamage>0&&<p className="summary-note">Aliados causaram {big(world.allyDamage,0)} de dano ({allDamage>0?fmt(world.allyDamage/allDamage*100):0}% do dano combinado), contado à parte do dano total do herói.</p>}
         </section>
         <section className="summary-col">
           <h2 className="stripe gold">Build final <small>{inventory.reduce((s,[,n])=>s+n,0)} itens</small></h2>
@@ -70,7 +73,7 @@ export function RunSummary({world,hero,mission,reward=null,rank=null,onlineRankS
         <section className="summary-col summary-attributes">
           <h2 className="stripe purple">Atributos finais</h2>
           <div className="summary-attribute-grid">
-          {STAT_GROUPS.map(group=><div className="stat-group" key={group.name}><h3>{group.name}</h3>{group.rows.map(([key,label,percent])=><div className="summary-stat" key={key}><span>{label}</span><b>{fmt(world.stats[key]*(percent?100:1))}{percent?'%':''}</b></div>)}</div>)}
+          {STAT_GROUPS.map(group=><div className="stat-group" key={group.name}><h3>{group.name}</h3>{group.rows.map(([key,label,percent])=><div className="summary-stat" key={key}><span>{label}</span><b>{big(world.stats[key]*(percent?100:1))}{percent?'%':''}</b></div>)}</div>)}
           </div>
         </section>
       </div>

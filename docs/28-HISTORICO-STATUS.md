@@ -9,7 +9,8 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Susano'o no pool | Itachi ANBU, Shisui e Sasuke Shippuden só depois de selar outro usuário → no próprio pool (Nv 12) |
+| (este commit) | Lamens do fim da run | nível 4/nível sem teto → 2/nível até 100 níveis; selados até 4; Bijū 180 → 60 por dificuldade e até 3 planos; vitória Kage ≈ 3 mil (a run de 76 min caiu de 56.031 para 3.038) |
+| `342da25` | Susano'o no pool | Itachi ANBU, Shisui e Sasuke Shippuden só depois de selar outro usuário → no próprio pool (Nv 12) |
 | `4fdd4a9` | Inimigos e construções | travavam na parede → contornam; nascem fora das construções |
 
 ## 25/11/2026

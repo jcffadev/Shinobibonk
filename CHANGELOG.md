@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 26/11/2026 · Lamens com teto em toda parcela e ficha final abreviada (Claude Code)
+
+- **Pedido do usuário** (run de 76 min no Kage, Nv 5.897, deu 56.031 Lamens; 23.584 só do nível): "no máximo uma RUN bem sucedida nesse porte deveria dar em torno de 2.9k lamens a 3.1k e uns quebradinhos" e "abreviar os números em K, M, T, Q".
+- **`LAMEN_RULES`** (`src/game/rewards.ts`): nível passa a valer 2 por nível com teto de 100 níveis (máx. 200; era 4 por nível sem teto); selados contam até 4 (máx. 80). Subtotal máximo 1.240.
+- **`bijuuLamens`** (`src/game/bijuu.ts`): 180 → 60 por dificuldade, com no máximo 3 planos contados (`BIJUU_LAMENS`); antes os 9 planos das 3 zonas davam ×3,97.
+- **Resultado:** a mesma run agora dá 3.038 Lamens (2.884 sem planos). Vitória completa: Genin 1.300, Chūnin 1.779, Jōnin 2.335 e Kage 2.884 a 3.038.
+- **Ficha final** (`src/ui/RunSummary.tsx`): dano total, DPS, dano dos aliados, Ryu, abates, nível, dano por técnica, golpe final, ranking local e atributos usam K, M, B, T, Q (`damageLabel`) a partir de mil. Os Lamens continuam exatos.
+- **Testes:** novo `tests/lamens.test.mjs` (4 testes, mínimo 334) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver a ficha final abreviada.
+
 ## 26/11/2026 · Susano'o no pool de quem o usa na obra (Claude Code)
 
 - **Pedido do usuário:** "Todos os personagens que deveriam ter Susano'o, tem a habilidade para pegar no pool?" → "sim"

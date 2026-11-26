@@ -1,6 +1,6 @@
 # 28 · Status de personagens e monstros
 
-> **Gerado pelo código** com `node scripts/gen-status-doc.mjs` em 2026-11-26, build `4fdd4a9`. Não edite as tabelas à mão: rode o gerador depois de cada mudança de balanceamento e faça commit junto. O histórico de alterações, com datas e builds, está em [28-HISTORICO-STATUS.md](28-HISTORICO-STATUS.md).
+> **Gerado pelo código** com `node scripts/gen-status-doc.mjs` em 2026-11-26, build `342da25`. Não edite as tabelas à mão: rode o gerador depois de cada mudança de balanceamento e faça commit junto. O histórico de alterações, com datas e builds, está em [28-HISTORICO-STATUS.md](28-HISTORICO-STATUS.md).
 
 ## Regras gerais em vigor
 

@@ -3186,3 +3186,9 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > sim
 
 **Resposta.** TEST_UNLOCK_ALL continua ligado. Susano'o no próprio pool de Itachi ANBU, Shisui e Sasuke Shippuden (9 versões no total). **Publicado no GitHub.**
+
+> Uma run completa nossa
+> Lembre-se que eu falei para você abreviar os números em K, M, T, Q, enfim
+> Agora esses lamens, foi alenms demais, demais mesmo no máximo uma RUN bem sucedida nesse porte deveria dar em torno de 2.9k lamens a 3.1k e uns quebradinhos...
+
+**Resposta.** O nível rendia 4 Lamens por nível sem teto (23.584 na run de Nv 5.897). Agora 2 por nível até 100 níveis, selados até 4 e Bijū 60 por dificuldade com até 3 planos: a mesma run dá 3.038 (2.884 sem planos). A ficha final abrevia dano, DPS, Ryu, abates e atributos em K, M, B, T, Q; os Lamens ficam exatos. **Publicado no GitHub.**

@@ -509,6 +509,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** A fila tem responsáveis e critérios de verificação. O índice de drops mantém as posições originais. O Hagoromo ganhou retrato, selo, indicador de fase e coleta antes de sair. As versões capturáveis usam a pose ajoelhada. **PENDENTE.** Gesto da mão no peito conforme as referências e calibração da defesa das Bijū.
 
+### Quantos Lamens uma run deve dar? · 26/11/2026
+
+**IMPLEMENTADO.** Vitória completa no Kage fica entre 2,9 mil e 3,1 mil Lamens. Toda parcela de `LAMEN_RULES` tem teto (tempo 30 min, abates 200, nível 100 níveis × 2, zonas +60, selados 4 × 20, vitória 100); Bijū = 60 × dificuldade × (1 + 0,33 × até 3 planos). Números grandes da ficha final usam K, M, B, T, Q.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

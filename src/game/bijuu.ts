@@ -33,7 +33,10 @@ export const bijuuFury = (phase: number) => Math.max(0, Math.min(2, phase - 1));
 export const furyDamage = (fury: number) => 1 + BIJUU_FURY.damagePerPhase * Math.max(0, fury);
 export const furyDefense = (base: number, fury: number) => 1 - (1 - base) * (1 - BIJUU_FURY.armorPerPhase) ** Math.max(0, fury);
 export const rollBijuu = (rng = Math.random) => BIJUU[Math.min(BIJUU.length-1,Math.floor(rng()*BIJUU.length))];
-export const bijuuLamens = (difficulty: number, plans: number) => Math.round(180 * difficulty * (1 + .33 * plans));
+/** Lamens da Bijū no portal (26/11/2026: 180 → 60 por dificuldade e no máximo 3 planos contados, para a vitória completa no
+ * Kage ficar perto de 3 mil Lamens no total — antes 9 planos somados nas 3 zonas davam ×3,97). */
+export const BIJUU_LAMENS = { base: 60, perPlan: .33, maxPlans: 3 };
+export const bijuuLamens = (difficulty: number, plans: number) => Math.round(BIJUU_LAMENS.base * difficulty * (1 + BIJUU_LAMENS.perPlan * Math.max(0, Math.min(BIJUU_LAMENS.maxPlans, plans))));
 
 /** Páginas dianteiras na ordem de BIJUU. */
 export const BIJUU_FRONT_SHEETS = [
