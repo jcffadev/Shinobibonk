@@ -35,7 +35,7 @@ test('drop fixo por abate (sem Sorte), um de cada no máximo, Ímã sempre no so
 test('o jogo solta, coleta ao pisar e aplica os efeitos (chefes fora da Nevasca e do Raio)', () => {
   const src = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
   assert.match(src, /\{const guizo=rollGuizo\(guizoBusy\(\)\);if\(guizo\)spawnPickup\(guizoPickupKind\(guizo\),defeatedAt\.x,defeatedAt\.z\);\}/);
-  assert.match(src, /const guizo=guizoFromKind\(pickup\.kind\);if\(guizo\)\{pickup\.active=false;scene\.remove\(pickup\.mesh\);activateGuizo\(guizo\);return true;\}/);
+  assert.match(src, /const guizo=guizoFromKind\(pickup\.kind\);if\(guizo\)\{pickup\.active=false;scene\.remove\(pickup\.mesh\);const at=pickups\.indexOf\(pickup\);if\(at>=0\)pickups\.splice\(at,1\);activateGuizo\(guizo\);return true;\}/);
   assert.match(src, /if\(id==='ima'\)globalMagnetUntil=pickupClock\+guizoDuration\(id\);/);
   assert.match(src, /for\(const enemy of enemyList\)\{if\(immovableBoss\(enemy\)\)continue;/);
   assert.match(src, /updateRikudo\(dt\);updateGuizos\(\);/);
