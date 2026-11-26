@@ -5,6 +5,13 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 - **Valores atuais:** [28-STATUS-PERSONAGENS-E-MONSTROS.md](28-STATUS-PERSONAGENS-E-MONSTROS.md), gerado pelo código (`node scripts/gen-status-doc.mjs`).
 - **Este arquivo:** uma linha por mudança de status, com data e build (commit). Ao mudar um número de personagem ou monstro: rode o gerador, acrescente a linha aqui e faça commit dos dois juntos.
 
+## 26/11/2026
+
+| Build | O que mudou | Antes → agora |
+|---|---|---|
+| (este commit) | Susano'o no pool | Itachi ANBU, Shisui e Sasuke Shippuden só depois de selar outro usuário → no próprio pool (Nv 12) |
+| `4fdd4a9` | Inimigos e construções | travavam na parede → contornam; nascem fora das construções |
+
 ## 25/11/2026
 
 | Build | O que mudou | Antes → agora |

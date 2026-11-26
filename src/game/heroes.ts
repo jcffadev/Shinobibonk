@@ -395,6 +395,9 @@ export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()
   for(const basic of ACADEMY)if(allowed.has(basic.element)&&!seen.has(basic.name)){seen.add(basic.name);list.push({...basic,source:'basica',origin:hero.id});}
   // Kits assinados pedem vínculo com a técnica e a versão em que ela faz sentido.
   const family=familyOf(hero.id);
+  // 26/11/2026 (usuário: "Todos os personagens que deveriam ter Susano'o, tem a habilidade para pegar no pool?" → "sim"): quem usa o
+  // Susano'o na obra (Shisui, Sasuke Shippuden, Itachi ANBU…) já o tem no próprio pool, sem precisar selar outro usuário.
+  if(!seen.has(L.susanoo.name)&&CANONICAL_TEACHING[L.susanoo.name]?.includes(family)&&canonicalPhase(hero.id,L.susanoo.name)&&allowed.has(L.susanoo.element)){seen.add(L.susanoo.name);list.push({...L.susanoo,unlockLevel:POOL_UNLOCK.unique,source:'kit',origin:hero.id});}
   for(const other of HEROES){
     if(familyOf(other.id)===family||!sealed.has(other.id))continue;
     for(const tech of other.techniques){

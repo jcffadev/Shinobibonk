@@ -131,3 +131,12 @@ test('Nagato, dono do Rinnegan, usa Bansho Tenin e Chibaku Tensei como o Pain (2
   assert.equal(by('nagato', 'Bansho Tenin').gravity, 'pull'); assert.equal(by('nagato', 'Chibaku Tensei').gravity, 'core');
   assert.equal(by('nagato', 'Chibaku Tensei').power, by('pain', 'Chibaku Tensei').power);
 });
+
+test("quem usa o Susano'o na obra já o tem no próprio pool, sem selar ninguém (26/11/2026)", async () => {
+  const { HEROES, skillPool } = await import('../src/game/heroes.ts');
+  const owners = HEROES.filter(h => skillPool(h.id, new Set()).some(t => t.name === 'Susanoo')).map(h => h.id).sort();
+  assert.deepEqual(owners, ['itachi', 'itachi-akatsuki', 'kakashi-dms', 'madara', 'madara-rinnegan', 'madara-seis-caminhos', 'sasuke-rinnegan', 'sasuke-shippuden', 'shisui']);
+  const shisui = skillPool('shisui', new Set()).find(t => t.name === 'Susanoo');
+  assert.equal(shisui.source, 'kit'); assert.equal(shisui.unlockLevel, 12);
+  assert.ok(!skillPool('sasuke', new Set()).some(t => t.name === 'Susanoo'), 'Sasuke Genin ainda não');
+});

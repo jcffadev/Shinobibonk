@@ -3181,3 +3181,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Presos em construções
 
 **Resposta.** Inimigos agora deslizam ao longo da parede para contornar a construção e não nascem dentro dela. **Publicado no GitHub.**
+
+> Ainda não
+> sim
+
+**Resposta.** TEST_UNLOCK_ALL continua ligado. Susano'o no próprio pool de Itachi ANBU, Shisui e Sasuke Shippuden (9 versões no total). **Publicado no GitHub.**

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 26/11/2026 · Susano'o no pool de quem o usa na obra (Claude Code)
+
+- **Pedido do usuário:** "Todos os personagens que deveriam ter Susano'o, tem a habilidade para pegar no pool?" → "sim"
+- **`techniquePool`** (`src/game/heroes.ts`): Itachi ANBU, Shisui e Sasuke Shippuden passam a ter o Susano'o no próprio pool (Nv 12, como técnica do kit), sem precisar selar outro usuário. As outras 6 versões já o tinham. Sasuke Genin continua sem.
+- **Testes:** 1 teste novo em `tests/jutsus.test.mjs` (mínimo 330) e 1 mutação nova, verificada à mão.
+
 ## 25/11/2026 · Inimigos contornam construções e não nascem dentro delas (Claude Code)
 
 - **Pedido do usuário:** "Revisar alguns elites ficarem bugados no cenário 3D." → "Presos em construções"
