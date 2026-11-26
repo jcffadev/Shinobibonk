@@ -3229,3 +3229,16 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > pain e nagato devem compartilhar todas as mesmas habilidades de rinnegan, a diferença que nagato terá invocação: Seis Caminhos de Pain · Kuchiyose: Pein Rikudō · Entenda/pesquise como funciona essa habilidade e coloque no jogo, pegue referencias para o Codex implementar, quero que isso seja a ultimate do Nagato e fazer de maneira jogável/balanceado
 
 **Resposta.** Nagato com o kit do Pain (Kunai Tática, Chibaku Tensei, Bansho Tenin, Barras de Chakra) e ultimate Kuchiyose: Pein Rikudō: os Seis Caminhos por 10 s (Deva, Asura, Humano, Animal, Preta, Naraka), poder 7,4 espalhado, cura e absorção. Referências para o Codex em docs/01. **Publicado no GitHub.**
+
+> Os bosses não podem ser empurrados e entram em rage ao perder 30% do HP
+> adicione essa mecânica
+
+**Resposta.** Guardião, Bijū e Totem não são mais empurrados nem puxados; o Guardião entra em fúria aos 70% da vida (+25% de dano, defesa mais fechada). **Publicado no GitHub.**
+
+> O buff de treinamento com Jiraya, ao passar de nivel sem nada para upar, esta aumentando velocidade de movimento?
+
+**Resposta.** Não especificamente: sorteia 1 de 19 atributos (+0,6%); Movimento é um deles.
+
+> Haku nasceu e não fez o efeito de névoa de gelo, tempestade de gelo na tela, anote para o codex · revisar os efeitos em tela de Haku/Gaara/Zabuza · Vamos aprimorar 'gráficamente' o Codex precisa me enviar como ficará o efeito em tela, antes de aprovarmos
+
+**Resposta.** Anotado para o Codex em docs/01 e docs/13, com prévia antes de aprovar.

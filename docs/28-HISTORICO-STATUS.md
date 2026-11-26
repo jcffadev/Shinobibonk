@@ -9,8 +9,10 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Kit do Nagato | Receptores de Chakra, Bansho Tenin, Chibaku Tensei, Invocação dos Caminhos → Kunai Tática, Chibaku Tensei, Bansho Tenin, Barras de Chakra (igual ao Pain) |
-| (este commit) | Ultimate do Nagato | Seis Caminhos do Rinnegan (explosão de poder 6) → Kuchiyose: Pein Rikudō (seis caminhos por 10 s, poder 7,4 espalhado, cura, absorção e recarga) |
+| (este commit) | Guardião: empurrão e puxão | puxões o moviam 40% → Guardião, Bijū e Totem não se movem |
+| (este commit) | Guardião: fúria | sem fúria → aos 70% da vida, +25% de dano e +30% de fechamento da defesa (uma vez) |
+| `09ec2d5` | Kit do Nagato | Receptores de Chakra, Bansho Tenin, Chibaku Tensei, Invocação dos Caminhos → Kunai Tática, Chibaku Tensei, Bansho Tenin, Barras de Chakra (igual ao Pain) |
+| `09ec2d5` | Ultimate do Nagato | Seis Caminhos do Rinnegan (explosão de poder 6) → Kuchiyose: Pein Rikudō (seis caminhos por 10 s, poder 7,4 espalhado, cura, absorção e recarga) |
 | `fdd2597` | Sorte em Hagoromo, Ebisu e Iruka | sem efeito → qualidade 0 (Sorte ≤ 10) a 1 (Sorte 70): raridade do treino e das ferramentas, e ganho do Ebisu/lição do Iruka puxado ao máximo |
 | `635981d` | Espaços de pílula | 6 → 5 tipos por run |
 | `635981d` | Preço dos itens do Mercador | +35% por compra e +12% por roletada → só +35% por compra (roletar encarece só a roletada) |

@@ -272,6 +272,14 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
 10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).
 
+### Anotação do usuário para o Codex · 26/11/2026 · efeitos de tela de Haku, Gaara e Zabuza
+
+- "Haku nasceu e não fez o efeito de névoa de gelo, tempestade de gelo na tela, anote para o codex · revisar os efeitos em tela de Haku/Gaara/Zabuza · Vamos aprimorar 'gráficamente' o Codex precisa me enviar como ficará o efeito em tela, antes de aprovarmos"
+- **O que houve:** a Haku nasceu (evento de clima) e a tela não mostrou a névoa nem a tempestade de gelo.
+- **Revisar os três efeitos de tela:** Haku (névoa e tempestade de gelo), Gaara (tempestade de areia) e Zabuza (névoa densa). Conferir se cada um aparece quando o evento começa e some quando termina, inclusive ao retomar a partida.
+- **Regra de aprovação (usuário):** antes de aplicar, o Codex manda ao usuário a prévia de como cada efeito vai ficar na tela (captura ou vídeo curto). Só implementa depois da aprovação.
+- Responsável: Codex (visual). A regra dos eventos de clima (duração, Mega Elite, lentidão) fica com o Claude Code.
+
 ### Anotação do usuário para o Codex · 26/11/2026 · Seis Caminhos de Pain (ultimate do Nagato)
 
 - "pain e nagato devem compartilhar todas as mesmas habilidades de rinnegan, a diferença que nagato terá invocação: Seis Caminhos de Pain · Kuchiyose: Pein Rikudō · Entenda/pesquise como funciona essa habilidade e coloque no jogo, pegue referencias para o Codex implementar, quero que isso seja a ultimate do Nagato e fazer de maneira jogável/balanceado"

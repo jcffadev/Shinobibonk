@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 26/11/2026 · Chefes inabaláveis e em fúria; aviso ao Codex sobre os climas de Haku, Gaara e Zabuza (Claude Code)
+
+- **Pedido do usuário:** "Os bosses não podem ser empurrados e entram em rage ao perder 30% do HP" → "adicione essa mecânica"
+- **Novo `src/game/bossRage.ts`** (`BOSS_RAGE`, `bossRageDue`, `rageDefense`, `immovableBoss`): Guardião, Bijū e Totem não são empurrados nem puxados (status Empurrar, Bansho Tenin, Chibaku Tensei, Shinra Tensei e a repulsão do Deva). Antes o Guardião ainda andava 40% do puxão. Continuam tomando dano e os outros status.
+- **Fúria do Guardião:** ao chegar a 70% da vida (perdeu 30%), entra em fúria uma vez: +25% de dano nos golpes e técnicas e fecha 30% do dano que ainda passava pela defesa (ex.: 60% → 72%). Aviso na tela e anel vermelho. A Bijū segue as fases dela (fúria ao perder 1/3 e 2/3 da vida, com atordoamento).
+- **Pedido do usuário:** "Haku nasceu e não fez o efeito de névoa de gelo, tempestade de gelo na tela, anote para o codex · revisar os efeitos em tela de Haku/Gaara/Zabuza · Vamos aprimorar 'gráficamente' o Codex precisa me enviar como ficará o efeito em tela, antes de aprovarmos" → anotado para o Codex em docs/01 e docs/13, com a regra de mandar a prévia antes da aprovação.
+- **Pergunta do usuário:** "O buff de treinamento com Jiraya, ao passar de nivel sem nada para upar, esta aumentando velocidade de movimento?" → não especificamente: o treino sorteia 1 de 19 atributos (+0,6% cada), e Movimento é um deles (~5% de chance por nível). Nenhum código alterado.
+- **Testes:** novo `tests/chefe-furia.test.mjs` (2 testes, mínimo 350), `tests/chefes.test.mjs` ajustado à regra nova e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver o Guardião parado sob Bansho/Shinra e o aviso de fúria.
+
 ## 26/11/2026 · Nagato com o kit do Pain e ultimate Kuchiyose: Pein Rikudō (Claude Code)
 
 - **Pedido do usuário:** "pain e nagato devem compartilhar todas as mesmas habilidades de rinnegan, a diferença que nagato terá invocação: Seis Caminhos de Pain · Kuchiyose: Pein Rikudō · Entenda/pesquise como funciona essa habilidade e coloque no jogo, pegue referencias para o Codex implementar, quero que isso seja a ultimate do Nagato e fazer de maneira jogável/balanceado"

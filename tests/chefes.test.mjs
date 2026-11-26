@@ -89,8 +89,9 @@ test('Bijū incontrolável: troca de fase atordoa 3 s e entra em fúria com mais
     'if(enemy.bijuu)checkBijuuPhase(enemy);',
     'applyBijuuFury(beast,fury);beast.phaseStun=BIJUU_FURY.stunSeconds;bossCombat.interrupt(beast);beast.windup=undefined;',
     "const stunned=channeling||enemy.arrivalGuard>0||(enemy.phaseStun??0)>0||",
-    "if(status==='Empurrar'){if(!enemy.bijuu){",
-    "else if(t.secondaryStatus==='Empurrar'&&!enemy.bijuu)",
+    // 26/11/2026: Guardião também não é empurrado (immovableBoss cobre Bijū, Guardião e Totem).
+    "if(status==='Empurrar'){if(!immovableBoss(enemy)){",
+    "else if(t.secondaryStatus==='Empurrar'&&!immovableBoss(enemy))",
     'enemy.speed*threat.speed*(enemy.bijuu?1:(enemy.slow?.75:1)*chillSlow(enemy))*',
     'beast.bossDamageScale=(beast.baseBossScale??beast.bossDamageScale??1)*furyDamage(fury);',
   ]) assert.ok(canvas.includes(wired), wired);

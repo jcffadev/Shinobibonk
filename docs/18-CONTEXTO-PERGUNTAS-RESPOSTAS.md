@@ -533,6 +533,14 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** `src/game/peinRikudo.ts` (`PEIN_RIKUDO`, `RIKUDO_PATHS`, `rikudoDue`, `rikudoTotalPower`) e `runRikudo`/`updateRikudo` no GameCanvas. Kit igual ao do Pain via `rinneganKit`; únicas divididas por `RINNEGAN_FAMILIES`/`sameTechniqueOwner`. **PENDENTE.** Arte dos Seis Caminhos (Codex) e validação em partida.
 
+### Chefes podem ser empurrados? Têm fúria? · 26/11/2026
+
+**IMPLEMENTADO.** `src/game/bossRage.ts`: `immovableBoss` (Guardião, Bijū, Totem) bloqueia Empurrar e gravidade; `checkBossRage` no GameCanvas aplica `BOSS_RAGE` (70% da vida, +25% de dano, defesa `rageDefense`). Bijū continua com `BIJUU_FURY`.
+
+### O treino sem nada para subir aumenta só o Movimento? · 26/11/2026
+
+**NÃO.** `rollPowerlevel` (src/game/powerlevel.ts) sorteia por igual entre os 19 atributos de `POWERLEVEL_ATTRIBUTES` com valor acima de 0; cada sorteio dá +0,6% naquele atributo.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

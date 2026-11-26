@@ -83,7 +83,8 @@ import { spawnBudgetFor, zoneThreat, zoneCurse, calculateStats, incomingDamage, 
 import { buildAltarOffers, extraStrikes } from '../game/altarRewards'
 import { luckQuality } from '../game/luckQuality'
 import { rollRecall, recallBlocked } from '../game/ichirakuRecall'
-import { PEIN_RIKUDO, RIKUDO_PATHS, rikudoDue, type RikudoEvent } from '../game/peinRikudo';
+import { PEIN_RIKUDO, RIKUDO_PATHS, rikudoDue, type RikudoEvent } from '../game/peinRikudo'
+import { BOSS_RAGE, bossRageDue, rageDefense, immovableBoss } from '../game/bossRage';
 import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
 import { castProgress, blendFog, mistHides, isChanneling, CAST_DISTANCE } from '../game/weatherCast';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
@@ -133,7 +134,7 @@ export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerS
 export { ALTAR_BUFF_BASE, ALTAR_BUFF_POOL } from '../game/altarRewards';
 /** Bolinho de arroz: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .025, heal: .35 };
-type Enemy = { /** Bijū: fúria (0–2), defesa e dano base, e atordoamento da troca de fase (s). */ fury?:number; baseDefense?:number; baseDmgMult?:number; baseBossScale?:number; phaseStun?:number; /** Inimigo preso perto do jogador (stuckReach). */ stuck?:StuckTrack; arrivalGuard?:number; bossDamageScale?:number; summonedAt?:number; summonedOvertime?:number; /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; /** Queimadura vinda da explosão da Esfera Katon (não explode de novo). */ burstBurn?:boolean; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:MissionNpc; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
+type Enemy = { /** Guardião em fúria (BOSS_RAGE, 26/11/2026). */ rage?:boolean; /** Bijū: fúria (0–2), defesa e dano base, e atordoamento da troca de fase (s). */ fury?:number; baseDefense?:number; baseDmgMult?:number; baseBossScale?:number; phaseStun?:number; /** Inimigo preso perto do jogador (stuckReach). */ stuck?:StuckTrack; arrivalGuard?:number; bossDamageScale?:number; summonedAt?:number; summonedOvertime?:number; /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; /** Queimadura vinda da explosão da Esfera Katon (não explode de novo). */ burstBurn?:boolean; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:MissionNpc; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
 type MapPickup = { id:string; kind:'kunai'|'shuriken'|'ryu'|'sealDrop'|'cursedShuriken'|'ninjaBody'; name:string; x:number; z:number; mesh:THREE.Object3D; active:boolean; discovered?:boolean };
 type Projectile = {mesh:THREE.Object3D;direction:THREE.Vector3;remaining:number;speed:number;radius:number;technique:Technique;origin:THREE.Vector3;hit:Set<Enemy>;growth:SkillGrowth;ally?:boolean;bounces:number;effectLevel?:number;range:number};
 /** Setup (buff puro) ativo no jogador. */
@@ -1718,6 +1719,11 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       for(const event of events){event.active=false;event.discovered=false;event.obj.visible=false;}
       teuchi.visible=false;
     }
+    /** Fúria do Guardião (BOSS_RAGE): ao perder 30% da vida, +25% de dano e mais armadura, uma vez. */
+    function checkBossRage(boss:Enemy){if(!bossRageDue(boss.hp,boss.maxHp??boss.hp,boss.rage))return;
+      boss.rage=true;boss.defense=rageDefense(boss.defense??0);boss.dmgMult=(boss.dmgMult??1)*(1+BOSS_RAGE.damage);boss.bossDamageScale=(boss.bossDamageScale??1)*(1+BOSS_RAGE.damage);
+      if(!hiddenEffects)addRing(boss.sprite.position,'#ff5a3c',3);
+      eventToast='Guardião · '+(HERO_BY_ID[boss.heroId!]?.name??'')+' entrou em fúria: +'+Math.round(BOSS_RAGE.damage*100)+'% de dano e mais armadura!';snapshotTimer=0;}
     /** Fúria da Bijū (BIJUU_FURY): mais dano e mais armadura por fase depois da 1ª. */
     function applyBijuuFury(beast:Enemy,fury:number){beast.fury=fury;beast.defense=furyDefense(beast.baseDefense??beast.defense??0,fury);beast.dmgMult=(beast.baseDmgMult??beast.dmgMult??1)*furyDamage(fury);beast.bossDamageScale=(beast.baseBossScale??beast.bossDamageScale??1)*furyDamage(fury);}
     /** Troca de fase: atordoa (sem andar, sem atacar, conjuração cancelada) e depois entra em fúria. */
@@ -1834,7 +1840,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
     }
     function takeDamage(enemy:Enemy,damage:number,color:string,fromAlly=false,tier=0,name='Status'){if(!enemyList.includes(enemy)||enemy.arrivalGuard||enemy.boss?.arrival!==undefined)return;if(enemy.defense)damage*=1-enemy.defense;if(enemy.account&&damage>=1)damage=Math.max(damage,(enemy.maxHp||1)*.10);const dealt=Math.min(enemy.hp,damage);if(fromAlly)allyDamage+=dealt;else{totalDamage+=dealt;skillDamage[name]=(skillDamage[name]||0)+dealt;if(ex('lifesteal')>0&&!defeated)hp=Math.min(stats.maxHp,hp+dealt*ex('lifesteal'));}enemy.hp-=damage;
       // Lâmina do Carrasco: inimigos comuns abaixo de 8% (+4 pontos por cópia extra) morrem na hora.
-      const executeAt=ex('execute')>0?.04*(ex('execute')/.08+1):0;if(executeAt>0&&enemy.hp>0&&!enemy.megaElite&&!enemy.guardian&&!enemy.totem&&enemy.hp<(enemy.maxHp||0)*executeAt)enemy.hp=0;damageNumber(enemy.sprite.position,damage,tier);if(enemy.hp<=0)removeEnemy(enemy);else{if(enemy.bijuu)checkBijuuPhase(enemy);if(!hiddenEffects){enemy.sprite.material.color.set(color);}}}
+      const executeAt=ex('execute')>0?.04*(ex('execute')/.08+1):0;if(executeAt>0&&enemy.hp>0&&!enemy.megaElite&&!enemy.guardian&&!enemy.totem&&enemy.hp<(enemy.maxHp||0)*executeAt)enemy.hp=0;damageNumber(enemy.sprite.position,damage,tier);if(enemy.hp<=0)removeEnemy(enemy);else{if(enemy.bijuu)checkBijuuPhase(enemy);else if(enemy.guardian)checkBossRage(enemy);if(!hiddenEffects){enemy.sprite.material.color.set(color);}}}
     /** Rodada 103: Resfriado (2 acúmulos ou molhado congelam). */
     function chillEnemy(enemy:Enemy,stacks:number){if(addChill(enemy,stacks)&&!hiddenEffects)addRing(enemy.sprite.position,'#9fe7ff',1.1);}
     const near=(at:THREE.Vector3,radius:number,skip?:Enemy)=>enemyList.filter(e=>e!==skip&&!e.totem&&Math.hypot(e.sprite.position.x-at.x,e.sprite.position.z-at.z)<radius);
@@ -1888,15 +1894,15 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       if(!ally)toolHitHooks(enemy,damage,crit.tier>0);
       const frozenBefore=isFrozen(enemy),poisonBefore=enemy.poison;
       if(enemy.control==='Dormir')enemy.controlTime=0;
-      if(t.gravity&&!enemy.bijuu&&!enemy.totem){
+      if(t.gravity&&!immovableBoss(enemy)){
         const delta=origin.clone().sub(enemy.sprite.position).setY(0),distance=delta.length();
         const step=t.gravity==='push'?-2:Math.min(3,Math.max(0,distance-(t.gravity==='core'?.28:.82)));
-        enemy.sprite.position.addScaledVector(delta.normalize(),step*(enemy.guardian?.4:1));
+        enemy.sprite.position.addScaledVector(delta.normalize(),step);
       }
-      const status=t.status??(stats.status>0?'Lentidão':undefined);if(status&&Math.random()<techniqueProc(t.status?t.statusChance:0,effectLevel,stats.status)){const duration=(status==='Lentidão'?1.8:.65)*stats.duration*(1+g.duration);if(status==='Empurrar'){if(!enemy.bijuu){const away=enemy.sprite.position.clone().sub(origin);away.y=0;enemy.sprite.position.addScaledVector(away.normalize(),1.4);}}else if(status==='Congelar')chillEnemy(enemy,STATUS_RULES.chill.techniqueStacks);else{enemy.control=status;enemy.controlTime=duration*(status==='Lentidão'?1:controlResist(enemy));if(status==='Lentidão')enemy.slow=duration;}}
+      const status=t.status??(stats.status>0?'Lentidão':undefined);if(status&&Math.random()<techniqueProc(t.status?t.statusChance:0,effectLevel,stats.status)){const duration=(status==='Lentidão'?1.8:.65)*stats.duration*(1+g.duration);if(status==='Empurrar'){if(!immovableBoss(enemy)){const away=enemy.sprite.position.clone().sub(origin);away.y=0;enemy.sprite.position.addScaledVector(away.normalize(),1.4);}}else if(status==='Congelar')chillEnemy(enemy,STATUS_RULES.chill.techniqueStacks);else{enemy.control=status;enemy.controlTime=duration*(status==='Lentidão'?1:controlResist(enemy));if(status==='Lentidão')enemy.slow=duration;}}
       if(t.secondaryStatus&&Math.random()<techniqueProc(t.secondaryStatusChance??0,effectLevel,stats.status)){
         if(t.secondaryStatus==='Lentidão')enemy.slow=Math.max(enemy.slow??0,1.8*stats.duration*(1+g.duration));
-        else if(t.secondaryStatus==='Empurrar'&&!enemy.bijuu)enemy.sprite.position.addScaledVector(enemy.sprite.position.clone().sub(origin).setY(0).normalize(),1.4);
+        else if(t.secondaryStatus==='Empurrar'&&!immovableBoss(enemy))enemy.sprite.position.addScaledVector(enemy.sprite.position.clone().sub(origin).setY(0).normalize(),1.4);
         else if(t.secondaryStatus==='Congelar')chillEnemy(enemy,1);
         else if(!enemy.controlTime){enemy.control=t.secondaryStatus;enemy.controlTime=.65*stats.duration*(1+g.duration)*controlResist(enemy);}
       }
