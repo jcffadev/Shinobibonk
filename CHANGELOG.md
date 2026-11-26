@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Zetsu visto entra no mapa (Claude Code)
+
+- **Pedido do usuário:** "Confirmar se ao ver o Zetsu o ícone está aparecendo no M/TAB."
+- **Erro:** a distância para marcar o Zetsu como visto usava o z do jogador sem subtrair o do Zetsu; ele quase nunca era marcado e o ícone não aparecia no M/Tab.
+- **Correção:** `zetsuSeen` em `src/game/akatsukiAmbush.ts` (7 m até ele), usado no GameCanvas. O ícone da nuvem da Akatsuki já existia no mapa.
+- **Testes:** 1 teste novo em `tests/akatsuki.test.mjs` (mínimo 319) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** chegar perto do Zetsu e abrir M e Tab.
+
 ## 25/11/2026 · Bijū incontrolável, atordoamento de fase e fúria (Claude Code)
 
 - **Pedidos do usuário:** "as habilidades que empurram, não pode empurrar a bijuu pra área morta, na realidade, as bijuus tem resistência aos status/atordoamentos/congelamentos, elas tomam o dano, tomam o status, mas tem status incontrolável, faça elas terem fases e ao você atingir a fase, ela toma um stunzinho que você pode bater nela sem ela devolver dano, mas ela entra em furia e recebe mais dano e mais armadura"; "Anotação para o Codex: Revisar a cabaça do Gaara, ele andando pra frente, ela fica estranha, não fica o padrão."

@@ -10,7 +10,7 @@ import { createDropModels, monsterDropScale, pickupScrollVariant, restDrop, type
 import { currentSettings, translateKey, pixelRatioFor, CAMERA_ZOOM, CAMERA_VIEW, perspectiveDistance } from '../game/settings';
 import { createMovementInput, createQuickMapInput } from '../game/movementInput';
 import { firstProjectileContact, projectileContact, projectileSpread, selectCombatTarget } from '../game/targetFocus';
-import { AKATSUKI_AMBUSH, AKATSUKI_MEMBERS, akatsukiAmbushHp, zetsuEmergence, type AmbushMemberSave } from '../game/akatsukiAmbush';
+import { zetsuSeen, AKATSUKI_AMBUSH, AKATSUKI_MEMBERS, akatsukiAmbushHp, zetsuEmergence, type AmbushMemberSave } from '../game/akatsukiAmbush';
 import { stuckReach, type StuckTrack, ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, ENEMY_XP_MULTIPLIER, commonEnemyProjectile, lootScale, xpDropValue, xpLoot, eliteHpRamp, capMegaEliteHp, megaEliteHp, rollMegaSchedule, type EnemyTier } from '../game/enemyTiers';
 import { completeEventDuel, sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain, RESEARCH_RULES } from '../game/account';
 import { createTotemBar } from './narutoTotem';
@@ -412,7 +412,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     function updateZetsu(dt:number){
       const {x,z,obj}=zetsuEvent;
       if(arena||!zetsuEvent.active){obj.visible=false;return;}
-      if(Math.hypot(player.position.x-x,player.position.z)<=AKATSUKI_AMBUSH.reveal)zetsuEvent.discovered=true;
+      if(zetsuSeen(player.position.x,player.position.z,x,z))zetsuEvent.discovered=true;
       obj.visible=zetsuEvent.discovered;
       if(!obj.visible||zetsuRise>=AKATSUKI_AMBUSH.riseTime)return;
       zetsuRise=Math.min(AKATSUKI_AMBUSH.riseTime,zetsuRise+dt);

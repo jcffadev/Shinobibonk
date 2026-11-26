@@ -35,3 +35,15 @@ test('Zetsu inicia por clique ou E, e a última baixa solta os pergaminhos sem s
   assert.match(src, /for\(const member of camp\.akatsukiAmbush\)/);
   assert.ok(fs.existsSync(new URL('../public/assets/icons/akatsuki-cloud.svg', import.meta.url)));
 });
+
+test('Zetsu visto de perto entra no mapa M/Tab, em qualquer ponto do mapa (25/11/2026)', async () => {
+  const { zetsuSeen, AKATSUKI_AMBUSH } = await import('../src/game/akatsukiAmbush.ts');
+  const r = AKATSUKI_AMBUSH.reveal;
+  assert.equal(zetsuSeen(-14, 9 + r - .1, -14, 9), true, 'a menos de 7 m do Zetsu');
+  assert.equal(zetsuSeen(-14, 0, -14, 30), false, 'longe dele, mesmo na linha z = 0');
+  assert.equal(zetsuSeen(40, 52, 42, 50), true, 'longe do centro do mapa também conta');
+  const src = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(src.includes('if(zetsuSeen(player.position.x,player.position.z,x,z))zetsuEvent.discovered=true;'));
+  const map = (await import('node:fs')).readFileSync(new URL('../src/ui/MapOverlay.tsx', import.meta.url), 'utf8');
+  assert.ok(map.includes("challenge: { glyph: 'akatsuki-cloud', tone: 'akatsuki' }"), 'ícone da Akatsuki no mapa');
+});

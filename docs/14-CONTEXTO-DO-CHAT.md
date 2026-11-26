@@ -3126,3 +3126,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 - Bijū incontrolável (sem empurrão nem lentidão), 3 s atordoada ao trocar de fase e depois fúria (+25% de dano por fase e mais armadura).
 - Cabaça do Gaara anotada para o Codex.
 - **Testes:** tipos, testes (318) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Ganha dano e armadura
+> Confirmar se ao ver o Zetsu o ícone está aparecendo no M/TAB.
+
+**Resposta.** Fúria confirmada como está. O ícone do Zetsu quase nunca aparecia: a distância para marcá-lo como visto estava errada (usava o z do jogador sem subtrair o do Zetsu). Corrigido. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

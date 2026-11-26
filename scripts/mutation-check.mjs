@@ -131,6 +131,7 @@ const MUTATIONS = [
   { regra: 'inimigo preso ataca de onde está', arquivo: 'src/game/enemyTiers.ts', de: '  return now - (track.since ?? now) >= r.seconds ? Math.max(reach, distance + r.slack) : reach;', para: '  return reach;' },
   { regra: 'inimigos ficam na área do jogador', arquivo: 'src/scene/GameCanvas.tsx', de: '        keepInPlayArea(sprite.position);', para: '' },
   { regra: 'fúria da Bijū soma dano por fase', arquivo: 'src/game/bijuu.ts', de: 'export const furyDamage = (fury: number) => 1 + BIJUU_FURY.damagePerPhase * Math.max(0, fury);', para: 'export const furyDamage = (fury: number) => 1;' },
+  { regra: 'Zetsu visto pela distância até ele', arquivo: 'src/game/akatsukiAmbush.ts', de: 'Math.hypot(px - x, pz - z) <= AKATSUKI_AMBUSH.reveal', para: 'Math.hypot(px - x, pz) <= AKATSUKI_AMBUSH.reveal' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },
