@@ -2,6 +2,12 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Planos do Shikamaru só no chefe da zona · 25/11/2026 (Claude Code)
+
+**Pedido do usuário:** "O Shikamaru ta aumentando a dificuldade do jogo todo? Ele deveria aumentar a dificuldade apenas do boss final da zona"
+
+- Os planos (+33% cada, até 3 por zona) agora entram só na ameaça do chefe: Guardião (vida, dano e defesa) e Bijū. Monstros comuns, elites e Mega Elites ficam como sem planos. As kunais extras do Guardião e os Lamens da Bijū por plano continuam.
+
 ## Os 6 abaixo da média e o pool real da partida · 25/11/2026 (Claude Code)
 
 **Pedido do usuário:** "Sim, os 6" (Hashirama Sábio, Lee Shippuden, Terceiro Raikage, Naruto Shippuden, Sasuke Shippuden e Haku).

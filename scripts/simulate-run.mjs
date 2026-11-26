@@ -150,7 +150,9 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     if (dirty) refresh();
     const overtime = Math.max(0, s.zoneT - ZONE_SECONDS);
     // `plans`: Planos do Shikamaru usados em cada zona (0–3), como no jogo (zoneCurse e guardianDefense).
-    const curse = zoneCurse(ZONE_DIFFICULTY[s.zone], plans, ex('threat'));
+    // Planos do Shikamaru só no chefe da zona (25/11/2026); a horda usa a ameaça sem planos.
+    const curse = zoneCurse(ZONE_DIFFICULTY[s.zone], 0, ex('threat'));
+    const bossThreat = () => plans ? zoneThreat(mission, s.zoneT, zoneCurse(ZONE_DIFFICULTY[s.zone], plans, ex('threat')), overtime, ex('enemyCount')) : threat;
     const threat = zoneThreat(mission, s.zoneT, curse, overtime, ex('enemyCount'));
     // Horda: nascimentos até o teto + emboscadas (8 + 2 × zona, AMBUSH_RULES).
     s.alive = Math.min(threat.cap, s.alive + threat.spawnPerSecond);
@@ -189,7 +191,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     }
     // Guardião: invocado em policy.guardianAt; derrotado → item grátis e próxima zona. Na zona 3 em modo sem fim, fica no Final Swarm.
     const endlessHere = policy.endless && s.zone === 3;
-    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) { const def0 = guardianDefense(s.t, false, overtime, s.zone, plans), hp = bossHpWithFloor(guardianVitality(threat.hp, s.t, s.zoneT, overtime, s.zone), singleDps(def0) * (1 + ex('eliteDamage')), BOSS_POWER.guardianSeconds, plans); guardian = { hp, maxHp: hp, def: guardianDefense(s.t, false, overtime, s.zone, plans), at: s.t, zone: s.zone, level: s.level }; }
+    if (!endlessHere && !guardian && s.zoneT >= policy.guardianAt) { const def0 = guardianDefense(s.t, false, overtime, s.zone, plans), hp = bossHpWithFloor(guardianVitality(bossThreat().hp, s.t, s.zoneT, overtime, s.zone), singleDps(def0) * (1 + ex('eliteDamage')), BOSS_POWER.guardianSeconds, plans); guardian = { hp, maxHp: hp, def: guardianDefense(s.t, false, overtime, s.zone, plans), at: s.t, zone: s.zone, level: s.level }; }
     if (guardian) {
       guardian.hp -= singleDps(guardian.def) * (1 + ex('eliteDamage'));
       if (guardian.hp <= 0) {

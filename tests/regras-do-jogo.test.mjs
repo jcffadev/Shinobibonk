@@ -20,8 +20,12 @@ test('verify-rules (elenco, catálogo, técnicas e sorteios) passa', () => {
 
 test('GameCanvas usa as funções testadas (sem lógica duplicada)', () => {
   const uses = {
-    'ameaça por zona': /const threatNow=\(\)=>zoneThreat\(mission,arena\?ZONE_SECONDS:zoneElapsed\(\)/,
-    'maldição da zona': /zoneCurse\(zoneDifficulty,shikamaruPlans,ex\('threat'\)\)/,
+    'ameaça por zona': /const zoneThreatWith=\(plans:number\)=>zoneThreat\(mission,arena\?ZONE_SECONDS:zoneElapsed\(\)/,
+    'maldição da zona': /zoneCurse\(zoneDifficulty,plans,ex\('threat'\)\)/,
+    // 25/11/2026: os planos do Shikamaru valem só para o chefe da zona; a horda usa a ameaça sem planos.
+    'horda sem os planos': /const threatNow=\(\)=>zoneThreatWith\(0\);/,
+    'chefe com os planos': /const bossThreatNow=\(\)=>zoneThreatWith\(shikamaruPlans\);/,
+    'vida do Guardião com os planos': /const guardianHpNow=\(hp=bossThreatNow\(\)\.hp\)=>/,
     '+% de inimigos': /ex\('enemyCount'\)/,
     'bênção do altar': /buildAltarOffers\(tier,stats\.luck\)/,
     'golpes extras': /extraStrikes\(stats\.projectiles,stats\.projectileChance,!!t\.ultimate\)/,

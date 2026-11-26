@@ -31,7 +31,7 @@ test('dano de alvo único cresce com o nível e cai com a defesa do chefe', () =
 });
 
 test('Guardião e Bijū usam o piso no jogo e no simulador', () => {
-  assert.ok(canvas.includes('const guardianHpNow=(hp=threatNow().hp)=>bossHpWithFloor(guardianVitality(hp,elapsed,zoneElapsed(),overtimeNow(),zone),playerBossDps('));
+  assert.ok(canvas.includes('const guardianHpNow=(hp=bossThreatNow().hp)=>bossHpWithFloor(guardianVitality(hp,elapsed,zoneElapsed(),overtimeNow(),zone),playerBossDps('));
   assert.ok(canvas.includes('BOSS_POWER.bijuuSeconds,bijuuPlans(shikamaruPlans));'));
   const run = missionProbe({ heroId: 'sasuke', mission: 'Genin', plans: 0, seed: 17, summonAt: 540 });
   assert.ok(run.bosses.length >= 1);

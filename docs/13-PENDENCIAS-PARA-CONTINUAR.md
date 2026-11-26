@@ -34,6 +34,10 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Planos do Shikamaru · 25/11/2026
+
+- Planos agora só fortalecem o Guardião da zona (e a Bijū). **PENDENTE DE VALIDAÇÃO E2E:** usar 3 planos e ver a horda igual e o Guardião mais forte.
+
 ## Tab e NPCs · 25/11/2026
 
 - Tab: mouse gira a câmera; botão direito segurado mostra a kunai para marcar rota. NPCs dos eventos e Teuchi sempre virados para o jogador. **PENDENTE DE VALIDAÇÃO E2E:** girar a câmera com o Tab aberto, marcar rota num NPC e andar em volta dos NPCs.

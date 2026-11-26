@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 25/11/2026 · Planos do Shikamaru só no chefe da zona (Claude Code)
+
+- **Pedido do usuário:** "O Shikamaru ta aumentando a dificuldade do jogo todo? Ele deveria aumentar a dificuldade apenas do boss final da zona"
+- **Antes:** cada plano somava +33% na ameaça da zona inteira (monstros comuns, elites, Mega Elites e Guardião) e reescalava a vida de todos os inimigos vivos.
+- **Agora (`GameCanvas`):** `threatNow` (horda, elites e Mega Elites) sai sem os planos; `bossThreatNow` leva os planos só para o Guardião (vida, dano e defesa) e a Bijū da zona 3 continua com `bijuuPlans`. Usar um plano com o Guardião vivo reescala só ele. As kunais extras da recompensa continuam.
+- **Textos:** aviso do plano ("Guardião da zona 33% mais forte") e guia.
+- **Simulador:** a horda sem os planos; a vida do Guardião com eles.
+- **Testes:** 3 testes antigos atualizados para a regra nova e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Selos: sai o texto acima da cabeça (Claude Code)
 
 - **Pedido do usuário:** "Os selos em cima do personagem é errado, eu queria a animaçao dos selos, não eles aparecendo em cima da cabeça."

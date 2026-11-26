@@ -3095,3 +3095,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Os selos em cima do personagem é errado, eu queria a animaçao dos selos, não eles aparecendo em cima da cabeça.
 
 **Resposta.** O texto acima da cabeça saiu. A animação dos selos é gráfica e fica com o Codex; a lógica das sequências ficou pronta em `src/game/handSeals.ts`. **Publicado no GitHub.**
+
+> O Shikamaru ta aumentando a dificuldade do jogo todo? Ele deveria aumentar a dificuldade apenas do boss final da zona
+
+**Resposta.** Sim, cada plano deixava a zona inteira 33% mais difícil. Agora os planos fortalecem só o Guardião da zona (vida, dano e defesa) e a Bijū; a horda não muda. As kunais extras continuam. **Publicado no GitHub.**

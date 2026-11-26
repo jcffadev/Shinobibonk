@@ -178,7 +178,7 @@ export function rollCritical(chance:number,criticalMultiplier=2.5,rng=Math.rando
 export type Threat=ReturnType<typeof difficultyAt>;
 /**
  * Multiplicador de ameaça de uma zona (Rodada 55): dificuldade própria da zona (ZONE_DIFFICULTY) × planos do Shikamaru
- * (+33% cada) × bônus de ameaça dos itens/eventos (mínimo ×0,2).
+ * (+33% cada; desde 25/11/2026 só no chefe da zona — Guardião e Bijū) × bônus de ameaça dos itens/eventos (mínimo ×0,2).
  */
 export function zoneCurse(zoneMultiplier:number,shikamaruPlans:number,threatBonus:number){return zoneMultiplier*(1+.33*shikamaruPlans)*Math.max(.2,1+threatBonus);}
 /**
