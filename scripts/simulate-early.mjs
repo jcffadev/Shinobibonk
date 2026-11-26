@@ -7,7 +7,7 @@ import { HEROES } from '../src/game/heroes.ts';
 import { simulateRun, targetsPerCast, hitDamage } from './simulate-run.mjs';
 import { attackCooldown, NO_GROWTH } from '../src/game/combat.ts';
 
-export const EARLY_MARKS = [1, 2, 3, 5];
+export const EARLY_MARKS = [1, 2, 3, 5, 8];
 
 /** Primeiros minutos de uma versão: nível, abates, golpe da 1ª técnica ÷ vida do comum e menor vida (%) até cada marco. */
 export function earlyRun(heroId, mission, seed = 1, account = 'novo', skill = 'medio') {

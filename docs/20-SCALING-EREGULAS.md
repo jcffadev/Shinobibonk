@@ -480,3 +480,7 @@ Degrau `k = floor(segundos de Final Swarm / 300)`. Vida ×Π(1 + 0,5·i), dano �
 ## Teto de cura · 26/11/2026
 
 Roubo de vida (`lifesteal` × dano causado) e cura por abate (`killHeal`, 2% da vida) passam por uma reserva: enche `HEAL_CAP.perSecond` = 10% da vida máxima por segundo, guarda até 1 s (src/game/healCap.ts).
+
+## Rampa do meio da zona · 26/11/2026
+
+`midHpRamp(min)`: 12^((min − 2)/6) de 2 a 8 min; depois 12^(1 − (min − 8)/22) até 30 min; ×1 fora disso. Multiplica a vida de todos os monstros (Mega Elite e Guardião acompanham porque saem da mesma ameaça).

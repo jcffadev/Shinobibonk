@@ -565,6 +565,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** `BossBars` (src/ui/BossBars.tsx, estilo em src/boss-bars.css), alimentado por `bossBars()` no snapshot do GameCanvas. Sem números; até 3 barras.
 
+### Build fraca deve sofrer aos 5 min? · 26/11/2026
+
+**IMPLEMENTADO.** `MID_HP_RAMP`/`midHpRamp` em src/game/progression.ts (×12 aos 8 min de zona, some aos 30 min). Medir com `node scripts/simulate-early.mjs Genin,Kage 1 novo` e `… maximo` (marcos 1, 2, 3, 5 e 8 min).
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

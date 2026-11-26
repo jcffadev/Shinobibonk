@@ -125,7 +125,8 @@ const hpLate=guardianVitality(difficultyAt('Genin',runSeconds,1,overtime).hp,run
 // 25/11: Final Swarm ×2 (antes ×3) → ~22,7 bilhões (antes ~34).
 // 25/11 (degraus do Final Swarm, +50% de vida a cada 5 min → 3 degraus aos +18 min): ~22,7 × 1,5³ ≈ 76,7 bilhões.
 // 26/11 (degraus que escalam, o degrau k vale k vezes): 1,5 × 2 × 2,5 = ×7,5 aos +18 min → ~22,7 × 7,5 ≈ 170 bilhões.
-assert.ok(hpLate>=160e9&&hpLate<180e9,`HP tardio do guardião: ${hpLate}`);
+// 26/11 (rampa do meio, MID_HP_RAMP: aos 28 min de zona ainda ×1,25): ~170 × 1,25 ≈ 214 bilhões.
+assert.ok(hpLate>=200e9&&hpLate<230e9,`HP tardio do guardião: ${hpLate}`);
 assert.ok(guardianDefense(runSeconds,false,overtime)>.95);
 assert.ok(guardianDefense(runSeconds,true,overtime,3)>guardianDefense(runSeconds,false,overtime));
 assert.ok(Math.abs(effectiveLootLuck(33,0)-6.6)<1e-9);assert.equal(effectiveLootLuck(33,150),33);

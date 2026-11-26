@@ -221,3 +221,17 @@ test('Final Swarm: cada degrau vale mais que o anterior (aos +30 min: vida ×315
   assert.ok(at(30).hp / at(25).hp > 3.9, 'do +25 ao +30 a vida passa de ×3,9');
   assert.ok(at(30).armor > .95 && at(30).armor <= SWARM_STEP.armorCap);
 });
+
+test('rampa do meio: vida ×1 até 2 min, ×12 aos 8 min, volta a ×1 aos 30 min e a vida total nunca cai (26/11/2026)', async () => {
+  // "no jogo referencia aos 5min+ se você não tiver uma build boa… você já começa tomar dano/morrer" → "Sim, calibrar".
+  const { MID_HP_RAMP, midHpRamp, difficultyAt } = await import('../src/game/progression.ts');
+  assert.equal(MID_HP_RAMP.max, 12);
+  assert.equal(midHpRamp(0), 1); assert.equal(midHpRamp(2), 1); assert.equal(midHpRamp(8), 12); assert.equal(midHpRamp(30), 1); assert.equal(midHpRamp(45), 1);
+  assert.ok(Math.abs(midHpRamp(5) - Math.sqrt(12)) < 1e-9);
+  for (const rank of ['Genin', 'Kage']) {
+    let prev = 0;
+    for (let m = 0; m <= 60; m += .25) { const h = difficultyAt(rank, m * 60, 1, Math.max(0, m * 60 - 600)).hp; assert.ok(h >= prev * .999, `${rank} ${m} min`); prev = h; }
+  }
+  // O 1º minuto não muda.
+  assert.ok(Math.abs(difficultyAt('Genin', 60).hp / difficultyAt('Genin', 60).hp - 1) < 1e-12 && midHpRamp(1) === 1);
+});

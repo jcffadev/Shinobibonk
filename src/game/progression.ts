@@ -90,6 +90,16 @@ export const normalHpFactor=(rank:Difficulty)=>MISSION_HP[rank]/MISSION_TIER[ran
 export const OPENING={minutes:4,perMinute:.5,capBase:8,capPerMinute:10};
 /** Termo extra de vida por dificuldade: só começa depois de `delay` min e chega ao teto em `spread` min (antes: do 0 ao teto em 2,1 min). */
 export const HP_RAMP={delay:2,spread:4};
+/**
+ * Rampa do meio (26/11/2026 — usuário: "no jogo referencia aos 5min+ se você não tiver uma build boa, feito fusão, ter itens,
+ * pouco level você já começa tomar dano/morrer" → "Sim, calibrar"). Simulador: aos 5 min até a conta nova matava o comum com
+ * 15–37× a vida dele num golpe. Entre `from` e `to` minutos de zona a vida dos monstros ganha um fator que cresce de ×1 até
+ * ×`max` (exponencial), depois volta devagar a ×1 até os 30 min de zona; os 2 primeiros minutos não mudam. Calibrado em scripts/simulate-early.mjs.
+ */
+export const MID_HP_RAMP={from:2,to:8,fadeUntil:30,max:12};
+/** Sobe de ×1 (2 min) a ×max (8 min) e volta a ×1 aos fadeUntil min de zona, mais devagar que o crescimento normal da vida
+ * (a vida total nunca cai). O Final Swarm a partir de +20 min fica como estava (calibrado para +30 ser quase impossível). */
+export const midHpRamp=(minutes:number)=>{const M=MID_HP_RAMP;if(minutes<=M.to)return Math.pow(M.max,Math.max(0,(minutes-M.from)/(M.to-M.from)));return Math.pow(M.max,Math.max(0,1-(minutes-M.to)/(M.fadeUntil-M.to)));};
 /** Rodada 76 (pedido: "talvez eles estarem um pouquinho mais longe… as emboscadas também devem ser eventos com maiores intervalos"):
  * nos 2 primeiros min de cada zona os comuns nascem a 16–24 m (antes 10–18 m); emboscada a partir de 2:30 e a cada 50–80 s (antes 30 s e 18–30 s). */
 export const SPAWN_RING = { openingSeconds: 120, opening: [16, 24] as const };
@@ -198,7 +208,7 @@ export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeco
   const opened=swarm>1?1:Math.min(1,(minutes/OPENING.minutes)**2);
   const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):MISSION_HP[rank]*(1+OPENING.perMinute*minutes)*(1-opened)+baseSpawn*opened;
   const openCap=swarm>1?cap:Math.max(1,Math.round((OPENING.capBase+OPENING.capPerMinute*minutes)*MISSION_HP[rank]*(1-opened)+cap*opened));
-  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,Math.max(0,minutes-HP_RAMP.delay)*1.4/HP_RAMP.spread)*.19*(tier-1)/.4)*curse*swarm*swarmStepHp(step),damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm*(1+GENIN_PRESSURE.damage*geninPressure)*swarmStepDamage(step),
+  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,Math.max(0,minutes-HP_RAMP.delay)*1.4/HP_RAMP.spread)*.19*(tier-1)/.4)*midHpRamp(minutes)*curse*swarm*swarmStepHp(step),damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm*(1+GENIN_PRESSURE.damage*geninPressure)*swarmStepDamage(step),
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08+GENIN_PRESSURE.attackRate*geninPressure)*curse,
     spawnPerSecond,spawnInterval:1/spawnPerSecond,
     cap:openCap,

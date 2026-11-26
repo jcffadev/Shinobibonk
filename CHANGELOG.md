@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 26/11/2026 · Rampa de vida do meio da zona: build fraca começa a cair a partir dos 5–8 min (Claude Code)
+
+- **Pedido do usuário:** "no jogo referencia aos 5min+ se você não tiver uma build boa, feito fusão, ter itens, pouco level você já começa tomar dano/morrer · Acha que da pra refinar ainda mais com essa informação?" → "Sim, calibrar"
+- **Antes (simulador, 115 versões):** aos 5 min até a conta nova matava o comum com 16–37× a vida dele num golpe (Genin) e quase ninguém levava dano.
+- **`MID_HP_RAMP` / `midHpRamp`** (`src/game/progression.ts`): a vida dos monstros ganha um fator que vai de ×1 aos 2 min a ×12 aos 8 min de zona (exponencial: 5 min ×3,5) e volta devagar a ×1 aos 30 min de zona, sem a vida total cair. Os 2 primeiros minutos não mudam; o Final Swarm a partir de +20 min fica como estava.
+- **Calibração** (`scripts/simulate-early.mjs`, agora com o marco de 8 min; fatores testados 10, 12, 14 e 20):
+
+| Conta | Dificuldade | Mortes até 5 min | Mortes até 8 min | Golpe ÷ vida aos 8 min |
+|---|---|---|---|---|
+| Nova | Genin | 0 | 33 de 115 | 3,2 |
+| Nova | Kage | 33 de 115 | 108 de 115 | 3,3 |
+| No máximo | Genin | 0 | 0 | 9,6 |
+| No máximo | Kage | 0 | 3 de 115 | 2,8 |
+
+- **Fim de jogo preservado:** Kimimaro no máximo cai aos 49,6 min no Kage e aos 60,1 min no Genin (antes 50 e 60).
+- **Ressalva:** no Genin, aos 5 min a conta nova ainda mata com ~6× a vida do comum; o alvo de 2–3 golpes chega por volta dos 8 min. O bot do simulador escolhe bem as cartas — um jogador com escolhas ruins fica mais fraco que a "conta nova".
+- **Testes:** 1 teste novo em `tests/progressao.test.mjs` (mínimo 367), `verify-rules` com a faixa nova do Guardião tardio (~214 bilhões) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** jogar até 8 min com build fraca e com build boa.
+
 ## 26/11/2026 · Teto na cura por roubo de vida e por abate (Claude Code)
 
 - **Pedido do usuário:** "Sim, aplicar teto" (proposta: até 10% da vida máxima por segundo, para o Final Swarm +30 ficar quase impossível).

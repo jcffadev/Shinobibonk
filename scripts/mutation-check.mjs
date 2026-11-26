@@ -164,6 +164,7 @@ const MUTATIONS = [
   { regra: 'Nevasca e Raio não pegam chefes', arquivo: 'src/scene/GameCanvas.tsx', de: 'for(const enemy of enemyList){if(immovableBoss(enemy))continue;', para: 'for(const enemy of enemyList){' },
   { regra: 'HUD mostra a barra de vida de chefes e Mega Elites', arquivo: 'src/scene/GameCanvas.tsx', de: 'onSnapshotRef.current({killedBy,bossBars:bossBars(),', para: 'onSnapshotRef.current({killedBy,bossBars:[],' },
   { regra: 'roubo de vida cura até 10% da vida por segundo', arquivo: 'src/game/healCap.ts', de: 'HEAL_CAP = { perSecond: .1 }', para: 'HEAL_CAP = { perSecond: 100 }' },
+  { regra: 'rampa do meio: vida ×12 aos 8 min de zona', arquivo: 'src/game/progression.ts', de: 'MID_HP_RAMP={from:2,to:8,fadeUntil:30,max:12}', para: 'MID_HP_RAMP={from:2,to:8,fadeUntil:30,max:1}' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },
