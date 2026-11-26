@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 26/11/2026 · Guizos: seis efeitos de 60 s que caem dos monstros (Claude Code)
+
+- **Pedido do usuário:** "Precisamos colocar umas passivas ao abater X quantidade de monstros escalonados… até 50mil mortes" → "Na realidade faça dropar os guisos · faça um de cada cor para cada efeito · Coletou Guiso de Imã / de Dificuldade / de Isca / da Nevasca / do Raio / da Força da Juventude (Aumenta 60% movspeed) · Esses efeitos duram sempre 60 segundos · Eles dropam por rng, sem considerar a sorte do personagem eles tem drop fixo por monstros" → "vamos manter os guisos de imã sempre" → "Para vermos se melhorarmos a questão do FPS do jogo"
+- **Novo `src/game/guizos.ts`** (`GUIZOS`, `GUIZO_RULES`, `rollGuizo`, `guizoToast`): cada abate tem chance fixa de 1 em 2.000 de soltar um guizo (a Sorte não entra). O tipo é sorteado por igual entre os que não estão no chão nem ativos (um de cada no máximo).
+- **Efeitos (60 s, com cronômetro no HUD):** Ímã (azul, puxa todos os itens do mapa — sempre no sorteio), Dificuldade (vermelho, +20% de dificuldade), Isca (laranja, +30% de inimigos), Nevasca (branco, lentidão em toda a horda), Raio (amarelo, toda a horda paralisada) e Força da Juventude (verde, +60% de movimento). Nevasca e Raio não pegam Guardião, Bijū nem Totem. **PROPOSTO:** os valores de Dificuldade (+20%) e Isca (+30%), que o pedido não fixou.
+- **No jogo:** o guizo cai onde o monstro morreu, é pego ao pisar e mostra "Coletou Guizo de …". O modelo é provisório (esfera da cor do efeito com alça); a arte final ficou anotada para o Codex com a referência do usuário (docs/01).
+- **Substitui** a ideia das passivas por marcos de abates (25/50/75/100… até 50 mil), que o usuário trocou pelos guizos.
+- **Testes:** novo `tests/guizos.test.mjs` (3 testes, mínimo 363) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver os guizos caindo, a coleta e cada efeito.
+
 ## 26/11/2026 · Degraus do Final Swarm que escalam (Claude Code)
 
 - **Pedido do usuário:** "Precisamos buffar mais a armadura dos monstros e o HP com o passar do tempo, tem um jogo aqui de um amigo testando que ele esta no final swarm em +30mins já, precisamos buffar mais 30min de final swarm deveria ser 'quase' impossível a build tem que estar muito perfeita · Buffar dos monstros: Hp/Vida/dano"

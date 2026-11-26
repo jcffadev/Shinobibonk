@@ -3263,3 +3263,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Precisamos buffar mais a armadura dos monstros e o HP com o passar do tempo, tem um jogo aqui de um amigo testando que ele esta no final swarm em +30mins já, precisamos buffar mais 30min de final swarm deveria ser 'quase' impossível a build tem que estar muito perfeita · Buffar dos monstros: Hp/Vida/dano
 
 **Resposta.** Degraus do Final Swarm agora escalam (o degrau k vale k vezes): aos +30 min vida ×315, dano ×61 e defesa até 97%. Simulação mostrou que o roubo de vida cura mais que a vida máxima por segundo no fim de jogo; proposto um teto de 10% da vida por segundo. **Publicado no GitHub.**
+
+> Precisamos colocar umas passivas ao abater X quantidade de monstros escalonados… até 50mil mortes" → "Na realidade faça dropar os guisos · faça um de cada cor para cada efeito · Coletou Guiso de Imã / de Dificuldade / de Isca / da Nevasca / do Raio / da Força da Juventude (Aumenta 60% movspeed) · Esses efeitos duram sempre 60 segundos · Eles dropam por rng, sem considerar a sorte do personagem eles tem drop fixo por monstros" → "vamos manter os guisos de imã sempre" → "Para vermos se melhorarmos a questão do FPS do jogo
+
+**Resposta.** Seis guizos (Ímã, Dificuldade, Isca, Nevasca, Raio, Força da Juventude), 60 s cada, chance fixa de 1 em 2.000 por abate, um de cada no máximo, Ímã sempre no sorteio. Arte provisória; arte final para o Codex. **Publicado no GitHub.**

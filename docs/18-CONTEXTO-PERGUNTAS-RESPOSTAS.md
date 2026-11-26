@@ -557,6 +557,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** +20% por uso, sem inflação: `rouletteCost(giros, desconto)` (base 30) e `weaponPrice(aberturas)` (base 20). Só o Mercador ainda usa `runInflation`.
 
+### Como funcionam os guizos? · 26/11/2026
+
+**IMPLEMENTADO.** `src/game/guizos.ts`; no GameCanvas `activateGuizo`, `updateGuizos`, `guizoBusy` e o tipo de pickup `guizo-<id>`. Efeitos via `applyTimedBuff` (aparecem no HUD); Ímã usa `globalMagnetUntil`. **PROPOSTO:** Dificuldade +20% e Isca +30%.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

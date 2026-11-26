@@ -272,6 +272,11 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
 10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).
 
+### Anotação do usuário para o Codex · 26/11/2026 · arte dos guizos
+
+- Referência do usuário: um par de guizos prateados redondos pendurados por cordão (imagem enviada no chat). Fazer o guizo do chão em 6 cores, uma por efeito: Ímã azul #45b8ff, Dificuldade vermelho #ff4b4b, Isca laranja #ff9f2e, Nevasca branco #e9f7ff, Raio amarelo #ffe23d e Força da Juventude verde #38d878.
+- Hoje o jogo usa um modelo provisório (esfera da cor + alça) em `spawnPickup` do GameCanvas; a regra fica em `src/game/guizos.ts`. Mandar a prévia ao usuário antes de aplicar.
+
 ### Anotação do usuário para o Codex · 26/11/2026 · efeitos de tela de Haku, Gaara e Zabuza
 
 - "Haku nasceu e não fez o efeito de névoa de gelo, tempestade de gelo na tela, anote para o codex · revisar os efeitos em tela de Haku/Gaara/Zabuza · Vamos aprimorar 'gráficamente' o Codex precisa me enviar como ficará o efeito em tela, antes de aprovarmos"

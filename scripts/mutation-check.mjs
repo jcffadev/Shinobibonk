@@ -160,6 +160,8 @@ const MUTATIONS = [
   { regra: 'roleta da Tsunade sobe 20% por giro', arquivo: 'src/game/roulette.ts', de: 'costGrowth: 1.2,', para: 'costGrowth: 1.7,' },
   { regra: 'kunai/pergaminho pago sobe 20% por abertura', arquivo: 'src/game/preparation.ts', de: 'WEAPON_PRICE={base:20,growth:1.2}', para: 'WEAPON_PRICE={base:20,growth:1.5}' },
   { regra: 'degraus do Final Swarm escalam (k vezes)', arquivo: 'src/game/progression.ts', de: 'for(let k=1;k<=step;k++)total*=1+per*k;', para: 'for(let k=1;k<=step;k++)total*=1+per;' },
+  { regra: 'guizos caem com chance fixa por abate', arquivo: 'src/game/guizos.ts', de: 'chancePerKill: 1 / 2000', para: 'chancePerKill: 0' },
+  { regra: 'Nevasca e Raio não pegam chefes', arquivo: 'src/scene/GameCanvas.tsx', de: 'for(const enemy of enemyList){if(immovableBoss(enemy))continue;', para: 'for(const enemy of enemyList){' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },
