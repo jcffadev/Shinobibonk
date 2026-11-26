@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 26/11/2026 · Ninja de capuz roxo só atira (Claude Code)
+
+- **Pedido do usuário:** "Esse personagem será ranged apenas" (captura do ninja de capuz roxo com kunai)
+- **Novo `src/game/hordeRoles.ts`** (`hordeLook`, `rangedChance`, `RANGED_ROW`): a linha 0 do atlas da horda (ninja de capuz roxo com kunai) é sempre atirador — kunai, shuriken ou fūma, só à distância. As outras três artes (cachecol vermelho, turbante do deserto e samurai de máscara) são corpo a corpo e nunca atiram.
+- **Antes:** a arte era sorteada entre as 4 linhas e o atirador era sorteado à parte, então qualquer arte podia atirar e o capuz roxo também batia de perto.
+- **Proporção de atiradores:** a mesma de antes (7% dos comuns no começo da zona, até 20% aos 5 min). Elite, desafio e Mega Elite não usam essa arte.
+- **Testes:** novo `tests/horda-atirador.test.mjs` (2 testes, mínimo 353) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver os capuzes roxos atirando e os outros só no corpo a corpo.
+
 ## 26/11/2026 · Eventos na home (Claude Code)
 
 - **Pedido do usuário:** "Os eventos devem aparecer na home do jogo e não lá no planejar missão"

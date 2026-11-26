@@ -3246,3 +3246,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Os eventos devem aparecer na home do jogo e não lá no planejar missão
 
 **Resposta.** Cartão do evento na home com o progresso; botão removido do planejar missão; "Voltar" dos Eventos vai à home. **Publicado no GitHub.**
+
+> Esse personagem será ranged apenas (captura do ninja de capuz roxo com kunai)
+
+**Resposta.** Linha 0 do atlas da horda = sempre atirador; as outras artes só corpo a corpo; proporção de atiradores igual à de antes. **Publicado no GitHub.**
