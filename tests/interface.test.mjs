@@ -112,3 +112,11 @@ test('ficha final mostra o golpe que derrubou o jogador e quem deu (25/11/2026)'
   const summary = fs.readFileSync(new URL('../src/ui/RunSummary.tsx', import.meta.url), 'utf8');
   assert.ok(summary.includes('Golpe final: <b>{world.killedBy.by}</b>'));
 });
+
+test('HUD mostra todos os itens, sem recolher nem resumir no total (25/11/2026)', () => {
+  const corner = fs.readFileSync(new URL('../src/ui/InventoryCorner.tsx', import.meta.url), 'utf8');
+  assert.ok(!corner.includes('inventory-toggle') && !corner.includes('expanded'), 'sem botão de recolher com o total');
+  assert.ok(corner.includes('entries.map(([name, count]) =>'), 'todos os itens entram na grade');
+  const css = fs.readFileSync(new URL('../src/hud-dock.css', import.meta.url), 'utf8');
+  assert.ok(css.includes('.inventory-corner.all-items{max-width:min(470px,48vw);max-height:none;overflow:visible;'), 'sem limite de altura nem rolagem');
+});

@@ -3164,3 +3164,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > A cada 5min no final swarm ter um buff consideravel nos inimigos dano/armadura/vida
 
 **Resposta.** A cada 5 min de Final Swarm: +50% de vida, +30% de dano e +2 pontos de defesa (até 95%), com aviso. **Publicado no GitHub.**
+
+> Ajustar o hud para aparecer todos os itens que temos, não minimizar e aparecer +60 por exemplo
+
+**Resposta.** A grade de itens mostra todos os itens, sem recolher; ícones encolhem com muitos itens. **Publicado no GitHub.**

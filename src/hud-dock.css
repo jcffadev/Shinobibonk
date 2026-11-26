@@ -193,3 +193,10 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .youth-note{opacity:.8;font-size:12px}
 .youth-actions{display:flex;gap:10px;justify-content:flex-end}
 .youth-banner{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:5;padding:6px 14px;border-radius:999px;background:#1d2a1ccc;border:1px solid #5fd06f;color:#eaffea;font-weight:800;pointer-events:none}
+/* 25/11/2026: todos os itens sempre visíveis (sem recolher). */
+.inventory-corner.all-items{max-width:min(470px,48vw);max-height:none;overflow:visible;flex-wrap:wrap;align-content:flex-end}
+.inventory-corner.all-items .inv-icon{width:28px;height:28px}
+.inventory-corner.all-items.small .inv-icon{width:23px;height:23px}
+.inventory-corner.all-items.tiny .inv-icon{width:19px;height:19px}
+.inventory-corner.all-items.tiny .inv-icon small{font-size:10px}
+@media(max-width:700px){.inventory-corner.all-items{max-width:60vw}}

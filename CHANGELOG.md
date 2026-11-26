@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25/11/2026 · HUD com todos os itens (Claude Code)
+
+- **Pedido do usuário:** "Ajustar o hud para aparecer todos os itens que temos, não minimizar e aparecer +60 por exemplo"
+- **`src/ui/InventoryCorner.tsx`:** a grade de itens mostra sempre todos os itens, sem recolher em 3 linhas com rolagem e sem o botão com o total; com mais de 24 e de 48 itens os ícones ficam menores para caber (`hud-dock.css`).
+- **Testes:** 1 teste novo em `tests/interface.test.mjs` (mínimo 327). **PENDENTE DE VALIDAÇÃO E2E:** ver a grade com muitos itens na tela.
+
 ## 25/11/2026 · Degraus do Final Swarm a cada 5 min (Claude Code)
 
 - **Pedido do usuário:** "A cada 5min no final swarm ter um buff consideravel nos inimigos dano/armadura/vida"
