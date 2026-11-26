@@ -83,3 +83,11 @@ test('cada prêmio é creditado uma vez e ligado na tela', () => {
   assert.ok(main.includes('{accountTitle&&<small className="account-title"'));
   assert.ok(picker.includes('frameLock(id,eventDuelsDone())'));
 });
+
+test('eventos ficam na home, não no planejar missão (26/11/2026)', () => {
+  // "Os eventos devem aparecer na home do jogo e não lá no planejar missão".
+  const main = fs.readFileSync('src/main.tsx', 'utf8'), mapSelect = fs.readFileSync('src/ui/MapSelect.tsx', 'utf8');
+  assert.match(main, /className="home-event-card"[\s\S]{0,400}onClick=\{\(\) => changePage\('events'\)\}>Abrir evento →/);
+  assert.match(main, /<EventsPage heroId=\{hero\.id\} onPlay=\{beginEventDuel\} onBack=\{\(\) => changePage\('home'\)\}\/>/);
+  assert.doesNotMatch(mapSelect, /onEvents|Eventos · Prova/);
+});

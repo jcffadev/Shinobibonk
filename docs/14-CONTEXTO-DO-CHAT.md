@@ -3242,3 +3242,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Haku nasceu e não fez o efeito de névoa de gelo, tempestade de gelo na tela, anote para o codex · revisar os efeitos em tela de Haku/Gaara/Zabuza · Vamos aprimorar 'gráficamente' o Codex precisa me enviar como ficará o efeito em tela, antes de aprovarmos
 
 **Resposta.** Anotado para o Codex em docs/01 e docs/13, com prévia antes de aprovar.
+
+> Os eventos devem aparecer na home do jogo e não lá no planejar missão
+
+**Resposta.** Cartão do evento na home com o progresso; botão removido do planejar missão; "Voltar" dos Eventos vai à home. **Publicado no GitHub.**

@@ -541,6 +541,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **NÃO.** `rollPowerlevel` (src/game/powerlevel.ts) sorteia por igual entre os 19 atributos de `POWERLEVEL_ATTRIBUTES` com valor acima de 0; cada sorteio dá +0,6% naquele atributo.
 
+### Onde ficam os Eventos? · 26/11/2026
+
+**IMPLEMENTADO.** Na home (cartão `home-event-card` em main.tsx, um por evento de `EVENTS`) e no menu do topo; não mais no planejar missão (MapSelect).
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

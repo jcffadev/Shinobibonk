@@ -154,6 +154,7 @@ const MUTATIONS = [
   { regra: 'Nagato com o kit do Rinnegan igual ao do Pain', arquivo: 'src/game/heroes.ts', de: "if (spec.id === 'nagato') kit.splice(0, kit.length, ...rinneganKit());", para: '' },
   { regra: 'Guardião entra em fúria ao perder 30% da vida', arquivo: 'src/game/bossRage.ts', de: 'hpShare: .7', para: 'hpShare: .5' },
   { regra: 'Guardião não é empurrado nem puxado', arquivo: 'src/game/bossRage.ts', de: '!!(e.guardian || e.bijuu || e.totem)', para: '!!(e.bijuu || e.totem)' },
+  { regra: 'Eventos com cartão na home', arquivo: 'src/main.tsx', de: 'className="home-event-card"', para: 'className="home-card"' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

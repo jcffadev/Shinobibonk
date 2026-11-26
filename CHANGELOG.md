@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 26/11/2026 · Eventos na home (Claude Code)
+
+- **Pedido do usuário:** "Os eventos devem aparecer na home do jogo e não lá no planejar missão"
+- **Home** (`src/main.tsx`): cartão "Evento · Prova Chūnin" ao lado de "Build preparada", com o progresso (x/15 duelos vencidos ou "Concluído") e o botão "Abrir evento →". O "Voltar" da aba Eventos leva à home.
+- **Planejar missão** (`src/ui/MapSelect.tsx`): sai o botão "Eventos · Prova Chūnin". O botão "Eventos" do menu do topo continua.
+- **Testes:** 1 teste novo em `tests/eventos.test.mjs` (mínimo 351) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver o cartão na home.
+
 ## 26/11/2026 · Chefes inabaláveis e em fúria; aviso ao Codex sobre os climas de Haku, Gaara e Zabuza (Claude Code)
 
 - **Pedido do usuário:** "Os bosses não podem ser empurrados e entram em rage ao perder 30% do HP" → "adicione essa mecânica"
