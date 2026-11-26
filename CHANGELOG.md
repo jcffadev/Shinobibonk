@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 26/11/2026 · Vazamento de memória: fila de explosões na morte e guizos (Claude Code)
+
+- **Relato do usuário:** "Da forma que estava derrubou o navegador falando que faltou memória... isso não pode acontecer nunca"
+- **Causa principal:** a fila de explosões na morte (Esfera Katon / Espelho de Gelo de Haku) só esvaziava 12 por quadro (720/s a 60 FPS). Com a reposição da horda no Final Swarm o personagem passa a matar milhares por segundo, cada morte em chamas enfileirava uma explosão e as explosões matavam mais — a fila crescia sem fim até faltar memória.
+- **Correção** (`enqueueDeathBurst` e `STATUS_RULES.deathBurst.maxQueued` = 120 em `src/game/statusRules.ts`): com a fila cheia, a explosão nova é descartada (perde-se só o dano em área extra daquele abate).
+- **Guizos:** cada guizo criava geometria e material novos e ficava na lista de pickups depois de pego. Agora usam geometria e material por cor compartilhados (liberados no fim da partida) e saem da lista ao serem pegos; ids por contador.
+- **Conferido:** números de dano (teto 300), tiros inimigos (80), drops do chão (junção e XP que some) e anéis (vida curta) já tinham limite.
+- **Testes:** novo `tests/memoria.test.mjs` (2 testes, mínimo 371; 1 milhão de abates com a fila no teto) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** Final Swarm longo com Esfera Katon olhando a memória da aba.
+
 ## 26/11/2026 · Orbe de XP some em 20 s e degraus do Final Swarm mais fortes (Claude Code)
 
 - **Pedido do usuário:** "Muitos itens estão sendo dropados no chão… passar uns 20s sem pegar o item de EXP vamos fazer sumir do mapa os itens · Eu estava vivo 10m do Final Swarm e meu personagem estava dando overkill em tudo! Precisamos aumentar mais a defesa/vida/dano"

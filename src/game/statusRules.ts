@@ -26,7 +26,7 @@ export const STATUS_RULES = {
   poison: { maxStacks: 8, perStack: .15 },
   resist: { mega: .4, guardian: .4, bijuu: .25 },
   shatter: { radius: 3 },
-  deathBurst: { fireChance: .5, fireRadius: 3.5, fireDamage: 2, iceRadius: 3, iceDamage: 1.5, perFrame: 12 },
+  deathBurst: { fireChance: .5, fireRadius: 3.5, fireDamage: 2, iceRadius: 3, iceDamage: 1.5, perFrame: 12, maxQueued: 120 },
 } as const;
 
 export type StatusTarget = {
@@ -101,6 +101,17 @@ export function reactionsFor(e: StatusTarget, elements: readonly (string | undef
   if (elements.includes('Vento') && (e.burn ?? 0) > 0) out.push('scorch');
   if (elements.includes('Água')) out.push('wet');
   return out;
+}
+
+/**
+ * Fila de explosões na morte com teto (26/11/2026 — usuário: "Da forma que estava derrubou o navegador falando que faltou
+ * memória... isso não pode acontecer nunca"). A fila só esvazia `perFrame` por quadro (720/s a 60 FPS); no Final Swarm com
+ * milhares de abates por segundo, e explosões matando mais, ela crescia sem fim. Com a fila cheia (`maxQueued`), a explosão
+ * nova é descartada (o monstro já morreu; perde-se só o dano em área extra daquele abate).
+ */
+export function enqueueDeathBurst<T>(queue: T[], burst: T): boolean {
+  if (queue.length >= STATUS_RULES.deathBurst.maxQueued) return false;
+  queue.push(burst); return true;
 }
 
 /** Explosão na morte: 'fire' (queimando + Esfera Katon, 50%), 'ice' (congelado + Espelho de Gelo de Haku). */

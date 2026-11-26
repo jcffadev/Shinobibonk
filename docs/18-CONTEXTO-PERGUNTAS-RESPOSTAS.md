@@ -569,6 +569,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** `MID_HP_RAMP`/`midHpRamp` em src/game/progression.ts (×12 aos 8 min de zona, some aos 30 min). Medir com `node scripts/simulate-early.mjs Genin,Kage 1 novo` e `… maximo` (marcos 1, 2, 3, 5 e 8 min).
 
+### O que derrubou o navegador por falta de memória? · 26/11/2026
+
+**CORRIGIDO.** Fila `deathBursts` sem teto (agora `enqueueDeathBurst`, máx. 120). Regra para filas novas: toda fila que cresce com abates precisa de teto ou de vida curta (ver tests/memoria.test.mjs).
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

@@ -64,7 +64,7 @@ import { activeSynergies, synergyBonuses, type ActiveSynergy } from '../game/syn
 import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVitality, guardianDefense, guardianAttackMultiplier } from '../game/missions';
 import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DURATION, weatherWait, planZoneWeather, type WeatherEventId, type WeatherPlan } from '../game/maps';
 import { canLockTarget, mistVisibility, ZABUZA_MIST } from '../game/zabuzaMist';
-import { addChill, addPoisonStack, chillSlow, controlResist, damageStatusCount, deathBurstKind, freezeTarget, isFrozen, poisonMultiplier, reactionsFor, STATUS_RULES, statusDamageMultiplier, tickStatus } from '../game/statusRules';
+import { addChill, addPoisonStack, chillSlow, controlResist, damageStatusCount, deathBurstKind, enqueueDeathBurst, freezeTarget, isFrozen, poisonMultiplier, reactionsFor, STATUS_RULES, statusDamageMultiplier, tickStatus } from '../game/statusRules';
 import { FALLEN_TRAP, trapIsElite, trapRing } from '../game/fallenTrap';
 import { BOSS_POWER, bossHpWithFloor, singleTargetDps } from '../game/bossScaling';
 import { YOUTH_FIGHTER_HP, YOUTH_GOALS, YOUTH_TEXT, rollYouthChallenge, tickYouth, youthBonuses, youthChallengeText, youthSpots, type YouthChallengeId, type YouthDifficulty, type YouthRun } from '../game/youthTraining';
@@ -1645,6 +1645,11 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     /** Rodada 73: farol (facho de luz + brilho) de cada pergaminho de recompensa grátis (sealDrop: G, Guardião, desafio). */
     const beacons=new Map<MapPickup,RewardBeacon>();
     const CURSED_SHURIKEN_DAMAGE=.08;
+    /** Modelo provisório do guizo: geometrias e um material por cor, criados uma vez e liberados no fim da partida. */
+    const guizoGeometry={bell:new THREE.SphereGeometry(.26,14,10),loop:new THREE.TorusGeometry(.1,.03,6,12)},guizoMaterials=new Map<string,THREE.MeshLambertMaterial>();
+    const guizoMaterial=(color:string)=>{let m=guizoMaterials.get(color);if(!m){m=new THREE.MeshLambertMaterial({color,emissive:color,emissiveIntensity:.35});guizoMaterials.set(color,m);}return m;};
+    runCleanups.push(()=>{guizoGeometry.bell.dispose();guizoGeometry.loop.dispose();for(const m of guizoMaterials.values())m.dispose();});
+    let pickupSerial=0;
     function spawnPickup(kind:MapPickup['kind'],x:number,z:number){
       ({x,z}=solids.freeSpot(x,z));
       const names={kunai:'Pergaminho',shuriken:'Pergaminho',ryu:'Morro de bolinhos de arroz',sealDrop:'Pergaminho de recompensa grátis',cursedShuriken:'Shuriken Amaldiçoada',ninjaBody:'Corpo de ninja'};
@@ -1657,9 +1662,9 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
         art.position.y=.035;
         mesh.add(pickupShadows.place(x,z,art.scale.x),art);
       }else if(guizoFromKind(kind)){
-        const color=GUIZO_BY_ID[guizoFromKind(kind)!].color,material=new THREE.MeshLambertMaterial({color,emissive:color,emissiveIntensity:.35});
-        const bell=new THREE.Mesh(new THREE.SphereGeometry(.26,14,10),material);bell.position.y=.3;
-        const loop=new THREE.Mesh(new THREE.TorusGeometry(.1,.03,6,12),material);loop.position.y=.58;
+        const material=guizoMaterial(GUIZO_BY_ID[guizoFromKind(kind)!].color);
+        const bell=new THREE.Mesh(guizoGeometry.bell,material);bell.position.y=.3;
+        const loop=new THREE.Mesh(guizoGeometry.loop,material);loop.position.y=.58;
         mesh.add(pickupShadows.place(x,z,.8),bell,loop);
       }else{
         const variant=kind==='ryu'||kind==='cursedShuriken'?0:pickupScrollVariant(kind as 'kunai'|'shuriken'|'sealDrop',Math.random());
@@ -1672,7 +1677,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
         mesh.add(shadow,art);
       }
       scene.add(mesh);
-      pickups.push({id:'pickup-'+pickups.length,kind,name:guizoFromKind(kind)?GUIZO_BY_ID[guizoFromKind(kind)!].name:names[kind as keyof typeof names],x,z,mesh,active:true});
+      pickups.push({id:'pickup-'+(pickupSerial++),kind,name:guizoFromKind(kind)?GUIZO_BY_ID[guizoFromKind(kind)!].name:names[kind as keyof typeof names],x,z,mesh,active:true});
       // Rodada 73: o pergaminho grátis brilha, tem facho de luz e aparece no minimapa, no Tab e no M desde que cai.
       if(kind==='sealDrop'){const pickup=pickups.at(-1)!;pickup.discovered=true;beacons.set(pickup,createRewardBeacon(scene,x,z,itemSurface,mesh.position.y+.38));}
     }
@@ -1816,7 +1821,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
  * + Rodada 50 "os bolinhos de arroz você colocou para passar em cima e pegar automático, retire isso") —
  * coleta AO PISAR, sem "E": apenas o drop do mega elite (sealDrop). Rodada 50: morro de arroz (Ryu) agora também pede E.
  * Pergaminhos (kunai/shuriken) e emboscadas (ninjaBody/cursedShuriken) pedem E: são ações deliberadas (pago em Ryu / gatilho de risco), não coleta passiva. */
-function collectPickup(pickup:MapPickup):boolean{let ryuGain=0;{const guizo=guizoFromKind(pickup.kind);if(guizo){pickup.active=false;scene.remove(pickup.mesh);activateGuizo(guizo);return true;}}if(pickup.kind==='kunai'||pickup.kind==='shuriken'){const cost=kunaiPrice();if(runMoney<cost){eventToast='São necessários '+compactNumber(cost)+' Ryu para abrir esta recompensa.';return false;}runMoney-=cost;ryuSpent+=cost;paidWeapons++;}pickup.active=false;scene.remove(pickup.mesh);if(pickup.kind==='kunai'||pickup.kind==='shuriken'){if(pickup.kind==='kunai')kunai++;else shuriken++;choiceLevel=0;choiceData=rollMegaLoot();keys.clear();}else if(pickup.kind==='sealDrop'){choiceLevel=0;choiceData=rollMegaLoot();eventToast=`Sorte ${luck}: escolha o item deixado pelo mega elite`;}else{ryuGain=Math.round((14+zone*6)*MISSION_TIER[mission]*(1+Math.min(1,stats.luck*.01)));runMoney+=ryuGain;globalMagnetUntil=pickupClock+10;const rice=Math.random()<.5;if(rice)addDrop(new THREE.Vector3(pickup.x,0,pickup.z),'onigiri',RAMEN_DROP.heal);eventToast=`${pickup.name} · +${compactNumber(ryuGain)} Ryu · ímã 10 s${rice?' · bolinho de cura':''}`;}if(pickup.kind!=='sealDrop'&&pickup.kind!=='ryu')eventToast=`${pickup.name} coletado`;playSfx('pickup');return true;}
+function collectPickup(pickup:MapPickup):boolean{let ryuGain=0;{const guizo=guizoFromKind(pickup.kind);if(guizo){pickup.active=false;scene.remove(pickup.mesh);const at=pickups.indexOf(pickup);if(at>=0)pickups.splice(at,1);activateGuizo(guizo);return true;}}if(pickup.kind==='kunai'||pickup.kind==='shuriken'){const cost=kunaiPrice();if(runMoney<cost){eventToast='São necessários '+compactNumber(cost)+' Ryu para abrir esta recompensa.';return false;}runMoney-=cost;ryuSpent+=cost;paidWeapons++;}pickup.active=false;scene.remove(pickup.mesh);if(pickup.kind==='kunai'||pickup.kind==='shuriken'){if(pickup.kind==='kunai')kunai++;else shuriken++;choiceLevel=0;choiceData=rollMegaLoot();keys.clear();}else if(pickup.kind==='sealDrop'){choiceLevel=0;choiceData=rollMegaLoot();eventToast=`Sorte ${luck}: escolha o item deixado pelo mega elite`;}else{ryuGain=Math.round((14+zone*6)*MISSION_TIER[mission]*(1+Math.min(1,stats.luck*.01)));runMoney+=ryuGain;globalMagnetUntil=pickupClock+10;const rice=Math.random()<.5;if(rice)addDrop(new THREE.Vector3(pickup.x,0,pickup.z),'onigiri',RAMEN_DROP.heal);eventToast=`${pickup.name} · +${compactNumber(ryuGain)} Ryu · ímã 10 s${rice?' · bolinho de cura':''}`;}if(pickup.kind!=='sealDrop'&&pickup.kind!=='ryu')eventToast=`${pickup.name} coletado`;playSfx('pickup');return true;}
 function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo();return;}const fallen=closestFallenMega();if(fallen){removeFallenMega(fallen);keys.clear();startSeal(fallen.candidate);snapshotTimer=0;return;}let bestPickup:MapPickup|undefined,bestDistance=2;for(const pickup of pickups){if(!pickup.active||pickup===activeBody||(pickup.kind!=='cursedShuriken'&&pickup.kind!=='ninjaBody'&&pickup.kind!=='kunai'&&pickup.kind!=='shuriken'&&pickup.kind!=='ryu'))continue;const d=Math.hypot(pickup.x-player.position.x,pickup.z-player.position.z);if(d<bestDistance){bestDistance=d;bestPickup=pickup;}}if(!bestPickup&&portal&&Math.hypot(portal.x-player.position.x,portal.z-player.position.z)<2.2){const pt=portal;const left=pickups.filter(p=>p.active&&(p.kind==='sealDrop'||p.kind==='kunai'||p.kind==='shuriken')&&Math.hypot(p.x-pt.x,p.z-pt.z)<6).length;if(left&&elapsed-portalWarnedAt>4){portalWarnedAt=elapsed;eventToast=`Ainda há ${left} pergaminho${left>1?'s':''} perto do portal. Recolha com E antes ou aperte E de novo para entrar no portal.`;return;}enterPortal();return;}if(arena&&!bestPickup)return;if(bestPickup){if(bestPickup.kind==='ryu'||bestPickup.kind==='kunai'||bestPickup.kind==='shuriken'){collectPickup(bestPickup);return;}startFieldAmbush(bestPickup);return;}const event=events.filter(e=>e.active).sort((a,b)=>Math.hypot(a.x-player.position.x,a.z-player.position.z)-Math.hypot(b.x-player.position.x,b.z-player.position.z))[0];if(!event||Math.hypot(event.x-player.position.x,event.z-player.position.z)>3.6)return;if(event===zetsuEvent){startAkatsukiAmbush();return;}if(event.id==='shikamaru'){useShikamaruPlan();return;}if(event.id==='guardian-seal'){summonGuardian();return;}if(event.id==='orochimaru'){event.active=false;zoneDifficulty*=1.2;xpMultiplier*=1.25;lootMultiplier*=1.25;eventToast='Maldição de Orochimaru: +20% dificuldade · +25% XP e saque';return;}if(event.id==='arsenal'){openKakashi(event);return;}if(event.id==='ebisu'){openEbisu(event);return;}if(event.id==='iruka'){openIruka(event);return;}if(event.id==='youth'){openYouth(event);return;}if(event.id==='sapos-sabios'){openSages();return;}if(event===ichiraku){openIchiraku();return;}if(event.id==='trader'){showMerchant();return;}if(event.id==='slot'){openRoulette();return;}if(event.altarTier!==undefined){eventToast=event.name+' · fique dentro do círculo para ativar o altar (sem E)';return;}
     }
     function addDrop(position:THREE.Vector3,type:Drop['type'],value:number,name=''){
@@ -1889,7 +1894,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
     }
     /** Rodada 103: explosões na morte (Esfera Katon / Espelho de Gelo de Haku), resolvidas no quadro seguinte. */
     const deathBursts:{x:number;z:number;kind:'fire'|'ice'}[]=[];
-    function queueDeathBurst(enemy:Enemy){const kind=deathBurstKind(enemy,ex('fireBurst'),ex('iceBurst'),Math.random());if(kind)deathBursts.push({x:enemy.sprite.position.x,z:enemy.sprite.position.z,kind});}
+    function queueDeathBurst(enemy:Enemy){const kind=deathBurstKind(enemy,ex('fireBurst'),ex('iceBurst'),Math.random());if(kind)enqueueDeathBurst(deathBursts,{x:enemy.sprite.position.x,z:enemy.sprite.position.z,kind});}
     function flushDeathBursts(){
       const D=STATUS_RULES.deathBurst;
       for(const b of deathBursts.splice(0,D.perFrame)){

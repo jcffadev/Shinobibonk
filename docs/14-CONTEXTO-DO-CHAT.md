@@ -3291,3 +3291,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Muitos itens estão sendo dropados no chão… passar uns 20s sem pegar o item de EXP vamos fazer sumir do mapa os itens · Eu estava vivo 10m do Final Swarm e meu personagem estava dando overkill em tudo! Precisamos aumentar mais a defesa/vida/dano
 
 **Resposta.** Orbe de XP some após 20 s parado no chão. Degraus do Final Swarm mais fortes (+10 min: vida ×6, dano ×3; +20 min: vida ×120, dano ×22,5). **Publicado no GitHub.**
+
+> Da forma que estava derrubou o navegador falando que faltou memória... isso não pode acontecer nunca
+
+**Resposta.** A fila de explosões na morte crescia sem fim com milhares de abates por segundo; agora tem teto de 120. Guizos com modelo compartilhado e removidos da lista ao serem pegos. **Publicado no GitHub.**
