@@ -9,8 +9,9 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Degraus do Final Swarm | vida ×(1+0,5k), dano ×(1+0,3k), +2k defesa → vida ×(1+k), dano ×(1+0,5k), +3k defesa |
-| (este commit) | Orbe de XP no chão | ficava para sempre → some em 20 s |
+| (este commit) | Resistência por zona | zona 2/3 só com ×1,18/×1,38 → vida ×6/×20 e +5/+10 pontos de defesa (dano igual) |
+| `bda3c11` | Degraus do Final Swarm | vida ×(1+0,5k), dano ×(1+0,3k), +2k defesa → vida ×(1+k), dano ×(1+0,5k), +3k defesa |
+| `bda3c11` | Orbe de XP no chão | ficava para sempre → some em 20 s |
 | `68bbc2d` | Guizo do Raio | 60 s → 20 s; guizo igual ativo não acumula |
 | `449b186` | Vida dos monstros no meio da zona | sem rampa → ×1 (2 min), ×3,5 (5 min), ×12 (8 min), de volta a ×1 aos 30 min de zona |
 | `1ba0c16` | Cura por roubo de vida e por abate | sem teto (curava bilhões por segundo) → até 10% da vida máxima por segundo |

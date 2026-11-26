@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 26/11/2026 · Resistência por zona: zonas 2 e 3 com mais vida e defesa (Claude Code)
+
+- **Pedidos do usuário:** "Aumente em 10x o HP/Armadura/Dano a cada 3m de jogo dos monstros, no final swarm você vai fazer isso a cada 2m" → "Quero ver se conseguimos melhorar a curva de dificuldade do jogo a progressão está muito alta" → "deixe o dano como está, só armadura e vida, aumente 5x" → "a progressão deveria ser pela zona mesmo, isso está correto. Não acumulativo para partida toda, a unica coisa seria a dificuldade"
+- **Testes no simulador (não aplicados):** ×10 em vida, defesa e dano a cada 3 min (2 min no Final Swarm) matava todo mundo entre 3,2 e 6,3 min, até a conta no máximo; ×5 só em vida (ou vida e defesa) também, entre 3,3 e 6,6 min. Arquivo restaurado.
+- **Onde a curva desandava:** cada zona recomeça a curva do minuto 0 e o personagem chega com tudo da zona anterior — o golpe passava a vida do comum 2.143× na entrada da zona 2 e 10.573× na zona 3.
+- **`ZONE_TOUGHNESS`** (`src/game/progression.ts`, aplicado em `zoneThreat(…, zona)`): a curva continua recomeçando por zona, como o usuário confirmou, mas a zona multiplica a vida e soma defesa — zona 2: vida ×6 e +5 pontos de defesa; zona 3: vida ×20 e +10 pontos (teto 97%). O dano segue ZONE_DIFFICULTY (×1,18 e ×1,38). Calibrado entre 14/50 (duro demais: Kage no máximo caía na zona 2) e 6/20.
+- **Simulação** (Kimimaro, conta no máximo): golpe ÷ vida aos 5 min de cada zona — Genin 16× / 46× / 51× (zonas 1/2/3; antes 16× / 277× / 1.024×), Kage 3× / 6,4× / 7×. Morre aos 40 min no Genin (FS +10) e aos 29 min no Kage (zona 3, antes do FS). O simulador não tem ultimate, aliados nem efeitos de itens.
+- **Esclarecimento:** os 97% são a defesa máxima dos monstros: com ela, o golpe do jogador tira 3% do dano.
+- **Objetivo do usuário:** "mesmo com uma build minmax… em algum momento ele tem que encontrar problemas para sobreviver/matar bichos e é obrigado a encerrar a run, se ele forçar ele vai fatalmente morrer" — degraus do Final Swarm, teto de cura e resistência por zona vão nessa direção.
+- **Simulador de chefes:** `bijuuProbe` aceita a conta; o teste mede a Bijū com a conta no máximo (a conta nova do Naruto Academia não chega mais à Bijū correndo as zonas).
+- **Testes:** 1 teste novo em `tests/progressao.test.mjs` (mínimo 372) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** zonas 2 e 3 com build boa.
+
 ## 26/11/2026 · Aviso ao Codex: mesclagem parada no ramo vilas-refinadas (Claude Code)
 
 - **Pedido do usuário:** "tem alguma coisa que codex deixou por fazer que se eu for subir a versão para teste vai dar erro?" → "Sim, avisar o Codex".

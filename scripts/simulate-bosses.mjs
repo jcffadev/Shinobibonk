@@ -40,9 +40,9 @@ export function guardianProbe({ heroId, mission, plans, seed }) {
 }
 
 /** Cenário B: Bijū com a build de quem venceu a zona 3. */
-export function bijuuProbe({ heroId, mission, plans, seed }) {
+export function bijuuProbe({ heroId, mission, plans, seed, account }) {
   let end = null;
-  simulateRun({ heroId, mission, plans, seed, minutes: 45, policy: { guardianAt: 160, bossFightLimit: 120, endless: false }, record: 3600,
+  simulateRun({ heroId, mission, plans, seed, account, minutes: 45, policy: { guardianAt: 160, bossFightLimit: 120, endless: false }, record: 3600,
     probe: p => { if (p.victory) end = p; } });
   if (!end) return null;
   // Decisão de 25/11: só os planos da última zona pesam na Bijū (bijuuPlans).

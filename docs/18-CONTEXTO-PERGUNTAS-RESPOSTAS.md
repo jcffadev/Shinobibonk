@@ -573,6 +573,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **CORRIGIDO.** Fila `deathBursts` sem teto (agora `enqueueDeathBurst`, máx. 120). Regra para filas novas: toda fila que cresce com abates precisa de teto ou de vida curta (ver tests/memoria.test.mjs).
 
+### Como cada zona fica mais difícil? · 26/11/2026
+
+**IMPLEMENTADO.** A curva recomeça por zona (decisão do usuário); `ZONE_TOUGHNESS` multiplica a vida e soma defesa por zona (zona 2: ×6, +0,05; zona 3: ×20, +0,10), passado em `zoneThreat(…, tuning, zona)`. Dano: `ZONE_DIFFICULTY`. A defesa dos monstros tem teto de 97% (`SWARM_STEP.armorCap`).
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

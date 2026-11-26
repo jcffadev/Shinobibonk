@@ -3300,3 +3300,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Sim, avisar o Codex
 
 **Resposta.** Main pronto (build, 371 testes, arte e lockfile conferidos). O Codex tem uma mesclagem com conflitos parada no ramo vilas-refinadas, fora do main; aviso com a lista do que manter em docs/13. **Publicado no GitHub.**
+
+> Aumente em 10x o HP/Armadura/Dano a cada 3m de jogo dos monstros, no final swarm você vai fazer isso a cada 2m" → "Quero ver se conseguimos melhorar a curva de dificuldade do jogo a progressão está muito alta" → "deixe o dano como está, só armadura e vida, aumente 5x" → "a progressão deveria ser pela zona mesmo, isso está correto. Não acumulativo para partida toda, a unica coisa seria a dificuldade
+> Esse 97% seria o dano absorvido? Ou seja independente do valor ele tomaria apenas 3% de dano por golpes? Seria isso?
+
+**Resposta.** ×10 e ×5 por degrau matavam todo mundo antes dos 7 min no simulador (não aplicados). Curva continua por zona; a zona agora multiplica vida (×6 / ×20) e soma defesa (+5 / +10 pontos), dano igual. Sim: 97% é a defesa máxima dos monstros, o golpe tira 3%. **Publicado no GitHub.**

@@ -488,3 +488,7 @@ Roubo de vida (`lifesteal` × dano causado) e cura por abate (`killHeal`, 2% da 
 ### Atualização 26/11/2026
 
 Degraus: vida ×Π(1 + i), dano ×Π(1 + 0,5·i), defesa +0,03·k(k+1)/2 (até 97%). Orbe de XP some após 20 s no chão (`DROP_EXPIRY`).
+
+## Resistência por zona · 26/11/2026
+
+`ZONE_TOUGHNESS` = {1: ×1 / +0, 2: ×6 / +0,05, 3: ×20 / +0,10} (vida / defesa), aplicado em `zoneThreat` depois de `difficultyAt`; dano continua com `ZONE_DIFFICULTY`.

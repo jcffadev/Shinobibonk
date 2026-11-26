@@ -202,7 +202,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
      * aumentar a dificuldade apenas do boss final da zona"): os planos do Shikamaru entram só no chefe (`bossThreatNow`:
      * Guardião e Bijū). Monstros comuns, elites e Mega Elites usam `threatNow`, sem os planos.
      */
-    const zoneThreatWith=(plans:number)=>zoneThreat(mission,arena?ZONE_SECONDS:zoneElapsed(),zoneCurse(zoneDifficulty,plans,ex('threat')),overtimeNow(),ex('enemyCount'),t=>tuneThreat(t,tune()));
+    const zoneThreatWith=(plans:number)=>zoneThreat(mission,arena?ZONE_SECONDS:zoneElapsed(),zoneCurse(zoneDifficulty,plans,ex('threat')),overtimeNow(),ex('enemyCount'),t=>tuneThreat(t,tune()),zone);
     const threatNow=()=>zoneThreatWith(0);
     const bossThreatNow=()=>zoneThreatWith(shikamaruPlans);
     // Rodada 97: Treinamento do Hagoromo — chaves, ferramentas do Sábio e o evento em andamento.
@@ -1776,7 +1776,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       sprite.position.set(x,itemSurface(x,z)+BIJUU_SIZE*.46,z);scene.add(sprite);
       const overtime=saved?.overtime??arrivalOvertime;
       const curse=zoneCurse(zoneDifficulty,bijuuPlans(shikamaruPlans),ex('threat'));
-      const threat=zoneThreat(mission,ZONE_SECONDS+overtime,curse,overtime,ex('enemyCount'),t=>tuneThreat(t,tune()));
+      const threat=zoneThreat(mission,ZONE_SECONDS+overtime,curse,overtime,ex('enemyCount'),t=>tuneThreat(t,tune()),zone);
       const maxHp=saved?.maxHp??bossHpWithFloor(bijuuVitality(threat.hp,elapsed,overtime),playerBossDps(bijuuDefense(elapsed,overtime,bijuuPlans(shikamaruPlans))),BOSS_POWER.bijuuSeconds,bijuuPlans(shikamaruPlans));
       const bossDamageScale=guardianAttackMultiplier(elapsed,overtime,3,true)*threat.damage/Math.max(.01,threatNow().damage);
       const beast:Enemy={heroId:id,bijuu:true,guardian:true,megaElite:true,hp:saved?.hp??maxHp,maxHp,sprite,speed:1.7,hitTimer:.5,dmgMult:2.1*bossDamageScale,bossDamageScale,summonedOvertime:overtime,defense:bijuuDefense(elapsed,overtime,bijuuPlans(shikamaruPlans)),uid:++megaUid,seen:true};

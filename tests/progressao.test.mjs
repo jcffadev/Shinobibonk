@@ -236,3 +236,19 @@ test('rampa do meio: vida ×1 até 2 min, ×12 aos 8 min, volta a ×1 aos 30 min
   // O 1º minuto não muda.
   assert.ok(Math.abs(difficultyAt('Genin', 60).hp / difficultyAt('Genin', 60).hp - 1) < 1e-12 && midHpRamp(1) === 1);
 });
+
+test('zonas 2 e 3: mais vida e defesa para quem chega forte, mesmo dano, curva recomeça por zona (26/11/2026)', async () => {
+  // "a progressão deveria ser pela zona mesmo… a única coisa seria a dificuldade" + "deixe o dano como está, só armadura e vida".
+  const { ZONE_TOUGHNESS, zoneThreat, zoneCurse, ZONE_DIFFICULTY, SWARM_STEP } = await import('../src/game/progression.ts');
+  assert.deepEqual(ZONE_TOUGHNESS, { 1: { hp: 1, armor: 0 }, 2: { hp: 6, armor: .05 }, 3: { hp: 20, armor: .1 } });
+  for (const zone of [2, 3]) {
+    const base = zoneThreat('Genin', 300, zoneCurse(ZONE_DIFFICULTY[zone], 0, 0), 0, 0);
+    const tough = zoneThreat('Genin', 300, zoneCurse(ZONE_DIFFICULTY[zone], 0, 0), 0, 0, undefined, zone);
+    assert.ok(Math.abs(tough.hp / base.hp - ZONE_TOUGHNESS[zone].hp) < 1e-9, 'vida da zona');
+    assert.equal(tough.damage, base.damage, 'dano igual');
+    assert.ok(Math.abs(tough.armor - base.armor - ZONE_TOUGHNESS[zone].armor) < 1e-9, 'defesa somada');
+  }
+  assert.ok(zoneThreat('Kage', 600 + 3600, 1, 3600, 0, undefined, 3).armor <= SWARM_STEP.armorCap);
+  const src = (await import('node:fs')).readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.match(src, /ex\('enemyCount'\),t=>tuneThreat\(t,tune\(\)\),zone\);/);
+});

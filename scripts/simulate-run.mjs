@@ -153,8 +153,8 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     // `plans`: Planos do Shikamaru usados em cada zona (0–3), como no jogo (zoneCurse e guardianDefense).
     // Planos do Shikamaru só no chefe da zona (25/11/2026); a horda usa a ameaça sem planos.
     const curse = zoneCurse(ZONE_DIFFICULTY[s.zone], 0, ex('threat'));
-    const bossThreat = () => plans ? zoneThreat(mission, s.zoneT, zoneCurse(ZONE_DIFFICULTY[s.zone], plans, ex('threat')), overtime, ex('enemyCount')) : threat;
-    const threat = zoneThreat(mission, s.zoneT, curse, overtime, ex('enemyCount'));
+    const bossThreat = () => plans ? zoneThreat(mission, s.zoneT, zoneCurse(ZONE_DIFFICULTY[s.zone], plans, ex('threat')), overtime, ex('enemyCount'), undefined, s.zone) : threat;
+    const threat = zoneThreat(mission, s.zoneT, curse, overtime, ex('enemyCount'), undefined, s.zone);
     // Horda: nascimentos até o teto + emboscadas (8 + 2 × zona, AMBUSH_RULES).
     s.alive = Math.min(threat.cap, s.alive + threat.spawnPerSecond);
     if (s.zoneT >= s.ambushAt) { s.alive = Math.min(threat.cap, s.alive + 8 + 2 * s.zone); s.ambushAt = s.zoneT + AMBUSH_RULES.min + rnd() * AMBUSH_RULES.spread; }

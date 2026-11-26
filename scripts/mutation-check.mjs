@@ -169,6 +169,7 @@ const MUTATIONS = [
   { regra: 'Guizo do Raio paralisa por 20 s', arquivo: 'src/game/guizos.ts', de: 'bonuses: {}, duration: 20 }', para: 'bonuses: {} }' },
   { regra: 'orbe de XP some em 20 s no chão', arquivo: 'src/game/drops.ts', de: 'DROP_EXPIRY={xpSeconds:20}', para: 'DROP_EXPIRY={xpSeconds:1e9}' },
   { regra: 'fila de explosões na morte tem teto (memória)', arquivo: 'src/game/statusRules.ts', de: 'if (queue.length >= STATUS_RULES.deathBurst.maxQueued) return false;', para: '' },
+  { regra: 'zonas 2 e 3 com mais vida (resistência por zona)', arquivo: 'src/game/progression.ts', de: '2:{hp:6,armor:.05}', para: '2:{hp:1,armor:.05}' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

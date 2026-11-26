@@ -134,6 +134,15 @@ export const ENEMY_SCALING={hpBase:3.2,hpLinear:.3,hpPerMinute:1.17,damageBase:1
 /** Escala individual por zona (fase): cada fase nasce mais forte que a anterior (HP, dano, spawn e pressão de roleta). Pedido do usuário (11/11): "verifique o nível de dificuldade também individual para cada fase do jogo". */
 export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
 /**
+ * Resistência por zona (26/11/2026 — usuário: "Quero ver se conseguimos melhorar a curva de dificuldade do jogo a progressão
+ * está muito alta" → "a progressão deveria ser pela zona mesmo… Não acumulativo para partida toda, a única coisa seria a
+ * dificuldade" + "deixe o dano como está, só armadura e vida"). Cada zona recomeça a curva do minuto 0, mas o personagem chega
+ * com o nível e os itens da zona anterior: no simulador o golpe passava a vida do comum 2.143× (entrada da zona 2) e 10.573×
+ * (zona 3). A zona multiplica só a VIDA (`hp`) e soma DEFESA (`armor`, até 97%); o dano segue ZONE_DIFFICULTY.
+ * Calibrado em scripts/simulate-run.mjs (build boa em poucos golpes por monstro em todas as zonas).
+ */
+export const ZONE_TOUGHNESS:Record<number,{hp:number;armor:number}>={1:{hp:1,armor:0},2:{hp:6,armor:.05},3:{hp:20,armor:.1}};
+/**
  * FINAL SWARM: quando o relógio da zona zera, o jogo NÃO acaba; conta o tempo sobrevivido e a dificuldade triplica na hora
  * (HP, dano, defesa e quantidade/spawn) e cresce growthPerMinute a cada minuto sobrevivido (além da escala normal por tempo).
  * Quantidade (correção 06/11/2026 — "os monstros pararam de aumentar em 300 no Final Swarm"): antes o teto do swarm era
@@ -233,7 +242,8 @@ export function zoneCurse(zoneMultiplier:number,shikamaruPlans:number,threatBonu
  * (cada zona recomeça do 0). `enemyCountBonus` (+% de inimigos) multiplica spawn e teto de vivos por cima da escala,
  * respeitando o teto absoluto (1.600 fora do Final Swarm). `tuning` aplica os parâmetros do debug (identidade nos testes).
  */
-export function zoneThreat(mission:Difficulty,zoneSeconds:number,curse:number,overtimeSeconds:number,enemyCountBonus:number,tuning:(t:Threat)=>Threat=t=>t):Threat{
+export function zoneThreat(mission:Difficulty,zoneSeconds:number,curse:number,overtimeSeconds:number,enemyCountBonus:number,tuning:(t:Threat)=>Threat=t=>t,zone=1):Threat{
   const t=tuning(difficultyAt(mission,zoneSeconds,curse,overtimeSeconds));const density=Math.max(.2,1+enemyCountBonus);
-  return {...t,spawnPerSecond:t.spawnPerSecond*density,spawnInterval:t.spawnInterval/density,cap:Math.min(t.swarm>1?FINAL_SWARM.maxEnemies:ENEMY_SCALING.maxEnemies,Math.max(1,Math.round(t.cap*density)))};
+  const tough=ZONE_TOUGHNESS[zone]??ZONE_TOUGHNESS[1];
+  return {...t,hp:t.hp*tough.hp,armor:Math.min(SWARM_STEP.armorCap,t.armor+tough.armor),spawnPerSecond:t.spawnPerSecond*density,spawnInterval:t.spawnInterval/density,cap:Math.min(t.swarm>1?FINAL_SWARM.maxEnemies:ENEMY_SCALING.maxEnemies,Math.max(1,Math.round(t.cap*density)))};
 }

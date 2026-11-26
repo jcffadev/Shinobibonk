@@ -46,7 +46,9 @@ test('simulador de chefes mede Guardião nos marcos e Bijū com opções de arma
   // Desde 25/11 (afixos de dano ½) o Naruto Academia não segura 3 planos desde o segundo 0 no simulador; 1 plano basta aqui.
   const more = guardianProbe({ heroId: 'naruto', mission: 'Genin', plans: 1, seed: 17 });
   assert.ok(more.normal.def > g.normal.def, 'planos do Shikamaru somam armadura');
-  const b = bijuuProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17 });
+  // 26/11/2026: com a resistência por zona (ZONE_TOUGHNESS) a conta nova do Naruto Academia não chega mais à Bijū correndo as
+  // zonas; a medição usa a conta no máximo.
+  const b = bijuuProbe({ heroId: 'naruto', mission: 'Genin', plans: 0, seed: 17, account: 'maximo' });
   assert.ok(b && b['chegada'].hp >= 4600);
   assert.ok(b['chegada'].options[20] > b['chegada'].options[1.35] * 10, '20× de armadura alonga muito a luta');
   assert.ok(b['+15'].hp > b['chegada'].hp);
