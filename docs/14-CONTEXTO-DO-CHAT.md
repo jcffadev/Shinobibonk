@@ -3155,3 +3155,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Me mostre a dificuldade dos níveis de jogo HP/Armadura/Dano dos inimigos
 
 **Resposta.** Medições no chat; ficha final com "Golpe final" (quem e quanto). **Publicado no GitHub.**
+
+> Diminuir um pouco a quantidade de elites que spawnam no começo do jogo, pelo menos 1m30 mais suavizado o spawn deles.
+> Ajustar regeneração por segundo para todos os personagens, iniciar com 1,0 Alguns estão começando com menos de 1.0
+
+**Resposta.** Elites começam em 2% e chegam a 8% aos 1m30; todos começam com 1,0 HP/s de regeneração (passivas somam). **Publicado no GitHub.**

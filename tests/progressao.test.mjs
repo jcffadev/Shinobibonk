@@ -160,3 +160,11 @@ test('abertura calma: 1 monstro/s no Genin, 2 no Kage, e curva antiga a partir d
   assert.equal(difficultyAt('Kage',0).cap,16);
   assert.equal(difficultyAt('Genin',240).cap,304);
 });
+
+test('todo shinobi começa com pelo menos 1,0 HP/s de regeneração (25/11/2026)', async () => {
+  const { HEROES } = await import('../src/game/heroes.ts');
+  const { calculateStats, BASE_REGEN } = await import('../src/game/progression.ts');
+  assert.equal(BASE_REGEN, 1);
+  for (const h of HEROES) assert.ok(calculateStats(h.id, 1).regen >= 1, h.id);
+  assert.ok(Math.abs(calculateStats('hashirama', 1).regen - 1.8) < 1e-9, 'a passiva de cura soma por cima');
+});

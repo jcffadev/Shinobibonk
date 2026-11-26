@@ -2,6 +2,11 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Elites no começo e regeneração base · 25/11/2026 (Claude Code)
+
+- "Diminuir um pouco a quantidade de elites que spawnam no começo do jogo, pelo menos 1m30 mais suavizado o spawn deles." → `ELITE_OPENING = { start: .25, seconds: 90 }`: chance de elite de 2% no início, cheia (8%) aos 1m30.
+- "Ajustar regeneração por segundo para todos os personagens, iniciar com 1,0 Alguns estão começando com menos de 1.0" → `BASE_REGEN = 1`: 1,0 HP/s para todos; passivas de cura somam (Hashirama 1,8; Tsunade Byakugou 3,0).
+
 ## Dano no jogador: nerf da horda e teto por golpe · 25/11/2026 (Claude Code)
 
 **Pedidos do usuário:** "Me mostre os números de dano do ataque básico dos monstros normais, acho que os danos estão muito fortes no início do jogo, as vezes tomamos hitkill aos 5minutos de jogo sem saber ao certo o que houve." e "Seria o teto por golpe, como nosso jogo tem muito mais monstros do que nosso jogo referência, temos que nerfar o dano dos monstros, menos dos megas/bosses/bijuus... Nerf 30% do dano de todos"

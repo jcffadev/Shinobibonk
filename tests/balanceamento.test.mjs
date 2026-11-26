@@ -191,3 +191,12 @@ test('dano no jogador: horda −30% e teto de 40% da vida por golpe, menos Guard
     "damagePlayer(base*threatNow().damage,host as Enemy|undefined,slow,host?hitSource(host as Enemy):'boss',"]) assert.ok(canvas.includes(wired), wired);
   assert.ok(fs.readFileSync(new URL('../src/scene/bossCombat.ts', import.meta.url), 'utf8').includes('t.gravity,c.center,host,'));
 });
+
+test('elites entram suaves: 25% da chance no início e cheia aos 1m30 (25/11/2026)', async () => {
+  const { ELITE_OPENING, eliteOpening, eliteSpawnChance } = await import('../src/game/enemyTiers.ts');
+  assert.deepEqual(ELITE_OPENING, { start: .25, seconds: 90 });
+  assert.equal(eliteOpening(0), .25); assert.equal(eliteOpening(90), 1); assert.equal(eliteOpening(600), 1);
+  assert.ok(eliteOpening(30) < eliteOpening(60) && eliteOpening(60) < 1);
+  assert.ok(Math.abs(eliteSpawnChance(1, 0, 0) * 4 - eliteSpawnChance(1, 0)) < 1e-12);
+  assert.ok(src('scene/GameCanvas.tsx').includes("eliteSpawnChance(t.eliteRate,ex('eliteSpawn'),elapsed)"));
+});

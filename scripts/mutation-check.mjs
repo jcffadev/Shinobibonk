@@ -136,6 +136,8 @@ const MUTATIONS = [
   { regra: 'FPS livre por padrão (V-Sync desligado)', arquivo: 'src/game/settings.ts', de: "  quality: 'alta', fpsLimit: 0, vsync: false,", para: "  quality: 'alta', fpsLimit: 0, vsync: true," },
   { regra: 'Shikamaru bloqueado com o Guardião invocado', arquivo: 'src/scene/GameCanvas.tsx', de: "if(guardianSpawned){eventToast='Plano do Shikamaru: o Guardião desta zona já foi invocado; os planos valem só antes de invocá-lo';return false;}", para: '' },
   { regra: 'ficha final guarda quem derrubou o jogador', arquivo: 'src/scene/GameCanvas.tsx', de: 'else{defeated=true;killedBy=lastHit;', para: 'else{defeated=true;' },
+  { regra: 'regeneração base 1,0', arquivo: 'src/game/progression.ts', de: 'export const BASE_REGEN=1;', para: 'export const BASE_REGEN=0;' },
+  { regra: 'elites entram suaves no começo', arquivo: 'src/game/enemyTiers.ts', de: 'export const ELITE_OPENING = { start: .25, seconds: 90 };', para: 'export const ELITE_OPENING = { start: 1, seconds: 90 };' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

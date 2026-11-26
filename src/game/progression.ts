@@ -43,6 +43,11 @@ export function xpToLevelUp(level:number) {
   const levels=Math.max(0,level-1);
   return level<=1?30:(18+6*levels+.08*levels**2/(1+levels/250))*xpCurveScale(level);
 }
+/**
+ * Regeneração base de todo shinobi (25/11/2026 — usuário: "Ajustar regeneração por segundo para todos os personagens, iniciar
+ * com 1,0. Alguns estão começando com menos de 1.0"). A regeneração própria do personagem (passiva) soma por cima.
+ */
+export const BASE_REGEN=1;
 export function calculateStats(heroId:string,level:number,items:Record<string,number>={},pills:Record<string,number>={},bonusHp=0,permanent:Record<string,number>={},runBuffs:Bonuses={},powerlevel:Powerlevel={},pillQuality:Record<string,number>={}):Stats {
   const base=HERO_BASE[heroId]??HERO_BASE.naruto,n=Math.max(0,level-1),b:Bonuses={...HERO_BY_ID[heroId]?.bonuses};
   for(const [key,value] of Object.entries(runBuffs)){const k=key as keyof Bonuses;b[k]=(b[k]||0)+value;}
@@ -64,7 +69,7 @@ export function calculateStats(heroId:string,level:number,items:Record<string,nu
     damage:base.damage*heroDamageScale(level)*(1+add('damage')+scaled('Treinamento')*.04)*(familyOf(heroId)==='gaara'?1+(armorByLevel+add('defense')+scaled('Colete Shinobi')*2)*.01:1),
     armor:armorByLevel+add('defense')+scaled('Colete Shinobi')*2,
     crit:Math.max(0,base.crit+n*.0015+add('crit')+scaled('Precisão')*.01),critDamage:2.5+add('critDamage'),
-    evasion:Math.min(.6,add('dodge')),regen:(base.regen+n*.04+add('regen'))*Math.max(0,1+add('regenMult')),luck:Math.floor(n/3)+add('luck')+scaled('Fortuna')*2,
+    evasion:Math.min(.6,add('dodge')),regen:(BASE_REGEN+base.regen+n*.04+add('regen'))*Math.max(0,1+add('regenMult')),luck:Math.floor(n/3)+add('luck')+scaled('Fortuna')*2,
     pickup:2.5*(1+add('pickup'))+add('pickupFlat')+scaled('Magnetismo')*.6,xpGain:1+add('exp')+scaled('Estudo')*.05,moneyGain:1+add('gold')+scaled('Comércio')*.05,
     ultimateRate:1+add('cool'),area:1+add('area'),projectiles:1+add('projectiles'),projectileChance:Math.max(0,add('projectileChance')),
     duration:1+add('duration'),poison:add('dot'),status:Math.min(.9,add('status')),physical:1+add('normal'),ninjutsu:1+add('element'),genjutsu:1+add('genjutsu'),attackSpeed:Math.max(.2,1+n*.008+add('attackSpeed')+scaled('Celeridade')*.02),projectileSpeed:Math.max(.3,1+add('projectileSpeed')),bounce:Math.floor(add('bounce')),moveSpeed:base.speed*Math.max(.3,1+n*.002+add('move')+scaled('Agilidade')*.025),extra:{...b},

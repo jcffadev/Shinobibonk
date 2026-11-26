@@ -23,7 +23,16 @@ export function commonEnemyProjectile(fuma: boolean) {
 }
 
 export const ELITE_CHANCE = .08;
-export const eliteSpawnChance = (rate = 1, bonus = 0) => Math.min(1, Math.max(0, ELITE_CHANCE * rate * (1 + bonus)));
+/**
+ * Começo suave dos elites (25/11/2026 — usuário: "Diminuir um pouco a quantidade de elites que spawnam no começo do jogo, pelo
+ * menos 1m30 mais suavizado o spawn deles"): a chance começa em `start` do valor cheio e sobe em curva suave até `seconds`.
+ */
+export const ELITE_OPENING = { start: .25, seconds: 90 };
+export function eliteOpening(runSeconds: number) {
+  const x = Math.max(0, Math.min(1, runSeconds / ELITE_OPENING.seconds)), smooth = x * x * (3 - 2 * x);
+  return ELITE_OPENING.start + (1 - ELITE_OPENING.start) * smooth;
+}
+export const eliteSpawnChance = (rate = 1, bonus = 0, runSeconds = Infinity) => Math.min(1, Math.max(0, ELITE_CHANCE * rate * (1 + bonus) * eliteOpening(runSeconds)));
 /** Drops base de um inimigo normal (EXP, Ryu, Chakra) e chances. Elites e mega elites garantem Ryu e Chakra. */
 export const BASE_LOOT = { xp: 5, ryu: 3, chakra: 9, ryuChance: .72, chakraChance: .28 }; // Rodada 48 — XP por mob alta (8→5), pedido do usuário; drop por abate segue garantido
 /** Peso da dificuldade da missão no tamanho dos drops: tier^0,5 (Genin 1, Chunin 1,18, Jonin 1,38, Kage 1,61). */

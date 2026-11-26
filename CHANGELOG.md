@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Elites suaves no começo e regeneração base 1,0 (Claude Code)
+
+- **Pedidos do usuário:** "Diminuir um pouco a quantidade de elites que spawnam no começo do jogo, pelo menos 1m30 mais suavizado o spawn deles."; "Ajustar regeneração por segundo para todos os personagens, iniciar com 1,0 Alguns estão começando com menos de 1.0"
+- **Elites (`ELITE_OPENING`, `eliteOpening` em `src/game/enemyTiers.ts`):** a chance de elite amarelo começa em 25% do valor (2% em vez de 8%) e sobe em curva suave até o valor cheio aos 1m30 de partida. Jogo e simulador usam a mesma regra.
+- **Regeneração (`BASE_REGEN` em `src/game/progression.ts`):** todo shinobi começa com 1,0 HP/s; a regeneração própria (passivas de cura) soma por cima. Antes 108 de 115 começavam com 0.
+- **Testes:** 2 testes novos (mínimo 325) e 2 mutações novas, verificadas à mão.
+
 ## 25/11/2026 · Ficha final mostra o golpe que te derrubou (Claude Code)
 
 - **Pedido do usuário:** "Quanto de dano os personagens estavam dando com 8m de jogo? Colocar na ficha final o dano que você tomou que te matou e quem te matou."

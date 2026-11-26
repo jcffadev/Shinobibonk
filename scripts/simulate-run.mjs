@@ -158,7 +158,7 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     s.alive = Math.min(threat.cap, s.alive + threat.spawnPerSecond);
     if (s.zoneT >= s.ambushAt) { s.alive = Math.min(threat.cap, s.alive + 8 + 2 * s.zone); s.ambushAt = s.zoneT + AMBUSH_RULES.min + rnd() * AMBUSH_RULES.spread; }
     // Monstro "médio" da horda (comum + elites na proporção do jogo).
-    const e = eliteSpawnChance(1, ex('eliteSpawn')), normalHp = ENEMY_TIERS.normal.hp * threat.hp * normalHpFactor(mission), eliteHp = ENEMY_TIERS.elite.hp * eliteHpRamp('elite', s.zoneT) * threat.hp;
+    const e = eliteSpawnChance(1, ex('eliteSpawn'), s.t), normalHp = ENEMY_TIERS.normal.hp * threat.hp * normalHpFactor(mission), eliteHp = ENEMY_TIERS.elite.hp * eliteHpRamp('elite', s.zoneT) * threat.hp;
     const def = Math.min(.85, threat.armor), eliteDef = Math.min(.85, ENEMY_TIERS.elite.defense + threat.armor);
     const avgEhp = (1 - e) * normalHp / (1 - def) + e * eliteHp / (1 - eliteDef) * (1 / (1 + ex('eliteDamage')));
     // Mortes: cada técnica de dano acerta alvos(forma, horda) por uso; mata min(1, golpe/vida efetiva) de cada alvo.
