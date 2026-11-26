@@ -172,7 +172,8 @@ test('todo shinobi começa com pelo menos 1,0 HP/s de regeneração (25/11/2026)
 test('Final Swarm: degrau a cada 5 min com +50% de vida, +30% de dano e +2 pontos de defesa (25/11/2026)', async () => {
   const { SWARM_STEP, swarmStep, difficultyAt } = await import('../src/game/progression.ts');
   // 26/11/2026: degraus que escalam (o degrau k vale k vezes); teto de defesa 97%.
-  assert.deepEqual(SWARM_STEP, { seconds: 300, hp: .5, damage: .3, armor: .02, armorCap: .97 });
+  // 26/11/2026 ("overkill em tudo aos 10 min de Final Swarm"): degrau k = vida ×(1+k), dano ×(1+0,5k), +3k pontos de defesa.
+  assert.deepEqual(SWARM_STEP, { seconds: 300, hp: 1, damage: .5, armor: .03, armorCap: .97 });
   assert.deepEqual([0, 299, 300, 899, 900].map(swarmStep), [0, 0, 1, 2, 3]);
   const before = difficultyAt('Kage', 600 + 299.9, 1, 299.9), after = difficultyAt('Kage', 600 + 300, 1, 300);
   assert.ok(after.hp / before.hp > 1.5, 'salto de vida no degrau');
@@ -208,13 +209,13 @@ test('Final Swarm repõe a horda até o teto em todas as zonas, mesmo com o her�
   assert.match(src, /spawnBudget=spawnBudgetFor\(spawnBudget,dt,threat\.spawnInterval,enemyList\.length,threat\.cap,threat\.swarm>1,perFrame,SPAWN_RULES\.refill\)/);
 });
 
-test('Final Swarm: cada degrau vale mais que o anterior (aos +30 min: vida ×315, dano ×61, +42 pontos de defesa) (26/11/2026)', async () => {
+test('Final Swarm: cada degrau vale mais que o anterior (aos +30 min: vida ×5.040, dano ×315, defesa até 97%) (26/11/2026)', async () => {
   // "30min de final swarm deveria ser 'quase' impossível… Buffar dos monstros: Hp/Vida/dano".
   const { swarmStepHp, swarmStepDamage, swarmStepArmor, difficultyAt, SWARM_STEP } = await import('../src/game/progression.ts');
-  assert.equal(swarmStepHp(0), 1); assert.equal(swarmStepHp(1), 1.5); assert.equal(swarmStepHp(2), 3);
-  assert.ok(Math.abs(swarmStepHp(6) - 315) < 1e-9);
-  assert.ok(Math.abs(swarmStepDamage(6) - 1.3 * 1.6 * 1.9 * 2.2 * 2.5 * 2.8) < 1e-9);
-  assert.ok(Math.abs(swarmStepArmor(6) - .42) < 1e-12);
+  assert.equal(swarmStepHp(0), 1); assert.equal(swarmStepHp(1), 2); assert.equal(swarmStepHp(2), 6);
+  assert.ok(Math.abs(swarmStepHp(6) - 5040) < 1e-9);
+  assert.ok(Math.abs(swarmStepDamage(6) - 315) < 1e-9);
+  assert.ok(Math.abs(swarmStepArmor(6) - .63) < 1e-12);
   // Cada degrau cresce mais que o anterior.
   for (let k = 2; k <= 8; k++) assert.ok(swarmStepHp(k) / swarmStepHp(k - 1) > swarmStepHp(k - 1) / swarmStepHp(k - 2));
   const at = m => difficultyAt('Kage', 600 + m * 60, 1, m * 60);

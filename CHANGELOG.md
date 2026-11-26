@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 26/11/2026 · Orbe de XP some em 20 s e degraus do Final Swarm mais fortes (Claude Code)
+
+- **Pedido do usuário:** "Muitos itens estão sendo dropados no chão… passar uns 20s sem pegar o item de EXP vamos fazer sumir do mapa os itens · Eu estava vivo 10m do Final Swarm e meu personagem estava dando overkill em tudo! Precisamos aumentar mais a defesa/vida/dano"
+- **XP no chão** (`DROP_EXPIRY`, `dropExpired`, `removeGrounded` em `src/game/drops.ts`; varredura 2× por segundo no GameCanvas): orbe de XP parado no chão há mais de 20 s some. O que o ímã já puxou continua até chegar; Ryu e chakra não somem. Um orbe que recebe valor de uma junção recomeça o relógio.
+- **Degraus do Final Swarm** (`SWARM_STEP`): por degrau k, vida ×(1 + k) (era 1 + 0,5k), dano ×(1 + 0,5k) (era 1 + 0,3k) e +3k pontos de defesa (era +2k), até 97%. +10 min: vida ×6 (era ×3), dano ×3 (era ×2,1). +20 min: vida ×120 (era ×22,5), dano ×22,5 (era ×8,5).
+- **Simulação** (Kimimaro, conta no máximo): cai aos 45,8 min no Kage (FS +16, antes +20) e aos 54 min no Genin (FS +24, antes +30). O simulador não tem ultimate, aliados nem efeitos de itens; o jogador de verdade aguenta mais.
+- **Testes:** 1 teste novo em `tests/drops-juncao.test.mjs` (mínimo 369), testes dos degraus e `verify-rules` (Guardião tardio ~684 bilhões) ajustados aos valores novos, e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** orbes sumindo e Final Swarm +10 sem overkill.
+
 ## 26/11/2026 · Guizo do Raio com 20 s e guizo igual sem acumular (Claude Code)
 
 - **Pedido do usuário:** "60s de parilisia é muito tempo, coloque 20s e não pode stackar se pegar vários guizos do mesmo"

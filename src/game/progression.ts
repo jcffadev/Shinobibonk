@@ -179,7 +179,8 @@ export const SWARM_COMPOUND={perMinute:.1};
  * dano/armadura/vida"): a cada `seconds` de Final Swarm os inimigos ganham +`hp` de vida, +`damage` de dano (multiplicativo)
  * e +`armor` de defesa, que pode passar do teto normal do swarm até `armorCap`.
  */
-export const SWARM_STEP={seconds:300,hp:.5,damage:.3,armor:.02,armorCap:.97};
+/** 26/11/2026 (usuário: "Eu estava vivo 10m do Final Swarm e meu personagem estava dando overkill em tudo! Precisamos aumentar mais a defesa/vida/dano"): por degrau k, vida ×(1+1·k), dano ×(1+0,5·k), +3·k pontos de defesa (eram 0,5 / 0,3 / 2). */
+export const SWARM_STEP={seconds:300,hp:1,damage:.5,armor:.03,armorCap:.97};
 export const swarmStep=(overtimeSeconds:number)=>overtimeSeconds>0?Math.floor(overtimeSeconds/SWARM_STEP.seconds):0;
 /**
  * Degraus que escalam (26/11/2026 — usuário: "Precisamos buffar mais a armadura dos monstros e o HP com o passar do tempo, tem um

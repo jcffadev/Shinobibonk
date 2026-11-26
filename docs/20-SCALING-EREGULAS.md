@@ -484,3 +484,7 @@ Roubo de vida (`lifesteal` × dano causado) e cura por abate (`killHeal`, 2% da 
 ## Rampa do meio da zona · 26/11/2026
 
 `midHpRamp(min)`: 12^((min − 2)/6) de 2 a 8 min; depois 12^(1 − (min − 8)/22) até 30 min; ×1 fora disso. Multiplica a vida de todos os monstros (Mega Elite e Guardião acompanham porque saem da mesma ameaça).
+
+### Atualização 26/11/2026
+
+Degraus: vida ×Π(1 + i), dano ×Π(1 + 0,5·i), defesa +0,03·k(k+1)/2 (até 97%). Orbe de XP some após 20 s no chão (`DROP_EXPIRY`).

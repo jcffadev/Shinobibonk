@@ -9,7 +9,9 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Guizo do Raio | 60 s → 20 s; guizo igual ativo não acumula |
+| (este commit) | Degraus do Final Swarm | vida ×(1+0,5k), dano ×(1+0,3k), +2k defesa → vida ×(1+k), dano ×(1+0,5k), +3k defesa |
+| (este commit) | Orbe de XP no chão | ficava para sempre → some em 20 s |
+| `68bbc2d` | Guizo do Raio | 60 s → 20 s; guizo igual ativo não acumula |
 | `449b186` | Vida dos monstros no meio da zona | sem rampa → ×1 (2 min), ×3,5 (5 min), ×12 (8 min), de volta a ×1 aos 30 min de zona |
 | `1ba0c16` | Cura por roubo de vida e por abate | sem teto (curava bilhões por segundo) → até 10% da vida máxima por segundo |
 | `0b2530f` | Degraus do Final Swarm | +50% vida, +30% dano, +2 pontos de defesa por degrau (até 95%) → o degrau k vale k vezes (+30 min: vida ×315, dano ×61, +42 pontos até 97%) |

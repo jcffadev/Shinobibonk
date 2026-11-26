@@ -51,3 +51,19 @@ test('o jogo junta XP, Ryu e chakra no addDrop', () => {
   const src = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
   assert.match(src, /if\(DROP_MERGE\.kinds\.has\(type\)\)\{const into=drops\.mergeTarget\(x,z,d=>d\.type===type,DROP_MERGE\.perCell\);if\(into\)\{into\.value\+=value;/);
 });
+
+test('orbe de XP parado há mais de 20 s some; Ryu, chakra e o que o ímã puxou ficam (26/11/2026)', async () => {
+  // "passar uns 20s sem pegar o item de EXP vamos fazer sumir do mapa os itens".
+  const { DROP_EXPIRY, dropExpired } = await import('../src/game/drops.ts');
+  assert.equal(DROP_EXPIRY.xpSeconds, 20);
+  assert.equal(dropExpired('xp', 19.9), false); assert.equal(dropExpired('xp', 20.1), true);
+  assert.equal(dropExpired('ryu', 999), false); assert.equal(dropExpired('chakra', 999), false);
+  const index = createGroundDropIndex(d => d), grounded = { x: 1, y: 0, z: 1, type: 'xp' }, pulled = { x: 2, y: 0, z: 2, type: 'xp' };
+  index.add(grounded); index.add(pulled); index.startPull(pulled);
+  assert.equal(index.removeGrounded(grounded), true);
+  assert.equal(index.removeGrounded(pulled), false, 'o que o ímã já puxou não some');
+  assert.deepEqual([...index.all()], [pulled]);
+  const src = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.match(src, /for\(const drop of drops\.ground\(\)\)if\(dropExpired\(drop\.type,pickupClock-drop\.born\)\)old\.push\(drop\);for\(const drop of old\)drops\.removeGrounded\(drop\);/);
+  assert.match(src, /if\(into\)\{into\.value\+=value;into\.born=pickupClock;/);
+});

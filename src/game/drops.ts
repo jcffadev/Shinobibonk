@@ -23,6 +23,13 @@ export const DROP_CELL_SIZE=8;
  * máximo `perCell` drops de cada tipo juntável; o excedente soma o valor num drop que já está ali (nada se perde).
  */
 export const DROP_MERGE={perCell:6,kinds:new Set(['xp','ryu','chakra'])};
+/**
+ * Orbe de XP some do chão (26/11/2026 — usuário: "Muitos itens estão sendo dropados no chão… passar uns 20s sem pegar o item
+ * de EXP vamos fazer sumir do mapa os itens"): orbe de XP parado no chão há mais de `xpSeconds` desaparece (o que o ímã já
+ * puxou continua até chegar). Receber valor de uma junção conta como drop novo (o relógio recomeça).
+ */
+export const DROP_EXPIRY={xpSeconds:20};
+export const dropExpired=(type:string,age:number)=>type==='xp'&&age>DROP_EXPIRY.xpSeconds;
 
 /** Indexa o ponto onde cada drop caiu. Só o ímã pode tirá-lo da célula para movê-lo. */
 export function createGroundDropIndex<T>(position:(drop:T)=>GroundPosition) {
@@ -80,6 +87,8 @@ export function createGroundDropIndex<T>(position:(drop:T)=>GroundPosition) {
       for(const entry of cell.entries)if(match(entry)){count++;last=entry;}
       return count>=limit?last:undefined;
     },
+    /** Tira do chão um drop parado (não mexe nos que o ímã já puxou). */
+    removeGrounded(drop:T){return detach(drop);},
     startPull(drop:T){if(detach(drop))moving.add(drop);},
     collect(drop:T){moving.delete(drop);},
     clear(){cells.clear();grounded.clear();moving.clear();},

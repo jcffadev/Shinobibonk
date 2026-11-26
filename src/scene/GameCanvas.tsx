@@ -88,7 +88,7 @@ import { BOSS_RAGE, bossRageDue, rageDefense, immovableBoss } from '../game/boss
 import { hordeLook } from '../game/hordeRoles'
 import { refillHealBudget, spendHeal } from '../game/healCap'
 import { GUIZOS, GUIZO_BY_ID, guizoDuration, guizoStacks, guizoFromKind, guizoPickupKind, guizoToast, rollGuizo, type GuizoId, type GuizoPickupKind } from '../game/guizos';
-import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, DROP_MERGE, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
+import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, DROP_MERGE, dropExpired, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
 import { castProgress, blendFog, mistHides, isChanneling, CAST_DISTANCE } from '../game/weatherCast';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
 import { rollRarityTier, RARITY_ORDER, SHAPE_RADIUS } from '../game/combat';
@@ -208,7 +208,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     // Rodada 97: Treinamento do Hagoromo — chaves, ferramentas do Sábio e o evento em andamento.
     const hagoromo=createHagoromo();let hagoromoBossDown=false,hagoromoEvent:{rarity:SageTool['rarity'];wave:number;origin:{x:number;z:number};mega:Enemy|null;completed:boolean;outsideEnemies:Enemy[];outsideDrops:ReturnType<typeof makeDropIndex>}|null=null;
     const hero=HERO_BY_ID[heroId]??HEROES[0],techniques=skillPool(hero.id,sealedHeroes()),growth:Record<string,SkillGrowth>={},cooldowns:Record<string,number>={},runBuffs:Bonuses={},skillDamage:Record<string,number>={};
-    let swarmStepAnnounced=0,zoneStart=0,plansUsed=0,arena=false,bijuuReward=0,defeatedBijuu='',finalSwarmAnnounced=false,spawnBudget=0,pickupClock=0,globalMagnetUntil=0,/** Relógio só de animação: nunca para (o elapsed da missão para no Treinamento do Hagoromo e deixava a horda congelada). */animClock=0;
+    let expirySweep=.5,swarmStepAnnounced=0,zoneStart=0,plansUsed=0,arena=false,bijuuReward=0,defeatedBijuu='',finalSwarmAnnounced=false,spawnBudget=0,pickupClock=0,globalMagnetUntil=0,/** Relógio só de animação: nunca para (o elapsed da missão para no Treinamento do Hagoromo e deixava a horda congelada). */animClock=0;
     let portal:{kind:PortalKind;x:number;z:number;mesh:THREE.Group}|null=null;
     let totalDamage=0,hiddenEffects=currentSettings().hideMyAttacks,victory=false,zone=1,ambushTimer=AMBUSH_RULES.first,guardianSpawned=false,shikamaruPlans=0,defenseTime=0,defenseActive=false,defenseDone=false;
     const config=preparationRef.current,permanent={...config.permanent},uses=choiceUses(permanent),banned=new Set<string>();let banning=false,paidWeapons=0;
@@ -1822,7 +1822,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
     function addDrop(position:THREE.Vector3,type:Drop['type'],value:number,name=''){
       const x=position.x+(Math.random()-.5)*.7,z=position.z+(Math.random()-.5)*.7;
       // Junção (DROP_MERGE): com a célula cheia desse tipo, o valor entra num drop que já está no chão.
-      if(DROP_MERGE.kinds.has(type)){const into=drops.mergeTarget(x,z,d=>d.type===type,DROP_MERGE.perCell);if(into){into.value+=value;const size=monsterDropScale(type,into.value,currentSettings().discreetDrops);into.mesh.scale.setScalar(size);into.mesh.userData.baseScale=size;return;}}
+      if(DROP_MERGE.kinds.has(type)){const into=drops.mergeTarget(x,z,d=>d.type===type,DROP_MERGE.perCell);if(into){into.value+=value;into.born=pickupClock;const size=monsterDropScale(type,into.value,currentSettings().discreetDrops);into.mesh.scale.setScalar(size);into.mesh.userData.baseScale=size;return;}}
       const mesh=new THREE.Object3D();
       restDrop(mesh,x,z,itemSurface,Math.random()*Math.PI*2);
       mesh.scale.setScalar(monsterDropScale(type,value,currentSettings().discreetDrops));
@@ -2388,6 +2388,8 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
           }
         }
         if(shot.remaining<=0){scene.remove(shot.mesh);disposeObject(shot.mesh);shots.splice(i,1);}}
+      // Orbes de XP parados há mais de 20 s somem (DROP_EXPIRY); varredura 2× por segundo.
+      expirySweep-=dt;if(expirySweep<=0){expirySweep=.5;const old:Drop[]=[];for(const drop of drops.ground())if(dropExpired(drop.type,pickupClock-drop.born))old.push(drop);for(const drop of old)drops.removeGrounded(drop);}
       const globalPull=pickupClock<globalMagnetUntil;
       const nearbyDrops=globalPull?drops.ground():drops.near(player.position.x,player.position.z,stats.pickup);
       for(const drop of nearbyDrops){

@@ -1,13 +1,13 @@
 # 28 · Status de personagens e monstros
 
-> **Gerado pelo código** com `node scripts/gen-status-doc.mjs` em 2026-11-26, build `1ba0c16`. Não edite as tabelas à mão: rode o gerador depois de cada mudança de balanceamento e faça commit junto. O histórico de alterações, com datas e builds, está em [28-HISTORICO-STATUS.md](28-HISTORICO-STATUS.md).
+> **Gerado pelo código** com `node scripts/gen-status-doc.mjs` em 2026-11-26, build `68bbc2d`. Não edite as tabelas à mão: rode o gerador depois de cada mudança de balanceamento e faça commit junto. O histórico de alterações, com datas e builds, está em [28-HISTORICO-STATUS.md](28-HISTORICO-STATUS.md).
 
 ## Regras gerais em vigor
 
 - Regeneração base de todo shinobi: **1 HP/s** (passivas de cura somam).
 - Dano recebido da horda (comuns e elites): **×0,7**; teto por golpe de horda e Mega Elite: **40% da vida máxima** (Guardião e Bijū sem teto).
 - Elites no começo: chance começa em **25%** do valor e chega ao cheio aos **90 s**.
-- Final Swarm: entra com **×2** e ganha um degrau a cada **5 min**; o degrau k dá vida ×(1 + 0,5·k), dano ×(1 + 0,3·k) e +2·k pontos de defesa (até 97%), acumulando.
+- Final Swarm: entra com **×2** e ganha um degrau a cada **5 min**; o degrau k dá vida ×(1 + 1·k), dano ×(1 + 0,5·k) e +3·k pontos de defesa (até 97%), acumulando.
 - Multiplicador por dificuldade: Genin ×1 · Chunin ×1,4 · Jonin ×1,9 · Kage ×2,6.
 
 ## Monstros
@@ -30,23 +30,23 @@ Golpe = dano bruto antes da sua armadura, já com o nerf da horda (Mega Elite se
 | Genin | 1 min | 53 · 3% · 12 | 218 · 33% · 20 | 45 | 1,1 mil · 68% |
 | Genin | 5 min | 464 · 24% · 25 | 3,4 mil · 54% · 39 | 91 | 32,6 mil · 77% |
 | Genin | 10 min | 3,7 mil · 39% · 46 | 27,1 mil · 69% · 74 | 172 | 654,3 mil · 83% |
-| Genin | Final Swarm +5 | 62,4 mil · 87% · 753 | 456,1 mil · 95% · 1204 | 2795 | 94,3M · 92% |
-| Genin | Final Swarm +10 | 465,7 mil · 91% · 4944 | 3,4M · 95% · 7910 | 18364 | 2,5B · 94% |
+| Genin | Final Swarm +5 | 83,2 mil · 88% · 868 | 608,2 mil · 95% · 1389 | 3225 | 125,8M · 92% |
+| Genin | Final Swarm +10 | 931,5 mil · 94% · 7131 | 6,8M · 95% · 11409 | 26486 | 5,1B · 94% |
 | Chunin | 1 min | 69 · 3% · 17 | 305 · 33% · 27 | 64 | 1,5 mil · 68% |
 | Chunin | 5 min | 724 · 15% · 32 | 5,7 mil · 45% · 51 | 119 | 54,7 mil · 77% |
 | Chunin | 10 min | 6,1 mil · 30% · 61 | 48,0 mil · 60% · 97 | 225 | 1,2M · 83% |
-| Chunin | Final Swarm +5 | 117,5 mil · 87% · 1126 | 924,8 mil · 95% · 1802 | 4184 | 191,2M · 92% |
-| Chunin | Final Swarm +10 | 1,0M · 91% · 8466 | 7,9M · 95% · 13546 | 31446 | 5,9B · 94% |
+| Chunin | Final Swarm +5 | 156,7 mil · 88% · 1300 | 1,2M · 95% · 2080 | 4828 | 255,0M · 92% |
+| Chunin | Final Swarm +10 | 2,0M · 94% · 12211 | 15,8M · 95% · 19537 | 45354 | 11,7B · 94% |
 | Jonin | 1 min | 85 · 3% · 23 | 414 · 33% · 37 | 86 | 2,0 mil · 68% |
 | Jonin | 5 min | 1,1 mil · 15% · 44 | 9,3 mil · 45% · 70 | 162 | 89,7 mil · 77% |
 | Jonin | 10 min | 9,5 mil · 30% · 82 | 82,3 mil · 60% · 131 | 305 | 2,0M · 83% |
-| Jonin | Final Swarm +5 | 208,2 mil · 87% · 1743 | 1,8M · 95% · 2788 | 6473 | 373,6M · 92% |
-| Jonin | Final Swarm +10 | 2,0M · 91% · 14932 | 17,6M · 95% · 23891 | 55460 | 13,1B · 94% |
+| Jonin | Final Swarm +5 | 277,6 mil · 88% · 2011 | 2,4M · 95% · 3217 | 7469 | 498,1M · 92% |
+| Jonin | Final Swarm +10 | 4,1M · 94% · 21536 | 35,2M · 95% · 34458 | 79991 | 26,2B · 94% |
 | Kage | 1 min | 106 · 3% · 32 | 566 · 33% · 51 | 118 | 2,7 mil · 68% |
 | Kage | 5 min | 1,7 mil · 15% · 60 | 15,9 mil · 45% · 95 | 222 | 152,3 mil · 77% |
 | Kage | 10 min | 15,3 mil · 30% · 112 | 145,5 mil · 60% · 180 | 418 | 3,5M · 83% |
-| Kage | Final Swarm +5 | 398,1 mil · 87% · 2825 | 3,8M · 95% · 4521 | 10494 | 782,0M · 92% |
-| Kage | Final Swarm +10 | 4,6M · 91% · 28679 | 43,6M · 95% · 45886 | 106521 | 32,4B · 94% |
+| Kage | Final Swarm +5 | 530,8 mil · 88% · 3260 | 5,0M · 95% · 5216 | 12109 | 1,0B · 92% |
+| Kage | Final Swarm +10 | 9,2M · 94% · 41363 | 87,2M · 95% · 66182 | 153636 | 64,9B · 94% |
 
 A vida do Guardião acima é a da fórmula da zona; na partida ela também tem um piso pelo poder do jogador (30 s do seu dano).
 
