@@ -3254,3 +3254,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > quantos % de aumento a roleta da tsunade esta subindo ao roletar? Porque o dinheiro some muito rápido · Precisamos também suavizar, melhorar o fps em relação aos itens dropados no chão, quando matamos muitos monstros e não coletamos, dropa muito o fps e quando pegamos de uma vez ele chega a travar o jogo
 
 **Resposta.** Roleta: +70% por giro (×1,7), sem zerar, mais inflação por minuto e por zona; aguardando decisão para baixar. FPS: drops de XP, Ryu e chakra se juntam (máx. 6 por tipo a cada 8 m), sem perder valor. **Publicado no GitHub.**
+
+> Outra coisa precisa na hud de level ficar o level certinho na bolinha vermelha
+> Vamos considerar 20% do valor de acréscimo na roleta da Tsunade e não colocar =15% por minuto, nem 25% por zona, sempre subirá 20% · O mesmo para kunais/pergaminhos
+
+**Resposta.** Selo do nível com fonte que se ajusta aos dígitos (e abreviado a partir de 10 mil). Roleta e kunais/pergaminhos: sempre +20% por uso, sem inflação por minuto nem por zona. **Publicado no GitHub.**

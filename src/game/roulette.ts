@@ -1,6 +1,5 @@
 import { ITEM_BY_NAME, type Bonuses, type StatKey } from './catalog.ts';
 import type { Difficulty } from './progression.ts';
-import { runInflation } from './itemTrade.ts';
 
 /**
  * Caça-Níquel da Tsunade ("Lendária Perdedora"): evento de RNG com casas boas e ruins + 5 combos de 3 iguais
@@ -27,15 +26,13 @@ export const ROULETTE_BY_ID = Object.fromEntries(ROULETTE_CASAS.map(c => [c.id, 
  * - pressão = (curse − 1) × curseWeight + (zona − 1) × zoneWeight + missionWeight[dificuldade]. Casas ruins × (1 + pressão).
  * - Depois de normalizar as cinco casas, a chance de Hidan fica em [minBad, maxBad].
  *   A tabela exibe as mesmas probabilidades do sorteio.
- * Custo (economia expansiva, rodada 37): round(baseCost × costGrowth^(giros na run) × inflação por minuto de run (itemTrade.ts) × (1 + (zona−1) × zoneCostWeight) × (1 − min(maxDiscount, desconto))).
+ * Custo (26/11/2026 — usuário: "Vamos considerar 20% do valor de acréscimo na roleta da Tsunade e não colocar 15% por minuto, nem 25% por zona, sempre subirá 20%. O mesmo para kunais/pergaminhos"): round(baseCost × costGrowth^(giros na run) × (1 − min(maxDiscount, desconto))). Sem inflação por minuto nem por zona.
  * Não reseta por zona.
  */
 export const ROULETTE_RULES = {
   baseCost: 30,
-  /** Crescimento exponencial por giro na run: 30, 51, 87, 147, 251, 426, ... (×1,70 por giro — rodada 37: "cobrar mais por rodada, gradualmente, escalando consideravelmente"). */
-  costGrowth: 1.7,
-  /** Fator de zona (rodada 37): +25% de custo por zona acima da 1 — o giro escala como o Ryu dropado pela zona. */
-  zoneCostWeight: .25,
+  /** +20% por giro na run: 30, 36, 43, 52, 62, ... (26/11/2026; era ×1,70 por giro, mais inflação por minuto e +25% por zona). */
+  costGrowth: 1.2,
   /** Teto do desconto total (Dente de Ouro + Bolsa Gama-chan). */
   maxDiscount: .4,
   luckDivisor: 100,
@@ -117,9 +114,8 @@ export function rollRoulette(w: Record<SlotComboId, number>, rng: () => number =
   return ROULETTE_CASAS[ROULETTE_CASAS.length - 1].id;
 }
 
-export function rouletteCost(spins: number, discount: number, runSeconds = 0, zone = 1) {
-  const zoneFactor = 1 + Math.max(0, zone - 1) * ROULETTE_RULES.zoneCostWeight;
-  return Math.round(ROULETTE_RULES.baseCost * Math.pow(ROULETTE_RULES.costGrowth, Math.max(0, spins)) * runInflation(runSeconds) * zoneFactor * (1 - Math.min(ROULETTE_RULES.maxDiscount, Math.max(0, discount))));
+export function rouletteCost(spins: number, discount: number) {
+  return Math.round(ROULETTE_RULES.baseCost * Math.pow(ROULETTE_RULES.costGrowth, Math.max(0, spins)) * (1 - Math.min(ROULETTE_RULES.maxDiscount, Math.max(0, discount))));
 }
 
 /** Gerador determinístico (LCG) para testes com semente. */

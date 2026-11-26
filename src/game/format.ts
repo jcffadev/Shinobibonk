@@ -24,3 +24,14 @@ export function damageLabel(value: number): string {
   if (tier >= DAMAGE_SUFFIXES.length) return sign + abs.toExponential(1).replace('.0e', 'e').replace('e+', 'e');
   return sign + String(scaled).replace(/\.0$/, '') + DAMAGE_SUFFIXES[tier];
 }
+
+/**
+ * Texto do selo vermelho do nível no HUD (26/11/2026 — usuário: "precisa na hud de level ficar o level certinho na bolinha
+ * vermelha"): até 9.999 o número inteiro; a partir de 10 mil abreviado (10K, 12.3K). `digits` diz ao CSS quantos caracteres
+ * cabem, para a fonte diminuir (16 px até 2, 13 px com 3, 10 px com 4 ou mais).
+ */
+export function levelSealText(level: number) {
+  const value = Math.max(1, Math.floor(level || 1));
+  const text = value < 10000 ? String(value) : damageLabel(value);
+  return { text, digits: Math.min(5, text.length) };
+}

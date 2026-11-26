@@ -175,8 +175,8 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     s.xp += kills * xpDropValue(xpLoot(loot, MISSION_TIER[mission]), 1, s.t) * stats.xpGain;
     s.ryu += kills * BASE_LOOT.ryuChance * BASE_LOOT.ryu * loot * stats.moneyGain;
     // Kunais: compra sempre que der (o mapa tem CROWD.kunaisPerZone por zona).
-    let price = weaponPrice(s.paid, s.t) * (1 - Math.min(.4, ex('kunaiDiscount')));
-    while (s.kunaisLeft > 0 && s.ryu >= price) { s.ryu -= price; s.paid++; s.kunaisLeft--; pickItem(); price = weaponPrice(s.paid, s.t) * (1 - Math.min(.4, ex('kunaiDiscount'))); }
+    let price = weaponPrice(s.paid) * (1 - Math.min(.4, ex('kunaiDiscount')));
+    while (s.kunaisLeft > 0 && s.ryu >= price) { s.ryu -= price; s.paid++; s.kunaisLeft--; pickItem(); price = weaponPrice(s.paid) * (1 - Math.min(.4, ex('kunaiDiscount'))); }
     const xpMult = l => typeof xpScale === 'function' ? xpScale(l) : xpScale;
     let need = xpToLevelUp(s.level) * xpMult(s.level), guard = 0;
     while (s.xp >= need && guard++ < 400) { s.xp -= need; levelUp(); need = xpToLevelUp(s.level) * xpMult(s.level); }

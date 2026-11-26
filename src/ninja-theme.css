@@ -406,3 +406,6 @@ kbd{font-family:var(--fonte-texto)}
 @media(max-width:1240px){.home-topbar .hub-nav{min-width:0;overflow-x:auto;scrollbar-width:thin}}
 @media(max-width:900px){.home-topbar{height:auto;flex-basis:auto;flex-wrap:wrap;padding-block:6px}.home-topbar .hub-nav{order:3;flex-basis:100%;margin-left:0}.home-topbar .account-badge{display:flex;padding:4px}.home-topbar .account-badge>span{display:none}}
 @media(max-width:680px){.account-lamens small>span,.home-topbar .language-chip>span{display:none}}
+/* 26/11/2026: o nível cabe na bolinha vermelha (levelSealText em format.ts). */
+.game-shell .game-level .level-seal[data-digits="3"]{font-size:13px}
+.game-shell .game-level .level-seal[data-digits="4"],.game-shell .game-level .level-seal[data-digits="5"]{font-size:10px;letter-spacing:-.4px}

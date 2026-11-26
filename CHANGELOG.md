@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 26/11/2026 · Nível cabe no selo do HUD; roleta e kunais sobem 20% por uso (Claude Code)
+
+- **Pedidos do usuário:** "Outra coisa precisa na hud de level ficar o level certinho na bolinha vermelha" · "Vamos considerar 20% do valor de acréscimo na roleta da Tsunade e não colocar =15% por minuto, nem 25% por zona, sempre subirá 20% · O mesmo para kunais/pergaminhos"
+- **Selo do nível** (`levelSealText` em `src/game/format.ts`, main.tsx e ninja-theme.css): até 9.999 o número inteiro, a partir de 10 mil abreviado (12.3K); a fonte cai de 16 px para 13 px com 3 caracteres e 10 px com 4 ou mais, para caber no círculo de 34 px.
+- **Roleta da Tsunade** (`ROULETTE_RULES.costGrowth` 1,7 → 1,2; `rouletteCost(giros, desconto)`): sempre +20% por giro na partida — 30, 36, 43, 52, 62… Sai a inflação por minuto e os +25% por zona. O texto da roleta mostra "+20% por giro".
+- **Kunai, shuriken e pergaminho pago** (`WEAPON_PRICE.growth` 1,5 → 1,2; `weaponPrice(aberturas)`): sempre +20% por abertura — 20, 24, 29, 35… Sai a inflação por minuto. O Mercador continua com a regra dele (+35% por compra e inflação por minuto).
+- **Testes:** novo `tests/nivel-e-precos.test.mjs` (3 testes, mínimo 359), `verify-rules` ajustado aos preços novos e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver o selo com nível de 3 e 4 dígitos.
+
 ## 26/11/2026 · Drops do chão se juntam (FPS) e custo da roleta da Tsunade (Claude Code)
 
 - **Pedido do usuário:** "quantos % de aumento a roleta da tsunade esta subindo ao roletar? Porque o dinheiro some muito rápido · Precisamos também suavizar, melhorar o fps em relação aos itens dropados no chão, quando matamos muitos monstros e não coletamos, dropa muito o fps e quando pegamos de uma vez ele chega a travar o jogo"

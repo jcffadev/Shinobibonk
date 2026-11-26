@@ -178,7 +178,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
         <div className="tr-side">
           <dl className="tr-stats">
             <div><dt>Ryu</dt><dd title={fullRyu(live.money)}><CasaIcon id="ryu" fallback="🪙" label="Ryu" /> {fmtRyu(live.money)}</dd></div>
-            <div><dt>Próximo giro</dt><dd title={fullRyu(live.cost)}>{fmtRyu(live.cost)} Ryu <small>(×{String(ROULETTE_RULES.costGrowth).replace('.', ',')}/giro · +{Math.round(ROULETTE_RULES.zoneCostWeight * 100)}%/zona · sobe com o tempo{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
+            <div><dt>Próximo giro</dt><dd title={fullRyu(live.cost)}>{fmtRyu(live.cost)} Ryu <small>(+{Math.round((ROULETTE_RULES.costGrowth - 1) * 100)}% por giro{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
             <div><dt>Giros na run</dt><dd>{live.spins}</dd></div>
             <div><dt>Ryu gasto na run</dt><dd title={fullRyu(live.ryuSpent)}>{fmtRyu(live.ryuSpent)}</dd></div>
             <div><dt>Sorte</dt><dd>🍀 {live.luck}</dd></div>

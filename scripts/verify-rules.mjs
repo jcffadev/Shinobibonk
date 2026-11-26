@@ -206,12 +206,10 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  for(const [id,kind] of [['tsunade','bom'],['jiraiya','bom'],['hiruzen','bom'],['hidan','ruim'],['kakuzu','bom']])assert.equal(R.ROULETTE_BY_ID[id].kind,kind,'combo de 3 iguais existe com a classe certa');
  assert.equal(R.slotKakuzuRyu(0,0),120,'3 Kakuzus: base 120 Ryu sem sorte/pressão');assert.equal(R.slotKakuzuRyu(100,0),240,'Sorte 100 dobra o tesouro');assert.equal(R.slotKakuzuRyu(100,1),480,'pressão do jogo multiplica o tesouro');
  assert.deepEqual(Object.keys(w0),['tsunade','hiruzen','kakuzu','jiraiya','hidan']);
- // Economia expansiva (rodada 37): ×1,70 por giro, ×1,15 por minuto inteiro de run, +25% por zona acima da 1.
- assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),251);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
- assert.equal(R.rouletteCost(0,0,59),30,'inflação só por minuto inteiro');assert.equal(R.rouletteCost(0,0,600),121);assert.ok(R.rouletteCost(40,0,1800)>1e6,'fim de run: milhões');
- assert.equal(R.rouletteCost(0,0,0,2),38,'zona 2: custo +25%');assert.equal(R.rouletteCost(0,0,0,3),45,'zona 3: custo +50%');
+ // 26/11/2026 (usuário): sempre +20% por giro, sem inflação por minuto nem por zona.
+ assert.equal(R.rouletteCost(0,0),30);assert.equal(R.rouletteCost(4,0),62);assert.equal(R.rouletteCost(0,.24),23);assert.equal(R.rouletteCost(0,.9),18,'desconto limitado a 40%');
  {const P=await import('../src/game/preparation.ts'),T=await import('../src/game/itemTrade.ts');
-  assert.deepEqual([0,1,2,3].map(n=>P.weaponPrice(n)),[20,30,45,68]);assert.equal(P.weaponPrice(0,600),81);assert.ok(P.weaponPrice(25,1200)>2e6,'kunai no fim custa milhões');
+  assert.deepEqual([0,1,2,3].map(n=>P.weaponPrice(n)),[20,24,29,35]);
   assert.equal(T.merchantPrice('Comum',0),45);assert.ok(T.merchantPrice('Comum',1,0)>T.merchantPrice('Comum',0));assert.equal(T.merchantPrice('Comum',2),82);assert.equal(T.merchantRerollPrice(0,0),20);assert.equal(T.merchantRerollPrice(2,0),45);assert.equal(T.merchantRerollPrice(0,.9),12);}
  assert.deepEqual(R.spendBonuses({},5000),{});assert.equal(R.spendBonuses({'Carteira Gama-chan':1},749).damage,.02);assert.equal(R.spendBonuses({'Carteira Gama-chan':1},99999).damage,.3);
  const wallet=calculateStats('naruto',1,{'Carteira Gama-chan':1},{},0,{},R.spendBonuses({'Carteira Gama-chan':1},500));assert.ok(Math.abs(wallet.damage/calculateStats('naruto',1).damage-1.02)<1e-9);assert.ok(Math.abs(wallet.moneyGain-1.12)<1e-9);}

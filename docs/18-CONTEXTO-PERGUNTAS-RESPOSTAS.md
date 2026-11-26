@@ -553,6 +553,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** `DROP_MERGE`/`mergeTarget` em src/game/drops.ts: no máximo 6 drops de XP, Ryu e chakra por célula de 8 m; o resto soma no valor. **Em aberto:** custo da roleta da Tsunade (`ROULETTE_RULES.costGrowth` 1,7 por giro, sem zerar) — o usuário acha que o Ryu some rápido.
 
+### Quanto sobem a roleta da Tsunade e as kunais? · 26/11/2026
+
+**IMPLEMENTADO.** +20% por uso, sem inflação: `rouletteCost(giros, desconto)` (base 30) e `weaponPrice(aberturas)` (base 20). Só o Mercador ainda usa `runInflation`.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

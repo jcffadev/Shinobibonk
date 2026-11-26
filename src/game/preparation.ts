@@ -4,7 +4,6 @@ import { PHARMACOLOGY_MAX } from './pills.ts';
  * não renomeie nós existentes sem migrar o salvamento. Valores e preços provisórios.
  * Seções no estilo da referência: "Treinamento" (atributos) e "Equipe da partida" (espaços, opções e ferramentas).
  */
-import { runInflation } from './itemTrade.ts';
 export type PassiveSection='Treinamento'|'Equipe da partida';
 export type PassiveDef={name:string;buff:string;base:number;max:number;icon:string;section:PassiveSection};
 export const PASSIVE_SECTIONS:{id:PassiveSection;subtitle:string}[]=[
@@ -82,9 +81,9 @@ export function jiraiyaSlots(levels:Record<string,number>):JiraiyaSlot[]{
 }
 export function jiraiyaRolls(levels:Record<string,number>,rng=Math.random){return jiraiyaSlots(levels).filter(s=>rng()<s.chance).length;}
 
-/** Kunai/shuriken do chão: 20 × WEAPON_PRICE_GROWTH^(aberturas pagas) × inflação por minuto de run (itemTrade.ts). 20, 30, 45, 68... */
-export const WEAPON_PRICE={base:20,growth:1.5};
-export function weaponPrice(opened:number,runSeconds=0){return Math.round(WEAPON_PRICE.base*Math.pow(WEAPON_PRICE.growth,Math.max(0,opened))*runInflation(runSeconds));}
+/** Kunai/shuriken/pergaminho pago do chão: 20 × 1,2^(aberturas pagas): 20, 24, 29, 35... (26/11/2026 — usuário: "Vamos considerar 20% do valor de acréscimo na roleta da Tsunade e não colocar 15% por minuto, nem 25% por zona, sempre subirá 20%. O mesmo para kunais/pergaminhos"; era ×1,5 e inflação por minuto). */
+export const WEAPON_PRICE={base:20,growth:1.2};
+export function weaponPrice(opened:number){return Math.round(WEAPON_PRICE.base*Math.pow(WEAPON_PRICE.growth,Math.max(0,opened)));}
 export type AdminWallet={balance:number;spent:number};
 export const NEW_ADMIN:AdminWallet={balance:999999,spent:0};
 export function purchase(wallet:AdminWallet,cost:number):AdminWallet|null{return cost>=0&&wallet.balance>=cost?{balance:wallet.balance-cost,spent:wallet.spent+cost}:null;}
