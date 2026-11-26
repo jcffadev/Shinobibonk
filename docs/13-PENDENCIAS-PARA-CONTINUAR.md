@@ -38,6 +38,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 - Bijū não é empurrada nem desacelerada; toma dano e status. Ao chegar a 2/3 e 1/3 da vida, fica 3 s atordoada (sem andar nem atacar) e entra em fúria (+25% de dano por fase e 30% a mais de armadura sobre o dano que passa). **PENDENTE DE VALIDAÇÃO E2E:** ver o atordoamento, o aviso e a luta ficar mais dura nas fases 2 e 3.
 - **Codex:** revisar a cabaça do Gaara andando para a frente (docs/01).
+- **Decisão do usuário (26/11):** baixar o crescimento do giro da roleta da Tsunade (hoje ×1,7 por giro, sem zerar, + inflação por minuto e por zona)?
 - **Codex (26/11):** efeitos de tela de Haku (névoa/tempestade de gelo não apareceu), Gaara e Zabuza; mandar prévia ao usuário antes de aplicar (docs/01).
 - **Codex (26/11):** arte e animação dos Seis Caminhos de Pain na ultimate do Nagato (Kuchiyose: Pein Rikudō), referências em docs/01. **PENDENTE DE VALIDAÇÃO E2E:** jogar com o Nagato e usar a ultimate.
 - **Codex (26/11):** escadaria de pedra da Vila da Folha sem sólido: jogador atravessa e monstros se escondem dentro dela (docs/01).

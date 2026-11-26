@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 26/11/2026 · Drops do chão se juntam (FPS) e custo da roleta da Tsunade (Claude Code)
+
+- **Pedido do usuário:** "quantos % de aumento a roleta da tsunade esta subindo ao roletar? Porque o dinheiro some muito rápido · Precisamos também suavizar, melhorar o fps em relação aos itens dropados no chão, quando matamos muitos monstros e não coletamos, dropa muito o fps e quando pegamos de uma vez ele chega a travar o jogo"
+- **Roleta da Tsunade (resposta, sem mudança):** cada giro custa ×1,7 o anterior (+70%) e não zera na partida; por cima entram +15% por minuto de partida e +25% por zona. Ex.: 30 Ryu no 1º giro, ~6 mil no 11º, mais de 1 milhão no 21º (antes da inflação). Aguarda decisão do usuário para baixar.
+- **Causa da queda de FPS:** cada abate solta XP, Ryu (2 pedaços) e chakra; no fim de jogo o chão acumulava dezenas de milhares de drops, recalculados em todo quadro, e o ímã global movia todos de uma vez.
+- **`DROP_MERGE` + `mergeTarget`** (`src/game/drops.ts`) e `addDrop` no GameCanvas: cada quadrado de 8 m guarda no máximo 6 drops de XP, 6 de Ryu e 6 de chakra; o excedente soma o valor num drop que já está lá (o drop de XP cresce até o tamanho grande). Bolinho de cura, pílula e item não juntam.
+- **Medição (sem navegador):** 60 mil abates sem coletar num raio de 20 m deixavam 240 mil drops; agora ficam menos de 1.500, com a mesma soma de XP, Ryu e chakra.
+- **Testes:** novo `tests/drops-juncao.test.mjs` (3 testes, mínimo 356) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** FPS com o chão cheio e ao puxar tudo com o ímã.
+
 ## 26/11/2026 · Ninja de capuz roxo só atira (Claude Code)
 
 - **Pedido do usuário:** "Esse personagem será ranged apenas" (captura do ninja de capuz roxo com kunai)

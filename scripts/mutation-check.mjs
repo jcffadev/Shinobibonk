@@ -156,6 +156,7 @@ const MUTATIONS = [
   { regra: 'Guardião não é empurrado nem puxado', arquivo: 'src/game/bossRage.ts', de: '!!(e.guardian || e.bijuu || e.totem)', para: '!!(e.bijuu || e.totem)' },
   { regra: 'Eventos com cartão na home', arquivo: 'src/main.tsx', de: 'className="home-event-card"', para: 'className="home-card"' },
   { regra: 'ninja de capuz roxo é sempre atirador', arquivo: 'src/game/hordeRoles.ts', de: 'return { row: RANGED_ROW, ranged: true };', para: 'return { row: 2, ranged: true };' },
+  { regra: 'drops do chão se juntam (máx. 6 por tipo a cada 8 m)', arquivo: 'src/game/drops.ts', de: 'DROP_MERGE={perCell:6,', para: 'DROP_MERGE={perCell:1e9,' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

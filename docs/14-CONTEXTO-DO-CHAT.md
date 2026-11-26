@@ -3250,3 +3250,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Esse personagem será ranged apenas (captura do ninja de capuz roxo com kunai)
 
 **Resposta.** Linha 0 do atlas da horda = sempre atirador; as outras artes só corpo a corpo; proporção de atiradores igual à de antes. **Publicado no GitHub.**
+
+> quantos % de aumento a roleta da tsunade esta subindo ao roletar? Porque o dinheiro some muito rápido · Precisamos também suavizar, melhorar o fps em relação aos itens dropados no chão, quando matamos muitos monstros e não coletamos, dropa muito o fps e quando pegamos de uma vez ele chega a travar o jogo
+
+**Resposta.** Roleta: +70% por giro (×1,7), sem zerar, mais inflação por minuto e por zona; aguardando decisão para baixar. FPS: drops de XP, Ryu e chakra se juntam (máx. 6 por tipo a cada 8 m), sem perder valor. **Publicado no GitHub.**

@@ -16,6 +16,13 @@ export function dropCanMagnetize(age:number,settle:number,distance:number,radius
 type GroundPosition = { x:number; y:number; z:number };
 type DropCell<T> = { key:string; x:number; z:number; minY:number; maxY:number; entries:Set<T> };
 export const DROP_CELL_SIZE=8;
+/**
+ * Junção de drops no chão (26/11/2026 — pedido do usuário: "quando matamos muitos monstros e não coletamos, dropa muito o fps
+ * e quando pegamos de uma vez ele chega a travar o jogo"). Cada abate solta XP, Ryu e chakra; no fim de jogo eram dezenas de
+ * milhares de drops recalculados em todo quadro, e o ímã global movia todos de uma vez. Agora cada quadrado de 8 m guarda no
+ * máximo `perCell` drops de cada tipo juntável; o excedente soma o valor num drop que já está ali (nada se perde).
+ */
+export const DROP_MERGE={perCell:6,kinds:new Set(['xp','ryu','chakra'])};
 
 /** Indexa o ponto onde cada drop caiu. Só o ímã pode tirá-lo da célula para movê-lo. */
 export function createGroundDropIndex<T>(position:(drop:T)=>GroundPosition) {
@@ -64,6 +71,14 @@ export function createGroundDropIndex<T>(position:(drop:T)=>GroundPosition) {
       cell.maxY=Math.max(cell.maxY,point.y);
       cell.entries.add(drop);
       grounded.set(drop,cell);
+    },
+    /** Drop do chão, na mesma célula de (x, z), que deve receber o valor de um novo, ou undefined se ainda cabe outro. */
+    mergeTarget(x:number,z:number,match:(drop:T)=>boolean,limit:number){
+      const cell=cells.get(cellKey(cellIndex(x),cellIndex(z)));
+      if(!cell)return undefined;
+      let count=0,last:T|undefined;
+      for(const entry of cell.entries)if(match(entry)){count++;last=entry;}
+      return count>=limit?last:undefined;
     },
     startPull(drop:T){if(detach(drop))moving.add(drop);},
     collect(drop:T){moving.delete(drop);},

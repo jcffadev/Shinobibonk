@@ -549,6 +549,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** Só o ninja de capuz roxo (linha 0 de `shinobi-enemy-front-v3.png`), por `hordeLook` em `src/game/hordeRoles.ts`. Chance de atirador `rangedChance` (7% → 20% em 5 min da zona), só em comuns fora de desafio.
 
+### Por que o FPS cai com muitos drops no chão? · 26/11/2026
+
+**IMPLEMENTADO.** `DROP_MERGE`/`mergeTarget` em src/game/drops.ts: no máximo 6 drops de XP, Ryu e chakra por célula de 8 m; o resto soma no valor. **Em aberto:** custo da roleta da Tsunade (`ROULETTE_RULES.costGrowth` 1,7 por giro, sem zerar) — o usuário acha que o Ryu some rápido.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.
