@@ -3279,3 +3279,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > no jogo referencia aos 5min+ se você não tiver uma build boa, feito fusão, ter itens, pouco level você já começa tomar dano/morrer · Acha que da pra refinar ainda mais com essa informação?" → "Sim, calibrar
 
 **Resposta.** Medido no simulador: aos 5 min até conta nova matava tudo num golpe. Rampa de vida ×12 aos 8 min de zona (calibrada entre 10 e 20), que some aos 30 min. Conta nova cai a partir de ~5 min (Kage) e ~8 min (Genin); conta no máximo segue. Fim de jogo preservado. **Publicado no GitHub.**
+
+> Evento tem que esta em destaque do lado de jogar
+
+**Resposta.** Evento virou botão dourado do tamanho do Jogar, logo ao lado dele. **Publicado no GitHub.**

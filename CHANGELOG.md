@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 26/11/2026 · Evento em destaque ao lado do Jogar (Claude Code)
+
+- **Pedido do usuário:** "Evento tem que esta em destaque do lado de jogar" (com captura da home).
+- **Home** (`src/main.tsx`, `.event-button` em ninja-theme.css): o cartão "Evento · Prova Chūnin" saiu da fileira de baixo e virou um botão dourado, do tamanho do Jogar, logo depois dele, com o progresso (x/15 duelos ou Concluído). "Build preparada" continua embaixo.
+- **Testes:** teste da home em `tests/eventos.test.mjs` ajustado ao botão novo e mutação atualizada, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver o botão na home.
+
 ## 26/11/2026 · Rampa de vida do meio da zona: build fraca começa a cair a partir dos 5–8 min (Claude Code)
 
 - **Pedido do usuário:** "no jogo referencia aos 5min+ se você não tiver uma build boa, feito fusão, ter itens, pouco level você já começa tomar dano/morrer · Acha que da pra refinar ainda mais com essa informação?" → "Sim, calibrar"

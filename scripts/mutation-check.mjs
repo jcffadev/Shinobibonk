@@ -154,7 +154,7 @@ const MUTATIONS = [
   { regra: 'Nagato com o kit do Rinnegan igual ao do Pain', arquivo: 'src/game/heroes.ts', de: "if (spec.id === 'nagato') kit.splice(0, kit.length, ...rinneganKit());", para: '' },
   { regra: 'Guardião entra em fúria ao perder 30% da vida', arquivo: 'src/game/bossRage.ts', de: 'hpShare: .7', para: 'hpShare: .5' },
   { regra: 'Guardião não é empurrado nem puxado', arquivo: 'src/game/bossRage.ts', de: '!!(e.guardian || e.bijuu || e.totem)', para: '!!(e.bijuu || e.totem)' },
-  { regra: 'Eventos com cartão na home', arquivo: 'src/main.tsx', de: 'className="home-event-card"', para: 'className="home-card"' },
+  { regra: 'Eventos com cartão na home', arquivo: 'src/main.tsx', de: 'className="button event-button home-event-card"', para: 'className="button home-card"' },
   { regra: 'ninja de capuz roxo é sempre atirador', arquivo: 'src/game/hordeRoles.ts', de: 'return { row: RANGED_ROW, ranged: true };', para: 'return { row: 2, ranged: true };' },
   { regra: 'drops do chão se juntam (máx. 6 por tipo a cada 8 m)', arquivo: 'src/game/drops.ts', de: 'DROP_MERGE={perCell:6,', para: 'DROP_MERGE={perCell:1e9,' },
   { regra: 'roleta da Tsunade sobe 20% por giro', arquivo: 'src/game/roulette.ts', de: 'costGrowth: 1.2,', para: 'costGrowth: 1.7,' },

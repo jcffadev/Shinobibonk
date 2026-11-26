@@ -87,7 +87,8 @@ test('cada prêmio é creditado uma vez e ligado na tela', () => {
 test('eventos ficam na home, não no planejar missão (26/11/2026)', () => {
   // "Os eventos devem aparecer na home do jogo e não lá no planejar missão".
   const main = fs.readFileSync('src/main.tsx', 'utf8'), mapSelect = fs.readFileSync('src/ui/MapSelect.tsx', 'utf8');
-  assert.match(main, /className="home-event-card"[\s\S]{0,400}onClick=\{\(\) => changePage\('events'\)\}>Abrir evento →/);
+  // 26/11/2026: "Evento tem que esta em destaque do lado de jogar" — botão dourado logo depois do Jogar.
+  assert.match(main, /escolha seu shinobi'\}<\/small><\/span><\/button>\{EVENTS\.map\(event=>[\s\S]{0,200}className="button event-button home-event-card" onClick=\{\(\) => changePage\('events'\)\}/);
   assert.match(main, /<EventsPage heroId=\{hero\.id\} onPlay=\{beginEventDuel\} onBack=\{\(\) => changePage\('home'\)\}\/>/);
   assert.doesNotMatch(mapSelect, /onEvents|Eventos · Prova/);
 });

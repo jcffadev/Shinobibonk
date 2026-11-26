@@ -409,3 +409,7 @@ kbd{font-family:var(--fonte-texto)}
 /* 26/11/2026: o nível cabe na bolinha vermelha (levelSealText em format.ts). */
 .game-shell .game-level .level-seal[data-digits="3"]{font-size:13px}
 .game-shell .game-level .level-seal[data-digits="4"],.game-shell .game-level .level-seal[data-digits="5"]{font-size:10px;letter-spacing:-.4px}
+/* 26/11/2026: evento em destaque ao lado do Jogar (dourado, mesmo tamanho do botão principal). */
+.event-button{min-width:260px;min-height:67px;border:3px solid var(--ouro);border-radius:8px;background:linear-gradient(135deg,#f0b23c,#b86a12);box-shadow:0 0 0 2px #6b3a06,0 5px 0 rgba(0,0,0,.45),0 0 18px rgba(255,196,80,.45);color:#2a1606}
+.event-button b{color:#2a1606}.event-button small{color:#4a2a08}
+@media(max-width:700px){.event-button{width:100%;min-height:56px}}
