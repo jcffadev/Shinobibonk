@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 26/11/2026 · Barras de vida de chefes e Mega Elites no HUD (Claude Code)
+
+- **Pedido do usuário:** "Ao nascer um elite a vida dele precisa ter a barrinha de hp aparecendo abaixo de onde mostra as informações do mapa centralizado um pouco mais acima do centro, hoje isso está em cima das informações do mapa e está em números o hp..."
+- **Novo `src/ui/BossBars.tsx` + `src/boss-bars.css`:** a faixa de texto "Guardião · nome · 1,2B/3,4B HP" (a 110 px do topo, por cima das informações do mapa) virou barras de vida sem números, centralizadas a 30% da altura da tela (um pouco acima do meio). Até 3 barras: Guardião/Bijū primeiro (barra roxa mais grossa), depois os Mega Elites mais perto (barra vermelha). Selo "Fúria" quando o chefe enfurece.
+- **GameCanvas:** `bossBars()` no snapshot (nome, vida, vida máxima, chefe, fúria). O treinamento do Hagoromo continua com o painel próprio.
+- **Interpretação:** "elite" foi lido como Mega Elite (os elites comuns da horda não têm barra no HUD); Guardião e Bijū também ganharam a barra.
+- **Testes:** novo `tests/barra-chefe.test.mjs` (mínimo 364) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver a posição das barras com o mapa e o relógio.
+
 ## 26/11/2026 · Guizos: seis efeitos de 60 s que caem dos monstros (Claude Code)
 
 - **Pedido do usuário:** "Precisamos colocar umas passivas ao abater X quantidade de monstros escalonados… até 50mil mortes" → "Na realidade faça dropar os guisos · faça um de cada cor para cada efeito · Coletou Guiso de Imã / de Dificuldade / de Isca / da Nevasca / do Raio / da Força da Juventude (Aumenta 60% movspeed) · Esses efeitos duram sempre 60 segundos · Eles dropam por rng, sem considerar a sorte do personagem eles tem drop fixo por monstros" → "vamos manter os guisos de imã sempre" → "Para vermos se melhorarmos a questão do FPS do jogo"

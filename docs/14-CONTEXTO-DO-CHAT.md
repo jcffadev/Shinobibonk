@@ -3267,3 +3267,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Precisamos colocar umas passivas ao abater X quantidade de monstros escalonados… até 50mil mortes" → "Na realidade faça dropar os guisos · faça um de cada cor para cada efeito · Coletou Guiso de Imã / de Dificuldade / de Isca / da Nevasca / do Raio / da Força da Juventude (Aumenta 60% movspeed) · Esses efeitos duram sempre 60 segundos · Eles dropam por rng, sem considerar a sorte do personagem eles tem drop fixo por monstros" → "vamos manter os guisos de imã sempre" → "Para vermos se melhorarmos a questão do FPS do jogo
 
 **Resposta.** Seis guizos (Ímã, Dificuldade, Isca, Nevasca, Raio, Força da Juventude), 60 s cada, chance fixa de 1 em 2.000 por abate, um de cada no máximo, Ímã sempre no sorteio. Arte provisória; arte final para o Codex. **Publicado no GitHub.**
+
+> Ao nascer um elite a vida dele precisa ter a barrinha de hp aparecendo abaixo de onde mostra as informações do mapa centralizado um pouco mais acima do centro, hoje isso está em cima das informações do mapa e está em números o hp...
+
+**Resposta.** Barras de vida sem números, centralizadas a 30% da altura da tela, para Guardião/Bijū e até 2–3 Mega Elites mais perto; substituem a faixa de texto do topo. **Publicado no GitHub.**

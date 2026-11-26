@@ -1,0 +1,11 @@
+/* Barras de vida dos chefes e Mega Elites (BossBars.tsx, 26/11/2026): centralizadas, um pouco acima do meio da tela. */
+.boss-bars{position:absolute;z-index:4;left:50%;top:30vh;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;width:min(440px,calc(100% - 32px));pointer-events:none}
+.boss-bar{display:flex;flex-direction:column;gap:3px}
+.boss-bar-name{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff3df;font-size:12px;font-weight:800;text-shadow:0 1px 0 #000,0 0 4px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.boss-bar-name em{padding:0 6px;border-radius:4px;background:#c8321f;color:#fff;font-size:10px;font-style:normal;letter-spacing:.5px;text-transform:uppercase}
+.boss-bar-track{position:relative;display:block;height:10px;border:2px solid #120b07;border-radius:4px;background:#2a1c14;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.boss-bar-track i{position:absolute;inset:0 auto 0 0;background:linear-gradient(#ff8a5c,#c8321f);transition:width .15s linear}
+.boss-bar.is-boss .boss-bar-track{height:14px}
+.boss-bar.is-boss .boss-bar-track i{background:linear-gradient(#d68cff,#7b2fb8)}
+.boss-bar.is-rage .boss-bar-track{border-color:#ff4b2b}
+@media(max-width:700px){.boss-bars{top:26vh}.boss-bar-name{font-size:11px}}
