@@ -36,7 +36,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 ## Jogador grudado na cerca · 25/11/2026
 
-- Correção geral: inimigo corpo a corpo preso a menos de 3 m por 1 s ataca de onde está (`stuckReach`). **PENDENTE DE VALIDAÇÃO E2E:** reproduzir o caso da cerca e confirmar que o jogador toma dano. Se continuar imortal, anotar o mapa e o lado da cerca.
+- **Resolvido pelo usuário (25/11):** "era o range das habilidades" — o alcance das técnicas matava a horda antes de ela chegar; não era bug. A regra `stuckReach` (inimigo preso perto ataca de onde está) ficou como proteção extra.
 - **Aguardando decisão do usuário:** regra de scale do Guardião (segundos de luta por dificuldade e crescimento por minuto de Final Swarm) e siglas da vida do chefe acima de quintilhões.
 
 ## Planos do Shikamaru · 25/11/2026

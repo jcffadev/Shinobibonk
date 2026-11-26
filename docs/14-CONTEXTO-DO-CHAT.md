@@ -3110,3 +3110,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 - Guardião da zona 1 com +10 min de Final Swarm: 273 milhões (Genin) a 3,5 bilhões (Kage) pela fórmula, o dobro com 3 planos. Hoje a vida quase sempre sai do piso (seu dano × 30 s), então a luta dura ~30 s chamando cedo ou tarde. Proposta de regra de scale aguardando escolha.
 - Cerca: correção geral, inimigo preso perto ataca de onde está. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> PRecisa verificar se o personagem esta tomando dano perto da cerca... não é pra deixar o personagem invulnerável, sem tomar dano
+> Ja entendi o que era, era o range das habilidades. Estaa tudo ok, relaxa
+
+**Resposta.** Anotado: não era bug, era o alcance das técnicas. A proteção `stuckReach` ficou no jogo.
