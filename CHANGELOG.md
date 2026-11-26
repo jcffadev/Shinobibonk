@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 26/11/2026 · Cinco espaços de pílula e Mercador sem alta ao roletar (Claude Code)
+
+- **Pedidos do usuário:** "Temos 6 espaços, eu quero 5 no jogo e no hud" · "No mercador, quando não selecionarmos nenhum item, só aumentar o valor de roletar não dos itens disponíveis pra escolha, a % de aumento do preço dos itens, só aumentam considerando quantos itens eu comprei por pool. Hoje eles estão aumentando roletando mesmo sem comprar nada."
+- **`PILL_SLOTS`** (`src/game/pills.ts`): 6 → 5 tipos de pílula por run. Vale para as cartas, a roleta, os drops, o HUD (espaços vazios "+") e a ficha ("x/5 tipos"). Save antigo com 6 tipos mantém as 5 de nível mais alto.
+- **`merchantPrice`** (`src/game/itemTrade.ts`): sai o fator de 12% por roletada (`merchantStockReroll`). O preço dos itens sobe só 35% por item comprado (`merchantBuy`); roletar encarece apenas a própria roletada (×1,5 por uso). A inflação geral de 15% por minuto de partida continua igual à de kunai, shuriken e roleta.
+- **Testes:** novo `tests/loja-e-pilulas.test.mjs` (2 testes, mínimo 337), `verify-rules` ajustado e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver 5 espaços no HUD e os preços do Mercador ao roletar.
+
 ## 26/11/2026 · Aviso ao Codex: escadaria sem sólido (Claude Code)
 
 - **Pedido do usuário:** "Essa escadaria esta permitindo passar por dentro dela e também não esta fazendo ela estar ai... deixe aviso pro Codex sobre isso, os monstros estão passando dentro dela e se escondendo"

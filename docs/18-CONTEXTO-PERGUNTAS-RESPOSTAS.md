@@ -517,6 +517,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** O teto (800 até +4 min, 1.600 a partir de +7 min) estava certo; faltava ritmo de nascimento. `spawnBudgetFor` (progression.ts) repõe até o teto a cada quadro no Final Swarm, até `SPAWN_RULES.swarmPerFrame` (120). **PENDENTE.** Validar FPS e contagem no navegador; Bijū que não apareceu aguarda detalhes do usuário.
 
+### Quantas pílulas e como sobe o preço do Mercador? · 26/11/2026
+
+**IMPLEMENTADO.** 5 tipos de pílula por run (`PILL_SLOTS`). No Mercador, o item custa base da raridade × 1,35^compras × inflação por minuto; roletar não mexe nesse preço, só no da próxima roletada (×1,5 por uso).
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

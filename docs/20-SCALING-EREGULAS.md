@@ -458,7 +458,7 @@ Bênção do altar: valores base da Rodada 51 de 5/8/12/18/25% por raridade e mu
 
 ## Teto de pílulas (rodada 53)
 
-`PILL_MAX=9`, `PHARMACOLOGY_MAX=4`, Cabaça +2 e `PILL_SLOTS=6`. O máximo simultâneo é 15 níveis por pílula. A qualidade altera o bônus de nível, enquanto cada escolha sobe exatamente um nível.
+`PILL_MAX=9`, `PHARMACOLOGY_MAX=4`, Cabaça +2 e `PILL_SLOTS=5` (era 6 até 26/11/2026). O máximo simultâneo é 15 níveis por pílula. A qualidade altera o bônus de nível, enquanto cada escolha sobe exatamente um nível.
 
 ## Rodada 55 (13/11/2026) — HP, projéteis de bênção, zona e ímã (PROPOSTO, o usuário testa)
 

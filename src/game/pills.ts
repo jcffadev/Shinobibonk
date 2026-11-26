@@ -6,7 +6,8 @@ import type { Bonuses, Rarity, StatKey } from './catalog.ts';
 // BALANCEAMENTO PROVISÓRIO: valores por nível derivados da referência de formato com ajustes leves.
 export const PILL_MAX = 9;
 export const PHARMACOLOGY_MAX = 4;
-export const PILL_SLOTS = 6;
+/** Tipos de pílula por run (26/11/2026 — usuário: "Temos 6 espaços, eu quero 5 no jogo e no hud"). */
+export const PILL_SLOTS = 5;
 
 export type PillDef = {
   id: string;

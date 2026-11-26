@@ -652,7 +652,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const saleValue=()=>Math.max(0,...(choiceData??[]).map(card=>(card.kind==='item'||card.kind==='pill')?itemSalePrice(card.rarity):0));
     function quoteMerchantStock(){
       merchant.prices=merchant.stock.map(name=>name&&ITEM_BY_NAME[name]
-        ?merchantPrice(ITEM_BY_NAME[name].rarity,merchant.purchases,elapsed,merchant.rerolls):0);
+        ?merchantPrice(ITEM_BY_NAME[name].rarity,merchant.purchases,elapsed):0);
     }
     function setMerchantStock(names:readonly string[]){
       merchant.stock=Array.from({length:4},(_,index)=>names[index]??null);
