@@ -9,7 +9,9 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Resistência por zona | zona 2/3 só com ×1,18/×1,38 → vida ×6/×20 e +5/+10 pontos de defesa (dano igual) |
+| (este commit) | XP por nível | +10% a cada 100 níveis (acumulando) |
+| (este commit) | Monstros vivos fora do Final Swarm | −20% (HORDE_CAP_SCALE 0,8) |
+| `dd55810` | Resistência por zona | zona 2/3 só com ×1,18/×1,38 → vida ×6/×20 e +5/+10 pontos de defesa (dano igual) |
 | `bda3c11` | Degraus do Final Swarm | vida ×(1+0,5k), dano ×(1+0,3k), +2k defesa → vida ×(1+k), dano ×(1+0,5k), +3k defesa |
 | `bda3c11` | Orbe de XP no chão | ficava para sempre → some em 20 s |
 | `68bbc2d` | Guizo do Raio | 60 s → 20 s; guizo igual ativo não acumula |

@@ -250,7 +250,8 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
 // Horda — Rodada 50: escada de vivos reduzida ~40% no início (capBase 36 · capLinear 52 · capQuad 3,8): 1 min = 91 (era 156),
 // 8 min = 695 (era 1189), 10 min = 936 (era 1.600), teto 1600 aos ~15 min (era ~10 min). Spawn em lote crescente; FINAL SWARM ×3 imediato e crescendo.
 {const d8=difficultyAt('Genin',480),d10=difficultyAt('Genin',600),sw=difficultyAt('Genin',600,1,1e-3),sw5=difficultyAt('Genin',900,1,300);
- assert.ok(d8.cap>=650&&d8.cap<750,'escada de vivos reduzida ~695 aos 8 min');assert.ok(d10.cap===936,'~936 aos 10 min');assert.equal(difficultyAt('Genin',900).cap,1600,'teto 1600 aos 15 min');assert.ok(d8.spawnPerSecond>40,'spawn em lote');
+ // 26/11/2026: HORDE_CAP_SCALE 0,8 → 8 min ~556 (era ~695), 10 min 748 (era 936), 15 min 1.336 (era 1.600; o Final Swarm ainda sobe a 1.600).
+ assert.ok(d8.cap>=520&&d8.cap<600,'escada de vivos ~556 aos 8 min');assert.ok(d10.cap===748,'748 aos 10 min');assert.equal(difficultyAt('Genin',900).cap,1336,'1.336 aos 15 min');assert.ok(d8.spawnPerSecond>40,'spawn em lote');
  assert.ok(Math.abs(sw.hp/d10.hp-2)<.01&&Math.abs(sw.damage/d10.damage-2)<.01,'FINAL SWARM dobra HP e dano (decisão de 25/11; antes ×3)');
  // Com a nova pressão do Genin, a armadura aos 10 min é 39% e o Final Swarm ainda sobe ao teto de 85%.
  assert.ok(Math.abs(d10.armor-.39)<1e-9,'Genin tem 39% de armadura aos 10 min');

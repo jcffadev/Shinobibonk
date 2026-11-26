@@ -492,3 +492,7 @@ Degraus: vida ×Π(1 + i), dano ×Π(1 + 0,5·i), defesa +0,03·k(k+1)/2 (até 9
 ## Resistência por zona · 26/11/2026
 
 `ZONE_TOUGHNESS` = {1: ×1 / +0, 2: ×6 / +0,05, 3: ×20 / +0,10} (vida / defesa), aplicado em `zoneThreat` depois de `difficultyAt`; dano continua com `ZONE_DIFFICULTY`.
+
+## XP por centena de níveis e teto da horda · 26/11/2026
+
+`xpToLevelUp` × 1,1^floor(nível/100) (`XP_CENTURY`). Teto de vivos fora do Final Swarm × `HORDE_CAP_SCALE` (0,8).

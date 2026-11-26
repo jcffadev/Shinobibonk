@@ -39,9 +39,15 @@ export function effectiveLootLuck(luck:number, elapsed:number) {
  */
 export const XP_RULES={from:10,to:60,scale:5};
 export const xpCurveScale=(level:number)=>1+(XP_RULES.scale-1)*Math.min(1,Math.max(0,(level-XP_RULES.from)/(XP_RULES.to-XP_RULES.from)));
+/**
+ * +10% de XP pedido a cada 100 níveis, acumulando (26/11/2026 — usuário: "aumentar a tabela de XP a cada 100 levels para não
+ * estacar tanto exp assim, colocar cerca de 10% mais exp"): Nv 100–199 ×1,1 · 200–299 ×1,21 · 1.000 ×2,59 · 5.000 ×117.
+ */
+export const XP_CENTURY={every:100,growth:1.1};
+export const xpCenturyScale=(level:number)=>Math.pow(XP_CENTURY.growth,Math.floor(Math.max(0,level)/XP_CENTURY.every));
 export function xpToLevelUp(level:number) {
   const levels=Math.max(0,level-1);
-  return level<=1?30:(18+6*levels+.08*levels**2/(1+levels/250))*xpCurveScale(level);
+  return level<=1?30:(18+6*levels+.08*levels**2/(1+levels/250))*xpCurveScale(level)*xpCenturyScale(level);
 }
 /**
  * Regeneração base de todo shinobi (25/11/2026 — usuário: "Ajustar regeneração por segundo para todos os personagens, iniciar
@@ -130,6 +136,9 @@ export const AMBUSH_RULES = { first: 150, min: 50, spread: 30 };
  * - O %inimigos de itens/pílulas/debuffs (enemyCount: Incenso Repelente −8% · Flauta Provocadora +12% · Pílula de Incenso +10%)
  *   JÁ multiplica o cap (densidade em GameCanvas.threatNow) e continua progressivo com o tempo — apenas a escada-base ficou mais suave.
  */
+/** −20% de monstros vivos ao mesmo tempo fora do Final Swarm (26/11/2026 — usuário: "Diminuir um pouco o acumulo de monstros
+ * durante a partida esta nascendo monstros demais"). O teto do Final Swarm (rampa até 1.600) não muda. */
+export const HORDE_CAP_SCALE=.8;
 export const ENEMY_SCALING={hpBase:3.2,hpLinear:.3,hpPerMinute:1.17,damageBase:1.45,damageLinear:.2,damagePerMinute:1.06,maxEnemies:1600,capBase:36,capLinear:52,capQuad:3.8,spawnBase:2,spawnPerMinute:6,maxSpawnPerSecond:90,armorPerMinute:.03,maxArmor:.72};
 /** Escala individual por zona (fase): cada fase nasce mais forte que a anterior (HP, dano, spawn e pressão de roleta). Pedido do usuário (11/11): "verifique o nível de dificuldade também individual para cada fase do jogo". */
 export const ZONE_DIFFICULTY:Record<number,number>={1:1,2:1.18,3:1.38};
@@ -209,7 +218,7 @@ export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeco
   // Revisão 11/11/2026: sem desconto de early game em nenhum rank — cada dificuldade escala em sua devida proporção (tier).
   const opening=.34+.66*Math.min(1,minutes);
   const geninPressure=rank==='Genin'?Math.max(0,Math.min(1,(minutes-GENIN_PRESSURE.startMinute)/(GENIN_PRESSURE.fullMinute-GENIN_PRESSURE.startMinute))):0;
-  const baseCap=Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*opening));
+  const baseCap=Math.min(S.maxEnemies,Math.floor((S.capBase+S.capLinear*minutes+S.capQuad*minutes*minutes)*(.85+tier*.15)*opening*HORDE_CAP_SCALE));
   const swarmRamp=swarm>1?Math.min(1,overtimeSeconds/60/FINAL_SWARM.rampMinutes):1;
   // Rodada 49 — rampa do FINAL SWARM: teto em min(teto normal, 800) até +4 min (240 s), depois sobe linearmente
   // até 1600 (teto absoluto) a +7 min (420 s). Fora do swarm o teto normal (máx. 1600) se aplica.

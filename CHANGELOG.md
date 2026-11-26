@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 26/11/2026 · Nome inteiro no HUD, XP +10% a cada 100 níveis e menos monstros acumulando (Claude Code)
+
+- **Pedidos do usuário:** "Os nomes dos personagens do lado superior esquerdo, não estão aparecendo as vezes, o HUD está minimizando o nome... isso não deve acontecer." · "aumentar a tabela de XP a cada 100 levels para não estacar tanto exp assim, colocar cerca de 10% mais exp" · "Diminuir um pouco o acumulo de monstros durante a partida esta nascendo monstros demais"
+- **Nome no HUD** (main.tsx + ninja-theme.css): o nome do personagem no canto superior esquerdo quebra em até duas linhas em vez de ser cortado com reticências; nomes com mais de 18 caracteres usam fonte de 12,5 px.
+- **XP** (`XP_CENTURY`, `xpCenturyScale` em `src/game/progression.ts`): o XP pedido por nível sobe 10% a cada 100 níveis, acumulando (Nv 100 ×1,1 · 200 ×1,21 · 1.000 ×2,59 · 5.000 ×117).
+- **Horda** (`HORDE_CAP_SCALE` = 0,8): 20% menos monstros vivos ao mesmo tempo fora do Final Swarm (Genin aos 10 min: 936 → 748). O teto do Final Swarm (rampa até 1.600) não mudou.
+- **Testes:** novo `tests/hud-xp-horda.test.mjs` (3 testes, mínimo 376) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** nome longo no HUD.
+
 ## 26/11/2026 · Pergaminhos fora das casas, XP some em 10 s, telhado anotado para o Codex (Claude Code)
 
 - **Pedidos do usuário:** "As vezes está nascendo pergaminhos dentro das casas, isso não pode ser possível e o telhado das casas deve ser 'chão' para os personagens correrem em cima, hoje o personagem cai" · "A questão dos itens que não pegarmos que dropou dos monstros sumir após 20s, coloque 10s."

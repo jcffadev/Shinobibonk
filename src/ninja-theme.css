@@ -413,3 +413,7 @@ kbd{font-family:var(--fonte-texto)}
 .event-button{min-width:260px;min-height:67px;border:3px solid var(--ouro);border-radius:8px;background:linear-gradient(135deg,#f0b23c,#b86a12);box-shadow:0 0 0 2px #6b3a06,0 5px 0 rgba(0,0,0,.45),0 0 18px rgba(255,196,80,.45);color:#2a1606}
 .event-button b{color:#2a1606}.event-button small{color:#4a2a08}
 @media(max-width:700px){.event-button{width:100%;min-height:56px}}
+/* 26/11/2026 — "Os nomes dos personagens do lado superior esquerdo, não estão aparecendo as vezes, o HUD está minimizando o
+   nome": o nome quebra em até duas linhas em vez de cortar com reticências; nome longo usa fonte um pouco menor. */
+.game-shell .game-level>b{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+.game-shell .game-level>b[data-len="long"]{font-size:12.5px}

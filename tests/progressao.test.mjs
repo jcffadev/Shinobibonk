@@ -142,7 +142,8 @@ test('XP por abate usa o relógio total e a curva continua nas trocas de zona', 
   const normalXp = samples.map(elapsed => xpDropValue(lootScale('normal', 0, 0, MISSION_TIER.Genin), 1, elapsed));
   assert.deepEqual(normalXp, [4, 7, 7, 10, 10, 13]);
   // Rodada 76: a XP pedida fica igual até o Nv. 10 e chega a ×5 no Nv. 60 (XP_RULES); antes 1174 · 5069 · 11629.
-  assert.deepEqual([100, 300, 582].map(level => Math.ceil(xpToLevelUp(level))), [5869, 25345, 58142]);
+  // 26/11/2026: +10% a cada 100 níveis (XP_CENTURY) — antes 5869 · 25345 · 58142.
+  assert.deepEqual([100, 300, 582].map(level => Math.ceil(xpToLevelUp(level))), [6456, 33734, 93637]);
   assert.equal(xpDropValue(3, 1.25, 600), 25, 'bônus da zona ativa é aplicado antes do arredondamento');
 });
 
@@ -158,7 +159,7 @@ test('abertura calma: 1 monstro/s no Genin, 2 no Kage, e curva antiga a partir d
     assert.ok(close(difficultyAt(rank,240).spawnPerSecond,26*Math.sqrt(MISSION_TIER[rank])));
   }
   assert.equal(difficultyAt('Kage',0).cap,16);
-  assert.equal(difficultyAt('Genin',240).cap,304);
+  assert.equal(difficultyAt('Genin',240).cap,243); // 26/11/2026: HORDE_CAP_SCALE 0,8 (era 304)
 });
 
 test('todo shinobi começa com pelo menos 1,0 HP/s de regeneração (25/11/2026)', async () => {
