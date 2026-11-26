@@ -11,7 +11,7 @@ import { currentSettings, translateKey, pixelRatioFor, CAMERA_ZOOM, CAMERA_VIEW,
 import { createMovementInput, createQuickMapInput } from '../game/movementInput';
 import { firstProjectileContact, projectileContact, projectileSpread, selectCombatTarget } from '../game/targetFocus';
 import { zetsuSeen, AKATSUKI_AMBUSH, AKATSUKI_MEMBERS, akatsukiAmbushHp, zetsuEmergence, type AmbushMemberSave } from '../game/akatsukiAmbush';
-import { stuckReach, type StuckTrack, ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, ENEMY_XP_MULTIPLIER, commonEnemyProjectile, lootScale, xpDropValue, xpLoot, eliteHpRamp, capMegaEliteHp, megaEliteHp, rollMegaSchedule, type EnemyTier } from '../game/enemyTiers';
+import { playerHitDamage, type HitSource, stuckReach, type StuckTrack, ENEMY_TIERS, eliteSpawnChance, BASE_LOOT, ENEMY_XP_MULTIPLIER, commonEnemyProjectile, lootScale, xpDropValue, xpLoot, eliteHpRamp, capMegaEliteHp, megaEliteHp, rollMegaSchedule, type EnemyTier } from '../game/enemyTiers';
 import { completeEventDuel, sealedHeroes, sealForAccount, unlockedHeroes, addResearch, researchGain, RESEARCH_RULES } from '../game/account';
 import { createTotemBar } from './narutoTotem';
 import { NPC_ALLIES, NPC_RULES, TOTEM_RULES, dealBonuses, dealLabel, dealText, pctText, rollEbisuDeals, rollIrukaLegendary, rollIrukaLesson, type StatDeal } from '../game/npcs';
@@ -1383,14 +1383,16 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const damageVignette=container.querySelector<HTMLElement>('.player-damage-vignette');
     const damageImpact=container.querySelector<HTMLElement>('.player-damage-impact');
     /** Todo dano recebido passa aqui: escudo, evasão, armadura (+Postura de Pedra), espinhos, adrenalina, fumaça, gelo de Haku e ressurreição. */
-    function damagePlayer(raw:number,attacker?:Enemy,slow=0){
+    /** Origem do golpe para o nerf da horda e o teto por golpe (PLAYER_HIT_RULES): Guardião/Bijū, Mega Elite ou horda. */
+    const hitSource=(attacker?:Enemy):HitSource=>!attacker?'horde':attacker.guardian||attacker.bijuu?'boss':attacker.megaElite?'mega':'horde';
+    function damagePlayer(raw:number,attacker?:Enemy,slow=0,source:HitSource=hitSource(attacker)){
       if(invulnerability>0||defeated||debugState.god)return false;
       if(ex('shield')>0&&shieldReady){shieldReady=false;shieldTimer=14;invulnerability=.25;addRing(player.position,'#7fd3ff',1.1);eventToast='Escudo de Chakra bloqueou o golpe!';return false;}
       if(Math.random()<stats.evasion)return false;
       const hpBefore=hp;
       // Rodada 98: no desafio "não ser acertado" do Might Guy, qualquer golpe que passe das defesas encerra o desafio.
       const youthHit=()=>{if(hp<hpBefore)failYouthNoHit();};queueMicrotask(youthHit);
-      hp=Math.max(0,hp-incomingDamage(raw,stats.armor*(ex('stance')>0&&stillTime>.5?1.3:1)));
+      hp=Math.max(0,hp-playerHitDamage(incomingDamage(raw,stats.armor*(ex('stance')>0&&stillTime>.5?1.3:1)),stats.maxHp,source));
       invulnerability=.25;timeSinceHit=0;
       if(hp<hpBefore){
         playerMotion.hurt();
@@ -1427,7 +1429,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       for(const e of [...enemyList]){const d=Math.hypot(e.sprite.position.x-center.x,e.sprite.position.z-center.z);if(e===target||d<2.5){e.burn=3*stats.duration;e.burstBurn=false;takeDamage(e,e===target?damage:damage*.5,'#3b1f45',false,0,'Amaterasu');}}
     }
     const bossCombat=createBossCombat({scene,player,height:itemSurface,zone:()=>zone,hidden:()=>hiddenEffects,susanoo,
-      hitPlayer:(base,slow,gravity,center)=>{if(!damagePlayer(base*threatNow().damage,undefined,slow)||!gravity||!center)return;const direction=center.clone().sub(player.position).setY(0), distance=direction.length();const step=gravity==='push'?-2:Math.min(2.25,Math.max(0,distance-.7));player.position.addScaledVector(direction.normalize(),step);if(!arena)solids.resolve(player.position);},viewRight:()=>v2,viewForward:()=>v1});
+      hitPlayer:(base,slow,gravity,center,host)=>{if(!damagePlayer(base*threatNow().damage,host as Enemy|undefined,slow,host?hitSource(host as Enemy):'boss')||!gravity||!center)return;const direction=center.clone().sub(player.position).setY(0), distance=direction.length();const step=gravity==='push'?-2:Math.min(2.25,Math.max(0,distance-.7));player.position.addScaledVector(direction.normalize(),step);if(!arena)solids.resolve(player.position);},viewRight:()=>v2,viewForward:()=>v1});
     function spawnEnemy(challenge=false,megaElite=false,guardian=false,forcedId?:string,accountSeal=false,openingMega=!openingMegaSpawned,akatsuki?:AmbushMemberSave){const t=tune(),candidates=megaElite&&!guardian&&!forcedId?HEROES.filter(h=>h.family===h.id&&!hasAllyFamily(h.id)&&!enemyList.some(enemy=>enemy.heroId&&familyOf(enemy.heroId)===h.id)):[],naturalFamily=candidates[Math.floor(Math.random()*candidates.length)]?.id,id=forcedId??(guardian?ZONES[zone-1].guardians[Math.floor(Math.random()*ZONES[zone-1].guardians.length)]:naturalFamily?versionForEncounter(naturalFamily,zone,mission):heroId),angle=Math.random()*Math.PI*2;if(accountSeal)megaElite=true;const swarmRing=!challenge&&!megaElite&&!guardian&&overtimeNow()>0,r=challenge?7:megaElite?12:swarmRing?FINAL_SWARM.spawnRing[0]+Math.random()*(FINAL_SWARM.spawnRing[1]-FINAL_SWARM.spawnRing[0]):zoneElapsed()<SPAWN_RING.openingSeconds?SPAWN_RING.opening[0]+Math.random()*(SPAWN_RING.opening[1]-SPAWN_RING.opening[0]):10+Math.random()*8,x=THREE.MathUtils.clamp(player.position.x+Math.cos(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),z=THREE.MathUtils.clamp(player.position.z+Math.sin(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),elite=!megaElite&&!challenge&&(forceElite||Math.random()<eliteSpawnChance(t.eliteRate,ex('eliteSpawn')));
       const tier:EnemyTier=accountSeal?'account':guardian?'mega':megaElite?'mega':elite?'elite':'normal',T=ENEMY_TIERS[tier];const e=megaElite?makeHero(id,Math.max(1,level)):makeSprite(Math.floor(Math.random()*4),elite?1.9:1.55,elite?2.5:2);if(megaElite)e.scale.multiplyScalar(1.4);e.position.set(akatsuki?.x??x,terrainHeight(akatsuki?.x??x,akatsuki?.z??z)+(megaElite?1.6:1),akatsuki?.z??z);if(elite)addOutline(e,'#ffd21f');else if(accountSeal)addOutline(e,'#5ff0ff');else if(megaElite&&!guardian)addOutline(e,'#ff4d6d');scene.add(e);const threat=threatNow();const hpBase=accountSeal?T.hp*t.accountHp:elite?T.hp*t.eliteHp*eliteHpRamp(tier,zoneElapsed()):challenge?30:T.hp;const isMegaEncounter=tier==='mega'&&!guardian&&!akatsuki;
       if(isMegaEncounter)openingMegaSpawned=true;
@@ -2512,7 +2514,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       setRunBuff:(key:string,value:number)=>{runBuffs[key as keyof Bonuses]=value;refreshStats();},
       setGrowth:(name:string,g:Partial<SkillGrowth>)=>{growth[name]={...NO_GROWTH,...g};},
       setCrit:(n:number)=>{runBuffs.crit=n;refreshStats();},recruitAlly,
-      hurt:(n:number)=>damagePlayer(n),
+      hurt:(n:number)=>damagePlayer(n,undefined,0,'boss'),
       summonGuardian:()=>{const g=summonGuardian();return g?{heroId:g.heroId,maxHp:g.maxHp,hpMultiplier:g.hpMultiplier}:null;},shikamaru:()=>useShikamaruPlan(),
       freeKunai:()=>pickups.filter(p=>p.active&&p.kind==='sealDrop').map(p=>({x:p.x,z:p.z})),portalAt:()=>portal?{x:portal.x,z:portal.z,kind:portal.kind}:null,
       accountCandidates:(setKills?:number)=>{if(setKills!==undefined)kills=setKills;return accountCandidates().map(h=>h.id);},

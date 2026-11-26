@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Horda com 30% menos dano e teto de 40% da vida por golpe (Claude Code)
+
+- **Pedidos do usuário:** "Me mostre os números de dano do ataque básico dos monstros normais, acho que os danos estão muito fortes no início do jogo, as vezes tomamos hitkill aos 5minutos de jogo sem saber ao certo o que houve."; "Seria o teto por golpe, como nosso jogo tem muito mais monstros do que nosso jogo referência, temos que nerfar o dano dos monstros, menos dos megas/bosses/bijuus... Nerf 30% do dano de todos"
+- **`PLAYER_HIT_RULES` + `playerHitDamage`** (`src/game/enemyTiers.ts`), usados no `damagePlayer` do GameCanvas e no simulador: comuns e elites (inclusive projéteis) −30%; nenhum golpe de comum, elite ou Mega Elite (inclusive a Ultimate) tira mais de 40% da vida máxima; Guardião e Bijū ficam como estavam. `bossCombat` passa o chefe que conjura para o jogo saber a origem do golpe.
+- **Efeito aos 5 min:** Ultimate do Mega Elite de 113% → 40% da vida no Genin e de 234% → 40% no Kage; comum de 24% → 17% (Genin) e 50% → 35% (Kage). Tabela em docs/20.
+- **Testes:** 1 teste novo em `tests/balanceamento.test.mjs` (mínimo 321) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Nagato com as técnicas do Rinnegan (Claude Code)
 
 - **Pedido do usuário:** "Porque o Nagato não tem as habilidades do Pain? Ja que ele é o dono do Rinnegan?" → "Corrija isso"

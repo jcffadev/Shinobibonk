@@ -3137,3 +3137,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Corrija isso, quero subir esse build, o que temos pendente?
 
 **Resposta.** Zetsu: 3 pergaminhos grátis ao derrotar a Akatsuki. Nagato agora usa Bansho Tenin e Chibaku Tensei (Pain igual). **Publicado no GitHub.**
+
+> Me mostre os números de dano do ataque básico dos monstros normais, acho que os danos estão muito fortes no início do jogo, as vezes tomamos hitkill aos 5minutos de jogo sem saber ao certo o que houve.
+> Seria o teto por golpe, como nosso jogo tem muito mais monstros do que nosso jogo referência, temos que nerfar o dano dos monstros, menos dos megas/bosses/bijuus... Nerf 30% do dano de todos
+
+**Resposta.** O hitkill vinha da Ultimate do Mega Elite. Agora a horda dá 30% menos dano e nenhum golpe de comum, elite ou Mega Elite passa de 40% da vida; Guardião e Bijū iguais. **Publicado no GitHub.**

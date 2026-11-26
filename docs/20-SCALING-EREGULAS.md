@@ -2,6 +2,25 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Dano no jogador: nerf da horda e teto por golpe · 25/11/2026 (Claude Code)
+
+**Pedidos do usuário:** "Me mostre os números de dano do ataque básico dos monstros normais, acho que os danos estão muito fortes no início do jogo, as vezes tomamos hitkill aos 5minutos de jogo sem saber ao certo o que houve." e "Seria o teto por golpe, como nosso jogo tem muito mais monstros do que nosso jogo referência, temos que nerfar o dano dos monstros, menos dos megas/bosses/bijuus... Nerf 30% do dano de todos"
+
+- `PLAYER_HIT_RULES` (`src/game/enemyTiers.ts`): horda (comuns e elites, kunai e fūma) −30% depois da armadura; horda e Mega Elites (golpe, técnicas e Ultimate) no máximo 40% da vida máxima por golpe; Guardião e Bijū sem nerf e sem teto (como pedido).
+- O hitkill dos 5 min vinha da Ultimate do Mega Elite (110–230% da vida).
+
+| Golpe aos 5 min | Genin antes → agora | Kage antes → agora |
+|---|---|---|
+| Comum | 29 (24%) → 20 (17%) | 70 (50%) → 49 (35%) |
+| Kunai | 20 (17%) → 14 (12%) | 49 (35%) → 35 (24%) |
+| Fūma | 32 (27%) → 22 (19%) | 77 (55%) → 54 (38%) |
+| Elite | 46 (39%) → 32 (27%) | 113 (80%) → 56 (40%) |
+| Mega Elite (golpe) | 75 (63%) → 48 (40%) | 183 (130%) → 56 (40%) |
+| Mega Elite (Ultimate) | 135 (113%) → 48 (40%) | 330 (234%) → 56 (40%) |
+| Guardião (Ultimate) | 135 (113%), sem mudança | 330 (234%), sem mudança |
+
+Porcentagem da vida típica de conta nova aos 5 min (Genin ~119, Kage ~141).
+
 ## Bijū incontrolável, fases e fúria · 25/11/2026 (Claude Code)
 
 **Pedido do usuário:** "as habilidades que empurram, não pode empurrar a bijuu pra área morta, na realidade, as bijuus tem resistência aos status/atordoamentos/congelamentos, elas tomam o dano, tomam o status, mas tem status incontrolável, faça elas terem fases e ao você atingir a fase, ela toma um stunzinho que você pode bater nela sem ela devolver dano, mas ela entra em furia e recebe mais dano e mais armadura"

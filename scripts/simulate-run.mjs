@@ -12,7 +12,7 @@
 // Uso: node scripts/simulate-run.mjs [heroi] [Genin|Chunin|Jonin|Kage] [minutos] [semente] [novo|maximo]
 import { HEROES, HERO_BY_ID, heroAffinity, skillPool } from '../src/game/heroes.ts';
 import { calculateStats, zoneThreat, zoneCurse, ZONE_DIFFICULTY, MISSION_TIER, xpToLevelUp, effectiveLootLuck, incomingDamage, normalHpFactor, AMBUSH_RULES } from '../src/game/progression.ts';
-import { ENEMY_TIERS, BASE_LOOT, xpDropValue, xpLoot, lootScale, megaEliteHp, rollMegaSchedule, eliteSpawnChance, eliteHpRamp } from '../src/game/enemyTiers.ts';
+import { playerHitDamage, ENEMY_TIERS, BASE_LOOT, xpDropValue, xpLoot, lootScale, megaEliteHp, rollMegaSchedule, eliteSpawnChance, eliteHpRamp } from '../src/game/enemyTiers.ts';
 import { SHAPE_RADIUS, CONE_COS, MELEE_IMPACT, setupNumbers, attackCooldown, techniqueCritical, techniqueHitDamage, techniquePassiveMultiplier, rollGrowth, ELEMENT_KEY, NO_GROWTH } from '../src/game/combat.ts';
 import { techniqueLevelCap } from '../src/game/techniqueMerge.ts';
 import { expectedHit, bossHpWithFloor, BOSS_POWER } from '../src/game/bossScaling.ts';
@@ -204,7 +204,8 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     }
     // Dano recebido: curva de pressão da horda (CROWD.pressureK), até 4 golpes/s (invulnerabilidade 0,25 s).
     const hits = Math.min(CROWD.maxHitsPerSecond, CROWD.maxHitsPerSecond * (s.alive / (s.alive + pressureK)) ** 2 * threat.attackRate) * (1 - stats.evasion);
-    const incoming = hits * incomingDamage(10 * threat.damage * (1 + e * .6), stats.armor);
+    // Nerf da horda e teto por golpe (PLAYER_HIT_RULES, 25/11/2026).
+    const incoming = hits * playerHitDamage(incomingDamage(10 * threat.damage * (1 + e * .6), stats.armor), stats.maxHp, 'horde');
     const heal = stats.regen + dealt * ex('lifesteal') + kills * ex('killHeal') * stats.maxHp * .02 + kills * .025 * CROWD.ramenPickup * .35 * stats.maxHp;
     s.hp = Math.min(stats.maxHp, s.hp - incoming + heal);
     if (s.hp <= 0) { if (s.revives > 0) { s.revives--; s.hp = stats.maxHp * .35; } else s.dead = true; }

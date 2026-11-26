@@ -54,7 +54,7 @@ export type BossContext = {
   hidden: () => boolean;
   susanoo?: Pick<ReturnType<typeof createSusanooFx>, 'trigger' | 'cancel'>;
   /** Aplica o golpe no jogador (ameaça, armadura, evasão, invulnerabilidade e god mode ficam com a simulação). */
-  hitPlayer: (base: number, slowSeconds: number, gravity?:Technique['gravity'], center?:THREE.Vector3) => void;
+  hitPlayer: (base: number, slowSeconds: number, gravity?:Technique['gravity'], center?:THREE.Vector3, host?:BossHost) => void;
   /** Rodada 55: direita da tela projetada no chão (v2 da câmera). Espelha a bijū pela câmera e não pelo eixo X do mundo. */
   viewRight?: () => THREE.Vector3;
   /** Rodada 59: direção "para dentro da tela" no chão (v1 da câmera). Escolhe a folha de frente ou de costas. */
@@ -200,7 +200,7 @@ export function createBossCombat(ctx: BossContext) {
     if (playerInside(c)) {
       const t=c.technique;
       const controls=Boolean(t.status&&t.status!=='Empurrar')&&Math.random()<techniqueProc(t.statusChance);
-      ctx.hitPlayer(BOSS_RULES.baseDamage*c.power*(host.bossDamageScale??1),controls?BOSS_RULES.slowSeconds:0,t.gravity,c.center);
+      ctx.hitPlayer(BOSS_RULES.baseDamage*c.power*(host.bossDamageScale??1),controls?BOSS_RULES.slowSeconds:0,t.gravity,c.center,host);
     }
     if (!ctx.hidden() && !c.susanoo) {
       const visual = techniqueVisual(c.technique);

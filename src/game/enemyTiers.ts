@@ -87,3 +87,18 @@ export function stuckReach(track: StuckTrack, distance: number, reach: number, n
   if (track.closest === undefined || distance < track.closest - r.progress) { track.closest = distance; track.since = now; return reach; }
   return now - (track.since ?? now) >= r.seconds ? Math.max(reach, distance + r.slack) : reach;
 }
+
+/**
+ * Dano que o jogador recebe (25/11/2026 — pedido do usuário: "Seria o teto por golpe, como nosso jogo tem muito mais monstros
+ * do que nosso jogo referência, temos que nerfar o dano dos monstros, menos dos megas/bosses/bijuus... Nerf 30% do dano de
+ * todos"). Depois da armadura:
+ * - horda (comuns e elites, inclusive kunai e fūma): −30% (`hordeDamage`);
+ * - horda e Mega Elites (golpes e técnicas, inclusive a Ultimate): no máximo `capShare` da vida máxima por golpe;
+ * - Guardião e Bijū: sem nerf e sem teto.
+ */
+export const PLAYER_HIT_RULES = { hordeDamage: .7, capShare: .4 };
+export type HitSource = 'horde' | 'mega' | 'boss';
+export function playerHitDamage(afterArmor: number, maxHp: number, source: HitSource) {
+  const scaled = source === 'horde' ? afterArmor * PLAYER_HIT_RULES.hordeDamage : afterArmor;
+  return source === 'boss' ? scaled : Math.min(scaled, PLAYER_HIT_RULES.capShare * Math.max(1, maxHp));
+}

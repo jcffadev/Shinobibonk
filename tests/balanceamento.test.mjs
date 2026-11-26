@@ -176,3 +176,17 @@ test('inimigo preso perto do jogador ataca de onde está (cerca, parede; 25/11/2
   const canvas = src('scene/GameCanvas.tsx');
   assert.ok(canvas.includes('reach=ranged?8:stuckReach(enemy.stuck??={},distance,enemy.megaElite?1.6:1,elapsed);'));
 });
+
+test('dano no jogador: horda −30% e teto de 40% da vida por golpe, menos Guardião e Bijū (25/11/2026)', async () => {
+  const { PLAYER_HIT_RULES, playerHitDamage } = await import('../src/game/enemyTiers.ts');
+  assert.deepEqual(PLAYER_HIT_RULES, { hordeDamage: .7, capShare: .4 });
+  assert.ok(Math.abs(playerHitDamage(20, 100, 'horde') - 14) < 1e-9, 'comum −30%');
+  assert.equal(playerHitDamage(200, 100, 'horde'), 40, 'teto da horda');
+  assert.equal(playerHitDamage(135, 119, 'mega'), .4 * 119, 'Ultimate do Mega Elite com teto');
+  assert.equal(playerHitDamage(30, 100, 'mega'), 30, 'Mega sem nerf');
+  assert.equal(playerHitDamage(330, 141, 'boss'), 330, 'Guardião e Bijū sem nerf nem teto');
+  const canvas = src('scene/GameCanvas.tsx');
+  for (const wired of ["hp=Math.max(0,hp-playerHitDamage(incomingDamage(raw,", "const hitSource=(attacker?:Enemy):HitSource=>!attacker?'horde':attacker.guardian||attacker.bijuu?'boss':attacker.megaElite?'mega':'horde';",
+    "damagePlayer(base*threatNow().damage,host as Enemy|undefined,slow,host?hitSource(host as Enemy):'boss')"]) assert.ok(canvas.includes(wired), wired);
+  assert.ok(fs.readFileSync(new URL('../src/scene/bossCombat.ts', import.meta.url), 'utf8').includes('t.gravity,c.center,host);'));
+});
