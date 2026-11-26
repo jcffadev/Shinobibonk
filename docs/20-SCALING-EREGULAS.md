@@ -2,6 +2,15 @@
 
 > Criado em **12/11/2026** (rodada 36 — consolidação de contexto). **Fonte da verdade: o código** (`src/game/`); este documento consolida os valores **lidos do código nesta data**. Ao alterar balance, atualize aqui o mesmo bloco. Estados: `IMPLEMENTADO` (no código) · `PROPOSTO` (aprovado no plano, ainda não codificado).
 
+## Bijū incontrolável, fases e fúria · 25/11/2026 (Claude Code)
+
+**Pedido do usuário:** "as habilidades que empurram, não pode empurrar a bijuu pra área morta, na realidade, as bijuus tem resistência aos status/atordoamentos/congelamentos, elas tomam o dano, tomam o status, mas tem status incontrolável, faça elas terem fases e ao você atingir a fase, ela toma um stunzinho que você pode bater nela sem ela devolver dano, mas ela entra em furia e recebe mais dano e mais armadura"
+
+- **Incontrolável:** a Bijū toma dano e status (veneno, queimadura, Resfriado, bônus de congelado), mas não é empurrada nem puxada e não fica lenta; atordoar, prender, dormir e congelar não a param.
+- **Fases** (já existiam, `beastPhase`): 1ª acima de 2/3 da vida, 2ª até 1/3, 3ª abaixo. Ao entrar na 2ª e na 3ª, fica **3 s atordoada** (`BIJUU_FURY.stunSeconds`): não anda, não ataca e a técnica em preparação é cancelada.
+- **Fúria:** a partir da 2ª fase, +25% de dano por fase (`damagePerPhase`) e a defesa fecha 30% do dano que ainda passava (`armorPerPhase`). Isso soma ao ritmo e à força de ataque que as fases já davam.
+- Interpretação: "recebe mais dano e mais armadura" lido como a Bijū ganhando mais dano de ataque e mais armadura.
+
 ## Planos do Shikamaru só no chefe da zona · 25/11/2026 (Claude Code)
 
 **Pedido do usuário:** "O Shikamaru ta aumentando a dificuldade do jogo todo? Ele deveria aumentar a dificuldade apenas do boss final da zona"

@@ -305,5 +305,11 @@ export function createBossCombat(ctx: BossContext) {
     host.boss = undefined;
   }
 
-  return { attach, update, updateEffects, rescale, dispose };
+  /** Interrompe a técnica em preparação (atordoamento da troca de fase da Bijū). */
+  function interrupt(host: BossHost) {
+    const state = host.boss; if (!state?.cast) return;
+    if (state.cast.susanoo) ctx.susanoo?.cancel(host.sprite.position);
+    clearCast(state); state.lastCasting = ''; state.lastRatio = -1;
+  }
+  return { attach, update, updateEffects, rescale, dispose, interrupt };
 }

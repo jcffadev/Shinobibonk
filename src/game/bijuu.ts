@@ -20,6 +20,18 @@ export const BIJUU = [
 export const BIJUU_BY_ID = Object.fromEntries(BIJUU.map(beast=>[beast.id,beast])) as Record<string, typeof BIJUU[number]>;
 export const BIJUU_BOMB = attack('Bijūdama','Área','Sombra','#dfb2ff',2.8,3.3);
 export const beastPhase = (ratio: number) => ratio > 2/3 ? 1 : ratio > 1/3 ? 2 : 3;
+/**
+ * Bijū incontrolável e com fúria (25/11/2026 — pedido do usuário: "as bijuus tem resistência aos status/atordoamentos/
+ * congelamentos, elas tomam o dano, tomam o status, mas tem status 'incontrolável', faça elas terem fases e ao você atingir a
+ * fase, ela toma um stunzinho que você pode bater nela sem ela devolver dano, mas ela entra em furia e recebe mais dano e mais
+ * armadura"). Ao trocar de fase (2/3 e 1/3 da vida), a Bijū fica `stunSeconds` atordoada (sem andar nem atacar) e depois
+ * entra em fúria: cada fase além da 1ª soma `damagePerPhase` ao dano dela e fecha `armorPerPhase` do dano que ainda passa.
+ */
+export const BIJUU_FURY = { stunSeconds: 3, damagePerPhase: .25, armorPerPhase: .3 };
+/** Fúria = fases depois da 1ª (0, 1 ou 2). */
+export const bijuuFury = (phase: number) => Math.max(0, Math.min(2, phase - 1));
+export const furyDamage = (fury: number) => 1 + BIJUU_FURY.damagePerPhase * Math.max(0, fury);
+export const furyDefense = (base: number, fury: number) => 1 - (1 - base) * (1 - BIJUU_FURY.armorPerPhase) ** Math.max(0, fury);
 export const rollBijuu = (rng = Math.random) => BIJUU[Math.min(BIJUU.length-1,Math.floor(rng()*BIJUU.length))];
 export const bijuuLamens = (difficulty: number, plans: number) => Math.round(180 * difficulty * (1 + .33 * plans));
 

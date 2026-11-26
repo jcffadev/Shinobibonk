@@ -3115,3 +3115,14 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Ja entendi o que era, era o range das habilidades. Estaa tudo ok, relaxa
 
 **Resposta.** Anotado: não era bug, era o alcance das técnicas. A proteção `stuckReach` ficou no jogo.
+
+> As Bijuus estão indo para uma área morta do mata, onde nosso personagem não consegue ir para mata-la
+> as habilidades que empurram, não pode empurrar a bijuu pra área morta, na realidade, as bijuus tem resistência aos status/atordoamentos/congelamentos, elas tomam o dano, tomam o status, mas tem status incontrolável, faça elas terem fases e ao você atingir a fase, ela toma um stunzinho que você pode bater nela sem ela devolver dano, mas ela entra em furia e recebe mais dano e mais armadura
+> Anotação para o Codex: Revisar a cabaça do Gaara, ele andando pra frente, ela fica estranha, não fica o padrão.
+
+**Resposta.**
+
+- Inimigos e Bijū ficam sempre dentro da área do jogador.
+- Bijū incontrolável (sem empurrão nem lentidão), 3 s atordoada ao trocar de fase e depois fúria (+25% de dano por fase e mais armadura).
+- Cabaça do Gaara anotada para o Codex.
+- **Testes:** tipos, testes (318) e build. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

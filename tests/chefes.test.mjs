@@ -77,3 +77,23 @@ test('Bijū e inimigos não saem da área do jogador (25/11/2026)', async () => 
   assert.deepEqual(inside, { x: 10, z: -20 });
   assert.ok(canvas.includes('keepInPlayArea(sprite.position);'), 'o laço dos inimigos traz de volta quem saiu');
 });
+
+test('Bijū incontrolável: troca de fase atordoa 3 s e entra em fúria com mais dano e armadura (25/11/2026)', async () => {
+  const { BIJUU_FURY, bijuuFury, furyDamage, furyDefense, beastPhase } = await import('../src/game/bijuu.ts');
+  assert.deepEqual(BIJUU_FURY, { stunSeconds: 3, damagePerPhase: .25, armorPerPhase: .3 });
+  assert.deepEqual([.9, .6, .2].map(r => bijuuFury(beastPhase(r))), [0, 1, 2]);
+  assert.equal(furyDamage(0), 1); assert.equal(furyDamage(2), 1.5);
+  assert.ok(Math.abs(furyDefense(.8, 1) - (1 - .2 * .7)) < 1e-12, 'fecha 30% do dano que ainda passava');
+  assert.equal(furyDefense(.8, 0), .8);
+  for (const wired of [
+    'if(enemy.bijuu)checkBijuuPhase(enemy);',
+    'applyBijuuFury(beast,fury);beast.phaseStun=BIJUU_FURY.stunSeconds;bossCombat.interrupt(beast);beast.windup=undefined;',
+    "const stunned=channeling||enemy.arrivalGuard>0||(enemy.phaseStun??0)>0||",
+    "if(status==='Empurrar'){if(!enemy.bijuu){",
+    "else if(t.secondaryStatus==='Empurrar'&&!enemy.bijuu)",
+    'enemy.speed*threat.speed*(enemy.bijuu?1:(enemy.slow?.75:1)*chillSlow(enemy))*',
+    'beast.bossDamageScale=(beast.baseBossScale??beast.bossDamageScale??1)*furyDamage(fury);',
+  ]) assert.ok(canvas.includes(wired), wired);
+  const boss = readFileSync(new URL('../src/scene/bossCombat.ts', import.meta.url), 'utf8');
+  assert.ok(boss.includes('return { attach, update, updateEffects, rescale, dispose, interrupt };'));
+});

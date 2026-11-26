@@ -34,6 +34,11 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Bijū incontrolável e fúria · 25/11/2026
+
+- Bijū não é empurrada nem desacelerada; toma dano e status. Ao chegar a 2/3 e 1/3 da vida, fica 3 s atordoada (sem andar nem atacar) e entra em fúria (+25% de dano por fase e 30% a mais de armadura sobre o dano que passa). **PENDENTE DE VALIDAÇÃO E2E:** ver o atordoamento, o aviso e a luta ficar mais dura nas fases 2 e 3.
+- **Codex:** revisar a cabaça do Gaara andando para a frente (docs/01).
+
 ## Jogador grudado na cerca · 25/11/2026
 
 - **Resolvido pelo usuário (25/11):** "era o range das habilidades" — o alcance das técnicas matava a horda antes de ela chegar; não era bug. A regra `stuckReach` (inimigo preso perto ataca de onde está) ficou como proteção extra.

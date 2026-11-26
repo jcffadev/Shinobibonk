@@ -272,6 +272,10 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
 10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).
 
+### Anotação do usuário para o Codex · 25/11/2026
+
+- "Anotação para o Codex: Revisar a cabaça do Gaara, ele andando pra frente, ela fica estranha, não fica o padrão." Conferir a cabaça de areia do Gaara na caminhada para a frente (folhas de movimento das versões do Gaara): ela sai do padrão das outras vistas.
+
 ### Anotações do usuário para o Codex · 15/11/2026 (rodada 96)
 
 > Anotações para o Codex: Aprimorar com tudo que você sabe, referências, ideias que já implemetamos, cenário, habilidades, tudo que o Claude fez e deixou anotado pra você. Os cenários, você tem a foto dos mapas no próprio jogo ao selecionar, porque você não usou isso para fazer os mapas? é literalmente fazer aquela foto ser jogável como um mapa do jogo... e aplicar para todos os mapas seguindo aquelas fotos que você tem, além disso te dei referência de todos os mapas.

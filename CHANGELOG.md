@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Bijū incontrolável, atordoamento de fase e fúria (Claude Code)
+
+- **Pedidos do usuário:** "as habilidades que empurram, não pode empurrar a bijuu pra área morta, na realidade, as bijuus tem resistência aos status/atordoamentos/congelamentos, elas tomam o dano, tomam o status, mas tem status incontrolável, faça elas terem fases e ao você atingir a fase, ela toma um stunzinho que você pode bater nela sem ela devolver dano, mas ela entra em furia e recebe mais dano e mais armadura"; "Anotação para o Codex: Revisar a cabaça do Gaara, ele andando pra frente, ela fica estranha, não fica o padrão."
+- **Incontrolável:** a Bijū não é empurrada (status Empurrar) nem desacelerada (lentidão e Resfriado no movimento); controles já não a paravam. Toma dano e status normalmente. Aviso ao chegar.
+- **Fases e fúria** (`BIJUU_FURY`, `bijuuFury`, `furyDamage`, `furyDefense` em `src/game/bijuu.ts`): ao chegar a 2/3 e 1/3 da vida, 3 s atordoada sem andar nem atacar (`bossCombat.interrupt` cancela a técnica em preparo); depois +25% de dano por fase e +30% de armadura sobre o dano que passa. Partida retomada aplica a fúria da fase atual sem atordoar.
+- **Codex:** anotada a revisão da cabaça do Gaara andando para a frente (docs/01).
+- **Testes:** 1 teste novo em `tests/chefes.test.mjs` (mínimo 318) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Inimigos e Bijū não saem da área do jogador (Claude Code)
 
 - **Pedido do usuário:** "As Bijuus estão indo para uma área morta do mata, onde nosso personagem não consegue ir para mata-la"
