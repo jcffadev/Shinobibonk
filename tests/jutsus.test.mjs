@@ -121,3 +121,13 @@ test('Kakashi dos Dois Mangekyō tem seu kit e a missão dependente do Sexto Hok
   assert.equal(versionForEncounter('kakashi',3,'Kage'),id);
   assert.equal(versionForEncounter('kakashi',3,'Chunin'),'kakashi-hokage');
 });
+
+test('Nagato, dono do Rinnegan, usa Bansho Tenin e Chibaku Tensei como o Pain (25/11/2026)', async () => {
+  const { HERO_BY_ID } = await import('../src/game/heroes.ts');
+  const kit = id => HERO_BY_ID[id].techniques.map(t => t.name);
+  assert.deepEqual(kit('nagato'), ['Receptores de Chakra', 'Bansho Tenin', 'Chibaku Tensei', 'Invocação dos Caminhos']);
+  assert.deepEqual(kit('pain'), ['Kunai Tática', 'Chibaku Tensei', 'Bansho Tenin', 'Barras de Chakra'], 'o Pain não muda');
+  const by = (id, name) => HERO_BY_ID[id].techniques.find(t => t.name === name);
+  assert.equal(by('nagato', 'Bansho Tenin').gravity, 'pull'); assert.equal(by('nagato', 'Chibaku Tensei').gravity, 'core');
+  assert.equal(by('nagato', 'Chibaku Tensei').power, by('pain', 'Chibaku Tensei').power);
+});

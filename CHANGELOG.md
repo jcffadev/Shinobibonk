@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Nagato com as técnicas do Rinnegan (Claude Code)
+
+- **Pedido do usuário:** "Porque o Nagato não tem as habilidades do Pain? Ja que ele é o dono do Rinnegan?" → "Corrija isso"
+- **Kit do Nagato (Edo Tensei):** Receptores de Chakra (Nv 1) · **Bansho Tenin** (Nv 5) · **Chibaku Tensei** (Nv 12) · Invocação dos Caminhos (Nv 20); saíram Shuriken e Kunai Tática. Ultimate igual. O Pain não muda.
+- `rinneganTechnique` em `heroes.ts` define as duas técnicas uma vez para Pain e Nagato.
+- **Regra de únicas:** `uniqueTechniques` conta como única só a técnica cujo dono é a família da versão (a 1ª que a tem no kit). Bansho e Chibaku seguem únicas do Pain; o Nagato as usa sem quebrar a regra de 1–2 únicas e sem abrir essas técnicas para o resto do elenco.
+- **Testes:** 1 teste novo em `tests/jutsus.test.mjs` (mínimo 320); `verify-rules` passa.
+
 ## 25/11/2026 · Zetsu visto entra no mapa (Claude Code)
 
 - **Pedido do usuário:** "Confirmar se ao ver o Zetsu o ícone está aparecendo no M/TAB."

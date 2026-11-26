@@ -3131,3 +3131,9 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Confirmar se ao ver o Zetsu o ícone está aparecendo no M/TAB.
 
 **Resposta.** Fúria confirmada como está. O ícone do Zetsu quase nunca aparecia: a distância para marcá-lo como visto estava errada (usava o z do jogador sem subtrair o do Zetsu). Corrigido. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+> Qual a recompensa de acionar o Zetsu e derrotar a Akatsuki?
+> Porque o Nagato não tem as habilidades do Pain? Ja que ele é o dono do Rinnegan?
+> Corrija isso, quero subir esse build, o que temos pendente?
+
+**Resposta.** Zetsu: 3 pergaminhos grátis ao derrotar a Akatsuki. Nagato agora usa Bansho Tenin e Chibaku Tensei (Pain igual). **Publicado no GitHub.**
