@@ -1,13 +1,13 @@
 # 28 · Status de personagens e monstros
 
-> **Gerado pelo código** com `node scripts/gen-status-doc.mjs` em 2026-11-26, build `0d6aec0`. Não edite as tabelas à mão: rode o gerador depois de cada mudança de balanceamento e faça commit junto. O histórico de alterações, com datas e builds, está em [28-HISTORICO-STATUS.md](28-HISTORICO-STATUS.md).
+> **Gerado pelo código** com `node scripts/gen-status-doc.mjs` em 2026-11-26, build `3e1f14b`. Não edite as tabelas à mão: rode o gerador depois de cada mudança de balanceamento e faça commit junto. O histórico de alterações, com datas e builds, está em [28-HISTORICO-STATUS.md](28-HISTORICO-STATUS.md).
 
 ## Regras gerais em vigor
 
 - Regeneração base de todo shinobi: **1 HP/s** (passivas de cura somam).
 - Dano recebido da horda (comuns e elites): **×0,7**; teto por golpe de horda e Mega Elite: **40% da vida máxima** (Guardião e Bijū sem teto).
 - Elites no começo: chance começa em **25%** do valor e chega ao cheio aos **90 s**.
-- Final Swarm: entra com **×2** e ganha um degrau a cada **5 min** (+50% de vida, +30% de dano, +2 pontos de defesa até 95%).
+- Final Swarm: entra com **×2** e ganha um degrau a cada **5 min**; o degrau k dá vida ×(1 + 0,5·k), dano ×(1 + 0,3·k) e +2·k pontos de defesa (até 97%), acumulando.
 - Multiplicador por dificuldade: Genin ×1 · Chunin ×1,4 · Jonin ×1,9 · Kage ×2,6.
 
 ## Monstros
@@ -31,22 +31,22 @@ Golpe = dano bruto antes da sua armadura, já com o nerf da horda (Mega Elite se
 | Genin | 5 min | 134 · 24% · 25 | 979 · 54% · 39 | 91 | 9,4 mil · 77% |
 | Genin | 10 min | 387 · 39% · 46 | 2,8 mil · 69% · 74 | 172 | 68,3 mil · 83% |
 | Genin | Final Swarm +5 | 11,5 mil · 87% · 753 | 83,8 mil · 95% · 1204 | 2795 | 17,3M · 92% |
-| Genin | Final Swarm +10 | 112,9 mil · 89% · 4017 | 825,0 mil · 95% · 6427 | 14920 | 613,7M · 94% |
+| Genin | Final Swarm +10 | 150,5 mil · 91% · 4944 | 1,1M · 95% · 7910 | 18364 | 818,2M · 94% |
 | Chunin | 1 min | 69 · 3% · 17 | 305 · 33% · 27 | 64 | 1,5 mil · 68% |
 | Chunin | 5 min | 209 · 15% · 32 | 1,6 mil · 45% · 51 | 119 | 15,8 mil · 77% |
 | Chunin | 10 min | 638 · 30% · 61 | 5,0 mil · 60% · 97 | 225 | 121,1 mil · 83% |
 | Chunin | Final Swarm +5 | 21,6 mil · 87% · 1126 | 169,9 mil · 95% · 1802 | 4184 | 35,1M · 92% |
-| Chunin | Final Swarm +10 | 243,2 mil · 89% · 6879 | 1,9M · 95% · 11006 | 25550 | 1,4B · 94% |
+| Chunin | Final Swarm +10 | 324,2 mil · 91% · 8466 | 2,6M · 95% · 13546 | 31446 | 1,9B · 94% |
 | Jonin | 1 min | 85 · 3% · 23 | 414 · 33% · 37 | 86 | 2,0 mil · 68% |
 | Jonin | 5 min | 311 · 15% · 44 | 2,7 mil · 45% · 70 | 162 | 25,9 mil · 77% |
 | Jonin | 10 min | 991 · 30% · 82 | 8,6 mil · 60% · 131 | 305 | 207,6 mil · 83% |
 | Jonin | Final Swarm +5 | 38,3 mil · 87% · 1743 | 331,9 mil · 95% · 2788 | 6473 | 68,6M · 92% |
-| Jonin | Final Swarm +10 | 491,1 mil · 89% · 12132 | 4,3M · 95% · 19411 | 45061 | 3,2B · 94% |
+| Jonin | Final Swarm +10 | 654,8 mil · 91% · 14932 | 5,7M · 95% · 23891 | 55460 | 4,2B · 94% |
 | Kage | 1 min | 106 · 3% · 32 | 566 · 33% · 51 | 118 | 2,7 mil · 68% |
 | Kage | 5 min | 482 · 15% · 60 | 4,6 mil · 45% · 95 | 222 | 44,0 mil · 77% |
 | Kage | 10 min | 1,6 mil · 30% · 112 | 15,2 mil · 60% · 180 | 418 | 366,8 mil · 83% |
 | Kage | Final Swarm +5 | 73,1 mil · 87% · 2825 | 694,9 mil · 95% · 4521 | 10494 | 143,7M · 92% |
-| Kage | Final Swarm +10 | 1,1M · 89% · 23301 | 10,6M · 95% · 37282 | 86548 | 7,9B · 94% |
+| Kage | Final Swarm +10 | 1,5M · 91% · 28679 | 14,1M · 95% · 45886 | 106521 | 10,5B · 94% |
 
 A vida do Guardião acima é a da fórmula da zona; na partida ela também tem um piso pelo poder do jogador (30 s do seu dano).
 

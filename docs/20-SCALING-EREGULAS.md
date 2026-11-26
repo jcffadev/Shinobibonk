@@ -472,3 +472,7 @@ Exemplos para o jogador ficam no Guia do jogo, em src/game/glossary.ts. Sincroni
 ## Sorte na qualidade dos buffs de evento · 26/11/2026
 
 `luckQuality(sorte) = clamp((sorte − 10) / 60, 0, 1)` (src/game/luckQuality.ts). Hagoromo: `rollHagoromoRarity` e `rollToolOffers` multiplicam o peso de cada raridade por `1 + qualidade × índice`. Ebisu e lição do Iruka: `valor = mín + (máx − mín) × rng^(1/(1+2×qualidade))`. Altar: `altarLuckMultiplier = 1 + min(1,2; (sorte − 10) × 0,02)`.
+
+## Degraus do Final Swarm que escalam · 26/11/2026
+
+Degrau `k = floor(segundos de Final Swarm / 300)`. Vida ×Π(1 + 0,5·i), dano ×Π(1 + 0,3·i) para i = 1..k; defesa +0,02·k(k+1)/2, até `SWARM_STEP.armorCap` = 97%. Funções `swarmStepHp`, `swarmStepDamage`, `swarmStepArmor` em src/game/progression.ts.

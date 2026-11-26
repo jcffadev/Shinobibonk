@@ -24,7 +24,7 @@ out.push('## Regras gerais em vigor', '');
 out.push(`- Regeneração base de todo shinobi: **${n1(BASE_REGEN)} HP/s** (passivas de cura somam).`);
 out.push(`- Dano recebido da horda (comuns e elites): **×${n1(PLAYER_HIT_RULES.hordeDamage)}**; teto por golpe de horda e Mega Elite: **${pct(PLAYER_HIT_RULES.capShare)} da vida máxima** (Guardião e Bijū sem teto).`);
 out.push(`- Elites no começo: chance começa em **${pct(ELITE_OPENING.start)}** do valor e chega ao cheio aos **${ELITE_OPENING.seconds} s**.`);
-out.push(`- Final Swarm: entra com **×${FINAL_SWARM.multiplier}** e ganha um degrau a cada **${SWARM_STEP.seconds / 60} min** (+${pct(SWARM_STEP.hp)} de vida, +${pct(SWARM_STEP.damage)} de dano, +${Math.round(SWARM_STEP.armor * 100)} pontos de defesa até ${pct(SWARM_STEP.armorCap)}).`);
+out.push(`- Final Swarm: entra com **×${FINAL_SWARM.multiplier}** e ganha um degrau a cada **${SWARM_STEP.seconds / 60} min**; o degrau k dá vida ×(1 + ${n1(SWARM_STEP.hp)}·k), dano ×(1 + ${n1(SWARM_STEP.damage)}·k) e +${Math.round(SWARM_STEP.armor * 100)}·k pontos de defesa (até ${pct(SWARM_STEP.armorCap)}), acumulando.`);
 out.push(`- Multiplicador por dificuldade: ${Object.entries(MISSION_TIER).map(([k, v]) => `${k} ×${n1(v)}`).join(' · ')}.`, '');
 
 out.push('## Monstros', '');

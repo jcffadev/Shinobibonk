@@ -169,8 +169,19 @@ export const SWARM_COMPOUND={perMinute:.1};
  * dano/armadura/vida"): a cada `seconds` de Final Swarm os inimigos ganham +`hp` de vida, +`damage` de dano (multiplicativo)
  * e +`armor` de defesa, que pode passar do teto normal do swarm até `armorCap`.
  */
-export const SWARM_STEP={seconds:300,hp:.5,damage:.3,armor:.02,armorCap:.95};
+export const SWARM_STEP={seconds:300,hp:.5,damage:.3,armor:.02,armorCap:.97};
 export const swarmStep=(overtimeSeconds:number)=>overtimeSeconds>0?Math.floor(overtimeSeconds/SWARM_STEP.seconds):0;
+/**
+ * Degraus que escalam (26/11/2026 — usuário: "Precisamos buffar mais a armadura dos monstros e o HP com o passar do tempo, tem um
+ * jogo aqui de um amigo testando que ele esta no final swarm em +30mins já… 30min de final swarm deveria ser 'quase'
+ * impossível a build tem que estar muito perfeita · Buffar dos monstros: Hp/Vida/dano"). O degrau k vale k vezes o anterior:
+ * vida ×(1 + 0,5·k), dano ×(1 + 0,3·k) e +2·k pontos de defesa, acumulando. Aos +30 min (6 degraus): vida ×315 (era ×11,4),
+ * dano ×61 (era ×4,8) e +42 pontos de defesa até 97% (era +12 até 95%).
+ */
+const stepProduct=(step:number,per:number)=>{let total=1;for(let k=1;k<=step;k++)total*=1+per*k;return total;};
+export const swarmStepHp=(step:number)=>stepProduct(step,SWARM_STEP.hp);
+export const swarmStepDamage=(step:number)=>stepProduct(step,SWARM_STEP.damage);
+export const swarmStepArmor=(step:number)=>SWARM_STEP.armor*step*(step+1)/2;
 /** O Genin ganha pressão aos poucos, mantendo a abertura e os outros ranks. */
 export const GENIN_PRESSURE={startMinute:1,fullMinute:5,damage:.07,attackRate:.06,armor:.09};
 export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeconds=0){
@@ -187,11 +198,11 @@ export function difficultyAt(rank:Difficulty,seconds:number,curse=1,overtimeSeco
   const opened=swarm>1?1:Math.min(1,(minutes/OPENING.minutes)**2);
   const spawnPerSecond=swarm>1?Math.max(baseSpawn,cap/FINAL_SWARM.refillSeconds):MISSION_HP[rank]*(1+OPENING.perMinute*minutes)*(1-opened)+baseSpawn*opened;
   const openCap=swarm>1?cap:Math.max(1,Math.round((OPENING.capBase+OPENING.capPerMinute*minutes)*MISSION_HP[rank]*(1-opened)+cap*opened));
-  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,Math.max(0,minutes-HP_RAMP.delay)*1.4/HP_RAMP.spread)*.19*(tier-1)/.4)*curse*swarm*(1+SWARM_STEP.hp)**step,damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm*(1+GENIN_PRESSURE.damage*geninPressure)*(1+SWARM_STEP.damage)**step,
+  return {hp:tier*(S.hpBase+minutes*S.hpLinear)*Math.pow(S.hpPerMinute,minutes)*(1+Math.min(1.4,Math.max(0,minutes-HP_RAMP.delay)*1.4/HP_RAMP.spread)*.19*(tier-1)/.4)*curse*swarm*swarmStepHp(step),damage:tier*(S.damageBase+minutes*S.damageLinear)*Math.pow(S.damagePerMinute,minutes)*curse*swarm*(1+GENIN_PRESSURE.damage*geninPressure)*swarmStepDamage(step),
     speed:Math.min(2.5,1+(tier-1)*.18+minutes*.025),attackRate:(1+(tier-1)*.2+minutes*.08+GENIN_PRESSURE.attackRate*geninPressure)*curse,
     spawnPerSecond,spawnInterval:1/spawnPerSecond,
     cap:openCap,
-    armor:swarm>1?Math.min(Math.min(SWARM_STEP.armorCap,FINAL_SWARM.maxArmor+SWARM_STEP.armor*step),minutes*S.armorPerMinute*swarm+SWARM_STEP.armor*step):Math.min(S.maxArmor,minutes*S.armorPerMinute+GENIN_PRESSURE.armor*geninPressure),swarm};
+    armor:swarm>1?Math.min(Math.min(SWARM_STEP.armorCap,FINAL_SWARM.maxArmor+swarmStepArmor(step)),minutes*S.armorPerMinute*swarm+swarmStepArmor(step)):Math.min(S.maxArmor,minutes*S.armorPerMinute+GENIN_PRESSURE.armor*geninPressure),swarm};
 }
 export function incomingDamage(raw:number,armor:number){return Math.max(1,raw*100/(100+Math.max(0,armor)));}
 export function rollCritical(chance:number,criticalMultiplier=2.5,rng=Math.random):{tier:0|1|2;multiplier:number}{

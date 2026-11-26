@@ -3259,3 +3259,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Vamos considerar 20% do valor de acréscimo na roleta da Tsunade e não colocar =15% por minuto, nem 25% por zona, sempre subirá 20% · O mesmo para kunais/pergaminhos
 
 **Resposta.** Selo do nível com fonte que se ajusta aos dígitos (e abreviado a partir de 10 mil). Roleta e kunais/pergaminhos: sempre +20% por uso, sem inflação por minuto nem por zona. **Publicado no GitHub.**
+
+> Precisamos buffar mais a armadura dos monstros e o HP com o passar do tempo, tem um jogo aqui de um amigo testando que ele esta no final swarm em +30mins já, precisamos buffar mais 30min de final swarm deveria ser 'quase' impossível a build tem que estar muito perfeita · Buffar dos monstros: Hp/Vida/dano
+
+**Resposta.** Degraus do Final Swarm agora escalam (o degrau k vale k vezes): aos +30 min vida ×315, dano ×61 e defesa até 97%. Simulação mostrou que o roubo de vida cura mais que a vida máxima por segundo no fim de jogo; proposto um teto de 10% da vida por segundo. **Publicado no GitHub.**

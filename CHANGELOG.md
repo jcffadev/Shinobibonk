@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 26/11/2026 · Degraus do Final Swarm que escalam (Claude Code)
+
+- **Pedido do usuário:** "Precisamos buffar mais a armadura dos monstros e o HP com o passar do tempo, tem um jogo aqui de um amigo testando que ele esta no final swarm em +30mins já, precisamos buffar mais 30min de final swarm deveria ser 'quase' impossível a build tem que estar muito perfeita · Buffar dos monstros: Hp/Vida/dano"
+- **Degraus** (`swarmStepHp`, `swarmStepDamage`, `swarmStepArmor` em `src/game/progression.ts`): a cada 5 min de Final Swarm, o degrau k vale k vezes o anterior — vida ×(1 + 0,5·k), dano ×(1 + 0,3·k) e +2·k pontos de defesa, acumulando; teto de defesa 95% → 97%. Aos +30 min: vida ×315 (era ×11,4), dano ×61 (era ×4,8), +42 pontos de defesa (era +12). Aos +5 min nada muda; aos +10 min a vida é ×3 (era ×2,25).
+- **Simulação** (Kimimaro, Kage, conta no máximo, semente 1): a horda fica imortal para ele a partir de ~FS +20 (50 min de partida), mas ele **não morre**: a cura por roubo de vida (% do dano causado, na casa dos bilhões) devolve mais que a vida máxima por segundo. Com um teto de 10% da vida por segundo nessa cura (teste numa cópia temporária, não aplicado), ele cai aos 50 min (FS +20). O teto aguarda decisão do usuário (docs/13).
+- **Testes:** 1 teste novo em `tests/progressao.test.mjs` (mínimo 360), o teste dos degraus ajustado ao teto de 97% e 1 mutação nova, verificada à mão.
+
 ## 26/11/2026 · Nível cabe no selo do HUD; roleta e kunais sobem 20% por uso (Claude Code)
 
 - **Pedidos do usuário:** "Outra coisa precisa na hud de level ficar o level certinho na bolinha vermelha" · "Vamos considerar 20% do valor de acréscimo na roleta da Tsunade e não colocar =15% por minuto, nem 25% por zona, sempre subirá 20% · O mesmo para kunais/pergaminhos"
