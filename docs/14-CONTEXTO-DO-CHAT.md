@@ -3168,3 +3168,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Ajustar o hud para aparecer todos os itens que temos, não minimizar e aparecer +60 por exemplo
 
 **Resposta.** A grade de itens mostra todos os itens, sem recolher; ícones encolhem com muitos itens. **Publicado no GitHub.**
+
+> Porque tamanha lentidão?
+> Colocar o valor de custo das kunais/shurikens/pergaminhos/valor atual da roleta em cima do item no chão, pro jogador visualizar ao chegar perto
+
+**Resposta.** Lentidão: bateria completa (~2,5 min) a cada mudança; agora LEVE durante a edição e completa ao fechar. Preço em Ryu acima de kunai/shuriken/pergaminho e do Caça-Níquel a até 5 m; pergaminho de recompensa mostra "Grátis". **Publicado no GitHub.**

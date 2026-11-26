@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 25/11/2026 · Preço em cima dos itens do chão e da roleta (Claude Code)
+
+- **Pedido do usuário:** "Colocar o valor de custo das kunais/shurikens/pergaminhos/valor atual da roleta em cima do item no chão, pro jogador visualizar ao chegar perto"
+- **Novo `src/game/priceTags.ts`** + `updatePriceTag` no GameCanvas: a até 5 m, o item pago mais perto (kunai, shuriken = pergaminho pago em Ryu) mostra o preço atual em Ryu acima dele; o pergaminho de recompensa mostra "Grátis"; o Caça-Níquel da Tsunade mostra o valor atual da rodada. Usa o texto flutuante que já existe, sem arte nova.
+- **Testes:** 1 teste novo em `tests/interface.test.mjs` (mínimo 328). **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · HUD com todos os itens (Claude Code)
 
 - **Pedido do usuário:** "Ajustar o hud para aparecer todos os itens que temos, não minimizar e aparecer +60 por exemplo"

@@ -120,3 +120,15 @@ test('HUD mostra todos os itens, sem recolher nem resumir no total (25/11/2026)'
   const css = fs.readFileSync(new URL('../src/hud-dock.css', import.meta.url), 'utf8');
   assert.ok(css.includes('.inventory-corner.all-items{max-width:min(470px,48vw);max-height:none;overflow:visible;'), 'sem limite de altura nem rolagem');
 });
+
+test('preço acima da kunai/shuriken/pergaminho e do Caça-Níquel mais perto (25/11/2026)', async () => {
+  const { PRICE_TAG, nearestPriceTag, priceTagText } = await import('../src/game/priceTags.ts');
+  assert.equal(PRICE_TAG.radius, 5);
+  const targets = [{ id: 'k', x: 3, z: 0, price: 120 }, { id: 's', x: 1, z: 1, price: 'free' }, { id: 'slot', x: 9, z: 0, price: 900 }];
+  assert.equal(nearestPriceTag(0, 0, targets).id, 's', 'o mais perto');
+  assert.equal(nearestPriceTag(20, 0, targets), undefined, 'longe: sem preço');
+  assert.equal(priceTagText(120, n => String(n)), '120 Ryu');
+  assert.equal(priceTagText('free', n => String(n)), 'Grátis');
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  for (const wired of ["price:p.kind==='sealDrop'?'free':kunaiPrice()", "targets.push({id:'slot',x:slot.x,z:slot.z,price:slotPrice()});", 'updatePriceTag(dt);']) assert.ok(canvas.includes(wired), wired);
+});
