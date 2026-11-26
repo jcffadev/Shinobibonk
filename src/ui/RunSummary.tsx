@@ -38,6 +38,7 @@ export function RunSummary({world,hero,mission,reward=null,rank=null,onlineRankS
           <small>MISSÃO {mission.toUpperCase()} · ENCERRADA</small>
           <h1>{world.victory?'Missão concluída!':'Seu shinobi caiu'}</h1>
           <p><b>{hero.name}</b> · {form} · Nv. {world.level}{world.bijuu?` · Bijū: ${world.bijuu}`:world.boss?` · Chefe: ${world.boss}`:''}</p>
+          {!world.victory&&world.killedBy&&<p className="summary-killer">Golpe final: <b>{world.killedBy.by}</b> · {fmt(world.killedBy.damage,0)} de dano ({fmt(world.killedBy.damage/Math.max(1,world.killedBy.maxHp)*100,0)}% da sua vida máxima)</p>}
           <p className="summary-hint">{world.victory?'Você derrotou a Bijū e atravessou o portal de saída.':'Fique fora dos círculos vermelhos antes do impacto.'}</p>
         </div>
       </header>

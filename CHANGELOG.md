@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Ficha final mostra o golpe que te derrubou (Claude Code)
+
+- **Pedido do usuário:** "Quanto de dano os personagens estavam dando com 8m de jogo? Colocar na ficha final o dano que você tomou que te matou e quem te matou."
+- **GameCanvas:** cada golpe recebido guarda quem deu e quanto tirou (comum, elite, Mega Elite, Akatsuki, Shinobi para selar, Guardião, Bijū, kunai ou fūma de monstro, com o nome da técnica quando é um chefe ou Mega Elite). Na derrota, o último golpe vai para o snapshot (`killedBy`).
+- **RunSummary:** "Golpe final: <quem> · <dano> (x% da sua vida máxima)".
+- **Testes:** 1 teste novo em `tests/interface.test.mjs` (mínimo 323), 3 testes antigos ajustados às novas chamadas e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+- **Medições respondidas no chat (simulador):** golpe da 1ª técnica aos 8 min (mediana 15,6 mil no Genin a 21 mil no Kage) e tabela de vida/defesa/golpe dos inimigos por dificuldade ("Me mostre a dificuldade dos níveis de jogo HP/Armadura/Dano dos inimigos").
+
 ## 25/11/2026 · Plano do Shikamaru só antes de invocar o Guardião (Claude Code)
 
 - **Pedido do usuário:** "Não pode buffar o guardião no Shikamaru, se já invocamos ele Guardião."

@@ -3150,3 +3150,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Não pode buffar o guardião no Shikamaru, se já invocamos ele Guardião.
 
 **Resposta.** Com o Guardião já invocado, o plano do Shikamaru fica bloqueado naquela zona. **Publicado no GitHub.**
+
+> Quanto de dano os personagens estavam dando com 8m de jogo? Colocar na ficha final o dano que você tomou que te matou e quem te matou.
+> Me mostre a dificuldade dos níveis de jogo HP/Armadura/Dano dos inimigos
+
+**Resposta.** Medições no chat; ficha final com "Golpe final" (quem e quanto). **Publicado no GitHub.**

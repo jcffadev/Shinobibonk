@@ -138,7 +138,8 @@ test('proteção de nível continua e só o HP perdido produz número vermelho',
   const canvas = read('../src/scene/GameCanvas.tsx');
   assert.match(canvas, /if\(xp>=xpNext\|\|pendingLevels>0\)\{[^\n]+openLevelReward\(\);invulnerability=3;/);
   assert.match(canvas, /if\(invulnerability>0\|\|defeated\|\|debugState\.god\)return false/);
-  assert.match(canvas, /if\(hit\)damagePlayer\(shot\.damage\)/);
+  // 25/11/2026: o tiro passa também a origem e o nome (ficha final).
+  assert.match(canvas, /if\(hit\)damagePlayer\(shot\.damage[,)]/);
   assert.match(canvas, /if\(hp<hpBefore\)\{\s*playerMotion\.hurt\(\);\s*damageNumber\(player\.position,hpBefore-hp,0,true\);/);
   assert.match(canvas, /protection:debugState\.god\?'debug':invulnerability>\.25\?'temporary'/);
   assert.match(read('../src/main.tsx'), /world\.protection&&<span className="run-protection"/);

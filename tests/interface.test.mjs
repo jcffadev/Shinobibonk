@@ -103,3 +103,12 @@ test('Tab: mouse gira a câmera e o botão direito segurado mostra a kunai para 
   const map = fs.readFileSync(new URL('../src/ui/MapOverlay.tsx', import.meta.url), 'utf8');
   assert.ok(map.includes('Mouse gira a câmera · segure o botão direito para a kunai'));
 });
+
+test('ficha final mostra o golpe que derrubou o jogador e quem deu (25/11/2026)', async () => {
+  const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  for (const wired of ['if(hp<hpBefore)lastHit={by:label??attackerName(attacker),damage:hpBefore-hp,maxHp:stats.maxHp};', 'else{defeated=true;killedBy=lastHit;', 'onSnapshotRef.current({killedBy,',
+    "damagePlayer(shot.damage,undefined,0,'horde',shot.type==='fuma'?'Fūma de monstro':'Kunai de monstro')", "attackerName(host as Enemy)+(technique?' · '+technique:'')"]) assert.ok(canvas.includes(wired), wired);
+  assert.ok(fs.readFileSync(new URL('../src/scene/bossCombat.ts', import.meta.url), 'utf8').includes('t.gravity,c.center,host,t.name);'));
+  const summary = fs.readFileSync(new URL('../src/ui/RunSummary.tsx', import.meta.url), 'utf8');
+  assert.ok(summary.includes('Golpe final: <b>{world.killedBy.by}</b>'));
+});

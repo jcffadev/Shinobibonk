@@ -57,3 +57,6 @@
 .summary-card{display:flex;flex-direction:column;max-height:96vh;overflow:hidden}.summary-body{overflow:auto;min-height:0;grid-template-columns:1fr 1fr}.summary-attributes{grid-column:1/-1}.summary-attribute-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0 12px 12px}.summary-footer{flex:none;background:#2f221a;margin-top:10px;padding-top:10px}@media(max-width:680px){.summary-attribute-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-header,.summary-metrics,.summary-lamens{flex-shrink:1}}
 
 .summary-ranking{grid-column:1/-1}.summary-ranking ol{display:flex;flex-wrap:wrap;gap:8px 25px;margin:0 0 0 14px;padding:0}.summary-ranking li{margin-right:12px;padding-left:3px;font-size:13px}.summary-ranking li span{display:block;color:#d8ccb7;font-size:12px}
+
+.summary-killer{margin:4px 0 0;font-size:14px;color:#ffb3a1}
+.summary-killer b{color:#ffd9cf}

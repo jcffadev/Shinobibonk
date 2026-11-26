@@ -188,6 +188,6 @@ test('dano no jogador: horda −30% e teto de 40% da vida por golpe, menos Guard
   assert.equal(playerHitDamage(330, 141, 'boss'), 330, 'Guardião e Bijū sem nerf nem teto');
   const canvas = src('scene/GameCanvas.tsx');
   for (const wired of ["hp=Math.max(0,hp-playerHitDamage(incomingDamage(raw,", "const hitSource=(attacker?:Enemy):HitSource=>!attacker?'horde':attacker.guardian||attacker.bijuu?'boss':attacker.megaElite?'mega':'horde';",
-    "damagePlayer(base*threatNow().damage,host as Enemy|undefined,slow,host?hitSource(host as Enemy):'boss')"]) assert.ok(canvas.includes(wired), wired);
-  assert.ok(fs.readFileSync(new URL('../src/scene/bossCombat.ts', import.meta.url), 'utf8').includes('t.gravity,c.center,host);'));
+    "damagePlayer(base*threatNow().damage,host as Enemy|undefined,slow,host?hitSource(host as Enemy):'boss',"]) assert.ok(canvas.includes(wired), wired);
+  assert.ok(fs.readFileSync(new URL('../src/scene/bossCombat.ts', import.meta.url), 'utf8').includes('t.gravity,c.center,host,'));
 });
