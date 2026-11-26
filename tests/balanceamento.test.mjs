@@ -161,3 +161,18 @@ test('simulador: geometria dos golpes igual à do jogo e bônus do preparo (25/1
   assert.ok(sim.includes('calculateStats(heroId, s.level, s.items, s.pills, 0, permanent, setupBuffs(), s.powerlevel)'), 'preparo entra pela fração ativa');
   assert.ok(sim.includes('const kit = process.env.SIM_KIT_ONLY ? hero.techniques : skillPool(heroId);'), 'pool da partida como no jogo (básicas incluídas)');
 });
+
+test('inimigo preso perto do jogador ataca de onde está (cerca, parede; 25/11/2026)', async () => {
+  const { stuckReach, STUCK_REACH } = await import('../src/game/enemyTiers.ts');
+  assert.deepEqual(STUCK_REACH, { range: 3, seconds: 1, progress: .15, slack: .2 });
+  const track = {};
+  assert.equal(stuckReach(track, 2, 1, 0), 1, 'acabou de chegar perto: alcance normal');
+  assert.equal(stuckReach(track, 1.95, 1, .9), 1, 'ainda dentro do 1 s');
+  assert.ok(Math.abs(stuckReach(track, 1.95, 1, 1.01) - 2.15) < 1e-9, 'parado 1 s a 1,95 m: ataca de onde está');
+  const moving = {};
+  stuckReach(moving, 2.5, 1, 0); stuckReach(moving, 2.2, 1, .6);
+  assert.equal(stuckReach(moving, 2.0, 1, 1.3), 1, 'quem continua chegando perto não ganha alcance');
+  assert.equal(stuckReach({}, 5, 1, 9), 1, 'longe: alcance normal');
+  const canvas = src('scene/GameCanvas.tsx');
+  assert.ok(canvas.includes('reach=ranged?8:stuckReach(enemy.stuck??={},distance,enemy.megaElite?1.6:1,elapsed);'));
+});

@@ -72,3 +72,18 @@ export const ENEMY_XP_MULTIPLIER = .88;
 export function xpDropValue(loot: number, zoneBonus: number, elapsed: number) {
   return Math.round(BASE_LOOT.xp * ENEMY_XP_MULTIPLIER * loot * zoneBonus * (1 + Math.max(0, elapsed / 60 - 3) * .075));
 }
+
+/**
+ * Inimigo preso perto do jogador (25/11/2026 — pedido do usuário: "Verificar o personagem grudado na cerca, não tomar dano e
+ * ficar imortal"). Se um inimigo corpo a corpo está a menos de `range` m e passa `seconds` s sem chegar mais perto (cerca,
+ * parede, terreno), ele ataca de onde está: o alcance vira a distância atual + `slack`.
+ */
+export const STUCK_REACH = { range: 3, seconds: 1, progress: .15, slack: .2 };
+export type StuckTrack = { closest?: number; since?: number };
+/** Atualiza o rastro do inimigo e devolve o alcance do golpe neste quadro. */
+export function stuckReach(track: StuckTrack, distance: number, reach: number, now: number) {
+  const r = STUCK_REACH;
+  if (distance > r.range || distance <= reach) { track.closest = undefined; track.since = undefined; return reach; }
+  if (track.closest === undefined || distance < track.closest - r.progress) { track.closest = distance; track.since = now; return reach; }
+  return now - (track.since ?? now) >= r.seconds ? Math.max(reach, distance + r.slack) : reach;
+}

@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Jogador grudado na cerca não fica mais imortal (Claude Code)
+
+- **Pedido do usuário:** "Verificar o personagem grudado na cerca, não tomar dano e ficar imortal."
+- A cerca do limite do mapa é só visual; pelo código não apareceu uma barreira única. Sem navegador não deu para reproduzir.
+- **Correção geral (`stuckReach` em `src/game/enemyTiers.ts`, usada no GameCanvas):** um inimigo corpo a corpo a menos de 3 m que passa 1 s sem chegar mais perto (preso em cerca, parede ou terreno) ataca de onde está; o alcance vira a distância + 0,2 m. Quem continua se aproximando não ganha alcance extra.
+- **Testes:** 1 teste novo em `tests/balanceamento.test.mjs` (mínimo 316) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** encostar na cerca (e em paredes) e ver os inimigos acertarem.
+
 ## 25/11/2026 · Planos do Shikamaru só no chefe da zona (Claude Code)
 
 - **Pedido do usuário:** "O Shikamaru ta aumentando a dificuldade do jogo todo? Ele deveria aumentar a dificuldade apenas do boss final da zona"

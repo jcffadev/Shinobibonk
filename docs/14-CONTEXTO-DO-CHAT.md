@@ -3099,3 +3099,14 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > O Shikamaru ta aumentando a dificuldade do jogo todo? Ele deveria aumentar a dificuldade apenas do boss final da zona
 
 **Resposta.** Sim, cada plano deixava a zona inteira 33% mais difícil. Agora os planos fortalecem só o Guardião da zona (vida, dano e defesa) e a Bijū; a horda não muda. As kunais extras continuam. **Publicado no GitHub.**
+
+> faça um teste, quero que voce fique 10m no final swarm e quanto de hp o boss da zona1 nasce?
+> Esses numeros podem escalar até quadrilhoes, sem problemas dependendo, tipo sei la puxar o boss aos 15m, como exemplo
+> mas, tem que ter todo um calculo de scale pra fazer sentido, entende?
+> Verificar o personagem grudado na cerca, não tomar dano e ficar imortal.
+> Quais foram as perguntas que você me fez?
+
+**Resposta.**
+
+- Guardião da zona 1 com +10 min de Final Swarm: 273 milhões (Genin) a 3,5 bilhões (Kage) pela fórmula, o dobro com 3 planos. Hoje a vida quase sempre sai do piso (seu dano × 30 s), então a luta dura ~30 s chamando cedo ou tarde. Proposta de regra de scale aguardando escolha.
+- Cerca: correção geral, inimigo preso perto ataca de onde está. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

@@ -34,6 +34,11 @@
 
 Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas anteriores.
 
+## Jogador grudado na cerca · 25/11/2026
+
+- Correção geral: inimigo corpo a corpo preso a menos de 3 m por 1 s ataca de onde está (`stuckReach`). **PENDENTE DE VALIDAÇÃO E2E:** reproduzir o caso da cerca e confirmar que o jogador toma dano. Se continuar imortal, anotar o mapa e o lado da cerca.
+- **Aguardando decisão do usuário:** regra de scale do Guardião (segundos de luta por dificuldade e crescimento por minuto de Final Swarm) e siglas da vida do chefe acima de quintilhões.
+
 ## Planos do Shikamaru · 25/11/2026
 
 - Planos agora só fortalecem o Guardião da zona (e a Bijū). **PENDENTE DE VALIDAÇÃO E2E:** usar 3 planos e ver a horda igual e o Guardião mais forte.
