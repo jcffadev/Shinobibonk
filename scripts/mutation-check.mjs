@@ -150,6 +150,8 @@ const MUTATIONS = [
   { regra: 'ganho do Ebisu/Iruka tende ao máximo com Sorte', arquivo: 'src/game/luckQuality.ts', de: 'Math.pow(rng(), 1 / (1 + 2 *', para: 'Math.pow(rng(), 1 / (1 + 0 *' },
   { regra: 'Ichiraku: técnica planejada pesa 50% a mais na lembrança', arquivo: 'src/game/ichirakuRecall.ts', de: 'plannedWeight: 1.5', para: 'plannedWeight: 1' },
   { regra: 'Ichiraku: lembrança uma vez por zona', arquivo: 'src/game/ichirakuRecall.ts', de: "if (o.usedZone === o.zone) return 'Já usada nesta zona.';", para: '' },
+  { regra: 'ultimate do Nagato chama os Seis Caminhos (Pein Rikudō)', arquivo: 'src/scene/GameCanvas.tsx', de: 'if(hero.ultimate===PEIN_RIKUDO.name){rikudo=', para: 'if(false){rikudo=' },
+  { regra: 'Nagato com o kit do Rinnegan igual ao do Pain', arquivo: 'src/game/heroes.ts', de: "if (spec.id === 'nagato') kit.splice(0, kit.length, ...rinneganKit());", para: '' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

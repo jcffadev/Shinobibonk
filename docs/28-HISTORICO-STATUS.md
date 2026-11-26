@@ -9,7 +9,9 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Sorte em Hagoromo, Ebisu e Iruka | sem efeito → qualidade 0 (Sorte ≤ 10) a 1 (Sorte 70): raridade do treino e das ferramentas, e ganho do Ebisu/lição do Iruka puxado ao máximo |
+| (este commit) | Kit do Nagato | Receptores de Chakra, Bansho Tenin, Chibaku Tensei, Invocação dos Caminhos → Kunai Tática, Chibaku Tensei, Bansho Tenin, Barras de Chakra (igual ao Pain) |
+| (este commit) | Ultimate do Nagato | Seis Caminhos do Rinnegan (explosão de poder 6) → Kuchiyose: Pein Rikudō (seis caminhos por 10 s, poder 7,4 espalhado, cura, absorção e recarga) |
+| `fdd2597` | Sorte em Hagoromo, Ebisu e Iruka | sem efeito → qualidade 0 (Sorte ≤ 10) a 1 (Sorte 70): raridade do treino e das ferramentas, e ganho do Ebisu/lição do Iruka puxado ao máximo |
 | `635981d` | Espaços de pílula | 6 → 5 tipos por run |
 | `635981d` | Preço dos itens do Mercador | +35% por compra e +12% por roletada → só +35% por compra (roletar encarece só a roletada) |
 | `230f28d` | Reposição da horda no Final Swarm | teto ÷ 4 s por segundo (tela ~400 com herói forte nas zonas 2 e 3) → repõe até o teto a cada quadro (até 120 por quadro) |

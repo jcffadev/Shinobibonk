@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 26/11/2026 · Nagato com o kit do Pain e ultimate Kuchiyose: Pein Rikudō (Claude Code)
+
+- **Pedido do usuário:** "pain e nagato devem compartilhar todas as mesmas habilidades de rinnegan, a diferença que nagato terá invocação: Seis Caminhos de Pain · Kuchiyose: Pein Rikudō · Entenda/pesquise como funciona essa habilidade e coloque no jogo, pegue referencias para o Codex implementar, quero que isso seja a ultimate do Nagato e fazer de maneira jogável/balanceado"
+- **Kit:** o Nagato passa a ter exatamente o kit do Rinnegan do Pain (`rinneganKit` em `src/game/heroes.ts`): Kunai Tática (Nv 1), Chibaku Tensei (Nv 5), Bansho Tenin (Nv 12) e Barras de Chakra (Nv 20). Saem do Nagato Receptores de Chakra e Invocação dos Caminhos (a invocação virou a ultimate). O Pain não muda.
+- **Regra de únicas:** `RINNEGAN_FAMILIES`/`sameTechniqueOwner` fazem Chibaku Tensei e Bansho Tenin contarem como únicas das duas famílias (a regra de 1–2 únicas por versão continua valendo).
+- **Ultimate do Nagato: Kuchiyose: Pein Rikudō** (novo `src/game/peinRikudo.ts`). Os Seis Caminhos ficam 10 s em campo e cada um age no seu tempo: Deva (Shinra Tensei em área, 2×), Asura (mísseis de fogo no inimigo mais perto, 5×), Humano (arranca a alma: golpe único que paralisa, 2×), Animal (invocações pisoteiam o grupo e atordoam, 2×), Preta (absorve projéteis inimigos num raio de 4 m e cura 2% da vida por projétil) e Naraka (Rei do Inferno: cura 20% na chegada e corta à metade as recargas no 8º segundo).
+- **Balanceamento:** poder total 7,4 espalhado em 10 s (a ultimate comum é 6 de uma vez), metade em alvo único; a ultimate não reinicia enquanto os Caminhos estão em campo.
+- **Visual:** por enquanto anéis coloridos no lugar de cada ação; arte e animação dos Seis Caminhos anotadas para o Codex (docs/01).
+- **Testes:** novo `tests/nagato-pain.test.mjs` (3 testes, mínimo 348), `tests/jutsus.test.mjs` e `verify-rules` ajustados à regra nova, e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** jogar com o Nagato e usar a ultimate.
+
 ## 26/11/2026 · Ichiraku: "Tente lembrar o planejado" (Claude Code)
 
 - **Pedido do usuário:** "No Ichiraku teremos uma opção: 'Tente lembrar o planejado'. Vai dar pra selecionar, faltando habilidades para completar todas as primárias ou esquecermos, vai aparecer um pop-up que terá 50% de chance de aparecer 1 habilidade que planejamos para a missão... Sera uma escolha de 1 a 3 habilidades aleatórias, porém o peso para habilidades planejadas será 50% a mais. Uma vez por zona"

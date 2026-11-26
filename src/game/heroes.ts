@@ -39,6 +39,13 @@ export const LAUNCHED_ORBITS=new Set(['Susanoo','Limbo','Esferas da Busca da Ver
 const t=(name:string,school:School,element:Element,shape:Shape,power=1):Technique=>({name,school,element,shape,color:colors[element],power:power*SHAPE_POWER[shape],range:shape==='Corpo a corpo'?1.6:shape==='Cone'?2.8:shape==='Órbita'?(LAUNCHED_ORBITS.has(name)?4.5:1.7):4.5,cooldown:SHAPE_COOLDOWN[shape],slow:element==='Sombra',burn:element==='Fogo',poison:/Venenos[ao]|Tóxic[ao]|Corrosiv[ao]/.test(name),status:school==='Genjutsu'?(name.includes('Corvo')?'Dormir':name.includes('Tsukuyomi')?'Atordoar':'Paralisar'):element==='Raio'?'Paralisar':element==='Vento'?'Empurrar':element==='Gelo'?'Congelar':element==='Madeira'||element==='Areia'?'Lentidão':shape==='Corpo a corpo'?'Atordoar':undefined,statusChance:school==='Genjutsu'?.3:.12,unlockLevel:1});
 /** Técnicas do Rinnegan (Pain e Nagato, o dono do Rinnegan): Chibaku Tensei (núcleo que puxa) e Bansho Tenin (puxão). */
 const rinneganTechnique=(name:'Chibaku Tensei'|'Bansho Tenin'):Technique=>name==='Chibaku Tensei'?{...t(name,'Ninjutsu','Neutro','Área'),gravity:'core'}:{...t(name,'Ninjutsu','Neutro','Onda'),gravity:'pull',color:'#bda0ff'};
+/**
+ * Kit do Rinnegan, igual para Pain e Nagato (26/11/2026 — usuário: "pain e nagato devem compartilhar todas as mesmas habilidades
+ * de rinnegan, a diferença que nagato terá invocação: Seis Caminhos de Pain"): o kit do Pain como já era — Kunai Tática (Nv 1),
+ * Chibaku Tensei (Nv 5), Bansho Tenin (Nv 12) e Barras de Chakra (receptores, Nv 20). Mantém a regra de 1–2 técnicas únicas por
+ * versão (Barras de Chakra é compartilhada). Ultimates: Pain = Shinra Tensei; Nagato = Kuchiyose: Pein Rikudō (peinRikudo.ts).
+ */
+const rinneganKit=():Technique[]=>[L.kunai,rinneganTechnique('Chibaku Tensei'),rinneganTechnique('Bansho Tenin'),t('Barras de Chakra','Ninjutsu','Neutro','Projétil')];
 /** Cria uma técnica de setup. Valores provisórios. */
 const s=(name:string,school:School,element:Element,setup:Setup):Technique=>({name,school,element,shape:'Buff',color:colors[element],power:0,range:9,cooldown:setup.cooldown,statusChance:0,unlockLevel:1,setup});
 const SAGE_MODE:Setup={cooldown:16,duration:7,bonuses:{damage:.15,area:.2},stack:false,sage:true,summary:'Entra no Modo Sábio: +dano e +área; aplica o elemento Sábio, dá Senjutsu ao Ninjutsu e faz o taijutsu corpo a corpo acertar em área ao redor.'};
@@ -184,7 +191,7 @@ export const HEROES:Hero[]=[
  h('shikamaru','Shikamaru','Clã Nara','#a5b783',120,17,5,6.6,'Estrategista · +30% duração de status e +10 pontos de chance de lentidão.',{duration:.3,status:.1},[U.possessao,L.kunai,L.agulhasSombra,L.prisaoSombra],'Estrangulamento das Sombras','Controle, duração e velocidade de ataque'),
  h('temari','Temari','Vila da Areia','#d1be8a',125,22,4,6.7,'Mestra do Leque · +25% raio dos ataques.',{area:.25},[U.corteLeque,L.laminas,L.vendaval,U.tornado],'Invocação de Kamatari','Área, projéteis e ninjutsu'),
  h('tenten','Tenten','Vila da Folha','#dc9f91',120,16,4,7,'Mestra de Armas · ×1,5 de dano em técnicas neutras ou de projétil. +1 projétil por disparo.',{projectiles:1},[L.shuriken,U.kunaiExplosiva,L.senbon,U.corrente],'Dragões Gêmeos','Projéteis, taijutsu e crítico'),
- h('pain','Pain','Vila da Chuva','#ca86cb',140,24,7,6.2,'Caminho Deva · +20% ninjutsu e +15% raio de área. Nagato (Clã Uzumaki) controla o corpo de Yahiko pelos receptores de chakra.',{element:.2,area:.15},[L.kunai,rinneganTechnique('Chibaku Tensei'),rinneganTechnique('Bansho Tenin'),t('Barras de Chakra','Ninjutsu','Neutro','Projétil')],'Shinra Tensei','Ninjutsu, área e recarga'),
+ h('pain','Pain','Vila da Chuva','#ca86cb',140,24,7,6.2,'Caminho Deva · +20% ninjutsu e +15% raio de área. Nagato (Clã Uzumaki) controla o corpo de Yahiko pelos receptores de chakra.',{element:.2,area:.15},rinneganKit(),'Shinra Tensei','Ninjutsu, área e recarga'),
  h('tobirama','Tobirama','Vila da Folha','#82cbe6',135,21,7,6.8,'Estratégia Suiton · +15% velocidade de ataque e +15% recarga da Ultimate.',{attackSpeed:.15,cool:.15},[t('Corte de Água','Ninjutsu','Água','Linha'),L.dragaoAgua,L.agulhasAgua,t('Onda Explosiva','Ninjutsu','Água','Área',1.4)],'Mar do Segundo Hokage','Velocidade de ataque, ninjutsu e recarga'),
  h('kankuro','Kankuro','Vila da Areia','#a48fc7',130,18,6,6.5,'Marionetista · +20% duração de status e ataques aplicam veneno de 20% do impacto em 3 s.',{duration:.2,dot:.2},[U.karasu,U.kuroari,L.parede,L.kunai],'Teatro das Marionetes','Veneno, duração e projéteis'),
  h('guy','Might Guy','Vila da Folha','#69cf81',145,25,7,6.8,'Poder da Juventude · +30% taijutsu e +10% movimento.',{normal:.3,move:.1},[L.furacao,L.punho,L.portoes,U.chuteDinamico],'Portões Internos','Taijutsu, velocidade de ataque e crítico'),
@@ -280,7 +287,8 @@ const expansionHeroes = ROSTER_EXPANSION.map(spec => {
   const kit = [own[0], shared[0] ?? fallback[0], finisher.setup ? own[1] : shared[1] ?? fallback[1], finisher.setup ? shared[1] ?? fallback[1] : own[1]];
   // 25/11/2026 (usuário: "Porque o Nagato não tem as habilidades do Pain? Ja que ele é o dono do Rinnegan?" → "Corrija isso"):
   // o Nagato usa as técnicas do Rinnegan do Pain no lugar de Shuriken e Kunai Tática.
-  if (spec.id === 'nagato') { kit[1] = rinneganTechnique('Bansho Tenin'); kit[2] = rinneganTechnique('Chibaku Tensei'); }
+  // 26/11/2026: kit do Rinnegan inteiro, igual ao do Pain (rinneganKit); a diferença é a ultimate.
+  if (spec.id === 'nagato') kit.splice(0, kit.length, ...rinneganKit());
   return { ...h(spec.id, spec.name + ' ' + spec.title, spec.village, colors[basic.element],
     ...spec.stats, spec.passive, spec.bonuses, kit, spec.ultimate, spec.passive.split(' · ')[0]),
     family: spec.family, form: spec.form, title: spec.title };
@@ -338,7 +346,11 @@ export const SAGE_USERS=new Set(['naruto-shippuden','naruto-kyuubi','naruto-hoka
  * 25/11/2026: Bansho Tenin e Chibaku Tensei são do Pain; o Nagato (dono do Rinnegan) também as usa, sem que virem únicas dele
  * nem compartilhadas com o resto do elenco.
  */
-export function uniqueTechniques(heroId:string){const family=familyOf(heroId);return (HERO_BY_ID[heroId]?.techniques??[]).filter(t=>!SHARED_TECHNIQUES.has(t.name)&&techniqueOwner(t.name)===family);}
+/** Famílias que dividem as técnicas do Rinnegan como próprias (26/11/2026: Pain e Nagato com o mesmo kit do Rinnegan). */
+export const RINNEGAN_FAMILIES=new Set(['pain','nagato']);
+/** Mesmo dono para a regra de únicas: a própria família, ou Pain/Nagato entre si. */
+export const sameTechniqueOwner=(a?:string,b?:string)=>a===b||(!!a&&!!b&&RINNEGAN_FAMILIES.has(a)&&RINNEGAN_FAMILIES.has(b));
+export function uniqueTechniques(heroId:string){const family=familyOf(heroId);return (HERO_BY_ID[heroId]?.techniques??[]).filter(t=>!SHARED_TECHNIQUES.has(t.name)&&sameTechniqueOwner(techniqueOwner(t.name),family));}
 let ownerCache:Map<string,string>|undefined;
 function techniqueOwner(name:string){if(!ownerCache){ownerCache=new Map();for(const hero of HEROES)for(const t of hero.techniques)if(!ownerCache.has(t.name))ownerCache.set(t.name,hero.family??hero.id);}return ownerCache.get(name);}
 /**

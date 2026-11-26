@@ -272,6 +272,20 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
 10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).
 
+### Anotação do usuário para o Codex · 26/11/2026 · Seis Caminhos de Pain (ultimate do Nagato)
+
+- "pain e nagato devem compartilhar todas as mesmas habilidades de rinnegan, a diferença que nagato terá invocação: Seis Caminhos de Pain · Kuchiyose: Pein Rikudō · Entenda/pesquise como funciona essa habilidade e coloque no jogo, pegue referencias para o Codex implementar, quero que isso seja a ultimate do Nagato e fazer de maneira jogável/balanceado"
+- **Lógica pronta (Claude Code):** `src/game/peinRikudo.ts` (tabela `PEIN_RIKUDO.events`, nomes em `RIKUDO_PATHS`) e `runRikudo`/`updateRikudo` no GameCanvas. Hoje cada ação só desenha um anel colorido; falta a arte.
+- **Referência canônica** (Narutopedia, "Six Paths of Pain": https://naruto.fandom.com/wiki/Six_Paths_of_Pain): técnica do Caminho Exterior. O Nagato controla até seis corpos pelos receptores de chakra (barras pretas cravadas no corpo), todos com o Rinnegan e visão compartilhada; se a transmissão de chakra é interrompida, os corpos param. O Caminho Deva usa o corpo de Yahiko; os outros cinco, corpos de shinobi que Jiraiya conheceu. Todos usam o manto da Akatsuki, cabelo laranja/ruivo e piercings.
+- **O que desenhar** (6 corpos surgindo ao redor do Nagato, por 10 s, cada um com sua pose de ação):
+  1. **Deva (Tendō)** — Yahiko; onda de repulsão (Shinra Tensei) em volta do Nagato no segundo 0 e no 5. Cor de referência #e1eaff.
+  2. **Asura (Shuradō)** — corpo mecânico com braços extras e lâminas; dispara mísseis (5 rajadas). Cor #ff9b46.
+  3. **Humano (Ningendō)** — põe a mão na cabeça do alvo e puxa a alma (silhueta azulada saindo do inimigo). Cor #9fd8ff.
+  4. **Animal (Chikushōdō)** — a única mulher dos seis; invoca criaturas grandes (rinoceronte, cão de várias cabeças, centopeia, ave) que pisoteiam um grupo. Cor #d9b27a.
+  5. **Preta (Gakidō)** — corpo largo e baixo; absorve chakra: kunais e projéteis inimigos perto do Nagato são sugados e somem.
+  6. **Naraka (Jigokudō)** — invoca o Rei do Inferno (cabeça gigante com língua que "restaura"); cura o Nagato na chegada e no 8º segundo acelera as técnicas. Cor #c9a8ff.
+- Responsável: Codex (arte, sprites e efeitos). A regra de jogo fica com o Claude Code.
+
 ### Anotação do usuário para o Codex · 26/11/2026 · escadaria da vila
 
 - "Essa escadaria esta permitindo passar por dentro dela e também não esta fazendo ela estar ai... deixe aviso pro Codex sobre isso, os monstros estão passando dentro dela e se escondendo" (captura do usuário: escadaria de pedra larga ao lado de um muro com cerca de madeira, perto de uma casa, na Vila Oculta da Folha).

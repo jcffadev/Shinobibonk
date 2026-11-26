@@ -82,7 +82,8 @@ import { susanooStyleFor } from '../game/susanoo';
 import { spawnBudgetFor, zoneThreat, zoneCurse, calculateStats, incomingDamage, rollCritical, MISSION_TIER, normalHpFactor, SPAWN_RING, AMBUSH_RULES, ENEMY_SCALING, FINAL_SWARM, SWARM_STEP, swarmStep, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
 import { buildAltarOffers, extraStrikes } from '../game/altarRewards'
 import { luckQuality } from '../game/luckQuality'
-import { rollRecall, recallBlocked } from '../game/ichirakuRecall';
+import { rollRecall, recallBlocked } from '../game/ichirakuRecall'
+import { PEIN_RIKUDO, RIKUDO_PATHS, rikudoDue, type RikudoEvent } from '../game/peinRikudo';
 import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
 import { castProgress, blendFog, mistHides, isChanneling, CAST_DISTANCE } from '../game/weatherCast';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
@@ -2034,7 +2035,35 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       if(!t.ultimate)motion?.attack(t.school==='Taijutsu'||academyThrow,direction.dot(v2)<0,false,t.school!=='Taijutsu'?undefined:t.name==='Furacão da Folha'||t.name==='Lótus Primária'?'kick':'punch',!academyThrow,direction.dot(v1)>.001,t.school==='Taijutsu'?.22:Math.max(.25,IMPACT_DELAY.other/Math.max(.3,stats.projectileSpeed)));
       if(!ally)playTechniqueSound(t,false,heroId);return true;
     }
-    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=selectCombatTarget(enemyList,player.position,ultRadius,activeFocus()),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
+    // ───── Ultimate do Nagato · Kuchiyose: Pein Rikudō (regras em src/game/peinRikudo.ts) ─────
+    let rikudo:{t:number}|null=null;
+    const rikudoTech=(power:number,extra:Partial<Technique>):Technique=>({...ultimateBase(hero),element:'Neutro',burn:false,poison:false,status:undefined,statusChance:0,gravity:undefined,setup:undefined,...extra,power,ultimate:true});
+    function runRikudo(e:RikudoEvent){
+      const info=RIKUDO_PATHS[e.path],areaRadius=4.2*Math.sqrt(stats.area);
+      if(e.path==='naraka'){
+        if(e.action==='heal')hp=Math.min(stats.maxHp,hp+stats.maxHp*PEIN_RIKUDO.healShare);
+        else for(const key of Object.keys(cooldowns))cooldowns[key]*=1-PEIN_RIKUDO.cooldownCut;
+        if(!hiddenEffects)addRing(player.position,'#c9a8ff',1.6);return;
+      }
+      if(e.path==='deva'){const t=rikudoTech(e.power??0,{name:info.power,shape:'Área',gravity:'push',color:'#e1eaff'});
+        for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<areaRadius)hit(enemy,t,NO_GROWTH,player.position);
+        if(!hiddenEffects)addRing(player.position,'#e1eaff',areaRadius);return;}
+      if(e.path==='asura'){castTechnique(rikudoTech(e.power??0,{name:info.power,shape:'Projétil',burn:true,element:'Fogo',color:'#ff9b46'}),player.position,NO_GROWTH,false,true);return;}
+      const target=selectCombatTarget(enemyList,player.position,9,activeFocus());if(!target)return;
+      if(e.path==='human'){hit(target,rikudoTech(e.power??0,{name:info.power,shape:'Projétil',status:'Paralisar',statusChance:1,color:'#9fd8ff'}),NO_GROWTH,player.position);if(!hiddenEffects)addRing(target.sprite.position,'#9fd8ff',.9);return;}
+      // Animal: as invocações pisoteiam o grupo em volta do alvo.
+      const at=target.sprite.position.clone(),stomp=2.6*Math.sqrt(stats.area),t=rikudoTech(e.power??0,{name:info.power,shape:'Área',status:'Atordoar',statusChance:1,color:'#d9b27a'});
+      for(const enemy of [...enemyList])if(Math.hypot(enemy.sprite.position.x-at.x,enemy.sprite.position.z-at.z)<stomp)hit(enemy,t,NO_GROWTH,at);
+      if(!hiddenEffects)addRing(at,'#d9b27a',stomp);
+    }
+    function updateRikudo(dt:number){
+      if(!rikudo)return;const previous=rikudo.t;rikudo.t+=dt;
+      for(const e of rikudoDue(previous,rikudo.t)){if(defeated)break;runRikudo(e);}
+      // Preta: absorve os projéteis inimigos perto do Nagato e cura um pouco por projétil.
+      for(const shot of enemyShots)if(shot.life>0&&Math.hypot(shot.object.position.x-player.position.x,shot.object.position.z-player.position.z)<PEIN_RIKUDO.pretaRadius){shot.life=0;hp=Math.min(stats.maxHp,hp+stats.maxHp*PEIN_RIKUDO.pretaHeal);}
+      if(rikudo.t>=PEIN_RIKUDO.duration){rikudo=null;eventToast='Os Seis Caminhos de Pain se retiram.';}
+    }
+    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette||rikudo)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');if(hero.ultimate===PEIN_RIKUDO.name){rikudo={t:-1e-6};updateRikudo(0);eventToast='Kuchiyose: Pein Rikudō · os Seis Caminhos de Pain entram na luta por '+PEIN_RIKUDO.duration+' s';snapshotTimer=0;return;}const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=selectCombatTarget(enemyList,player.position,ultRadius,activeFocus()),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
         particles.footprint(t,player.position,aim,player.position,ultRadius,ultRadius,0);
         if(susanooStyle)susanoo.trigger(susanooStyle,player.position,aim,near?.sprite.position??player.position,ultRadius,true);
         else if(puppetArt(t.name))showPuppet(player.position,near?.sprite.position??player.position,puppetArt(t.name));
@@ -2130,6 +2159,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       // se passar do teto (ex.: emboscada/roleta por cima do lote), remove os últimos inimigos comuns — nunca bosses.
       if(enemyList.length>FINAL_SWARM.maxEnemies){for(let i=enemyList.length-1;i>=0&&enemyList.length>FINAL_SWARM.maxEnemies;i--){const e=enemyList[i];if(e.guardian||e.bijuu||e.totem||e.megaElite||e.account||e.boss||e.clone)continue;const j=enemyList.indexOf(e);scene.remove(e.sprite);disposeEnemySprite(e);enemyList.splice(j,1);}}
       hp=Math.min(stats.maxHp,hp+dt*stats.regen);
+      updateRikudo(dt);
       for(let i=enemyShots.length-1;i>=0;i--){
         const shot=enemyShots[i],position=shot.object.position,step=shot.speed*Math.min(shot.life,dt);
         const px=player.position.x-position.x,pz=player.position.z-position.z;

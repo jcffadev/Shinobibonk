@@ -3225,3 +3225,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > No Ichiraku teremos uma opção: 'Tente lembrar o planejado'. Vai dar pra selecionar, faltando habilidades para completar todas as primárias ou esquecermos, vai aparecer um pop-up que terá 50% de chance de aparecer 1 habilidade que planejamos para a missão... Sera uma escolha de 1 a 3 habilidades aleatórias, porém o peso para habilidades planejadas será 50% a mais. Uma vez por zona
 
 **Resposta.** Carta "Tente lembrar o planejado" no Ichiraku: com espaço de técnica livre, 1 a 3 técnicas novas (planejadas pesam ×1,5), uma vez por zona, sem custo. **Publicado no GitHub.**
+
+> pain e nagato devem compartilhar todas as mesmas habilidades de rinnegan, a diferença que nagato terá invocação: Seis Caminhos de Pain · Kuchiyose: Pein Rikudō · Entenda/pesquise como funciona essa habilidade e coloque no jogo, pegue referencias para o Codex implementar, quero que isso seja a ultimate do Nagato e fazer de maneira jogável/balanceado
+
+**Resposta.** Nagato com o kit do Pain (Kunai Tática, Chibaku Tensei, Bansho Tenin, Barras de Chakra) e ultimate Kuchiyose: Pein Rikudō: os Seis Caminhos por 10 s (Deva, Asura, Humano, Animal, Preta, Naraka), poder 7,4 espalhado, cura e absorção. Referências para o Codex em docs/01. **Publicado no GitHub.**

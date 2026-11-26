@@ -74,9 +74,9 @@ assert.equal(motionForms,HEROES.length);assert.equal(versionForms.size,HEROES.le
  assert.deepEqual(missingRequirements('naruto-shippuden',new Set()),['naruto-genin'],'Shippuden exige liberar o Genin');
  for(const id of ['naruto','sasuke','sakura','asuma'])assert.equal(HERO_BY_ID[id].form,1,'id antigo = primeira versão (saves)');}
 {// Regra do usuário: 1–2 técnicas únicas por versão; pool respeita elemento; únicas de outros só após selar.
- const {uniqueTechniques,allowedElements,techniquePool}=await import('../src/game/heroes.ts');
+ const {uniqueTechniques,allowedElements,techniquePool,sameTechniqueOwner}=await import('../src/game/heroes.ts');
  for(const h of HEROES){const n=uniqueTechniques(h.id).length;assert.ok(n>=1&&n<=2,h.id+' tem '+n+' únicas');const allowed=allowedElements(h.id);for(const t of techniquePool(h.id))assert.ok(allowed.has(t.element),h.id+' não pode aprender '+t.name+' ('+t.element+')');}
- const owner=new Map();for(const h of HEROES)for(const t of uniqueTechniques(h.id)){assert.ok(!owner.has(t.name)||owner.get(t.name)===h.family,'única '+t.name+' em duas famílias');owner.set(t.name,h.family);}
+ const owner=new Map();for(const h of HEROES)for(const t of uniqueTechniques(h.id)){assert.ok(!owner.has(t.name)||sameTechniqueOwner(owner.get(t.name),h.family),'única '+t.name+' em duas famílias');owner.set(t.name,h.family);}
  assert.ok(!skillPool('naruto',new Set(['naruto-shippuden'])).some(t=>t.name==='Rasenshuriken'),'versão não empresta técnica de outra versão da família');
  assert.ok(!skillPool('lee').some(t=>t.element!=='Neutro'),'Lee (sem natureza) só aprende Neutro');
  assert.ok(!skillPool('naruto').some(t=>t.name==='Raikiri'),'única do Kakashi bloqueada antes de selar');

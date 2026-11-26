@@ -79,7 +79,8 @@ test('equilíbrio dos status: só golpes de precisão ficam no crítico; gelo co
   assert.equal(tech('Senbon de Gelo').status, 'Congelar'); assert.equal(tech('Espelhos Demoníacos de Gelo').status, 'Congelar');
   const pain = HERO_BY_ID.pain.techniques.filter(t => t.gravity).length;
   assert.ok(pain >= 3, 'Pain com magnetismo em 3 técnicas');
-  assert.equal(tech('Receptores de Chakra').gravity, 'pull'); assert.equal(tech('Invocação dos Caminhos').gravity, 'push');
+  // 26/11/2026: Receptores de Chakra e Invocação dos Caminhos saíram do Nagato (kit do Rinnegan igual ao do Pain; a invocação virou a ultimate).
+  assert.equal(tech('Barras de Chakra').gravity, 'pull'); assert.equal(HERO_BY_ID.nagato.techniques.filter(t => t.gravity).length, pain);
   assert.ok(tech('Bijūdama').burn && tech('Yamata no Jutsu').poison && tech('Impacto de Sakura').status === 'Atordoar');
 });
 
@@ -125,7 +126,8 @@ test('Kakashi dos Dois Mangekyō tem seu kit e a missão dependente do Sexto Hok
 test('Nagato, dono do Rinnegan, usa Bansho Tenin e Chibaku Tensei como o Pain (25/11/2026)', async () => {
   const { HERO_BY_ID } = await import('../src/game/heroes.ts');
   const kit = id => HERO_BY_ID[id].techniques.map(t => t.name);
-  assert.deepEqual(kit('nagato'), ['Receptores de Chakra', 'Bansho Tenin', 'Chibaku Tensei', 'Invocação dos Caminhos']);
+  // 26/11/2026: o usuário pediu o kit do Rinnegan inteiro igual ao do Pain (a diferença é a ultimate, Kuchiyose: Pein Rikudō).
+  assert.deepEqual(kit('nagato'), kit('pain'));
   assert.deepEqual(kit('pain'), ['Kunai Tática', 'Chibaku Tensei', 'Bansho Tenin', 'Barras de Chakra'], 'o Pain não muda');
   const by = (id, name) => HERO_BY_ID[id].techniques.find(t => t.name === name);
   assert.equal(by('nagato', 'Bansho Tenin').gravity, 'pull'); assert.equal(by('nagato', 'Chibaku Tensei').gravity, 'core');

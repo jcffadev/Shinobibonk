@@ -529,6 +529,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** `src/game/ichirakuRecall.ts` (`ICHIRAKU_RECALL`, `recallCardCount`, `rollRecall`, `recallBlocked`); no GameCanvas, `openRecall`, `learnRecall`, `learnSkillOffer` e `recallZone` (salvo em `campaign.ichirakuRecall`). Condição: espaço de técnica livre e técnica nova disponível no nível; 1 a 3 cartas; planejada ×1,5; uma vez por zona; grátis. **Interpretado:** "50% de chance" = peso 50% maior.
 
+### Como é a ultimate do Nagato? · 26/11/2026
+
+**IMPLEMENTADO.** `src/game/peinRikudo.ts` (`PEIN_RIKUDO`, `RIKUDO_PATHS`, `rikudoDue`, `rikudoTotalPower`) e `runRikudo`/`updateRikudo` no GameCanvas. Kit igual ao do Pain via `rinneganKit`; únicas divididas por `RINNEGAN_FAMILIES`/`sameTechniqueOwner`. **PENDENTE.** Arte dos Seis Caminhos (Codex) e validação em partida.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.
