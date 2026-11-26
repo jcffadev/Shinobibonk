@@ -13,10 +13,15 @@ test('texto, 3 dificuldades e todos os atributos escalando com a dificuldade', (
   assert.deepEqual(YOUTH_DIFFICULTIES, ['Fácil', 'Normal', 'Difícil']);
   assert.ok(YOUTH_STATS.length >= 18, 'todos os atributos da ficha');
   assert.equal(new Set(YOUTH_STATS.map(s => s.key)).size, YOUTH_STATS.length);
-  const easy = youthBonuses('Fácil'), normal = youthBonuses('Normal'), hard = youthBonuses('Difícil');
-  for (const s of YOUTH_STATS) assert.ok(easy[s.key] > 0 && normal[s.key] > easy[s.key] && hard[s.key] > normal[s.key], s.label + ' escala');
+  // 26/11/2026: só o atributo escolhido sobe; força ×4 (Fácil 4 · Normal 8 · Difícil 16).
+  for (const s of YOUTH_STATS) {
+    const easy = youthBonuses('Fácil', s.key), normal = youthBonuses('Normal', s.key), hard = youthBonuses('Difícil', s.key);
+    assert.deepEqual(Object.keys(hard), [s.key], s.label + ' só ele');
+    assert.ok(easy[s.key] > 0 && normal[s.key] > easy[s.key] && hard[s.key] > normal[s.key], s.label + ' escala');
+  }
+  assert.deepEqual(YOUTH_POWER, { Fácil: 4, Normal: 8, Difícil: 16 });
   assert.ok(YOUTH_POWER['Difícil'] > YOUTH_POWER.Normal && YOUTH_POWER.Normal > YOUTH_POWER['Fácil']);
-  assert.equal(youthBonusText(YOUTH_STATS.find(s => s.key === 'damage'), 'Difícil'), '+12%');
+  assert.equal(youthBonusText(YOUTH_STATS.find(s => s.key === 'damage'), 'Difícil'), '+48%');
 });
 
 test('os 5 desafios pedidos, com metas por dificuldade', () => {
@@ -52,10 +57,18 @@ test('a partida liga o Might Guy: NPC, painel, desafio, falha ao ser acertado e 
     'choiceLevel=-13;choiceData=[];',
     "window.addEventListener('shinobi-youth',onYouth);",
     'const youthHit=()=>{if(hp<hpBefore)failYouthNoHit();};queueMicrotask(youthHit);',
-    'const bonus=youthBonuses(run.difficulty);',
+    'const stat=youthStat(run.stat),bonus=youthBonuses(run.difficulty,stat);',
     'if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth){',
     'tickHagoromo(dt);tickYouthRun(dt);',
   ]) assert.ok(canvas.includes(wired), wired);
   assert.equal(missionNpcForEvent('youth'),'guy');
   assert.ok(main.includes('<YouthPanel challenge={world.youth.challenge}/>') && main.includes('<YouthBanner run={world.youth.run}/>'));
+});
+
+test('painel do Guy: escolhe 1 atributo em cartões e manda só ele para o desafio (26/11/2026)', () => {
+  const panel = fs.readFileSync('src/ui/YouthPanel.tsx', 'utf8'), canvas = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.match(panel, /role="radiogroup" aria-label="Atributo do treino"/);
+  assert.match(panel, /new CustomEvent\('shinobi-youth', \{ detail: \{ difficulty, stat \} \}\)/);
+  assert.match(canvas, /if\(typeof detail==='string'\)startYouth\(detail\);else startYouth\(detail\.difficulty,detail\.stat\);/);
+  assert.match(canvas, /stat:youthStat\(chosen\)/);
 });

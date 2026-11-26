@@ -41,12 +41,17 @@ test('em cada raridade, a próxima horda e o chefe só vêm depois do último in
   }
 });
 
-test('9 ferramentas do Sábio (2·2·2·2·1), cada uma com atributo e subefeito', () => {
-  assert.equal(SAGE_TOOLS.length, 9);
-  const count = r => SAGE_TOOLS.filter(t => t.rarity === r).length;
-  assert.deepEqual(['Comum', 'Incomum', 'Raro', 'Épico', 'Lendário'].map(count), [2, 2, 2, 2, 1]);
-  for (const t of SAGE_TOOLS) { assert.ok(Object.keys(t.bonus).length && t.stat && t.detail && t.effect, t.name); }
-  assert.equal(new Set(SAGE_TOOLS.map(t => t.effect)).size, 9, 'subefeitos diferentes');
+test('ferramentas do Sábio: 9 com subefeito (2·2·2·2·1) + 5 de atributo por raridade (26/11/2026)', () => {
+  // "Criar mais recompensas do Hagoromo, pelo menos mais 5 itens de cada raridade".
+  assert.equal(SAGE_TOOLS.length, 34);
+  const special = SAGE_TOOLS.filter(t => t.effect !== 'passive'), passive = SAGE_TOOLS.filter(t => t.effect === 'passive');
+  const count = (list, r) => list.filter(t => t.rarity === r).length, rarities = ['Comum', 'Incomum', 'Raro', 'Épico', 'Lendário'];
+  assert.deepEqual(rarities.map(r => count(special, r)), [2, 2, 2, 2, 1]);
+  assert.deepEqual(rarities.map(r => count(passive, r)), [5, 5, 5, 5, 5]);
+  for (const t of SAGE_TOOLS) { assert.ok(Object.keys(t.bonus).length && t.stat && t.detail && t.effect && t.icon, t.name); }
+  assert.equal(new Set(SAGE_TOOLS.map(t => t.id)).size, 34, 'ids únicos');
+  assert.equal(new Set(SAGE_TOOLS.map(t => t.name)).size, 34, 'nomes únicos');
+  assert.equal(new Set(special.map(t => t.effect)).size, 9, 'subefeitos diferentes');
   assert.deepEqual(toolBonuses(['benihisago', 'shichiseiken']), { gold: .15, exp: .1, damage: .25 });
 });
 

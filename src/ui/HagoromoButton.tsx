@@ -33,13 +33,12 @@ export function HagoromoButton({ keys, progress, need, active, recharge, keyLabe
   </button>;
 }
 
-const TOOL_ICONS: Record<string, string> = { amuleto: '🧿', particulas: '✨', shakujo: '🔱', espada: '🗡️', bashosen: '🪭', kokinjo: '🪢', benihisago: '🏺', kohaku: '⚱️', shichiseiken: '⚔️' };
 /** As 3 vagas das ferramentas do Sábio no cartão do personagem (abaixo do nível e do XP). */
 export function SageToolSlots({ tools }: { tools: readonly string[] }) {
   return <div className="sage-tool-slots" aria-label="Ferramentas do Sábio dos Seis Caminhos">
     {Array.from({ length: HAGOROMO.maxTools }, (_, i) => {
       const tool = tools[i] ? TOOL_BY_ID[tools[i]] : undefined;
-      return <span key={i} className={`sage-tool${tool ? ' rarity-' + tool.rarity.toLowerCase() : ' empty'}`} title={tool ? `${tool.name} · ${tool.rarity} · ${tool.stat}. ${tool.detail}` : 'Vaga livre · ganhe ferramentas no Treinamento do Hagoromo'}>{tool ? TOOL_ICONS[tool.id] : ''}</span>;
+      return <span key={i} className={`sage-tool${tool ? ' rarity-' + tool.rarity.toLowerCase() : ' empty'}`} title={tool ? `${tool.name} · ${tool.rarity} · ${tool.stat}. ${tool.detail}` : 'Vaga livre · ganhe ferramentas no Treinamento do Hagoromo'}>{tool ? tool.icon : ''}</span>;
     })}
   </div>;
 }

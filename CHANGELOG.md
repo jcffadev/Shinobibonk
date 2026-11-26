@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 26/11/2026 · Treino do Guy com 1 buff escolhido e 25 ferramentas novas do Hagoromo (Claude Code)
+
+- **Pedidos do usuário:** "Fazer uma telinha mais bonita no treino do Might Guy e ser possível selecionar apenas 1 buff, ele está buffando a ficha inteira, não deveria ser possível, aumentar a % dos buffs de todos os níveis de dificuldade para compensar." · "Criar mais recompensas do Hagoromo, pelo menos mais 5 itens de cada raridade"
+- **Treino do Might Guy** (`src/game/youthTraining.ts`, `src/ui/YouthPanel.tsx`, estilo em hud-dock.css): o jogador escolhe 1 atributo num cartão antes de começar o desafio; vencer dá só esse atributo (antes, todos os 20 da ficha). Para compensar, a força por dificuldade ficou ×4 (Fácil 4 · Normal 8 · Difícil 16; ex.: dano total +12% / +24% / +48%). Tela nova: dificuldade à esquerda, grade de cartões de atributo à direita (o escolhido em dourado), frase com o ganho e botão "Começar · dificuldade · atributo"; a faixa do desafio mostra o atributo.
+- **Hagoromo** (`SAGE_TOOLS` em `src/game/hagoromoTraining.ts`): +25 ferramentas de atributo (5 por raridade), tesouros e armas da obra — de Etiqueta Explosiva e Hitai-ate da Folha (Comum) a Espelho de Yata, Espada de Totsuka, Gunbai do Uchiha, Magatama dos Seis Caminhos e Manto de Chakra da Kurama (Lendário). Efeito `passive`: só o bônus de atributo; as 9 antigas mantêm o efeito especial. Cada ferramenta ganhou `icon` (usado no HUD e nas cartas). Valores PROPOSTOS.
+- **Testes:** `tests/juventude.test.mjs` (1 teste novo e os antigos ajustados à regra nova) e `tests/hagoromo.test.mjs` (34 ferramentas: 9 com efeito + 5 de atributo por raridade), mínimo 377, e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** painel do Guy e cartas do Hagoromo.
+
 ## 26/11/2026 · Nome inteiro no HUD, XP +10% a cada 100 níveis e menos monstros acumulando (Claude Code)
 
 - **Pedidos do usuário:** "Os nomes dos personagens do lado superior esquerdo, não estão aparecendo as vezes, o HUD está minimizando o nome... isso não deve acontecer." · "aumentar a tabela de XP a cada 100 levels para não estacar tanto exp assim, colocar cerca de 10% mais exp" · "Diminuir um pouco o acumulo de monstros durante a partida esta nascendo monstros demais"

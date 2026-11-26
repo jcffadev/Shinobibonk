@@ -577,6 +577,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** A curva recomeça por zona (decisão do usuário); `ZONE_TOUGHNESS` multiplica a vida e soma defesa por zona (zona 2: ×6, +0,05; zona 3: ×20, +0,10), passado em `zoneThreat(…, tuning, zona)`. Dano: `ZONE_DIFFICULTY`. A defesa dos monstros tem teto de 97% (`SWARM_STEP.armorCap`).
 
+### Como funcionam o treino do Guy e as ferramentas do Hagoromo? · 26/11/2026
+
+**IMPLEMENTADO.** Guy: `youthBonuses(dificuldade, atributo)` dá só o atributo escolhido (`YOUTH_POWER` 4/8/16); o painel manda `{difficulty, stat}` no evento `shinobi-youth`. Hagoromo: `SAGE_TOOLS` com 34 ferramentas (9 com efeito, 25 `passive`), `icon` em cada uma.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

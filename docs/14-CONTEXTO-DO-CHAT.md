@@ -3313,3 +3313,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Os nomes dos personagens do lado superior esquerdo, não estão aparecendo as vezes, o HUD está minimizando o nome... isso não deve acontecer." · "aumentar a tabela de XP a cada 100 levels para não estacar tanto exp assim, colocar cerca de 10% mais exp" · "Diminuir um pouco o acumulo de monstros durante a partida esta nascendo monstros demais
 
 **Resposta.** Nome quebra em duas linhas (fonte menor se longo). XP pedido +10% a cada 100 níveis. 20% menos monstros vivos fora do Final Swarm. **Publicado no GitHub.**
+
+> Fazer uma telinha mais bonita no treino do Might Guy e ser possível selecionar apenas 1 buff, ele está buffando a ficha inteira, não deveria ser possível, aumentar a % dos buffs de todos os níveis de dificuldade para compensar." · "Criar mais recompensas do Hagoromo, pelo menos mais 5 itens de cada raridade
+
+**Resposta.** Treino do Guy: escolhe 1 atributo (cartões), só ele sobe, força ×4; tela redesenhada. Hagoromo: +25 ferramentas de atributo (5 por raridade). **Publicado no GitHub.**

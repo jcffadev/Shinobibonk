@@ -6,13 +6,14 @@ import type { Bonuses, StatKey } from './catalog';
  * (Fácil · Normal · Difícil) e, ao lado, TODOS os atributos com o buff que cada dificuldade dá. Um desafio sorteado:
  * chegar a 10 locais marcados, derrotar X monstros, não ser acertado, vencer o Might Guy ou vencer o Lee.
  * Vencer dá o buff em todos os atributos até o fim da missão. Valores PROPOSTOS — calibrar no simulador.
+ * 26/11/2026 — usuário: "Fazer uma telinha mais bonita no treino do Might Guy e ser possível selecionar apenas 1 buff, ele está buffando a ficha inteira, não deveria ser possível, aumentar a % dos buffs de todos os níveis de dificuldade para compensar": o jogador escolhe 1 atributo antes do desafio e só ele sobe; a força por dificuldade ficou ×4 (era 1 / 2 / 4).
  */
 export type YouthDifficulty = 'Fácil' | 'Normal' | 'Difícil';
 export const YOUTH_DIFFICULTIES: readonly YouthDifficulty[] = ['Fácil', 'Normal', 'Difícil'];
 export const YOUTH_TEXT = 'DEIXE A JUVENTUDE EXPLODIR EM SEU CORAÇÃO';
 
 /** Força do buff por dificuldade (multiplica a escala de cada atributo). */
-export const YOUTH_POWER: Record<YouthDifficulty, number> = { Fácil: 1, Normal: 2, Difícil: 4 };
+export const YOUTH_POWER: Record<YouthDifficulty, number> = { Fácil: 4, Normal: 8, Difícil: 16 };
 
 /** Todos os atributos da ficha e quanto cada um ganha com força 1 (Fácil). */
 export const YOUTH_STATS: readonly { key: StatKey; label: string; step: number; unit: '%' | 'pp' | '' }[] = [
@@ -38,11 +39,13 @@ export const YOUTH_STATS: readonly { key: StatKey; label: string; step: number; 
   { key: 'pickup', label: 'Coleta', step: .05, unit: '%' },
 ];
 
-/** Buff de cada atributo para a dificuldade. */
-export function youthBonuses(difficulty: YouthDifficulty): Bonuses {
-  const power = YOUTH_POWER[difficulty], out: Bonuses = {};
-  for (const stat of YOUTH_STATS) out[stat.key] = stat.step * power;
-  return out;
+export const YOUTH_STAT_BY_KEY = Object.fromEntries(YOUTH_STATS.map(s => [s.key, s])) as Partial<Record<StatKey, (typeof YOUTH_STATS)[number]>>;
+/** Atributo válido do treino (o padrão é Dano total). */
+export const youthStat = (key: unknown): StatKey => typeof key === 'string' && key in YOUTH_STAT_BY_KEY ? key as StatKey : 'damage';
+/** Buff do treino: só o atributo escolhido, na força da dificuldade. */
+export function youthBonuses(difficulty: YouthDifficulty, stat: StatKey): Bonuses {
+  const def = YOUTH_STAT_BY_KEY[youthStat(stat)]!;
+  return { [def.key]: def.step * YOUTH_POWER[difficulty] };
 }
 /** Texto do buff (tabela à direita). */
 export function youthBonusText(stat: (typeof YOUTH_STATS)[number], difficulty: YouthDifficulty) {
@@ -85,7 +88,7 @@ export function youthSpots(x: number, z: number, count: number, rng: () => numbe
   return spots;
 }
 
-export type YouthRun = { challenge: YouthChallengeId; difficulty: YouthDifficulty; timeLeft: number; progress: number; goal: number };
+export type YouthRun = { challenge: YouthChallengeId; difficulty: YouthDifficulty; timeLeft: number; progress: number; goal: number; stat?: StatKey };
 /** Avança o tempo; devolve 'win', 'lose' ou null. `nohit` vence quando o tempo acaba sem golpe. */
 export function tickYouth(run: YouthRun, dt: number): 'win' | 'lose' | null {
   run.timeLeft = Math.max(0, run.timeLeft - dt);

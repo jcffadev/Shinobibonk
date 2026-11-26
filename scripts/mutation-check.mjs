@@ -173,6 +173,8 @@ const MUTATIONS = [
   { regra: 'coletáveis fora de casas e escadarias', arquivo: 'src/scene/collision.ts', de: '&& stairs.every(s => foundationDistance(px, pz, s) > margin);', para: ';' },
   { regra: 'XP pedido +10% a cada 100 níveis', arquivo: 'src/game/progression.ts', de: 'XP_CENTURY={every:100,growth:1.1}', para: 'XP_CENTURY={every:100,growth:1}' },
   { regra: '20% menos monstros vivos fora do Final Swarm', arquivo: 'src/game/progression.ts', de: 'export const HORDE_CAP_SCALE=.8;', para: 'export const HORDE_CAP_SCALE=1;' },
+  { regra: 'treino do Guy dá só o atributo escolhido', arquivo: 'src/game/youthTraining.ts', de: 'return { [def.key]: def.step * YOUTH_POWER[difficulty] };', para: 'const all: Bonuses = {}; for (const s of YOUTH_STATS) all[s.key] = s.step * YOUTH_POWER[difficulty]; return all;' },
+  { regra: 'Hagoromo com 5 ferramentas de atributo por raridade', arquivo: 'src/game/hagoromoTraining.ts', de: "{ id: 'etiqueta', name: 'Etiqueta Explosiva', rarity: 'Comum'", para: "{ id: 'etiqueta', name: 'Etiqueta Explosiva', rarity: 'Incomum'" },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },
