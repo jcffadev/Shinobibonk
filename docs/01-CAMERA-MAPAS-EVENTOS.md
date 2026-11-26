@@ -272,6 +272,13 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
 10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).
 
+### Anotação do usuário para o Codex · 26/11/2026 · escadaria da vila
+
+- "Essa escadaria esta permitindo passar por dentro dela e também não esta fazendo ela estar ai... deixe aviso pro Codex sobre isso, os monstros estão passando dentro dela e se escondendo" (captura do usuário: escadaria de pedra larga ao lado de um muro com cerca de madeira, perto de uma casa, na Vila Oculta da Folha).
+- **O que acontece:** a escadaria aparece na tela, mas não age como objeto sólido. O jogador atravessa o bloco por dentro e os monstros entram nele e ficam escondidos dentro da pedra.
+- **O que conferir:** o sólido dessa escadaria em `src/scene/collision.ts` (`Solid.stair`, `createSolids`, `resolve` e `stairTop`) e em `src/scene/villageTraversal.ts`. O desenho e o sólido têm de bater; os degraus sobem e as laterais e o bloco embaixo bloqueiam o jogador e a horda (que também usa `slideAlong` para contornar construções).
+- Responsável: Codex (mapa e construções). O Claude Code não mexe em arte nem em mapa.
+
 ### Anotação do usuário para o Codex · 25/11/2026
 
 - "Anotação para o Codex: Revisar a cabaça do Gaara, ele andando pra frente, ela fica estranha, não fica o padrão." Conferir a cabaça de areia do Gaara na caminhada para a frente (folhas de movimento das versões do Gaara): ela sai do padrão das outras vistas.

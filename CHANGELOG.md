@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 26/11/2026 · Aviso ao Codex: escadaria sem sólido (Claude Code)
+
+- **Pedido do usuário:** "Essa escadaria esta permitindo passar por dentro dela e também não esta fazendo ela estar ai... deixe aviso pro Codex sobre isso, os monstros estão passando dentro dela e se escondendo"
+- Anotado em docs/01 e docs/13 para o Codex: a escadaria de pedra da Vila da Folha não bloqueia o jogador nem os monstros, que entram e se escondem dentro dela. Nenhum código alterado.
+- **Bijū:** o usuário está investigando por conta própria; fica em docs/13.
+
 ## 26/11/2026 · Final Swarm enche a tela até o teto em todas as zonas (Claude Code)
 
 - **Pedido do usuário:** "No final swarm só tava aparecendo 400 monstros, precisamos que a progressão vá até os 1600, revise" e "Isso para todas as zonas, na zona 1 a progressão funcionou direito".

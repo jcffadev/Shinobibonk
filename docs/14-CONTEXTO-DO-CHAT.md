@@ -3201,3 +3201,12 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > As bijus não apareceram
 
 **Resposta.** O caminho Guardião da zona 3 → portal da arena → Bijū está íntegro no código; pedido ao usuário em que ponto ela não apareceu.
+
+> Portal sem Bijū
+
+**Resposta.** Caminho portal → arena → Bijū conferido (nascimento, vida, imunidade na entrada, arte, esmaecimento, remoção) sem falha visível no código. Suspeita: a entrada só avança quando a folha de arte carrega. Perguntado se a tela ficou roxa e com aviso.
+
+> Essa escadaria esta permitindo passar por dentro dela e também não esta fazendo ela estar ai... deixe aviso pro Codex sobre isso, os monstros estão passando dentro dela e se escondendo
+> A bijuu estou investigando
+
+**Resposta.** Aviso ao Codex registrado em docs/01 e docs/13. Bijū fica com o usuário. **Publicado no GitHub.**

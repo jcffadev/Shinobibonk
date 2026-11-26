@@ -38,6 +38,8 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 - Bijū não é empurrada nem desacelerada; toma dano e status. Ao chegar a 2/3 e 1/3 da vida, fica 3 s atordoada (sem andar nem atacar) e entra em fúria (+25% de dano por fase e 30% a mais de armadura sobre o dano que passa). **PENDENTE DE VALIDAÇÃO E2E:** ver o atordoamento, o aviso e a luta ficar mais dura nas fases 2 e 3.
 - **Codex:** revisar a cabaça do Gaara andando para a frente (docs/01).
+- **Codex (26/11):** escadaria de pedra da Vila da Folha sem sólido: jogador atravessa e monstros se escondem dentro dela (docs/01).
+- **Bijū que não apareceu depois do portal da arena (26/11):** o usuário está investigando; o código do caminho portal → arena → Bijū foi conferido pelo Claude Code e não mostrou falha.
 
 ## Jogador grudado na cerca · 25/11/2026
 
