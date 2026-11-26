@@ -104,3 +104,22 @@ test('inimigo encostado numa construção desliza ao longo dela e não nasce den
   assert.ok(canvas.includes('if(solids.resolveBig(p)&&slideAlong({x:bx,z:bz},p,player.position,enemy.speed*threat.speed*dt))solids.resolveBig(p);'));
   assert.ok(canvas.includes(':arena?{x,z}:solids.freeSpot(x,z,.6);e.position.set(spot.x,'));
 });
+
+test('coletáveis nunca nascem dentro de casas nem de escadarias, mesmo no meio de casas vizinhas (26/11/2026)', async () => {
+  // "As vezes está nascendo pergaminhos dentro das casas, isso não pode ser possível".
+  const { createSolids, COLLISION_RULES } = await import('../src/scene/collision.ts');
+  const { foundationDistance } = await import('../src/scene/villageCollision.ts');
+  const solids = createSolids();
+  // Fileira de casas coladas e uma escadaria: o empurrão simples jogava o ponto de uma casa para dentro da vizinha.
+  for (let i = -3; i <= 3; i++) solids.addBox(i * 5, 0, 2.4, 3, 4);
+  solids.addStair(0, 6, 2, 1.5, 1.2);
+  const margin = COLLISION_RULES.placementMargin;
+  const outside = p => solids.big.every(s => foundationDistance(p.x, p.z, s) > margin) && solids.all.filter(s => s.stair).every(s => foundationDistance(p.x, p.z, s) > margin);
+  for (const [x, z] of [[0, 0], [2.5, 0], [-7.4, 1], [0, 6], [12, -2.9], [0.1, 3.2]]) {
+    const old = solids.freeSpot(x, z), p = solids.safeSpot(x, z);
+    assert.ok(outside(p), `(${x}, ${z}) → (${p.x.toFixed(2)}, ${p.z.toFixed(2)}) ainda dentro`);
+    if (x === 0 && z === 6) assert.ok(!outside(old), 'o freeSpot antigo deixava o ponto na escadaria');
+  }
+  const src = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.match(src, /function spawnPickup\(kind:MapPickup\['kind'\],x:number,z:number\)\{\n\s*\(\{x,z\}=solids\.safeSpot\(x,z\)\);/);
+});

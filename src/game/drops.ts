@@ -25,10 +25,10 @@ export const DROP_CELL_SIZE=8;
 export const DROP_MERGE={perCell:6,kinds:new Set(['xp','ryu','chakra'])};
 /**
  * Orbe de XP some do chão (26/11/2026 — usuário: "Muitos itens estão sendo dropados no chão… passar uns 20s sem pegar o item
- * de EXP vamos fazer sumir do mapa os itens"): orbe de XP parado no chão há mais de `xpSeconds` desaparece (o que o ímã já
+ * de EXP vamos fazer sumir do mapa os itens" → "coloque 10s"): orbe de XP parado no chão há mais de `xpSeconds` desaparece (o que o ímã já
  * puxou continua até chegar). Receber valor de uma junção conta como drop novo (o relógio recomeça).
  */
-export const DROP_EXPIRY={xpSeconds:20};
+export const DROP_EXPIRY={xpSeconds:10};
 export const dropExpired=(type:string,age:number)=>type==='xp'&&age>DROP_EXPIRY.xpSeconds;
 
 /** Indexa o ponto onde cada drop caiu. Só o ímã pode tirá-lo da célula para movê-lo. */

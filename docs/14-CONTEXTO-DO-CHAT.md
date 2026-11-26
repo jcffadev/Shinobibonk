@@ -3305,3 +3305,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Esse 97% seria o dano absorvido? Ou seja independente do valor ele tomaria apenas 3% de dano por golpes? Seria isso?
 
 **Resposta.** ×10 e ×5 por degrau matavam todo mundo antes dos 7 min no simulador (não aplicados). Curva continua por zona; a zona agora multiplica vida (×6 / ×20) e soma defesa (+5 / +10 pontos), dano igual. Sim: 97% é a defesa máxima dos monstros, o golpe tira 3%. **Publicado no GitHub.**
+
+> As vezes está nascendo pergaminhos dentro das casas, isso não pode ser possível e o telhado das casas deve ser 'chão' para os personagens correrem em cima, hoje o personagem cai" · "A questão dos itens que não pegarmos que dropou dos monstros sumir após 20s, coloque 10s.
+
+**Resposta.** Coletáveis nascem fora de casas e escadarias (`safeSpot`). XP some em 10 s. Telhado: a lógica de subir existe, mas depende da caixa de colisão de cada casa — anotado para o Codex. **Publicado no GitHub.**

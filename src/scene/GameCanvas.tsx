@@ -1651,7 +1651,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     runCleanups.push(()=>{guizoGeometry.bell.dispose();guizoGeometry.loop.dispose();for(const m of guizoMaterials.values())m.dispose();});
     let pickupSerial=0;
     function spawnPickup(kind:MapPickup['kind'],x:number,z:number){
-      ({x,z}=solids.freeSpot(x,z));
+      ({x,z}=solids.safeSpot(x,z));
       const names={kunai:'Pergaminho',shuriken:'Pergaminho',ryu:'Morro de bolinhos de arroz',sealDrop:'Pergaminho de recompensa grátis',cursedShuriken:'Shuriken Amaldiçoada',ninjaBody:'Corpo de ninja'};
       const mesh=new THREE.Group();
       mesh.position.set(x,itemSurface(x,z),z);

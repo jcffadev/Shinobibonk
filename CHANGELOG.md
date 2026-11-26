@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 26/11/2026 · Pergaminhos fora das casas, XP some em 10 s, telhado anotado para o Codex (Claude Code)
+
+- **Pedidos do usuário:** "As vezes está nascendo pergaminhos dentro das casas, isso não pode ser possível e o telhado das casas deve ser 'chão' para os personagens correrem em cima, hoje o personagem cai" · "A questão dos itens que não pegarmos que dropou dos monstros sumir após 20s, coloque 10s."
+- **`safeSpot`** (`src/scene/collision.ts`, usado em `spawnPickup`): o ponto de qualquer coletável (pergaminhos, morro de arroz, guizos, drop do Mega Elite) sai das construções E das escadarias com folga de 2,5 m; se ainda não estiver livre, procura em anéis de 2 em 2 m. Antes o `freeSpot` empurrava só 1 m, em duas passadas, sem olhar escadarias — no meio de casas vizinhas o ponto ia parar dentro da outra.
+- **XP no chão:** some em 10 s (era 20).
+- **Telhado como chão — anotado para o Codex (docs/01):** a lógica já mantém o personagem no topo da construção (`roofAt` em villageTraversal.ts, depois de escalar pulando), mas só para construções com altura de topo (`addBox`) e dentro da base de colisão. Suspeitas: construções registradas só como círculo (`addBuilding`, sem topo) e telhado desenhado maior que a base (beiral). Não reproduzível sem navegador.
+- **Testes:** 1 teste novo em `tests/colisao.test.mjs` (mínimo 373), teste do XP ajustado para 10 s e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** pergaminhos na vila e XP sumindo.
+
 ## 26/11/2026 · Resistência por zona: zonas 2 e 3 com mais vida e defesa (Claude Code)
 
 - **Pedidos do usuário:** "Aumente em 10x o HP/Armadura/Dano a cada 3m de jogo dos monstros, no final swarm você vai fazer isso a cada 2m" → "Quero ver se conseguimos melhorar a curva de dificuldade do jogo a progressão está muito alta" → "deixe o dano como está, só armadura e vida, aumente 5x" → "a progressão deveria ser pela zona mesmo, isso está correto. Não acumulativo para partida toda, a unica coisa seria a dificuldade"

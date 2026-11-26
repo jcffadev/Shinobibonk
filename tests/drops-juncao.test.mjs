@@ -52,11 +52,11 @@ test('o jogo junta XP, Ryu e chakra no addDrop', () => {
   assert.match(src, /if\(DROP_MERGE\.kinds\.has\(type\)\)\{const into=drops\.mergeTarget\(x,z,d=>d\.type===type,DROP_MERGE\.perCell\);if\(into\)\{into\.value\+=value;/);
 });
 
-test('orbe de XP parado há mais de 20 s some; Ryu, chakra e o que o ímã puxou ficam (26/11/2026)', async () => {
+test('orbe de XP parado há mais de 10 s some; Ryu, chakra e o que o ímã puxou ficam (26/11/2026)', async () => {
   // "passar uns 20s sem pegar o item de EXP vamos fazer sumir do mapa os itens".
   const { DROP_EXPIRY, dropExpired } = await import('../src/game/drops.ts');
-  assert.equal(DROP_EXPIRY.xpSeconds, 20);
-  assert.equal(dropExpired('xp', 19.9), false); assert.equal(dropExpired('xp', 20.1), true);
+  assert.equal(DROP_EXPIRY.xpSeconds, 10); // 26/11/2026: "coloque 10s" (eram 20)
+  assert.equal(dropExpired('xp', 9.9), false); assert.equal(dropExpired('xp', 10.1), true);
   assert.equal(dropExpired('ryu', 999), false); assert.equal(dropExpired('chakra', 999), false);
   const index = createGroundDropIndex(d => d), grounded = { x: 1, y: 0, z: 1, type: 'xp' }, pulled = { x: 2, y: 0, z: 2, type: 'xp' };
   index.add(grounded); index.add(pulled); index.startPull(pulled);

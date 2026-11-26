@@ -157,6 +157,23 @@ export function createSolids() {
     },
     /** Devolve o ponto mais próximo fora das construções. */
     freeSpot(x: number, z: number, margin = 1) { const p = { x, z }; push(big, p, margin); push(big, p, margin); return p; },
+    /**
+     * Ponto para coletáveis (26/11/2026 — usuário: "As vezes está nascendo pergaminhos dentro das casas, isso não pode ser
+     * possível"). O freeSpot empurrava só 1 m e em duas passadas: no meio de casas vizinhas podia cair dentro da outra, e as
+     * escadarias não contavam. Aqui o ponto sai das construções E das escadarias com a folga de posicionamento; se ainda não
+     * estiver livre, procura em anéis de 2 em 2 m em volta do ponto pedido.
+     */
+    safeSpot(x: number, z: number, margin = COLLISION_RULES.placementMargin) {
+      const free = (px: number, pz: number) => big.every(s => foundationDistance(px, pz, s) > margin) && stairs.every(s => foundationDistance(px, pz, s) > margin);
+      const p = { x, z };
+      for (let pass = 0; pass < 3; pass++) { push(big, p, margin + .01); push(stairs, p, margin + .01); }
+      if (free(p.x, p.z)) return p;
+      for (let ring = 1; ring <= 10; ring++) for (let k = 0; k < 12; k++) {
+        const a = (k + ring * .5) / 12 * Math.PI * 2, qx = x + Math.cos(a) * ring * 2, qz = z + Math.sin(a) * ring * 2;
+        if (free(qx, qz)) return { x: qx, z: qz };
+      }
+      return p;
+    },
   };
 }
 

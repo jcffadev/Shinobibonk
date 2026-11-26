@@ -272,6 +272,13 @@ Nada disso foi visto na tela pelos agentes (sem navegador). Tudo está **PENDENT
 9. **Fenda:** desenho em "Fila" acima (portal, arena, ondas, chefe com tempo, relíquias em 3 vagas com subpassiva).
 10. **Balancear os status:** muitas técnicas só dão crítico (Pedra e Água inclusive).
 
+### Anotação do usuário para o Codex · 26/11/2026 · telhado das casas como chão
+
+- "o telhado das casas deve ser 'chão' para os personagens correrem em cima, hoje o personagem cai".
+- **O que existe:** pular contra a parede escala a construção (`jump`/`advance` em `src/scene/villageTraversal.ts`) e `roofAt` mantém o apoio no topo enquanto o ponto está dentro da base (`foundationDistance < .045`). Só vale para sólidos com `top` (`solids.addBox` em villageArchitecture.ts e memorialStone.ts).
+- **O que conferir:** construções registradas só como círculo (`addBuilding`, sem `top`) não têm telhado andável; e o telhado desenhado (beiral e inclinação) é maior e mais alto que a caixa de colisão, então na beirada o personagem perde o apoio e cai. O sólido de cada casa precisa ter o `top` na altura do telhado e cobrir a área desenhada; junto da escadaria (anotação acima).
+- Responsável: Codex (mapa e construções). Mandar prévia ao usuário.
+
 ### Anotação do usuário para o Codex · 26/11/2026 · arte dos guizos
 
 - Referência do usuário: um par de guizos prateados redondos pendurados por cordão (imagem enviada no chat). Fazer o guizo do chão em 6 cores, uma por efeito: Ímã azul #45b8ff, Dificuldade vermelho #ff4b4b, Isca laranja #ff9f2e, Nevasca branco #e9f7ff, Raio amarelo #ffe23d e Força da Juventude verde #38d878.
