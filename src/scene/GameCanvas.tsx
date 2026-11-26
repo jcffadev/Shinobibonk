@@ -50,7 +50,7 @@ import { createMissionStructures, type MissionStructure } from './missionStructu
 import { createMissionNpcs, missionNpcForEvent, type MissionNpc } from './missionNpcs';
 import { villageRandom } from './villageDistricts';
 import { createVillageTraversal, moveVillageActor } from './villageTraversal';
-import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE, PLAYER_SIZE } from '../game/worldScale';
+import { MAP_SIZE, WORLD_LIMIT, ZONE_SECONDS, ACTOR_SCALE, ATTACK_SCALE, PLAYER_SIZE, keepInPlayArea } from '../game/worldScale';
 import { playHurt, playSfx, playTechniqueSound } from '../audio/sfx';
 import { createDamageFlash, flashStrength, impactOpacity, registerHit, vignetteOpacity } from '../game/damageFeedback';
 // Rodada 42 — trilha sonora: "The Raising Fighting Spirit" ao iniciar a luta contra a bijū (também está no pool de run).
@@ -2097,6 +2097,8 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         if(enemy.poison){const duration=Math.min(dt,enemy.poison.remaining);enemy.poison.remaining-=duration;takeDamage(enemy,enemy.poison.dps*duration*poisonMultiplier(enemy.poisonStacks),'#b67bff');if(!enemyList.includes(enemy))continue;if(enemy.poison.remaining<=0){enemy.poison=undefined;enemy.poisonStacks=0;}}
         enemy.sprite.material.color.lerp(enemy.elite?ELITE_TINT:WHITE_TINT,dt*6);if(enemy.fixedArt)enemy.fixedArt.material.color.copy(enemy.sprite.material.color);if((enemy.burn??0)>0){enemy.burn=Math.max(0,(enemy.burn??0)-dt);takeDamage(enemy,stats.damage*.15*dt*(1+ex('statusDamage'))*elementMultiplier(stats.extra,'Fogo'),'#ff9b46');if(!enemyList.includes(enemy))continue;}if(enemy.totem)continue;enemy.controlTime=Math.max(0,(enemy.controlTime||0)-dt);enemy.slow=Math.max(0,(enemy.slow||0)-dt);tickStatus(enemy,dt);const channeling=!hagoromoEvent&&isChanneling(weatherEvent,enemy.heroId,elapsed);enemy.arrivalGuard=Math.max(0,(enemy.arrivalGuard??0)-dt);const stunned=channeling||enemy.arrivalGuard>0||!enemy.bijuu&&enemy.controlTime>0&&enemy.control!=='Lentidão';const casting=enemy.boss?bossCombat.update(enemy,dt,Boolean(enemy.guardian||enemy.megaElite&&!enemy.account)&&!stunned&&enemy.windup===undefined&&!defeated):false;if(defeated)break;
         const sprite=enemy.sprite,batched=enemyRenderer.isBatched(sprite),motion=enemy.motion;
+        // Nenhum inimigo (Bijū inclusive) fica fora da área do jogador depois de empurrões e puxões.
+        keepInPlayArea(sprite.position);
         dir.set(player.position.x-sprite.position.x,0,player.position.z-sprite.position.z);
         const distance=dir.length();
         const ranged=enemy.ranged!==undefined,reach=ranged?8:stuckReach(enemy.stuck??={},distance,enemy.megaElite?1.6:1,elapsed);

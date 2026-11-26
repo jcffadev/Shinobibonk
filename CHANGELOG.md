@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 25/11/2026 · Inimigos e Bijū não saem da área do jogador (Claude Code)
+
+- **Pedido do usuário:** "As Bijuus estão indo para uma área morta do mata, onde nosso personagem não consegue ir para mata-la"
+- **Causa:** o jogador fica preso no limite do mapa (`WORLD_LIMIT`), mas os inimigos não; golpes que empurram ou puxam levavam a Bijū para fora.
+- **`keepInPlayArea`** (`src/game/worldScale.ts`): o laço dos inimigos no GameCanvas traz de volta para dentro do limite quem saiu.
+- **Testes:** 1 teste novo em `tests/chefes.test.mjs` (mínimo 317) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E.**
+
 ## 25/11/2026 · Jogador grudado na cerca não fica mais imortal (Claude Code)
 
 - **Pedido do usuário:** "Verificar o personagem grudado na cerca, não tomar dano e ficar imortal."

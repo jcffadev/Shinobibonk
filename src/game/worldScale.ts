@@ -13,3 +13,15 @@ export const ATTACK_SCALE = .7;
  */
 export const MONSTER_VISIBLE_HEIGHT = 2.0 * .83;
 export const PLAYER_SIZE = Math.round(MONSTER_VISIBLE_HEIGHT / 2.32 * 100) / 100;
+
+/**
+ * Mantém um ator na área em que o jogador anda (25/11/2026 — pedido do usuário: "As Bijuus estão indo para uma área morta do
+ * mata, onde nosso personagem não consegue ir para mata-la"). Empurrões e puxões levavam inimigos para fora do limite.
+ * Devolve true se precisou trazer de volta.
+ */
+export function keepInPlayArea(p: { x: number; z: number }, limit = WORLD_LIMIT) {
+  const x = Math.max(-limit, Math.min(limit, p.x)), z = Math.max(-limit, Math.min(limit, p.z));
+  const moved = x !== p.x || z !== p.z;
+  p.x = x; p.z = z;
+  return moved;
+}

@@ -66,3 +66,14 @@ test('missão até a arena: 1 + planos pergaminhos por Guardião (4 com 3 planos
   const sim = (await import('node:fs')).readFileSync(new URL('../scripts/simulate-run.mjs', import.meta.url), 'utf8');
   assert.ok(sim.includes('const scrolls = 1 + Math.min(GUARDIAN_RULES.shikamaruMaxPlans, plans);'), 'simulador segue a recompensa do jogo');
 });
+
+test('Bijū e inimigos não saem da área do jogador (25/11/2026)', async () => {
+  const { keepInPlayArea, WORLD_LIMIT } = await import('../src/game/worldScale.ts');
+  const out = { x: WORLD_LIMIT + 9, z: -WORLD_LIMIT - 3 };
+  assert.equal(keepInPlayArea(out), true);
+  assert.deepEqual(out, { x: WORLD_LIMIT, z: -WORLD_LIMIT });
+  const inside = { x: 10, z: -20 };
+  assert.equal(keepInPlayArea(inside), false);
+  assert.deepEqual(inside, { x: 10, z: -20 });
+  assert.ok(canvas.includes('keepInPlayArea(sprite.position);'), 'o laço dos inimigos traz de volta quem saiu');
+});
