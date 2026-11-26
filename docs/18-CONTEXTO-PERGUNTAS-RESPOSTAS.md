@@ -521,6 +521,10 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 
 **IMPLEMENTADO.** 5 tipos de pílula por run (`PILL_SLOTS`). No Mercador, o item custa base da raridade × 1,35^compras × inflação por minuto; roletar não mexe nesse preço, só no da próxima roletada (×1,5 por uso).
 
+### A Sorte entra nos buffs de evento? · 26/11/2026
+
+**IMPLEMENTADO.** Régua única em `src/game/luckQuality.ts` (`luckQuality`, `skewedRoll`): Hagoromo (raridade e ferramentas), Ebisu e lição do Iruka. Altar: `altarLuckMultiplier` no valor. Cartas, Mercador e Caça-Níquel: regras próprias de Sorte. **Em aberto:** a raridade do altar no mapa não usa Sorte.
+
 ### Chefes · 25/11/2026
 
 - Medição de chefes: `scripts/simulate-bosses.mjs` (`guardianProbe`, `bijuuProbe`, `ARMOR_OPTIONS`). Bijū: `BIJUU_RULES`, `bijuuVitality`, `bijuuDefense` em `src/game/bijuu.ts`. Armadura bruta: `guardianArmor`. Limite numérico: `BOSS_HP_LIMIT` / `finiteBossHp` em `src/game/missions.ts`.

@@ -1,5 +1,6 @@
 import type { Bonuses, StatKey } from './catalog';
 import type { Technique } from './heroes';
+import { skewedRoll } from './luckQuality.ts';
 
 /**
  * NPCs de evento: Ebisu e Iruka. Iruka também está no elenco jogável por missão.
@@ -67,11 +68,12 @@ function costKeyFor(buff: StatKey, cost: number, canLose: (key: StatKey, cost: n
 }
 
 /** Ebisu: 3 trocas com atributos de ganho distintos; custo = 110% do ganho, em outro atributo. */
-export function rollEbisuDeals(canLose: (key: StatKey, cost: number) => boolean, rng = Math.random): StatDeal[] {
+/** `quality` (0–1, luckQuality da Sorte) puxa o ganho para o máximo; o custo segue 10% acima do ganho. */
+export function rollEbisuDeals(canLose: (key: StatKey, cost: number) => boolean, rng = Math.random, quality = 0): StatDeal[] {
   const keys = DEAL_STATS.map((s) => s.key), out: StatDeal[] = [];
   while (out.length < 3 && keys.length) {
     const key = pick(keys, rng), r = NPC_RULES.ebisu;
-    const value = Math.round((r.min + rng() * (r.max - r.min)) * 100) / 100;
+    const value = Math.round((r.min + skewedRoll(rng, quality) * (r.max - r.min)) * 100) / 100;
     const cost = Math.round(value * r.costFactor * 1000) / 1000;
     const costKey = costKeyFor(key, cost, canLose, rng);
     if (costKey) out.push({ key, value, costKey, cost });
@@ -80,9 +82,9 @@ export function rollEbisuDeals(canLose: (key: StatKey, cost: number) => boolean,
 }
 
 /** Iruka (1): pequeno ganho sem custo. */
-export function rollIrukaLesson(rng = Math.random): StatDeal {
+export function rollIrukaLesson(rng = Math.random, quality = 0): StatDeal {
   const r = NPC_RULES.irukaLesson, key = DEAL_STATS[Math.floor(rng() * DEAL_STATS.length)].key;
-  return { key, value: Math.round((r.min + rng() * (r.max - r.min)) * 100) / 100 };
+  return { key, value: Math.round((r.min + skewedRoll(rng, quality) * (r.max - r.min)) * 100) / 100 };
 }
 
 /** Iruka (2): 3 atributos lendários distintos, cada um com custo de 20% em outro atributo. */

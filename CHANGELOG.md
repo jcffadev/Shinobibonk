@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 26/11/2026 · Sorte na qualidade de Hagoromo, Ebisu e Iruka (Claude Code)
+
+- **Pedido do usuário:** "A qualidade dos buffs dos altares/npcs/hagoromo também são influenciados pela sorte" · "Não sei se hoje isso esta sendo considerado"
+- **Como estava:** cartas de nível, Mercador e Caça-Níquel já usavam a Sorte; o altar só no valor da bênção (+2% por ponto acima de 10, até +120%). Hagoromo, Ebisu e a lição do Iruka ignoravam a Sorte.
+- **Novo `src/game/luckQuality.ts`:** `luckQuality` (0 até Sorte 10, 1 em Sorte 70, a mesma faixa do altar) e `skewedRoll` (sorteio que tende ao máximo: média 0,5 sem Sorte e 0,75 com qualidade 1).
+- **Hagoromo:** a Sorte puxa a raridade do treino e das ferramentas oferecidas (o parâmetro `quality` existia e nunca era passado).
+- **Ebisu e lição rápida do Iruka:** o ganho tende ao máximo da faixa; o custo do Ebisu continua 10% acima do ganho. O pergaminho lendário do Iruka já dá o valor máximo.
+- **Altar:** sem mudança; a raridade de cada altar continua fixa no mapa.
+- **Testes:** novo `tests/sorte-qualidade.test.mjs` (4 testes, mínimo 341) e 2 mutações novas, verificadas à mão.
+
 ## 26/11/2026 · Cinco espaços de pílula e Mercador sem alta ao roletar (Claude Code)
 
 - **Pedidos do usuário:** "Temos 6 espaços, eu quero 5 no jogo e no hud" · "No mercador, quando não selecionarmos nenhum item, só aumentar o valor de roletar não dos itens disponíveis pra escolha, a % de aumento do preço dos itens, só aumentam considerando quantos itens eu comprei por pool. Hoje eles estão aumentando roletando mesmo sem comprar nada."

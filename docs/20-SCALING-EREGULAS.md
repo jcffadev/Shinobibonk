@@ -468,3 +468,7 @@ Bênção do altar: valores base da Rodada 51 de 5/8/12/18/25% por raridade e mu
 - **Ímã do morro:** todo drop no chão (XP, Ryu, chakra, cura, pílula) entra no ímã global de 10 s e voa com velocidade ≥ distância/1,2 s — chega em ~1,2 s de qualquer ponto do mapa.
 
 Exemplos para o jogador ficam no Guia do jogo, em src/game/glossary.ts. Sincronize-os com as mudanças das regras nesta seção.
+
+## Sorte na qualidade dos buffs de evento · 26/11/2026
+
+`luckQuality(sorte) = clamp((sorte − 10) / 60, 0, 1)` (src/game/luckQuality.ts). Hagoromo: `rollHagoromoRarity` e `rollToolOffers` multiplicam o peso de cada raridade por `1 + qualidade × índice`. Ebisu e lição do Iruka: `valor = mín + (máx − mín) × rng^(1/(1+2×qualidade))`. Altar: `altarLuckMultiplier = 1 + min(1,2; (sorte − 10) × 0,02)`.

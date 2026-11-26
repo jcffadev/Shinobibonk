@@ -80,7 +80,8 @@ import { createVirtualCursor } from './virtualCursor';
 import { createSusanooFx } from './susanooFx';
 import { susanooStyleFor } from '../game/susanoo';
 import { spawnBudgetFor, zoneThreat, zoneCurse, calculateStats, incomingDamage, rollCritical, MISSION_TIER, normalHpFactor, SPAWN_RING, AMBUSH_RULES, ENEMY_SCALING, FINAL_SWARM, SWARM_STEP, swarmStep, ZONE_DIFFICULTY, xpToLevelUp, effectiveLootLuck, type Difficulty, type Stats } from '../game/progression';
-import { buildAltarOffers, extraStrikes } from '../game/altarRewards';
+import { buildAltarOffers, extraStrikes } from '../game/altarRewards'
+import { luckQuality } from '../game/luckQuality';
 import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
 import { castProgress, blendFog, mistHides, isChanneling, CAST_DISTANCE } from '../game/weatherCast';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
@@ -924,13 +925,13 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     function applyDeal(source:string,d:StatDeal){for(const [key,value] of Object.entries(dealBonuses(d)))runBuffs[key as keyof Bonuses]=(runBuffs[key as keyof Bonuses]||0)+(value as number);npcDeals.push({source,deal:d});refreshStats(true);playSfx('pickup');}
     function finishNpc(message:string){if(npcEvent){npcEvent.active=false;if(npcEvent.id==='ebisu')ebisuDeals=null;else{irukaLesson=null;irukaScroll=null;}}npcEvent=null;choiceData=null;keys.clear();eventToast=message;}
     function openEbisu(event:(typeof events)[number]){
-      ebisuDeals??=rollEbisuDeals(canLose);if(!ebisuDeals.length){ebisuDeals=null;eventToast='Ebisu: nenhum atributo seu aguenta o custo da troca agora.';return false;}
+      ebisuDeals??=rollEbisuDeals(canLose,Math.random,luckQuality(stats.luck));if(!ebisuDeals.length){ebisuDeals=null;eventToast='Ebisu: nenhum atributo seu aguenta o custo da troca agora.';return false;}
       npcEvent=event;choiceLevel=-3;banning=false;keys.clear();
       choiceData=ebisuDeals.map((d,i)=>dealCard('ebisu-'+i,d,'Épico','🕶',' (10% a mais que o ganho)'));
       eventToast='Ebisu: treino de elite. Todo ganho cobra 10% a mais em outro atributo.';return true;
     }
     function irukaMenu():LevelOffer[]{
-      irukaLesson??=rollIrukaLesson();const joined=allies.includes('iruka'),full=allyActors.length>=stats.supportSlots;
+      irukaLesson??=rollIrukaLesson(Math.random,luckQuality(stats.luck));const joined=allies.includes('iruka'),full=allyActors.length>=stats.supportSlots;
       return [
         {...dealCard('iruka-lesson',irukaLesson,'Incomum','📖',''),name:'Lição rápida · '+dealText(irukaLesson)},
         {id:'iruka-scroll',kind:'stat',name:'Pergaminho lendário',rarity:'Lendário',icon:'📜',description:`Abre 3 atributos de nível lendário (valor máximo). Você escolhe 1 e perde −${pctText(NPC_RULES.irukaLegendaryCost)} de outro atributo seu, mostrado na carta antes de confirmar.`},
@@ -997,7 +998,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     function activateHagoromo(){
       if(!enabledRef.current||pausedRef.current||debugOpenRef.current||hagoromoEvent||arena||defeated||victory||sealing||choiceData||roulette)return;
       if(hagoromo.keys<=0){eventToast=hagoromoRecharges('classico',hagoromoBossDown)?`Treinamento do Hagoromo: faltam ${HAGOROMO.killsPerKey-hagoromo.progress} abates para a próxima chave.`:'Treinamento do Hagoromo: sem recarga depois do chefe da zona (volta na próxima zona).';snapshotTimer=0;return;}
-      hagoromo.keys--;const rarity=rollHagoromoRarity();
+      hagoromo.keys--;const rarity=rollHagoromoRarity(Math.random,luckQuality(stats.luck));
       hagoromoEvent={rarity,wave:0,origin:{x:player.position.x,z:player.position.z},mega:null,completed:false,
         outsideEnemies:enemyList.splice(0),outsideDrops:drops};
       drops=hagoromoGround;
@@ -1032,7 +1033,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       for(const enemy of outsideEnemies){if(enemy.boss?.cast)enemy.boss.cast.marker.visible=true;}
       lockedTarget=null;traversal.reset();
       player.position.set(origin.x,standHeight(origin.x,origin.z)+player.scale.y*.5,origin.z);addRing(player.position,'#c9b8ff',3);
-      const offers=rollToolOffers(hagoromo.tools,rarity);
+      const offers=rollToolOffers(hagoromo.tools,rarity,Math.random,HAGOROMO.offers,luckQuality(stats.luck));
       if(!offers.length){eventToast='Treinamento do Hagoromo concluído · você já tem todas as ferramentas.';snapshotTimer=0;saveRun();return;}
       choiceLevel=-11;choiceData=offers.map(tool=>toolCard(tool));banning=false;keys.clear();snapshotTimer=0;saveRun();
     }

@@ -9,8 +9,9 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Espaços de pílula | 6 → 5 tipos por run |
-| (este commit) | Preço dos itens do Mercador | +35% por compra e +12% por roletada → só +35% por compra (roletar encarece só a roletada) |
+| (este commit) | Sorte em Hagoromo, Ebisu e Iruka | sem efeito → qualidade 0 (Sorte ≤ 10) a 1 (Sorte 70): raridade do treino e das ferramentas, e ganho do Ebisu/lição do Iruka puxado ao máximo |
+| `635981d` | Espaços de pílula | 6 → 5 tipos por run |
+| `635981d` | Preço dos itens do Mercador | +35% por compra e +12% por roletada → só +35% por compra (roletar encarece só a roletada) |
 | `230f28d` | Reposição da horda no Final Swarm | teto ÷ 4 s por segundo (tela ~400 com herói forte nas zonas 2 e 3) → repõe até o teto a cada quadro (até 120 por quadro) |
 | `b474f9c` | Lamens do fim da run | nível 4/nível sem teto → 2/nível até 100 níveis; selados até 4; Bijū 180 → 60 por dificuldade e até 3 planos; vitória Kage ≈ 3 mil (a run de 76 min caiu de 56.031 para 3.038) |
 | `342da25` | Susano'o no pool | Itachi ANBU, Shisui e Sasuke Shippuden só depois de selar outro usuário → no próprio pool (Nv 12) |

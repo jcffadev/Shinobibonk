@@ -3216,3 +3216,8 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > No mercador, quando não selecionarmos nenhum item, só aumentar o valor de roletar não dos itens disponíveis pra escolha, a % de aumento do preço dos itens, só aumentam considerando quantos itens eu comprei por pool. Hoje eles estão aumentando roletando mesmo sem comprar nada.
 
 **Resposta.** PILL_SLOTS 6 → 5 (jogo, HUD e ficha). Mercador: o preço dos itens sobe só pelas compras; roletar encarece só a roletada. **Publicado no GitHub.**
+
+> A qualidade dos buffs dos altares/npcs/hagoromo também são influenciados pela sorte
+> Não sei se hoje isso esta sendo considerado
+
+**Resposta.** Altar já usava a Sorte no valor; Hagoromo, Ebisu e lição do Iruka não. Agora usam `luckQuality` (Sorte 10 → 0, Sorte 70 → 1). **Publicado no GitHub.**
