@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 26/11/2026 · Teto na cura por roubo de vida e por abate (Claude Code)
+
+- **Pedido do usuário:** "Sim, aplicar teto" (proposta: até 10% da vida máxima por segundo, para o Final Swarm +30 ficar quase impossível).
+- **Novo `src/game/healCap.ts`** (`HEAL_CAP`, `refillHealBudget`, `spendHeal`) + `cappedHeal` no GameCanvas: roubo de vida e cura por abate dividem uma reserva que enche 10% da vida máxima por segundo e guarda no máximo 1 s. Regeneração, bolinhos, Naraka e outras curas não entram no teto. O simulador usa o mesmo teto.
+- **Simulação** (Kimimaro, conta no máximo, semente 1): antes não morria nunca; agora cai aos 50 min no Kage (Final Swarm +20) e aos 60 min no Genin (Final Swarm +30).
+- **Testes:** novo `tests/teto-cura.test.mjs` (2 testes, mínimo 366) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** partida longa com item de roubo de vida.
+
 ## 26/11/2026 · Barras de vida de chefes e Mega Elites no HUD (Claude Code)
 
 - **Pedido do usuário:** "Ao nascer um elite a vida dele precisa ter a barrinha de hp aparecendo abaixo de onde mostra as informações do mapa centralizado um pouco mais acima do centro, hoje isso está em cima das informações do mapa e está em números o hp..."

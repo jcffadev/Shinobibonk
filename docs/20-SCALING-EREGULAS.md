@@ -476,3 +476,7 @@ Exemplos para o jogador ficam no Guia do jogo, em src/game/glossary.ts. Sincroni
 ## Degraus do Final Swarm que escalam · 26/11/2026
 
 Degrau `k = floor(segundos de Final Swarm / 300)`. Vida ×Π(1 + 0,5·i), dano ×Π(1 + 0,3·i) para i = 1..k; defesa +0,02·k(k+1)/2, até `SWARM_STEP.armorCap` = 97%. Funções `swarmStepHp`, `swarmStepDamage`, `swarmStepArmor` em src/game/progression.ts.
+
+## Teto de cura · 26/11/2026
+
+Roubo de vida (`lifesteal` × dano causado) e cura por abate (`killHeal`, 2% da vida) passam por uma reserva: enche `HEAL_CAP.perSecond` = 10% da vida máxima por segundo, guarda até 1 s (src/game/healCap.ts).

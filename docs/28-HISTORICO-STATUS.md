@@ -9,7 +9,8 @@ Pedido do usuário (25/11/2026): "Crie um .md referente ao status de todos os pe
 
 | Build | O que mudou | Antes → agora |
 |---|---|---|
-| (este commit) | Degraus do Final Swarm | +50% vida, +30% dano, +2 pontos de defesa por degrau (até 95%) → o degrau k vale k vezes (+30 min: vida ×315, dano ×61, +42 pontos até 97%) |
+| (este commit) | Cura por roubo de vida e por abate | sem teto (curava bilhões por segundo) → até 10% da vida máxima por segundo |
+| `0b2530f` | Degraus do Final Swarm | +50% vida, +30% dano, +2 pontos de defesa por degrau (até 95%) → o degrau k vale k vezes (+30 min: vida ×315, dano ×61, +42 pontos até 97%) |
 | `3e1f14b` | Roleta da Tsunade | ×1,7 por giro + 15%/min + 25%/zona → +20% por giro, só |
 | `3e1f14b` | Kunai/shuriken/pergaminho pago | ×1,5 por abertura + 15%/min → +20% por abertura, só |
 | `173b290` | Guardião: empurrão e puxão | puxões o moviam 40% → Guardião, Bijū e Totem não se movem |

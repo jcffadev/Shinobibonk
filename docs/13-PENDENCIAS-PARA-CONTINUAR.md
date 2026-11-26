@@ -38,7 +38,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 
 - Bijū não é empurrada nem desacelerada; toma dano e status. Ao chegar a 2/3 e 1/3 da vida, fica 3 s atordoada (sem andar nem atacar) e entra em fúria (+25% de dano por fase e 30% a mais de armadura sobre o dano que passa). **PENDENTE DE VALIDAÇÃO E2E:** ver o atordoamento, o aviso e a luta ficar mais dura nas fases 2 e 3.
 - **Codex:** revisar a cabaça do Gaara andando para a frente (docs/01).
-- **Decisão do usuário (26/11):** teto na cura por roubo de vida e por abate (proposta: até 10% da vida máxima por segundo). Sem ele, o fim de jogo fica imortal contra a horda, porque a cura é % do dano causado (bilhões). Simulação com o teto: Kimimaro no máximo cai em FS +20.
+- **Resolvido (26/11):** teto de 10% da vida máxima por segundo na cura por roubo de vida e por abate (src/game/healCap.ts).
 - **Resolvido (26/11):** roleta da Tsunade e kunais/pergaminhos agora sobem só +20% por uso.
 - **Codex (26/11):** arte dos 6 guizos (referência do usuário: guizos prateados com cordão), prévia antes de aplicar (docs/01).
 - **Codex (26/11):** efeitos de tela de Haku (névoa/tempestade de gelo não apareceu), Gaara e Zabuza; mandar prévia ao usuário antes de aplicar (docs/01).

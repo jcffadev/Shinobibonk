@@ -23,6 +23,7 @@ import { guardianVitality, guardianDefense, GUARDIAN_RULES } from '../src/game/m
 import { ATTACK_SCALE } from '../src/game/worldScale.ts';
 import { POWERLEVEL_RATE, POWERLEVEL_ATTRIBUTES } from '../src/game/powerlevel.ts';
 import { ZONE_SECONDS } from '../src/game/worldScale.ts';
+import { HEAL_CAP } from '../src/game/healCap.ts';
 
 /**
  * Geometria da horda: inimigos por m² colados no jogador. Pressão: golpes recebidos por segundo =
@@ -206,7 +207,8 @@ export function simulateRun({ heroId = 'naruto', mission = 'Genin', minutes = 30
     const hits = Math.min(CROWD.maxHitsPerSecond, CROWD.maxHitsPerSecond * (s.alive / (s.alive + pressureK)) ** 2 * threat.attackRate) * (1 - stats.evasion);
     // Nerf da horda e teto por golpe (PLAYER_HIT_RULES, 25/11/2026).
     const incoming = hits * playerHitDamage(incomingDamage(10 * threat.damage * (1 + e * .6), stats.armor), stats.maxHp, 'horde');
-    const heal = stats.regen + dealt * ex('lifesteal') + kills * ex('killHeal') * stats.maxHp * .02 + kills * .025 * CROWD.ramenPickup * .35 * stats.maxHp;
+    // Teto do roubo de vida e da cura por abate (HEAL_CAP, 26/11/2026).
+    const heal = stats.regen + Math.min(stats.maxHp * HEAL_CAP.perSecond, dealt * ex('lifesteal') + kills * ex('killHeal') * stats.maxHp * .02) + kills * .025 * CROWD.ramenPickup * .35 * stats.maxHp;
     s.hp = Math.min(stats.maxHp, s.hp - incoming + heal);
     if (s.hp <= 0) { if (s.revives > 0) { s.revives--; s.hp = stats.maxHp * .35; } else s.dead = true; }
     s.t++; s.zoneT++;

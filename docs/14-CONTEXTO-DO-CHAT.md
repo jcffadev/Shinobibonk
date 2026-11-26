@@ -3271,3 +3271,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Ao nascer um elite a vida dele precisa ter a barrinha de hp aparecendo abaixo de onde mostra as informações do mapa centralizado um pouco mais acima do centro, hoje isso está em cima das informações do mapa e está em números o hp...
 
 **Resposta.** Barras de vida sem números, centralizadas a 30% da altura da tela, para Guardião/Bijū e até 2–3 Mega Elites mais perto; substituem a faixa de texto do topo. **Publicado no GitHub.**
+
+> Sim, aplicar teto
+
+**Resposta.** Roubo de vida e cura por abate limitados a 10% da vida máxima por segundo. Simulação: Kimimaro no máximo cai no FS +20 (Kage) e +30 (Genin). **Publicado no GitHub.**
