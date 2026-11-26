@@ -3142,3 +3142,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Seria o teto por golpe, como nosso jogo tem muito mais monstros do que nosso jogo referência, temos que nerfar o dano dos monstros, menos dos megas/bosses/bijuus... Nerf 30% do dano de todos
 
 **Resposta.** O hitkill vinha da Ultimate do Mega Elite. Agora a horda dá 30% menos dano e nenhum golpe de comum, elite ou Mega Elite passa de 40% da vida; Guardião e Bijū iguais. **Publicado no GitHub.**
+
+> Porque o FPS ta cravando no hz do monitor? Deixa livre ou sem essa configuração, temos opções de FPS nas configurações deixe o jogador escolher se for o caso.
+
+**Resposta.** O V-Sync vinha ligado por padrão. Agora o FPS sai livre e o jogador escolhe V-Sync e limite nas configurações. **Publicado no GitHub.**

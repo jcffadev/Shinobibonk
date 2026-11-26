@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · FPS livre por padrão (Claude Code)
+
+- **Pedido do usuário:** "Porque o FPS ta cravando no hz do monitor? Deixa livre ou sem essa configuração, temos opções de FPS nas configurações deixe o jogador escolher se for o caso."
+- **Causa:** o V-Sync vinha ligado por padrão e prende o FPS na taxa do monitor.
+- **`src/game/settings.ts`:** V-Sync desligado por padrão (FPS livre; limite "Sem limite"); migração v3 → v4 desliga o V-Sync de quem estava no padrão antigo. O jogador escolhe V-Sync e limite de FPS em Configurações → Gráficos.
+- No navegador o FPS livre é o melhor esforço (o navegador ainda pode segurar); usa mais CPU e esquenta mais que o V-Sync.
+- **Testes:** 1 teste novo em `tests/configuracoes.test.mjs` (mínimo 322) e 1 mutação nova, verificada à mão.
+
 ## 25/11/2026 · Horda com 30% menos dano e teto de 40% da vida por golpe (Claude Code)
 
 - **Pedidos do usuário:** "Me mostre os números de dano do ataque básico dos monstros normais, acho que os danos estão muito fortes no início do jogo, as vezes tomamos hitkill aos 5minutos de jogo sem saber ao certo o que houve."; "Seria o teto por golpe, como nosso jogo tem muito mais monstros do que nosso jogo referência, temos que nerfar o dano dos monstros, menos dos megas/bosses/bijuus... Nerf 30% do dano de todos"

@@ -107,3 +107,12 @@ test('pegar sozinha a única carta: opção desligada por padrão, salva e usada
   const screen = fs.readFileSync(new URL('../src/ui/SettingsScreen.tsx', import.meta.url), 'utf8');
   assert.ok(screen.includes('set({ autoPickSingle: v })'), 'opção aparece nas Configurações');
 });
+
+test('FPS livre por padrão: V-Sync desligado e migração de quem tinha o padrão antigo (25/11/2026)', async () => {
+  const fresh = await withSaved(undefined);
+  assert.equal(fresh.DEFAULT_SETTINGS.vsync, false);
+  assert.equal(fresh.DEFAULT_SETTINGS.fpsLimit, 0, 'sem limite');
+  assert.equal((await withSaved({ vsync: true, settingsVersion: 3 })).readSettings().vsync, false, 'padrão antigo vira FPS livre');
+  const current = fresh.DEFAULT_SETTINGS.settingsVersion;
+  assert.equal((await withSaved({ vsync: true, settingsVersion: current })).readSettings().vsync, true, 'quem liga depois mantém');
+});

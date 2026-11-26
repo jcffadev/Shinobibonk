@@ -42,7 +42,7 @@ export type GameSettings = {
   settingsVersion: number;
 };
 /** Rodada 55 (pedido do usuário: "abaixar a música na configuração padrão… cerca de 10%"): padrão da música 0,7 → 0,1. */
-const MUSIC_DEFAULT = .1, OLD_MUSIC_DEFAULT = .7, SETTINGS_VERSION = 3;
+const MUSIC_DEFAULT = .1, OLD_MUSIC_DEFAULT = .7, SETTINGS_VERSION = 4;
 /**
  * Zoom da câmera = altura do mundo visível na tela (unidades). Rodada 77 (pedido do usuário: "Diminuir mais o zoom padrão do
  * jogo, se o usuário quiser pode subir com certo limite, mas o inicial está MUITO distante"): padrão 19 → 12 e faixa
@@ -60,7 +60,7 @@ export const clampZoom = (value: number) => Math.min(CAMERA_ZOOM.max, Math.max(C
 export const DEFAULT_SETTINGS: GameSettings = {
   sealAnimation: true,
   volume: .7, sfxVolume: 1, voiceVolume: .8, musicVolume: MUSIC_DEFAULT, voiceLanguage: 'pt', muteInBackground: true,
-  quality: 'alta', fpsLimit: 0, vsync: true, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true, damageFlash: true,
+  quality: 'alta', fpsLimit: 0, vsync: false, gpu: 'desempenho', hideMyAttacks: false, showTechniqueAreas: true, discreetDrops: false, pickupFx: 'simples', showFps: true, damageNumbers: true, damageFlash: true,
   resolution: 'auto', renderer: 'directx',
   mouseSensitivity: 1, invertY: false, cameraDistance: CAMERA_ZOOM.default, cameraProjection: 'perspectiva', autoUltimate: false, autoPickSingle: false,
   keys: { ...DEFAULT_KEYS },
@@ -82,6 +82,9 @@ function load(): GameSettings {
     // Migração v2 → v3: câmera no padrão antigo (19) vai ao novo padrão; qualquer valor fica dentro da faixa nova.
     if ((parsed.settingsVersion ?? 1) < 3 && parsed.cameraDistance === CAMERA_ZOOM.oldDefault) parsed.cameraDistance = CAMERA_ZOOM.default;
     if (parsed.cameraDistance !== undefined) parsed.cameraDistance = clampZoom(parsed.cameraDistance);
+    // Migração v3 → v4 (25/11/2026 — usuário: "Porque o FPS ta cravando no hz do monitor? Deixa livre... deixe o jogador
+    // escolher"): o V-Sync ligado era o padrão; vira desligado (FPS livre). Quem ligar de novo depois mantém.
+    if ((parsed.settingsVersion ?? 1) < 4 && parsed.vsync === true) parsed.vsync = false;
     return { ...DEFAULT_SETTINGS, ...parsed, keys, settingsVersion: SETTINGS_VERSION };
   } catch { return { ...DEFAULT_SETTINGS, keys: { ...DEFAULT_KEYS } }; }
 }
