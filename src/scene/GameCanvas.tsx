@@ -87,7 +87,7 @@ import { PEIN_RIKUDO, RIKUDO_PATHS, rikudoDue, type RikudoEvent } from '../game/
 import { BOSS_RAGE, bossRageDue, rageDefense, immovableBoss } from '../game/bossRage'
 import { hordeLook } from '../game/hordeRoles'
 import { refillHealBudget, spendHeal } from '../game/healCap'
-import { GUIZOS, GUIZO_BY_ID, GUIZO_RULES, guizoFromKind, guizoPickupKind, guizoToast, rollGuizo, type GuizoId, type GuizoPickupKind } from '../game/guizos';
+import { GUIZOS, GUIZO_BY_ID, guizoDuration, guizoStacks, guizoFromKind, guizoPickupKind, guizoToast, rollGuizo, type GuizoId, type GuizoPickupKind } from '../game/guizos';
 import { collectedXp, createGroundDropIndex, DROP_CELL_SIZE, DROP_MERGE, dropCanMagnetize, magnetSpeed, xpCollectedAtPortal } from '../game/drops';
 import { castProgress, blendFog, mistHides, isChanneling, CAST_DISTANCE } from '../game/weatherCast';
 import { PILL_NAMES, PILL_BY_NAME, PILL_SLOTS, PILL_RARITY_POWER, pillOfferText, pillEffectText, canGrantPill, grantPill } from '../game/pills';
@@ -882,8 +882,9 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const guizoActive=(id:GuizoId)=>activeSetups.some(a=>a.name===GUIZO_BY_ID[id].name&&a.remaining>0);
     const guizoBusy=()=>new Set(GUIZOS.filter(g=>guizoActive(g.id)||pickups.some(p=>p.active&&p.kind===guizoPickupKind(g.id))).map(g=>g.id));
     function activateGuizo(id:GuizoId){
-      const guizo=GUIZO_BY_ID[id];applyTimedBuff(guizo.name,guizo.bonuses,GUIZO_RULES.duration);
-      if(id==='ima')globalMagnetUntil=pickupClock+GUIZO_RULES.duration;
+      const guizo=GUIZO_BY_ID[id];if(!guizoStacks(guizoActive(id))){eventToast=guizo.name+' já está ativo: o tempo não acumula.';snapshotTimer=0;return;}
+      applyTimedBuff(guizo.name,guizo.bonuses,guizoDuration(id));
+      if(id==='ima')globalMagnetUntil=pickupClock+guizoDuration(id);
       refreshStats(true);playSfx('pickup');if(!hiddenEffects)addRing(player.position,guizo.color,2.4);
       eventToast=guizoToast(id);snapshotTimer=0;
     }

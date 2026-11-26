@@ -3283,3 +3283,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Evento tem que esta em destaque do lado de jogar
 
 **Resposta.** Evento virou botão dourado do tamanho do Jogar, logo ao lado dele. **Publicado no GitHub.**
+
+> 60s de parilisia é muito tempo, coloque 20s e não pode stackar se pegar vários guizos do mesmo
+
+**Resposta.** Raio agora dura 20 s; guizo igual com o efeito ativo não acumula nem renova. **Publicado no GitHub.**

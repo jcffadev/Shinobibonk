@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 26/11/2026 · Guizo do Raio com 20 s e guizo igual sem acumular (Claude Code)
+
+- **Pedido do usuário:** "60s de parilisia é muito tempo, coloque 20s e não pode stackar se pegar vários guizos do mesmo"
+- **`src/game/guizos.ts`:** o Guizo do Raio paralisa por 20 s (os outros seguem 60 s; `guizoDuration`). Pegar um guizo igual com o efeito ainda ativo não acumula nem renova o tempo (`guizoStacks`); aparece "… já está ativo: o tempo não acumula". O sorteio já não soltava um igual enquanto o efeito estava ativo; agora a coleta também bloqueia (save antigo ou guizo já no chão).
+- **Testes:** 1 teste novo em `tests/guizos.test.mjs` (mínimo 368) e 2 mutações novas, verificadas à mão.
+
 ## 26/11/2026 · Evento em destaque ao lado do Jogar (Claude Code)
 
 - **Pedido do usuário:** "Evento tem que esta em destaque do lado de jogar" (com captura da home).
