@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 26/11/2026 · Ichiraku: "Tente lembrar o planejado" (Claude Code)
+
+- **Pedido do usuário:** "No Ichiraku teremos uma opção: 'Tente lembrar o planejado'. Vai dar pra selecionar, faltando habilidades para completar todas as primárias ou esquecermos, vai aparecer um pop-up que terá 50% de chance de aparecer 1 habilidade que planejamos para a missão... Sera uma escolha de 1 a 3 habilidades aleatórias, porém o peso para habilidades planejadas será 50% a mais. Uma vez por zona"
+- **Nova carta no Ichiraku** (`src/game/ichirakuRecall.ts` + GameCanvas): com espaço livre de técnica (menos de 3, ou 4 com "Quarta técnica"), abre de 1 a 3 técnicas novas sorteadas sem repetir; técnica planejada no plano da missão pesa ×1,5. Escolher uma aprende a técnica com raridade e afixos sorteados pela Sorte, pela mesma regra do level-up (`learnSkillOffer`).
+- **Uma vez por zona, sem custo em Ryu.** Fechar sem escolher guarda a mesma oferta até o fim da zona (reabrir não sorteia de novo). A zona usada vai no save.
+- **Interface:** título "Tente lembrar o planejado", botões "Lembrar" e "Aprender"; técnicas planejadas mostram o selo "Planejado" como no level-up.
+- **Interpretação:** o "50% de chance" foi aplicado como peso 50% maior para cada técnica planejada (a frase final do pedido).
+- **Testes:** novo `tests/ichiraku-lembrar.test.mjs` (4 testes, mínimo 345) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** abrir no Ichiraku depois de esquecer uma técnica.
+
 ## 26/11/2026 · Sorte na qualidade de Hagoromo, Ebisu e Iruka (Claude Code)
 
 - **Pedido do usuário:** "A qualidade dos buffs dos altares/npcs/hagoromo também são influenciados pela sorte" · "Não sei se hoje isso esta sendo considerado"

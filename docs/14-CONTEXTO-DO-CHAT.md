@@ -3221,3 +3221,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Não sei se hoje isso esta sendo considerado
 
 **Resposta.** Altar já usava a Sorte no valor; Hagoromo, Ebisu e lição do Iruka não. Agora usam `luckQuality` (Sorte 10 → 0, Sorte 70 → 1). **Publicado no GitHub.**
+
+> No Ichiraku teremos uma opção: 'Tente lembrar o planejado'. Vai dar pra selecionar, faltando habilidades para completar todas as primárias ou esquecermos, vai aparecer um pop-up que terá 50% de chance de aparecer 1 habilidade que planejamos para a missão... Sera uma escolha de 1 a 3 habilidades aleatórias, porém o peso para habilidades planejadas será 50% a mais. Uma vez por zona
+
+**Resposta.** Carta "Tente lembrar o planejado" no Ichiraku: com espaço de técnica livre, 1 a 3 técnicas novas (planejadas pesam ×1,5), uma vez por zona, sem custo. **Publicado no GitHub.**

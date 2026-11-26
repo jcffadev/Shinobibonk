@@ -148,6 +148,8 @@ const MUTATIONS = [
   { regra: 'roletar o Mercador não encarece os itens', arquivo: 'src/scene/GameCanvas.tsx', de: 'merchant.purchases,elapsed):0', para: 'merchant.purchases+merchant.rerolls,elapsed):0' },
   { regra: 'Sorte puxa a qualidade de Hagoromo, Ebisu e Iruka', arquivo: 'src/game/luckQuality.ts', de: 'return Math.max(0, Math.min(1, (luck - LUCK_QUALITY.from)', para: 'return 0 * Math.max(0, Math.min(1, (luck - LUCK_QUALITY.from)' },
   { regra: 'ganho do Ebisu/Iruka tende ao máximo com Sorte', arquivo: 'src/game/luckQuality.ts', de: 'Math.pow(rng(), 1 / (1 + 2 *', para: 'Math.pow(rng(), 1 / (1 + 0 *' },
+  { regra: 'Ichiraku: técnica planejada pesa 50% a mais na lembrança', arquivo: 'src/game/ichirakuRecall.ts', de: 'plannedWeight: 1.5', para: 'plannedWeight: 1' },
+  { regra: 'Ichiraku: lembrança uma vez por zona', arquivo: 'src/game/ichirakuRecall.ts', de: "if (o.usedZone === o.zone) return 'Já usada nesta zona.';", para: '' },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

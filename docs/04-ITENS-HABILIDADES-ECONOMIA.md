@@ -248,3 +248,7 @@ Abates podem largar moedas douradas de Ryu e bolinhos de arroz. O bolinho usa o 
 
 
 **Rodada 53.** O teto por pílula é 9, ou 13 com quatro níveis de Farmacologia Ninja. A Cabaça soma mais dois, chegando a 15. Células de Hashirama ressuscitam com 35% do HP, e Chakra de Hagoromo com 60%. Os IDs de catálogo preservam compras e arsenais.
+
+## Ichiraku · "Tente lembrar o planejado" · 26/11/2026
+
+Além de esquecer técnica ou pílula por Ryu, o Ichiraku tem a carta "Tente lembrar o planejado": com espaço de técnica livre, mostra de 1 a 3 técnicas novas (as planejadas pesam ×1,5) para aprender de graça, uma vez por zona. Regras em `src/game/ichirakuRecall.ts`.
