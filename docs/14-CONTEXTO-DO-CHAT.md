@@ -3177,3 +3177,7 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Crie um .md referente ao status de todos os personagens e monstros para termos um track das alterações e suas respectivas datas/builds.
 
 **Resposta.** `docs/28-STATUS-PERSONAGENS-E-MONSTROS.md` gerado pelo código (`scripts/gen-status-doc.mjs`) e `docs/28-HISTORICO-STATUS.md` com as mudanças, datas e builds. **Publicado no GitHub.**
+
+> Presos em construções
+
+**Resposta.** Inimigos agora deslizam ao longo da parede para contornar a construção e não nascem dentro dela. **Publicado no GitHub.**

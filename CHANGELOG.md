@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 25/11/2026 · Inimigos contornam construções e não nascem dentro delas (Claude Code)
+
+- **Pedido do usuário:** "Revisar alguns elites ficarem bugados no cenário 3D." → "Presos em construções"
+- **Causa:** inimigos andam em linha reta até o jogador e a construção só os empurra para fora; com a construção no meio, travavam encostados na parede (o elite, maior, chama mais atenção).
+- **`slideAlong`** (`src/scene/collision.ts`): quando a construção empurra o inimigo, ele desliza ao longo da parede para o lado que o aproxima do jogador.
+- **Nascimento:** o ponto de nascimento passa por `solids.freeSpot`, fora das construções.
+- **Testes:** 1 teste novo em `tests/colisao.test.mjs` (mínimo 329) e 1 mutação nova, verificada à mão. **PENDENTE DE VALIDAÇÃO E2E:** ver elites contornando casas na vila.
+
 ## 25/11/2026 · Arquivo de status de personagens e monstros (Claude Code)
 
 - **Pedido do usuário:** "Crie um .md referente ao status de todos os personagens e monstros para termos um track das alterações e suas respectivas datas/builds."

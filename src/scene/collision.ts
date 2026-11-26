@@ -159,3 +159,17 @@ export function createSolids() {
     freeSpot(x: number, z: number, margin = 1) { const p = { x, z }; push(big, p, margin); push(big, p, margin); return p; },
   };
 }
+
+/**
+ * Inimigo encostado numa construção desliza ao longo dela (25/11/2026 — pedido do usuário: elites "presos em construções").
+ * `pushed` é a posição depois do empurrão do sólido, `unpushed` a de antes; a parede fica na direção do empurrão. Move `pushed`
+ * `step` m ao longo da parede, para o lado que aproxima de `toward`. Devolve true se deslizou.
+ */
+export function slideAlong(unpushed: Point, pushed: Point, toward: Point, step: number) {
+  const nx = pushed.x - unpushed.x, nz = pushed.z - unpushed.z, len = Math.hypot(nx, nz);
+  if (len < 1e-5 || step <= 0) return false;
+  let tx = -nz / len, tz = nx / len;
+  if (tx * (toward.x - pushed.x) + tz * (toward.z - pushed.z) < 0) { tx = -tx; tz = -tz; }
+  pushed.x += tx * step; pushed.z += tz * step;
+  return true;
+}

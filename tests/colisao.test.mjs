@@ -82,3 +82,25 @@ test('todos os adultos do mesmo tamanho; Genin/Academia um pouco menores (rodada
   assert.ok(ratio >= .85 && ratio < .95, `ligeiramente menores (${ratio.toFixed(2)})`);
   assert.ok(!canvas.includes("familyOf(id)==='gaara'?1.1"), 'sem aumento extra do Gaara');
 });
+
+test('inimigo encostado numa construção desliza ao longo dela e não nasce dentro (25/11/2026)', async () => {
+  const { createSolids, slideAlong } = await import('../src/scene/collision.ts');
+  const solids = createSolids();
+  solids.addBuilding(0, 0, 10); // raio 1,8
+  // Jogador do outro lado da construção: o inimigo empurrado para fora desliza e, em alguns passos, contorna.
+  const enemy = { x: -2.2, z: .05 }, player = { x: 4, z: 0 };
+  let around = false;
+  for (let i = 0; i < 60; i++) {
+    const dx = player.x - enemy.x, dz = player.z - enemy.z, d = Math.hypot(dx, dz);
+    enemy.x += dx / d * .1; enemy.z += dz / d * .1;
+    const bx = enemy.x, bz = enemy.z;
+    if (solids.resolveBig(enemy) && slideAlong({ x: bx, z: bz }, enemy, player, .1)) solids.resolveBig(enemy);
+    if (enemy.x > 0) { around = true; break; }
+  }
+  assert.ok(around, 'contornou a construção em vez de travar na parede');
+  const spot = solids.freeSpot(0, .2, .6);
+  assert.ok(Math.hypot(spot.x, spot.z) >= 1.8 + .6 - 1e-6, 'nascimento sai de dentro da construção');
+  const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
+  assert.ok(canvas.includes('if(solids.resolveBig(p)&&slideAlong({x:bx,z:bz},p,player.position,enemy.speed*threat.speed*dt))solids.resolveBig(p);'));
+  assert.ok(canvas.includes(':arena?{x,z}:solids.freeSpot(x,z,.6);e.position.set(spot.x,'));
+});
