@@ -23,3 +23,16 @@ export function trapRing(x: number, z: number, count: number = FALLEN_TRAP.enemi
     return { x: x + Math.cos(angle) * radius, z: z + Math.sin(angle) * radius };
   });
 }
+
+/*
+ * 27/11/2026 (usuário: "Shurikens de enboscadas e shinobi no chão / armadilhas ainda estão dando os buffs/recompensa sem
+ * aparecer os ninjas a mais de armadilhas"):
+ * - a Shuriken Amaldiçoada limitava os ninjas à vaga até o teto de vivos; com a horda cheia surgiam 0 e o +8% vinha de graça.
+ *   Agora a emboscada da shuriken sempre invoca os seus ninjas, como o corpo;
+ * - os ninjas das duas armadilhas nascem no anel de 10 m fora de casas e escadarias e não são cortados pelo teto de 1.600
+ *   do Final Swarm (o corte tira outros comuns no lugar).
+ */
+/** Ninjas da emboscada da Shuriken Amaldiçoada: 4·√(peso da missão) + 2 por zona depois da 1ª, sem depender da vaga. */
+export const CURSED_AMBUSH = { base: 4, perZone: 2 } as const;
+export const cursedAmbushCount = (missionTier: number, zone: number) =>
+  Math.max(1, Math.round(CURSED_AMBUSH.base * Math.sqrt(Math.max(0, missionTier))) + Math.max(0, zone - 1) * CURSED_AMBUSH.perZone);

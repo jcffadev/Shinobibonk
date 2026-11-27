@@ -3390,3 +3390,10 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com conferência ao girar a câmera. Também pediu mais exemplos de NPC em pixel art 3D.
 
 115 de 115 versões têm folhas dedicadas. A prévia nativa usa a geometria do controlador e mostra Haku, Naruto Shippuden e Kimimaro durante uma volta completa da câmera. O padrão de criação inclui a queda e a leitura no tamanho de partida. O usuário pediu que a malha preserve o boneco do sprite original, com o Blender como ferramenta. Teuchi e Shikamaru ganharam novos arquivos editáveis, com pose de repouso, interação e render de uma volta de câmera. A revisão de NPCs 3D segue fora da versão jogável.
+
+## 27/11/2026 · Revisão do que o Codex fez e armadilhas sem ninjas (Claude Code)
+
+> Verificar tudo que o codex fez e o que temos em fila
+> Aviso: Shurikens de enboscadas e shinobi no chão / armadilhas ainda estão dando os buffs/recompensa sem aparecer os ninjas a mais de armadilhas.
+
+**Resposta.** O Codex publicou 2 commits em 27/11 (arenas do Exame e do Hagoromo, clima, malhas de drop e guizos, ícones de pílulas, preços em Ryu e folhas de derrota das 115 versões), refeitos num ramo novo a partir do main; as regras do main continuam e a suíte passou. A pasta antiga do ramo `vilas-refinadas` ainda tem a mesclagem parada, mas o trabalho dela já entrou no main por esse outro caminho. Causa das armadilhas: a Shuriken Amaldiçoada limitava os ninjas à vaga até o teto de vivos (horda cheia = 0 ninjas, +8% de graça) e o corte de 1.600 do Final Swarm apagava os recém-invocados. Corrigido: a shuriken sempre invoca os seus, os das duas armadilhas nascem fora das casas e não são cortados. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

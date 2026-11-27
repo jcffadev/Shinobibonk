@@ -693,3 +693,7 @@ A porta do Exame liga a floresta à sala de duelos. O E libera a passagem ao com
 ### Como está a cobertura de derrota e a amostra de NPCs? · 27/11/2026
 
 Seis versões têm poses próprias com oito quadros e apoio ao joelho. A matriz e as skills exigem folha por versão, com a aparência do atlas atual. Os onze NPCs da missão têm estudo 3D chibi com textura pixel art, clipe próprio e GIF individual, fora da versão jogável até revisar acabamento.
+
+### Por que a shuriken e o corpo davam o bônus sem os ninjas? · 27/11/2026
+
+A Shuriken Amaldiçoada só invocava ninjas até o teto de vivos: com a horda cheia, nenhum. No Final Swarm, o corte de 1.600 removia os inimigos mais novos, que eram os da armadilha. Agora a shuriken sempre invoca 4·√(peso da missão) + 2 por zona depois da 1ª, e os ninjas das duas armadilhas nascem a 10 m fora das casas e ficam fora do corte (Claude Code).

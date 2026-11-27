@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 27/11/2026 · Armadilhas sempre invocam os ninjas (Claude Code)
+
+- **Pedido do usuário:** "Shurikens de enboscadas e shinobi no chão / armadilhas ainda estão dando os buffs/recompensa sem aparecer os ninjas a mais de armadilhas."
+- **Causa:** a Shuriken Amaldiçoada limitava os ninjas à vaga até o teto de monstros vivos. Com a horda cheia surgiam 0 ninjas e o +8% de dano vinha de graça. No Final Swarm, o corte do teto de 1.600 tirava os últimos inimigos da lista, justamente os recém-invocados pelas armadilhas. Os ninjas do corpo também podiam nascer dentro de casas.
+- **Correção** (`src/game/fallenTrap.ts`, `startFieldAmbush` em GameCanvas.tsx): a shuriken sempre invoca `cursedAmbushCount` = 4·√(peso da missão) + 2 por zona depois da 1ª (Genin zona 1: 4 · Kage zona 3: 12). Os ninjas das duas armadilhas nascem no anel de 10 m fora de casas e escadarias (`safeSpot`) e ficam fora do corte de 1.600; o corte tira outros comuns no lugar. A emboscada comum por tempo não avisa mais quando não há vaga para nenhum ninja.
+- **Testes:** 1 teste novo em `tests/armadilha-ninja-caido.test.mjs` (mínimo 385) e 2 mutações novas, além da antiga atualizada; as três verificadas à mão. O teste da ultimate do Nagato passou a aceitar quebra de linha do Windows (CRLF), que a cópia local passou a ter. Suíte: 385/385, tipos e build ok. **PENDENTE DE VALIDAÇÃO E2E:** pegar a shuriken e investigar um corpo com a horda cheia e no Final Swarm, e ver os ninjas em volta.
+
 ## 27/11/2026 · Exame Chūnin, espaço do Hagoromo, clima e arte de derrota
 
 - Konoha, Suna, Iwa e Kiri sorteiam os mesmos três eventos de clima. Zabuza conjura a névoa, Haku traz flocos, Gaara levanta poeira e Rasa levanta areia dourada. O evento dura até 60 segundos desde a abertura, ou até o próprio Mega do encontro cair. O Mega criado pelo clima fica fora do selamento mesmo após o evento terminar.

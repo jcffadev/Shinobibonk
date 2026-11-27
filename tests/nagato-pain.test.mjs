@@ -41,5 +41,5 @@ test('o jogo chama os Seis Caminhos na ultimate do Nagato e não reinicia com el
   const src = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
   assert.match(src, /if\(hero\.ultimate===PEIN_RIKUDO\.name\)\{rikudo=\{t:-1e-6\};updateRikudo\(0\);/);
   assert.match(src, /function castUltimate\(\)\{if\(chakra<100\|\|defeated\|\|pausedRef\.current\|\|choiceData\|\|sealing\|\|roulette\|\|rikudo\)return;/);
-  assert.match(src, /hp=Math\.min\(stats\.maxHp,hp\+dt\*stats\.regen\);\n\s*updateRikudo\(dt\);/);
+  assert.match(src, /hp=Math\.min\(stats\.maxHp,hp\+dt\*stats\.regen\);\r?\n\s*updateRikudo\(dt\);/);
 });
