@@ -48,7 +48,7 @@ assert.equal(motionForms,HEROES.length);assert.equal(versionForms.size,HEROES.le
  for(const [family,forms] of Object.entries(FORMS))for(const f of forms)assert.ok(versionForms.has(family+':'+f.level),'forma sem versão: '+family+' '+f.name);}
 {// Fase da obra por versão: cada versão só tem técnicas da própria fase.
  const {HERO_BY_ID,PHASE_LEVELS,SHARED_TECHNIQUES}=await import('../src/game/heroes.ts');const lv=(id,name)=>HERO_BY_ID[id].techniques.find(t=>t.name===name)?.unlockLevel;const has=(id,name)=>HERO_BY_ID[id].techniques.some(t=>t.name===name);
- assert.deepEqual(HERO_BY_ID.naruto.techniques.map(t=>t.name),['Kage Bunshin','Shuriken','Kunai Tática','Rendan Uzumaki']);
+ /* 27/11/2026: Jutsu Sexy inicial do Naruto Academia. */assert.deepEqual(HERO_BY_ID.naruto.techniques.map(t=>t.name),['Jutsu Sexy','Kage Bunshin','Shuriken','Kunai Tática']);
  assert.ok(!has('naruto','Rasengan')&&!has('naruto','Modo Sábio')&&!skillPool('naruto').some(t=>t.name==='Modo Sábio'),'Naruto Academia sem Rasengan/Modo Sábio');
  assert.deepEqual(HERO_BY_ID['naruto-genin'].techniques.map(t=>[t.name,t.unlockLevel]),[['Kage Bunshin',1],['Invocação do Sapo',5],['Kunai Tática',8],['Rasengan',15]]);
  assert.ok(has('naruto-shippuden','Modo Sábio')&&has('naruto-shippuden','Rasenshuriken')&&has('naruto-kyuubi','Bijūdama'));
@@ -191,7 +191,7 @@ assert.equal(sandSynergy(['gaara','temari']),false);assert.equal(sandSynergy(['g
  const setups=HEROES.flatMap(h=>h.techniques.filter(t=>t.setup).map(t=>t.name)).sort();assert.deepEqual([...new Set(setups)],['Byakugou','Habanero Sangrento','Jutsu de Expansão','Modo Sábio','Portões do Inferno']);
  const gates=HERO_BY_ID.lee.techniques.find(t=>t.setup);const g=setupNumbers(gates);assert.equal(g.cooldown,11*1.55);assert.equal(g.duration,6);assert.ok(setupNumbers(gates,undefined,9).cooldown<g.cooldown);assert.ok(setupLines(gates).includes('Ativo 35% do tempo'));assert.ok(setupLines(gates).includes('Acumulável: Não'));
  assert.ok(setupNumbers(gates,{damage:0,area:0,haste:.1,duration:.2}).uptime>g.uptime,'afixos de recarga/duração aumentam o tempo ativo');
- assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Rendan Uzumaki');assert.equal(ultimateBase(HERO_BY_ID['naruto-shippuden']).name,'Rasenshuriken');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
+ /* 27/11/2026: Tajū Kage Bunshin. */assert.equal(ultimateBase(HERO_BY_ID.naruto).name,'Kage Bunshin');assert.equal(ultimateBase(HERO_BY_ID['naruto-shippuden']).name,'Rasenshuriken');assert.ok(HEROES.every(h=>!ultimateBase(h).setup));
  assert.ok(HEROES.every(h=>!h.techniques[0].setup),'a técnica inicial sempre ataca');
  assert.equal(SENJUTSU.multiplier,1.5);const rasengan=HERO_BY_ID['naruto-genin'].techniques.find(t=>t.name==='Rasengan'),punch=HERO_BY_ID.hashirama.techniques[0];
  assert.equal(hasSenjutsu(rasengan,false),false);assert.equal(hasSenjutsu(rasengan,true),true);assert.equal(hasSenjutsu(punch,true),false,'Senjutsu é linha só de Ninjutsu');assert.equal(hasSenjutsu(HERO_BY_ID['hashirama-sabio'].techniques[3],false),true,'Ninjutsu de elemento Sábio já tem Senjutsu');
@@ -272,7 +272,7 @@ assert.ok(difficultyAt('Kage',500,1.4).attackRate>difficultyAt('Genin',0).attack
  const {HERO_BY_ID,ultimateBase,versionForEncounter,versionStep}=await import('../src/game/heroes.ts');
  for(const h of HEROES){assert.ok(h.ultimate,h.id+' sem Ultimate');const b=ultimateBase(h);assert.ok(h.techniques.includes(b)&&!b.setup,h.id+': Ultimate fora do kit da fase');}
  assert.equal(new Set(HEROES.map(h=>h.ultimate)).size>=50,true,'Ultimates próprias por versão');
- assert.equal(HERO_BY_ID.naruto.ultimate,'Jutsu Sexy');assert.equal(isProjectileUltimate('naruto'),false);assert.equal(isProjectileUltimate('naruto-genin'),true);assert.equal(HERO_BY_ID['naruto-shippuden'].ultimate,'Rasenshuriken Supremo');
+ /* 27/11/2026: Naruto Academia — Jutsu Sexy inicial e ultimate Tajū Kage Bunshin (projéteis). */assert.equal(HERO_BY_ID.naruto.ultimate,'Tajū Kage Bunshin');assert.equal(HERO_BY_ID.naruto.techniques[0].name,'Jutsu Sexy');assert.equal(isProjectileUltimate('naruto'),true);assert.equal(isProjectileUltimate('naruto-genin'),true);assert.equal(HERO_BY_ID['naruto-shippuden'].ultimate,'Rasenshuriken Supremo');
  assert.equal(HERO_BY_ID.madara.ultimate,'Susanoo Perfeito','Meteorito (Tengai Shinsei) exige o Rinnegan');assert.equal(HERO_BY_ID['madara-rinnegan'].ultimate,'Tengai Shinsei');
  assert.notEqual(HERO_BY_ID['guy-setimo-portao'].ultimate,'Oito Portões','Oito Portões é fase posterior ao Sétimo Portão');
  // Ajudantes e Mega Elites como versões: Genin/zona 1 → inicial; Kage/zona 3 → mais avançada.

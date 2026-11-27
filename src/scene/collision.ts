@@ -27,13 +27,18 @@ export const COLLISION_RULES = {
   buildingMaxRadius: 3,
   /** Folga ao posicionar eventos e coletáveis fora das construções. */
   placementMargin: 2.5,
+  /**
+   * Degrau que o inimigo sobe sem travar (m). 27/11/2026 — usuário: "monstros ainda conseguindo passaar dentro dessa escadaria...
+   * não deve ser possivel eles entrarem dentro dela, só passar por cima ou do lado": degrau mais alto que os pés + isto é parede.
+   */
+  enemyStepUp: .3,
 };
 export type Solid = Foundation & { big: boolean; stair?: boolean };
 type Point = { x: number; z: number };
 
 export function createSolids() {
   const all: Solid[] = [], big: Solid[] = [], stairs: Solid[] = [];
-  const cells=new Map<number,Solid[]>();
+  const cells=new Map<number,Solid[]>(),stairCells=new Map<number,Solid[]>();
   const cellSize=8,indexMargin=.75;
   const key=(x:number,z:number)=>x+1024*z;
   const positionKey=(p:Point)=>key(Math.floor(p.x/cellSize),Math.floor(p.z/cellSize));
@@ -96,6 +101,38 @@ export function createSolids() {
     addStair(x:number,z:number,halfX:number,halfZ:number,top:number) {
       const stair=add(x,z,halfX,false,top,undefined,halfZ);
       stair.stair=true;stairs.push(stair);
+      const xPad=halfX+indexMargin,zPad=halfZ+indexMargin;
+      for(let iz=Math.floor((z-zPad)/cellSize);iz<=Math.floor((z+zPad)/cellSize);iz++)
+        for(let ix=Math.floor((x-xPad)/cellSize);ix<=Math.floor((x+xPad)/cellSize);ix++){const id=key(ix,iz),bucket=stairCells.get(id);if(bucket)bucket.push(stair);else stairCells.set(id,[stair]);}
+    },
+    /**
+     * Inimigos e degraus (27/11/2026): o degrau bloqueia quando o topo está acima dos pés + `enemyStepUp` — o monstro sobe a
+     * escada pelos degraus ou contorna pelo lado, mas não atravessa a parede. Grade espacial própria (8 m) para a horda grande.
+     */
+    /** Altura do degrau sob o inimigo que ele alcança a partir dos pés (sobe um degrau por vez), ou -Infinity. */
+    enemyStairTop(x:number,z:number,foot:number){
+      if(!stairs.length)return -Infinity;
+      const nearby=stairCells.get(key(Math.floor(x/cellSize),Math.floor(z/cellSize)));if(!nearby)return -Infinity;
+      let height=-Infinity;
+      for(const s of nearby)if(s.top!<=foot+COLLISION_RULES.enemyStepUp&&foundationDistance(x,z,s)<=0)height=Math.max(height,s.top!);
+      return height;
+    },
+    resolveStairs(p:Point,foot:number,radius=COLLISION_RULES.enemyRadius){
+      if(!COLLISION_RULES.enabled||!stairs.length)return false;
+      const nearby=stairCells.get(positionKey(p));if(!nearby)return false;
+      const walls=nearby.filter(s=>s.top!>foot+COLLISION_RULES.enemyStepUp);
+      const overlaps=(x:number,z:number)=>walls.some(w=>foundationDistance(x,z,w)<radius-1e-6);
+      if(!overlaps(p.x,p.z))return false;
+      // Encostou por fora: sai pelo lado de menor penetração de cada degrau (desliza pela parede).
+      for(const w of walls){const dx=p.x-w.x,dz=p.z-w.z,hz=w.halfZ??w.r,penX=w.r+radius-Math.abs(dx),penZ=hz+radius-Math.abs(dz);
+        if(penX<=0||penZ<=0||foundationDistance(p.x,p.z,w)>=radius)continue;
+        if(penX<penZ)p.x+=(dx>=0?1:-1)*(penX+.001);else p.z+=(dz>=0?1:-1)*(penZ+.001);}
+      if(!overlaps(p.x,p.z))return true;
+      // Ainda dentro (ex.: empurrado para o meio da escada): sai pelo caminho livre mais curto nas 4 direções.
+      let best:{d:number;ux:number;uz:number}|undefined;
+      for(const [ux,uz] of [[1,0],[-1,0],[0,1],[0,-1]] as const)for(let d=.25;d<=12;d+=.25)if(!overlaps(p.x+ux*d,p.z+uz*d)){if(!best||d<best.d)best={d,ux,uz};break;}
+      if(best){p.x+=best.ux*best.d;p.z+=best.uz*best.d;}
+      return true;
     },
     stairTop(x:number,z:number,from:number) {
       let height=-Infinity;

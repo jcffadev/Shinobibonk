@@ -721,3 +721,7 @@ Sim: no topo da lista há "☰ Por time" (com os títulos dos times) e "▦ Comp
 ### Como os mapas e as dificuldades são liberados? · 27/11/2026
 
 Conta nova começa só com Konoha e só o Genin. Vencer uma dificuldade abre a seguinte no mesmo mapa (Genin → Chūnin → Jōnin → Kage). O mapa seguinte (Areia, depois Pedra, depois Névoa) só abre ao vencer o Kage do anterior. O progresso fica salvo no navegador (Claude Code).
+
+### Os monstros podem passar pela escadaria? · 27/11/2026
+
+Só por cima, subindo degrau por degrau, ou pelo lado. Um degrau mais alto que os pés do monstro + 0,3 m é parede para ele (Claude Code).

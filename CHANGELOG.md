@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 27/11/2026 · Escadaria sólida para os monstros e Naruto Academia com Jutsu Sexy inicial e Tajū Kage Bunshin (Claude Code)
+
+- **Pedidos do usuário:** "Habilidade inicial do Naruto inicial do naruto academia precisa de buff" · "monstros ainda conseguindo passaar dentro dessa escadaria... não deve ser possivel eles entrarem dentro dela, só passar por cima ou do lado" · "Naruto academia a ultimate dele tem que ser o vários clones das sombras... a skill inicial tem que ser o jutsu sexy lembra?"
+- **Causa da escadaria:** os degraus só existiam na colisão do jogador; os monstros desviavam apenas de casas e a altura deles seguia o terreno e as pontes, então andavam "dentro" da escada.
+- **Escadaria** (`collision.ts`: `resolveStairs`, `enemyStairTop`, `enemyStepUp` 0,3 m; grade espacial própria de 8 m): degrau mais alto que os pés + 0,3 m é parede para o monstro, que sobe pelos degraus (a altura acompanha cada degrau) ou contorna pelo lado. Quem já estava dentro sai pelo caminho livre mais curto.
+- **Naruto Academia** (`heroes.ts`, `statusProfiles.ts`): técnica inicial **Jutsu Sexy** (área, poder 1,9 e 60% de chance de atordoar — no `simulate-early` o Naruto Academia era o único inicial que não matava o monstro comum de um golpe no 1º minuto: golpe÷vida 0,74 contra a mediana 2,1; com o buff sai da lista); kit Jutsu Sexy → Kage Bunshin → Shuriken → Kunai Tática (o Rendan Uzumaki saiu para manter a regra de 1 a 2 técnicas únicas por versão). Ultimate **Tajū Kage Bunshin** (vários Clones das Sombras), feita da Kage Bunshin e disparada como projéteis, como nas outras versões do Naruto.
+- **Testes:** novos `tests/escadaria-monstros.test.mjs` (3) e `tests/naruto-academia.test.mjs` (1); `scripts/verify-rules.mjs` acompanha a ultimate nova; 3 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** horda na escadaria da Vila da Folha e o Naruto Academia em partida (efeito visual do Jutsu Sexy como técnica: Codex).
+
 ## 27/11/2026 · Lista de personagens em modo por time ou compacto; chefes e Naruto Totem fora das casas; só Konoha até vencer o Kage (Claude Code)
 
 - **Pedidos do usuário:** "Primeiro mapa só deve ter o Genin liberado para primeiro jogo, hoje ta genin/chunin" · "unico mapa liberado a principio até chegar e finalizar com sucesso o modo kage, será konoha, ai vai liberando o resto depois" · "Ser possível escolher entre deixar em modo lista ou compactado... com os quadradinhos lado a lado ou da forma que você está organizando agora" · "Bossese Naruto totem nascendo dentro das casas, não pode..."

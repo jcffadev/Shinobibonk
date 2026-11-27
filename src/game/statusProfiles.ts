@@ -51,6 +51,7 @@ export const STATUS_PROFILES: Record<string, Profile> = {
   'Palmas Protetoras': { status: 'Lentidão', statusChance: .25 },
   'Punhos dos Leões Gêmeos': { status: 'Paralisar', statusChance: .3 },
   'Rendan Uzumaki': { status: 'Atordoar', statusChance: .25 },
+  'Jutsu Sexy': { status: 'Atordoar', statusChance: .6 },
   'Senbon com Sinos': { status: 'Dormir', statusChance: .15 },
   'Tigre do Meio-Dia': { status: 'Empurrar', statusChance: .4, burn: true },
   // Sombra, Sábio, Terra e Água

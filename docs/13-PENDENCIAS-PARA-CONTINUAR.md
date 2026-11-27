@@ -50,7 +50,7 @@ Os blocos abaixo registram o que foi entregue e preservam a fila das rodadas ant
 - **Codex (26/11):** arte dos 6 guizos (referência do usuário: guizos prateados com cordão), prévia antes de aplicar (docs/01).
 - **Codex (26/11):** efeitos de tela de Haku (névoa/tempestade de gelo não apareceu), Gaara e Zabuza; mandar prévia ao usuário antes de aplicar (docs/01).
 - **Codex (26/11):** arte e animação dos Seis Caminhos de Pain na ultimate do Nagato (Kuchiyose: Pein Rikudō), referências em docs/01. **PENDENTE DE VALIDAÇÃO E2E:** jogar com o Nagato e usar a ultimate.
-- **Codex (26/11):** escadaria de pedra da Vila da Folha sem sólido: jogador atravessa e monstros se escondem dentro dela (docs/01).
+- **Codex (26/11):** escadaria de pedra da Vila da Folha sem sólido: jogador atravessa e monstros se escondem dentro dela (docs/01). **27/11 · monstros resolvidos pelo Claude Code** (degraus sólidos para a horda, sobem um degrau por vez); falta ao Codex conferir o jogador e o desenho.
 - **Bijū que não apareceu depois do portal da arena (26/11):** o usuário está investigando; o código do caminho portal → arena → Bijū foi conferido pelo Claude Code e não mostrou falha.
 
 ## Jogador grudado na cerca · 25/11/2026

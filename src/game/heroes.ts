@@ -107,6 +107,8 @@ const L={
 const U={
  kageBunshin:t('Kage Bunshin','Taijutsu','Neutro','Projétil',1.2),
  rendan:t('Rendan Uzumaki','Taijutsu','Neutro','Cone',1.25),
+ // 27/11/2026 — usuário: "Naruto academia a ultimate dele tem que ser o vários clones das sombras... a skill inicial tem que ser o jutsu sexy lembra?": o Jutsu Sexy é a técnica inicial do Naruto Academia (área que distrai e atordoa; status em statusProfiles.ts).
+ sexy:t('Jutsu Sexy','Ninjutsu','Neutro','Área',1.9),
  rasenshuriken:t('Rasenshuriken','Ninjutsu','Vento','Projétil',1.8),
  bijudama:t('Bijūdama','Ninjutsu','Neutro','Área',2),
  chidori:t('Chidori','Ninjutsu','Raio','Linha',1.5),
@@ -173,7 +175,7 @@ const SHARED_LIBRARY=new Set(Object.values(L).map(x=>x.name));
 export const SHARED_TECHNIQUES=new Set([...SHARED_LIBRARY,'Barras de Chakra']);
 // Temas canônicos; percentuais, atributos e composições são regras originais de protótipo. U = única, L.* = compartilhada.
 export const HEROES:Hero[]=[
- h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[U.kageBunshin,L.shuriken,L.kunai,U.rendan],'Jutsu Sexy','Clones em área, projéteis e atordoamento',0),
+ h('naruto','Naruto','Vila da Folha','#f4a23a',130,18,4,7,'Determinação · até +20% de dano conforme perde HP (+10% com metade da vida).',{},[U.sexy,U.kageBunshin,L.shuriken,L.kunai],'Tajū Kage Bunshin','Clones em área, projéteis e atordoamento',0),
  h('gaara','Gaara','Vila da Areia','#c87557',145,22,4,6.3,'Defesa Ofensiva · +8 armadura e +1% de dano total para cada ponto de armadura.',{defense:8},[L.agulhasAreia,U.caixao,L.ondaAreia,U.sepultamento],'Funeral do Deserto','Área, armadura e duração',1),
  h('madara','Madara','Clã Uchiha','#b94f61',120,24,3,6.8,'Sharingan · +7 pontos de chance crítica: 12% total; críticos causam 250% do dano.',{crit:.07},[U.leque,L.bolaFogo,L.susanoo,U.chamas],'Susanoo Perfeito','Crítico, fogo e ninjutsu',2),
  h('hashirama','Hashirama','Vila da Folha','#62a678',155,23,8,6.2,'Poder Sábio · +20% de dano em ataques de elemento Sábio; infusão disponível por técnica ou item.',{regen:.8},[L.punho,U.estacas,L.raizes,L.dragaoAgua],'Nascimento das Árvores','Regeneração, vida e área',3),
@@ -216,7 +218,7 @@ export const ACADEMY:Technique[]=[
  {...t('Raiton: Faísca','Ninjutsu','Raio','Linha',.7),unlockLevel:4},
 ];
 /** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
-export function isProjectileUltimate(id:string){if(id==='naruto-hokage'||id==='kisame'||id==='kidomaru')return true;const family=familyOf(id);if(id==='naruto')return false;/* Academia: Jutsu Sexy é em área */return family==='naruto'||family==='tenten'||family==='minato';}
+export function isProjectileUltimate(id:string){if(id==='naruto-hokage'||id==='kisame'||id==='kidomaru')return true;const family=familyOf(id);/* 27/11/2026: a ultimate do Naruto Academia (Tajū Kage Bunshin) é de projéteis, como a das outras versões. */return family==='naruto'||family==='tenten'||family==='minato';}
 /**
  * VERSÕES SEPARADAS (pedido do usuário, 06/11/2026): cada forma de evolution.ts virou um personagem jogável próprio, com kit,
  * passiva e atributos da fase. O id do shinobi base continua sendo a PRIMEIRA versão (ex.: `naruto` = Naruto Academia), por isso
@@ -317,6 +319,8 @@ export const DETERMINATION:Record<string,number>={naruto:.2,'naruto-genin':.25,'
 const ULTIMATE_FROM_STARTER=new Set(['choji','choji-guerra','kabuto','kimimaro','tayuya','sakon-ukon','juzo','orochimaru-akatsuki']);
 export function ultimateBase(hero:Hero):Technique{
   if(hero.id===KAKASHI_DMS)return hero.techniques[2];
+  // 27/11/2026 — usuário: "Naruto academia a ultimate dele tem que ser o vários clones das sombras... a skill inicial tem que ser o jutsu sexy lembra?": Tajū Kage Bunshin sai da Kage Bunshin.
+  if(hero.id==='naruto')return hero.techniques.find(x=>x.name==='Kage Bunshin')??hero.techniques[0];
   if(ULTIMATE_FROM_STARTER.has(hero.id))return hero.techniques[0];
   return [...hero.techniques].reverse().find(t=>!t.setup)??hero.techniques[0];
 }

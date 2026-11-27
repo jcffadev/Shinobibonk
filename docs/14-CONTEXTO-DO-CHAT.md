@@ -3437,3 +3437,10 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > unico mapa liberado a principio até chegar e finalizar com sucesso o modo kage, será konoha, ai vai liberando o resto depois
 
 **Resposta.** Botões "Por time" e "Compacto" na lista, com a escolha salva. Chefes, Mega Elites, Mega do clima, Naruto Totem e clones nascem fora de casas e escadarias. Conta nova: só Konoha e só o Genin; o próximo mapa abre ao vencer o Kage do anterior. O Chūnin aberto vem de progresso salvo no navegador. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Escadaria sólida para os monstros e Naruto Academia (Claude Code)
+
+> monstros ainda conseguindo passaar dentro dessa escadaria... não deve ser possivel eles entrarem dentro dela, só passar por cima ou do lado
+> Naruto academia a ultimate dele tem que ser o vários clones das sombras... a skill inicial tem que ser o jutsu sexy lembra?
+
+**Resposta.** Os degraus agora valem para os monstros: sobem um degrau por vez ou contornam; não atravessam a parede. Naruto Academia começa com o Jutsu Sexy e a ultimate é Tajū Kage Bunshin. Depois do pedido "Habilidade inicial do Naruto inicial do naruto academia precisa de buff", o Jutsu Sexy ficou com poder 1,9 e 60% de atordoar (no simulador ele era o único inicial que não matava o comum de um golpe no 1º minuto). **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
