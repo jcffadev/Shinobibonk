@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 27/11/2026 · Barra do chefe no Hagoromo, fúria e carga da técnica, aviso mais baixo e Incenso Repelente (Claude Code)
+
+- **Pedidos do usuário:** "Todos os itens do Hagoromo devem dar buffs · Abaixar mais o aviso, do aviso em vermelho para ficar bonito em tela, o HP do BOSS dentro da sala do Hagoromo não esta mostrando a barrinha de HP · Na barrinha de HP em cima mostrar quando está em RAGE, também mostrando o carregamento da skill dos bosses pro jogador saber exatamente o momento que ele vai lançar." · sobre o Incenso Repelente: "Esse item deveria dar + Ryu +EXP · E quando cair 30% do hp afastar os monstros · Além é claro do que esta ai como buffs"
+- **Ferramentas do Hagoromo:** conferido que as 34 já somam na ficha (as duas de dano em elites valem no golpe); novo teste garante que toda ferramenta muda um atributo ou é usada em combate.
+- **Barra do chefe no Hagoromo:** o HUD mostrava a faixa do treino OU as barras de chefe, e as barras deixavam o Mega do Hagoromo de fora. Agora a faixa e as barras aparecem juntas e o Mega do treino tem barra.
+- **Fúria e carga** (`BossBars.tsx`, `boss-bars.css`, `src/game/bossCharge.ts`): na fúria, selo "🔥 Fúria" e barra vermelha pulsando (sem animação com movimento reduzido). Abaixo da vida, a barra "Próxima técnica" enche durante a recarga; quando o aviso vermelho abre no chão, ela fica vermelha com "⚠ nome da técnica" e enche até o golpe sair.
+- **Aviso:** na sala do Hagoromo o aviso em pergaminho desce para baixo da faixa do treino (186 px; 282 px no celular) e as barras do chefe descem junto.
+- **Incenso Repelente** (`catalog.ts`, novo `src/game/repelIncense.ts`): mantém −8% de inimigos e +6% de movimento por unidade e soma +8% de Ryu e +8% de XP. Com 30% de HP ou menos, uma onda empurra 6 m para longe os monstros a 7 m (+1 m por unidade extra), recarga 20 s. Guardião, Bijū e totem não se movem. Valores PROPOSTOS.
+- **Testes:** novo `tests/hagoromo-chefe-incenso.test.mjs` (4 testes) e mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** barra do Mega no Hagoromo, fúria e carga na barra, posição do aviso e a onda do incenso.
+
 ## 27/11/2026 · Armadilhas sempre invocam os ninjas (Claude Code)
 
 - **Pedido do usuário:** "Shurikens de enboscadas e shinobi no chão / armadilhas ainda estão dando os buffs/recompensa sem aparecer os ninjas a mais de armadilhas."

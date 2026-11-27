@@ -9,3 +9,17 @@
 .boss-bar.is-boss .boss-bar-track i{background:linear-gradient(#d68cff,#7b2fb8)}
 .boss-bar.is-rage .boss-bar-track{border-color:#ff4b2b}
 @media(max-width:700px){.boss-bars{top:26vh}.boss-bar-name{font-size:11px}}
+/* 27/11/2026: fúria mais visível e carga da próxima técnica do chefe. */
+.boss-bar.is-rage .boss-bar-track{border-color:#ff4b2b;box-shadow:0 0 10px #ff4b2bb0,0 2px 0 rgba(0,0,0,.4);animation:boss-rage-pulse .8s ease-in-out infinite alternate}
+.boss-bar.is-rage .boss-bar-track i{background:linear-gradient(#ffb15c,#e0281a)}
+.boss-bar-name em{animation:boss-rage-pulse .8s ease-in-out infinite alternate}
+@keyframes boss-rage-pulse{from{filter:brightness(1)}to{filter:brightness(1.35)}}
+.boss-bar-cast{position:relative;display:block;height:12px;border:1px solid #120b07;border-radius:3px;background:#1d1610;overflow:hidden}
+.boss-bar-cast i{position:absolute;inset:0 auto 0 0;background:linear-gradient(#ffe48a,#d9a521)}
+.boss-bar-cast small{position:relative;display:block;color:#fff3df;font-size:10px;font-weight:800;line-height:12px;text-align:center;text-shadow:0 1px 0 #000,0 0 3px #000}
+.boss-bar-cast.is-casting{border-color:#ff4b2b}
+.boss-bar-cast.is-casting i{background:linear-gradient(#ff7a5c,#d11f12)}
+@media (prefers-reduced-motion:reduce){.boss-bar.is-rage .boss-bar-track,.boss-bar-name em{animation:none}}
+/* Na sala do Hagoromo a faixa do treino ocupa o topo: barras um pouco mais abaixo. */
+.game-shell.in-hagoromo .boss-bars{top:max(30vh,236px)}
+@media(max-width:700px){.game-shell.in-hagoromo .boss-bars{top:max(26vh,330px)}}

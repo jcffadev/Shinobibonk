@@ -236,3 +236,6 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .ryu-cost small{color:#e6cc9d}
 .ryu-cost[data-insufficient=true]{border-color:#f29c82;color:#ffcab8}
 .ryu-cost-coin{display:inline-grid;place-items:center;width:1.2em;height:1.2em;border-radius:50%;background:#f1bc58;color:#442d13;font-weight:900;font-size:.88em}
+/* 27/11/2026 — usuário: "Abaixar mais o aviso, do aviso em vermelho para ficar bonito em tela": na sala do Hagoromo o aviso fica abaixo da faixa do treino. */
+.game-shell.in-hagoromo .world-toast{top:186px}
+@media(max-width:700px){.game-shell.in-hagoromo .world-toast{top:282px}}

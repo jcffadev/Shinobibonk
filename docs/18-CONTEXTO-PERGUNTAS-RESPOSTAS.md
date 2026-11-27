@@ -697,3 +697,11 @@ Seis versões têm poses próprias com oito quadros e apoio ao joelho. A matriz 
 ### Por que a shuriken e o corpo davam o bônus sem os ninjas? · 27/11/2026
 
 A Shuriken Amaldiçoada só invocava ninjas até o teto de vivos: com a horda cheia, nenhum. No Final Swarm, o corte de 1.600 removia os inimigos mais novos, que eram os da armadilha. Agora a shuriken sempre invoca 4·√(peso da missão) + 2 por zona depois da 1ª, e os ninjas das duas armadilhas nascem a 10 m fora das casas e ficam fora do corte (Claude Code).
+
+### Como saber quando o chefe vai lançar a técnica? · 27/11/2026
+
+Abaixo da barra de vida do chefe há a barra "Próxima técnica". Ela enche durante a recarga; quando fica vermelha com "⚠" e o nome da técnica, o aviso vermelho já está no chão e o golpe sai quando ela enche. Na fúria, a barra de vida pulsa em vermelho com o selo "🔥 Fúria". Vale também para o Mega do Hagoromo (Claude Code).
+
+### O que faz o Incenso Repelente? · 27/11/2026
+
+Por unidade (até 3): −8% de inimigos no mapa, +6% de movimento, +8% de Ryu e +8% de experiência. Com 30% de HP ou menos, empurra 6 m para longe os monstros a 7 m (+1 m por unidade extra), com recarga de 20 s. Guardião, Bijū e totem não se movem (Claude Code).

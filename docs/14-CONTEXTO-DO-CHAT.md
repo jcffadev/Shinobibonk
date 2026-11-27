@@ -3397,3 +3397,14 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > Aviso: Shurikens de enboscadas e shinobi no chão / armadilhas ainda estão dando os buffs/recompensa sem aparecer os ninjas a mais de armadilhas.
 
 **Resposta.** O Codex publicou 2 commits em 27/11 (arenas do Exame e do Hagoromo, clima, malhas de drop e guizos, ícones de pílulas, preços em Ryu e folhas de derrota das 115 versões), refeitos num ramo novo a partir do main; as regras do main continuam e a suíte passou. A pasta antiga do ramo `vilas-refinadas` ainda tem a mesclagem parada, mas o trabalho dela já entrou no main por esse outro caminho. Causa das armadilhas: a Shuriken Amaldiçoada limitava os ninjas à vaga até o teto de vivos (horda cheia = 0 ninjas, +8% de graça) e o corte de 1.600 do Final Swarm apagava os recém-invocados. Corrigido: a shuriken sempre invoca os seus, os das duas armadilhas nascem fora das casas e não são cortados. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Hagoromo, barras de chefe e Incenso Repelente (Claude Code)
+
+> "Todos os itens do Hagoromo devem dar buffs
+> Abaixar mais o aviso, do aviso em vermelho para ficar bonito em tela, o HP do BOSS dentro da sala do Hagoromo não esta mostrando a barrinha de HP
+> Na barrinha de HP em cima mostrar quando está em RAGE, também mostrando o carregamento da skill dos bosses pro jogador saber exatamente o momento que ele vai lançar."
+> sobre o Incenso Repelente: "Esse item deveria dar + Ryu +EXP
+> E quando cair 30% do hp afastar os monstros
+> Além é claro do que esta ai como buffs"
+
+**Resposta.** As 34 ferramentas já davam buff (teste novo garante). A barra do chefe sumia no Hagoromo porque o HUD trocava a faixa do treino pelas barras e as barras excluíam o Mega do treino: agora aparecem juntas. A barra mostra a fúria em destaque e uma segunda barra com a carga da próxima técnica, vermelha com o nome quando o aviso no chão abre. O aviso desce para baixo da faixa do treino. Incenso Repelente: mantém −8% de inimigos e +6% de movimento, soma +8% de Ryu e +8% de XP e, com 30% de HP ou menos, afasta os monstros a 7 m (recarga 20 s). **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

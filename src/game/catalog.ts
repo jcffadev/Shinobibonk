@@ -12,6 +12,8 @@ export type StatKey = 'health'|'damage'|'defense'|'move'|'normal'|'element'|'cri
   |'revive35'|'revive60'|'shield'|'rush'|'stance'|'smoke'|'emergencyHeal'|'periodicHeal'|'bolts'|'beam'|'freezeOnHit'
   |'shatter'|'fireBurst'|'iceBurst'
   |'bounce'|'kunaiDiscount'|'slotDiscount'|'enemyCount'|'eliteSpawn'|'threat'|'pillCap'|'skillCap'|'ultReset'
+  // Incenso Repelente: onda que afasta os monstros com 30% de HP ou menos (src/game/repelIncense.ts, 27/11/2026)
+  |'repelLowHp'
   // Caça-Níquel da Tsunade: +dano a cada 250 Ryu gastos na run (src/game/roulette.ts · spendBonuses)
   |'spendDamage';
 export type Bonuses = Partial<Record<StatKey, number>>;
@@ -78,7 +80,8 @@ export const ITEMS:Item[] = [
   item('poison-herb','Erva Venenosa','Incomum',13,ANY,'+30% de dano de queimadura e veneno.',{statusDamage:.3}),
   item('swift-kunai','Kunai Ágil','Incomum',1,ANY,'+10% de velocidade de ataque.',{attackSpeed:.1}),
   item('crit-damage','Kunai Afiada','Incomum',1,ANY,'+30 pontos percentuais de dano crítico.',{critDamage:.3}),
-  item('repel','Incenso Repelente','Incomum',2,3,'−8% de inimigos no mapa e +6% de movimento.',{enemyCount:-.08,move:.06}),
+  // 27/11/2026 — usuário: "Esse item deveria dar + Ryu +EXP · E quando cair 30% do hp afastar os monstros · Além é claro do que esta ai como buffs".
+  item('repel','Incenso Repelente','Incomum',2,3,'−8% de inimigos no mapa, +6% de movimento, +8% de Ryu e +8% de experiência. Com 30% de HP ou menos, afasta os monstros em volta (recarga 20 s).',{enemyCount:-.08,move:.06,gold:.08,exp:.08,repelLowHp:1}),
   item('thorn-armor','Armadura de Espinhos','Incomum',4,ANY,'Inimigos que te acertam sofrem dano igual à sua armadura × o seu dano (cresce com nível, armadura e dano%).',{thorns:1}),
   item('blood-shell','Concha Sanguinária','Incomum',15,ANY,'Recupera 0,8% do dano causado como HP.',{lifesteal:.008}),
   item('emergency-fruit','Fruta Medicinal','Incomum',13,ANY,'+10 HP máximo; abaixo de 30% de HP, recupera 35% (a cada 45 s).',{health:10,emergencyHeal:1}),

@@ -6,6 +6,7 @@ import { activeTuning, dropChance, tuneThreat } from '../game/tuning';
 import { createInstanceArenas } from './missionArenas';
 import { constrainArena, EXAM_ENTRANCE, EXAM_SPAWN, INSTANCE_FLOOR, type InstanceArena } from '../game/missionArenas';
 import { createBossCombat, BIJUU_SIZE, type BossState } from './bossCombat';
+import { bossCharge } from '../game/bossCharge';
 import { createPickupShadows } from './dropSprites';
 import { createDropModels, monsterDropScale, pickupScrollVariant, restDrop, type MonsterDropKind, type ThrownWeapon } from './dropModels';
 import { currentSettings, translateKey, pixelRatioFor, CAMERA_ZOOM, CAMERA_VIEW, perspectiveDistance } from '../game/settings';
@@ -85,6 +86,7 @@ import { buildAltarOffers, extraStrikes } from '../game/altarRewards'
 import { luckQuality } from '../game/luckQuality'
 import { rollRecall, recallBlocked } from '../game/ichirakuRecall'
 import { PEIN_RIKUDO, RIKUDO_PATHS, rikudoDue, type RikudoEvent } from '../game/peinRikudo'
+import { REPEL_INCENSE, repelDue, repelPoint, repelRadius } from '../game/repelIncense';
 import { BOSS_RAGE, bossRageDue, rageDefense, immovableBoss } from '../game/bossRage'
 import { hordeLook } from '../game/hordeRoles'
 import { refillHealBudget, spendHeal } from '../game/healCap'
@@ -668,7 +670,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       }
       priceTag.sprite.position.set(best.x,standHeight(best.x,best.z)+PRICE_TAG.lift,best.z);
     }
-    let timeSinceHit=99,rushTimer=0,shieldReady=true,shieldTimer=0,emergencyCd=0,periodicTimer=30,boltTimer=2.5,beamTimer=6,freezeCd=0,ultBuffTimer=0,stillTime=0,revives35=0,revives60=0;
+    let timeSinceHit=99,rushTimer=0,shieldReady=true,shieldTimer=0,emergencyCd=0,repelCd=0,periodicTimer=30,boltTimer=2.5,beamTimer=6,freezeCd=0,ultBuffTimer=0,stillTime=0,revives35=0,revives60=0;
     const lastPos=new THREE.Vector3();
     /** Multiplicador temporário de velocidade de ataque: Selo de Adrenalina, Postura de Pedra parado e Pergaminho do Hokage após a Ultimate. */
     const tempAttackSpeed=()=>1+(rushTimer>0?.12:0)+(ex('stance')>0&&stillTime>.5?.08:0)+(ultBuffTimer>0?.3:0);
@@ -1251,7 +1253,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     let route:RouteTarget|null=null,routeNotice:{text:string;kind:'arrived'|'lost'|'set';until:number}|null=null,megaUid=0;
     const routeProbe=new THREE.Vector3();
     /** Até 3 barras: Guardião/Bijū primeiro, depois os Mega Elites mais perto (BossBars.tsx). */
-    const bossBars=()=>{const dist=(e:Enemy)=>Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z);return enemyList.filter(e=>(e.guardian||e.megaElite)&&!e.hagoromo&&!e.totem&&!e.clone&&(e.maxHp??0)>0).sort((a,b)=>Number(!!b.guardian)-Number(!!a.guardian)||dist(a)-dist(b)).slice(0,3).map(e=>({id:'boss-'+(e.uid??0),name:megaName(e),hp:Math.max(0,e.hp),maxHp:e.maxHp!,boss:!!e.guardian,rage:!!e.rage||(e.fury??0)>0}));};
+    const bossBars=()=>{const dist=(e:Enemy)=>Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z);return enemyList.filter(e=>(e.guardian||e.megaElite)&&!e.totem&&!e.clone&&(e.maxHp??0)>0).sort((a,b)=>Number(!!b.guardian)-Number(!!a.guardian)||dist(a)-dist(b)).slice(0,3).map(e=>({id:'boss-'+(e.uid??0),name:megaName(e),hp:Math.max(0,e.hp),maxHp:e.maxHp!,boss:!!e.guardian,rage:!!e.rage||(e.fury??0)>0,/* 27/11: carga da próxima técnica (bossCharge). */...bossCharge(e.boss)}));};
     const megaName=(e:Enemy)=>e.bijuu?(e.boss?.name??'Bijū'):(e.hagoromo?'Treinamento do Hagoromo · ':e.guardian?'Guardião · ':e.account?'Shinobi para selar · ':'Mega Elite · ')+(HERO_BY_ID[e.heroId??'']?.name??'?');
     function markNpcUsed(id:string){
       const event=events.find(entry=>entry.id===id);
@@ -2199,9 +2201,11 @@ function interact(){if(activeInstance==='exam-hall'&&duelWon){victory=true;snaps
       if(enabledRef.current&&!pausedRef.current&&!choiceData&&!roulette&&!defeated&&!victory&&!debugState.frozen&&(document.hasFocus()||testPointer||debugOpenRef.current||sealing)){
       refreshStats();invulnerability=Math.max(0,invulnerability-dt);playerSlow=Math.max(0,playerSlow-dt);
       // Temporizadores dos itens.
-      timeSinceHit+=dt;rushTimer=Math.max(0,rushTimer-dt);freezeCd=Math.max(0,freezeCd-dt);ultBuffTimer=Math.max(0,ultBuffTimer-dt);emergencyCd=Math.max(0,emergencyCd-dt);
+      timeSinceHit+=dt;rushTimer=Math.max(0,rushTimer-dt);freezeCd=Math.max(0,freezeCd-dt);ultBuffTimer=Math.max(0,ultBuffTimer-dt);emergencyCd=Math.max(0,emergencyCd-dt);repelCd=Math.max(0,repelCd-dt);
       stillTime=Math.hypot(player.position.x-lastPos.x,player.position.z-lastPos.z)>.001?0:stillTime+dt;lastPos.copy(player.position);
       if(!shieldReady){shieldTimer-=dt;if(shieldTimer<=0)shieldReady=true;}
+      // 27/11/2026: Incenso Repelente — com 30% de HP ou menos, a onda empurra os monstros em volta (Guardião, Bijū e totem ficam).
+      if(!defeated&&repelDue(hp,stats.maxHp,ex('repelLowHp'),repelCd)){repelCd=REPEL_INCENSE.cooldown;const radius=repelRadius(ex('repelLowHp'));for(const e of enemyList){if(immovableBoss(e))continue;const ep=e.sprite.position;if(Math.hypot(ep.x-player.position.x,ep.z-player.position.z)>radius)continue;const to=repelPoint(ep.x,ep.z,player.position.x,player.position.z);keepInInstance(to);const x=THREE.MathUtils.clamp(to.x,-WORLD_LIMIT,WORLD_LIMIT),z=THREE.MathUtils.clamp(to.z,-WORLD_LIMIT,WORLD_LIMIT);ep.set(x,ep.y-terrainHeight(ep.x,ep.z)+terrainHeight(x,z),z);}addRing(player.position,'#f5edb9',radius);eventToast='Incenso Repelente: os monstros foram afastados!';}
       if(!defeated&&ex('emergencyHeal')>0&&emergencyCd<=0&&hp>0&&hp<stats.maxHp*.3){hp=Math.min(stats.maxHp,hp+stats.maxHp*.35);emergencyCd=45;addRing(player.position,'#7dffb0',1.4);eventToast='Fruta Medicinal: +35% de HP';}
       if(!defeated&&ex('periodicHeal')>0){periodicTimer-=dt;if(periodicTimer<=0){periodicTimer=30;if(hp<stats.maxHp){hp=Math.min(stats.maxHp,hp+stats.maxHp*.12);addRing(player.position,'#7dffb0',1.2);}}}
       // Procs de item com golpe (raios/chamas) também seguem a velocidade de ataque.

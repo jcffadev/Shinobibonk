@@ -28,7 +28,7 @@ export const BOSS_RULES = {
 
 type CastShape = 'circle' | 'cone' | 'line' | 'lineV' | 'ring';
 type Cast = { technique: Technique; shape: CastShape; center: THREE.Vector3; dir: THREE.Vector3; range: number; width: number; windup: number; total: number; power: number; marker: THREE.Group; ultimate: boolean; susanoo?: boolean };
-export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number; motionTime:number; recoil:number; motionMap?:THREE.Texture; motionRow?:number;
+export type BossState = { name: string; maxHp: number; guardian: boolean; cooldown: number; /** Duração da espera atual até a próxima técnica (barra de carga do HUD). */ cooldownTotal?: number; next: number; ultimateUsed: boolean; cast?: Cast; bar: THREE.Sprite; canvas: HTMLCanvasElement; lastRatio: number; lastCasting: string; hpText?:string; phase?:number; castCount:number; motionTime:number; recoil:number; motionMap?:THREE.Texture; motionRow?:number;
   /** Rodada 55: espelho com histerese, posição anterior (andar = deslocamento real) e quadro exibido (testes). */
   flip?:boolean; lastX?:number; lastZ?:number; walkBlend?:number; pose?:number;
   /** Rodada 58: segundos restantes da entrada (a bijū surge do chão antes de receber dano). */
@@ -104,7 +104,7 @@ export function createBossCombat(ctx: BossContext) {
     const name = beast?.name ?? HERO_BY_ID[host.heroId ?? '']?.name ?? 'Shinobi';
     const zoneIndex = Math.min(2, Math.max(0, ctx.zone() - 1));
     const cooldown = BOSS_RULES.cooldownByZone[zoneIndex] * (guardian ? .8 : 1);
-    host.boss = { name, maxHp, guardian, cooldown, next: 2 + Math.random() * 1.5, ultimateUsed: false, bar, canvas, lastRatio: 1, lastCasting: '',phase:beast?beastPhase(host.hp/maxHp):undefined,castCount:0,motionTime:0,recoil:0 };
+    host.boss = { name, maxHp, guardian, cooldown, cooldownTotal: cooldown, next: 2 + Math.random() * 1.5, ultimateUsed: false, bar, canvas, lastRatio: 1, lastCasting: '',phase:beast?beastPhase(host.hp/maxHp):undefined,castCount:0,motionTime:0,recoil:0 };
     if(beast){
       const {page,row}=bijuuSheetCell(BIJUU.indexOf(beast)),state=host.boss;
       state.fallbackArt=host.sprite.material.map;
@@ -230,7 +230,7 @@ export function createBossCombat(ctx: BossContext) {
       if (state.cast.windup <= 0) fire(host, state);
     } else if (canAct && (!phase || state.arrival===undefined)) {
       state.cooldown -= dt;
-      if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.2,1.35,.68][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); }
+      if (state.cooldown <= 0) { startCast(host, state); state.cooldown = state.phase ? [0,2.2,1.35,.68][state.phase] : BOSS_RULES.cooldownByZone[Math.min(2, Math.max(0, ctx.zone() - 1))] * (state.guardian ? .8 : 1) * (.85 + Math.random() * .3); state.cooldownTotal = state.cooldown; }
     }
     if(phase){
       // Rodada 55 — anda só quando DE FATO se desloca (antes: 'pode agir' = andando, então a bijū colada no jogador
