@@ -93,7 +93,11 @@ test('lista por time: Time 7 primeiro (Naruto, Sasuke, Sakura, Kakashi) e "Em br
 });
 
 test('mapas e dificuldades pelo progresso, mesmo com TEST_UNLOCK_ALL', () => {
-  assert.equal(isMapUnlocked('folha'), true); assert.equal(isMapUnlocked('areia'), false, 'Areia só depois do Genin da Folha');
+  assert.equal(isMapUnlocked('folha'), true); assert.equal(isMapUnlocked('areia'), false, 'Areia só depois do Kage da Folha');
+  for (const map of ['areia', 'pedra', 'nevoa']) assert.equal(isMapUnlocked(map), false, map + ' fechado no começo');
+  const account = fs.readFileSync('src/game/account.ts', 'utf8'), maps = fs.readFileSync('src/ui/MapSelect.tsx', 'utf8');
+  assert.ok(account.includes("export const MAP_UNLOCK_DIFFICULTY = 'Kage';") && account.includes('.includes(MAP_UNLOCK_DIFFICULTY);'), 'próximo mapa só com o Kage do anterior');
+  assert.ok(maps.includes('Vença o Kage em') && !maps.includes('Vença o Genin em'));
   assert.equal(isDifficultyUnlocked('folha', 'Genin'), true); assert.equal(isDifficultyUnlocked('folha', 'Chunin'), false);
 });
 
@@ -110,4 +114,24 @@ test('ligações na interface e na partida', () => {
   assert.ok(main.includes('for(const id of eventUnlocks(done))if(!unlockedHeroes().has(id))sealForAccount(id);'));
   assert.ok(select.includes("'🔒 Em breve · próxima temporada'") && select.includes('teamOrder(a.id) - teamOrder(b.id)') && select.includes('className="cs-team-heading"'));
   assert.ok(events.includes('<OrganizationEvent />'));
+});
+
+test('lista de personagens: modo "Por time" ou "Compacto", salvo no navegador (27/11/2026)', () => {
+  const select = fs.readFileSync('src/ui/CharacterSelect.tsx', 'utf8'), css = fs.readFileSync('src/hud-dock.css', 'utf8');
+  assert.ok(select.includes("const VIEW_KEY = 'sb_roster_view_v1';") && select.includes('localStorage.getItem(VIEW_KEY)'), 'a escolha fica salva');
+  assert.ok(select.includes("heading = view === 'times' && (index === 0 || seasonTeam(list[index - 1].id) !== team)"), 'títulos só no modo por time');
+  assert.ok(select.includes("view === 'compacto' ? ' cs-compact' : ''"), 'compacto muda a grade');
+  assert.ok(select.includes('role="group" aria-label="Modo da lista"') && select.includes('aria-pressed={view === v}'));
+  assert.ok(css.includes('.cs-grid.cs-compact{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))'));
+  for (const size of (css.slice(css.indexOf('modo da lista de personagens')).match(/font-size:([\d.]+)px/g) ?? [])) assert.ok(Number(size.match(/[\d.]+/)[0]) >= 10, size);
+});
+
+test('chefes, Mega Elites, Mega do clima e Naruto Totem nascem fora das casas (27/11/2026)', () => {
+  // Usuário: "Bossese Naruto totem nascendo dentro das casas, não pode..."
+  const canvas = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.ok(canvas.includes('megaElite?solids.safeSpot(x,z):solids.freeSpot(x,z,.6)'), 'chefes e Mega Elites');
+  assert.ok(canvas.includes('{x,z}=solids.safeSpot(THREE.MathUtils.clamp(player.position.x+Math.cos(angle)*TOTEM_RULES.distance'), 'Naruto Totem');
+  assert.ok(canvas.includes('{x,z}=solids.safeSpot(THREE.MathUtils.clamp(totemPos.x+Math.cos(angle)*r'), 'clones do totem');
+  assert.ok(canvas.includes('const spot=solids.safeSpot(THREE.MathUtils.clamp(player.position.x+v1.x*distance'), 'Mega do clima');
+  assert.ok(canvas.includes('seasonVersion(versionForEncounter(elite,zone,mission),familyVersions(elite).map(v=>v.id))??elite'), 'Mega do clima da temporada');
 });

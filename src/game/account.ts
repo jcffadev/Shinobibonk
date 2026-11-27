@@ -90,12 +90,17 @@ export function isDifficultyUnlocked(mapId: string, difficulty: string) {
   const index = ORDER.indexOf(difficulty); if (index <= 0) return true;
   return (mapProgress()[mapId] ?? []).includes(ORDER[index - 1]);
 }
-/** Ordem dos mapas: o seguinte só libera ao vencer o Genin do anterior (Folha → Areia → Pedra → Névoa). */
+/**
+ * Ordem dos mapas (Folha → Areia → Pedra → Névoa). 27/11/2026 — usuário: "unico mapa liberado a principio até chegar e finalizar
+ * com sucesso o modo kage, será konoha, ai vai liberando o resto depois": o seguinte só libera ao vencer o KAGE do anterior
+ * (antes bastava o Genin).
+ */
+export const MAP_UNLOCK_DIFFICULTY = 'Kage';
 export const MAP_ORDER = ['folha', 'areia', 'pedra', 'nevoa'];
 export function isMapUnlocked(mapId: string) {
   if (testMode() || allUnlockedOverride) return true;
   const index = MAP_ORDER.indexOf(mapId); if (index <= 0) return true;
-  return (mapProgress()[MAP_ORDER[index - 1]] ?? []).includes('Genin');
+  return (mapProgress()[MAP_ORDER[index - 1]] ?? []).includes(MAP_UNLOCK_DIFFICULTY);
 }
 export function markMapCompleted(mapId: string, difficulty: string) {
   const all = mapProgress(); const done = new Set(all[mapId] ?? []); done.add(difficulty); all[mapId] = [...done]; write(MAP_PROGRESS_KEY, all);

@@ -257,3 +257,12 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .ev-event.ev-organization{border-color:#c8321f;background:linear-gradient(160deg,#2a1214,#140a0b)}
 .ev-event.ev-organization h2{color:#ff8a7a}
 .ev-event.ev-organization.closed{opacity:.8}
+/* 27/11/2026: modo da lista de personagens — "Por time" (títulos) ou "Compacto" (quadradinhos menores lado a lado). */
+.cs-view{display:inline-flex;gap:0;border:1px solid #ffffff33;border-radius:8px;overflow:hidden}
+.cs-view button{padding:6px 10px;border:0;background:#2b1f16;color:#e8d8bf;font-size:12px;cursor:pointer}
+.cs-view button+button{border-left:1px solid #ffffff22}
+.cs-view button[aria-pressed="true"]{background:#c08f5d;color:#1f140b;font-weight:800}
+.cs-grid.cs-compact{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:5px}
+.cs-grid.cs-compact .cs-card{padding:4px 4px 5px!important;gap:1px}
+.cs-grid.cs-compact .cs-card>b{font-size:10.5px;line-height:1.15}
+.cs-grid.cs-compact .cs-village,.cs-grid.cs-compact .cs-mission-label{display:none}

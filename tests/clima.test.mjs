@@ -64,7 +64,7 @@ test('selos do Zabuza: a folha tem preparo e selo distintos de frente e de costa
 
 test('GameCanvas: Zabuza surge à vista, faz selos, névoa engrossa e só depois esconde', () => {
   assert.ok(CAST_DISTANCE > 3 && CAST_DISTANCE < 12);
-  assert.match(canvas, /const distance=w\.cast\?CAST_DISTANCE:8;\s*const spot=solids\.freeSpot\(THREE\.MathUtils\.clamp\(player\.position\.x\+v1\.x\*distance/, 'aparece à frente do jogador, dentro da tela');
+  assert.match(canvas, /const distance=w\.cast\?CAST_DISTANCE:8;\s*const spot=solids\.safeSpot\(THREE\.MathUtils\.clamp\(player\.position\.x\+v1\.x\*distance/, 'aparece à frente do jogador, dentro da tela (fora das casas desde 27/11/2026)');
   assert.match(canvas, /castEnd:w\.cast\?elapsed\+w\.cast\.seconds:undefined/);
   assert.match(canvas, /eventToast=w\.cast\?w\.cast\.line:/, 'fala da técnica');
   assert.match(canvas, /const channeling=!hagoromoEvent&&enemy===weatherOpponent&&isChanneling\(weatherEvent,enemy\.heroId,elapsed\);[^\n]*const stunned=channeling\|\|/, 'parado durante os selos');

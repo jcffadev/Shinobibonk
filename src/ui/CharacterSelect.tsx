@@ -118,7 +118,19 @@ export function CardPortrait({ id, decorative = false, fullBody = false }: { id:
   </span>;
 }
 
+/**
+ * Modo da lista (27/11/2026 — usuário: "Ser possível escolher entre deixar em modo lista ou compactado... com os quadradinhos lado a
+ * lado ou da forma que você está organizando agora"): "Por time" com os títulos dos times; "Compacto" com os quadradinhos lado a lado,
+ * menores e sem títulos. A escolha fica salva neste navegador.
+ */
+export type RosterView = 'times' | 'compacto';
+const VIEW_KEY = 'sb_roster_view_v1';
+export const readRosterView = (): RosterView => { try { return localStorage.getItem(VIEW_KEY) === 'compacto' ? 'compacto' : 'times'; } catch { return 'times'; } };
+const saveRosterView = (view: RosterView) => { try { localStorage.setItem(VIEW_KEY, view); } catch { /* sem armazenamento: vale só nesta sessão */ } };
+
 export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; onSelect: (id: string) => void }) {
+  const [view, setView] = useState<RosterView>(readRosterView);
+  const chooseView = (next: RosterView) => { setView(next); saveRosterView(next); };
   const [filters, setFilters] = useState<Filters>(EMPTY);
   const set = (key: keyof Filters, value: string) => setFilters(f => ({ ...f, [key]: value }));
   const active = Object.values(filters).some(Boolean);
@@ -151,11 +163,12 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
         {ORG_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
       </select>
       <button type="button" className="cs-clear" disabled={!active} onClick={() => setFilters(EMPTY)}>Limpar filtros</button>
+      <span className="cs-view" role="group" aria-label="Modo da lista">{(['times', 'compacto'] as const).map(v => <button key={v} type="button" aria-pressed={view === v} onClick={() => chooseView(v)}>{v === 'times' ? '☰ Por time' : '▦ Compacto'}</button>)}</span>
       <span className="cs-count" aria-live="polite"><b>{list.length}</b> de {HEROES.length}</span>
     </div>
-    <div className="character-grid cs-grid">
+    <div className={`character-grid cs-grid${view === 'compacto' ? ' cs-compact' : ''}`}>
       {list.map((entry, index) => {
-        const team = seasonTeam(entry.id), heading = index === 0 || seasonTeam(list[index - 1].id) !== team;
+        const team = seasonTeam(entry.id), heading = view === 'times' && (index === 0 || seasonTeam(list[index - 1].id) !== team);
         const element = heroAffinity(entry.id), groups = heroGroups(entry.id), selected = entry.id === selectedId, playable = isHeroPlayable(entry.id), rank = seasonRank(entry.id), soon = !rank, byEvent = !!rank && EVENT_ONLY_RANKS.includes(rank);
         return <Fragment key={entry.id}>{heading && <h3 className="cs-team-heading">{team}</h3>}<button type="button" aria-pressed={selected}
           title={isHeroPlayable(entry.id) ? `${entry.name} · ${entry.village} · ${element}${groups.length ? ' · ' + groups.join(', ') : ''}` : undefined}

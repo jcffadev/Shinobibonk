@@ -102,7 +102,8 @@ test('inimigo encostado numa construção desliza ao longo dela e não nasce den
   assert.ok(Math.hypot(spot.x, spot.z) >= 1.8 + .6 - 1e-6, 'nascimento sai de dentro da construção');
   const canvas = (await import('node:fs')).readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   assert.ok(canvas.includes('if(solids.resolveBig(p)&&slideAlong({x:bx,z:bz},p,player.position,enemy.speed*threat.speed*dt))solids.resolveBig(p);'));
-  assert.ok(canvas.includes(':arena||activeInstance?{x,z}:solids.freeSpot(x,z,.6);keepInInstance(spot);e.position.set(spot.x,'));
+  // 27/11/2026: chefes e Mega Elites usam o safeSpot (fora das casas); os comuns seguem no freeSpot.
+  assert.ok(canvas.includes(':arena||activeInstance?{x,z}:/* 27/11: chefes fora das casas */megaElite?solids.safeSpot(x,z):solids.freeSpot(x,z,.6);keepInInstance(spot);e.position.set(spot.x,'));
 });
 
 test('coletáveis nunca nascem dentro de casas nem de escadarias, mesmo no meio de casas vizinhas (26/11/2026)', async () => {

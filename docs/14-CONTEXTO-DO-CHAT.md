@@ -3427,3 +3427,13 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > "HIruzen é um Kage, ele deveria ser lendário... talvez me enganei. os líderes de times, ficam como Jounins, se forem jounins... O Might Guy jovem será liberado por evento mais pra frente, precisamos da versão dele Jounin liberado agora"
 
 **Resposta.** Perguntado ao usuário e respondido: só o Naruto Academia inicial, Kages de primeira versão, bloqueados como "Em breve", Minato Jonin e Yamato entre os Jōnins. Depois o usuário corrigiu: o Terceiro Hokage é Lendário (Kage). Iruka é Chūnin (Narutopedia), então sai pelo Exame Chūnin completo. O Might Guy Jōnin já está na temporada (não há Guy jovem no elenco). Todo selamento tem chance por rank e no máximo 3 tentativas, com faixa "ESCAPOU!". Evento rotativo "Uma nova Organização surge!" com Kisame e Itachi Akatsuki, metas altas e chances baixas. Lista por time e mapas pelo progresso. Na fila: 8 habilidades iniciais para todos, combinação/fusão 1 por zona, dono das habilidades compartilhadas, nível e crescimento ao passar o mouse e chefes/totem fora das casas. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Modo da lista de personagens e chefes fora das casas (Claude Code)
+
+> Ser possível escolher entre deixar em modo lista ou compactado... com os quadradinhos lado a lado ou da forma que você está organizando agora
+> Bossese Naruto totem nascendo dentro das casas, não pode...
+
+> Primeiro mapa só deve ter o Genin liberado para primeiro jogo, hoje ta genin/chunin
+> unico mapa liberado a principio até chegar e finalizar com sucesso o modo kage, será konoha, ai vai liberando o resto depois
+
+**Resposta.** Botões "Por time" e "Compacto" na lista, com a escolha salva. Chefes, Mega Elites, Mega do clima, Naruto Totem e clones nascem fora de casas e escadarias. Conta nova: só Konoha e só o Genin; o próximo mapa abre ao vencer o Kage do anterior. O Chūnin aberto vem de progresso salvo no navegador. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

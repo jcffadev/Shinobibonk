@@ -713,3 +713,11 @@ Começa só o Naruto Academia. Genin e Jōnins saem por missão; Épicos (Tsunad
 ### Por que o selo falhou e o shinobi fugiu? · 27/11/2026
 
 Toda captura tem chance por tentativa (Genin 80% · Chūnin 70% · Jōnin 60% · Épico 45% · Lendário 30% · Akatsuki 15%) e no máximo 3 tentativas. Na 3ª falha ele escapa e a faixa "ESCAPOU!" aparece. O card mostra a tentativa e a chance (Claude Code).
+
+### Dá para ver a lista de personagens mais compacta? · 27/11/2026
+
+Sim: no topo da lista há "☰ Por time" (com os títulos dos times) e "▦ Compacto" (quadradinhos menores lado a lado). A escolha fica salva neste navegador (Claude Code).
+
+### Como os mapas e as dificuldades são liberados? · 27/11/2026
+
+Conta nova começa só com Konoha e só o Genin. Vencer uma dificuldade abre a seguinte no mesmo mapa (Genin → Chūnin → Jōnin → Kage). O mapa seguinte (Areia, depois Pedra, depois Névoa) só abre ao vencer o Kage do anterior. O progresso fica salvo no navegador (Claude Code).
