@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 27/11/2026 · Banidos na ficha, passivas nas 25 ferramentas do Hagoromo e Kage Bunshin como ultimate do Naruto Academia (Claude Code)
+
+- **Pedidos do usuário:** "mostrar na ficha o que banimos na run" · "Todos os itens tem que ter passivas" (ferramentas do Hagoromo) · "kage bunshin de naruto academia deve ser sua ultimate e ele lançar 10 clones ao redor dele"
+- **Ficha** (`RunSheet.tsx`): seção "BANIDOS DA RUN" na coluna do inventário, com cada nome riscado (ou "Nada banido nesta run.").
+- **Hagoromo** (`TOOL_PASSIVES` em `hagoromoTraining.ts`; motor em GameCanvas): as 25 ferramentas de atributo ganharam passiva própria além do bônus, e o card descreve a passiva. Tipos: golpe em área periódico (com status), rajada nos inimigos mais próximos ou mais fortes, cura periódica (com o teto de cura), dreno, bloqueio do próximo golpe, explosão no crítico, golpe extra em elites e chefes, e Ryu/XP a cada N abates. O dano por segundo médio cresce com a raridade (Comum 0,32 < Incomum 0,37 < Raro 0,70 < Épico 1,40 < Lendário 1,86, em poder de ferramenta). Exemplos: Etiqueta Explosiva explode a 4 m a cada 10 s; Hitai-ate anula um golpe a cada 18 s; Kabutowari dá golpe extra e atordoa elites; Espada de Totsuka sela o inimigo mais forte (dano alto e 2 s adormecido) a cada 9 s. Valores PROPOSTOS.
+- **Naruto Academia:** a Kage Bunshin saiu do kit e virou a ultimate **Tajū Kage Bunshin**: 10 clones animados (os mesmos da Kage Bunshin) surgem em anel em volta dele e cada um corre até o inimigo mais perto e golpeia. Kit: Jutsu Sexy → Shuriken → Kunai Tática → Rendan Uzumaki (base de dano da ultimate).
+- **Testes:** `tests/hagoromo-passivas.test.mjs` (3), +1 em `naruto-academia.test.mjs` e +1 em `temporada.test.mjs`; `verify-rules` acompanha o kit; 2 mutações novas e 1 atualizada, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** banidos na ficha, passivas em partida (anéis de cor de cada uma) e a ultimate do Naruto Academia. Arte própria das passivas e dos 10 clones: Codex.
+
 ## 27/11/2026 · Monstros contornam objetos sem travar (Claude Code)
 
 - **Pedido do usuário:** "monstros não podem ficar travados nos objetos eles tem que saber contornar"

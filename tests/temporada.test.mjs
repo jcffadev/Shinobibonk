@@ -135,3 +135,11 @@ test('chefes, Mega Elites, Mega do clima e Naruto Totem nascem fora das casas (2
   assert.ok(canvas.includes('const spot=solids.safeSpot(THREE.MathUtils.clamp(player.position.x+v1.x*distance'), 'Mega do clima');
   assert.ok(canvas.includes('seasonVersion(versionForEncounter(elite,zone,mission),familyVersions(elite).map(v=>v.id))??elite'), 'Mega do clima da temporada');
 });
+
+test('ficha mostra o que foi banido na run (27/11/2026)', () => {
+  // Usuário: "mostrar na ficha o que banimos na run".
+  const sheet = fs.readFileSync('src/ui/RunSheet.tsx', 'utf8'), canvas = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.ok(sheet.includes('BANIDOS DA RUN · {world.banned.length}') && sheet.includes('world.banned.map(name=>'), 'lista na ficha');
+  assert.ok(sheet.includes('Nada banido nesta run.'));
+  assert.ok(canvas.includes('banned:[...banned]'), 'o snapshot leva os banidos');
+});

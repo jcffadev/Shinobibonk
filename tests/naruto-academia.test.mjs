@@ -2,6 +2,7 @@
 // jutsu sexy lembra?"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { HERO_BY_ID, isProjectileUltimate, ultimateBase } from '../src/game/heroes.ts';
 
 test('Naruto Academia: Jutsu Sexy inicial e ultimate Tajū Kage Bunshin (vários clones)', () => {
@@ -9,12 +10,22 @@ test('Naruto Academia: Jutsu Sexy inicial e ultimate Tajū Kage Bunshin (vários
   assert.equal(naruto.techniques[0].name, 'Jutsu Sexy', 'técnica inicial');
   assert.equal(naruto.techniques[0].shape, 'Área');
   assert.equal(naruto.ultimate, 'Tajū Kage Bunshin');
-  assert.equal(ultimateBase(naruto).name, 'Kage Bunshin', 'a ultimate sai dos Clones das Sombras');
+  assert.equal(ultimateBase(naruto).name, 'Rendan Uzumaki', 'a base de dano é o combo de clones');
   assert.equal(isProjectileUltimate('naruto'), true, 'vários clones disparados');
-  assert.deepEqual(naruto.techniques.map(t => t.name), ['Jutsu Sexy', 'Kage Bunshin', 'Shuriken', 'Kunai Tática']);
+  assert.deepEqual(naruto.techniques.map(t => t.name), ['Jutsu Sexy', 'Shuriken', 'Kunai Tática', 'Rendan Uzumaki'], 'Kage Bunshin saiu do kit e virou a ultimate');
   assert.equal(naruto.techniques[0].status, 'Atordoar', 'atordoa (statusProfiles.ts)');
   // "Habilidade inicial do Naruto inicial do naruto academia precisa de buff": poder 1,9 e 60% de atordoar (simulate-early: deixa de
   // ser o único inicial que não mata o comum de um golpe no 1º minuto).
   assert.equal(naruto.techniques[0].statusChance, .6);
-  assert.ok(naruto.techniques[0].power > naruto.techniques[1].power, 'mais forte que a Kage Bunshin');
+  assert.ok(naruto.techniques[0].power > naruto.techniques[1].power, 'mais forte que a Shuriken');
+});
+
+test('Kage Bunshin é a ultimate: 10 clones em anel em volta do Naruto Academia (27/11/2026)', () => {
+  // Usuário: "kage bunshin de naruto academia deve ser sua ultimate e ele lançar 10 clones ao redor dele".
+  const canvas = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
+  assert.ok(canvas.includes("if(heroId==='naruto'){castShadowClones(t);return;}"), 'a ultimate do Naruto Academia chama os clones');
+  assert.ok(canvas.includes('const SHADOW_CLONES={count:10,'), '10 clones');
+  assert.ok(canvas.includes("shadowClones.push({sprite,motion:createPlayerMotion(scene,sprite,'naruto',false),target,life:SHADOW_CLONES.life,technique:t,"), 'os clones animados da Kage Bunshin');
+  assert.ok(canvas.includes('const a=i/SHADOW_CLONES.count*Math.PI*2'), 'em anel, ao redor dele');
+  assert.ok(canvas.includes('target=(free.length?free:pool).sort((p,q)=>distance(p)-distance(q))[0]'), 'cada clone vai atrás de um inimigo diferente, o mais perto dele');
 });

@@ -725,3 +725,7 @@ Conta nova começa só com Konoha e só o Genin. Vencer uma dificuldade abre a s
 ### Os monstros podem passar pela escadaria? · 27/11/2026
 
 Só por cima, subindo degrau por degrau, ou pelo lado. Um degrau mais alto que os pés do monstro + 0,3 m é parede para ele (Claude Code).
+
+### O que as ferramentas do Hagoromo fazem além do bônus? · 27/11/2026
+
+Todas as 34 têm efeito: as 9 especiais (selo, partículas, espada, leque etc.) e as 25 de atributo, cada uma com passiva própria descrita no card (explosões, rajadas, cura, bloqueio, explosão no crítico, golpe em elites, Ryu ou XP por abates). Quanto maior a raridade, mais forte (Claude Code).

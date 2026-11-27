@@ -266,3 +266,8 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .cs-grid.cs-compact .cs-card{padding:4px 4px 5px!important;gap:1px}
 .cs-grid.cs-compact .cs-card>b{font-size:10.5px;line-height:1.15}
 .cs-grid.cs-compact .cs-village,.cs-grid.cs-compact .cs-mission-label{display:none}
+/* 27/11/2026: banidos da run na ficha. */
+.sheet-banned{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 10px;padding:0;list-style:none}
+.sheet-banned li{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid #c8321f80;border-radius:6px;background:#3a1512;color:#ffd9d2;font-size:12px;text-decoration:line-through;text-decoration-color:#ff7a6a}
+.sheet-banned li span{text-decoration:none}
+.sheet-banned-empty{margin:2px 0 10px;color:#c9b597;font-size:12px}

@@ -20,7 +20,25 @@ export const HAGOROMO_WAVES: Record<Rarity, { waves: number; perWave: number }> 
 export const RARITY_WEIGHTS: Record<Rarity, number> = { Comum: 45, Incomum: 27, Raro: 16, 'Épico': 9, 'Lendário': 3 };
 
 export type ToolEffect = 'sealBurst' | 'polarPull' | 'statusSpread' | 'critSlash' | 'windGust' | 'goldRope' | 'gourdRyu' | 'smokeCrit' | 'sevenBlades' | 'passive';
-export type SageTool = { id: string; name: string; rarity: Rarity; bonus: Bonuses; stat: string; effect: ToolEffect; detail: string; icon: string };
+export type SageTool = { id: string; name: string; rarity: Rarity; bonus: Bonuses; stat: string; effect: ToolEffect; detail: string; icon: string; /** Passiva das ferramentas de atributo (27/11/2026). */ passive?: ToolPassive };
+/**
+ * Passivas das 25 ferramentas de atributo (27/11/2026 — usuário: "Todos os itens tem que ter passivas"). Além do bônus, cada uma
+ * tem um efeito próprio, mais forte quanto maior a raridade. `power` é o multiplicador de dano das ferramentas (toolDamage).
+ * - pulse: a cada `every` s, golpe em área em volta do jogador (com status opcional);
+ * - volley: a cada `every` s, acerta os `count` inimigos mais próximos (ou os mais fortes) até `radius` m;
+ * - heal: a cada `every` s, cura `share` da vida máxima (respeita o teto de cura por segundo);
+ * - drain: a cada `every` s, golpe em área que cura `share` da vida por inimigo atingido (até 5);
+ * - guard: a cada `every` s, o próximo golpe recebido é anulado;
+ * - critBurst: no crítico (recarga `every` s), `share` do dano explode em volta do alvo;
+ * - eliteSmash: ao acertar elite, Mega Elite ou chefe (recarga `every` s por alvo), golpe extra com status;
+ * - killDrop: a cada `every` abates, Ryu (`share` × preço da kunai) ou XP (`share` do nível).
+ * Valores PROPOSTOS — calibrar depois de jogar.
+ */
+export type ToolPassive = {
+  kind: 'pulse' | 'volley' | 'heal' | 'drain' | 'guard' | 'critBurst' | 'eliteSmash' | 'killDrop'; every: number; color: string;
+  radius?: number; power?: number; count?: number; strongest?: boolean; share?: number; drop?: 'ryu' | 'xp';
+  status?: 'Paralisar' | 'Atordoar' | 'Lentidão' | 'Empurrar' | 'Dormir'; statusTime?: number;
+};
 /** As 9 ferramentas com efeito (2 Comum, 2 Incomum, 2 Raro, 2 Épico, 1 Lendário) + 25 de atributo (5 por raridade, 26/11/2026). Valores PROPOSTOS — calibrar no simulador. */
 export const SAGE_TOOLS: readonly SageTool[] = [
   { id: 'amuleto', name: 'Amuleto de Selamento', rarity: 'Comum', bonus: { healthPct: .08 }, stat: '+8% de HP máximo', effect: 'sealBurst', detail: 'A cada 100 abates, um selo explode em volta e paralisa os inimigos a 6 m por 1 s.', icon: '🧿' },
@@ -60,6 +78,39 @@ export const SAGE_TOOLS: readonly SageTool[] = [
   { id: 'magatama', name: 'Magatama dos Seis Caminhos', rarity: 'Lendário', bonus: { crit: .1, critDamage: .2 }, stat: '+10 pontos de crítico e +20% de dano crítico', effect: 'passive', detail: 'Ferramenta de atributo: só o bônus, sem efeito especial.', icon: '🔮' },
   { id: 'manto-kurama', name: 'Manto de Chakra da Kurama', rarity: 'Lendário', bonus: { regen: 5, damage: .12, move: .08 }, stat: '+5 HP/s, +12% de dano total e +8% de movimento', effect: 'passive', detail: 'Ferramenta de atributo: só o bônus, sem efeito especial.', icon: '🦊' },
 ];
+export const TOOL_PASSIVES: Readonly<Record<string, { passive: ToolPassive; detail: string }>> = {
+  // Comum
+  etiqueta: { passive: { kind: 'pulse', every: 10, radius: 4, power: 2.5, color: '#ff9b4a' }, detail: 'A cada 10 s, uma etiqueta explode a 4 m em volta.' },
+  'kunai-tres': { passive: { kind: 'volley', every: 6, count: 3, radius: 12, power: 1.2, color: '#d9e4ff' }, detail: 'A cada 6 s, três kunais acertam os 3 inimigos mais próximos.' },
+  'hitai-ate': { passive: { kind: 'guard', every: 18, color: '#9fd0ff' }, detail: 'A cada 18 s, a bandana anula o próximo golpe recebido.' },
+  cantil: { passive: { kind: 'heal', every: 20, share: .04, color: '#7dffb0' }, detail: 'A cada 20 s, recupera 4% da vida máxima.' },
+  zori: { passive: { kind: 'pulse', every: 5, radius: 2.5, power: .6, status: 'Lentidão', statusTime: 2, color: '#b7f0ff' }, detail: 'A cada 5 s, o rastro de chakra deixa lentos os inimigos a 2,5 m por 2 s.' },
+  // Incomum
+  corrente: { passive: { kind: 'pulse', every: 9, radius: 5, power: 2, status: 'Paralisar', statusTime: 1, color: '#7fe0ff' }, detail: 'A cada 9 s, correntes de chakra prendem os inimigos a 5 m por 1 s.' },
+  'pergaminho-invocacao': { passive: { kind: 'volley', every: 8, count: 2, radius: 10, power: 3, strongest: true, status: 'Atordoar', statusTime: .8, color: '#ffcf6b' }, detail: 'A cada 8 s, um sapo invocado esmaga os 2 inimigos mais fortes a 10 m.' },
+  'mascara-anbu': { passive: { kind: 'pulse', every: 12, radius: 4, power: 1.5, status: 'Atordoar', statusTime: 1.5, color: '#e2e2e2' }, detail: 'A cada 12 s, some numa nuvem de fumaça: dano e atordoamento de 1,5 s a 4 m.' },
+  'luvas-ferro': { passive: { kind: 'critBurst', every: .6, radius: 2.5, share: .3, color: '#c9c9c9' }, detail: 'No crítico, 30% do golpe atinge os inimigos a 2,5 m do alvo.' },
+  'bolsa-ninja': { passive: { kind: 'killDrop', every: 60, drop: 'ryu', share: .5, color: '#ffd84a' }, detail: 'A cada 60 abates, a bolsa rende Ryu (metade do preço de uma kunai).' },
+  // Raro
+  'grande-leque': { passive: { kind: 'pulse', every: 7, radius: 7, power: 2, status: 'Empurrar', color: '#c8f5ff' }, detail: 'A cada 7 s, uma ventania corta e empurra os inimigos a 7 m.' },
+  samehada: { passive: { kind: 'drain', every: 6, radius: 3, power: 2, share: .015, color: '#5aa9ff' }, detail: 'A cada 6 s, devora chakra a 3 m: dano e 1,5% da vida por inimigo atingido (até 5).' },
+  kiba: { passive: { kind: 'volley', every: 5, count: 4, radius: 10, power: 2.2, status: 'Paralisar', statusTime: .6, color: '#b3c5ff' }, detail: 'A cada 5 s, raios atingem os 4 inimigos mais próximos e os paralisam por 0,6 s.' },
+  hiramekarei: { passive: { kind: 'pulse', every: 8, radius: 5, power: 3.5, color: '#8fd3ff' }, detail: 'A cada 8 s, a lâmina de chakra varre tudo a 5 m.' },
+  kabutowari: { passive: { kind: 'eliteSmash', every: 6, power: 4, status: 'Atordoar', statusTime: .8, color: '#ffb36b' }, detail: 'Ao acertar elite, Mega Elite ou chefe, o martelo dá um golpe extra e atordoa por 0,8 s (6 s por alvo).' },
+  // Épico
+  'oito-trigramas': { passive: { kind: 'pulse', every: 9, radius: 5, power: 3, status: 'Paralisar', statusTime: 1.2, color: '#e0d4ff' }, detail: 'A cada 9 s, as 64 palmas fecham o chakra dos inimigos a 5 m (paralisados 1,2 s).' },
+  'cajado-rikudo': { passive: { kind: 'heal', every: 15, share: .06, color: '#f5da86' }, detail: 'A cada 15 s, recupera 6% da vida máxima.' },
+  'busca-verdade': { passive: { kind: 'volley', every: 6, count: 4, radius: 14, power: 3, color: '#3a3a3a' }, detail: 'A cada 6 s, quatro esferas atingem os 4 inimigos mais próximos a 14 m.' },
+  'manto-kage': { passive: { kind: 'killDrop', every: 80, drop: 'xp', share: .12, color: '#9fe6ff' }, detail: 'A cada 80 abates, ganha 12% do XP do nível.' },
+  'kunai-hiraishin': { passive: { kind: 'volley', every: 4, count: 3, radius: 12, power: 2.5, color: '#ffe35a' }, detail: 'A cada 4 s, o Relâmpago Amarelo golpeia os 3 inimigos mais próximos.' },
+  // Lendário
+  yata: { passive: { kind: 'guard', every: 9, color: '#fff2b0' }, detail: 'A cada 9 s, o espelho anula o próximo golpe recebido.' },
+  totsuka: { passive: { kind: 'volley', every: 9, count: 1, radius: 15, power: 30, strongest: true, status: 'Dormir', statusTime: 2, color: '#ff8a8a' }, detail: 'A cada 9 s, a espada sela o inimigo mais forte a 15 m: dano alto e 2 s adormecido.' },
+  gunbai: { passive: { kind: 'pulse', every: 8, radius: 6, power: 6, status: 'Atordoar', statusTime: 1, color: '#ff6b5a' }, detail: 'A cada 8 s, o leque devolve o impacto: dano e atordoamento de 1 s a 6 m.' },
+  magatama: { passive: { kind: 'critBurst', every: .4, radius: 3.5, share: .6, color: '#c49bff' }, detail: 'No crítico, 60% do golpe atinge os inimigos a 3,5 m do alvo.' },
+  'manto-kurama': { passive: { kind: 'drain', every: 4, radius: 5.5, power: 6, share: .02, color: '#ff9b3d' }, detail: 'A cada 4 s, o manto queima tudo a 5,5 m e recupera 2% da vida por inimigo atingido (até 5).' },
+};
+for (const tool of SAGE_TOOLS) { const p = TOOL_PASSIVES[tool.id]; if (p) { tool.passive = p.passive; tool.detail = p.detail; } }
 export const TOOL_BY_ID: Record<string, SageTool> = Object.fromEntries(SAGE_TOOLS.map(t => [t.id, t]));
 
 export type HagoromoEncounterHud = { rarity:Rarity; wave:number; total:number; remaining:number; phase:'wave'|'boss'|'complete' };

@@ -71,7 +71,7 @@ import { addChill, addPoisonStack, chillSlow, controlResist, damageStatusCount, 
 import { FALLEN_TRAP, cursedAmbushCount, trapIsElite, trapRing } from '../game/fallenTrap';
 import { BOSS_POWER, bossHpWithFloor, singleTargetDps } from '../game/bossScaling';
 import { YOUTH_FIGHTER_HP, YOUTH_GOALS, YOUTH_TEXT, YOUTH_STAT_BY_KEY, youthStat, youthBonusText, rollYouthChallenge, tickYouth, youthBonuses, youthChallengeText, youthSpots, type YouthChallengeId, type YouthDifficulty, type YouthRun } from '../game/youthTraining';
-import { HAGOROMO, HAGOROMO_WAVES, TOOL_BY_ID, chooseTool, createHagoromo, addHagoromoKills, hagoromoRecharges, nextHagoromoStage, rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots, type HagoromoEncounterHud, type HagoromoState, type SageTool } from '../game/hagoromoTraining';
+import { HAGOROMO, HAGOROMO_WAVES, TOOL_BY_ID, chooseTool, createHagoromo, addHagoromoKills, hagoromoRecharges, nextHagoromoStage, rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots, type HagoromoEncounterHud, type HagoromoState, type SageTool, type ToolPassive } from '../game/hagoromoTraining';
 import { UNLOCK_MISSIONS, activeMission, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
 import { NO_GROWTH, rollGrowth, growthText, SENJUTSU, hasSenjutsu, techniqueHitDamage, techniquePassiveMultiplier, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, elementMultiplier, thornsDamage, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
@@ -1094,6 +1094,8 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const toolDamage=(power:number)=>stats.damage*TECHNIQUE_SCALE*power*damageMultiplier*tune().playerDamage;
     let lastToolKills=0,pendingTool:string|null=null,toolCritAt=-1e9,toolSmokeAt=-1e9;
     const toolTimers={polar:0,spread:0,wind:0,blades:0},ropeAt=new WeakMap<Enemy,number>();
+    /** Passivas das ferramentas de atributo (27/11/2026): recargas, marcas de abates e golpes por alvo. */
+    const passiveTimers:Record<string,number>={},passiveKills:Record<string,number>={},passiveAt:Record<string,number>={},smashAt=new WeakMap<Enemy,number>();
     function activateHagoromo(){
       if(!enabledRef.current||pausedRef.current||debugOpenRef.current||hagoromoEvent||activeInstance||arena||defeated||victory||sealing||choiceData||roulette)return;
       if(hagoromo.keys<=0){eventToast=hagoromoRecharges('classico',hagoromoBossDown)?`Treinamento do Hagoromo: faltam ${HAGOROMO.killsPerKey-hagoromo.progress} abates para a próxima chave.`:'Treinamento do Hagoromo: sem recarga depois do chefe da zona (volta na próxima zona).';snapshotTimer=0;return;}
@@ -1192,6 +1194,18 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       if(hasTool('particulas')&&(toolTimers.polar-=dt)<=0){toolTimers.polar=8;for(const drop of drops.near(player.position.x,player.position.z,7))if(drop.mesh.position.distanceTo(player.position)<7)pullDrop(drop);addRing(player.position,'#b9e6ff',7);}
       if(hasTool('shakujo')&&(toolTimers.spread-=dt)<=0){toolTimers.spread=6;const source=near(8).find(e=>(e.controlTime||0)>0&&e.control);if(source){for(const e of near(3,source.sprite.position.x,source.sprite.position.z).filter(e=>e!==source&&!e.bijuu).slice(0,2)){e.control=source.control;e.controlTime=Math.max(e.controlTime||0,source.controlTime||1);}addRing(source.sprite.position,'#d8b7ff',3);}}
       if(hasTool('bashosen')&&(toolTimers.wind-=dt)<=0){toolTimers.wind=8;for(const e of near(8)){takeDamage(e,toolDamage(3),'#c8f5ff',false,0,'Bashōsen');if(!e.bijuu&&!e.guardian){const away=e.sprite.position.clone().sub(player.position).setY(0);if(away.lengthSq()>1e-6)e.sprite.position.addScaledVector(away.normalize(),2);}}addRing(player.position,'#c8f5ff',8);}
+      // Passivas das 25 ferramentas de atributo (TOOL_PASSIVES em hagoromoTraining.ts).
+      const control=(e:Enemy,p:ToolPassive)=>{if(!p.status||e.bijuu||e.totem)return;if(p.status==='Empurrar'){if(immovableBoss(e))return;const away=e.sprite.position.clone().sub(player.position).setY(0);if(away.lengthSq()>1e-6)e.sprite.position.addScaledVector(away.normalize(),2);return;}e.control=p.status;e.controlTime=Math.max(e.controlTime||0,(p.statusTime??1)*stats.duration);};
+      for(const id of hagoromo.tools){const tool=TOOL_BY_ID[id],p=tool?.passive;if(!p||p.kind==='guard'||p.kind==='critBurst'||p.kind==='eliteSmash')continue;
+        if(p.kind==='killDrop'){if(passiveKills[id]===undefined||passiveKills[id]>kills)passiveKills[id]=kills;while(kills-passiveKills[id]>=p.every){passiveKills[id]+=p.every;if(p.drop==='ryu'){const ryu=Math.max(1,Math.round(kunaiPrice()*(p.share??.5)));runMoney+=ryu;eventToast=tool.name+': +'+compactNumber(ryu)+' Ryu';}else{addDrop(player.position.clone(),'xp',Math.max(1,Math.round(xpToLevelUp(level)*(p.share??.1))));addRing(player.position,p.color,1.2);}}continue;}
+        passiveTimers[id]=(passiveTimers[id]??p.every)-dt;if(passiveTimers[id]>0)continue;passiveTimers[id]=p.every;
+        if(p.kind==='heal'){cappedHeal(stats.maxHp*(p.share??0));addRing(player.position,p.color,1.3);continue;}
+        const reach=(p.radius??4)*Math.sqrt(stats.area);
+        if(p.kind==='volley'){const list=near(reach).filter(e=>!e.totem);list.sort(p.strongest?(a,b)=>b.hp-a.hp:(a,b)=>a.sprite.position.distanceTo(player.position)-b.sprite.position.distanceTo(player.position));for(const e of list.slice(0,p.count??1)){if(p.power)takeDamage(e,toolDamage(p.power),p.color,false,0,tool.name);control(e,p);addRing(e.sprite.position,p.color,.8);}continue;}
+        let hits=0;for(const e of near(reach)){if(e.totem)continue;if(p.power)takeDamage(e,toolDamage(p.power),p.color,false,0,tool.name);control(e,p);hits++;}
+        if(p.kind==='drain'&&hits)cappedHeal(stats.maxHp*(p.share??0)*Math.min(5,hits));
+        addRing(player.position,p.color,reach);
+      }
       if(hasTool('shichiseiken')&&(toolTimers.blades-=dt)<=0){toolTimers.blades=7;for(const e of near(15).sort((a,b)=>b.hp-a.hp).slice(0,7)){takeDamage(e,toolDamage(8),'#fff6c2',false,0,'Shichiseiken');addRing(e.sprite.position,'#fff6c2',1);}}
     }
     const hagoromoPhase=()=>hagoromoEvent?.completed?'complete':hagoromoEvent?.mega?'boss':hagoromoEvent?'wave':null;
@@ -1210,6 +1224,10 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       if(critical&&hasTool('kohaku')&&now-toolSmokeAt>=2){toolSmokeAt=now;
         for(const e of enemyList)if(!e.bijuu&&Math.hypot(e.sprite.position.x-enemy.sprite.position.x,e.sprite.position.z-enemy.sprite.position.z)<4){e.slow=Math.max(e.slow??0,2);e.hitTimer=Math.max(e.hitTimer,2);}
         addRing(enemy.sprite.position,'#d9d9d9',4);
+      }
+      for(const id of hagoromo.tools){const tool=TOOL_BY_ID[id],p=tool?.passive;if(!p)continue;
+        if(p.kind==='critBurst'&&critical&&now-(passiveAt[id]??-1e9)>=p.every){passiveAt[id]=now;const r=p.radius??2.5;for(const e of [...enemyList])if(e!==enemy&&!e.totem&&Math.hypot(e.sprite.position.x-enemy.sprite.position.x,e.sprite.position.z-enemy.sprite.position.z)<r)takeDamage(e,damage*(p.share??.3),p.color,false,0,tool.name);addRing(enemy.sprite.position,p.color,r);}
+        if(p.kind==='eliteSmash'&&(enemy.elite||enemy.megaElite||enemy.guardian||enemy.bijuu)&&now-(smashAt.get(enemy)??-1e9)>=p.every){smashAt.set(enemy,now);takeDamage(enemy,toolDamage(p.power??3),p.color,false,0,tool.name);if(p.status&&!enemy.bijuu){enemy.control=p.status==='Empurrar'?'Atordoar':p.status;enemy.controlTime=Math.max(enemy.controlTime||0,(p.statusTime??1)*stats.duration);}addRing(enemy.sprite.position,p.color,1.2);}
       }
       if(hasTool('kokinjo')&&(enemy.elite||enemy.megaElite)&&!enemy.bijuu&&now-(ropeAt.get(enemy)??-1e9)>=10){ropeAt.set(enemy,now);enemy.control='Paralisar';enemy.controlTime=Math.max(enemy.controlTime||0,1.5);addRing(enemy.sprite.position,'#ffd64a',1.2);}
     }
@@ -1526,8 +1544,26 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     /** Nome de quem acertou, para a ficha final (25/11/2026 — usuário: "Colocar na ficha final o dano que você tomou que te matou e quem te matou"). */
     const attackerName=(e?:Enemy)=>!e?'Monstro da horda':e.bijuu?BIJUU_BY_ID[e.heroId!]?.name??'Bijū':e.guardian?'Guardião · '+(HERO_BY_ID[e.heroId!]?.name??''):e.megaElite?(e.account?'Shinobi para selar · ':akatsukiEnemies.has(e)?'Akatsuki · ':'Mega Elite · ')+(HERO_BY_ID[e.heroId!]?.name??''):e.elite?'Elite':'Monstro comum';
     let lastHit:{by:string;damage:number;maxHp:number}|undefined,killedBy:typeof lastHit;
+    /**
+     * Tajū Kage Bunshin, ultimate do Naruto Academia (27/11/2026 — usuário: "kage bunshin de naruto academia deve ser sua ultimate e ele lançar 10 clones ao redor dele"): 10 clones surgem em anel em volta dele e avançam para fora,
+     * acertando cada inimigo que tocam uma vez, e somem em fumaça. Arte e animação próprias: Codex.
+     */
+    const SHADOW_CLONES={count:10,ring:1.6,life:3,reach:16};
+    /** Usa os clones animados da Kage Bunshin (mesmo movimento e golpe): cada um nasce no anel e corre até o inimigo mais perto dele. */
+    function castShadowClones(t:Technique){
+      const taken=new Set<Enemy>(),pool=enemyList.filter(e=>!e.totem&&Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<SHADOW_CLONES.reach);let made=0;
+      for(let i=0;i<SHADOW_CLONES.count;i++){const a=i/SHADOW_CLONES.count*Math.PI*2,x=player.position.x+Math.cos(a)*SHADOW_CLONES.ring,z=player.position.z+Math.sin(a)*SHADOW_CLONES.ring;
+        const distance=(e:Enemy)=>Math.hypot(e.sprite.position.x-x,e.sprite.position.z-z),free=pool.filter(e=>!taken.has(e)),target=(free.length?free:pool).sort((p,q)=>distance(p)-distance(q))[0];
+        if(!target)break;taken.add(target);
+        const sprite=makeHero('naruto',level);sprite.position.set(x,terrainHeight(x,z)+1,z);sprite.visible=!hiddenEffects;scene.add(sprite);
+        shadowClones.push({sprite,motion:createPlayerMotion(scene,sprite,'naruto',false),target,life:SHADOW_CLONES.life,technique:t,growth:NO_GROWTH,ally:false,level});made++;
+        if(!hiddenEffects)addRing(sprite.position,'#f2f2f2',.6);}
+      eventToast=made?'Tajū Kage Bunshin! '+made+' clones das sombras.':'Tajū Kage Bunshin: nenhum inimigo por perto.';
+    }
     function damagePlayer(raw:number,attacker?:Enemy,slow=0,source:HitSource=hitSource(attacker),label?:string){
       if(invulnerability>0||defeated||debugState.god)return false;
+      // 27/11/2026: passiva "guard" das ferramentas do Hagoromo (Hitai-ate, Espelho de Yata) anula o próximo golpe a cada recarga.
+      {const now=performance.now()/1000;for(const id of hagoromo.tools){const p=TOOL_BY_ID[id]?.passive;if(p?.kind==='guard'&&now-(passiveAt[id]??-1e9)>=p.every){passiveAt[id]=now;invulnerability=.25;addRing(player.position,p.color,1.1);eventToast=TOOL_BY_ID[id].name+' anulou o golpe!';return false;}}}
       if(ex('shield')>0&&shieldReady){shieldReady=false;shieldTimer=14;invulnerability=.25;addRing(player.position,'#7fd3ff',1.1);eventToast='Escudo de Chakra bloqueou o golpe!';return false;}
       if(Math.random()<stats.evasion)return false;
       const hpBefore=hp;
@@ -2202,7 +2238,7 @@ function interact(){if(activeInstance==='exam-hall'&&duelWon){victory=true;snaps
       for(const shot of enemyShots)if(shot.life>0&&Math.hypot(shot.object.position.x-player.position.x,shot.object.position.z-player.position.z)<PEIN_RIKUDO.pretaRadius){shot.life=0;hp=Math.min(stats.maxHp,hp+stats.maxHp*PEIN_RIKUDO.pretaHeal);}
       if(rikudo.t>=PEIN_RIKUDO.duration){rikudo=null;eventToast='Os Seis Caminhos de Pain se retiram.';}
     }
-    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette||rikudo)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');if(hero.ultimate===PEIN_RIKUDO.name){rikudo={t:-1e-6};updateRikudo(0);eventToast='Kuchiyose: Pein Rikudō · os Seis Caminhos de Pain entram na luta por '+PEIN_RIKUDO.duration+' s';snapshotTimer=0;return;}const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=selectCombatTarget(enemyList,player.position,ultRadius,activeFocus()),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
+    function castUltimate(){if(chakra<100||defeated||pausedRef.current||choiceData||sealing||roulette||rikudo)return;chakra=0;playerMotion.attack(false,undefined,true,familyOf(heroId)==='lee'?'kick':familyOf(heroId)==='guy'?'punch':undefined,/Bunshin/.test(hero.ultimate));if(ex('ultReset')>0){for(const k of Object.keys(cooldowns))cooldowns[k]=0;ultBuffTimer=6;eventToast='Pergaminho do Hokage: técnicas recarregadas e +30% de velocidade de ataque';}playSfx('ultimate');if(hero.ultimate===PEIN_RIKUDO.name){rikudo={t:-1e-6};updateRikudo(0);eventToast='Kuchiyose: Pein Rikudō · os Seis Caminhos de Pain entram na luta por '+PEIN_RIKUDO.duration+' s';snapshotTimer=0;return;}const projectile=isProjectileUltimate(heroId),base=ultimateBase(hero),repulsion=hero.ultimate==='Shinra Tensei',t:Technique={...base,...(repulsion?{element:'Neutro' as const,burn:false,status:undefined,statusChance:0,gravity:'push' as const,color:'#e1eaff'}:heroId==='kakuzu'?{secondaryElement:'Fogo' as const,burn:true}:{}),name:hero.ultimate,power:6,range:Math.max(8,ultimateBase(hero).range),ultimate:true,shape:projectile?'Projétil':'Área',setup:undefined};playTechniqueSound(t,true,heroId);/* 27/11: Naruto Academia — Kage Bunshin com 10 clones em volta */if(heroId==='naruto'){castShadowClones(t);return;}const susanooStyle=susanooStyleFor(heroId,t.name);if(projectile||susanooStyle==='kakashi'){castTechnique(t,player.position,NO_GROWTH,false,projectile);return;}const ultRadius=4.2*Math.sqrt(stats.area);areas.mark(t,player.position,player.position,player.position,ultRadius,ultRadius,0,0,hiddenEffects);if(!hiddenEffects){const near=selectCombatTarget(enemyList,player.position,ultRadius,activeFocus()),aim=near?near.sprite.position.clone().sub(player.position).setY(0).normalize():new THREE.Vector3(0,0,1);
         particles.footprint(t,player.position,aim,player.position,ultRadius,ultRadius,0);
         if(susanooStyle)susanoo.trigger(susanooStyle,player.position,aim,near?.sprite.position??player.position,ultRadius,true);
         else if(puppetArt(t.name))showPuppet(player.position,near?.sprite.position??player.position,puppetArt(t.name));

@@ -3451,3 +3451,11 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > temos animação para o jutsu sexy?
 
 **Resposta.** O monstro agora escolhe um lado ao bater num obstáculo e mantém até dar a volta, em vez de trocar de lado a cada quadro. Jutsu Sexy não tem animação própria (usa o efeito genérico de área); anotado para o Codex com a do Tajū Kage Bunshin. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Banidos na ficha, passivas do Hagoromo e Kage Bunshin do Naruto Academia (Claude Code)
+
+> mostrar na ficha o que banimos na run
+> Todos os itens tem que ter passivas
+> kage bunshin de naruto academia deve ser sua ultimate e ele lançar 10 clones ao redor dele
+
+**Resposta.** Ficha com "BANIDOS DA RUN". As 25 ferramentas de atributo do Hagoromo têm passiva própria (o pedido anterior "Todos os itens do Hagoromo devem dar buffs" foi entendido como bônus de atributo; agora cada uma tem efeito). Naruto Academia: Kage Bunshin virou a ultimate com 10 clones em volta. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
