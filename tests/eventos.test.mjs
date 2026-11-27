@@ -21,8 +21,10 @@ test('Prova Chūnin: 15 duelos da obra em 3 fases, só com Academia e Genin', ()
   for (const d of CHUNIN_EXAM.duels) assert.ok(d.phase === 'Final' ? d.difficulty === 'Chunin' : d.difficulty === 'Genin');
 });
 
-test('a corrente libera todo o elenco do evento a partir dos iniciais', () => {
-  const playable = new Set(STARTER_HEROES);
+test('a corrente libera todo o elenco do evento a partir dos iniciais', async () => {
+  // 27/11/2026: só o Naruto Academia é inicial; os genin também saem por missão (season.ts), então a corrente parte dos dois.
+  const { hasSeasonMission, SEASON_ROSTER } = await import('../src/game/season.ts');
+  const playable = new Set([...STARTER_HEROES, ...Object.keys(SEASON_ROSTER).filter(hasSeasonMission)]);
   let grew = true;
   while (grew) { grew = false; for (const d of CHUNIN_EXAM.duels) if (duelAvailable(d, id => playable.has(id))) for (const s of d.sides) if (!playable.has(s)) { playable.add(s); grew = true; } }
   for (const d of CHUNIN_EXAM.duels) for (const s of d.sides) assert.ok(playable.has(s), s + ' nunca fica disponível');

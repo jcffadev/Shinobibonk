@@ -1,15 +1,17 @@
 import { menuPortraitRegion } from '../game/evolution';
 import { VillageEmblem, villageName } from './VillageEmblem';
 import { MissionCard } from './MissionCard';
-import { UNLOCK_MISSIONS, LEGENDARY } from '../game/unlockMissions';
+import { UNLOCK_MISSIONS, LEGENDARY, activeMission } from '../game/unlockMissions';
+import { SEASON_RANK_LABEL, seasonRank, inSeason, EVENT_ONLY_RANKS, seasonTeam, teamOrder } from '../game/season';
 /** Ordem do elenco: jogáveis primeiro; bloqueados pela dificuldade da missão (Genin → Kage) e Lendários por último. */
 const DIFF_RANK: Record<string, number> = { Genin: 1, Chunin: 2, Jonin: 3, Kage: 4 };
-const unlockOrder = (id: string) => isHeroPlayable(id) ? 0 : (DIFF_RANK[UNLOCK_MISSIONS[id]?.difficulty ?? 'Genin'] ?? 1) * 10 + (LEGENDARY.has(id) ? 50 : 0);
+/** 27/11/2026: fora da temporada ("Em breve") vão para o fim da lista. */
+const unlockOrder = (id: string) => isHeroPlayable(id) ? 0 : !inSeason(id) ? 1000 : (DIFF_RANK[UNLOCK_MISSIONS[id]?.difficulty ?? 'Genin'] ?? 1) * 10 + (LEGENDARY.has(id) ? 50 : 0);
 /** Desempate: família na ordem do elenco e, dentro dela, a versão pela forma (Academia → Genin → Shippuden…). */
 const familyOrder = (id: string) => HEROES.findIndex(h => h.id === familyOf(id)) * 100 + (HERO_BY_ID[id]?.form ?? 1);
 
 import { isHeroPlayable } from '../game/account';
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { HEROES, HERO_BY_ID, HERO_CLAN, ORGANIZATIONS, familyOf, heroAffinity, heroClan, heroOrganizations, type Element } from '../game/heroes';
 import { matchesSearch } from './PoolFilters';
 
@@ -127,10 +129,11 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
       && (!filters.village || h.village === filters.village)
       && (!filters.element || known && heroAffinity(h.id) === filters.element)
       && (!filters.org || known && groups.includes(filters.org));
-  }).sort((a, b) => unlockOrder(a.id) - unlockOrder(b.id) || familyOrder(a.id) - familyOrder(b.id)), [filters]);
+    // 27/11/2026: lista por time (Time 7, Time 8…); "Em breve" no fim.
+  }).sort((a, b) => teamOrder(a.id) - teamOrder(b.id) || unlockOrder(a.id) - unlockOrder(b.id) || familyOrder(a.id) - familyOrder(b.id)), [filters]);
   // Card da missão em camada fixa (por cima de tudo, sem ser cortado pela grade).
   const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null);
-  const showMission = (id: string, el: HTMLElement) => { if (isHeroPlayable(id) || !UNLOCK_MISSIONS[id]) { setHover(null); return; } const r = el.getBoundingClientRect(); const w = 280, x = Math.min(window.innerWidth - w - 8, Math.max(8, r.left + r.width / 2 - w / 2)); const below = r.bottom + 330 < window.innerHeight; setHover({ id, x, y: below ? r.bottom + 6 : Math.max(8, r.top - 330) }); };
+  const showMission = (id: string, el: HTMLElement) => { if (isHeroPlayable(id) || !activeMission(id)) { setHover(null); return; } const r = el.getBoundingClientRect(); const w = 280, x = Math.min(window.innerWidth - w - 8, Math.max(8, r.left + r.width / 2 - w / 2)); const below = r.bottom + 330 < window.innerHeight; setHover({ id, x, y: below ? r.bottom + 6 : Math.max(8, r.top - 330) }); };
 
   return <div className="cs-root">
     <div className="cs-filters" role="search">
@@ -151,11 +154,12 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
       <span className="cs-count" aria-live="polite"><b>{list.length}</b> de {HEROES.length}</span>
     </div>
     <div className="character-grid cs-grid">
-      {list.map(entry => {
-        const element = heroAffinity(entry.id), groups = heroGroups(entry.id), selected = entry.id === selectedId, playable = isHeroPlayable(entry.id);
-        return <button key={entry.id} type="button" aria-pressed={selected}
+      {list.map((entry, index) => {
+        const team = seasonTeam(entry.id), heading = index === 0 || seasonTeam(list[index - 1].id) !== team;
+        const element = heroAffinity(entry.id), groups = heroGroups(entry.id), selected = entry.id === selectedId, playable = isHeroPlayable(entry.id), rank = seasonRank(entry.id), soon = !rank, byEvent = !!rank && EVENT_ONLY_RANKS.includes(rank);
+        return <Fragment key={entry.id}>{heading && <h3 className="cs-team-heading">{team}</h3>}<button type="button" aria-pressed={selected}
           title={isHeroPlayable(entry.id) ? `${entry.name} · ${entry.village} · ${element}${groups.length ? ' · ' + groups.join(', ') : ''}` : undefined}
-          className={`character-card cs-card ${selected ? 'selected' : ''} ${isHeroPlayable(entry.id) ? '' : 'cs-locked'} ${LEGENDARY.has(entry.id) ? 'cs-legendary' : ''}`} style={{ ['--hero' as string]: entry.color }}
+          className={`character-card cs-card ${selected ? 'selected' : ''} ${isHeroPlayable(entry.id) ? '' : 'cs-locked'} ${soon ? 'cs-coming-soon' : ''} ${LEGENDARY.has(entry.id) ? 'cs-legendary' : ''}`} style={{ ['--hero' as string]: entry.color }}
           onClick={() => onSelect(entry.id)} onMouseEnter={(e) => showMission(entry.id, e.currentTarget)} onMouseLeave={() => setHover(null)} onFocus={(e) => showMission(entry.id, e.currentTarget)} onBlur={() => setHover(null)}>
           <span className="cs-portrait">
             <span className="cs-initials" aria-hidden="true">{playable?initials(entry.name):null}</span>
@@ -166,10 +170,10 @@ export function CharacterSelect({ selectedId, onSelect }: { selectedId: string; 
           {playable&&<b>{entry.name}</b>}
           
           <small className="cs-village"><VillageEmblem village={entry.village}/>{villageName(entry.village,true)}</small>
-          {playable && LEGENDARY.has(entry.id) && <span className="cs-legend-tag">Lendário</span>}
-          {!playable&&<small className="cs-mission-label">{entry.family!==entry.id?'Nova versão · missão':'Liberado com missão'}</small>}
+          {(rank === 'epico' || rank === 'lendario') && <span className={`cs-legend-tag cs-rank-${rank}`}>{SEASON_RANK_LABEL[rank]}</span>}
+          {!playable&&<small className="cs-mission-label">{soon?'🔒 Em breve · próxima temporada':byEvent?(rank==='akatsuki'?'Evento · Uma nova Organização surge!':'Evento · Exame Chūnin completo'):entry.family!==entry.id?'Nova versão · missão':'Liberado com missão'}</small>}
           {selected && <i className="cs-picked">SELECIONADO</i>}
-        </button>;
+        </button></Fragment>;
       })}
       {hover && <div className="cs-mission-float" style={{ left: hover.x, top: hover.y }} role="tooltip"><MissionCard id={hover.id} compact anonymous /></div>}
       {list.length === 0 && <p className="cs-empty">Nenhum shinobi combina com esses filtros. <button type="button" onClick={() => setFilters(EMPTY)}>Limpar filtros</button></p>}

@@ -21,7 +21,7 @@ export type EventDuel = {
  * uma vez (`claimEventPrize` em account.ts); título e moldura ficam liberados enquanto o evento estiver completo.
  */
 export type EventPrizes = { phase: Readonly<Record<string, number>>; complete: number; title: string; frame: string };
-export type AnimeEvent = { id: string; title: string; season: number; story: string; reward: string; prizes: EventPrizes; duels: readonly EventDuel[] };
+export type AnimeEvent = { id: string; title: string; season: number; story: string; reward: string; prizes: EventPrizes; duels: readonly EventDuel[]; /** Shinobis liberados na conta ao completar o evento (27/11/2026). */ unlocks?: readonly string[] };
 export type EventPrize = { id: string; label: string; lamens: number };
 
 /** Elenco da 1ª temporada: Academia e Genin (inclui o Trio do Som, que era genin na Prova Chūnin). */
@@ -38,7 +38,9 @@ const duel = (base: typeof FOREST, a: string, b: string, title: string, story: s
 export const CHUNIN_EXAM: AnimeEvent = {
   id: 'prova-chunin', season: 1, title: 'Prova Chūnin',
   story: 'Os genin de Konoha, Suna e do Som disputam a promoção a chūnin: a sobrevivência na Floresta da Morte, as lutas preliminares e a final diante das vilas.',
-  reward: 'Cada duelo vencido libera o oponente na conta. Fechar cada fase dá Lamens; vencer os 15 duelos dá 2.000 Lamens, o título "Chūnin" e a moldura Jade.',
+  reward: 'Cada duelo vencido libera o oponente na conta. Fechar cada fase dá Lamens; vencer os 15 duelos dá 2.000 Lamens, o título "Chūnin", a moldura Jade e libera o Chūnin Iruka.',
+  // 27/11/2026 — usuário: "os Chounins pelo evento"; Iruka é Chūnin na obra.
+  unlocks: ['iruka'],
   prizes: { phase: { 'Floresta da Morte': 300, 'Preliminares': 600, 'Final': 600 }, complete: 2000, title: 'Chūnin', frame: 'jade' },
   duels: [
     duel(FOREST, 'sasuke', 'zaku', 'O Selo Amaldiçoado', 'Sasuke desperta o Selo Amaldiçoado e enfrenta Zaku para proteger o time.'),
@@ -95,6 +97,9 @@ export function eventPrizes(e: AnimeEvent, done: Readonly<Record<string, string>
   if (eventProgress(e, done).complete) out.push({ id: `${e.id}:completo`, label: `${e.title} completa`, lamens: e.prizes.complete });
   return out;
 }
+/** Shinobis que os eventos completos liberam na conta. */
+export const eventUnlocks = (done: Readonly<Record<string, string>>, events: readonly AnimeEvent[] = EVENTS) =>
+  events.filter(e => eventProgress(e, done).complete).flatMap(e => e.unlocks ?? []);
 /** Título mostrado no perfil e no ranking (o do último evento completo). */
 export const earnedTitle = (done: Readonly<Record<string, string>>, events: readonly AnimeEvent[] = EVENTS) =>
   [...events].reverse().find(e => eventProgress(e, done).complete)?.prizes.title;

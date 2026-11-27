@@ -6,8 +6,10 @@
  * - Técnicas de outros shinobis precisam de 100% de pesquisa para entrar no Plano de build (passiva "Pesquisa" acelera).
  * Tudo em localStorage com try/catch; sem armazenamento, vale só nesta sessão.
  */
-export const STARTER_HEROES = ['naruto', 'sasuke', 'sakura', 'asuma'];
+// 27/11/2026: temporada com só o Naruto Academia inicial (src/game/season.ts); antes Naruto, Sasuke, Sakura e Asuma.
+export const STARTER_HEROES = [...SEASON_STARTERS];
 const UNLOCKED_KEY = 'sb_unlocked_heroes_v1';
+import { SEASON_STARTERS, inSeason } from './season.ts';
 const SEALED_KEY = 'sb_sealed_heroes_v1';
 const RESEARCH_KEY = 'sb_research_v1';
 
@@ -35,7 +37,10 @@ export function unlockedHeroes(): Set<string> {
 }
 /** TESTE (pedido do usuário, 11/11/2026): todo o elenco liberado para testar. Volte para false para reativar as missões de desbloqueio. */
 export const TEST_UNLOCK_ALL = true;
-export function isHeroPlayable(id: string) { return TEST_UNLOCK_ALL || allUnlockedOverride || testMode() || unlockedHeroes().has(id); }
+/** Jogável: da temporada e liberado (TEST_UNLOCK_ALL libera só o elenco da temporada; fora dela fica "Em breve", 27/11/2026). */
+export function isHeroPlayable(id: string) { if (testMode()) return true; if (!inSeason(id)) return false; return TEST_UNLOCK_ALL || allUnlockedOverride || unlockedHeroes().has(id); }
+/** Fora do elenco da temporada: aparece com cadeado "Em breve". */
+export const comingSoon = (id: string) => !inSeason(id);
 export function sealedHeroes(): Set<string> { return new Set(read<string[]>(SEALED_KEY, [])); }
 
 /** Selamento de conta: libera o shinobi para jogar e libera as técnicas únicas dele para os outros. */
@@ -73,9 +78,14 @@ export function researchGain(base: number, pesquisaLevel: number) { return base 
 const MAP_PROGRESS_KEY = 'sb_map_progress_v1';
 const ORDER = ['Genin', 'Chunin', 'Jonin', 'Kage'];
 export function mapProgress(): Record<string, string[]> { return read<Record<string, string[]>>(MAP_PROGRESS_KEY, {}); }
-/** Rodada 96 (pedido do usuário: "Deixar todas as dificuldades/mapas liberados para tester's"): com TEST_UNLOCK_ALL, mapas e dificuldades também ficam liberados. */
+/**
+ * Rodada 96 liberava mapas e dificuldades com TEST_UNLOCK_ALL. 27/11/2026 — usuário: "bloquear os modos de jogos e os mapas ·
+ * Será necessário progredir conforme ja esta estipulado para liberar os mapas." Agora TEST_UNLOCK_ALL só vale para o elenco; mapas e
+ * dificuldades seguem o progresso (só o debug e o modo ?test liberam tudo).
+ */
+export const MAPS_FOLLOW_PROGRESS = true;
 export function isDifficultyUnlocked(mapId: string, difficulty: string) {
-  if (TEST_UNLOCK_ALL || allUnlockedOverride || testMode()) return true;
+  if (allUnlockedOverride || testMode()) return true;
   if (!isMapUnlocked(mapId)) return false;
   const index = ORDER.indexOf(difficulty); if (index <= 0) return true;
   return (mapProgress()[mapId] ?? []).includes(ORDER[index - 1]);
@@ -83,7 +93,7 @@ export function isDifficultyUnlocked(mapId: string, difficulty: string) {
 /** Ordem dos mapas: o seguinte só libera ao vencer o Genin do anterior (Folha → Areia → Pedra → Névoa). */
 export const MAP_ORDER = ['folha', 'areia', 'pedra', 'nevoa'];
 export function isMapUnlocked(mapId: string) {
-  if (TEST_UNLOCK_ALL || allUnlockedOverride || testMode()) return true;
+  if (testMode() || allUnlockedOverride) return true;
   const index = MAP_ORDER.indexOf(mapId); if (index <= 0) return true;
   return (mapProgress()[MAP_ORDER[index - 1]] ?? []).includes('Genin');
 }

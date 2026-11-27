@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { MAPS, MAP_BY_ID, DIFFICULTY_ORDER, type MapId } from '../game/maps';
 import { HERO_BY_ID, heroAffinity } from '../game/heroes';
 import { isDifficultyUnlocked, mapProgress, isHeroPlayable, isMapUnlocked, MAP_ORDER } from '../game/account';
+import { hasSeasonMission } from '../game/season';
 import { MissionCard } from './MissionCard';
 import { UNLOCK_MISSIONS } from '../game/unlockMissions';
 import { MISSION_TIER, type Difficulty } from '../game/progression';
@@ -26,7 +27,8 @@ export function MapSelect({ heroId, mapId, onMap, mission, onMission, planned, t
 }) {
   const map = MAP_BY_ID[mapId], hero = HERO_BY_ID[heroId], progress = mapProgress()[mapId] ?? [];
   const mapOpen = isMapUnlocked(mapId), canStart = mapOpen && isHeroPlayable(heroId) && isDifficultyUnlocked(mapId, mission);
-  const unlockHere = Object.entries(UNLOCK_MISSIONS).filter(([id, m]) => m.map === mapId && !isHeroPlayable(id));
+  // 27/11/2026: só as missões abertas na temporada (src/game/season.ts).
+  const unlockHere = Object.entries(UNLOCK_MISSIONS).filter(([id, m]) => m.map === mapId && !isHeroPlayable(id) && hasSeasonMission(id));
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.target instanceof HTMLElement && e.target.matches('input,select,textarea')) return; if (e.key === 'Enter' && canStart) onStart(); if (e.key === 'Escape') onBack(); };
     window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey);

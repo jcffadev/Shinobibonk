@@ -3408,3 +3408,22 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > Além é claro do que esta ai como buffs"
 
 **Resposta.** As 34 ferramentas já davam buff (teste novo garante). A barra do chefe sumia no Hagoromo porque o HUD trocava a faixa do treino pelas barras e as barras excluíam o Mega do treino: agora aparecem juntas. A barra mostra a fúria em destaque e uma segunda barra com a carga da próxima técnica, vermelha com o nome quando o aviso no chão abre. O aviso desce para baixo da faixa do treino. Incenso Repelente: mantém −8% de inimigos e +6% de movimento, soma +8% de Ryu e +8% de XP e, com 30% de HP ou menos, afasta os monstros a 7 m (recarga 20 s). **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Elenco da temporada, selamento com 3 tentativas e evento da Akatsuki (Claude Code)
+
+> "bloquear todos os personagens que não são iniciais academia/genin, deixar o trio do som
+> Deixar Terceiro Hokage, Tsunade normal, Jiraya, Orochimaru como épicos
+> Todos os Kages serão lendários...
+> Deixar Iruka, verificar se ele realmente é Chuunin ou Jounin em Naruto.
+> Deixar Hanabi/Hiashi
+> Deixar primeira versão
+> Os Jounins liderees de time, Kakashi, Kurenai, Guy...etc
+> Deixar Zabuza e Haku
+> Os jogavéis serão apenas personagens academia, os genins você vai deixar missões para desbloquea-los... assim como os Chounins pelo evento... Os personagens da Akatsuki desbloqueáveis serão Itachi e Kisame... só por evento... 'Uma nova Organização surge!' Faça quests difíceis... com chance de aparecimento e chance de captura baixa, lembrando que todas as capturas devem apenas ser possível tentar 3x o selamento, se não o personagem escapa
+> Aviso na tela quando eles escaparem"
+> "Colocar a lista de personagens organizados por time"
+> "bloquear os modos de jogos e os mapas
+> Será necessário progredir conforme ja esta estipulado para liberar os mapas."
+> "HIruzen é um Kage, ele deveria ser lendário... talvez me enganei. os líderes de times, ficam como Jounins, se forem jounins... O Might Guy jovem será liberado por evento mais pra frente, precisamos da versão dele Jounin liberado agora"
+
+**Resposta.** Perguntado ao usuário e respondido: só o Naruto Academia inicial, Kages de primeira versão, bloqueados como "Em breve", Minato Jonin e Yamato entre os Jōnins. Depois o usuário corrigiu: o Terceiro Hokage é Lendário (Kage). Iruka é Chūnin (Narutopedia), então sai pelo Exame Chūnin completo. O Might Guy Jōnin já está na temporada (não há Guy jovem no elenco). Todo selamento tem chance por rank e no máximo 3 tentativas, com faixa "ESCAPOU!". Evento rotativo "Uma nova Organização surge!" com Kisame e Itachi Akatsuki, metas altas e chances baixas. Lista por time e mapas pelo progresso. Na fila: 8 habilidades iniciais para todos, combinação/fusão 1 por zona, dono das habilidades compartilhadas, nível e crescimento ao passar o mouse e chefes/totem fora das casas. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

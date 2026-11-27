@@ -705,3 +705,11 @@ Abaixo da barra de vida do chefe há a barra "Próxima técnica". Ela enche dura
 ### O que faz o Incenso Repelente? · 27/11/2026
 
 Por unidade (até 3): −8% de inimigos no mapa, +6% de movimento, +8% de Ryu e +8% de experiência. Com 30% de HP ou menos, empurra 6 m para longe os monstros a 7 m (+1 m por unidade extra), com recarga de 20 s. Guardião, Bijū e totem não se movem (Claude Code).
+
+### Quem joga nesta temporada e como liberar? · 27/11/2026
+
+Começa só o Naruto Academia. Genin e Jōnins saem por missão; Épicos (Tsunade, Jiraiya, Orochimaru) pedem missão em Jōnin ou mais; Lendários (Terceiro Hokage e os Kages de primeira versão) pedem Kage. Iruka sai ao completar o Exame Chūnin. Itachi Akatsuki e Kisame só no evento rotativo "Uma nova Organização surge!". Os outros ficam "Em breve" (Claude Code).
+
+### Por que o selo falhou e o shinobi fugiu? · 27/11/2026
+
+Toda captura tem chance por tentativa (Genin 80% · Chūnin 70% · Jōnin 60% · Épico 45% · Lendário 30% · Akatsuki 15%) e no máximo 3 tentativas. Na 3ª falha ele escapa e a faixa "ESCAPOU!" aparece. O card mostra a tentativa e a chance (Claude Code).

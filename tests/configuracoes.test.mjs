@@ -87,7 +87,7 @@ test('Ultimate automática e selamento direto continuam na próxima partida (rod
   const main = fs.readFileSync(new URL('../src/main.tsx', import.meta.url), 'utf8');
   assert.ok(canvas.includes('autoUlt=currentSettings().autoUltimate'), 'a partida começa com o que está salvo');
   assert.ok(canvas.includes('autoUlt=!autoUlt;const saved=readSettings();if(saved.autoUltimate!==autoUlt)saveSettings({...saved,autoUltimate:autoUlt});'), 'trocar na partida salva');
-  assert.ok(canvas.includes('if(readSettings().sealAnimation){sealing=p;return;}'), 'selamento lê o salvo');
+  assert.ok(canvas.includes('if(readSettings().sealAnimation){sealing={...p,attempts:0};return;}'), 'selamento lê o salvo (com as 3 tentativas desde 27/11/2026)');
   assert.ok(main.includes('updateSettings({sealAnimation:!event.target.checked})'), 'a caixa do selamento salva');
   assert.ok(main.includes('const next = { ...readSettings(), ...patch };'), 'uma opção não desfaz a outra');
   assert.ok(main.includes("window.addEventListener('shinobi-settings', sync)"), 'a tela acompanha o que a partida salvou');

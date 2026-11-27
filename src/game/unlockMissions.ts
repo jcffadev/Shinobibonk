@@ -3,6 +3,7 @@ import type { MapId } from './maps';
 import { unlockedHeroes } from './account.ts';
 import { ROSTER_EXPANSION } from './rosterExpansion.ts';
 import { KAKASHI_DMS } from './susanoo.ts';
+import { SEASON_ROSTER, hasSeasonMission, type SeasonRank } from './season.ts';
 
 /**
  * Missões de desbloqueio (pedido do usuário em 06/11/2026). Para cada shinobi bloqueado:
@@ -58,7 +59,7 @@ export const VERSION_MISSIONS: Record<string, UnlockMission> = {
   'guy-sexto-portao': V('guy', 'nevoa', 'Jonin', 4, 550, 'O Sexto Portão', 'Jogando com Might Guy Jonin, enfrente Kisame abrindo o Portão da Visão.'),
   'guy-setimo-portao': V('guy-sexto-portao', 'pedra', 'Kage', 6, 900, 'O Sétimo Portão', 'Might Guy Sexto Portão abre o Portão da Admiração na guerra.'),
 };
-export const UNLOCK_MISSIONS: Record<string, UnlockMission> = {
+const ALL_MISSIONS: Record<string, UnlockMission> = {
   // Folha · Genin: os genin da Folha (Time Guy e Hinata)
   hinata: { map: 'folha', difficulty: 'Genin', minute: 1, kills: 120, title: 'Coragem Gentil', story: 'Encontre Hinata treinando escondida na floresta da Folha.' },
   neji: { map: 'folha', difficulty: 'Genin', minute: 2, kills: 200, requires: ['hinata'], title: 'Gaiola do Destino', story: 'Depois de conhecer Hinata, enfrente o primo prodígio do clã Hyuga.' },
@@ -88,6 +89,29 @@ export const UNLOCK_MISSIONS: Record<string, UnlockMission> = {
   ...Object.fromEntries(ROSTER_EXPANSION.filter(hero=>hero.id===hero.family).map(hero=>[hero.id,hero.mission])),
   ...VERSION_MISSIONS,
 };
+/**
+ * Temporada (27/11/2026, src/game/season.ts): Sasuke, Sakura e Asuma deixam de ser iniciais e ganham missão; os pedidos que
+ * apontavam para shinobis fora da temporada mudam (Yamato pedia Sai, Mei pedia Ao); Épicos pedem no mínimo Jōnin e os
+ * Lendários (Kages de primeira versão) pedem Kage, retrato oculto e aparecem só no fim da partida.
+ */
+const SEASON_NEW_MISSIONS: Record<string, UnlockMission> = {
+  sasuke: { map: 'folha', difficulty: 'Genin', minute: 1, kills: 120, title: 'O Último Uchiha', story: 'O melhor aluno da turma treina sozinho perto do distrito Uchiha.' },
+  sakura: { map: 'folha', difficulty: 'Genin', minute: 1, kills: 130, requires: ['sasuke'], title: 'Time 7', story: 'Sakura segue Sasuke até o campo de treino do Time 7.' },
+  asuma: { map: 'folha', difficulty: 'Chunin', minute: 3, kills: 320, requires: ['shikamaru'], title: 'O Mestre do Time 10', story: 'Shikamaru leva você ao tabuleiro de shōgi do Asuma.' },
+};
+const SEASON_PATCH: Record<string, Partial<UnlockMission>> = { yamato: { requires: ['kakashi'] }, mei: { requires: ['zabuza'] } };
+const DIFF_ORDER = ['Genin', 'Chunin', 'Jonin', 'Kage'] as const;
+const atLeast = (d: Difficulty, min: Difficulty) => DIFF_ORDER.indexOf(d as typeof DIFF_ORDER[number]) >= DIFF_ORDER.indexOf(min as typeof DIFF_ORDER[number]) ? d : min;
+function seasonMission(id: string, m: UnlockMission, rank: SeasonRank | undefined): UnlockMission {
+  const out = { ...m, ...SEASON_PATCH[id] };
+  if (rank === 'epico') out.difficulty = atLeast(out.difficulty, 'Jonin');
+  if (rank === 'lendario') { out.difficulty = 'Kage'; out.legendary = true; }
+  return out;
+}
+export const UNLOCK_MISSIONS: Record<string, UnlockMission> = Object.fromEntries(
+  Object.entries({ ...ALL_MISSIONS, ...SEASON_NEW_MISSIONS }).map(([id, m]) => [id, seasonMission(id, m, SEASON_ROSTER[id])]));
+/** Missão de desbloqueio aberta nesta temporada (fora dela, iniciais e os que saem por evento não têm). */
+export const activeMission = (id: string): UnlockMission | undefined => hasSeasonMission(id) ? UNLOCK_MISSIONS[id] : undefined;
 export const LEGENDARY = new Set(Object.entries(UNLOCK_MISSIONS).filter(([, m]) => m.legendary).map(([id]) => id));
 /**
  * Requisitos de história ainda não cumpridos: shinobis que precisam ter sido selados antes e, nas versões, a versão anterior

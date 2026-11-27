@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { EVENTS, duelAvailable, eventPhases, eventProgress, type EventDuel } from '../game/events';
-import { eventDuelsDone, eventPrizesClaimed, isHeroPlayable } from '../game/account';
+import { eventDuelsDone, eventPrizesClaimed, isHeroPlayable, sealedHeroes, unlockedHeroes } from '../game/account';
+import { CAPTURE_CHANCE, ORGANIZATION_EVENT, SEAL_ATTEMPTS, captureOdds, organizationStatus } from '../game/season';
 import { HERO_BY_ID, familyOf } from '../game/heroes';
 import { HeroPortrait } from './RunSheet';
 import '../events.css';
@@ -36,6 +37,7 @@ export function EventsPage({ heroId, onPlay, onBack }: { heroId: string; onPlay:
         </div></div>)}
       </section>;
     })}
+    <OrganizationEvent />
   </div>;
 }
 
@@ -53,4 +55,36 @@ function DuelCard({ duel, winner, playAs, onPlay }: { duel: EventDuel; winner?: 
       return <button type="button" key={side} onClick={() => onPlay(duel.id, as)}>Jogar com {name(as)}<small>{isHeroPlayable(foe) ? 'enfrente ' + name(foe) : 'selar libera ' + name(foe)}</small></button>;
     })}</div>}
   </article>;
+}
+
+const MAP_NAME: Record<string, string> = { folha: 'Vila da Folha', areia: 'Vila da Areia', pedra: 'Vila da Pedra', nevoa: 'Vila da Névoa' };
+const pct = (n: number) => Math.round(n * 100) + '%';
+const when = (t: number) => new Date(t).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+/**
+ * "Uma nova Organização surge!" (27/11/2026): evento rotativo da Akatsuki. Só Itachi e Kisame se liberam aqui, com metas
+ * difíceis, chance baixa de aparecer e de selar (3 tentativas). As regras ficam em src/game/season.ts.
+ */
+function OrganizationEvent() {
+  const status = organizationStatus(Date.now()), sealed = sealedHeroes(), unlocked = unlockedHeroes();
+  const name = (id: string) => HERO_BY_ID[id]?.name ?? id;
+  const odds = captureOdds(CAPTURE_CHANCE.akatsuki, SEAL_ATTEMPTS);
+  return <section className={'ev-event ev-organization' + (status.active ? '' : ' closed')} aria-label={ORGANIZATION_EVENT.title}>
+    <div className="ev-event-head">
+      <div><small>EVENTO ROTATIVO · AKATSUKI</small><h2>{ORGANIZATION_EVENT.title}</h2><p>{ORGANIZATION_EVENT.story}</p>
+        <p className="ev-reward">{status.active ? `Aberto até ${when(status.changesAt)}.` : `Fechado · volta em ${when(status.changesAt)}.`} Cumpridas as metas, cada membro tem uma chance de aparecer por partida. Derrotado, vira Shinobi para selar: {pct(CAPTURE_CHANCE.akatsuki)} por tentativa, {SEAL_ATTEMPTS} tentativas ({pct(odds)} no total); depois ele escapa.</p></div>
+    </div>
+    <div className="ev-duels">
+      {ORGANIZATION_EVENT.targets.map(t => {
+        const got = unlocked.has(t.heroId), missing = t.requires.filter(r => !sealed.has(r));
+        return <article key={t.heroId} className={'ev-duel' + (got ? ' done' : '') + (status.active ? '' : ' locked')}>
+          <div className="ev-sides"><span className={got ? '' : 'ev-locked-side'}><HeroPortrait id={t.heroId}/><b>{name(t.heroId)}</b></span></div>
+          <h4>{t.title}</h4>
+          <p>{t.story}</p>
+          <small className="ev-rule">{MAP_NAME[t.map] ?? t.map} · {t.difficulty} · depois de {t.minute} min e {t.kills.toLocaleString('pt-BR')} abates · {pct(t.appearChance)} de chance de aparecer</small>
+          <small className="ev-rule">Selados antes: {t.requires.map(r => (sealed.has(r) ? '✓ ' : '✗ ') + name(r)).join(' · ')}</small>
+          {got ? <small className="ev-state">✓ Liberado na conta</small> : missing.length ? <small className="ev-state">🔒 Sele antes {missing.map(name).join(' e ')}</small> : !status.active ? <small className="ev-state">⏳ Espere o evento voltar</small> : null}
+        </article>;
+      })}
+    </div>
+  </section>;
 }
