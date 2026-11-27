@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 27/11/2026 · De quem é cada habilidade e nível/escala por nível ao passar o mouse (Claude Code)
+
+- **Pedidos do usuário:** "As habilidades compartillhdas, deve mostrar de quem é compartilhada, ou seja para o jogadore saber quem tem que desbloquear para ganhar a habilidade." · "as habilidades ao passar o mouse não estão mostrando o level e o scale delas por nível... todas tem que ter um ataque base por nível, ai a qualidade das cartas atuam em cima dessa base para buffar, sendo as cartas comuns o status base da carta, ai a incomum já atua calculando em cima dessa base, isso para todas as habilidades"
+- **Donos** (`techniqueProviders` e `upcomingTechniques` em `heroes.ts`): o planejador mostra também as técnicas que ainda faltam, bloqueadas, com quem ensina ("Compartilhada · ensinada por Hashirama, Sakura, Tsunade… 🔒 Sele um deles para ganhar"); quem está fora da temporada aparece por último, marcado "(em breve)". A carta de level-up de técnica vinda de outro shinobi diz "· de Fulano".
+- **Escala por nível** (`LEVEL_GROWTH`, `rarityGrowthMultiplier`, `levelScaleText`, `rarityScaleText` em `combat.ts`): toda técnica de ataque sobe de dano a cada nível; a carta Comum dá a base (+22,5% por nível, mais o sorteio da faixa) e as outras multiplicam essa base (Incomum ×1,78 · Raro ×3 · Épico ×5 · Lendário ×8,33). O equilíbrio não mudou: a tabela já era base × raridade, só não aparecia. Agora aparece no mouse sobre a barra de habilidades ("Nv. 3 · base +22,5% de dano por nível (carta Comum); Incomum ×1,8 · … · acumulado +68%"), na ficha e na carta de level-up ("Dano ×3 da base de +22,5%/nível").
+- **Testes:** novo `tests/habilidades-donos-escala.test.mjs` (2) e 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** textos no planejador, no mouse da barra, na ficha e nas cartas.
+
 ## 27/11/2026 · Todo o elenco começa com 9+ técnicas e planejador com 1 fusão ou combinação por zona (Claude Code)
 
 - **Pedido do usuário:** "Lembre-se referente as habilidades... os personagens tem que ir desbloqueando os outros para ter mais habilidades... Porém, acho interessante que tenhamos mais habilidades... Consegue que TODOS os personagens de todo o elenco... fazendo mais pesquisa consiga ter inicialmente pelo menos 8 habilidades? Outra coisa, em combinação... ele deveria conseguir combinar/fundir 1 por zona... aparentemente no planejador aparece apenas 1 combinação e 1 fusão, isso está errado."

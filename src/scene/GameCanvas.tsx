@@ -62,7 +62,7 @@ import { choiceCount, choiceUses, weaponPrice, jiraiyaRolls, prioritySlots, PRIO
 import { merchantPrice, merchantRerollPrice, itemSalePrice } from '../game/itemTrade';
 import { ITEM_BY_NAME, currentItemName, rollItems, type Item, type Rarity, type StatKey } from '../game/catalog';
 import { ORGANIZATION_EVENT, SEAL_ATTEMPTS, afterFailedSeal, captureChance, organizationReady, organizationStatus, sealSucceeds, seasonVersion, type OrganizationTarget } from '../game/season';
-import { HEROES, HERO_BY_ID, familyOf, familyVersions, versionForEncounter, skillPool, heroAffinity, isProjectileUltimate, sandSynergy, ultimateBase, type Technique, type Control } from '../game/heroes';
+import { HEROES, HERO_BY_ID, familyOf, familyVersions, versionForEncounter, skillPool, heroAffinity, isProjectileUltimate, sandSynergy, ultimateBase, type Technique, type Control, type PoolTechnique } from '../game/heroes';
 import { activeSynergies, synergyBonuses, type ActiveSynergy } from '../game/synergy';
 import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVitality, guardianDefense, guardianAttackMultiplier } from '../game/missions';
 import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, GOLDEN_SAND, WEATHER_EVENT_DURATION, weatherWait, planZoneWeather, type WeatherEventId, type WeatherPlan } from '../game/maps';
@@ -74,7 +74,7 @@ import { YOUTH_FIGHTER_HP, YOUTH_GOALS, YOUTH_TEXT, YOUTH_STAT_BY_KEY, youthStat
 import { HAGOROMO, HAGOROMO_WAVES, TOOL_BY_ID, chooseTool, createHagoromo, addHagoromoKills, hagoromoRecharges, nextHagoromoStage, rollHagoromoRarity, rollToolOffers, toolBonuses, waveSpots, type HagoromoEncounterHud, type HagoromoState, type SageTool, type ToolPassive } from '../game/hagoromoTraining';
 import { UNLOCK_MISSIONS, activeMission, missingRequirements } from '../game/unlockMissions';
 import { formAt, portraitRegion } from '../game/evolution';
-import { NO_GROWTH, rollGrowth, growthText, SENJUTSU, hasSenjutsu, techniqueHitDamage, techniquePassiveMultiplier, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, elementMultiplier, thornsDamage, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
+import { NO_GROWTH, rollGrowth, rarityScaleText, growthText, SENJUTSU, hasSenjutsu, techniqueHitDamage, techniquePassiveMultiplier, setupNumbers, attackCooldown, BURN_CHANCE, POISON_CHANCE, techniqueCritical, techniqueDetail, techniqueProc, TECHNIQUE_SCALE, elementMultiplier, thornsDamage, aimedCenter, MELEE_IMPACT, type SkillGrowth } from '../game/combat';
 import type { Bonuses } from '../game/catalog';
 import { animateTechniqueVisual, techniqueVisual, cachedTechniqueVisual, hasSignatureVisual, disposeObject } from './techniqueEffects';
 import { createParticleFx } from './particleFx';
@@ -797,7 +797,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       const pills=eligiblePills();
       if(!skills.length&&!pills.length)return [];
       const total=offerCount(),cards:LevelOffer[]=[];
-      const skillCard=(index?:number)=>{const t=skills.splice(index??Math.floor(Math.random()*skills.length),1)[0],roll=rollGrowth(lootLuck(),t),current=skillLevels[t.name]||0;cards.push({id:'skill-'+t.name,kind:'skill',name:t.name,rarity:roll.rarity,growth:roll.growth,icon:'⚔️',description:(current?'Nível '+current+' → '+(current+1):'Nova técnica · '+t.school+' · '+t.shape)+'. '+growthText(roll.growth,t)+(t.status?' · '+t.status:'')+' — '+techniqueDetail(t,growthAfter(t.name,roll.growth),stats.sage>0,knowsSageMode(),current+1,stats.status)});};
+      const skillCard=(index?:number)=>{const t=skills.splice(index??Math.floor(Math.random()*skills.length),1)[0],roll=rollGrowth(lootLuck(),t),current=skillLevels[t.name]||0;cards.push({id:'skill-'+t.name,kind:'skill',name:t.name,rarity:roll.rarity,growth:roll.growth,icon:'⚔️',description:(t.setup?'':/* 27/11: raridade sobre a base por nível */'Dano '+rarityScaleText(roll.rarity)+'. ')+(current?'Nível '+current+' → '+(current+1):'Nova técnica · '+t.school+' · '+t.shape+/* 27/11: de quem é a técnica */(['vila','elemento','única'].includes((t as PoolTechnique).source)?' · de '+(HERO_BY_ID[(t as PoolTechnique).origin]?.name??''):''))+'. '+growthText(roll.growth,t)+(t.status?' · '+t.status:'')+' — '+techniqueDetail(t,growthAfter(t.name,roll.growth),stats.sage>0,knowsSageMode(),current+1,stats.status)});};
       const pillCard=()=>{const pill=pills.splice(Math.floor(Math.random()*pills.length),1)[0];cards.push(pillOffer(pill));};
       const skillTarget=Math.max(Math.min(2,skills.length),total-pills.length);
       while(cards.length<skillTarget&&skills.length)skillCard();

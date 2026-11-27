@@ -271,3 +271,5 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .sheet-banned li{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border:1px solid #c8321f80;border-radius:6px;background:#3a1512;color:#ffd9d2;font-size:12px;text-decoration:line-through;text-decoration-color:#ff7a6a}
 .sheet-banned li span{text-decoration:none}
 .sheet-banned-empty{margin:2px 0 10px;color:#c9b597;font-size:12px}
+/* 27/11/2026: nível e escala por nível na ficha. */
+.level-scale{margin:2px 0 6px;font-size:12px;color:#ffe9a8}

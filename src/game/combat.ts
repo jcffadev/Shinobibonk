@@ -33,6 +33,24 @@ export const TECHNIQUE_SCALE=1.2;
  * personagem (que já inclui nível e dano%). Armadura de Espinhos 100% por cópia, Armadura Samurai 150%.
  */
 export const thornsDamage=(thorns:number,armor:number,damage:number)=>Math.max(0,thorns)*Math.max(0,armor)*Math.max(0,damage);
+/**
+ * Ataque base por nível e raridade da carta (27/11/2026 — usuário: "as habilidades ao passar o mouse não estão mostrando o level e o scale delas por nível... todas tem que ter um ataque base por nível, ai a qualidade das cartas atuam em cima dessa base para buffar, sendo as cartas comuns o status base da carta, ai a incomum já atua calculando em cima dessa base, isso para todas as habilidades").
+ * Toda técnica de ataque sobe de dano a cada nível. A carta Comum dá a BASE (+22,5% de dano por nível, mais o sorteio da faixa);
+ * as outras raridades multiplicam essa base: Incomum ×1,78 · Raro ×3 · Épico ×5 · Lendário ×8,33. Os números vêm de GROWTH_ROLLS
+ * (o equilíbrio não mudou: a tabela já era base × raridade, só não era mostrada).
+ */
+export const LEVEL_GROWTH={damageBase:GROWTH_ROLLS.damage.base[0]};
+/** Multiplicador da raridade sobre a base por nível (Comum = 1). */
+export const rarityGrowthMultiplier=(rarity:Rarity)=>GROWTH_ROLLS.damage.base[Math.max(0,RARITY_ORDER.indexOf(rarity))]/GROWTH_ROLLS.damage.base[0];
+const pctText=(n:number)=>(Math.round(n*10)/10).toLocaleString('pt-BR');
+/** "Nv. 3 · base +22,5% de dano por nível (Comum); Incomum ×1,78 · … · acumulado +68% de dano". Técnicas de buff não têm dano por nível. */
+export function levelScaleText(technique:Technique,level:number,growth:SkillGrowth){
+  if(technique.setup)return 'Nv. '+level+' · buff: a carta melhora força, recarga ou duração.';
+  const tiers=RARITY_ORDER.slice(1).map(r=>r+' ×'+pctText(rarityGrowthMultiplier(r))).join(' · ');
+  return 'Nv. '+level+' · base +'+pctText(LEVEL_GROWTH.damageBase)+'% de dano por nível (carta Comum); '+tiers+' · acumulado +'+Math.round(growth.damage*100)+'% de dano';
+}
+/** Na carta: quanto a raridade multiplica a base por nível. */
+export const rarityScaleText=(rarity:Rarity)=>'×'+pctText(rarityGrowthMultiplier(rarity))+' da base de +'+pctText(LEVEL_GROWTH.damageBase)+'%/nível';
 export function rollGrowth(luck:number,technique:Technique,rng=Math.random):{rarity:Rarity;growth:SkillGrowth}{
  const tier=rollRarityTier(luck,rng);
  const keys:(keyof SkillGrowth)[]=technique.setup?['damage','haste','duration']:['area','haste'];if(!technique.setup&&(technique.status||technique.burn))keys.push('duration');

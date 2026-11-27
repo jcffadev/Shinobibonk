@@ -374,7 +374,7 @@ export function allowedElements(heroId:string){const set=new Set<Element>(['Neut
 /** Bônus de dano de técnicas do elemento natural (afinidade) do shinobi. */
 export const NATURE_BONUS=1.5;
 export type PoolSource='kit'|'basica'|'vila'|'elemento'|'única';
-export type PoolTechnique=Technique&{source:PoolSource;origin:string;locked?:boolean};
+export type PoolTechnique=Technique&{source:PoolSource;origin:string;locked?:boolean;/** Quem ensina a técnica (27/11/2026). */providers?:string[]};
 /** Nível de desbloqueio no level-up: compartilhadas a partir do 8; únicas de outros shinobis a partir do 12. */
 export const POOL_UNLOCK={shared:8,unique:12};
 /**
@@ -434,6 +434,34 @@ export function techniquePool(heroId:string,sealed:ReadonlySet<string>=new Set()
     }
   }
   return list;
+}
+/**
+ * De quem vem cada técnica que este shinobi pode aprender de outros (27/11/2026 — usuário: "As habilidades compartillhdas, deve mostrar de quem é compartilhada, ou seja para o jogadore saber quem tem que desbloquear para ganhar a habilidade.").
+ * Mesmas regras do `techniquePool` (elemento, ensino canônico, vila), mas olhando o elenco inteiro, selado ou não.
+ */
+export function techniqueProviders(heroId:string):Map<string,{tech:Technique;providers:string[];shared:boolean;sameVillage:boolean}>{
+  const hero=HERO_BY_ID[heroId]??HEROES[0],allowed=allowedElements(hero.id),family=familyOf(hero.id),own=new Set(hero.techniques.map(x=>x.name)),out=new Map<string,{tech:Technique;providers:string[];shared:boolean;sameVillage:boolean}>();
+  for(const other of HEROES){
+    if(familyOf(other.id)===family)continue;
+    for(const tech of other.techniques){
+      if(own.has(tech.name)||!allowed.has(tech.element))continue;
+      const sameVillage=hero.village!=='Sem aldeia'&&other.village===hero.village,authorized=CANONICAL_TEACHING[tech.name],shared=SHARED_LIBRARY.has(tech.name);
+      if(authorized?!authorized.includes(family)||!canonicalPhase(hero.id,tech.name):!shared||(!sameVillage&&tech.element==='Neutro'))continue;
+      const entry=out.get(tech.name);
+      if(entry){if(!entry.providers.includes(other.id))entry.providers.push(other.id);entry.sameVillage||=sameVillage;}
+      else out.set(tech.name,{tech,providers:[other.id],shared,sameVillage});
+    }
+  }
+  return out;
+}
+/** Técnicas que ainda faltam no pool: aparecem bloqueadas, com quem precisa ser selado para ganhá-las. */
+export function upcomingTechniques(heroId:string,sealed:ReadonlySet<string>=new Set()):PoolTechnique[]{
+  const have=new Set(techniquePool(heroId,sealed).map(t=>t.name)),out:PoolTechnique[]=[];
+  for(const [name,{tech,providers,shared,sameVillage}] of techniqueProviders(heroId)){
+    if(have.has(name))continue;
+    out.push({...tech,unlockLevel:shared?POOL_UNLOCK.shared:POOL_UNLOCK.unique,source:shared?(sameVillage?'vila':'elemento'):'única',origin:providers[0],locked:true,providers});
+  }
+  return out;
 }
 /** Técnicas que podem aparecer na run (sem as únicas ainda bloqueadas). */
 export function skillArchiveLimit(learnableCount:number){return Math.floor(Math.max(0,learnableCount)*.6);}

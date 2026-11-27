@@ -3465,3 +3465,10 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > Lembre-se referente as habilidades... os personagens tem que ir desbloqueando os outros para ter mais habilidades... Porém, acho interessante que tenhamos mais habilidades... Consegue que TODOS os personagens de todo o elenco... fazendo mais pesquisa consiga ter inicialmente pelo menos 8 habilidades? Outra coisa, em combinação... ele deveria conseguir combinar/fundir 1 por zona... aparentemente no planejador aparece apenas 1 combinação e 1 fusão, isso está errado.
 
 **Resposta.** Bunshin no Jutsu e Armadilha de Fios (Academia, na obra) entram no pool de todos: o elenco começa com 9 a 12 técnicas. O planejador lista fusões e combinações do kit, com 3 vagas (1 por zona). **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Donos das habilidades e escala por nível (Claude Code)
+
+> As habilidades compartillhdas, deve mostrar de quem é compartilhada, ou seja para o jogadore saber quem tem que desbloquear para ganhar a habilidade.
+> as habilidades ao passar o mouse não estão mostrando o level e o scale delas por nível... todas tem que ter um ataque base por nível, ai a qualidade das cartas atuam em cima dessa base para buffar, sendo as cartas comuns o status base da carta, ai a incomum já atua calculando em cima dessa base, isso para todas as habilidades
+
+**Resposta.** Planejador lista as técnicas a ganhar com quem ensina (e "(em breve)" para quem está fora da temporada); a carta diz de quem é. Mouse, ficha e carta mostram o nível, a base de +22,5% por nível e o multiplicador de cada raridade. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

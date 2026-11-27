@@ -729,3 +729,7 @@ Só por cima, subindo degrau por degrau, ou pelo lado. Um degrau mais alto que o
 ### O que as ferramentas do Hagoromo fazem além do bônus? · 27/11/2026
 
 Todas as 34 têm efeito: as 9 especiais (selo, partículas, espada, leque etc.) e as 25 de atributo, cada uma com passiva própria descrita no card (explosões, rajadas, cura, bloqueio, explosão no crítico, golpe em elites, Ryu ou XP por abates). Quanto maior a raridade, mais forte (Claude Code).
+
+### Como a raridade da carta muda o dano da técnica? · 27/11/2026
+
+Toda técnica de ataque ganha dano a cada nível. A carta Comum dá a base (+22,5% por nível, até ~+33%); Incomum vale ×1,78 da base, Raro ×3, Épico ×5 e Lendário ×8,33. O mouse sobre a técnica mostra o nível e o acumulado (Claude Code).
