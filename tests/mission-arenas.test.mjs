@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import * as THREE from 'three';
 import { HERO_BY_ID } from '../src/game/heroes.ts';
+import { decodePng, cellShape } from '../scripts/audit-walk-sheets.mjs';
 import { EXAM_ENTRANCE, EXAM_SPAWN, INSTANCE_FLOOR, constrainArena } from '../src/game/missionArenas.ts';
 import { load,installCanvasStub } from './helpers/load.mjs';
 
@@ -64,14 +65,19 @@ test('duelo começa pela porta com objetivos cumpridos e Hagoromo usa a origem d
 
 test('folhas de derrota têm oito quadros e a última pose só entra ao liberar E',()=>{
   const entries=Object.entries(DEFEAT_SHEETS);
+  assert.deepEqual(Object.keys(DEFEAT_SHEETS).sort(),Object.keys(HERO_BY_ID).sort());
   assert.deepEqual(entries.map(([,file])=>file.split('/').at(-1)).sort(),
     readdirSync('public/assets/shinobi-defeat').filter(file=>file.endsWith('.png')).sort());
   for(const [id,file] of entries){
     assert.ok(HERO_BY_ID[id], 'a folha corresponde a uma versão do elenco');
     assert.equal(file, '/assets/shinobi-defeat/'+id+'-derrota-v1.png');
-    const png=readFileSync('public'+file);
-    assert.equal(png.readUInt32BE(16),464);
-    assert.equal(png.readUInt32BE(20),232);
+    const png=decodePng('public'+file);
+    assert.equal(png.width,464);
+    assert.equal(png.height,232);
+    for(let frame=0;frame<8;frame++){
+      const x=frame%4*116,y=Math.floor(frame/4)*116;
+      assert.ok(!cellShape(png,x,y,116,116).empty, `${id}: quadro ${frame+1} vazio`);
+    }
   }
   const scene=new THREE.Scene(),sheet=new THREE.Texture({width:464,height:232});
   sheet.repeat.set(.25,.5);

@@ -3389,4 +3389,4 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 
 O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com conferência ao girar a câmera. Também pediu mais exemplos de NPC em pixel art 3D.
 
-40 de 115 versões têm folhas dedicadas. A prévia nativa usa a geometria do controlador e mostra Haku, Naruto Shippuden e Kimimaro durante uma volta completa da câmera. O padrão de criação inclui a queda e a leitura no tamanho de partida. Teuchi, Shikamaru e Tsunade têm protótipos animados em GLB, com prévias externas em Konoha.
+115 de 115 versões têm folhas dedicadas. A prévia nativa usa a geometria do controlador e mostra Haku, Naruto Shippuden e Kimimaro durante uma volta completa da câmera. O padrão de criação inclui a queda e a leitura no tamanho de partida. O usuário pediu que a malha preserve o boneco do sprite original, com o Blender como ferramenta. Teuchi e Shikamaru ganharam novos arquivos editáveis, com pose de repouso, interação e render de uma volta de câmera. A revisão de NPCs 3D segue fora da versão jogável.

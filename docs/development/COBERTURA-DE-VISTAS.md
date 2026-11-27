@@ -139,7 +139,7 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 
 ## Derrota antes do selamento · 27/11/2026
 
-Há **40 de 115 versões** com oito poses próprias em folhas 4×2. A queda passa pelo impacto, mão no peito, apoio dos joelhos e espera do selamento. O plano se orienta pela câmera em torno do ponto de apoio. A última célula aparece a 1,42 s e libera o E. [Padrão de criação](../../skills/criar-arte-shinobibonk/SKILL.md#derrota-e-selamento).
+Há **115 de 115 versões** com oito poses próprias em folhas 4×2. A queda passa pelo impacto, mão no peito, apoio dos joelhos e espera do selamento. O plano se orienta pela câmera em torno do ponto de apoio. A última célula aparece a 1,42 s e libera o E. [Padrão de criação](../../skills/criar-arte-shinobibonk/SKILL.md#derrota-e-selamento).
 
 | Versão | Folha dedicada |
 | --- | --- |
@@ -148,25 +148,64 @@ Há **40 de 115 versões** com oito poses próprias em folhas 4×2. A queda pass
 | Madara Armadura | `madara-derrota-v1.png` |
 | Hashirama Hokage | `hashirama-derrota-v1.png` |
 | Sasuke Genin | `sasuke-derrota-v1.png` |
+| Sakura Genin | `sakura-derrota-v1.png` |
 | Kakashi Jonin | `kakashi-derrota-v1.png` |
 | Itachi ANBU | `itachi-derrota-v1.png` |
 | Minato Jonin | `minato-derrota-v1.png` |
+| Tsunade Sannin | `tsunade-derrota-v1.png` |
+| Jiraiya Sannin | `jiraiya-derrota-v1.png` |
 | Orochimaru Sannin | `orochimaru-derrota-v1.png` |
 | Rock Lee Genin | `lee-derrota-v1.png` |
 | Neji Genin | `neji-derrota-v1.png` |
 | Hinata Genin | `hinata-derrota-v1.png` |
 | Shikamaru Genin | `shikamaru-derrota-v1.png` |
+| Temari Genin | `temari-derrota-v1.png` |
+| Tenten Genin | `tenten-derrota-v1.png` |
 | Pain | `pain-derrota-v1.png` |
+| Tobirama | `tobirama-derrota-v1.png` |
+| Kankuro Genin | `kankuro-derrota-v1.png` |
+| Might Guy Jonin | `guy-derrota-v1.png` |
 | Kushina | `kushina-derrota-v1.png` |
+| Asuma | `asuma-derrota-v1.png` |
+| Hiruzen Sarutobi Terceiro Hokage | `hiruzen-derrota-v1.png` |
+| A Terceiro Raikage | `raikage-terceiro-derrota-v1.png` |
+| A Quarto Raikage | `raikage-quarto-derrota-v1.png` |
+| Killer B Jinchūriki | `killer-b-derrota-v1.png` |
+| Ōnoki Terceiro Tsuchikage | `onoki-derrota-v1.png` |
+| Ao Veterano da Névoa | `ao-derrota-v1.png` |
+| Rasa Quarto Kazekage | `rasa-derrota-v1.png` |
 | Hanzō Salamandra | `hanzo-derrota-v1.png` |
+| Mei Terumī Quinta Mizukage | `mei-derrota-v1.png` |
+| Gengetsu Hōzuki Segundo Mizukage | `gengetsu-derrota-v1.png` |
 | Chōji Akimichi Genin | `choji-derrota-v1.png` |
+| Kiba Inuzuka Genin | `kiba-derrota-v1.png` |
+| Shino Aburame Genin | `shino-derrota-v1.png` |
+| Ino Yamanaka Genin | `ino-derrota-v1.png` |
+| Kurenai Yūhi Jōnin | `kurenai-derrota-v1.png` |
+| Iruka Umino Chūnin | `iruka-derrota-v1.png` |
+| Sai Time 7 | `sai-derrota-v1.png` |
+| Yamato Capitão do Time 7 | `yamato-derrota-v1.png` |
+| Shisui Uchiha Shunshin | `shisui-derrota-v1.png` |
+| Obito Uchiha Genin | `obito-derrota-v1.png` |
+| Hiashi Hyūga Chefe do Clã | `hiashi-derrota-v1.png` |
+| Hanabi Hyūga Clássico | `hanabi-derrota-v1.png` |
+| Kisame Hoshigaki Akatsuki | `kisame-derrota-v1.png` |
 | Zabuza Momochi Espadachim da Névoa | `zabuza-derrota-v1.png` |
+| Suigetsu Hōzuki Taka | `suigetsu-derrota-v1.png` |
+| Mangetsu Hōzuki Espadachim da Névoa | `mangetsu-derrota-v1.png` |
+| Karin Uzumaki Taka | `karin-derrota-v1.png` |
+| Nagato Uzumaki Edo Tensei | `nagato-derrota-v1.png` |
+| Sasori Akatsuki | `sasori-derrota-v1.png` |
 | Haku Caçador da Névoa | `haku-derrota-v1.png` |
+| Chiriku Templo do Fogo | `chiriku-derrota-v1.png` |
 | Sakumo Hatake Canino Branco | `sakumo-derrota-v1.png` |
+| Deidara Akatsuki | `deidara-derrota-v1.png` |
+| Hidan Akatsuki | `hidan-derrota-v1.png` |
 | Kakuzu Akatsuki | `kakuzu-derrota-v1.png` |
 | Konan Akatsuki | `konan-derrota-v1.png` |
 | Zetsu Akatsuki | `zetsu-derrota-v1.png` |
 | Jūgo Taka | `jugo-derrota-v1.png` |
+| Kabuto Yakushi Clássico | `kabuto-derrota-v1.png` |
 | Kimimaro Clássico | `kimimaro-derrota-v1.png` |
 | Jirōbō Quarteto do Som | `jirobo-derrota-v1.png` |
 | Kidōmaru Quarteto do Som | `kidomaru-derrota-v1.png` |
@@ -183,5 +222,41 @@ Há **40 de 115 versões** com oito poses próprias em folhas 4×2. A queda pass
 | Sasuke Rinnegan | `sasuke-rinnegan-derrota-v1.png` |
 | Sakura Shippuden | `sakura-shippuden-derrota-v1.png` |
 | Sakura Byakugou | `sakura-byakugou-derrota-v1.png` |
+| Gaara Kazekage | `gaara-kazekage-derrota-v1.png` |
+| Gaara Aliança | `gaara-alianca-derrota-v1.png` |
+| Madara Rinnegan | `madara-rinnegan-derrota-v1.png` |
+| Madara Seis Caminhos | `madara-seis-caminhos-derrota-v1.png` |
+| Hashirama Sábio | `hashirama-sabio-derrota-v1.png` |
+| Kakashi Hokage | `kakashi-hokage-derrota-v1.png` |
+| Kakashi Dois Mangekyō | `kakashi-dms-derrota-v1.png` |
+| Itachi Akatsuki | `itachi-akatsuki-derrota-v1.png` |
+| Minato Hokage | `minato-hokage-derrota-v1.png` |
+| Tsunade Hokage | `tsunade-hokage-derrota-v1.png` |
+| Tsunade Byakugou | `tsunade-byakugou-derrota-v1.png` |
+| Jiraiya Sábio | `jiraiya-sabio-derrota-v1.png` |
+| Orochimaru Som | `orochimaru-som-derrota-v1.png` |
+| Rock Lee Shippuden | `lee-shippuden-derrota-v1.png` |
+| Rock Lee Portões | `lee-portoes-derrota-v1.png` |
+| Neji Jonin | `neji-jonin-derrota-v1.png` |
+| Hinata Shippuden | `hinata-shippuden-derrota-v1.png` |
+| Hinata Leões | `hinata-leoes-derrota-v1.png` |
+| Shikamaru Estrategista | `shikamaru-estrategista-derrota-v1.png` |
+| Shikamaru Conselheiro | `shikamaru-conselheiro-derrota-v1.png` |
+| Temari Shippuden | `temari-shippuden-derrota-v1.png` |
+| Tenten Shippuden | `tenten-shippuden-derrota-v1.png` |
+| Kankuro Shippuden | `kankuro-shippuden-derrota-v1.png` |
+| Kankuro Aliança | `kankuro-alianca-derrota-v1.png` |
+| Might Guy Sexto Portão | `guy-sexto-portao-derrota-v1.png` |
+| Might Guy Sétimo Portão | `guy-setimo-portao-derrota-v1.png` |
+| Naruto Sétimo Hokage | `naruto-hokage-derrota-v1.png` |
+| Kabuto Yakushi Sábio do Dragão | `kabuto-sabio-derrota-v1.png` |
+| Orochimaru Akatsuki | `orochimaru-akatsuki-derrota-v1.png` |
+| Chōji Akimichi Quarta Guerra | `choji-guerra-derrota-v1.png` |
+| Kiba Inuzuka Shippuden | `kiba-shippuden-derrota-v1.png` |
+| Shino Aburame Shippuden | `shino-shippuden-derrota-v1.png` |
+| Ino Yamanaka Quarta Guerra | `ino-guerra-derrota-v1.png` |
+| Obito Uchiha Tobi · Akatsuki | `tobi-akatsuki-derrota-v1.png` |
+| Obito Uchiha Máscara Branca | `obito-guerra-derrota-v1.png` |
+| Hanabi Hyūga Adulta | `hanabi-adulta-derrota-v1.png` |
 
-As 75 versões restantes ainda usam a transição compartilhada. Confira cada folha em movimento e em uma volta de câmera no tamanho de partida.
+A conferência visual em partida continua pendente.

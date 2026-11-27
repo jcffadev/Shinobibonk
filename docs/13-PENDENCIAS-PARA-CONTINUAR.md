@@ -21,8 +21,8 @@
 **Codex · Arte, animação e apresentação**
 
 1. Conferir em partida retrato, selo animado, contador e avisos de onda, chefe e saída no Hagoromo.
-2. Completar as folhas de derrota por versão. 40 de 115 têm oito quadros próprios. Teste offline confere 16 rumos de câmera e a liberação do E. Conferir em partida as quedas, o clima e as transições do Exame e do Hagoromo. [Cobertura](development/COBERTURA-DE-VISTAS.md#derrota-antes-do-selamento--27112026).
-3. Refinar as três novas malhas de Teuchi, Shikamaru e Tsunade. Os estudos externos foram renderizados isolados em Konoha com câmera girando e clipes próprios. Revisar expressão, dobras, mãos e cabelo para aproximá-los dos sprites. [Skill de personagens 3D](../skills/criar-personagem-3d/SKILL.md).
+2. Conferir em partida as folhas de derrota das 115 versões, o clima e as transições do Exame e do Hagoromo. O teste offline confere o cadastro do elenco, 16 rumos de câmera e a liberação do E. [Cobertura](development/COBERTURA-DE-VISTAS.md#derrota-antes-do-selamento--27112026).
+3. Revisar os modelos externos de Teuchi e Shikamaru refeitos no Blender. A comparação com os sprites inclui repouso, interação, perfil e costas. Os arquivos editáveis ficam na pasta externa. [Skill de personagens 3D](../skills/criar-personagem-3d/SKILL.md).
 4. Revisar os 13 jutsus da auditoria, a transição da área de acerto aos impactos e a entrada das nove Bijū. Continuar a revisão das transições do elenco e do material 3D dos mapas.
 5. Conferir desempenho visual com horda máxima, água, vegetação, sombras, efeitos e zoom. A validação gráfica em navegador segue a política vigente.
 
