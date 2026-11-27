@@ -227,3 +227,20 @@ export function slideAlong(unpushed: Point, pushed: Point, toward: Point, step: 
   pushed.x += tx * step; pushed.z += tz * step;
   return true;
 }
+
+/**
+ * Contorno com memória (27/11/2026 — usuário: "monstros não podem ficar travados nos objetos eles tem que saber contornar").
+ * O `slideAlong` escolhe a cada quadro o lado da parede mais perto do alvo; no meio de uma parede comprida (cerca, muro,
+ * escadaria) com o jogador bem atrás, esse lado troca de um quadro para o outro e o monstro treme no lugar. Aqui o monstro
+ * escolhe um lado na primeira batida e o mantém enquanto continuar encostando (e por `hold` segundos depois), até dar a volta.
+ */
+export type Detour = { side: 1 | -1; until: number };
+export const DETOUR_RULES = { hold: 1.2 };
+export function steerAround(unpushed: Point, pushed: Point, toward: Point, step: number, now: number, memory?: Detour): Detour | undefined {
+  const nx = pushed.x - unpushed.x, nz = pushed.z - unpushed.z, len = Math.hypot(nx, nz);
+  if (len < 1e-5 || step <= 0) return memory;
+  const tx = -nz / len, tz = nx / len;
+  const side: 1 | -1 = memory && now < memory.until ? memory.side : tx * (toward.x - pushed.x) + tz * (toward.z - pushed.z) < 0 ? -1 : 1;
+  pushed.x += tx * side * step; pushed.z += tz * side * step;
+  return { side, until: now + DETOUR_RULES.hold };
+}

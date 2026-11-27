@@ -3444,3 +3444,10 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > Naruto academia a ultimate dele tem que ser o vários clones das sombras... a skill inicial tem que ser o jutsu sexy lembra?
 
 **Resposta.** Os degraus agora valem para os monstros: sobem um degrau por vez ou contornam; não atravessam a parede. Naruto Academia começa com o Jutsu Sexy e a ultimate é Tajū Kage Bunshin. Depois do pedido "Habilidade inicial do Naruto inicial do naruto academia precisa de buff", o Jutsu Sexy ficou com poder 1,9 e 60% de atordoar (no simulador ele era o único inicial que não matava o comum de um golpe no 1º minuto). **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Monstros contornam objetos (Claude Code)
+
+> monstros não podem ficar travados nos objetos eles tem que saber contornar
+> temos animação para o jutsu sexy?
+
+**Resposta.** O monstro agora escolhe um lado ao bater num obstáculo e mantém até dar a volta, em vez de trocar de lado a cada quadro. Jutsu Sexy não tem animação própria (usa o efeito genérico de área); anotado para o Codex com a do Tajū Kage Bunshin. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

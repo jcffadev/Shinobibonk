@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 27/11/2026 · Monstros contornam objetos sem travar (Claude Code)
+
+- **Pedido do usuário:** "monstros não podem ficar travados nos objetos eles tem que saber contornar"
+- **Causa:** ao encostar numa casa, caixa ou muro, o monstro deslizava para o lado mais perto do jogador, recalculado a cada quadro. No meio de uma parede comprida com o jogador bem atrás, esse lado trocava de um quadro para o outro e o monstro tremia no lugar. A escadaria, sólida desde a mudança anterior, nem tinha esse deslize.
+- **Correção** (`steerAround` em `collision.ts`, `DETOUR_RULES.hold` 1,2 s): na primeira batida o monstro escolhe um lado e o mantém enquanto continuar encostando (e 1,2 s depois), até dar a volta. Vale para casas, caixas e escadaria.
+- **Testes:** 1 teste novo em `tests/escadaria-monstros.test.mjs` (muro de 12 m com o jogador bem atrás: sem a memória não passa em 200 passos; com ela, dá a volta) e o de colisão atualizado; 1 mutação nova e a da escadaria atualizada, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** horda contornando cercas, muros e a escadaria da Vila da Folha.
+
 ## 27/11/2026 · Escadaria sólida para os monstros e Naruto Academia com Jutsu Sexy inicial e Tajū Kage Bunshin (Claude Code)
 
 - **Pedidos do usuário:** "Habilidade inicial do Naruto inicial do naruto academia precisa de buff" · "monstros ainda conseguindo passaar dentro dessa escadaria... não deve ser possivel eles entrarem dentro dela, só passar por cima ou do lado" · "Naruto academia a ultimate dele tem que ser o vários clones das sombras... a skill inicial tem que ser o jutsu sexy lembra?"

@@ -38,6 +38,25 @@ test('monstro sobe pelos degraus, um de cada vez, e desce sem travar', () => {
 
 test('a partida aplica os degraus aos monstros', () => {
   const canvas = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
-  assert.ok(canvas.includes('solids.resolveStairs(p,p.y-enemy.sprite.scale.y*.46);'), 'degrau alto bloqueia');
+  assert.ok(canvas.includes('hitStair=solids.resolveStairs(p,foot)'), 'degrau alto bloqueia');
   assert.ok(canvas.includes('ep.y=Math.max(standHeight(ep.x,ep.z),activeInstance||arena?-Infinity:solids.enemyStairTop(ep.x,ep.z,foot))'), 'altura segue o degrau');
+});
+
+test('monstro contorna uma parede comprida com o jogador bem atrás, sem travar (27/11/2026)', async () => {
+  // Usuário: "monstros não podem ficar travados nos objetos eles tem que saber contornar".
+  const { steerAround, slideAlong } = await load('/src/scene/collision.ts');
+  const wall = () => { const solids = createSolids(); solids.addBox(0, 0, 6, .4, 2); return solids; }; // muro de 12 m entre os dois
+  const run = (useMemory) => {
+    const solids = wall(), enemy = { x: 0, z: -3 }, player = { x: 0, z: 3 }; let memory, t = 0;
+    for (let i = 0; i < 400; i++) {
+      t += .05; const dx = player.x - enemy.x, dz = player.z - enemy.z, d = Math.hypot(dx, dz);
+      enemy.x += dx / d * .15; enemy.z += dz / d * .15;
+      const bx = enemy.x, bz = enemy.z;
+      if (solids.resolveBig(enemy)) { if (useMemory) memory = steerAround({ x: bx, z: bz }, enemy, player, .15, t, memory); else slideAlong({ x: bx, z: bz }, enemy, player, .15); solids.resolveBig(enemy); }
+      if (enemy.z > .8) return i;
+    }
+    return -1;
+  };
+  const steps = run(true);
+  assert.ok(steps > 0 && steps < 200, 'dá a volta no muro em menos de 200 passos (' + steps + ')');
 });
