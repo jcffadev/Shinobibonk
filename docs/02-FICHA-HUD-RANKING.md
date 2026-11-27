@@ -76,3 +76,8 @@ Atualizar a posição e distância até o Top 1 após cada abate. Guardar partid
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 O HUD exibe o HP inteiro atual e máximo. Os mesmos valores aparecem no sprite da barra sob o jogador. A cor da raridade cobre toda a área do ícone nos cartões de escolha.
+
+
+## Cronômetro de clima e preço em Ryu · 26/11/2026
+
+O tempo de clima aparece junto ao nome do clima na barra da missão. As partículas ficam atrás do HUD e deixam passar cliques. O Mercador e a Tsunade mostram o mesmo custo usado pela transação, com selo de moeda e destaque quando falta saldo. O preço na cena aparece perto do item ou ponto de interação elegível, com o mesmo realce.

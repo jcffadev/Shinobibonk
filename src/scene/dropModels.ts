@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { SCROLL_STYLES, scrollStyle, type ScrollStyle } from './dropSprites.ts';
+import { GUIZO_BY_ID, guizoFromKind, type GuizoPickupKind } from '../game/guizos.ts';
 
 export type MonsterDropKind = 'xp' | 'ryu' | 'chakra' | 'pill' | 'item' | 'onigiri';
 const MONSTER_DROPS = ['xp', 'ryu', 'chakra', 'pill', 'item', 'onigiri'] as const;
 export type ThrownWeapon = 'kunai' | 'shuriken' | 'fuma';
 type BatchedModel = MonsterDropKind | ThrownWeapon;
-type GroundModel = BatchedModel | 'scroll' | 'freeScroll' | 'riceMound' | 'cursed';
+type GroundModel = BatchedModel | 'scroll' | 'freeScroll' | GuizoPickupKind | 'riceMound' | 'cursed';
 const BATCHED_MODELS = [...MONSTER_DROPS,'kunai','shuriken','fuma'] as const;
 
 function modelParts() {
@@ -78,30 +79,62 @@ function scroll(parts:ReturnType<typeof modelParts>, style:ScrollStyle, free:boo
 }
 
 function rice(parts:ReturnType<typeof modelParts>, x=0,y=0,z=0,size=1,yaw=0) {
-  const grains = new THREE.CylinderGeometry(.18,.27,.16,3,1);
-  grains.rotateX(-Math.PI/2).scale(size,size,size).rotateY(yaw);
-  parts.add(grains,'#fff2c9',x,y+.26*size,z);
-  const wrap = new THREE.BoxGeometry(.18*size,.19*size,.185*size).rotateY(yaw);
-  parts.add(wrap,'#263a25',x,y+.12*size,z);
+  const triangle=new THREE.Shape().moveTo(-.24,.05).lineTo(-.255,.13)
+    .quadraticCurveTo(-.245,.21,-.17,.30).lineTo(-.062,.438)
+    .quadraticCurveTo(0,.503,.062,.438).lineTo(.17,.30)
+    .quadraticCurveTo(.245,.21,.255,.13).lineTo(.24,.05)
+    .quadraticCurveTo(.20,0,.14,0).lineTo(-.14,0).quadraticCurveTo(-.20,0,-.24,.05);
+  const rice=new THREE.ExtrudeGeometry(triangle,{depth:.18,curveSegments:3,steps:1,
+    bevelEnabled:true,bevelThickness:.041,bevelSize:.038,bevelSegments:2});
+  rice.translate(0,.039,-.09).scale(size,size,size).rotateY(yaw);
+  parts.add(rice,'#fff2d4',x,y,z);
+  const wrap=new THREE.BoxGeometry(.19,.185,.278).translate(0,.097,0).scale(size,size,size).rotateY(yaw);
+  parts.add(wrap,'#263d2e',x,y,z);
+  for(const [gx,gy,gz] of [[-.14,.26,.124],[.12,.20,.123],[.025,.35,.121],[-.071,.30,-.128],[.16,.249,-.105]]){
+    const grain=new THREE.SphereGeometry(.020,5,3).scale(1.15,.62,.47).translate(gx,gy,gz).scale(size,size,size).rotateY(yaw);
+    parts.add(grain,'#dfc8a1',x,y,z);
+  }
 }
 
 function shuriken(parts:ReturnType<typeof modelParts>, tint:string, ridge:string, large=false) {
-  const blade = new THREE.Shape().moveTo(-.12,-.07).lineTo(-.06,.17).lineTo(.07,.51).lineTo(.15,.27).lineTo(.19,.08).lineTo(.13,-.07).closePath();
-  for (let i=0;i<4;i++) {
-    const yaw = i*Math.PI/2;
-    const edge = new THREE.ExtrudeGeometry(blade,{depth:.028,bevelEnabled:true,bevelSegments:1,bevelThickness:.015,bevelSize:.019,steps:1});
-    edge.rotateX(-Math.PI/2).rotateY(yaw);
-    if(large)edge.scale(1.32,1,1.32);
-    parts.add(edge,tint,0,.021,0);
-    const stripe=new THREE.BoxGeometry(.023,.012,.20).translate(.047,.064,-.24).rotateY(yaw);
-    parts.add(stripe,ridge,0,0,0);
+  const width=large?1.35:1;
+  const outline=new THREE.Shape();
+  const quarter=[[-.142,.153],[-.082,.27],[.045,.55],[.135,.274]];
+  for(let i=0;i<4;i++)for(const [n,[x,z]] of quarter.entries()){
+    const a=-i*Math.PI/2,px=x*Math.cos(a)-z*Math.sin(a),pz=x*Math.sin(a)+z*Math.cos(a);
+    if(i===0&&n===0)outline.moveTo(px,pz);
+    else outline.lineTo(px,pz);
   }
-  parts.add(new THREE.TorusGeometry(.123,.037,4,10).rotateX(-Math.PI/2),ridge,0,.064,0);
+  outline.closePath();
+  const eye=new THREE.Path().absarc(0,0,.079,0,Math.PI*2,true);
+  outline.holes.push(eye);
+  const blade=new THREE.ExtrudeGeometry(outline,{depth:.040,bevelEnabled:true,bevelSegments:1,
+    bevelThickness:.022,bevelSize:.014,curveSegments:8,steps:1}).rotateX(-Math.PI/2).scale(width,1,width);
+  parts.add(blade,tint,0,.012,0);
+  const bevel=new THREE.TorusGeometry(.104*width,.011,4,16).rotateX(-Math.PI/2);
+  parts.add(bevel,ridge,0,.070,0);
+  const cut=new THREE.Shape().moveTo(.030,.49).lineTo(.046,.52).lineTo(.104,.265).lineTo(.072,.218).closePath();
+  for(let i=0;i<4;i++){
+    const glint=new THREE.ShapeGeometry(cut).rotateX(-Math.PI/2).rotateY(i*Math.PI/2).scale(width,1,width);
+    parts.add(glint,ridge,0,.075,0);
+  }
 }
 
 function makeGeometry(kind:GroundModel,style:ScrollStyle) {
   const parts=modelParts();
   const { add, box, cylinder }=parts;
+  const guizo=guizoFromKind(kind);
+  if(guizo){
+    const color=GUIZO_BY_ID[guizo].color;
+    const metal=new THREE.SphereGeometry(.25,12,8,0,Math.PI*2,.19,Math.PI-.52);
+    add(metal,color,0,.27,0);
+    add(new THREE.SphereGeometry(.222,10,6),'#3d2927',0,.22,0);
+    add(new THREE.TorusGeometry(.211,.024,4,12).rotateX(-Math.PI/2),'#f2cc8a',0,.13,0);
+    add(new THREE.SphereGeometry(.065,7,5),'#755230',0,.065,0);
+    add(new THREE.TorusGeometry(.074,.025,5,10),'#f2cc8a',0,.54,0);
+    add(new THREE.TorusGeometry(.096,.024,5,10).rotateY(.6),color,0,.62,0);
+    return parts.finish();
+  }
   switch(kind) {
     case 'scroll': case 'freeScroll': case 'item':
       scroll(parts,style,kind==='freeScroll');
@@ -181,7 +214,7 @@ export function createDropModels(scene:THREE.Scene, capacity:number) {
     batches.set(kind,mesh);
     return mesh;
   }
-  const counts:Record<BatchedModel,number>={xp:0,ryu:0,chakra:0,pill:0,item:0,onigiri:0,kunai:0,shuriken:0,fuma:0};
+  const counts=Object.fromEntries(BATCHED_MODELS.map(kind=>[kind,0])) as Record<BatchedModel,number>;
   const bounds=new THREE.Sphere();
   return {
     mesh(kind:GroundModel,variant=0){

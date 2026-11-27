@@ -675,3 +675,21 @@ Os retratos usam o enquadramento de corpo inteiro da seleção. Nome e afinidade
 | Contexto do jogo de referência (fora do repo) | pasta arquivada na raiz do workspace: `CONTEXTO-COMPLETO.md` + `prints/` |
 | Skills do projeto (como trabalhar) | [skills/contexto-e-decisao](../skills/contexto-e-decisao/SKILL.md) (primeiro passo) · [skills/documentar-projeto](../skills/documentar-projeto/SKILL.md) · [skills/publicar-github](../skills/publicar-github/SKILL.md) · [skills/criar-arte-shinobibonk](../skills/criar-arte-shinobibonk/SKILL.md) · [skills/movimentar-shinobi](../skills/movimentar-shinobi/SKILL.md) · [skills/referencia-externa](../skills/referencia-externa/SKILL.md) |
 | Referências próprias do projeto (screenshots/concept art) | `references/` · `history/` (versões antigas) |
+
+
+### Qual é o padrão de personagens 3D chibi? · 26/11/2026
+
+A pixel art do atlas da versão orienta as vistas, a silhueta e a roupa. O ImageGen produz uma prancha e uma sequência de corrida para testar a direção. Uma malha 3D articulada com acabamento pixelado é a meta para o NPC aprovado. O estudo de OpenGL revelou articulações e formas simples demais para reproduzir a prancha. A skill registra o fluxo, as vistas e o limite de qualidade. [Criação de personagem 3D](../skills/criar-personagem-3d/SKILL.md).
+
+### Como funcionam os megas de clima e a queda para selamento? · 26/11/2026
+
+Névoa, nevasca e areia rodam nas quatro vilas. Haku usa flocos, Gaara poeira e Rasa partículas douradas. O Mega do clima tem marca de origem persistente que impede selamento. Os capturáveis recuam, trazem a manga em direção ao peito, baixam o joelho e assentam antes de liberar E. Validação offline concluída. Conferência em partida fica na fila.
+
+
+### Como entram nas arenas do Exame e do Hagoromo? · 27/11/2026
+
+A porta do Exame liga a floresta à sala de duelos. O E libera a passagem ao completar tempo e abates. C leva a um espaço separado com o Sábio ao fundo. Ao voltar ou retomar uma missão salva durante o treinamento, restaura-se a origem.
+
+### Como está a cobertura de derrota e a amostra de NPCs? · 27/11/2026
+
+Seis versões têm poses próprias com oito quadros e apoio ao joelho. A matriz e as skills exigem folha por versão, com a aparência do atlas atual. Os onze NPCs da missão têm estudo 3D chibi com textura pixel art, clipe próprio e GIF individual, fora da versão jogável até revisar acabamento.

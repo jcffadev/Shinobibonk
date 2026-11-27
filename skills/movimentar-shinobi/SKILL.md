@@ -69,6 +69,8 @@ Use `acrobaticsArt` quando a versão já tiver ataque aprovado e precisar soment
 
 ## Corpo caído (Mega Elite / Shinobi para selar) · rodada 55
 
+Para novas folhas, desenhe poses dedicadas por versão conforme a [skill de arte](../criar-arte-shinobibonk/SKILL.md#derrota-e-selamento). A abertura do E usa a conclusão da pose ajoelhada a 1,42 s. Saves restauram a última pose. Durante a rotação da câmera, a folha mantém o apoio no ponto da derrota e a fase continua. Valide a leitura em uma volta completa. A matriz de cobertura registra separadamente quem ainda usa a animação de transição.
+
 - `src/scene/fallenShinobi.ts` (`createFallenBody`): a arte da forma segue uma malha articulada. O shinobi cambaleia até 0,24 s, dobra o joelho até 0,63 s, tomba de lado até 1,09 s e assenta até 1,36 s. O corpo deitado acompanha o piso e mantém a orientação no mundo. O contorno é vermelho para Mega Elite e ciano para shinobi de desbloqueio. O E fica disponível após o assentamento, e um corpo restaurado do save já começa deitado.
 - Luz: halo no chão que acompanha o relevo (disco suave + anel) e feixe vertical bem fraco, mistura normal (sem aditivo/bloom), `fog:false` para aparecer na névoa, pulsação lenta (2,6 s) e opacidade ≤ 0,72 (cor do contorno clareada 25%). Modo H: só o anel, fixo em 0,45, sem feixe nem poeira. Minimapa/mapa: marcador com retrato e ⛓.
 - E dentro de 10 m do **centro do corpo deitado** captura (ritual ou selamento direto conforme a configuração); G recusa no ritual; troca de zona remove o corpo. O save guarda o centro e `account`.

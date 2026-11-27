@@ -53,7 +53,7 @@ test('o duelo vencido fica salvo na conta uma vez', () => {
 test('aba Eventos e duelo ligados no jogo', () => {
   const canvas = fs.readFileSync(new URL('../src/scene/GameCanvas.tsx', import.meta.url), 'utf8');
   const main = fs.readFileSync(new URL('../src/main.tsx', import.meta.url), 'utf8');
-  for (const wired of ['const duelId=resume?.eventDuel??eventDuel', 'duelReady(duel,elapsed,kills)&&!enemyList.some(e=>e.account&&e.heroId===duelFoe)', 'spawnEnemy(false,false,false,duelFoe,true)',
+  for (const wired of ['const duelId=resume?.eventDuel??eventDuel', "if(!duelReady(duel,elapsed,kills))", "setInstance('exam-hall')", 'spawnEnemy(false,false,false,duelFoe,true)',
     'completeEventDuel(duel.id,heroId)', 'const duelNote=accountSeal(p.heroId)', 'const duelNote=accountSeal(sealing.heroId)', 'function serializeRun():SavedRun{return {eventDuel:duelId,',
     "else if(!arena&&!hagoromoEvent&&!testRun&&!sealing&&accountEncounters<2"]) assert.ok(canvas.includes(wired), wired);
   for (const wired of ["{page === 'events' && <EventsPage", 'eventDuel={page===\'game\'?eventDuel:undefined}', 'onRetry={retryRun}', "onClick={()=>changePage('events')}>Eventos</button>"]) assert.ok(main.includes(wired), wired);

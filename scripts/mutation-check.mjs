@@ -11,6 +11,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MUTATIONS = [
+  { regra: 'porta do Exame exige os objetivos prévios', arquivo: 'src/scene/GameCanvas.tsx', de: "if(!duelReady(duel,elapsed,kills)){eventToast='Complete", para: "if(false){eventToast='Complete" },
+  { regra: 'salvar durante o Hagoromo conserva o ponto da missão', arquivo: 'src/scene/GameCanvas.tsx', de: 'player:{x:hagoromoEvent?.origin.x??player.position.x', para: 'player:{x:player.position.x' },
+  { regra: 'Mega dos eventos de clima não pode ser capturado', arquivo: 'src/scene/GameCanvas.tsx', de: '!enemy.youth&&!enemy.weatherElite){const pending', para: '!enemy.youth){const pending' },
   { regra: 'Tab bloqueia navegação também no auto-repeat', arquivo: 'src/game/movementInput.ts', de: 'event.preventDefault();\n      if (event.repeat) return;', para: 'if (event.repeat) return;\n      event.preventDefault();' },
   { regra: 'coleta local deixa o drop distante no chão', arquivo: 'src/game/drops.ts', de: 'if(cell)yield* cell.entries;', para: 'if(cell)yield* grounded.keys();' },
   { regra: 'Hagoromo invoca o chefe antes de oferecer a recompensa', arquivo: 'src/game/hagoromoTraining.ts', de: "?'wave':'boss'", para: "?'wave':'reward'" },

@@ -134,3 +134,10 @@ Mega elites naturais escolhem uma versão da família conforme zona e rank da mi
 ## Rodada 52 · 12/11/2026 — áudio, preparação, selamento e arte
 
 A derrota de um Mega Elite deixa seu corpo no terreno. Até 10 m, E inicia o selamento. Uma interação mais próxima tem prioridade. Com animação habilitada, E/G no ritual confirmam ou recusam. Com a opção desabilitada, E sela diretamente, com escolha de troca caso a equipe esteja cheia. Os candidatos no terreno são preservados na missão salva. A armadilha de corpo caído usa `fallen-scout-v1.png`.
+
+
+## Animação de derrota · 26/11/2026
+
+As versões capturáveis passam pelo mesmo controlador com textura da forma atual. O tronco recua no impacto, a manga externa se aproxima do peito durante a perda de apoio e a canela chega ao chão. A cabeça baixa com o peso do corpo. O personagem permanece ajoelhado no ponto da derrota após o assentamento a 1,42 s. O E usa o raio existente de 10 m. Saves restauram a pose assentada. Halo, região de captura e facho mantêm a regra do modo H.
+
+Cada folha desenhada tem oito poses e é cadastrada pelo ID exato da versão. O controlador orienta o plano pela câmera e conserva o ponto de apoio e a fase da queda durante a rotação. As versões pendentes ainda usam a transição compartilhada. [Cobertura atual](development/COBERTURA-DE-VISTAS.md#derrota-antes-do-selamento--27112026). Megas gerados pelo clima ficam fora da captura.

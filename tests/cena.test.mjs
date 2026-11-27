@@ -41,6 +41,21 @@ test('Mega Elite cambaleia, baixa os joelhos e estabiliza antes de poder selar',
   assert.equal(b.debug().phase,'kneeling','continua ajoelhado até ser capturado');
 });
 
+test('a derrota reage ao golpe, protege o peito e relaxa após apoiar o joelho',()=>{
+  const {scene,b}=body();
+  const vertices=scene.getObjectByName('shinobi-em-queda').geometry.attributes.position;
+  const before=vertices.array.slice();
+  b.update(.17,false);
+  assert.ok(b.debug().angle<0,'o tronco recua no impacto');
+  assert.equal(b.ready,false);
+  b.update(.4,false);
+  assert.ok(b.debug().chest>.95,'manga se contrai durante a queda');
+  assert.notDeepEqual(vertices.array,before);
+  b.update(F.FALLEN_TIMING.settle,false);
+  assert.ok(b.debug().chest>.2&&b.debug().chest<.4,'apoio termina com o tronco relaxado');
+  assert.equal(b.ready,true);
+});
+
 test('pose ajoelhada mantém apoio no terreno e a silhueta acima da encosta',()=>{
   const ground=(x,z)=>.15*x+.1*z;
   const {scene,b}=body({ground});

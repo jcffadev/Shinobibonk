@@ -110,7 +110,7 @@ test('novas partidas usam as vilas e uma partida antiga retoma em mapas_basicos'
   assert.equal(missionMapLayout({mapLayout:'vilas'}),'vilas');
   const canvas=readFileSync(new URL('../src/scene/GameCanvas.tsx',import.meta.url),'utf8');
   assert.match(canvas,/mapLayout:MapLayout=enabledRef.current\?missionMapLayout\(resume\):'mapas_basicos'/);
-  assert.match(canvas,/mapLayout,villageSeed,surfaceElevation:traversal.elevation/);
+  assert.match(canvas,/mapLayout,villageSeed,surfaceElevation:hagoromoEvent\?hagoromoEvent\.origin\.elevation:traversal\.elevation/);
   assert.match(canvas,/resume.villageSeed\?\?0/);
   assert.match(canvas,/villageActive=false;traversal.reset\(\)/);
 });

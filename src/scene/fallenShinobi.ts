@@ -3,8 +3,8 @@ import * as THREE from 'three';
 /**
  * Rodada 55 — corpo caído do Mega Elite (contorno vermelho) e do Shinobi para selar (contorno ciano).
  *
- * A arte da forma é separada em perna e tronco durante o cambaleio e a descida aos joelhos.
- * A pose ajoelhada acompanha o chão, com respiração leve. O ponto da queda ancora o raio de 10 m do E.
+ * A derrota passa por impacto, gesto de proteção no peito, descida ao joelho e recuperação curta do peso.
+ * A pose baixa mantém a arte da forma e o contato no solo. O ponto da queda ancora o raio de 10 m do E.
  *
  * Luz: halo no chão na cor do contorno (disco suave + anel), que acompanha o relevo, pulsa devagar e em baixa
  * intensidade (mistura normal, sem aditivo → não estoura nem gera bloom), sem névoa (fog:false) para ser visto
@@ -16,15 +16,79 @@ import * as THREE from 'three';
  * - Área de captura: círculo no chão com o raio do E (`areaRadius`, 10 m), na cor do contorno, preenchimento
  *   bem fraco e borda marcada, acompanhando o relevo. Pulsa devagar; no modo H fica fixo.
  */
-export const FALLEN_TIMING = { stagger: .26, kneel: .92, settle: 1.23 } as const;
+export const FALLEN_TIMING = { stagger: .34, kneel: 1.04, settle: 1.42 } as const;
+export const DEFEAT_SHEETS: Readonly<Partial<Record<string,string>>> = {
+  naruto: '/assets/shinobi-defeat/naruto-derrota-v1.png',
+  zabuza: '/assets/shinobi-defeat/zabuza-derrota-v1.png',
+  gaara: '/assets/shinobi-defeat/gaara-derrota-v1.png',
+  haku: '/assets/shinobi-defeat/haku-derrota-v1.png',
+  hanzo: '/assets/shinobi-defeat/hanzo-derrota-v1.png',
+  sakumo: '/assets/shinobi-defeat/sakumo-derrota-v1.png',
+  'naruto-genin': '/assets/shinobi-defeat/naruto-genin-derrota-v1.png',
+  'kakuzu': '/assets/shinobi-defeat/kakuzu-derrota-v1.png',
+  'naruto-shippuden': '/assets/shinobi-defeat/naruto-shippuden-derrota-v1.png',
+  'konan': '/assets/shinobi-defeat/konan-derrota-v1.png',
+  'sasuke': '/assets/shinobi-defeat/sasuke-derrota-v1.png',
+  'jugo': '/assets/shinobi-defeat/jugo-derrota-v1.png',
+  'naruto-kyuubi': '/assets/shinobi-defeat/naruto-kyuubi-derrota-v1.png',
+  'zetsu': '/assets/shinobi-defeat/zetsu-derrota-v1.png',
+  'itachi': '/assets/shinobi-defeat/itachi-derrota-v1.png',
+  'jirobo': '/assets/shinobi-defeat/jirobo-derrota-v1.png',
+  'kushina': '/assets/shinobi-defeat/kushina-derrota-v1.png',
+  'kidomaru': '/assets/shinobi-defeat/kidomaru-derrota-v1.png',
+  'orochimaru': '/assets/shinobi-defeat/orochimaru-derrota-v1.png',
+  'dosu': '/assets/shinobi-defeat/dosu-derrota-v1.png',
+  'kakashi': '/assets/shinobi-defeat/kakashi-derrota-v1.png',
+  'kimimaro': '/assets/shinobi-defeat/kimimaro-derrota-v1.png',
+  'pain': '/assets/shinobi-defeat/pain-derrota-v1.png',
+  'tayuya': '/assets/shinobi-defeat/tayuya-derrota-v1.png',
+  'madara': '/assets/shinobi-defeat/madara-derrota-v1.png',
+  'sakon-ukon': '/assets/shinobi-defeat/sakon-ukon-derrota-v1.png',
+  'lee': '/assets/shinobi-defeat/lee-derrota-v1.png',
+  'zaku': '/assets/shinobi-defeat/zaku-derrota-v1.png',
+  'neji': '/assets/shinobi-defeat/neji-derrota-v1.png',
+  'kin': '/assets/shinobi-defeat/kin-derrota-v1.png',
+  'hinata': '/assets/shinobi-defeat/hinata-derrota-v1.png',
+  'juzo': '/assets/shinobi-defeat/juzo-derrota-v1.png',
+  'choji': '/assets/shinobi-defeat/choji-derrota-v1.png',
+  'sasuke-rinnegan': '/assets/shinobi-defeat/sasuke-rinnegan-derrota-v1.png',
+  'hashirama': '/assets/shinobi-defeat/hashirama-derrota-v1.png',
+  'sakura-shippuden': '/assets/shinobi-defeat/sakura-shippuden-derrota-v1.png',
+  'shikamaru': '/assets/shinobi-defeat/shikamaru-derrota-v1.png',
+  'sasuke-shippuden': '/assets/shinobi-defeat/sasuke-shippuden-derrota-v1.png',
+  'minato': '/assets/shinobi-defeat/minato-derrota-v1.png',
+  'sakura-byakugou': '/assets/shinobi-defeat/sakura-byakugou-derrota-v1.png',
+};
+const DEFEAT_FRAME_AT=[0,.13,.28,.48,.70,.90,1.08,1.42];
+export function defeatFrame(seconds:number) {
+  for(let frame=DEFEAT_FRAME_AT.length-1;frame>0;frame--){
+    if(seconds>=DEFEAT_FRAME_AT[frame])return frame;
+  }
+  return 0;
+}
+const defeatSheets=new Map<string,THREE.Texture>();
+export function loadDefeatSheet(id:string) {
+  const path=DEFEAT_SHEETS[id];
+  if(!path)return;
+  let texture=defeatSheets.get(path);
+  if(!texture){
+    texture=new THREE.TextureLoader().load(path);
+    texture.colorSpace=THREE.SRGBColorSpace;
+    texture.magFilter=texture.minFilter=THREE.NearestFilter;
+    texture.generateMipmaps=false;
+    texture.repeat.set(.25,.5);
+    defeatSheets.set(path,texture);
+  }
+  return texture.clone();
+}
 type FallPhase = 'stagger' | 'kneel' | 'settle' | 'kneeling';
 
 export type FallenBody = {
   /** Ponto da derrota no chão (fixo no mundo). */
   readonly position: THREE.Vector3;
   readonly ready: boolean;
-  update(dt: number, hidden: boolean): void;
-  debug(): { phase: FallPhase; angle: number; knee: number; halo: number; beam: number; area: number; areaRadius: number; x: number; z: number };
+  update(dt: number, hidden: boolean, viewRight?: THREE.Vector3): void;
+  debug(): { phase: FallPhase; angle: number; knee: number; chest: number; halo: number; beam: number; area: number; areaRadius: number; x: number; z: number };
   dispose(): void;
 };
 
@@ -32,6 +96,8 @@ type Options = {
   scene: THREE.Scene;
   /** Textura (compartilhada, NÃO é descartada aqui) do sprite estático do personagem. */
   map: THREE.Texture;
+  /** Atlas 4×2 com poses desenhadas para esta versão, com uma textura por corpo. */
+  defeatSheet?: THREE.Texture;
   width: number;
   height: number;
   /** Ponto dos pés na derrota ou ponto ancorado na restauração do save. */
@@ -127,7 +193,7 @@ function outlineMaterial(map: THREE.Texture, color: string) {
 }
 
 export function createFallenBody(o: Options): FallenBody {
-  const { scene, map, width: w, height: h, ground, color } = o;
+  const { scene, map, defeatSheet, width: w, height: h, ground, color } = o;
   const right = new THREE.Vector3(o.right.x, 0, o.right.z);
   if (right.lengthSq() < 1e-6) right.set(1, 0, 0);
   right.normalize();
@@ -135,7 +201,7 @@ export function createFallenBody(o: Options): FallenBody {
   const restY = ground(o.x,o.z);
   const rest = new THREE.Vector3(o.x,restY,o.z);
 
-  const bodyGeo=new THREE.PlaneGeometry(1,1,4,20);
+  const bodyGeo=new THREE.PlaneGeometry(1,1,12,30);
   const outlineGeo=bodyGeo.clone();
   const body = new THREE.Mesh(bodyGeo,new THREE.MeshBasicMaterial({ map, transparent: true, alphaTest: .1, depthWrite: false, side: THREE.DoubleSide }));
   const outline = new THREE.Mesh(outlineGeo,outlineMaterial(map, color));
@@ -169,7 +235,7 @@ export function createFallenBody(o: Options): FallenBody {
   scene.add(area, shadow, halo, outline, body, beam, dust);
 
   let t = o.instant ? FALLEN_TIMING.settle + 1 : 0;
-  let angle = 0, knee = 0, haloShown = 0, beamShown = 0, areaShown = 0;
+  let angle = 0, knee = 0, chest = 0, haloShown = 0, beamShown = 0, areaShown = 0;
   let phase: FallPhase = 'stagger';
   const tint = new THREE.Color();
   const poseUv=bodyGeo.attributes.uv,vertices=bodyGeo.attributes.position,edgeVertices=outlineGeo.attributes.position;
@@ -177,45 +243,79 @@ export function createFallenBody(o: Options): FallenBody {
   const place = (hidden: boolean) => {
     const { stagger, kneel, settle } = FALLEN_TIMING;
     const bend=THREE.MathUtils.smoothstep(t,stagger,kneel);
-    let lean=.28;
-    if (t < stagger) {
-      phase = 'stagger';
-      const k = t / stagger;
-      lean = Math.sin(t * 20) * .09 * (1 - k) + .14 * k;
-    } else if (t < kneel) {
-      phase='kneel';
-      lean=.14+.25*bend;
-    } else if (t < settle) {
-      phase='settle';
-      lean=THREE.MathUtils.lerp(.39,.28,THREE.MathUtils.smoothstep(t,kneel,settle));
-    } else {
-      phase='kneeling';
-    }
-    angle = lean;
+    const impactTime=Math.min(1,t/stagger);
+    const recoil=Math.sin(Math.PI*impactTime)*.23;
+    const impactDip=-.06*Math.sin(Math.PI*impactTime);
+    const contactTime=THREE.MathUtils.smoothstep(t,kneel,settle);
+    const contactDip=-.036*Math.sin(Math.PI*contactTime);
+    const clap=THREE.MathUtils.smoothstep(t,.11,stagger+.25);
+    const release=THREE.MathUtils.smoothstep(t,kneel-.08,settle);
+    chest=clap*(1-.72*release);
+
+    if(t<stagger)phase='stagger';
+    else if(t<kneel)phase='kneel';
+    else if(t<settle)phase='settle';
+    else phase='kneeling';
+
+    const lean=.16*THREE.MathUtils.smoothstep(t,.15,stagger)+.31*bend-.13*contactTime-recoil;
+    angle=lean;
     knee=bend;
-    const shinAngle=lean-1.79*bend,thighAngle=lean+.61*bend,torsoAngle=lean+.04*bend;
-    const shinSin=Math.sin(shinAngle),thighSin=Math.sin(thighAngle),torsoSin=Math.sin(torsoAngle);
-    const shinCos=Math.cos(shinAngle),thighCos=Math.cos(thighAngle),torsoCos=Math.cos(torsoAngle);
-    const breath=phase==='kneeling'?1+.014*Math.sin((t-settle)*2.7):1;
-    // A canela se apoia no chão enquanto a coxa baixa. Cabeça e tronco ficam acima do ponto de captura.
+    const shinAngle=-1.23*bend-recoil*.26;
+    const thighAngle=.82*bend+recoil*.16;
+    const shoulderAngle=lean+.11*bend;
+    const headAngle=shoulderAngle+.16*bend;
+    const shinSin=Math.sin(shinAngle),thighSin=Math.sin(thighAngle);
+    const shoulderSin=Math.sin(shoulderAngle),headSin=Math.sin(headAngle);
+    const shinCos=Math.cos(shinAngle),thighCos=Math.cos(thighAngle);
+    const shoulderCos=Math.cos(shoulderAngle),headCos=Math.cos(headAngle);
+    const breath=phase==='kneeling'?1+.005*Math.sin((t-settle)*2.7):1;
+    const pose=defeatSheet?.image?defeatSheet:undefined;
+    const footSpan=h*.19;
+    const poseGround=pose?Math.max(restY,
+      ground(rest.x-right.x*footSpan,rest.z-right.z*footSpan),
+      ground(rest.x+right.x*footSpan,rest.z+right.z*footSpan)):restY;
+    body.material.map=outline.material.map=pose??map;
+    if(pose){
+      const frame=defeatFrame(t);
+      pose.offset.set((frame%4)*.25,frame<4?.5:0);
+      pose.updateMatrix();
+    }
+    // Com atlas próprio, o torso e os joelhos vêm do desenho. A malha só se apoia no piso.
     for(let i=0;i<poseUv.count;i++){
-      const v=poseUv.getY(i);
-      const shin=Math.min(v,.23),thigh=Math.min(Math.max(0,v-.23),.21),torso=Math.max(0,v-.44)*breath;
-      const lateral=h*side*(shin*shinSin+thigh*thighSin+torso*torsoSin);
-      const vertical=h*(shin*shinCos+thigh*thighCos+torso*torsoCos);
-      const across=(poseUv.getX(i)-.5)*w;
-      const x=rest.x+lateral*right.x,z=rest.z+lateral*right.z;
-      const dx=right.x*torsoCos*across,dz=right.z*torsoCos*across;
+      const v=poseUv.getY(i),u=poseUv.getX(i)-.5;
+      if(pose){
+        const across=u*h;
+        const x=rest.x+across*right.x,z=rest.z+across*right.z;
+        const y=poseGround+Math.max(0,(v-.06)*h)+.055;
+        vertices.setXYZ(i,x,y,z);
+        edgeVertices.setXYZ(i,rest.x+1.05*across*right.x,y+.013,rest.z+1.05*across*right.z);
+        continue;
+      }
+      const shin=Math.min(v,.23);
+      const thigh=Math.min(Math.max(0,v-.23),.21);
+      const torso=Math.min(Math.max(0,v-.44),.24)*breath;
+      const head=Math.max(0,v-.68);
+      const brace=THREE.MathUtils.smoothstep(v,.15,.45);
+      const lateral=h*side*(shin*shinSin+thigh*thighSin+torso*shoulderSin+head*headSin);
+      const vertical=h*(shin*shinCos+thigh*thighCos+torso*shoulderCos+head*headCos+(impactDip+contactDip)*brace);
+      // Move a manga externa para o centro durante o gesto e abaixa-a quando o peso assenta.
+      const sleeve=THREE.MathUtils.smoothstep(u*side,.12,.37)*
+        THREE.MathUtils.smoothstep(v,.36,.48)*(1-THREE.MathUtils.smoothstep(v,.51,.68));
+      const across=w*(u-side*.17*sleeve*chest);
+      const kneeDepth=h*.23*bend*Math.sin(Math.PI*Math.min(1,v/.49));
+      const x=rest.x+lateral*right.x+right.z*kneeDepth;
+      const z=rest.z+lateral*right.z-right.x*kneeDepth;
+      const dx=right.x*across,dz=right.z*across;
       const support=ground(x+dx,z+dz);
-      const leanY=torsoSin*side*across*THREE.MathUtils.smoothstep(v,.43,.63);
-      const y=support+Math.max(0,vertical-leanY)+.055;
+      const tilt=shoulderSin*side*across*brace;
+      const y=support+Math.max(0,vertical-tilt+h*.12*sleeve*chest)+.055;
       vertices.setXYZ(i,x+dx,y,z+dz);
-      edgeVertices.setXYZ(i,x+1.08*dx,y+.013,z+1.08*dz);
+      edgeVertices.setXYZ(i,x+1.06*dx,y+.013,z+1.06*dz);
     }
     vertices.needsUpdate=edgeVertices.needsUpdate=true;
     // Tinta de impacto que volta ao branco durante a queda.
-    const hitMix = Math.max(0, 1 - t / FALLEN_TIMING.kneel);
-    body.material.color.copy(tint.setRGB(1, 1 - .45 * hitMix, 1 - .45 * hitMix));
+    const hitMix = 1-THREE.MathUtils.smoothstep(t,0,.24);
+    body.material.color.copy(tint.setRGB(1,1-.33*hitMix,1-.33*hitMix));
     // Sombra e luz aparecem conforme o corpo chega ao chão.
     const grounded = THREE.MathUtils.smoothstep(t,kneel,settle);
     shadow.material.opacity = .42 * grounded;
@@ -237,8 +337,13 @@ export function createFallenBody(o: Options): FallenBody {
   return {
     position: rest,
     get ready(){return phase==='kneeling';},
-    update(dt: number, hidden: boolean) { t += dt; place(hidden); },
-    debug: () => ({ phase, angle: +angle.toFixed(3), knee:+knee.toFixed(3), halo: +haloShown.toFixed(3), beam: +beamShown.toFixed(3), area: +areaShown.toFixed(3), areaRadius, x: +rest.x.toFixed(2), z: +rest.z.toFixed(2) }),
+    update(dt: number, hidden: boolean, viewRight?: THREE.Vector3) {
+      t+=dt;
+      if(viewRight&&viewRight.x*viewRight.x+viewRight.z*viewRight.z>1e-6)
+        right.set(viewRight.x,0,viewRight.z).normalize();
+      place(hidden);
+    },
+    debug: () => ({ phase, angle: +angle.toFixed(3), knee:+knee.toFixed(3), chest:+chest.toFixed(3), halo: +haloShown.toFixed(3), beam: +beamShown.toFixed(3), area: +areaShown.toFixed(3), areaRadius, x: +rest.x.toFixed(2), z: +rest.z.toFixed(2) }),
     dispose() {
       for (const object of [area, shadow, halo, outline, body, beam, dust]) object.removeFromParent();
       area.geometry.dispose(); area.material.dispose();
@@ -246,6 +351,7 @@ export function createFallenBody(o: Options): FallenBody {
       halo.material.dispose(); shadow.material.dispose(); beam.material.dispose(); dust.material.dispose();
       bodyGeo.dispose(); outlineGeo.dispose();
       body.material.dispose(); outline.material.dispose();
+      defeatSheet?.dispose();
     },
   };
 }

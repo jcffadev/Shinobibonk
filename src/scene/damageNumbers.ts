@@ -12,19 +12,28 @@ type Entry = { texture: THREE.CanvasTexture; refs: number };
 
 export function createDamageNumbers(scene: THREE.Scene) {
   const cache = new Map<string, Entry>(), owner = new Map<THREE.Texture, string>(), pool: THREE.Sprite[] = [];
-  function draw(label: string, color: string, wide = false) {
+  function draw(label: string, color: string, wide = false, price = false) {
     const canvas = document.createElement('canvas'); canvas.width = wide ? 512 : 128; canvas.height = 64;
     const ctx = canvas.getContext('2d')!;
+    if(price){
+      canvas.width=256;canvas.height=80;
+      ctx.fillStyle='#251a14';ctx.fillRect(5,5,246,70);
+      ctx.strokeStyle=color;ctx.lineWidth=3;ctx.strokeRect(6,6,244,68);
+      ctx.fillStyle=color;ctx.beginPath();ctx.arc(41,40,18,0,Math.PI*2);ctx.fill();
+      ctx.font='bold 24px sans-serif';ctx.textAlign='center';ctx.fillStyle='#332014';ctx.fillText('両',41,48);
+      ctx.font='bold 31px sans-serif';ctx.textAlign='left';ctx.fillStyle='#fff8e6';ctx.fillText(label,69,51,172);
+      const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;return texture;
+    }
     ctx.font = wide ? 'bold 28px sans-serif' : 'bold 36px sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = '#111629'; ctx.strokeText(label, canvas.width / 2, 44);
     ctx.fillStyle = color; ctx.fillText(label, canvas.width / 2, 44);
     return new THREE.CanvasTexture(canvas);
   }
-  function acquire(label: string, color: string, wide: boolean) {
-    const key = label + '|' + color + (wide ? '|w' : '');
+  function acquire(label: string, color: string, wide: boolean, price = false) {
+    const key = label + '|' + color + (wide ? '|w' : '')+(price?'|price':'');
     let entry = cache.get(key);
     if (entry) cache.delete(key); // reinsere no fim (mais recente)
     else {
-      entry = { texture: draw(label, color, wide), refs: 0 }; owner.set(entry.texture, key);
+      entry = { texture: draw(label, color, wide, price), refs: 0 }; owner.set(entry.texture, key);
       if (cache.size >= CACHE_CAP) for (const [k, old] of cache) { if (old.refs > 0) continue; cache.delete(k); owner.delete(old.texture); old.texture.dispose(); if (cache.size < CACHE_CAP) break; }
     }
     cache.set(key, entry); entry.refs++;
@@ -49,8 +58,8 @@ export function createDamageNumbers(scene: THREE.Scene) {
       return sprite;
     },
     /** Rodada 48 — texto flutuante livre (HUD de treinamento): sprite largo com rótulo e cor próprias. */
-    spawnText(label: string, color = '#8fe3ff') {
-      const map = acquire(label, color, true);
+    spawnText(label: string, color = '#8fe3ff', price = false) {
+      const map = acquire(label, color, true, price);
       let sprite = pool.pop();
       if (sprite) { sprite.material.map = map; sprite.material.opacity = 1; sprite.visible = true; sprite.scale.set(6, 1.5, 1); }
       else { sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map, transparent: true, depthTest: false })); sprite.scale.set(6, 1.5, 1); }

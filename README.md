@@ -1,5 +1,7 @@
 # ShinobiBonk
 
+As quatro vilas podem ter os eventos de Zabuza, Haku, Gaara ou Rasa. Os efeitos duram até 60 segundos ou até o Mega do encontro cair. Os megas climáticos ficam fora do selamento. [Clima em missão](docs/01-CAMERA-MAPAS-EVENTOS.md#clima-nas-quatro-vilas--26112026). O Exame Chūnin tem acesso separado à [sala dos duelos](docs/01-CAMERA-MAPAS-EVENTOS.md#arenas-de-evento--27112026), e C abre o espaço próprio do Hagoromo. A referência para protótipos 3D chibi fica na [skill de personagens 3D](skills/criar-personagem-3d/SKILL.md).
+
 Protótipo jogável de um survivor roguelite inspirado no universo ninja. A base atual é React/TypeScript com cena Three.js isométrica (versão `0.6.0` no `package.json`). O protótipo Canvas 2D antigo fica preservado em `game/index.html`.
 
 Repositório: https://github.com/jcffadev/Shinobibonk

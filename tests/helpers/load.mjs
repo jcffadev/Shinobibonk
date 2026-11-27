@@ -9,11 +9,22 @@
 //   desenham texturas em canvas (sem pintar nada de verdade).
 import { createServer } from 'vite';
 import { after } from 'node:test';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+
+const testViteOptions = {
+  appType: 'custom',
+  configLoader: 'runner',
+  logLevel: 'silent',
+  cacheDir: join(tmpdir(), 'shinobibonk-vite-tests', String(process.pid)),
+  optimizeDeps: { noDiscovery: true, include: [] },
+  server: { middlewareMode: true, hmr: false, watch: null },
+};
 
 let server;
 export async function load(path) {
   if (!server) {
-    server = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true, hmr: false, watch: null } });
+    server = await createServer(testViteOptions);
     after(() => server.close());
   }
   return server.ssrLoadModule(path);
@@ -21,7 +32,7 @@ export async function load(path) {
 
 /** Vite novo e isolado (estado de módulo limpo) — para módulos que leem o ambiente ao carregar, como settings.ts. */
 export async function loadFresh(path) {
-  const fresh = await createServer({ appType: 'custom', logLevel: 'silent', server: { middlewareMode: true, hmr: false, watch: null } });
+  const fresh = await createServer(testViteOptions);
   try { return await fresh.ssrLoadModule(path); } finally { await fresh.close(); }
 }
 

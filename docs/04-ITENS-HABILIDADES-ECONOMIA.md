@@ -252,3 +252,8 @@ Abates podem largar moedas douradas de Ryu e bolinhos de arroz. O bolinho usa o 
 ## Ichiraku · "Tente lembrar o planejado" · 26/11/2026
 
 Além de esquecer técnica ou pílula por Ryu, o Ichiraku tem a carta "Tente lembrar o planejado": com espaço de técnica livre, mostra de 1 a 3 técnicas novas (as planejadas pesam ×1,5) para aprender de graça, uma vez por zona. Regras em `src/game/ichirakuRecall.ts`.
+
+
+## Malhas de guizo, onigiri e shuriken · 26/11/2026
+
+Os seis guizos usam a cor declarada em `src/game/guizos.ts`, corpo metálico com volume, badalo, aro próprio e sombra de contato. As geometrias ficam em cache. Chance, duração e efeitos seguem a tabela de Claude. O onigiri recebe grãos em relevo e nori. A Shuriken Amaldiçoada tem recorte vazado, lâminas e detalhes roxos. Na interface, dezenove pílulas ganharam pictogramas próprios de acordo com o efeito. Máscara ANBU e incenso conservam a arte dedicada. Custos em Ryu no chão e nos dois comerciantes usam os valores atuais da missão.

@@ -100,7 +100,7 @@ test('a partida liga o evento: tecla C, clareira, hordas, Mega Elite, recompensa
   assert.ok(hud.includes('<b>{keys}/{HAGOROMO.maxKeys}</b>'));
   assert.ok(hud.includes('/assets/hagoromo-portrait-v1.png'));
   assert.ok(main.includes('<HagoromoStatus stage={world.hagoromo.stage}'));
-  assert.match(canvas, /hagoromoSeal\.update\(hagoromoPhase\(\),dt,hiddenEffects\)/);
+  assert.match(canvas, /instanceArenas\.update\(animClock,hagoromoPhase\(\),dt,hiddenEffects\)/);
 });
 
 test('clareira do treinamento plana em todos os mapas e longe da água e do começo', async () => {

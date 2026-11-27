@@ -519,3 +519,21 @@ O balanço fica à esquerda de quem olha para a Academia, no bairro noroeste de 
 A Pedra Memorial fica na clareira a oeste da praça, em `(-38, -26)`. O corpo escuro facetado tem a ponta do memorial do anime, inscrições, lajes baixas e flores sobre o piso. A vegetação emoldura a clareira com acesso livre pelo sul. Os dois marcos podem receber rota por M/Tab desde a entrada na vila. A névoa do Zabuza continua ocultando os marcadores enquanto durar.
 
 Foram usadas a imagem do pátio da Academia enviada pelo usuário e o desenho facetado do anime para a pedra. [Pedra Memorial na Narutopedia](https://naruto.fandom.com/wiki/Memorial_Stone) · [Cena do memorial no anime](https://x.com/danbito_/status/1212582164371521538) · [Obito e o memorial no site oficial](https://naruto-official.com/en/news/01_1706).
+
+
+## Clima nas quatro vilas · 26/11/2026
+
+Konoha, Suna, Iwa e Kiri compartilham o sorteio de névoa, nevasca e areia por zona. Zabuza prepara a névoa com selos. Haku traz flocos e camadas de neve em movimento. Gaara traz poeira de areia e Rasa usa uma camada dourada com partículas mais luminosas. A composição acompanha o viewport e a opção de movimento reduzido. O topo do HUD mostra o tempo restante.
+
+O clima acaba quando o Mega do evento é derrotado ou quando o temporizador chega a 60 s. A marca de origem do Mega fica com ele mesmo após o clima acabar, inclusive em partidas retomadas. Os megas climáticos ficam fora da captura. O encontro natural tem sua própria origem e regras. Em arena ou treinamento, a renderização do clima cede lugar ao evento da arena.
+
+Os testes offline conferem cobertura nas quatro vilas, conjuração, ocultação na névoa, persistência e exclusão do selamento. A composição e a leitura durante uma partida carregada ainda pedem conferência visual.
+
+
+## Arenas de evento · 27/11/2026
+
+**Exame Chūnin.** A missão da aba Eventos começa na Floresta da Morte. O portão tem marcador de rota. Perto dele, o E mostra o progresso de tempo e abates e atravessa quando a condição do duelo é satisfeita. A sala usa piso de placas, galerias, janelas altas e a escultura de mãos. Só o oponente do duelo entra na sala. Derrote e sele o oponente. Use E após a conclusão para encerrar o duelo. Save conserva a entrada na sala e a vitória. Os prêmios do evento ficam separados do ranking e da campanha principal.
+
+**Treinamento do Hagoromo.** A tecla C, ou a tecla configurada para o treinamento, gasta uma chave e abre o Espaço do Sábio. O cenário tem piso escuro, círculos de chakra e Hagoromo sentado ao fundo. A zona, as hordas e os drops externos aguardam enquanto o treinamento roda. Ao concluir com E, a missão volta ao ponto original, com a altura de apoio anterior. Se a partida for salva durante o treinamento, a retomada volta ao ponto original. A sessão de treinamento em andamento fica fora do save.
+
+As prévias de geometria foram renderizadas sem navegador. Percorrer as duas transições com o HUD e as condições reais de partida fica na fila de validação visual.

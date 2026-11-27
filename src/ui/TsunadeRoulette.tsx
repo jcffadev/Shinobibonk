@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from 're
 import { ROULETTE_CASAS, ROULETTE_RULES, SLOT_HEROES, badChance, goodChance, type RouletteCasa, type RouletteCasaId, type RoulettePrize, type RouletteView } from '../game/roulette';
 import { itemArt } from '../game/inventoryArt';
 import { compactNumber } from '../game/format';
+import { RyuCost } from './RyuCost';
 import '../tsunade-roulette.css';
 
 /**
@@ -169,7 +170,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
           </div>
           {message && <p className="tr-message">{message}</p>}
           <div className="tr-actions">
-            <button className="tr-spin" onClick={() => spin(false)} disabled={spinning}>Girar · {fmtRyu(live.cost)} Ryu <kbd>E</kbd></button>
+            <button className="tr-spin" onClick={() => spin(false)} disabled={spinning}>Girar <RyuCost value={live.cost} available={live.money}/> <kbd>E</kbd></button>
             <button className={`tr-fast${fast ? ' on' : ''}`} onClick={toggleFast} aria-pressed={fast}>Giro rápido ao segurar E: {fast ? 'Ligado' : 'Desligado'} <kbd>F</kbd></button>
             <button className="tr-exit" onClick={exit}>Sair e receber <kbd>Esc</kbd></button>
           </div>
@@ -178,7 +179,7 @@ export function TsunadeRoulette({ view }: { view: RouletteView }) {
         <div className="tr-side">
           <dl className="tr-stats">
             <div><dt>Ryu</dt><dd title={fullRyu(live.money)}><CasaIcon id="ryu" fallback="🪙" label="Ryu" /> {fmtRyu(live.money)}</dd></div>
-            <div><dt>Próximo giro</dt><dd title={fullRyu(live.cost)}>{fmtRyu(live.cost)} Ryu <small>(+{Math.round((ROULETTE_RULES.costGrowth - 1) * 100)}% por giro{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
+            <div><dt>Próximo giro</dt><dd title={fullRyu(live.cost)}><RyuCost value={live.cost} available={live.money}/> <small>(+{Math.round((ROULETTE_RULES.costGrowth - 1) * 100)}% por giro{live.discount > 0 ? ` · −${Math.round(live.discount * 100)}%` : ''})</small></dd></div>
             <div><dt>Giros na run</dt><dd>{live.spins}</dd></div>
             <div><dt>Ryu gasto na run</dt><dd title={fullRyu(live.ryuSpent)}>{fmtRyu(live.ryuSpent)}</dd></div>
             <div><dt>Sorte</dt><dd>🍀 {live.luck}</dd></div>

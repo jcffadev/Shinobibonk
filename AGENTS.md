@@ -13,6 +13,7 @@ Siga `skills/contexto-e-decisao/SKILL.md`: leia o contexto (este AGENTS.md, docs
 - Na mesma tarefa, atualize o resumo da rodada (§4) e a direção/estado (§2/§5) em `docs/18-CONTEXTO-PERGUNTAS-RESPOSTAS.md`. O texto integral fica no docs/14; nunca apague entradas passadas do docs/18 — decisão nova substitui a antiga com data, sem remover.
 
 ## Skills de arte e movimento
+- Para protótipos e produção de personagens em 3D, siga `skills/criar-personagem-3d/SKILL.md`.
 - Para criar ou integrar arte, siga `skills/criar-arte-shinobibonk/SKILL.md`; para movimento, pulo, dash e animação dos shinobis, siga `skills/movimentar-shinobi/SKILL.md`.
 - Para criar ou reformar um mapa (terreno, horizonte, câmera, construções, vila canônica), siga `skills/criar-mapa-shinobibonk/SKILL.md`.
 - Para medir ou calibrar balanceamento (vida, dano, nascimentos, XP, recargas, itens, Final Swarm), siga `skills/simular-partida/SKILL.md`: simule partidas sem navegador (`scripts/simulate-run.mjs`, `scripts/simulate-batch.mjs`) antes e depois da mudança.

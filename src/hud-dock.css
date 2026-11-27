@@ -215,3 +215,24 @@ tr.pool-card .training-star[aria-pressed=true]{color:#ffce61;border:1px solid #f
 .youth-stat-card[aria-checked="true"]{border-color:#ffe35a;background:#3b5a2f;box-shadow:0 0 0 2px #ffe35a40,0 0 14px #ffe35a40}
 .youth-stat-card[aria-checked="true"] b{color:#ffe35a}
 .youth-note b{color:#ffe35a}
+
+
+.climate-overlay{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;isolation:isolate}
+.climate-overlay i{position:absolute;inset:-5%;background-repeat:repeat;animation:climate-drift linear infinite}
+.climate-snow{--climate-image:url('/assets/weather-snow-v1.svg');--climate-wash:rgba(202,233,253,.14);--shift-x:180px;--shift-y:160px}
+.climate-sand{--climate-image:url('/assets/weather-dust-v1.svg');--climate-wash:rgba(179,111,62,.22);--shift-x:230px;--shift-y:170px}
+.climate-gold{--climate-image:url('/assets/weather-gold-v1.svg');--climate-wash:rgba(198,131,43,.21);--shift-x:230px;--shift-y:170px}
+.climate-overlay{background:radial-gradient(ellipse at 52% 45%,transparent 25%,var(--climate-wash) 90%)}
+.climate-overlay i{background-image:var(--climate-image);background-size:var(--shift-x) var(--shift-y);opacity:.8;animation-duration:2.6s}
+.climate-overlay i:nth-child(2){background-size:calc(var(--shift-x) * .6) calc(var(--shift-y) * .6);animation-duration:3.8s;opacity:.56;--scale:.6}
+.climate-overlay i:nth-child(3){background-size:calc(var(--shift-x) * 1.4) calc(var(--shift-y) * 1.4);animation-duration:2s;animation-delay:-1.4s;opacity:.48;--scale:1.4}
+.climate-sand i,.climate-gold i{animation-name:sand-drift;animation-duration:1.8s}
+.climate-clock{color:#fff0a8}
+@keyframes climate-drift{to{background-position:calc(var(--shift-x) * var(--scale,1)) calc(var(--shift-y) * var(--scale,1))}}
+@keyframes sand-drift{to{background-position:calc(var(--shift-x) * var(--scale,1)) calc(var(--shift-y) * var(--scale,1) * -1)}}
+@media(prefers-reduced-motion:reduce){.climate-overlay i{animation:none}}
+.ryu-cost{display:inline-flex;gap:.36em;align-items:center;padding:.25em .52em;border:1px solid #e4b468;border-radius:5px;background:#2c2118;color:#fff2c1;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:1.03em;vertical-align:middle}
+.ryu-cost strong{color:inherit;font-weight:900}
+.ryu-cost small{color:#e6cc9d}
+.ryu-cost[data-insufficient=true]{border-color:#f29c82;color:#ffcab8}
+.ryu-cost-coin{display:inline-grid;place-items:center;width:1.2em;height:1.2em;border-radius:50%;background:#f1bc58;color:#442d13;font-weight:900;font-size:.88em}

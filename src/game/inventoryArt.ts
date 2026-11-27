@@ -34,7 +34,7 @@ const looseItems:Record<string,ReturnType<typeof atlasCell>>=Object.fromEntries(
   ['revive','rinne-tensei','ninja-info-cards'].map(id=>[id,{backgroundImage:`url(/assets/inventory/${id}-v1.png)`,backgroundSize:'100% 100%',backgroundPosition:'center'}]));
 export const itemArt = (id: string) => looseItems[id] ?? itemCells[id];
 export const pillArt = {
-  ...Object.fromEntries(pills.map((id, index) => [id, atlasCell('/assets/pills-v3.png', index, 4)])),
+  ...Object.fromEntries(pills.map(id => [id,{backgroundImage:`url(/assets/inventory/pill-${id}-v4.svg)`,backgroundSize:'contain',backgroundPosition:'center'}])),
   incenso: { backgroundImage: 'url(/assets/inventory/pill-incenso-v1.png)', backgroundSize: 'contain', backgroundPosition: 'center' },
   isca: { backgroundImage: 'url(/assets/inventory/pill-anbu-v1.png)', backgroundSize: 'contain', backgroundPosition: 'center' },
 } as Record<string, ReturnType<typeof atlasCell>>;

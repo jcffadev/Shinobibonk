@@ -3,7 +3,8 @@ import { createGroundMaterial, createSky, groundHeight, terrainOccludesActor, tr
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { activeTuning, dropChance, tuneThreat } from '../game/tuning';
-import { createHagoromoSeal } from './hagoromoVisual';
+import { createInstanceArenas } from './missionArenas';
+import { constrainArena, EXAM_ENTRANCE, EXAM_SPAWN, INSTANCE_FLOOR, type InstanceArena } from '../game/missionArenas';
 import { createBossCombat, BIJUU_SIZE, type BossState } from './bossCombat';
 import { createPickupShadows } from './dropSprites';
 import { createDropModels, monsterDropScale, pickupScrollVariant, restDrop, type MonsterDropKind, type ThrownWeapon } from './dropModels';
@@ -20,7 +21,7 @@ import { readSettings, saveSettings, shouldAutoPick } from '../game/settings';
 import { DebugPanel, type DebugApi } from '../ui/DebugPanel';
 import { compactNumber } from '../game/format';
 import { createPlayerMotion, movementFacing, stableFacing } from './playerMotion';
-import { createFallenBody, type FallenBody } from './fallenShinobi';
+import { loadDefeatSheet, createFallenBody, type FallenBody } from './fallenShinobi';
 import { createRewardBeacon, type RewardBeacon } from './rewardBeacon';
 import { createPerfMonitor } from './perfMonitor';
 import { recentStreak, extendStreak, type KillStreak } from '../game/killStreak';
@@ -62,7 +63,7 @@ import { ITEM_BY_NAME, currentItemName, rollItems, type Item, type Rarity, type 
 import { HEROES, HERO_BY_ID, familyOf, versionForEncounter, skillPool, heroAffinity, isProjectileUltimate, sandSynergy, ultimateBase, type Technique, type Control } from '../game/heroes';
 import { activeSynergies, synergyBonuses, type ActiveSynergy } from '../game/synergy';
 import { ZONES as BASE_ZONES, GUARDIAN_RULES, guardianHpMultiplier, guardianVitality, guardianDefense, guardianAttackMultiplier } from '../game/missions';
-import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, WEATHER_EVENT_DURATION, weatherWait, planZoneWeather, type WeatherEventId, type WeatherPlan } from '../game/maps';
+import { MAP_BY_ID, type MapId, WEATHER_EVENTS, WEATHER_BY_MAP, GOLDEN_SAND, WEATHER_EVENT_DURATION, weatherWait, planZoneWeather, type WeatherEventId, type WeatherPlan } from '../game/maps';
 import { canLockTarget, mistVisibility, ZABUZA_MIST } from '../game/zabuzaMist';
 import { addChill, addPoisonStack, chillSlow, controlResist, damageStatusCount, deathBurstKind, enqueueDeathBurst, freezeTarget, isFrozen, poisonMultiplier, reactionsFor, STATUS_RULES, statusDamageMultiplier, tickStatus } from '../game/statusRules';
 import { FALLEN_TRAP, trapIsElite, trapRing } from '../game/fallenTrap';
@@ -95,7 +96,7 @@ import { rollRarityTier, RARITY_ORDER, SHAPE_RADIUS } from '../game/combat';
 import { ROULETTE_CASAS, ROULETTE_BY_ID, ROULETTE_RULES, BLESSINGS, BAD_LUCK, SLOT_COMBOS, slotKakuzuRyu, rouletteWeights, roulettePressure, rollRoulette, rouletteCost, seededRng, spendBonuses, type SlotComboId, type RoulettePrize, type RouletteView } from '../game/roulette';
 
 export type LevelOffer = { merge?:TechniqueMerge; id: string; kind: 'skill'|'pill'|'item'|'stat'; name: string; rarity: Rarity; icon: string; description: string; planned?: boolean; price?:number; growth?:SkillGrowth; bonus?:Bonuses; deal?:StatDeal; disabled?:string; /** Tela de substituição de ajudantes (choiceLevel −7): id do ajudante e se é o recém-derrotado. */ allyId?:string; allyNew?:boolean };
-export type WorldSnapshot = { /** Barras de vida dos chefes e Mega Elites no HUD (26/11/2026). */ bossBars?:{id:string;name:string;hp:number;maxHp:number;boss:boolean;rage:boolean}[]; /** Golpe que derrubou o jogador: quem deu e quanto tirou (25/11/2026). */ killedBy?:{by:string;damage:number;maxHp:number}; /** Rodada 98: Treinamento da Juventude (painel e desafio em andamento). */ youth?:{panel:boolean;challenge:YouthChallengeId|null;run:{challenge:YouthChallengeId;difficulty:YouthDifficulty;timeLeft:number;progress:number;goal:number;stat?:StatKey}|null}; /** Rodada 97: Treinamento do Hagoromo (chaves, progresso, ferramentas). */ hagoromo?:{keys:number;progress:number;need:number;tools:string[];active:boolean;recharge:boolean;stage?:HagoromoEncounterHud}; killStreak?:number; sagesUsed?:boolean; enemyCount?:number; powerlevel?:Powerlevel; allyCharge:number; victory:boolean; remaining:number; protection?:'temporary'|'debug'; /** FINAL SWARM: segundos sobrevividos após o relógio da zona zerar (0/ausente = relógio normal). */ overtime?:number; hiddenEffects:boolean; totalDamage:number; skillDamage:Record<string,number>; skillGrowth:Record<string,SkillGrowth>; techniques:Technique[]; synergy:boolean; synergies:ActiveSynergy[]; setups:{name:string;remaining:number;duration:number}[]; zone:number; phase?:'zone'|'arena'|'exit'; bijuu?:string; bijuuReward?:number; plansUsed?:number; skillTimers?:Record<string,{remaining:number;total:number;duration:number}>; boss:string; defenseProgress:number; banned:string[]; hp: number; maxHp:number; stats:Stats; defeated:boolean; allyDamage:number; difficultyScale:number; level: number; xp: number; xpNext: number; chakra: number; kills: number; runMoney: number; elapsed: number; fps: number; kunai: number; shuriken: number; luck:number; autoUlt:boolean; allies:string[]; /** Pontos de afinidade por ajudante (src/game/allies.ts). */ affinity:Record<string,number>; weather:string;weatherEvent?:WeatherEventId;weatherRemaining?:number; toast:string; interaction:{name:string;description:string;key?:string}|null; items: Record<string, number>; pills: Record<string, number>; pillQuality?:Record<string,number>; skillLevels: Record<string,number>; choice: { level: number; cards: LevelOffer[]; sale?:number; rerollCost?:number }|null; sealing:{heroId:string;target:string;phase:'ready'|'sealing'|'complete';account?:boolean}|null; pickups:{kind:string;x:number;z:number;id?:string;name?:string}[];enemies: { x: number; z: number }[]; /** Marcos fixos e marcadores dinâmicos vistos em tela, para o mapa e minimapa. */ events: { id: string; name: string; x: number; z: number; icon: string; kind?:'event'|'enemy'|'landmark'; portrait?:string; guardian?:boolean; active?:boolean }[]; explored: { x: number; z: number }[]; player: { x: number; z: number; heading?:number }; ping: {x:number;z:number}|null; /** Rota do mapa (um alvo por vez): distância em metros e posição do alvo na tela (NDC −1..1). */ route?:RouteView|null; routeNotice?:{text:string;kind:'arrived'|'lost'|'set'}|null; effects: number; choices:{reroll:number;skip:number;ban:number;banning:boolean}; weaponCost:number; merchantRerollCost?:number; tsunadeSpinCost?:number; permanent:Record<string,number>; totem?:{hp:number;maxHp:number;remaining:number}|null; roulette?:RouletteView|null };
+export type WorldSnapshot = { /** Barras de vida dos chefes e Mega Elites no HUD (26/11/2026). */ bossBars?:{id:string;name:string;hp:number;maxHp:number;boss:boolean;rage:boolean}[]; /** Golpe que derrubou o jogador: quem deu e quanto tirou (25/11/2026). */ killedBy?:{by:string;damage:number;maxHp:number}; /** Rodada 98: Treinamento da Juventude (painel e desafio em andamento). */ youth?:{panel:boolean;challenge:YouthChallengeId|null;run:{challenge:YouthChallengeId;difficulty:YouthDifficulty;timeLeft:number;progress:number;goal:number;stat?:StatKey}|null}; /** Rodada 97: Treinamento do Hagoromo (chaves, progresso, ferramentas). */ hagoromo?:{keys:number;progress:number;need:number;tools:string[];active:boolean;recharge:boolean;stage?:HagoromoEncounterHud}; killStreak?:number; sagesUsed?:boolean; enemyCount?:number; powerlevel?:Powerlevel; allyCharge:number; victory:boolean; remaining:number; protection?:'temporary'|'debug'; /** FINAL SWARM: segundos sobrevividos após o relógio da zona zerar (0/ausente = relógio normal). */ overtime?:number; hiddenEffects:boolean; totalDamage:number; skillDamage:Record<string,number>; skillGrowth:Record<string,SkillGrowth>; techniques:Technique[]; synergy:boolean; synergies:ActiveSynergy[]; setups:{name:string;remaining:number;duration:number}[]; zone:number; phase?:'zone'|'arena'|'exit'; bijuu?:string; bijuuReward?:number; plansUsed?:number; skillTimers?:Record<string,{remaining:number;total:number;duration:number}>; boss:string; defenseProgress:number; banned:string[]; hp: number; maxHp:number; stats:Stats; defeated:boolean; allyDamage:number; difficultyScale:number; level: number; xp: number; xpNext: number; chakra: number; kills: number; runMoney: number; elapsed: number; fps: number; kunai: number; shuriken: number; luck:number; autoUlt:boolean; allies:string[]; /** Pontos de afinidade por ajudante (src/game/allies.ts). */ affinity:Record<string,number>; weather:string;weatherEvent?:WeatherEventId; weatherGold?:boolean;weatherRemaining?:number; toast:string; interaction:{name:string;description:string;key?:string}|null; items: Record<string, number>; pills: Record<string, number>; pillQuality?:Record<string,number>; skillLevels: Record<string,number>; choice: { level: number; cards: LevelOffer[]; sale?:number; rerollCost?:number }|null; sealing:{heroId:string;target:string;phase:'ready'|'sealing'|'complete';account?:boolean}|null; pickups:{kind:string;x:number;z:number;id?:string;name?:string}[];enemies: { x: number; z: number }[]; /** Marcos fixos e marcadores dinâmicos vistos em tela, para o mapa e minimapa. */ events: { id: string; name: string; x: number; z: number; icon: string; kind?:'event'|'enemy'|'landmark'; portrait?:string; guardian?:boolean; active?:boolean }[]; explored: { x: number; z: number }[]; player: { x: number; z: number; heading?:number }; ping: {x:number;z:number}|null; /** Rota do mapa (um alvo por vez): distância em metros e posição do alvo na tela (NDC −1..1). */ route?:RouteView|null; routeNotice?:{text:string;kind:'arrived'|'lost'|'set'}|null; effects: number; choices:{reroll:number;skip:number;ban:number;banning:boolean}; weaponCost:number; merchantRerollCost?:number; tsunadeSpinCost?:number; permanent:Record<string,number>; totem?:{hp:number;maxHp:number;remaining:number}|null; roulette?:RouletteView|null };
 export type RouteView = { id:string; kind:'event'|'enemy'|'pickup'|'ping'; name:string; x:number; z:number; distance:number; screen:{x:number;y:number} };
 /** Run salva (Esc → Salvar e sair, salvamento automático e ao fechar o navegador). */
 export const SAVED_RUN_KEY='sb_saved_run_v1';
@@ -104,7 +105,7 @@ type PortalKind='zone'|'arena'|'exit';
 type ActiveWeatherEvent={id:WeatherEventId;until:number;elite:string;x:number;z:number;castEnd?:number;openingMega?:boolean};
 type SavedBijuu={id:string;hp:number;maxHp:number;x?:number;z?:number;overtime?:number};
 type CampaignSave={/** Zona em que o "Tente lembrar o planejado" do Ichiraku foi usado (26/11/2026). */ichirakuRecall?:number;openingMegaSpawned?:boolean;akatsukiAmbush?:AmbushMemberSave[];weatherPlan?:WeatherPlan;altarBlessing?:{tier:number;name:string;offers:LevelOffer[]};weatherEvent?:ActiveWeatherEvent;nextWeatherAt?:number;fallenMegas?:{heroId:string;x:number;z:number;account?:boolean}[];start:number;pendingLevels?:number;sagesUsedZone?:number;merges?:TechniqueMerge[];megaSchedule?:number[];accountEncounters?:number;plans:number;arena:boolean;reward:number;bijuu:string;portal?:{kind:PortalKind;x:number;z:number};boss?:SavedBijuu;locations?:{id:string;x:number;z:number}[];pickups?:{kind:MapPickup['kind'];x:number;z:number;discovered:boolean}[]};
-export type SavedRun={/** Duelo de evento em andamento (src/game/events.ts). */ eventDuel?:string;hagoromo?:HagoromoState;mapLayout?:MapLayout;villageSeed?:number;surfaceElevation?:number;rankTicket?:{id:string;owner:string};killStreak?:KillStreak;powerlevel?:Powerlevel;v:1;heroId:string;mission:Difficulty;mapId:MapId;savedAt:number;elapsed:number;zone:number;level:number;xp:number;xpNext:number;kills:number;runMoney:number;kunai:number;shuriken:number;chakra:number;hp:number;bonusHp:number;totalDamage:number;allyDamage:number;skillDamage:Record<string,number>;knownItems:Record<string,number>;knownPills:Record<string,number>;pillQuality?:Record<string,number>;skillLevels:Record<string,number>;growth:Record<string,SkillGrowth>;allies:string[];allyAffinity:Record<string,number>;runBuffs:Bonuses;uses:{reroll:number;skip:number;ban:number};banned:string[];events:{id:string;active:boolean;uses:number;discovered:boolean}[];explored:string[];ryuSpent:number;rouletteSpins:number;paidWeapons:number;guardianSpawned:boolean;shikamaruPlans:number;megaElitesSpawned:number;zoneDifficulty:number;xpMultiplier:number;lootMultiplier:number;totemSpawned:boolean;pendingItemRewards:number;defenseDone:boolean;player:{x:number;z:number};accountTried:string[]; campaign?:CampaignSave; merchant?:{purchases:number;rerolls:number;stock:(string|null)[];prices?:number[]}; rouletteItems?:PendingPrize[]; rouletteSession?:{pending:RoulettePrize[];sessionSpins:number;sessionSpent:number}|null};
+export type SavedRun={ examRoom?:boolean; examWon?:boolean; /** Duelo de evento em andamento (src/game/events.ts). */ eventDuel?:string;hagoromo?:HagoromoState;mapLayout?:MapLayout;villageSeed?:number;surfaceElevation?:number;rankTicket?:{id:string;owner:string};killStreak?:KillStreak;powerlevel?:Powerlevel;v:1;heroId:string;mission:Difficulty;mapId:MapId;savedAt:number;elapsed:number;zone:number;level:number;xp:number;xpNext:number;kills:number;runMoney:number;kunai:number;shuriken:number;chakra:number;hp:number;bonusHp:number;totalDamage:number;allyDamage:number;skillDamage:Record<string,number>;knownItems:Record<string,number>;knownPills:Record<string,number>;pillQuality?:Record<string,number>;skillLevels:Record<string,number>;growth:Record<string,SkillGrowth>;allies:string[];allyAffinity:Record<string,number>;runBuffs:Bonuses;uses:{reroll:number;skip:number;ban:number};banned:string[];events:{id:string;active:boolean;uses:number;discovered:boolean}[];explored:string[];ryuSpent:number;rouletteSpins:number;paidWeapons:number;guardianSpawned:boolean;shikamaruPlans:number;megaElitesSpawned:number;zoneDifficulty:number;xpMultiplier:number;lootMultiplier:number;totemSpawned:boolean;pendingItemRewards:number;defenseDone:boolean;player:{x:number;z:number};accountTried:string[]; campaign?:CampaignSave; merchant?:{purchases:number;rerolls:number;stock:(string|null)[];prices?:number[]}; rouletteItems?:PendingPrize[]; rouletteSession?:{pending:RoulettePrize[];sessionSpins:number;sessionSpent:number}|null};
 /** Recompensas atraídas pelo jogador. O bolinho de arroz cura uma fração do HP máximo. */
 type Drop = { mesh: THREE.Object3D; type: MonsterDropKind; value: number; name: string; born: number; magnet: boolean; speed: number };
 /**
@@ -137,7 +138,7 @@ export const ALTAR_RULES = { radius: 3, seconds: [10, 14, 18, 23, 30], decayPerS
 export { ALTAR_BUFF_BASE, ALTAR_BUFF_POOL } from '../game/altarRewards';
 /** Bolinho de arroz: chance por abate e fração do HP máximo curada. */
 export const RAMEN_DROP = { chance: .025, heal: .35 };
-type Enemy = { /** Guardião em fúria (BOSS_RAGE, 26/11/2026). */ rage?:boolean; /** Bijū: fúria (0–2), defesa e dano base, e atordoamento da troca de fase (s). */ fury?:number; baseDefense?:number; baseDmgMult?:number; baseBossScale?:number; phaseStun?:number; /** Inimigo preso perto do jogador (stuckReach). */ stuck?:StuckTrack; arrivalGuard?:number; bossDamageScale?:number; summonedAt?:number; summonedOvertime?:number; /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; /** Queimadura vinda da explosão da Esfera Katon (não explode de novo). */ burstBurn?:boolean; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:MissionNpc; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
+type Enemy = { weatherElite?:boolean; /** Guardião em fúria (BOSS_RAGE, 26/11/2026). */ rage?:boolean; /** Bijū: fúria (0–2), defesa e dano base, e atordoamento da troca de fase (s). */ fury?:number; baseDefense?:number; baseDmgMult?:number; baseBossScale?:number; phaseStun?:number; /** Inimigo preso perto do jogador (stuckReach). */ stuck?:StuckTrack; arrivalGuard?:number; bossDamageScale?:number; summonedAt?:number; summonedOvertime?:number; /** Rodada 103: Resfriado (acúmulos e tempo até sumir), molhado (s) e acúmulos de veneno. */ chill?:number; chillTime?:number; wet?:number; poisonStacks?:number; /** Rodada 98: Guy/Lee do Treinamento da Juventude. */ youth?: boolean; /** Rodada 97: inimigo das hordas do Treinamento do Hagoromo. */ hagoromo?: boolean; openingMega?:boolean; bodyAmbush?: MapPickup; /** Rodada 63: intervalo entre os selos da conjuração do clima. */ sealTimer?:number; ranged?:number; motion?:ReturnType<typeof createPlayerMotion>; motionLevel?:number; moveAfter?:number; moveTime?:number; jumping?:boolean; heroId?:string; elite?:boolean; guardian?:boolean; control?:Control; controlTime?:number; burn?:number; /** Queimadura vinda da explosão da Esfera Katon (não explode de novo). */ burstBurn?:boolean; sprite: THREE.Sprite; hp: number; speed: number; hitTimer: number; windup?:number; attackPoint?:THREE.Vector3; marker?:THREE.Mesh; poison?:{remaining:number;dps:number}; slow?:number; challenge?:boolean; megaElite?:boolean; boss?:BossState; /** Tipo do inimigo (src/game/enemyTiers.ts), fração de dano bloqueada e multiplicador de dano do golpe. */ tier?:EnemyTier; defense?:number; dmgMult?:number; /** Shinobi para selar: libera na conta. */ account?:boolean; maxHp?:number; shikamaruPlans?:number; hpMultiplier?:number; guardianZone?:number; bijuu?:boolean; totem?:boolean; fixedArt?:MissionNpc; clone?:boolean; /** Mapa: id estável do mega elite e se já foi visto em tela. */ uid?:number; seen?:boolean };
 type MapPickup = { id:string; kind:'kunai'|'shuriken'|'ryu'|'sealDrop'|'cursedShuriken'|'ninjaBody'|GuizoPickupKind; name:string; x:number; z:number; mesh:THREE.Object3D; active:boolean; discovered?:boolean };
 type Projectile = {mesh:THREE.Object3D;direction:THREE.Vector3;remaining:number;speed:number;radius:number;technique:Technique;origin:THREE.Vector3;hit:Set<Enemy>;growth:SkillGrowth;ally?:boolean;bounces:number;effectLevel?:number;range:number};
 /** Setup (buff puro) ativo no jogador. */
@@ -206,7 +207,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const threatNow=()=>zoneThreatWith(0);
     const bossThreatNow=()=>zoneThreatWith(shikamaruPlans);
     // Rodada 97: Treinamento do Hagoromo — chaves, ferramentas do Sábio e o evento em andamento.
-    const hagoromo=createHagoromo();let hagoromoBossDown=false,hagoromoEvent:{rarity:SageTool['rarity'];wave:number;origin:{x:number;z:number};mega:Enemy|null;completed:boolean;outsideEnemies:Enemy[];outsideDrops:ReturnType<typeof makeDropIndex>}|null=null;
+    const hagoromo=createHagoromo();let hagoromoBossDown=false,hagoromoEvent:{rarity:SageTool['rarity'];wave:number;origin:{x:number;z:number;elevation?:number};mega:Enemy|null;completed:boolean;outsideEnemies:Enemy[];outsideDrops:ReturnType<typeof makeDropIndex>;outsidePickups:MapPickup[]}|null=null;
     const hero=HERO_BY_ID[heroId]??HEROES[0],techniques=skillPool(hero.id,sealedHeroes()),growth:Record<string,SkillGrowth>={},cooldowns:Record<string,number>={},runBuffs:Bonuses={},skillDamage:Record<string,number>={};
     let expirySweep=.5,swarmStepAnnounced=0,zoneStart=0,plansUsed=0,arena=false,bijuuReward=0,defeatedBijuu='',finalSwarmAnnounced=false,spawnBudget=0,pickupClock=0,globalMagnetUntil=0,/** Relógio só de animação: nunca para (o elapsed da missão para no Treinamento do Hagoromo e deixava a horda congelada). */animClock=0;
     let portal:{kind:PortalKind;x:number;z:number;mesh:THREE.Group}|null=null;
@@ -228,13 +229,17 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const village=villageSeed===undefined?null:createVillageLayout(MAP.id,villageSeed);
     const waters=village?villageWater(MAP.id):undefined;
     const exactGround=village&&waters?createVillageGround(village,waters):(x:number,z:number)=>groundHeight(MAP.id,x,z);
-    const terrainHeight=createHeightField(exactGround,RENDERED_GROUND_SIZE/2);
+    const mapTerrain=createHeightField(exactGround,RENDERED_GROUND_SIZE/2);
+    let activeInstance:InstanceArena|undefined;
+    const terrainHeight=(x:number,z:number)=>activeInstance?INSTANCE_FLOOR:mapTerrain(x,z);
+    const instanceArenas=createInstanceArenas(scene,HAGOROMO_ARENA);
+    runCleanups.push(instanceArenas.dispose);
     const villageShadows=!!village;
     let shadowX=Infinity,shadowZ=Infinity,shadowSize=0;
     scene.add(sun.target);
     function updateVillageLight(x:number,z:number){
       const quality=currentSettings().quality;
-      const size=villageShadows&&quality!=='baixa'?(quality==='alta'?2048:1024):0;
+      const size=villageShadows&&!activeInstance&&quality!=='baixa'?(quality==='alta'?2048:1024):0;
       if(size!==shadowSize||renderer.shadowMap.enabled!==Boolean(size)){
         renderer.shadowMap.enabled=Boolean(size);
         renderer.shadowMap.type=THREE.PCFShadowMap;
@@ -263,13 +268,19 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     // todos os personagens"): personagens ficam de pé no ponto MAIS ALTO do chão sob os pés (raio FOOT_RADIUS). Na encosta
     // de um terraço o chão logo à frente é mais alto que o centro e escondia os pés.
     // Rodada 89: sobre lagos e rios os personagens andam na superfície da água (como os ninjas com chakra na obra).
-    const standHeight=(x:number,z:number)=>village&&villageActive
+    const standHeight=(x:number,z:number)=>activeInstance?INSTANCE_FLOOR:village&&villageActive
       ?Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z,waters),villageDeck(village,terrainHeight,x,z))
       :Math.max(footHeight(terrainHeight,x,z),waterSurfaceAt(MAP.id,x,z));
-    const itemSurface=(x:number,z:number)=>Math.max(terrainHeight(x,z),waterSurfaceAt(MAP.id,x,z,waters),
-      village&&villageActive?villageDeck(village,terrainHeight,x,z):-Infinity);
-    const hagoromoSeal=createHagoromoSeal(scene,HAGOROMO_ARENA.x,itemSurface(HAGOROMO_ARENA.x,HAGOROMO_ARENA.z),HAGOROMO_ARENA.z);
-    runCleanups.push(hagoromoSeal.dispose);
+    const mapItemSurface=(x:number,z:number)=>Math.max(mapTerrain(x,z),waterSurfaceAt(MAP.id,x,z,waters),
+      village&&villageActive?villageDeck(village,mapTerrain,x,z):-Infinity);
+    const itemSurface=(x:number,z:number)=>activeInstance?INSTANCE_FLOOR:mapItemSurface(x,z);
+    function setInstance(kind:InstanceArena|undefined){
+      activeInstance=kind;
+      instanceArenas.set(kind);
+    }
+    function keepInInstance(point:{x:number;z:number}){
+      if(activeInstance)constrainArena(activeInstance,point,HAGOROMO_ARENA,HAGOROMO.arenaRadius);
+    }
     const solids=createSolids();
     // Partículas das técnicas (natureza × forma) e Susanoo procedural: pools fixos, só visual (particleFx.ts / susanooFx.ts).
     const particles=createParticleFx(scene,terrainHeight),susanoo=createSusanooFx(scene,particles,terrainHeight);particles.setHidden(hiddenEffects);susanoo.setHidden(hiddenEffects);
@@ -519,7 +530,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     }
     // Arsenal da Tenten (NPC, antes Kakashi): forja uma cópia de 1 item que o jogador já carrega. A escolha usa choiceLevel=-1; o evento só é gasto ao copiar.
     let kakashiEvent:(typeof events)[number]|null=null;
-    const enemyList:Enemy[]=[],shots:Projectile[]=[],keys=new Set<string>(),knownItems:Record<string,number>={},knownPills:Record<string,number>={},pillQuality:Record<string,number>={},skillLevels:Record<string,number>={},exploredCells=new Map<string,{x:number;z:number}>(),pickups:MapPickup[]=[],allies:string[]=[];let choiceData:LevelOffer[]|null=null,choiceLevel=1,kunai=0,shuriken=0,sealing:{heroId:string;target:string;phase:'ready'|'sealing'|'complete';account?:boolean}|null=null,sealTimer=0,damageMultiplier=1,luck=0;
+    const enemyList:Enemy[]=[],shots:Projectile[]=[],keys=new Set<string>(),knownItems:Record<string,number>={},knownPills:Record<string,number>={},pillQuality:Record<string,number>={},skillLevels:Record<string,number>={},exploredCells=new Map<string,{x:number;z:number}>(),allies:string[]=[];let pickups:MapPickup[]=[],choiceData:LevelOffer[]|null=null,choiceLevel=1,kunai=0,shuriken=0,sealing:{heroId:string;target:string;phase:'ready'|'sealing'|'complete';account?:boolean}|null=null,sealTimer=0,damageMultiplier=1,luck=0;
     let drops=makeDropIndex();
     const hagoromoGround=makeDropIndex();
     type SealCandidate={heroId:string;target:string;phase:'ready';account?:boolean};
@@ -532,7 +543,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       let closest:typeof fallenMegas[number]|undefined;
       let distance=sealRadius;
       for(const event of events){
-        if(!event.active||event.altarTier!==undefined)continue;
+        if(activeInstance||!event.active||event.altarTier!==undefined)continue;
         const d=distanceTo(event.x,event.z);
         if(d<=3.6)distance=Math.min(distance,d);
       }
@@ -541,7 +552,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
         const d=distanceTo(pickup.x,pickup.z);
         if(d<2)distance=Math.min(distance,d);
       }
-      if(portal){
+      if(portal&&!activeInstance){
         const d=distanceTo(portal.x,portal.z);
         if(d<2.2)distance=Math.min(distance,d);
       }
@@ -559,7 +570,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     /** Rodada 55: corpo do Mega Elite (vermelho) / Shinobi para selar (ciano) caindo e deitado; `instant` = restauração do save (já deitado). */
     function layFallenShinobi(heroId:string,x:number,z:number,account=false,lv=level,instant=false){
       const source=makeHero(heroId,Math.max(1,lv));
-      const body=createFallenBody({scene,map:source.material.map!,width:source.scale.x*1.4,height:source.scale.y*1.4,x,z,ground:itemSurface,
+      const body=createFallenBody({scene,map:source.material.map!,defeatSheet:loadDefeatSheet(heroId),width:source.scale.x*1.4,height:source.scale.y*1.4,x,z,ground:activeInstance?()=>INSTANCE_FLOOR:mapItemSurface,
         color:account?'#5ff0ff':'#ff4d6d',right:v2,awayFrom:player.position,instant,areaRadius:sealRadius});
       source.material.dispose();
       return body;
@@ -591,7 +602,29 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const activeSetups:ActiveSetup[]=[],pendingHits:{time:number;run:()=>void}[]=[];
     /** Evento do anime (src/game/events.ts): o oponente do duelo aparece depois do minuto e dos abates; selar marca o duelo. */
     const duelId=resume?.eventDuel??eventDuel,duel=duelId?EVENT_DUEL_BY_ID[duelId]:undefined,duelFoe=duel?duelOpponent(duel,heroId,familyOf):undefined;
-    let duelWon=false;
+    let duelWon=Boolean(resume?.examWon);
+    const examDoorDistance=()=>Math.hypot(player.position.x-EXAM_ENTRANCE.x,player.position.z-EXAM_ENTRANCE.z);
+    function examEntrance(){
+      if(activeInstance!=='exam-forest'||!duel||examDoorDistance()>EXAM_ENTRANCE.radius)return null;
+      const ready=duelReady(duel,elapsed,kills);
+      return {name:'Entrada da sala de lutas',key:'E',description:ready?'Entrar e enfrentar o oponente.':
+        'Para entrar · '+Math.min(kills,duel.kills)+'/'+duel.kills+' abates · '+Math.min(Math.floor(elapsed),duel.minute*60)+'/'+(duel.minute*60)+' s'};
+    }
+    function enterExamRoom(){
+      if(!duel||!duelFoe||!examEntrance())return false;
+      if(!duelReady(duel,elapsed,kills)){eventToast='Complete a preparação da Floresta da Morte para entrar.';snapshotTimer=0;return true;}
+      clearZone();
+      setInstance('exam-hall');
+      traversal.reset();
+      walkingFloor=INSTANCE_FLOOR;
+      player.position.set(EXAM_SPAWN.x,walkingFloor+player.scale.y*.5,EXAM_SPAWN.z);
+      nextAccountAt=elapsed;
+      invulnerability=Math.max(invulnerability,1.2);
+      eventToast='Exame Chūnin · Sala de Lutas';
+      snapshotTimer=0;
+      saveRun();
+      return true;
+    }
     function accountSeal(id:string){sealForAccount(id);if(!duel||id!==duelFoe||duelWon)return '';duelWon=true;completeEventDuel(duel.id,heroId);return ' · Prova Chūnin: duelo "'+duel.title+'" vencido!';}
     /** Teste: força a chance da linha Senjutsu (null = valor normal). */
     let senjutsuOverride:number|null=null,senjutsuProcs=0;
@@ -616,15 +649,23 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     /** Preço acima da kunai/shuriken/pergaminho do chão e do Caça-Níquel mais perto (priceTags.ts). */
     let priceTag:{sprite:THREE.Sprite;text:string;id:string}|null=null,priceTagTimer=0;
     function clearPriceTag(){if(priceTag){damageNumbers.recycle(priceTag.sprite);priceTag=null;}}
-    function updatePriceTag(dt:number){priceTagTimer-=dt;if(priceTagTimer>0&&priceTag){priceTag.sprite.position.y=standHeight(priceTag.sprite.position.x,priceTag.sprite.position.z)+PRICE_TAG.lift+.08*Math.sin(animClock*3);return;}priceTagTimer=.2;
-      if(hiddenEffects||arena||defeated||victory){clearPriceTag();return;}
+    function updatePriceTag(dt:number){if(activeInstance){clearPriceTag();return;}priceTagTimer-=dt;if(priceTagTimer>0&&priceTag){priceTag.sprite.position.y=standHeight(priceTag.sprite.position.x,priceTag.sprite.position.z)+PRICE_TAG.lift+.08*Math.sin(animClock*3);return;}priceTagTimer=.2;
+      if(arena||hagoromoEvent||defeated||victory){clearPriceTag();return;}
       const targets:PriceTarget[]=[];
       for(const p of pickups)if(p.active&&(p.kind==='kunai'||p.kind==='shuriken'||p.kind==='sealDrop'))targets.push({id:p.id,x:p.x,z:p.z,price:p.kind==='sealDrop'?'free':kunaiPrice()});
       const slot=events.find(e=>e.id==='slot');if(slot?.active&&slot.obj.visible)targets.push({id:'slot',x:slot.x,z:slot.z,price:slotPrice()});
+      const trader=events.find(e=>e.id==='trader');if(trader?.active&&trader.obj.visible)targets.push({id:'trader',x:trader.x,z:trader.z,price:merchantRerollCost()});
       const best=nearestPriceTag(player.position.x,player.position.z,targets);
       if(!best){clearPriceTag();return;}
       const text=priceTagText(best.price,compactNumber);
-      if(!priceTag||priceTag.text!==text||priceTag.id!==best.id){clearPriceTag();const sprite=damageNumbers.spawnText(text,best.price==='free'?'#9dffb5':'#ffd27a');sprite.scale.multiplyScalar(.6);priceTag={sprite,text,id:best.id};}
+      const color=best.price==='free'?'#9dffb5':runMoney<best.price?'#ff9d86':'#ffd27a';
+      const tagKey=text+'|'+color;
+      if(!priceTag||priceTag.text!==tagKey||priceTag.id!==best.id){
+        clearPriceTag();
+        const sprite=damageNumbers.spawnText(text,color,true);
+        sprite.scale.set(3.4,1.06,1);
+        priceTag={sprite,text:tagKey,id:best.id};
+      }
       priceTag.sprite.position.set(best.x,standHeight(best.x,best.z)+PRICE_TAG.lift,best.z);
     }
     let timeSinceHit=99,rushTimer=0,shieldReady=true,shieldTimer=0,emergencyCd=0,periodicTimer=30,boltTimer=2.5,beamTimer=6,freezeCd=0,ultBuffTimer=0,stillTime=0,revives35=0,revives60=0;
@@ -1041,12 +1082,15 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     let lastToolKills=0,pendingTool:string|null=null,toolCritAt=-1e9,toolSmokeAt=-1e9;
     const toolTimers={polar:0,spread:0,wind:0,blades:0},ropeAt=new WeakMap<Enemy,number>();
     function activateHagoromo(){
-      if(!enabledRef.current||pausedRef.current||debugOpenRef.current||hagoromoEvent||arena||defeated||victory||sealing||choiceData||roulette)return;
+      if(!enabledRef.current||pausedRef.current||debugOpenRef.current||hagoromoEvent||activeInstance||arena||defeated||victory||sealing||choiceData||roulette)return;
       if(hagoromo.keys<=0){eventToast=hagoromoRecharges('classico',hagoromoBossDown)?`Treinamento do Hagoromo: faltam ${HAGOROMO.killsPerKey-hagoromo.progress} abates para a próxima chave.`:'Treinamento do Hagoromo: sem recarga depois do chefe da zona (volta na próxima zona).';snapshotTimer=0;return;}
       hagoromo.keys--;const rarity=rollHagoromoRarity(Math.random,luckQuality(stats.luck));
-      hagoromoEvent={rarity,wave:0,origin:{x:player.position.x,z:player.position.z},mega:null,completed:false,
-        outsideEnemies:enemyList.splice(0),outsideDrops:drops};
+      hagoromoEvent={rarity,wave:0,origin:{x:player.position.x,z:player.position.z,elevation:traversal.elevation},mega:null,completed:false,
+        outsideEnemies:enemyList.splice(0),outsideDrops:drops,outsidePickups:pickups};
       drops=hagoromoGround;
+      pickups=[];
+      setInstance('hagoromo');
+      clearRoute();
       for(const enemy of hagoromoEvent.outsideEnemies){
         enemy.sprite.visible=false;
         if(enemy.fixedArt)enemy.fixedArt.root.visible=false;
@@ -1071,13 +1115,21 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const toolCard=(tool:SageTool,label=''):LevelOffer=>({id:'hagoromo:'+tool.id,kind:'stat',name:tool.name,rarity:tool.rarity,icon:tool.icon??'◆',description:(label?label+' · ':'')+tool.stat+'. '+tool.detail});
     function finishHagoromo(){
       if(!hagoromoEvent)return;
-      const {origin,rarity,outsideEnemies,outsideDrops}=hagoromoEvent;hagoromoEvent=null;
+      const {origin,rarity,outsideEnemies,outsideDrops,outsidePickups}=hagoromoEvent;hagoromoEvent=null;
+      setInstance(undefined);
       for(const drop of drops.pulled()){creditDrop(drop);drops.collect(drop);}
       drops=outsideDrops;
+      for(const pickup of pickups)scene.remove(pickup.mesh);
+      pickups=outsidePickups;
       enemyList.push(...outsideEnemies);
       for(const enemy of outsideEnemies){if(enemy.boss?.cast)enemy.boss.cast.marker.visible=true;}
       lockedTarget=null;traversal.reset();
-      player.position.set(origin.x,standHeight(origin.x,origin.z)+player.scale.y*.5,origin.z);addRing(player.position,'#c9b8ff',3);
+      walkingFloor=standHeight(origin.x,origin.z);
+      player.position.set(origin.x,walkingFloor+player.scale.y*.5,origin.z);
+      traversal.restore(player.position,origin.elevation,walkingFloor);
+      walkingFloor=traversal.elevation??walkingFloor;
+      player.position.y=walkingFloor+player.scale.y*.5;
+      invulnerability=Math.max(invulnerability,1.2);addRing(player.position,'#c9b8ff',3);
       const offers=rollToolOffers(hagoromo.tools,rarity,Math.random,HAGOROMO.offers,luckQuality(stats.luck));
       if(!offers.length){eventToast='Treinamento do Hagoromo concluído · você já tem todas as ferramentas.';snapshotTimer=0;saveRun();return;}
       choiceLevel=-11;choiceData=offers.map(tool=>toolCard(tool));banning=false;keys.clear();snapshotTimer=0;saveRun();
@@ -1211,6 +1263,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const notifyRoute=(text:string,kind:'arrived'|'lost'|'set')=>{routeNotice={text,kind,until:performance.now()+(kind==='set'?1800:2600)};eventToast=text;snapshotTimer=0;};
     /** Alvo visto e ainda existente pelo id do mapa; null se sumiu ou nunca foi visto. */
     function findRouteTarget(id:string):RouteTarget|null{
+      if(id==='exam-entry'&&activeInstance==='exam-forest')return {kind:'event',id,name:'Entrada da sala de lutas',x:EXAM_ENTRANCE.x,z:EXAM_ENTRANCE.z};
       if(id==='portal')return portal?{kind:'event',id,name:portalTitle(portal.kind),x:portal.x,z:portal.z}:null;
       if(id==='ping')return currentPing?{kind:'ping',id,name:'Ping',x:currentPing.x,z:currentPing.z}:null;
       if(id==='naruto-totem')return totem&&totemDiscovered?{kind:'enemy',id,name:'Naruto Totem',x:totem.sprite.position.x,z:totem.sprite.position.z}:null;
@@ -1247,11 +1300,14 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     function mapMarkers():WorldSnapshot['events']{
       const mist=!hagoromoEvent&&mistHides(weatherEvent,elapsed);
       const objectives:WorldSnapshot['events']=[];
+      if(activeInstance==='exam-forest')return [{id:'exam-entry',name:'Entrada da sala de lutas',x:EXAM_ENTRANCE.x,z:EXAM_ENTRANCE.z,icon:'⛩',kind:'event',active:true}];
+      if(activeInstance==='exam-hall')return [...enemyList.filter(e=>e.account).map(e=>({id:'exam-'+e.uid,name:megaName(e),x:e.sprite.position.x,z:e.sprite.position.z,icon:'🔓',kind:'enemy' as const,portrait:e.heroId,active:true})),
+        ...fallenMegas.map(f=>({id:'fallen-'+f.candidate.heroId,name:f.candidate.target,x:f.body.position.x,z:f.body.position.z,icon:'⛓',kind:'enemy' as const,active:true}))];
       if(portal&&!hagoromoEvent)objectives.push({id:'portal',name:portalTitle(portal.kind),x:portal.x,z:portal.z,icon:portal.kind==='arena'?'bijuu-portal':'🌀',kind:'event',active:true});
       const markerForBoss=(e:Enemy)=>({id:'mega-'+e.uid,name:megaName(e),x:e.sprite.position.x,z:e.sprite.position.z,icon:e.bijuu?'guardian-bijuu':e.guardian?'👑':e.account?'🔓':'💀',kind:'enemy' as const,portrait:e.bijuu?undefined:e.heroId,guardian:!!e.guardian,active:true});
       for(const boss of enemyList)if(boss.guardian||boss===hagoromoEvent?.mega)objectives.push(markerForBoss(boss));
       if(mist){
-        const boss=enemyList.find(enemy=>enemy.heroId===weatherEvent?.elite&&!enemy.guardian);
+        const boss=liveWeatherOpponent();
         if(boss&&routeDistance(boss.sprite.position)<ZABUZA_MIST.reveal)objectives.push(markerForBoss(boss));
         return objectives;
       }
@@ -1482,10 +1538,10 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       return true;
     }
     /** Pergaminho Chidori Nagashi: a cada 2,5 s, raios em 3 (+1 por cópia extra) inimigos a até 8 m; 30% de paralisar 1 s. */
-    function castBolts(){
-      const count=2+ex('bolts'),damage=stats.damage*1.3*damageMultiplier*tune().playerDamage;
+    function castBolts(name='Chidori Nagashi',count=2+ex('bolts')){
+      const damage=stats.damage*1.3*damageMultiplier*tune().playerDamage;
       const near=enemyList.filter(e=>Math.hypot(e.sprite.position.x-player.position.x,e.sprite.position.z-player.position.z)<8).sort((a,b)=>a.sprite.position.distanceToSquared(player.position)-b.sprite.position.distanceToSquared(player.position)).slice(0,count);
-      for(const e of near){addRing(e.sprite.position,'#ffe86b',.6);if(Math.random()<.3){e.control='Paralisar';e.controlTime=1;}takeDamage(e,damage,'#fff7a8',false,0,'Chidori Nagashi');}
+      for(const e of near){addRing(e.sprite.position,'#ffe86b',.6);if(Math.random()<.3){e.control='Paralisar';e.controlTime=1;}takeDamage(e,damage,'#fff7a8',false,0,name);}
     }
     /** Chamas de Amaterasu: a cada 6 s, o inimigo mais forte a até 12 m sofre um golpe forte e queima; explosão de 2,5 m em volta. */
     function castBeam(){
@@ -1496,9 +1552,9 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
       for(const e of [...enemyList]){const d=Math.hypot(e.sprite.position.x-center.x,e.sprite.position.z-center.z);if(e===target||d<2.5){e.burn=3*stats.duration;e.burstBurn=false;takeDamage(e,e===target?damage:damage*.5,'#3b1f45',false,0,'Amaterasu');}}
     }
     const bossCombat=createBossCombat({scene,player,height:itemSurface,zone:()=>zone,hidden:()=>hiddenEffects,susanoo,
-      hitPlayer:(base,slow,gravity,center,host,technique)=>{if(!damagePlayer(base*threatNow().damage,host as Enemy|undefined,slow,host?hitSource(host as Enemy):'boss',host?attackerName(host as Enemy)+(technique?' · '+technique:''):technique)||!gravity||!center)return;const direction=center.clone().sub(player.position).setY(0), distance=direction.length();const step=gravity==='push'?-2:Math.min(2.25,Math.max(0,distance-.7));player.position.addScaledVector(direction.normalize(),step);if(!arena)solids.resolve(player.position);},viewRight:()=>v2,viewForward:()=>v1});
+      hitPlayer:(base,slow,gravity,center,host,technique)=>{if(!damagePlayer(base*threatNow().damage,host as Enemy|undefined,slow,host?hitSource(host as Enemy):'boss',host?attackerName(host as Enemy)+(technique?' · '+technique:''):technique)||!gravity||!center)return;const direction=center.clone().sub(player.position).setY(0), distance=direction.length();const step=gravity==='push'?-2:Math.min(2.25,Math.max(0,distance-.7));player.position.addScaledVector(direction.normalize(),step);if(activeInstance)keepInInstance(player.position);else if(!arena)solids.resolve(player.position);},viewRight:()=>v2,viewForward:()=>v1});
     function spawnEnemy(challenge=false,megaElite=false,guardian=false,forcedId?:string,accountSeal=false,openingMega=!openingMegaSpawned,akatsuki?:AmbushMemberSave){const t=tune(),candidates=megaElite&&!guardian&&!forcedId?HEROES.filter(h=>h.family===h.id&&!hasAllyFamily(h.id)&&!enemyList.some(enemy=>enemy.heroId&&familyOf(enemy.heroId)===h.id)):[],naturalFamily=candidates[Math.floor(Math.random()*candidates.length)]?.id,id=forcedId??(guardian?ZONES[zone-1].guardians[Math.floor(Math.random()*ZONES[zone-1].guardians.length)]:naturalFamily?versionForEncounter(naturalFamily,zone,mission):heroId),angle=Math.random()*Math.PI*2;if(accountSeal)megaElite=true;const swarmRing=!challenge&&!megaElite&&!guardian&&overtimeNow()>0,r=challenge?7:megaElite?12:swarmRing?FINAL_SWARM.spawnRing[0]+Math.random()*(FINAL_SWARM.spawnRing[1]-FINAL_SWARM.spawnRing[0]):zoneElapsed()<SPAWN_RING.openingSeconds?SPAWN_RING.opening[0]+Math.random()*(SPAWN_RING.opening[1]-SPAWN_RING.opening[0]):10+Math.random()*8,x=THREE.MathUtils.clamp(player.position.x+Math.cos(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),z=THREE.MathUtils.clamp(player.position.z+Math.sin(angle)*r,-WORLD_LIMIT,WORLD_LIMIT),elite=!megaElite&&!challenge&&(forceElite||Math.random()<eliteSpawnChance(t.eliteRate,ex('eliteSpawn'),elapsed));
-      const tier:EnemyTier=accountSeal?'account':guardian?'mega':megaElite?'mega':elite?'elite':'normal',T=ENEMY_TIERS[tier];/* 26/11/2026: o ninja de capuz roxo (linha 0) é sempre atirador; as outras artes, corpo a corpo (hordeRoles.ts). */const look=hordeLook(tier==='normal'&&!challenge,zoneElapsed());const e=megaElite?makeHero(id,Math.max(1,level)):makeSprite(look.row,elite?1.9:1.55,elite?2.5:2);if(megaElite)e.scale.multiplyScalar(1.4);{const spot=akatsuki?{x:akatsuki.x,z:akatsuki.z}:arena?{x,z}:solids.freeSpot(x,z,.6);e.position.set(spot.x,terrainHeight(spot.x,spot.z)+(megaElite?1.6:1),spot.z);}if(elite)addOutline(e,'#ffd21f');else if(accountSeal)addOutline(e,'#5ff0ff');else if(megaElite&&!guardian)addOutline(e,'#ff4d6d');scene.add(e);const threat=threatNow();const hpBase=accountSeal?T.hp*t.accountHp:elite?T.hp*t.eliteHp*eliteHpRamp(tier,zoneElapsed()):challenge?30:T.hp;const isMegaEncounter=tier==='mega'&&!guardian&&!akatsuki;
+      const tier:EnemyTier=accountSeal?'account':guardian?'mega':megaElite?'mega':elite?'elite':'normal',T=ENEMY_TIERS[tier];/* 26/11/2026: o ninja de capuz roxo (linha 0) é sempre atirador; as outras artes, corpo a corpo (hordeRoles.ts). */const look=hordeLook(tier==='normal'&&!challenge,zoneElapsed());const e=megaElite?makeHero(id,Math.max(1,level)):makeSprite(look.row,elite?1.9:1.55,elite?2.5:2);if(megaElite)e.scale.multiplyScalar(1.4);{const spot=akatsuki?{x:akatsuki.x,z:akatsuki.z}:arena||activeInstance?{x,z}:solids.freeSpot(x,z,.6);keepInInstance(spot);e.position.set(spot.x,terrainHeight(spot.x,spot.z)+(megaElite?1.6:1),spot.z);}if(elite)addOutline(e,'#ffd21f');else if(accountSeal)addOutline(e,'#5ff0ff');else if(megaElite&&!guardian)addOutline(e,'#ff4d6d');scene.add(e);const threat=threatNow();const hpBase=accountSeal?T.hp*t.accountHp:elite?T.hp*t.eliteHp*eliteHpRamp(tier,zoneElapsed()):challenge?30:T.hp;const isMegaEncounter=tier==='mega'&&!guardian&&!akatsuki;
       if(isMegaEncounter)openingMegaSpawned=true;
       const hp=akatsuki?.hp??(guardian?guardianHpNow():isMegaEncounter?megaEliteHp(zoneElapsed(),t.megaHp*t.enemyHp*MISSION_TIER[mission]*zoneDifficulty*Math.max(.2,1+ex('threat')),Math.random,openingMega):Math.round(hpBase*threat.hp*(tier==='normal'&&!challenge?normalHpFactor(mission):1)));
       const enemy:Enemy={sprite:e,hp,openingMega:isMegaEncounter&&openingMega,speed:megaElite?2.6:elite?3.8:2.8+Math.random()*.8,hitTimer:.2,challenge,megaElite,elite,guardian,heroId:megaElite?id:undefined,tier,account:accountSeal,defense:guardian?guardianDefense(elapsed,false,overtimeNow(),zone,shikamaruPlans):Math.min(.85,T.defense*(tier==='elite'?t.eliteDefense:tier==='mega'&&!guardian?t.megaDefense*(.60+.40*Math.min(1,zoneElapsed()/480)):1)+(threat.armor??0)),dmgMult:guardian?2.2:T.damage*(tier==='elite'?t.eliteDamage:tier==='mega'?t.megaDamage:1)};if(guardian){enemy.summonedAt=elapsed;enemy.summonedOvertime=overtimeNow();enemy.bossDamageScale=guardianAttackMultiplier(elapsed,overtimeNow(),zone)*bossThreatNow().damage/Math.max(.01,threatNow().damage);enemy.dmgMult=2.2*enemy.bossDamageScale;enemy.hpMultiplier=guardianHpMultiplier(zoneElapsed());enemy.shikamaruPlans=shikamaruPlans;enemy.guardianZone=zone;}enemy.maxHp=akatsuki?.maxHp??enemy.hp;if(look.ranged)enemy.ranged=Math.floor(Math.random()*enemyWeapons.length);enemy.moveAfter=elapsed+3+Math.random()*5;if(megaElite){enemy.uid=++megaUid;enemy.motionLevel=level;enemy.motion=createPlayerMotion(scene,e,id,false,1.4);}enemyList.push(enemy);if(megaElite&&!accountSeal)bossCombat.attach(enemy,enemy.maxHp,guardian);return enemy;}
@@ -1529,34 +1585,49 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     }
     // Guardião (chefe final da zona): 1 por zona. Invocado pelo jogador no Selo do guardião (E).
     let weatherEvent:ActiveWeatherEvent|undefined;
+    let weatherOpponent:Enemy|undefined;
+    const liveWeatherOpponent=()=>weatherOpponent&&enemyList.includes(weatherOpponent)?weatherOpponent:undefined;
     // Rodada 96: eventos de clima sorteados por zona (planZoneWeather); fora do plano, nada acontece.
     let weatherPlan:WeatherPlan=planZoneWeather(WEATHER_BY_MAP[mapId],0);
     function scheduleWeather(){nextWeatherAt=weatherPlan[0]?.at??Infinity;}
     function startWeather(id:WeatherEventId){
       if(weatherEvent||arena||enemyList.length>=ENEMY_SCALING.maxEnemies)return false;
       const w=WEATHER_EVENTS[id];
-      const candidates=w.elites.filter(family=>familyOf(heroId)!==family&&!hasAllyFamily(family)&&!enemyList.some(e=>e.heroId&&familyOf(e.heroId)===family)&&!fallenMegas.some(e=>familyOf(e.candidate.heroId)===family));
-      const elite=candidates[Math.floor(Math.random()*candidates.length)];
+      const elite=w.elites[Math.floor(Math.random()*w.elites.length)];
       if(!elite)return false;
       const enemy=spawnEnemy(false,true,false,versionForEncounter(elite,zone,mission));
-      // Rodada 63: com conjuração, o Mega Elite surge à vista (à frente do jogador, dentro da tela) e faz os selos.
-      if(w.cast){const spot=solids.freeSpot(THREE.MathUtils.clamp(player.position.x+v1.x*CAST_DISTANCE,-WORLD_LIMIT,WORLD_LIMIT),THREE.MathUtils.clamp(player.position.z+v1.z*CAST_DISTANCE,-WORLD_LIMIT,WORLD_LIMIT));enemy.sprite.position.set(spot.x,standHeight(spot.x,spot.z)+enemy.sprite.scale.y*.46,spot.z);enemy.seen=true;}
+      enemy.weatherElite=true;
+      weatherOpponent=enemy;
+      const distance=w.cast?CAST_DISTANCE:8;
+      const spot=solids.freeSpot(THREE.MathUtils.clamp(player.position.x+v1.x*distance,-WORLD_LIMIT,WORLD_LIMIT),
+        THREE.MathUtils.clamp(player.position.z+v1.z*distance,-WORLD_LIMIT,WORLD_LIMIT));
+      enemy.sprite.position.set(spot.x,standHeight(spot.x,spot.z)+enemy.sprite.scale.y*.46,spot.z);
+      enemy.seen=true;enemy.arrivalGuard=1;
       const {x,z}=enemy.sprite.position;
-      weatherEvent={id,until:elapsed+WEATHER_EVENT_DURATION+(w.cast?.seconds??0),elite:enemy.heroId!,x,z,openingMega:enemy.openingMega,castEnd:w.cast?elapsed+w.cast.seconds:undefined};
-      weather=w.name;applyWeather();eventToast=w.cast?w.cast.line:w.name+' · encontre o Mega Elite';snapshotTimer=0;
+      weatherEvent={id,until:elapsed+WEATHER_EVENT_DURATION,elite:enemy.heroId!,x,z,openingMega:enemy.openingMega,castEnd:w.cast?elapsed+w.cast.seconds:undefined};
+      weather=id==='sand'&&elite==='rasa'?GOLDEN_SAND.name:w.name;
+      applyWeather();eventToast=w.cast?w.cast.line:weather+' · encontre o Mega Elite';snapshotTimer=0;
       return true;
     }
     function tickWeather(){
       if(weatherEvent){
-        const elite=enemyList.find(e=>e.heroId===weatherEvent?.elite);
-        if(elapsed>=weatherEvent.until||!elite){weatherEvent=undefined;weather=weatherDef.name;applyWeather();scheduleWeather();snapshotTimer=0;}
+        if(elapsed>=weatherEvent.until||!liveWeatherOpponent()){weatherEvent=undefined;weatherOpponent=undefined;weather=weatherDef.name;applyWeather();scheduleWeather();snapshotTimer=0;}
       }else if(!arena&&!hagoromoEvent&&weatherPlan.length&&elapsed>=weatherPlan[0].at){
-        const next=weatherPlan.shift()!;startWeather(next.id);scheduleWeather();
+        const next=weatherPlan.shift()!;
+        if(!startWeather(next.id)){
+          next.at=elapsed+12;
+          weatherPlan.push(next);
+          weatherPlan.sort((a,b)=>a.at-b.at);
+        }
+        scheduleWeather();
       }
-      zabuzaMistActive=mistHides(weatherEvent,elapsed)&&!!enemyList.find(e=>e.heroId===weatherEvent?.elite);
+      zabuzaMistActive=mistHides(weatherEvent,elapsed)&&!!liveWeatherOpponent();
     }
+    const goldenSand=()=>weatherEvent?.id==='sand'&&familyOf(weatherEvent.elite)==='rasa';
+    const weatherAppearance=()=>!hagoromoEvent&&weatherEvent
+      ? goldenSand()?GOLDEN_SAND:WEATHER_EVENTS[weatherEvent.id]:undefined;
     function weatherFog(){
-      const active=!hagoromoEvent&&weatherEvent&&WEATHER_EVENTS[weatherEvent.id];
+      const active=weatherAppearance();
       if(!active)return null;
       const distance=camera.position.distanceTo(player.position);
       return new THREE.Fog(active.sky,distance+active.near,distance+active.far);
@@ -1645,26 +1716,27 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
     const beacons=new Map<MapPickup,RewardBeacon>();
     const CURSED_SHURIKEN_DAMAGE=.08;
     /** Modelo provisório do guizo: geometrias e um material por cor, criados uma vez e liberados no fim da partida. */
-    const guizoGeometry={bell:new THREE.SphereGeometry(.26,14,10),loop:new THREE.TorusGeometry(.1,.03,6,12)},guizoMaterials=new Map<string,THREE.MeshLambertMaterial>();
-    const guizoMaterial=(color:string)=>{let m=guizoMaterials.get(color);if(!m){m=new THREE.MeshLambertMaterial({color,emissive:color,emissiveIntensity:.35});guizoMaterials.set(color,m);}return m;};
-    runCleanups.push(()=>{guizoGeometry.bell.dispose();guizoGeometry.loop.dispose();for(const m of guizoMaterials.values())m.dispose();});
     let pickupSerial=0;
     function spawnPickup(kind:MapPickup['kind'],x:number,z:number){
-      ({x,z}=solids.safeSpot(x,z));
+      if(activeInstance){const point={x,z};keepInInstance(point);({x,z}=point);}
+      else ({x,z}=solids.safeSpot(x,z));
       const names={kunai:'Pergaminho',shuriken:'Pergaminho',ryu:'Morro de bolinhos de arroz',sealDrop:'Pergaminho de recompensa grátis',cursedShuriken:'Shuriken Amaldiçoada',ninjaBody:'Corpo de ninja'};
       const mesh=new THREE.Group();
       mesh.position.set(x,itemSurface(x,z),z);
+      const guizo=guizoFromKind(kind);
       if(kind==='ninjaBody'){
         const art=new THREE.Sprite(fallenScoutMaterial);
         art.scale.set(1.85,1.23,1);
         art.center.y=.32;
         art.position.y=.035;
         mesh.add(pickupShadows.place(x,z,art.scale.x),art);
-      }else if(guizoFromKind(kind)){
-        const material=guizoMaterial(GUIZO_BY_ID[guizoFromKind(kind)!].color);
-        const bell=new THREE.Mesh(guizoGeometry.bell,material);bell.position.y=.3;
-        const loop=new THREE.Mesh(guizoGeometry.loop,material);loop.position.y=.58;
-        mesh.add(pickupShadows.place(x,z,.8),bell,loop);
+      }else if(guizo){
+        const art=groundModels.mesh(guizoPickupKind(guizo));
+        const shadow=pickupShadows.place(x,z,.8);
+        art.quaternion.copy(shadow.quaternion);
+        art.rotateY(x*.71+z*1.07);
+        art.position.y=.022;
+        mesh.add(shadow,art);
       }else{
         const variant=kind==='ryu'||kind==='cursedShuriken'?0:pickupScrollVariant(kind as 'kunai'|'shuriken'|'sealDrop',Math.random());
         const art=groundModels.mesh(kind==='ryu'?'riceMound':kind==='cursedShuriken'?'cursed':kind==='sealDrop'?'freeScroll':'scroll',variant);
@@ -1676,7 +1748,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
         mesh.add(shadow,art);
       }
       scene.add(mesh);
-      pickups.push({id:'pickup-'+(pickupSerial++),kind,name:guizoFromKind(kind)?GUIZO_BY_ID[guizoFromKind(kind)!].name:names[kind as keyof typeof names],x,z,mesh,active:true});
+      pickups.push({id:'pickup-'+(pickupSerial++),kind,name:guizo?GUIZO_BY_ID[guizo].name:names[kind as keyof typeof names],x,z,mesh,active:true});
       // Rodada 73: o pergaminho grátis brilha, tem facho de luz e aparece no minimapa, no Tab e no M desde que cai.
       if(kind==='sealDrop'){const pickup=pickups.at(-1)!;pickup.discovered=true;beacons.set(pickup,createRewardBeacon(scene,x,z,itemSurface,mesh.position.y+.38));}
     }
@@ -1821,7 +1893,7 @@ export function GameCanvas({ eventDuel, heroId, mission, mapId='folha', resume=n
  * coleta AO PISAR, sem "E": apenas o drop do mega elite (sealDrop). Rodada 50: morro de arroz (Ryu) agora também pede E.
  * Pergaminhos (kunai/shuriken) e emboscadas (ninjaBody/cursedShuriken) pedem E: são ações deliberadas (pago em Ryu / gatilho de risco), não coleta passiva. */
 function collectPickup(pickup:MapPickup):boolean{let ryuGain=0;{const guizo=guizoFromKind(pickup.kind);if(guizo){pickup.active=false;scene.remove(pickup.mesh);const at=pickups.indexOf(pickup);if(at>=0)pickups.splice(at,1);activateGuizo(guizo);return true;}}if(pickup.kind==='kunai'||pickup.kind==='shuriken'){const cost=kunaiPrice();if(runMoney<cost){eventToast='São necessários '+compactNumber(cost)+' Ryu para abrir esta recompensa.';return false;}runMoney-=cost;ryuSpent+=cost;paidWeapons++;}pickup.active=false;scene.remove(pickup.mesh);if(pickup.kind==='kunai'||pickup.kind==='shuriken'){if(pickup.kind==='kunai')kunai++;else shuriken++;choiceLevel=0;choiceData=rollMegaLoot();keys.clear();}else if(pickup.kind==='sealDrop'){choiceLevel=0;choiceData=rollMegaLoot();eventToast=`Sorte ${luck}: escolha o item deixado pelo mega elite`;}else{ryuGain=Math.round((14+zone*6)*MISSION_TIER[mission]*(1+Math.min(1,stats.luck*.01)));runMoney+=ryuGain;globalMagnetUntil=pickupClock+10;const rice=Math.random()<.5;if(rice)addDrop(new THREE.Vector3(pickup.x,0,pickup.z),'onigiri',RAMEN_DROP.heal);eventToast=`${pickup.name} · +${compactNumber(ryuGain)} Ryu · ímã 10 s${rice?' · bolinho de cura':''}`;}if(pickup.kind!=='sealDrop'&&pickup.kind!=='ryu')eventToast=`${pickup.name} coletado`;playSfx('pickup');return true;}
-function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo();return;}const fallen=closestFallenMega();if(fallen){removeFallenMega(fallen);keys.clear();startSeal(fallen.candidate);snapshotTimer=0;return;}let bestPickup:MapPickup|undefined,bestDistance=2;for(const pickup of pickups){if(!pickup.active||pickup===activeBody||(pickup.kind!=='cursedShuriken'&&pickup.kind!=='ninjaBody'&&pickup.kind!=='kunai'&&pickup.kind!=='shuriken'&&pickup.kind!=='ryu'))continue;const d=Math.hypot(pickup.x-player.position.x,pickup.z-player.position.z);if(d<bestDistance){bestDistance=d;bestPickup=pickup;}}if(!bestPickup&&portal&&Math.hypot(portal.x-player.position.x,portal.z-player.position.z)<2.2){const pt=portal;const left=pickups.filter(p=>p.active&&(p.kind==='sealDrop'||p.kind==='kunai'||p.kind==='shuriken')&&Math.hypot(p.x-pt.x,p.z-pt.z)<6).length;if(left&&elapsed-portalWarnedAt>4){portalWarnedAt=elapsed;eventToast=`Ainda há ${left} pergaminho${left>1?'s':''} perto do portal. Recolha com E antes ou aperte E de novo para entrar no portal.`;return;}enterPortal();return;}if(arena&&!bestPickup)return;if(bestPickup){if(bestPickup.kind==='ryu'||bestPickup.kind==='kunai'||bestPickup.kind==='shuriken'){collectPickup(bestPickup);return;}startFieldAmbush(bestPickup);return;}const event=events.filter(e=>e.active).sort((a,b)=>Math.hypot(a.x-player.position.x,a.z-player.position.z)-Math.hypot(b.x-player.position.x,b.z-player.position.z))[0];if(!event||Math.hypot(event.x-player.position.x,event.z-player.position.z)>3.6)return;if(event===zetsuEvent){startAkatsukiAmbush();return;}if(event.id==='shikamaru'){useShikamaruPlan();return;}if(event.id==='guardian-seal'){summonGuardian();return;}if(event.id==='orochimaru'){event.active=false;zoneDifficulty*=1.2;xpMultiplier*=1.25;lootMultiplier*=1.25;eventToast='Maldição de Orochimaru: +20% dificuldade · +25% XP e saque';return;}if(event.id==='arsenal'){openKakashi(event);return;}if(event.id==='ebisu'){openEbisu(event);return;}if(event.id==='iruka'){openIruka(event);return;}if(event.id==='youth'){openYouth(event);return;}if(event.id==='sapos-sabios'){openSages();return;}if(event===ichiraku){openIchiraku();return;}if(event.id==='trader'){showMerchant();return;}if(event.id==='slot'){openRoulette();return;}if(event.altarTier!==undefined){eventToast=event.name+' · fique dentro do círculo para ativar o altar (sem E)';return;}
+function interact(){if(activeInstance==='exam-hall'&&duelWon){victory=true;snapshotTimer=0;return;}if(enterExamRoom())return;if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo();return;}const fallen=closestFallenMega();if(fallen){removeFallenMega(fallen);keys.clear();startSeal(fallen.candidate);snapshotTimer=0;return;}if(activeInstance)return;let bestPickup:MapPickup|undefined,bestDistance=2;for(const pickup of pickups){if(!pickup.active||pickup===activeBody||(pickup.kind!=='cursedShuriken'&&pickup.kind!=='ninjaBody'&&pickup.kind!=='kunai'&&pickup.kind!=='shuriken'&&pickup.kind!=='ryu'))continue;const d=Math.hypot(pickup.x-player.position.x,pickup.z-player.position.z);if(d<bestDistance){bestDistance=d;bestPickup=pickup;}}if(!bestPickup&&portal&&Math.hypot(portal.x-player.position.x,portal.z-player.position.z)<2.2){const pt=portal;const left=pickups.filter(p=>p.active&&(p.kind==='sealDrop'||p.kind==='kunai'||p.kind==='shuriken')&&Math.hypot(p.x-pt.x,p.z-pt.z)<6).length;if(left&&elapsed-portalWarnedAt>4){portalWarnedAt=elapsed;eventToast=`Ainda há ${left} pergaminho${left>1?'s':''} perto do portal. Recolha com E antes ou aperte E de novo para entrar no portal.`;return;}enterPortal();return;}if(arena&&!bestPickup)return;if(bestPickup){if(bestPickup.kind==='ryu'||bestPickup.kind==='kunai'||bestPickup.kind==='shuriken'){collectPickup(bestPickup);return;}startFieldAmbush(bestPickup);return;}const event=events.filter(e=>e.active).sort((a,b)=>Math.hypot(a.x-player.position.x,a.z-player.position.z)-Math.hypot(b.x-player.position.x,b.z-player.position.z))[0];if(!event||Math.hypot(event.x-player.position.x,event.z-player.position.z)>3.6)return;if(event===zetsuEvent){startAkatsukiAmbush();return;}if(event.id==='shikamaru'){useShikamaruPlan();return;}if(event.id==='guardian-seal'){summonGuardian();return;}if(event.id==='orochimaru'){event.active=false;zoneDifficulty*=1.2;xpMultiplier*=1.25;lootMultiplier*=1.25;eventToast='Maldição de Orochimaru: +20% dificuldade · +25% XP e saque';return;}if(event.id==='arsenal'){openKakashi(event);return;}if(event.id==='ebisu'){openEbisu(event);return;}if(event.id==='iruka'){openIruka(event);return;}if(event.id==='youth'){openYouth(event);return;}if(event.id==='sapos-sabios'){openSages();return;}if(event===ichiraku){openIchiraku();return;}if(event.id==='trader'){showMerchant();return;}if(event.id==='slot'){openRoulette();return;}if(event.altarTier!==undefined){eventToast=event.name+' · fique dentro do círculo para ativar o altar (sem E)';return;}
     }
     function addDrop(position:THREE.Vector3,type:Drop['type'],value:number,name=''){
       const x=position.x+(Math.random()-.5)*.7,z=position.z+(Math.random()-.5)*.7;
@@ -1865,7 +1937,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       // Naruto Totem e clones: recompensas próprias (2 níveis / só XP), nunca selamento nem saque de mega elite.
       if(enemy.totem){endTotem('derrotado');return;}
       if(enemy.bijuu){defeatedBijuu=BIJUU_BY_ID[enemy.heroId!].name;enemyList.splice(i,1);bossCombat.dispose(enemy);disposeEnemySprite(enemy);countKill();bijuuReward=bijuuLamens(MISSION_TIER[mission],plansUsed);openPortal('exit',enemy.sprite.position.x,enemy.sprite.position.z);eventToast=defeatedBijuu+' derrotada · +'+bijuuReward+' Lamens no portal de saída';saveRun();return;}
-      if(enemy.clone){const at=enemy.sprite.position.clone();enemyList.splice(i,1);disposeEnemySprite(enemy);countKill();addDrop(at,'xp',Math.round(TOTEM_RULES.cloneXp*xpMultiplier*ENEMY_XP_MULTIPLIER));if(!hiddenEffects)addRing(at,'#f2f2f2',.45);return;}queueDeathBurst(enemy);const defeatedAt=enemy.sprite.position.clone();disposeEnemySprite(enemy);enemyList.splice(i,1);bossCombat.dispose(enemy);countKill();if(ex('killHeal')>0&&!defeated&&Math.random()<ex('killHeal'))cappedHeal(stats.maxHp*.02);if(enemy.account){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const,account:true};/* Rodada 55: o Shinobi para selar também cai e fica deitado (halo ciano) até o E dentro de 10 m. */fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,true,enemy.motionLevel??level)});eventToast='Shinobi para selar derrotado · aproxime-se do corpo e aperte E para selar e DESBLOQUEAR '+pending.target;return;}if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const};fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,false,enemy.motionLevel??level)});eventToast='Mega Elite derrotado · aproxime-se do corpo e aperte E';}for(const id of allies)gainAffinity(id,AFFINITY_RULES.perKill);if(enemy.guardian){hagoromoBossDown=true;const plans=Math.min(GUARDIAN_RULES.shikamaruMaxPlans,enemy.shikamaruPlans??0);for(let n=0;n<1+plans;n++){const angle=Math.PI/2+n*Math.PI*2/(1+plans);spawnPickup('sealDrop',defeatedAt.x+Math.cos(angle)*3.4,defeatedAt.z+Math.sin(angle)*3.4);}openPortal(zone===3?'arena':'zone',defeatedAt.x,defeatedAt.z);eventToast='Portal aberto! Guardião derrotado. '+(1+plans)+' kunai'+(plans?'s grátis no chão (Plano do Shikamaru +'+plans+').':' grátis no chão.');}if(enemy.bodyAmbush&&enemy.bodyAmbush===activeBody&&!enemyList.some(e=>e.bodyAmbush===activeBody)){activeBody.active=false;scene.remove(activeBody.mesh);activeBody=undefined;spawnPickup('sealDrop',defeatedAt.x,defeatedAt.z);eventToast='Emboscada concluída! Pegue o pergaminho de recompensa (1 item grátis).';saveRun();}const t=tune(),tierKey:EnemyTier=enemy.guardian?'mega':enemy.tier??'normal',boosted=tierKey!=='normal',loot=lootScale(tierKey,enemy.maxHp??0,ENEMY_TIERS.normal.hp*threatNow().hp,MISSION_TIER[mission])*(tierKey==='elite'?t.eliteLoot:tierKey==='mega'?t.megaLoot:1),pieces=tierKey==='mega'?3:1;addDrop(defeatedAt,'xp',xpDropValue(xpLoot(loot,MISSION_TIER[mission]),xpMultiplier,elapsed));{const guizo=rollGuizo(guizoBusy());if(guizo)spawnPickup(guizoPickupKind(guizo),defeatedAt.x,defeatedAt.z);}if(Math.random()<Math.min(RAMEN_DROP.chance,dropChance(RAMEN_DROP.chance,t.ramenDrop)))addDrop(defeatedAt,'onigiri',RAMEN_DROP.heal*t.ramenHeal);if(boosted||Math.random()<dropChance(BASE_LOOT.ryuChance,t.ryuDrop))for(let n=0;n<pieces;n++)addDrop(defeatedAt,'ryu',Math.max(1,Math.round(BASE_LOOT.ryu*lootMultiplier*loot/pieces)));if(boosted||Math.random()<dropChance(BASE_LOOT.chakraChance,t.chakraDrop))for(let n=0;n<(tierKey==='mega'?2:1);n++)addDrop(defeatedAt,'chakra',Math.round(BASE_LOOT.chakra*Math.sqrt(loot)*t.chakraGain));
+      if(enemy.clone){const at=enemy.sprite.position.clone();enemyList.splice(i,1);disposeEnemySprite(enemy);countKill();addDrop(at,'xp',Math.round(TOTEM_RULES.cloneXp*xpMultiplier*ENEMY_XP_MULTIPLIER));if(!hiddenEffects)addRing(at,'#f2f2f2',.45);return;}queueDeathBurst(enemy);const defeatedAt=enemy.sprite.position.clone();disposeEnemySprite(enemy);enemyList.splice(i,1);bossCombat.dispose(enemy);countKill();if(ex('killHeal')>0&&!defeated&&Math.random()<ex('killHeal'))cappedHeal(stats.maxHp*.02);if(enemy.account){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const,account:true};/* Rodada 55: o Shinobi para selar também cai e fica deitado (halo ciano) até o E dentro de 10 m. */fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,true,enemy.motionLevel??level)});eventToast='Shinobi para selar derrotado · aproxime-se do corpo e aperte E para selar e DESBLOQUEAR '+pending.target;return;}if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth&&!enemy.weatherElite){const pending={heroId:enemy.heroId!,target:HERO_BY_ID[enemy.heroId!].name,phase:'ready' as const};fallenMegas.push({candidate:pending,body:layFallenShinobi(pending.heroId,defeatedAt.x,defeatedAt.z,false,enemy.motionLevel??level)});eventToast='Mega Elite derrotado · aproxime-se do corpo e aperte E';}for(const id of allies)gainAffinity(id,AFFINITY_RULES.perKill);if(enemy.guardian){hagoromoBossDown=true;const plans=Math.min(GUARDIAN_RULES.shikamaruMaxPlans,enemy.shikamaruPlans??0);for(let n=0;n<1+plans;n++){const angle=Math.PI/2+n*Math.PI*2/(1+plans);spawnPickup('sealDrop',defeatedAt.x+Math.cos(angle)*3.4,defeatedAt.z+Math.sin(angle)*3.4);}openPortal(zone===3?'arena':'zone',defeatedAt.x,defeatedAt.z);eventToast='Portal aberto! Guardião derrotado. '+(1+plans)+' kunai'+(plans?'s grátis no chão (Plano do Shikamaru +'+plans+').':' grátis no chão.');}if(enemy.bodyAmbush&&enemy.bodyAmbush===activeBody&&!enemyList.some(e=>e.bodyAmbush===activeBody)){activeBody.active=false;scene.remove(activeBody.mesh);activeBody=undefined;spawnPickup('sealDrop',defeatedAt.x,defeatedAt.z);eventToast='Emboscada concluída! Pegue o pergaminho de recompensa (1 item grátis).';saveRun();}const t=tune(),tierKey:EnemyTier=enemy.guardian?'mega':enemy.tier??'normal',boosted=tierKey!=='normal',loot=lootScale(tierKey,enemy.maxHp??0,ENEMY_TIERS.normal.hp*threatNow().hp,MISSION_TIER[mission])*(tierKey==='elite'?t.eliteLoot:tierKey==='mega'?t.megaLoot:1),pieces=tierKey==='mega'?3:1;addDrop(defeatedAt,'xp',xpDropValue(xpLoot(loot,MISSION_TIER[mission]),xpMultiplier,elapsed));{const guizo=rollGuizo(guizoBusy());if(guizo)spawnPickup(guizoPickupKind(guizo),defeatedAt.x,defeatedAt.z);}if(Math.random()<Math.min(RAMEN_DROP.chance,dropChance(RAMEN_DROP.chance,t.ramenDrop)))addDrop(defeatedAt,'onigiri',RAMEN_DROP.heal*t.ramenHeal);if(boosted||Math.random()<dropChance(BASE_LOOT.ryuChance,t.ryuDrop))for(let n=0;n<pieces;n++)addDrop(defeatedAt,'ryu',Math.max(1,Math.round(BASE_LOOT.ryu*lootMultiplier*loot/pieces)));if(boosted||Math.random()<dropChance(BASE_LOOT.chakraChance,t.chakraDrop))for(let n=0;n<(tierKey==='mega'?2:1);n++)addDrop(defeatedAt,'chakra',Math.round(BASE_LOOT.chakra*Math.sqrt(loot)*t.chakraGain));
       // SEM drop de item por abate (pedido do usuário, 06/11/2026): itens só por kunai/shuriken/eventos com interação.
       // Antes: 1,8% por abate (×Sorte) virava pendingItemRewards ao ser puxado pelo ímã — com emboscadas e horda grande, chovia item sem interação.
       playSfx('impact');}
@@ -2142,12 +2214,12 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         // O guardião/portal continuam funcionando: vencer o guardião e entrar no portal leva à próxima zona (relógio novo) ou à arena.
         if(overtimeNow()>0&&!finalSwarmAnnounced){finalSwarmAnnounced=true;eventToast='FINAL SWARM! O tempo acabou: sobreviva o máximo que puder · dificuldade ×'+FINAL_SWARM.multiplier+' e subindo.';playSfx('ultimate');snapshotTimer=0;}
         else if(overtimeNow()<=0)finalSwarmAnnounced=false;{const step=swarmStep(overtimeNow());if(step>swarmStepAnnounced){swarmStepAnnounced=step;eventToast='FINAL SWARM · '+(step*SWARM_STEP.seconds/60)+' min: inimigos mais fortes (+'+Math.round((swarmStepHp(step)-1)*100).toLocaleString('pt-BR')+'% de vida, +'+Math.round((swarmStepDamage(step)-1)*100).toLocaleString('pt-BR')+'% de dano e mais armadura)';playSfx('ultimate');snapshotTimer=0;}else if(step<swarmStepAnnounced)swarmStepAnnounced=step;}}if(sealing?.phase==='sealing'){sealTimer+=dt;if(sealTimer>=2.7){if(sealing.account){const duelNote=accountSeal(sealing.heroId);eventToast=sealing.target+' foi selado e agora está DESBLOQUEADO na sua conta para as próximas missões'+duelNote;}else{recruitAlly(sealing.heroId);eventToast=sealing.target+' foi selado e agora luta ao seu lado';}/* Rodada 47 (pedido do usuário: "se não tiver escolha de substituição, continuar a missão instantaneamente") — o jutsu termina e a missão
- * continua na hora: próximo candidato (ou volta à run), sem a tela/botão "Continuar missão". O 'complete' nunca mais fica visível. */nextSeal();recaptureAfterChoice();}}if(!sealing){if(!arena&&!hagoromoEvent&&zoneElapsed()>=(megaSchedule[megaElitesSpawned]??Infinity)/Math.max(.1,tune().megaRate)&&enemyList.length<(overtimeNow()>0?FINAL_SWARM.maxEnemies:ENEMY_SCALING.maxEnemies)){spawnEnemy(false,true);megaElitesSpawned++;eventToast='Alerta: um Mega Elite surgiu naturalmente nesta zona!';}
-      if(!hagoromoEvent&&(!testRun||weatherEvent))tickWeather();
+ * continua na hora: próximo candidato (ou volta à run), sem a tela/botão "Continuar missão". O 'complete' nunca mais fica visível. */nextSeal();recaptureAfterChoice();}}if(!sealing){if(!activeInstance&&!arena&&!hagoromoEvent&&zoneElapsed()>=(megaSchedule[megaElitesSpawned]??Infinity)/Math.max(.1,tune().megaRate)&&enemyList.length<(overtimeNow()>0?FINAL_SWARM.maxEnemies:ENEMY_SCALING.maxEnemies)){spawnEnemy(false,true);megaElitesSpawned++;eventToast='Alerta: um Mega Elite surgiu naturalmente nesta zona!';}
+      if(!activeInstance&&!hagoromoEvent&&(!testRun||weatherEvent))tickWeather();
       // Missões de desbloqueio (src/game/unlockMissions.ts): o Shinobi para selar de cada shinobi bloqueado surge só no mapa e na
       // dificuldade da missão dele. Até dois candidatos elegíveis por zona, com intervalo sorteado. Testes não geram.
-      if(duel&&duelFoe){if(!duelWon&&!arena&&!hagoromoEvent&&!sealing&&elapsed>=nextAccountAt&&duelReady(duel,elapsed,kills)&&!enemyList.some(e=>e.account&&e.heroId===duelFoe)){nextAccountAt=elapsed+30;spawnEnemy(false,false,false,duelFoe,true);eventToast='Prova Chūnin · '+duel.title+': '+(HERO_BY_ID[duelFoe]?.name??duelFoe)+' entrou na luta · derrote e sele!';}}
-      else if(!arena&&!hagoromoEvent&&!testRun&&!sealing&&accountEncounters<2&&elapsed>=nextAccountAt&&enemyList.length<ENEMY_SCALING.maxEnemies){const candidates=accountCandidates();const candidate=candidates[Math.floor(Math.random()*candidates.length)];if(candidate){accountTried.add(candidate.id);accountEncounters++;nextAccountAt=elapsed+40+Math.random()*35;spawnEnemy(false,false,false,candidate.id,true);const m=UNLOCK_MISSIONS[candidate.id];eventToast=(m.legendary?'LENDÁRIO! ':'')+'Missão '+m.title+': '+candidate.name+' apareceu · derrote e sele para desbloquear na conta!';}else nextAccountAt=elapsed+5;}const speed=stats.moveSpeed*(weatherEvent?.id==='sand'?.73:weatherEvent?.id==='snow'?.64:1)*(playerSlow>0?.55:1)*(rushTimer>0?1.2:1);readMovement(dir);
+      if(duel&&duelFoe){if(activeInstance==='exam-hall'&&!duelWon&&!sealing&&elapsed>=nextAccountAt&&!fallenMegas.some(f=>f.candidate.account&&f.candidate.heroId===duelFoe)&&!enemyList.some(e=>e.account&&e.heroId===duelFoe)){nextAccountAt=elapsed+30;const opponent=spawnEnemy(false,false,false,duelFoe,true);opponent.sprite.position.set(0,INSTANCE_FLOOR+opponent.sprite.scale.y*.46,-5);opponent.seen=true;eventToast='Prova Chūnin · '+duel.title+': '+(HERO_BY_ID[duelFoe]?.name??duelFoe)+' entrou na luta · derrote e sele!';}}
+      else if(!arena&&!hagoromoEvent&&!testRun&&!sealing&&accountEncounters<2&&elapsed>=nextAccountAt&&enemyList.length<ENEMY_SCALING.maxEnemies){const candidates=accountCandidates();const candidate=candidates[Math.floor(Math.random()*candidates.length)];if(candidate){accountTried.add(candidate.id);accountEncounters++;nextAccountAt=elapsed+40+Math.random()*35;spawnEnemy(false,false,false,candidate.id,true);const m=UNLOCK_MISSIONS[candidate.id];eventToast=(m.legendary?'LENDÁRIO! ':'')+'Missão '+m.title+': '+candidate.name+' apareceu · derrote e sele para desbloquear na conta!';}else nextAccountAt=elapsed+5;}const speed=stats.moveSpeed*(activeInstance?1:weatherEvent?.id==='sand'?.73:weatherEvent?.id==='snow'?.64:1)*(playerSlow>0?.55:1)*(rushTimer>0?1.2:1);readMovement(dir);
       const gliding=jumpTime>0&&jumpTime<=jumpDuration*.5&&sandGlideLeft>0&&keys.has(' ');
       if(gliding)sandGlideLeft=Math.max(0,sandGlideLeft-dt);else jumpTime=Math.max(0,jumpTime-dt);
       jumpHeight=jumpTime>0?Math.sin(Math.PI*jumpTime/jumpDuration)*1.3:0;
@@ -2158,7 +2230,11 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       moving=dir.lengthSq()>0;
       if(moving)heading.copy(dir).normalize();
       const distance=moving?speed*dt*(slideTime>0?2.6:1):0;
-      if(villageActive){
+      if(activeInstance){
+        if(moving)player.position.addScaledVector(heading,distance);
+        keepInInstance(player.position);
+        walkingFloor=INSTANCE_FLOOR;
+      }else if(villageActive){
         walkingFloor=moveVillageActor(player.position,moving?heading:dir,distance,jumpHeight,dt,traversal,solids,standHeight,WORLD_LIMIT);
       } else {
         if(moving){
@@ -2190,14 +2266,14 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         wasAirborne=airborne;chakraFeet.update(player.position.x,player.position.z,onWater&&!airborne,performance.now()/1000,dt);}
       const threat=threatNow();
       if(tune().enemyHp!==appliedEnemyHp){const ratio=tune().enemyHp/Math.max(.01,appliedEnemyHp);for(const e of enemyList)rescaleEnemyHp(e,ratio);appliedEnemyHp=tune().enemyHp;}
-      if(!arena&&!hagoromoEvent)updateTotem(dt);
-      ambushTimer-=dt;if(!arena&&!hagoromoEvent&&ambushTimer<=0){for(let n=0;n<Math.min(8+zone*2,threat.cap-enemyList.length);n++)spawnEnemy();ambushTimer=AMBUSH_RULES.min+Math.random()*AMBUSH_RULES.spread;eventToast='Emboscada! Ninjas cercando a área.';}
+      if(!activeInstance&&!arena&&!hagoromoEvent)updateTotem(dt);
+      ambushTimer-=dt;if(!arena&&!hagoromoEvent&&activeInstance!=='exam-hall'&&ambushTimer<=0){for(let n=0;n<Math.min(8+zone*2,threat.cap-enemyList.length);n++)spawnEnemy();ambushTimer=AMBUSH_RULES.min+Math.random()*AMBUSH_RULES.spread;eventToast='Emboscada! Ninjas cercando a área.';}
       if(!hagoromoEvent)tickAltar(dt);
       // Rodada 47/49/50 — auto-coleta ao pisar (sem "E"): apenas o drop do mega (sealDrop). Rodada 50 (pedido do usuário: "os bolinhos de arroz você colocou para passar em cima e pegar automático, retire isso"): morro de arroz (Ryu) agora também pede E, igual aos pergaminhos.
       if(!hagoromoEvent&&!choiceData&&!sealing&&!roulette&&!defeated&&!victory){const autoPickup=pickups.find(p=>p.active&&p.kind!=='cursedShuriken'&&p.kind!=='ninjaBody'&&p.kind!=='kunai'&&p.kind!=='shuriken'&&p.kind!=='ryu'&&Math.hypot(p.x-player.position.x,p.z-player.position.z)<1.8);if(autoPickup)collectPickup(autoPickup);}
       // Spawn em LOTE (antes: 1 inimigo por intervalo, ~5/s aos 8 min — o jogador matava mais rápido do que nascia e a horda ficava em ~60).
       // Orçamento contínuo = spawns/s × dt; abaixo do teto a reposição acelera (até ×SPAWN_RULES.refill com a tela vazia); máximo SPAWN_RULES.perFrame por quadro.
-      spawnTimer-=dt;if(!arena&&!hagoromoEvent&&spawnTimer<=0){const perFrame=threat.swarm>1?SPAWN_RULES.swarmPerFrame:SPAWN_RULES.perFrame;spawnBudget=spawnBudgetFor(spawnBudget,dt,threat.spawnInterval,enemyList.length,threat.cap,threat.swarm>1,perFrame,SPAWN_RULES.refill);let made=0;while(spawnBudget>=1&&enemyList.length<threat.cap&&made<perFrame){spawnEnemy();spawnBudget--;made++;}if(enemyList.length>=threat.cap)spawnBudget=Math.min(spawnBudget,1);}
+      spawnTimer-=dt;if(!arena&&!hagoromoEvent&&activeInstance!=='exam-hall'&&spawnTimer<=0){const perFrame=threat.swarm>1?SPAWN_RULES.swarmPerFrame:SPAWN_RULES.perFrame;spawnBudget=spawnBudgetFor(spawnBudget,dt,threat.spawnInterval,enemyList.length,threat.cap,threat.swarm>1,perFrame,SPAWN_RULES.refill);let made=0;while(spawnBudget>=1&&enemyList.length<threat.cap&&made<perFrame){spawnEnemy();spawnBudget--;made++;}if(enemyList.length>=threat.cap)spawnBudget=Math.min(spawnBudget,1);}
       // Rodada 49 — hard cap 1600 (defesa em profundidade — pedido: "final swarm não respeitando os 1600 monstros totais"):
       // se passar do teto (ex.: emboscada/roleta por cima do lote), remove os últimos inimigos comuns — nunca bosses.
       if(enemyList.length>FINAL_SWARM.maxEnemies){for(let i=enemyList.length-1;i>=0&&enemyList.length>FINAL_SWARM.maxEnemies;i--){const e=enemyList[i];if(e.guardian||e.bijuu||e.totem||e.megaElite||e.account||e.boss||e.clone)continue;const j=enemyList.indexOf(e);scene.remove(e.sprite);disposeEnemySprite(e);enemyList.splice(j,1);}}
@@ -2220,7 +2296,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         if(!hagoromoEvent&&mistHides(weatherEvent,elapsed)&&!enemyRenderer.isBatched(enemy.sprite))enemy.sprite.visible=Math.hypot(enemy.sprite.position.x-player.position.x,enemy.sprite.position.z-player.position.z)<ZABUZA_MIST.reveal+ZABUZA_MIST.fade;
         else enemy.sprite.visible=true;
         if(enemy.poison){const duration=Math.min(dt,enemy.poison.remaining);enemy.poison.remaining-=duration;takeDamage(enemy,enemy.poison.dps*duration*poisonMultiplier(enemy.poisonStacks),'#b67bff');if(!enemyList.includes(enemy))continue;if(enemy.poison.remaining<=0){enemy.poison=undefined;enemy.poisonStacks=0;}}
-        enemy.sprite.material.color.lerp(enemy.elite?ELITE_TINT:WHITE_TINT,dt*6);if(enemy.fixedArt)enemy.fixedArt.material.color.copy(enemy.sprite.material.color);if((enemy.burn??0)>0){enemy.burn=Math.max(0,(enemy.burn??0)-dt);takeDamage(enemy,stats.damage*.15*dt*(1+ex('statusDamage'))*elementMultiplier(stats.extra,'Fogo'),'#ff9b46');if(!enemyList.includes(enemy))continue;}if(enemy.totem)continue;enemy.controlTime=Math.max(0,(enemy.controlTime||0)-dt);enemy.slow=Math.max(0,(enemy.slow||0)-dt);tickStatus(enemy,dt);const channeling=!hagoromoEvent&&isChanneling(weatherEvent,enemy.heroId,elapsed);enemy.arrivalGuard=Math.max(0,(enemy.arrivalGuard??0)-dt);if(enemy.phaseStun)enemy.phaseStun=Math.max(0,enemy.phaseStun-dt);const stunned=channeling||enemy.arrivalGuard>0||(enemy.phaseStun??0)>0||!enemy.bijuu&&enemy.controlTime>0&&enemy.control!=='Lentidão';const casting=enemy.boss?bossCombat.update(enemy,dt,Boolean(enemy.guardian||enemy.megaElite&&!enemy.account)&&!stunned&&enemy.windup===undefined&&!defeated):false;if(defeated)break;
+        enemy.sprite.material.color.lerp(enemy.elite?ELITE_TINT:WHITE_TINT,dt*6);if(enemy.fixedArt)enemy.fixedArt.material.color.copy(enemy.sprite.material.color);if((enemy.burn??0)>0){enemy.burn=Math.max(0,(enemy.burn??0)-dt);takeDamage(enemy,stats.damage*.15*dt*(1+ex('statusDamage'))*elementMultiplier(stats.extra,'Fogo'),'#ff9b46');if(!enemyList.includes(enemy))continue;}if(enemy.totem)continue;enemy.controlTime=Math.max(0,(enemy.controlTime||0)-dt);enemy.slow=Math.max(0,(enemy.slow||0)-dt);tickStatus(enemy,dt);const channeling=!hagoromoEvent&&enemy===weatherOpponent&&isChanneling(weatherEvent,enemy.heroId,elapsed);enemy.arrivalGuard=Math.max(0,(enemy.arrivalGuard??0)-dt);if(enemy.phaseStun)enemy.phaseStun=Math.max(0,enemy.phaseStun-dt);const stunned=channeling||enemy.arrivalGuard>0||(enemy.phaseStun??0)>0||!enemy.bijuu&&enemy.controlTime>0&&enemy.control!=='Lentidão';const casting=enemy.boss?bossCombat.update(enemy,dt,Boolean(enemy.guardian||enemy.megaElite&&!enemy.account)&&!stunned&&enemy.windup===undefined&&!defeated):false;if(defeated)break;
         const sprite=enemy.sprite,batched=enemyRenderer.isBatched(sprite),motion=enemy.motion;
         // Nenhum inimigo (Bijū inclusive) fica fora da área do jogador depois de empurrões e puxões.
         keepInPlayArea(sprite.position);
@@ -2273,7 +2349,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
           }else if(!ranged&&enemy.attackPoint&&Math.hypot(player.position.x-enemy.attackPoint.x,player.position.z-enemy.attackPoint.z)<radius&&invulnerability<=0){
             damagePlayer(10*(enemy.dmgMult??1)*threat.damage,enemy);
           }if(enemy.marker){scene.remove(enemy.marker);enemy.marker.geometry.dispose();(enemy.marker.material as THREE.Material).dispose();enemy.marker=undefined;}enemy.windup=undefined;enemy.hitTimer=(ranged?2.25:.9)/threat.attackRate;}
-        }else{enemy.hitTimer-=dt;if(distance>reach){enemy.sprite.position.addScaledVector(enemyTravel,enemy.speed*threat.speed*(enemy.bijuu?1:(enemy.slow?.75:1)*chillSlow(enemy))*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(!arena&&!enemy.bijuu){const p=enemy.sprite.position,bx=p.x,bz=p.z;if(solids.resolveBig(p)&&slideAlong({x:bx,z:bz},p,player.position,enemy.speed*threat.speed*dt))solids.resolveBig(p);}enemy.sprite.position.y=standHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
+        }else{enemy.hitTimer-=dt;if(distance>reach){enemy.sprite.position.addScaledVector(enemyTravel,enemy.speed*threat.speed*(enemy.bijuu?1:(enemy.slow?.75:1)*chillSlow(enemy))*(movingSpecial?(enemy.jumping?1.2:1.85):1)*dt);if(activeInstance)keepInInstance(enemy.sprite.position);else if(!arena&&!enemy.bijuu){const p=enemy.sprite.position,bx=p.x,bz=p.z;if(solids.resolveBig(p)&&slideAlong({x:bx,z:bz},p,player.position,enemy.speed*threat.speed*dt))solids.resolveBig(p);}enemy.sprite.position.y=standHeight(enemy.sprite.position.x,enemy.sprite.position.z)+enemy.sprite.scale.y*.46+leap;}
           else if(enemy.hitTimer<=0){enemy.windup=Math.max(.28,.65/Math.sqrt(threat.attackRate));enemy.attackPoint=player.position.clone();/* Aviso no chão desenhado em lote (enemyRenderer); o Mesh é só dado. */const marker=enemyRenderer.marker(ranged?.7:enemy.megaElite?1.7:1);marker.position.set(enemy.attackPoint.x,terrainHeight(enemy.attackPoint.x,enemy.attackPoint.z)+.2,enemy.attackPoint.z);enemy.marker=marker;}
         }
         if(motion){
@@ -2285,7 +2361,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       }
       bossCombat.updateEffects(dt);updateTargetMarker();
       for(const [pickup,beacon] of beacons){if(!pickup.active||!pickups.includes(pickup)){beacon.dispose();beacons.delete(pickup);}else beacon.update(dt,hiddenEffects);} // Rodada 73: farol do pergaminho grátis.
-      for(const fallen of fallenMegas)fallen.body.update(dt,hiddenEffects); // Rodada 55: queda, respiração e halo do corpo caído.
+      for(const fallen of fallenMegas)fallen.body.update(dt,hiddenEffects,v2); // Rodada 55: queda, respiração e halo do corpo caído.
       // Aliados seguem em formação, atacam automaticamente e fornecem regeneração de suporte.
       allyTimer-=dt;if(!defeated&&!sealing)for(const id of allies)gainAffinity(id,dt*AFFINITY_RULES.perSecond);
       for(let i=0;i<allyActors.length;i++){
@@ -2423,8 +2499,8 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       for(let i=numbers.length-1;i>=0;i--){const n=numbers[i];n.life-=dt;n.sprite.position.y+=dt*1.3;n.sprite.material.opacity=Math.max(0,n.life/.8);if(n.life<=0){damageNumbers.recycle(n.sprite);numbers.splice(i,1);}}
       // Só registra o evento depois que ele entra no campo visível da câmera.
       const frustum=viewFrustum.setFromProjectionMatrix(new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
-      updateZetsu(dt);
-      for(const event of events){if(event===zetsuEvent)continue;if(!event.discovered&&frustum.containsPoint(event.obj.position)&&event.obj.position.distanceTo(player.position)<60){event.discovered=true;event.obj.visible=true;if(event===ichiraku)placeTeuchi();}}
+      if(!activeInstance)updateZetsu(dt);
+      for(const event of events){if(activeInstance)break;if(event===zetsuEvent)continue;if(!event.discovered&&frustum.containsPoint(event.obj.position)&&event.obj.position.distanceTo(player.position)<60){event.discovered=true;event.obj.visible=true;if(event===ichiraku)placeTeuchi();}}
       if(totem&&!totemDiscovered&&frustum.containsPoint(totem.sprite.position)&&totem.sprite.position.distanceTo(player.position)<60)totemDiscovered=true;
       for(const pickup of pickups){if(!pickup.discovered&&frustum.containsPoint(pickup.mesh.position)&&pickup.mesh.position.distanceTo(player.position)<60)pickup.discovered=true;}
       // Mega elites/guardiões entram no mapa só depois de vistos na câmera.
@@ -2434,8 +2510,8 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         zoom=Math.abs(zoom-targetZoom)<.01?targetZoom:THREE.MathUtils.damp(zoom,targetZoom,18,dt);
         projectCamera();
       }
-      if(!arena){
-        const active=!hagoromoEvent&&weatherEvent&&WEATHER_EVENTS[weatherEvent.id];
+      if(!arena&&!activeInstance){
+        const active=weatherAppearance();
         if(active){if(!(scene.fog instanceof THREE.Fog))scene.fog=weatherFog();
           // Rodada 63: durante os selos a névoa engrossa aos poucos (névoa aberta → névoa do evento).
           if(scene.fog instanceof THREE.Fog){const distance=camera.position.distanceTo(player.position),range=blendFog(active,castProgress(elapsed,weatherEvent?.castEnd,active.cast?.seconds??0));scene.fog.color.set(active.sky);scene.fog.near=distance+range.near;scene.fog.far=distance+range.far;}
@@ -2467,7 +2543,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       camera.lookAt(cameraTarget);camera.updateMatrixWorld();
       if(enabledRef.current&&!defeated&&!victory)updateRoute();if(routeNotice&&performance.now()>routeNotice.until){routeNotice=null;snapshotTimer=0;}
       updatePriceTag(dt);
-      frames++;fpsTimer+=dt;if(fpsTimer>=.5){fps=Math.round(frames/fpsTimer);frames=0;fpsTimer=0;}snapshotTimer-=dt;if(snapshotTimer<=0){onSnapshotRef.current({killedBy,bossBars:bossBars(),youth:{panel:choiceLevel===-13&&!!choiceData,challenge:youthOffer,run:youthRun?{challenge:youthRun.challenge,difficulty:youthRun.difficulty,timeLeft:youthRun.timeLeft,progress:youthRun.progress,goal:youthRun.goal,stat:youthRun.stat}:null},hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,need:HAGOROMO.killsPerKey,tools:[...hagoromo.tools],active:!!hagoromoEvent,stage:hagoromoStage(),recharge:hagoromoRecharges('classico',hagoromoBossDown)},protection:debugState.god?'debug':invulnerability>.25?'temporary':undefined,killStreak:recentStreak(streak,elapsed),sagesUsed:sagesUsedZone===zone,enemyCount:enemyList.length,powerlevel:{...powerlevel},allyCharge:allyActors.length?Math.min(1,Math.max(0,1-allyTimer/allyInterval())):0,victory,remaining:Math.max(0,ZONE_SECONDS-zoneElapsed()),overtime:overtimeNow(),phase:portal?.kind==='exit'?'exit':arena?'arena':'zone',bijuu:enemyList.find(e=>e.bijuu)?.boss?.name??defeatedBijuu,bijuuReward,plansUsed,hiddenEffects,totalDamage:Math.round(totalDamage),skillDamage:{...skillDamage},skillGrowth:{...growth},techniques:techniques.filter(t=>skillLevels[t.name]||(!banned.has(t.name)&&!config.archivedSkills.includes(t.name)&&!consumedTechniques.has(t.name))),banned:[...banned],synergy:sandSynergy(allies),synergies:activeSynergies(heroId,allies),setups:activeSetups.map(s=>({name:s.name,remaining:s.remaining,duration:s.duration})),zone,skillTimers:Object.fromEntries(techniques.filter(t=>skillLevels[t.name]).map(t=>{const g=growth[t.name]??NO_GROWTH;return [t.name,{remaining:Math.max(0,cooldowns[t.name]||0),total:t.setup?setupNumbers(t,g,skillLevels[t.name]).cooldown:attackCooldown(t,skillLevels[t.name],g,stats.attackSpeed*tempAttackSpeed()),duration:activeSetups.find(setup=>setup.name===t.name)?.remaining??0}];})),boss:enemyList.filter(e=>e.guardian||e===hagoromoEvent?.mega).map(e=>(e.bijuu?e.boss?.name+' · Fase '+e.boss?.phase+'/3':HERO_BY_ID[e.heroId!].name)+' · '+compactNumber(Math.ceil(e.hp))+'/'+compactNumber(e.maxHp??e.hp)+' HP'+(e.guardian?' · '+Math.round((e.defense??0)*100)+'% defesa':'')+(e.shikamaruPlans?' · +'+e.shikamaruPlans+' kunai (Shikamaru)':'')).join(', '),defenseProgress:defenseActive&&defenseAltar?Math.floor(defenseTime/altarTimes[defenseAltar.altarTier??0]*100):0,hp:Math.ceil(hp),maxHp:stats.maxHp,stats:{...stats},defeated,allyDamage:Math.round(allyDamage),difficultyScale:threatNow().hp,level,xp,xpNext,chakra,kills,runMoney,elapsed,fps,kunai,shuriken,luck,autoUlt,allies:[...allies],affinity:{...allyAffinity},weather,weatherEvent:hagoromoEvent?undefined:weatherEvent?.id,weatherRemaining:!hagoromoEvent&&weatherEvent?Math.max(0,Math.ceil(weatherEvent.until-elapsed)):undefined,toast:eventToast,interaction:(()=>{if(hagoromoEvent)return hagoromoEvent.completed?{name:'Treinamento concluído',key:'E',description:'Concluir o treino e escolher uma ferramenta'}:null;if(sealing)return{name:`Mega Elite · ${sealing.target}`,key:sealing.phase==='ready'?'E':sealing.phase==='complete'?'Enter':undefined,description:sealing.phase==='ready'?'E sela · G recusa e deixa um drop':sealing.phase==='sealing'?'Concluindo o jutsu de selamento…':'Enter para continuar'};const fallen=closestFallenMega();if(fallen)return{name:fallen.candidate.target,key:'E',description:fallen.candidate.account?'E · selar e desbloquear o Shinobi na conta':'E · iniciar selamento do Mega Elite'};if(portal&&Math.hypot(portal.x-player.position.x,portal.z-player.position.z)<3.2)return{name:portalTitle(portal.kind),key:'E',description:portal.kind==='exit'?'E · finalizar e receber '+bijuuReward+' Lamens':'E · atravessar portal'};/* Rodada 47/49/50 — emboscadas (ninjaBody/cursedShuriken), pergaminhos (kunai/shuriken) e morro de arroz (Ryu, Rodada 50) pedem E; apenas o drop do mega (sealDrop) coleta ao pisar (sem "E"). */const p=pickups.find(p=>p.active&&(p.kind==='cursedShuriken'||p.kind==='ninjaBody'||p.kind==='kunai'||p.kind==='shuriken'||p.kind==='ryu')&&Math.hypot(p.x-player.position.x,p.z-player.position.z)<3.2);if(p)return{name:p.name,key:p===activeBody?undefined:'E',description:p===activeBody?'Derrote os ninjas da emboscada':p.kind==='ninjaBody'?'E · investigar · recompensa de 1 nível':p.kind==='ryu'?'E · colher morro de arroz · Ryu por zona/missão/sorte + ímã 10 s + chance de bolinho de cura':p.kind==='kunai'||p.kind==='shuriken'?`E · abrir recompensa · custo ${compactNumber(kunaiPrice())} Ryu`:'E · +8% dano total · atrai uma emboscada'};const e=events.find(e=>e.active&&Math.hypot(e.x-player.position.x,e.z-player.position.z)<3.6);return e?{name:e.name,key:e.altarTier===undefined?'E':undefined,description:e===zetsuEvent?'Clique no Zetsu ou aperte E para enfrentar a Akatsuki · 3 pergaminhos grátis':e.id==='guardian-seal'?`E · invocar o guardião agora · ~${compactNumber(guardianHpNow())} HP · ${Math.round(guardianDefense(elapsed,false,overtimeNow(),zone,shikamaruPlans)*100)}% de defesa`:e.id==='slot'?`E · abrir a roleta · giro ${compactNumber(slotPrice())} Ryu (+20% por giro) · Sorte ${stats.luck}`:e.id==='shikamaru'?(shikamaruPlans>=GUARDIAN_RULES.shikamaruMaxPlans?`Plano do Shikamaru ${shikamaruPlans}/${GUARDIAN_RULES.shikamaruMaxPlans} · limite atingido nesta zona`:`E · Plano do Shikamaru ${shikamaruPlans}/${GUARDIAN_RULES.shikamaruMaxPlans} · +1 kunai ao derrotar o guardião`):e.altarTier!==undefined?'Fique no círculo para ativar o altar — a contagem já começa em cima (sem E)':'Aperte E para interagir'}:null;})(),pickups:pickups.filter(p=>weatherEvent?.id!=='mist'&&p.active&&p.discovered).map(p=>({kind:p.kind,x:p.x,z:p.z,id:p.id,name:p.name})),items:{...knownItems},pills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},choice:choiceData?{level:choiceLevel,cards:choiceData,sale:choiceLevel===0||choiceLevel===-9?saleValue():undefined,rerollCost:choiceLevel===-8?merchantRerollCost():undefined}:null,sealing:sealing?{...sealing}:null,enemies:mapEnemyDots(),events:mapMarkers(),route:mistHides(weatherEvent,elapsed)?null:routeView(),routeNotice:routeNotice?{text:routeNotice.text,kind:routeNotice.kind}:null,roulette:rouletteView(),totem:totem?{hp:Math.ceil(totem.hp),maxHp:Math.ceil(totem.maxHp||0),remaining:Math.max(0,TOTEM_RULES.end-elapsed)}:null,explored:mistHides(weatherEvent,elapsed)?[]:[...exploredCells.values()],player:{x:player.position.x,z:player.position.z,heading:Math.atan2(heading.x,-heading.z)},ping:currentPing,effects:effects.length,choices:{...uses,banning},weaponCost:kunaiPrice(),merchantRerollCost:merchantRerollCost(),tsunadeSpinCost:slotPrice(),permanent});snapshotTimer=.2;}
+      frames++;fpsTimer+=dt;if(fpsTimer>=.5){fps=Math.round(frames/fpsTimer);frames=0;fpsTimer=0;}snapshotTimer-=dt;if(snapshotTimer<=0){onSnapshotRef.current({killedBy,bossBars:bossBars(),youth:{panel:choiceLevel===-13&&!!choiceData,challenge:youthOffer,run:youthRun?{challenge:youthRun.challenge,difficulty:youthRun.difficulty,timeLeft:youthRun.timeLeft,progress:youthRun.progress,goal:youthRun.goal,stat:youthRun.stat}:null},hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,need:HAGOROMO.killsPerKey,tools:[...hagoromo.tools],active:!!hagoromoEvent,stage:hagoromoStage(),recharge:hagoromoRecharges('classico',hagoromoBossDown)},protection:debugState.god?'debug':invulnerability>.25?'temporary':undefined,killStreak:recentStreak(streak,elapsed),sagesUsed:sagesUsedZone===zone,enemyCount:enemyList.length,powerlevel:{...powerlevel},allyCharge:allyActors.length?Math.min(1,Math.max(0,1-allyTimer/allyInterval())):0,victory,remaining:Math.max(0,ZONE_SECONDS-zoneElapsed()),overtime:overtimeNow(),phase:portal?.kind==='exit'?'exit':arena?'arena':'zone',bijuu:enemyList.find(e=>e.bijuu)?.boss?.name??defeatedBijuu,bijuuReward,plansUsed,hiddenEffects,totalDamage:Math.round(totalDamage),skillDamage:{...skillDamage},skillGrowth:{...growth},techniques:techniques.filter(t=>skillLevels[t.name]||(!banned.has(t.name)&&!config.archivedSkills.includes(t.name)&&!consumedTechniques.has(t.name))),banned:[...banned],synergy:sandSynergy(allies),synergies:activeSynergies(heroId,allies),setups:activeSetups.map(s=>({name:s.name,remaining:s.remaining,duration:s.duration})),zone,skillTimers:Object.fromEntries(techniques.filter(t=>skillLevels[t.name]).map(t=>{const g=growth[t.name]??NO_GROWTH;return [t.name,{remaining:Math.max(0,cooldowns[t.name]||0),total:t.setup?setupNumbers(t,g,skillLevels[t.name]).cooldown:attackCooldown(t,skillLevels[t.name],g,stats.attackSpeed*tempAttackSpeed()),duration:activeSetups.find(setup=>setup.name===t.name)?.remaining??0}];})),boss:enemyList.filter(e=>e.guardian||e===hagoromoEvent?.mega).map(e=>(e.bijuu?e.boss?.name+' · Fase '+e.boss?.phase+'/3':HERO_BY_ID[e.heroId!].name)+' · '+compactNumber(Math.ceil(e.hp))+'/'+compactNumber(e.maxHp??e.hp)+' HP'+(e.guardian?' · '+Math.round((e.defense??0)*100)+'% defesa':'')+(e.shikamaruPlans?' · +'+e.shikamaruPlans+' kunai (Shikamaru)':'')).join(', '),defenseProgress:defenseActive&&defenseAltar?Math.floor(defenseTime/altarTimes[defenseAltar.altarTier??0]*100):0,hp:Math.ceil(hp),maxHp:stats.maxHp,stats:{...stats},defeated,allyDamage:Math.round(allyDamage),difficultyScale:threatNow().hp,level,xp,xpNext,chakra,kills,runMoney,elapsed,fps,kunai,shuriken,luck,autoUlt,allies:[...allies],affinity:{...allyAffinity},weather:activeInstance==='exam-hall'?'Sala de lutas · Exame Chūnin':activeInstance==='exam-forest'?'Floresta da Morte':activeInstance==='hagoromo'?'Espaço do Sábio':weather,weatherEvent:activeInstance?undefined:weatherEvent?.id,weatherGold:goldenSand(),weatherRemaining:!activeInstance&&weatherEvent?Math.max(0,Math.ceil(weatherEvent.until-elapsed)):undefined,toast:eventToast,interaction:(()=>{const entrance=examEntrance();if(entrance)return entrance;if(activeInstance==='exam-hall'&&duelWon)return{name:'Duelo concluído',key:'E',description:'Finalizar o duelo'};if(hagoromoEvent)return hagoromoEvent.completed?{name:'Treinamento concluído',key:'E',description:'Concluir o treino e escolher uma ferramenta'}:null;if(sealing)return{name:`Mega Elite · ${sealing.target}`,key:sealing.phase==='ready'?'E':sealing.phase==='complete'?'Enter':undefined,description:sealing.phase==='ready'?'E sela · G recusa e deixa um drop':sealing.phase==='sealing'?'Concluindo o jutsu de selamento…':'Enter para continuar'};const fallen=closestFallenMega();if(fallen)return{name:fallen.candidate.target,key:'E',description:fallen.candidate.account?'E · selar e desbloquear o Shinobi na conta':'E · iniciar selamento do Mega Elite'};if(activeInstance)return null;if(portal&&Math.hypot(portal.x-player.position.x,portal.z-player.position.z)<3.2)return{name:portalTitle(portal.kind),key:'E',description:portal.kind==='exit'?'E · finalizar e receber '+bijuuReward+' Lamens':'E · atravessar portal'};/* Rodada 47/49/50 — emboscadas (ninjaBody/cursedShuriken), pergaminhos (kunai/shuriken) e morro de arroz (Ryu, Rodada 50) pedem E; apenas o drop do mega (sealDrop) coleta ao pisar (sem "E"). */const p=pickups.find(p=>p.active&&(p.kind==='cursedShuriken'||p.kind==='ninjaBody'||p.kind==='kunai'||p.kind==='shuriken'||p.kind==='ryu')&&Math.hypot(p.x-player.position.x,p.z-player.position.z)<3.2);if(p)return{name:p.name,key:p===activeBody?undefined:'E',description:p===activeBody?'Derrote os ninjas da emboscada':p.kind==='ninjaBody'?'E · investigar · recompensa de 1 nível':p.kind==='ryu'?'E · colher morro de arroz · Ryu por zona/missão/sorte + ímã 10 s + chance de bolinho de cura':p.kind==='kunai'||p.kind==='shuriken'?`E · abrir recompensa · custo ${compactNumber(kunaiPrice())} Ryu`:'E · +8% dano total · atrai uma emboscada'};const e=events.find(e=>e.active&&Math.hypot(e.x-player.position.x,e.z-player.position.z)<3.6);return e?{name:e.name,key:e.altarTier===undefined?'E':undefined,description:e===zetsuEvent?'Clique no Zetsu ou aperte E para enfrentar a Akatsuki · 3 pergaminhos grátis':e.id==='guardian-seal'?`E · invocar o guardião agora · ~${compactNumber(guardianHpNow())} HP · ${Math.round(guardianDefense(elapsed,false,overtimeNow(),zone,shikamaruPlans)*100)}% de defesa`:e.id==='slot'?`E · abrir a roleta · giro ${compactNumber(slotPrice())} Ryu (+20% por giro) · Sorte ${stats.luck}`:e.id==='shikamaru'?(shikamaruPlans>=GUARDIAN_RULES.shikamaruMaxPlans?`Plano do Shikamaru ${shikamaruPlans}/${GUARDIAN_RULES.shikamaruMaxPlans} · limite atingido nesta zona`:`E · Plano do Shikamaru ${shikamaruPlans}/${GUARDIAN_RULES.shikamaruMaxPlans} · +1 kunai ao derrotar o guardião`):e.altarTier!==undefined?'Fique no círculo para ativar o altar — a contagem já começa em cima (sem E)':'Aperte E para interagir'}:null;})(),pickups:pickups.filter(p=>weatherEvent?.id!=='mist'&&p.active&&p.discovered).map(p=>({kind:p.kind,x:p.x,z:p.z,id:p.id,name:p.name})),items:{...knownItems},pills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},choice:choiceData?{level:choiceLevel,cards:choiceData,sale:choiceLevel===0||choiceLevel===-9?saleValue():undefined,rerollCost:choiceLevel===-8?merchantRerollCost():undefined}:null,sealing:sealing?{...sealing}:null,enemies:mapEnemyDots(),events:mapMarkers(),route:mistHides(weatherEvent,elapsed)?null:routeView(),routeNotice:routeNotice?{text:routeNotice.text,kind:routeNotice.kind}:null,roulette:rouletteView(),totem:totem?{hp:Math.ceil(totem.hp),maxHp:Math.ceil(totem.maxHp||0),remaining:Math.max(0,TOTEM_RULES.end-elapsed)}:null,explored:mistHides(weatherEvent,elapsed)?[]:[...exploredCells.values()],player:{x:player.position.x,z:player.position.z,heading:Math.atan2(heading.x,-heading.z)},ping:currentPing,effects:effects.length,choices:{...uses,banning},weaponCost:kunaiPrice(),merchantRerollCost:merchantRerollCost(),tsunadeSpinCost:slotPrice(),permanent});snapshotTimer=.2;}
       const sliding=slideTime>0;
       const facing=sliding?dashHeading:heading;
       const walking=moving&&!defeated&&Boolean(moveHorizontal||moveVertical);
@@ -2520,7 +2596,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       }
       for(const drop of drops.pulled())renderedDrops.push(drop);
       groundModels.update(renderedDrops,dropFrustum,enemyShots);
-      hagoromoSeal.update(hagoromoPhase(),dt,hiddenEffects);
+      instanceArenas.update(animClock,hagoromoPhase(),dt,hiddenEffects);
       const perfT1=performance.now();renderer.render(scene,camera);perfMonitor.record(perfT0,perfT1,performance.now());
     };
     // V-Sync (Gráficos): LIGADO = requestAnimationFrame (um quadro por quadro do monitor). DESLIGADO = spin loop acima da taxa do monitor
@@ -2533,7 +2609,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
     // ───── Salvar e retomar a run (Esc → "Salvar e sair", salvamento automático e ao fechar o navegador) ─────
     // Salva o progresso da run (tempo, abates, nível, itens, pílulas, técnicas, ajudantes, eventos, mapa explorado...).
     // Hordas, drops e projéteis vivos não são salvos: voltam a surgir naturalmente ao retomar.
-    function serializeRun():SavedRun{return {eventDuel:duelId,mapLayout,villageSeed,surfaceElevation:traversal.elevation,hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,tools:[...hagoromo.tools]},rankTicket:getRankTicket?.(),killStreak:streak,powerlevel:{...powerlevel},v:1,heroId,mission,mapId,savedAt:Date.now(),elapsed,zone,level,xp,xpNext,kills,runMoney,kunai,shuriken,chakra,hp,bonusHp,totalDamage,allyDamage,skillDamage:{...skillDamage},knownItems:{...knownItems},knownPills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},growth:JSON.parse(JSON.stringify(growth)),allies:[...allies],allyAffinity:{...allyAffinity},runBuffs:{...runBuffs},uses:{...uses},banned:[...banned],events:events.map(e=>({id:e.id,active:e.active,uses:e.uses,discovered:!!e.discovered})),explored:[...exploredCells.keys()],ryuSpent,rouletteSpins,paidWeapons,guardianSpawned,shikamaruPlans,megaElitesSpawned,zoneDifficulty,xpMultiplier,lootMultiplier,totemSpawned,pendingItemRewards,defenseDone,player:{x:player.position.x,z:player.position.z},accountTried:[...accountTried],merchant:{...merchant,stock:[...merchant.stock],prices:[...merchant.prices]},rouletteItems:[...rouletteItems],rouletteSession:roulette,campaign:{openingMegaSpawned,ichirakuRecall:recallZone,akatsukiAmbush:akatsukiEnemies.size?[...akatsukiEnemies].map(e=>({id:e.heroId!,x:e.sprite.position.x,z:e.sprite.position.z,hp:e.hp,maxHp:e.maxHp!})):undefined,altarBlessing:pendingAltar&&choiceData&&choiceLevel===-10?{...pendingAltar,offers:choiceData}:undefined,fallenMegas:fallenMegas.map(({candidate,body})=>({heroId:candidate.heroId,x:body.position.x,z:body.position.z,account:candidate.account})),weatherEvent:weatherEvent?{...weatherEvent,...(()=>{const target=enemyList.find(e=>e.heroId===weatherEvent?.elite);return target?{x:target.sprite.position.x,z:target.sprite.position.z}:{};})()}:undefined,nextWeatherAt,weatherPlan,start:zoneStart,pendingLevels,sagesUsedZone,merges:[...merges.values()],megaSchedule:[...megaSchedule],accountEncounters,plans:plansUsed,arena,reward:bijuuReward,bijuu:defeatedBijuu,portal:portal?{kind:portal.kind,x:portal.x,z:portal.z}:undefined,boss:enemyList.filter(e=>e.bijuu).map(e=>({id:e.heroId!,hp:e.hp,maxHp:e.maxHp!,x:e.sprite.position.x,z:e.sprite.position.z,overtime:e.summonedOvertime}))[0],locations:events.map(e=>({id:e.id,x:e.x,z:e.z})),pickups:pickups.filter(p=>p.active).map(p=>({kind:p.kind,x:p.x,z:p.z,discovered:!!p.discovered}))}};}
+    function serializeRun():SavedRun{return {eventDuel:duelId,examRoom:duelId?activeInstance==='exam-hall':undefined,examWon:duelId?duelWon:undefined,mapLayout,villageSeed,surfaceElevation:hagoromoEvent?hagoromoEvent.origin.elevation:traversal.elevation,hagoromo:{keys:hagoromo.keys,progress:hagoromo.progress,tools:[...hagoromo.tools]},rankTicket:getRankTicket?.(),killStreak:streak,powerlevel:{...powerlevel},v:1,heroId,mission,mapId,savedAt:Date.now(),elapsed,zone,level,xp,xpNext,kills,runMoney,kunai,shuriken,chakra,hp,bonusHp,totalDamage,allyDamage,skillDamage:{...skillDamage},knownItems:{...knownItems},knownPills:{...knownPills},pillQuality:{...pillQuality},skillLevels:{...skillLevels},growth:JSON.parse(JSON.stringify(growth)),allies:[...allies],allyAffinity:{...allyAffinity},runBuffs:{...runBuffs},uses:{...uses},banned:[...banned],events:events.map(e=>({id:e.id,active:e.active,uses:e.uses,discovered:!!e.discovered})),explored:[...exploredCells.keys()],ryuSpent,rouletteSpins,paidWeapons,guardianSpawned,shikamaruPlans,megaElitesSpawned,zoneDifficulty,xpMultiplier,lootMultiplier,totemSpawned,pendingItemRewards,defenseDone,player:{x:hagoromoEvent?.origin.x??player.position.x,z:hagoromoEvent?.origin.z??player.position.z},accountTried:[...accountTried],merchant:{...merchant,stock:[...merchant.stock],prices:[...merchant.prices]},rouletteItems:[...rouletteItems],rouletteSession:roulette,campaign:{openingMegaSpawned,ichirakuRecall:recallZone,akatsukiAmbush:akatsukiEnemies.size?[...akatsukiEnemies].map(e=>({id:e.heroId!,x:e.sprite.position.x,z:e.sprite.position.z,hp:e.hp,maxHp:e.maxHp!})):undefined,altarBlessing:pendingAltar&&choiceData&&choiceLevel===-10?{...pendingAltar,offers:choiceData}:undefined,fallenMegas:fallenMegas.map(({candidate,body})=>({heroId:candidate.heroId,x:body.position.x,z:body.position.z,account:candidate.account})),weatherEvent:weatherEvent?{...weatherEvent,...(()=>{const target=weatherOpponent&&(hagoromoEvent?.outsideEnemies??enemyList).includes(weatherOpponent)?weatherOpponent:undefined;return target?{x:target.sprite.position.x,z:target.sprite.position.z}:{};})()}:undefined,nextWeatherAt,weatherPlan,start:zoneStart,pendingLevels,sagesUsedZone,merges:[...merges.values()],megaSchedule:[...megaSchedule],accountEncounters,plans:plansUsed,arena,reward:bijuuReward,bijuu:defeatedBijuu,portal:portal?{kind:portal.kind,x:portal.x,z:portal.z}:undefined,boss:enemyList.filter(e=>e.bijuu).map(e=>({id:e.heroId!,hp:e.hp,maxHp:e.maxHp!,x:e.sprite.position.x,z:e.sprite.position.z,overtime:e.summonedOvertime}))[0],locations:events.map(e=>({id:e.id,x:e.x,z:e.z})),pickups:(hagoromoEvent?.outsidePickups??pickups).filter(p=>p.active).map(p=>({kind:p.kind,x:p.x,z:p.z,discovered:!!p.discovered}))}};}
     function saveRun(){if(defeated||victory)return;try{localStorage.setItem(SAVED_RUN_KEY,JSON.stringify(serializeRun()));}catch{/* sem armazenamento */}}
     function restoreRun(s:SavedRun){if(s.hagoromo){hagoromo.keys=s.hagoromo.keys;hagoromo.progress=s.hagoromo.progress;hagoromo.tools=[...s.hagoromo.tools];}Object.assign(powerlevel,readPowerlevel(s.powerlevel));elapsed=s.elapsed;streak=s.killStreak??{count:0,lastAt:0};zone=s.zone;const camp=s.campaign;weatherEvent=camp?.weatherEvent;nextWeatherAt=camp?.nextWeatherAt??elapsed+65;weatherPlan=camp?.weatherPlan??planZoneWeather(WEATHER_BY_MAP[mapId],elapsed);if(camp?.altarBlessing?.offers.length===3){const {tier,name,offers}=camp.altarBlessing;pendingAltar={tier,name};choiceLevel=-10;choiceData=offers;}pendingLevels=camp?.pendingLevels??0;recallZone=camp?.ichirakuRecall??0;sagesUsedZone=camp?.sagesUsedZone??(camp?.merges?.length?s.zone:0);zoneStart=camp?.start??Math.max(0,(zone-1)*200);for(const plan of camp?.merges??[]){let technique=mergedTechnique(plan,techniques)??(s.skillLevels['Fusão · '+plan.names.join(' / ')]?legacyFusion(plan,techniques):undefined);if(technique){const legacyName='Fusão · '+plan.names.join(' / ');if(plan.kind==='fuse'&&s.skillLevels[legacyName]&&technique.name!==legacyName){const [first,second]=plan.names.map(name=>techniques.find(t=>t.name===name)!);technique={...technique,name:legacyName,shape:'Área',status:first.status??second.status,statusChance:first.status?first.statusChance:second.statusChance,burn:first.burn||second.burn,poison:first.poison||second.poison};}techniques.push(technique);merges.set(technique.name,plan);plan.names.forEach(name=>consumedTechniques.add(name));}}megaSchedule=camp?.megaSchedule??megaSchedule;accountEncounters=camp?.accountEncounters??0;plansUsed=camp?.plans??s.shikamaruPlans;arena=camp?.arena??false;bijuuReward=camp?.reward??0;defeatedBijuu=camp?.bijuu??'';level=s.level;xp=s.xp;xpNext=s.xpNext;kills=s.kills;runMoney=s.runMoney;kunai=s.kunai;shuriken=s.shuriken;chakra=s.chakra;bonusHp=s.bonusHp;totalDamage=s.totalDamage;allyDamage=s.allyDamage;Object.assign(skillDamage,s.skillDamage);for(const [name,count] of Object.entries(s.knownItems)){const key=currentItemName(name);knownItems[key]=(knownItems[key]??0)+count;}Object.assign(knownPills,Object.fromEntries(Object.entries(s.knownPills).filter(([name,lv])=>PILL_BY_NAME[name]&&lv>0).sort((a,b)=>b[1]-a[1]).slice(0,PILL_SLOTS)));Object.assign(pillQuality,s.pillQuality??{});Object.assign(skillLevels,s.skillLevels);for(const t of techniques)if(merges.get(t.name)?.kind==='fuse'&&skillLevels[t.name]>techniqueLevelCap(t))skillLevels[t.name]=techniqueLevelCap(t);Object.assign(growth,s.growth);Object.assign(runBuffs,s.runBuffs);Object.assign(uses,s.uses);for(const b of s.banned)banned.add(b);
       for(const saved of s.events){const e=events.find(x=>x.id===saved.id);if(e){e.active=saved.active;e.uses=saved.uses;e.discovered=saved.discovered;e.obj.visible=saved.discovered;}}
@@ -2560,7 +2636,7 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         if(restored.size){zetsuEvent.active=false;zetsuEvent.obj.visible=false;}
       }
       openingMegaSpawned=camp?.openingMegaSpawned??(s.zone>1||s.megaElitesSpawned>0||(camp?.fallenMegas?.some(mega=>!mega.account)??false));
-      if(weatherEvent&&weatherEvent.until>elapsed&&!arena){const event=weatherEvent;const elite=spawnEnemy(false,true,false,event.elite,false,event.openingMega);event.openingMega=elite.openingMega;elite.sprite.position.set(event.x,standHeight(event.x,event.z)+elite.sprite.scale.y*.5,event.z);weather=WEATHER_EVENTS[event.id].name;}else weatherEvent=undefined;
+      if(!activeInstance&&weatherEvent&&weatherEvent.until>elapsed&&!arena){const event=weatherEvent;const elite=spawnEnemy(false,true,false,event.elite,false,event.openingMega);event.openingMega=elite.openingMega;elite.weatherElite=true;elite.seen=true;weatherOpponent=elite;elite.sprite.position.set(event.x,standHeight(event.x,event.z)+elite.sprite.scale.y*.5,event.z);weather=goldenSand()?GOLDEN_SAND.name:WEATHER_EVENTS[event.id].name;}else weatherEvent=undefined;
       if(arena){
         openBijuuArena();
         player.position.set(s.player.x,standHeight(s.player.x,s.player.z)+player.scale.y*.5,s.player.z);
@@ -2570,7 +2646,8 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
       refreshStats();for(const id of s.allies)recruitAlly(id);Object.assign(allyAffinity,s.allyAffinity);refreshStats();hp=Math.min(stats.maxHp,s.hp);if(!roulette)showRouletteItem();
       player.position.set(s.player.x,standHeight(s.player.x,s.player.z)+player.scale.y*.5,s.player.z);player.material.dispose();player.material=heroMaterial(heroId,level);invulnerability=3;
       walkingFloor=standHeight(player.position.x,player.position.z);
-      if(villageActive){
+      if(activeInstance){keepInInstance(player.position);nextAccountAt=elapsed;}
+      if(villageActive&&!activeInstance){
         traversal.restore(player.position,s.surfaceElevation,walkingFloor);
         walkingFloor=traversal.elevation??walkingFloor;
         if(solids.resolve(player.position,COLLISION_RULES.playerRadius,walkingFloor)){
@@ -2580,6 +2657,10 @@ function interact(){if(hagoromoEvent){if(hagoromoEvent.completed)finishHagoromo(
         player.position.y=walkingFloor+player.scale.y*.5;
       }
       eventToast='Missão retomada de onde parou.';}
+    if(duel){
+      setInstance(resume?.examRoom?'exam-hall':'exam-forest');
+      if(!resume){player.position.set(EXAM_SPAWN.x,INSTANCE_FLOOR+player.scale.y*.5,EXAM_SPAWN.z);walkingFloor=INSTANCE_FLOOR;eventToast='Exame Chūnin · Atravesse a floresta até a entrada da sala.';}
+    }
     if(resume&&resume.heroId===heroId)restoreRun(resume);
     let configuredZoom=currentSettings().cameraDistance,configuredFx=currentSettings().hideMyAttacks;
     const onSettings=()=>{const S=currentSettings();

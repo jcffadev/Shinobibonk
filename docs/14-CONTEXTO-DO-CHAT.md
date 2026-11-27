@@ -3317,3 +3317,76 @@ A fila em docs/13 atribui a calibração dos chefes ao Claude e as regressões e
 > Fazer uma telinha mais bonita no treino do Might Guy e ser possível selecionar apenas 1 buff, ele está buffando a ficha inteira, não deveria ser possível, aumentar a % dos buffs de todos os níveis de dificuldade para compensar." · "Criar mais recompensas do Hagoromo, pelo menos mais 5 itens de cada raridade
 
 **Resposta.** Treino do Guy: escolhe 1 atributo (cartões), só ele sobe, força ×4; tela redesenhada. Hagoromo: +25 ferramentas de atributo (5 por raridade). **Publicado no GitHub.**
+
+
+## 26/11/2026 · Clima, queda e personagens 3D chibi
+
+> Os eventos de Zabuza, Gaara/Rasa e Haku deveriam aparecer em todos os mapas e lembrando, se eles aparecerem pelo evento, não deve ser possível capturar-los
+> Precisamos colocar graficamente na tela, parecido com a névoa de Zabuza o efeito em tela...
+> Lembrando que Gaara é areia normal, Rasa areia de ouro e Haku tem que ser neve/flocos de neve junto na tela
+> Para dar a imersão ao jogador
+
+**Resposta.** Sorteio compartilhado nas quatro vilas, exclusão dos megas de clima do selamento, flocos, poeira e areia dourada visíveis. A animação da névoa mantém os selos do Zabuza.
+
+> Me envie o que te pedi de amostragem, as coisas 3Ds e tudo mais, como esta sua fila?
+> consegue utilizar opengl para criar esses 3d?
+> vamos tentar, porque ficou FEIO demais, precisamos ver o que mais voce consegue fazer de geração de imagem para fazer bonecos 3D
+> ja ficou melhor hein, se conseguir animar... mas, precisamos manter o personagem meio chibbi ne?
+> faça a animação do personagem caindo/morrendo para selarmos, o jeito que está, esta muito feio
+> consgeue fazer um modelo 3d, mas fiel ao que temos do pixel art chibbi?
+> não me diga que isso foi o que tu vai me apresentar... a anterior esta 500x melhor
+> voce consegue usar coisas como zblush ou blender?
+> ficou bom, guarde como skill criação personagens 3D como você criou esse cara...
+> mas, acho que esta ainda distante do que queriamos...
+> eu nao as tenho na minha maquina, mas você consegue utilizar algo semelhante ai por você mesmo?
+> me faça todos os NPCS que temos no mapa nesse modelo 3D
+> E me dê exemplos deles no mapa, com as animações...
+> eu quero que voc~e pegue todas as referncias que temos que você criou o naruto... e faça mais em pixel art
+> O chibbi pixel art em 3D
+
+**Resposta.** Teste de render em OpenGL local e estudo de corrida a partir da prancha gerada usando os sprites da versão como referência. A arte mais aprovada segue como referência visual. A meta de produção é geometria articulada com acabamento pixel art e proporções chibi da versão. A malha simples de Naruto ficou aquém da prancha e permaneceu externa. O padrão reaproveitável está em `skills/criar-personagem-3d/SKILL.md`. O controlador de captura foi refinado para todo shinobi capturável. A fila lista a conferência visual do clima e selamento, a revisão das malhas dos NPCs e o restante da auditoria de jutsus. As prévias 3D ficam fora da versão jogável durante a revisão.
+
+
+## 27/11/2026 · Arenas separadas, folhas de derrota e amostras individuais
+
+> Referencia para o mapa evento Exame Chuunin
+> Tem que ser um mapa a parte ter uma entrada para entrarmos nessa sala onde acontecem as lutas.
+
+**Resposta.** Floresta separada, porta com E, objetivos do duelo, sala com piso em placas, galerias e monumento. O progresso de cada duelo permanece no evento.
+
+> Outra coisa, ao apertar C
+> Ir para um mapa diferente também do Hagoromo, aparecer ele de fundo vendo o treinamento a luta...
+> O mapa tem que ser algo parecido com isso da referência
+
+**Resposta.** Novo Espaço do Sábio com Hagoromo sentado e flutuando ao fundo. A arena tem anéis e solo escuro. E retorna ao ponto de origem depois do treino.
+
+> Como esta o Chibbi pixel art
+> Me mostre o que ja tem pronto das coisas que te pedi
+> me mostre como esta a animação de morte do nosso pixel art chibbi do sprite atual, me envia o gif da animação do personagem morrendo
+
+**Resposta.** Enviados o GIF da corrida, a prancha dos itens 3D e a demonstração da queda no controlador. A demonstração expôs a compressão da pose sem arte própria.
+
+> Você precisa criar os sprites/sheets deles ajoelhados... animação de mãos no peito, coisas assim, para ai sim você conseguir animar, se não fica essa coisa grotesca que temos e você me mostrou, infelizmente sem qualidade...
+> Você terá que fazer essas poses para todos os personagens, você sabe, ne?
+> E incorpore isso ao skill de criaçao de personagens...
+
+**Resposta.** Seis primeiras versões com folhas próprias. Impacto, mão no peito, contato do joelho e espera ajoelhada. Skills de arte, movimento e 3D refletem a exigência para cada versão. As demais seguem identificadas na matriz.
+
+> Isso aqui ta horrível, voce juntoui um monte de coisa, da pra ver nada, entender nada, parece que tem algum modelo ai que da pra usar, mas nao consigo nem distinguir o que é...
+> Continue o trabalho
+
+**Resposta.** Retirados os modelos antigos da prévia. Cada NPC tem GIF individual e GLB animado com a textura do atlas. O Blender portátil foi usado para exportação. Os onze estudos estão fora da versão jogável enquanto lateral, articulações e textura passam por revisão. O código foi conciliado com o main de Claude.
+
+
+### Retorno do usuário · 27/11/2026
+
+> Esses teste de npcs 3d em pixel art está horrível... você percebeu?
+> Já as animações das quedas, estão excelentes
+
+**Resposta.** Estudos 3D reprovados e mantidos fora da versão jogável. A forma perde leitura ao girar e as junções estão rígidas. As folhas de queda foram aprovadas como referência do restante do elenco.
+
+### Quedas e novos exemplos 3D · 27/11/2026
+
+O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com conferência ao girar a câmera. Também pediu mais exemplos de NPC em pixel art 3D.
+
+40 de 115 versões têm folhas dedicadas. A prévia nativa usa a geometria do controlador e mostra Haku, Naruto Shippuden e Kimimaro durante uma volta completa da câmera. O padrão de criação inclui a queda e a leitura no tamanho de partida. Teuchi, Shikamaru e Tsunade têm protótipos animados em GLB, com prévias externas em Konoha.

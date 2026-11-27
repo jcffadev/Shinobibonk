@@ -1,5 +1,7 @@
 # Estado real do ShinobiBonk · 05/11/2026
 
+As quatro vilas receberam o mesmo sorteio de clima, com flocos de Haku, poeira de Gaara e areia dourada de Rasa. Seis versões têm folhas próprias de derrota em oito poses. A Prova Chūnin tem uma floresta e uma sala de duelos. C leva ao espaço separado do Hagoromo. [Clima em missão](01-CAMERA-MAPAS-EVENTOS.md#clima-nas-quatro-vilas--26112026) · [Selamento](03-ALIADOS-E-SELAMENTO.md).
+
 Este documento resume o que é decisão de produto e o que o código da base atual realmente executa. A referência técnica detalhada é [12-ARQUITETURA-E-ESTADO-DO-CODIGO.md](12-ARQUITETURA-E-ESTADO-DO-CODIGO.md).
 
 A direção permanente e o registro resumido de todas as perguntas e respostas estão em [18-CONTEXTO-PERGUNTAS-RESPOSTAS.md](18-CONTEXTO-PERGUNTAS-RESPOSTAS.md); o texto integral do chat está em [14-CONTEXTO-DO-CHAT.md](14-CONTEXTO-DO-CHAT.md).

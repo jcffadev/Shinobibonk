@@ -1,6 +1,6 @@
 import { glossary } from '../game/glossary';
 import { useEffect, useState } from 'react';
-import { MAPS, WEATHER_BY_MAP, WEATHER_EVENTS, WEATHER_EVENT_DURATION, WEATHER_WAIT, type WeatherEventId } from '../game/maps';
+import { MAPS, WEATHER_BY_MAP, WEATHER_EVENTS, WEATHER_EVENT_DURATION, WEATHER_ZONE, type WeatherEventId } from '../game/maps';
 import { GUARDIAN_RULES } from '../game/missions';
 import { NPC_RULES, pctText, TOTEM_RULES } from '../game/npcs';
 import { ROULETTE_CASAS, ROULETTE_RULES } from '../game/roulette';
@@ -24,8 +24,8 @@ const clock=(seconds:number)=>Math.floor(seconds/60)+':'+String(seconds%60).padS
 
 const climateNotes:Record<WeatherEventId,string>={
   mist:'Zabuza aparece e faz os selos. A névoa reduz a visão do cenário, do mapa e do minimapa. Procure o Mega Elite de perto.',
-  snow:'A nevasca de Haku desacelera o movimento. Continue na direção desejada para atravessá-la e encontrar Haku.',
-  sand:'A areia reduz a velocidade. Gaara ou Rasa pode surgir como Mega Elite durante a tempestade.',
+  snow:'A nevasca de Haku traz flocos de neve e desacelera o movimento. Continue na direção desejada para encontrar Haku.',
+  sand:'A areia reduz a velocidade. Gaara levanta areia comum. Rasa levanta areia dourada.',
 };
 
 const fieldEvents=[
@@ -77,7 +77,7 @@ export function GameGuide({keys,onBack}:{keys:GameSettings['keys'];onBack:()=>vo
       <article className="guide-panel"><h2>Controles</h2><dl className="guide-keys">{controls.map(([actions,label])=><div key={actions[0]}><dt>{label}</dt><dd>{actions.map(action=><kbd key={action}>{keyText(keys[action])}</kbd>)}</dd></div>)}<div><dt>Câmera e zoom</dt><dd>Mouse · rolagem</dd></div><div><dt>Pausar</dt><dd><kbd>Esc</kbd></dd></div></dl></article>
     </div>}
     {tab==='Eventos'&&<>
-      {climates.length>0&&<section className="guide-event-group"><h2>Clima da missão</h2><p>A primeira tentativa ocorre entre {clock(WEATHER_WAIT.min)} e {clock(WEATHER_WAIT.max)} de missão. Novas tentativas ocorrem após intervalo semelhante. Cada evento dura {WEATHER_EVENT_DURATION} segundos após a conjuração ou até a derrota do Mega Elite.</p>
+      {climates.length>0&&<section className="guide-event-group"><h2>Clima da missão</h2><p>Em cada zona, os três climas podem ser sorteados a partir de {clock(WEATHER_ZONE.from)}. Cada evento dura até {WEATHER_EVENT_DURATION} segundos após a conjuração ou até a derrota do Mega Elite. Os Megas desses eventos ficam fora da captura.</p>
         <div className="guide-grid">{climates.map(id=><article className="guide-panel guide-weather" key={id}><h3>{WEATHER_EVENTS[id].name}</h3><p>{climateNotes[id]}</p><div className="guide-villages">{MAPS.filter(map=>WEATHER_BY_MAP[map.id].includes(id)).map(map=><span key={map.id}>{villageName(map.name,true)}</span>)}</div></article>)}</div>
       </section>}
       {entries.length>0&&<section className="guide-event-group"><h2>Encontros e marcos</h2><div className="guide-grid">{entries.map(([name,body])=><article className="guide-panel" key={name}><h3>{name}</h3><p>{body}</p></article>)}</div></section>}

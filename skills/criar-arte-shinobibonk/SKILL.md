@@ -15,6 +15,12 @@ Leia a direção de arte de `AGENTS.md`. Abra os atlases usados pelo módulo alv
 - Nos efeitos de técnicas, consulte a referência da obra e a direção visual de jogos oficiais quando houver. Recrie o efeito com a geometria e a paleta do projeto. Confira direção, escala, impacto e a tecla H sem depender de mudanças no dano. Em bijū, confira a silhueta e conte os apêndices visíveis antes de registrar a textura.
 - Para ilustração de seleção, deixe área livre para o nome da região e os guardiões. Guarde as imagens de referência e os assets do jogo em caminhos separados. Use apenas arte autorizada no produto.
 - Documente o caminho, a ordem do atlas, o que foi integrado e o que foi testado com a skill `documentar-projeto`.
+## Derrota e selamento
+
+- Cada versão capturável tem a própria folha de derrota 4×2. Desenhe oito poses no mesmo enquadramento, incluindo impacto, mão no peito, perda de apoio, primeiro joelho no chão, dois joelhos no chão, cabeça baixa e repouso. Preserve roupa, cabelo, mãos, armas e acessórios nas oito poses. A referência é o sprite atual daquela versão. Use as seis primeiras folhas aprovadas de `public/assets/shinobi-defeat/` para comparar o gesto, o apoio e a leitura em três quartos.
+- Normalize o atlas com uma escala por folha, alinhe o apoio dos pés e dos joelhos e preserve a redução natural de altura. Registre em `DEFEAT_SHEETS` o ID exato de cada versão. Versões sem folha continuam pendentes para a auditoria de arte.
+- Confira a queda no tamanho de jogo durante uma volta completa da câmera. A pose 2,5D mantém a vista em três quartos e gira em torno do apoio no terreno. Confira joelhos, leitura do rosto, continuidade dos oito quadros, plano inclinado e pose final restaurada de um save. O E fica disponível a 1,42 s, quando aparece a última pose.
+
 ## Técnicas e efeitos
 
 - Use o nome e a natureza do golpe para escolher sua silhueta, trajetória e impacto. Para cenas como Gamabunta, separe os quadros do ator do efeito em movimento para alinhar a origem com a boca ou as mãos.

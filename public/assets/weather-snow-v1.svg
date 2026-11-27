@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 160">
+ <defs><path id="flake" d="M0-6V6m-5.2-3L5.2 3m-10.4 0 10.4-6" fill="none" stroke="#fff" stroke-linecap="round"/></defs>
+ <g fill="#edf9ff"><circle cx="19" cy="23" r="1.7"/><circle cx="42" cy="104" r="2.2"/><circle cx="151" cy="126" r="2.1"/><circle cx="68" cy="58" r="1.7"/><circle cx="132" cy="17" r="2.4"/><circle cx="95" cy="138" r="1.5"/>
+ <use href="#flake" transform="translate(35 53) rotate(12)"/><use href="#flake" transform="translate(126 77) rotate(22) scale(.76)"/><use href="#flake" transform="translate(22 141) scale(.7)"/><use href="#flake" transform="translate(96 30) rotate(15) scale(.68)"/><use href="#flake" transform="translate(164 60) scale(.6)"/></g>
+</svg>

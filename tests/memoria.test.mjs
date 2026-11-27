@@ -22,8 +22,9 @@ test('fila de explosões na morte nunca passa do teto, mesmo com milhões de aba
 
 test('guizo usa modelo compartilhado e sai da lista de pickups ao ser pego', () => {
   const src = fs.readFileSync('src/scene/GameCanvas.tsx', 'utf8');
-  assert.match(src, /const bell=new THREE\.Mesh\(guizoGeometry\.bell,material\);/);
-  assert.match(src, /const loop=new THREE\.Mesh\(guizoGeometry\.loop,material\);/);
+  assert.match(src, /const art=groundModels\.mesh\(guizoPickupKind\(guizo\)\);/);
+  const models=fs.readFileSync(new URL('../src/scene/dropModels.ts',import.meta.url),'utf8');
+  assert.match(models, /const geometries=new Map<string,THREE\.BufferGeometry>\(\);/);
   assert.doesNotMatch(src, /new THREE\.SphereGeometry\(\.26,14,10\),material/);
   assert.match(src, /if\(guizo\)\{pickup\.active=false;scene\.remove\(pickup\.mesh\);const at=pickups\.indexOf\(pickup\);if\(at>=0\)pickups\.splice\(at,1\);/);
   assert.match(src, /id:'pickup-'\+\(pickupSerial\+\+\)/);

@@ -105,6 +105,9 @@ export function planZoneWeather(events: readonly WeatherEventId[], zoneStart: nu
   for (let i = 1; i < plan.length; i++) plan[i].at = Math.max(plan[i].at, plan[i - 1].at + WEATHER_ZONE.gap);
   return plan.filter(p => p.at <= WEATHER_ZONE.to + WEATHER_ZONE.gap).map(p => ({ id: p.id, at: zoneStart + p.at }));
 }
-export const WEATHER_BY_MAP: Record<MapId, WeatherEventId[]> = {
-  folha:['mist','snow'], areia:['sand'], pedra:['snow'], nevoa:['mist','snow'],
+const REGIONAL_WEATHER:readonly WeatherEventId[]=['mist','snow','sand'];
+export const WEATHER_BY_MAP: Record<MapId, readonly WeatherEventId[]> = {
+  folha:REGIONAL_WEATHER,areia:REGIONAL_WEATHER,pedra:REGIONAL_WEATHER,nevoa:REGIONAL_WEATHER,
 };
+
+export const GOLDEN_SAND={name:'Tempestade de Areia Dourada',sky:'#a97a36',near:12,far:40,cast:undefined} as const;

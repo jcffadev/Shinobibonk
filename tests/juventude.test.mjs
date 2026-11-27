@@ -58,7 +58,7 @@ test('a partida liga o Might Guy: NPC, painel, desafio, falha ao ser acertado e 
     "window.addEventListener('shinobi-youth',onYouth);",
     'const youthHit=()=>{if(hp<hpBefore)failYouthNoHit();};queueMicrotask(youthHit);',
     'const stat=youthStat(run.stat),bonus=youthBonuses(run.difficulty,stat);',
-    'if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth){',
+    'if(enemy.megaElite&&!enemy.guardian&&!enemy.hagoromo&&!enemy.youth&&!enemy.weatherElite){',
     'tickHagoromo(dt);tickYouthRun(dt);',
   ]) assert.ok(canvas.includes(wired), wired);
   assert.equal(missionNpcForEvent('youth'),'guy');

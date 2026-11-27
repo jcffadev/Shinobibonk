@@ -64,10 +64,10 @@ test('selos do Zabuza: a folha tem preparo e selo distintos de frente e de costa
 
 test('GameCanvas: Zabuza surge à vista, faz selos, névoa engrossa e só depois esconde', () => {
   assert.ok(CAST_DISTANCE > 3 && CAST_DISTANCE < 12);
-  assert.match(canvas, /if\(w\.cast\)\{const spot=solids\.freeSpot\(THREE\.MathUtils\.clamp\(player\.position\.x\+v1\.x\*CAST_DISTANCE/, 'aparece à frente do jogador, dentro da tela');
+  assert.match(canvas, /const distance=w\.cast\?CAST_DISTANCE:8;\s*const spot=solids\.freeSpot\(THREE\.MathUtils\.clamp\(player\.position\.x\+v1\.x\*distance/, 'aparece à frente do jogador, dentro da tela');
   assert.match(canvas, /castEnd:w\.cast\?elapsed\+w\.cast\.seconds:undefined/);
   assert.match(canvas, /eventToast=w\.cast\?w\.cast\.line:/, 'fala da técnica');
-  assert.match(canvas, /const channeling=!hagoromoEvent&&isChanneling\(weatherEvent,enemy\.heroId,elapsed\);[^\n]*const stunned=channeling\|\|/, 'parado durante os selos');
+  assert.match(canvas, /const channeling=!hagoromoEvent&&enemy===weatherOpponent&&isChanneling\(weatherEvent,enemy\.heroId,elapsed\);[^\n]*const stunned=channeling\|\|/, 'parado durante os selos');
   assert.match(canvas, /if\(channeling&&motion\)\{[^}]*motion\.attack\(false,left,true,undefined,true,back\);/, 'repete os selos');
   assert.match(canvas, /blendFog\(active,castProgress\(elapsed,weatherEvent\?\.castEnd/, 'névoa engrossando');
   assert.ok(!/weatherEvent\?\.id==='mist'/.test(canvas), 'toda verificação de névoa passa por mistHides');
@@ -85,7 +85,7 @@ test('névoa do Zabuza: branca e densa, todos aparecem a até 3 m e não dá par
   assert.match(canvas, /const near=enemyList\.filter\(e=>Math\.hypot\([^)]*\)<ZABUZA_MIST\.reveal\+ZABUZA_MIST\.fade\);/, 'todos os personagens perto aparecem');
   assert.ok(canvas.includes("if(!canLockTarget(zabuzaMistActive)){eventToast='Névoa do Zabuza: não dá para fixar alvo.';return;}"), 'não fixa alvo');
   assert.ok(canvas.includes("if(lockedTarget&&!canLockTarget(zabuzaMistActive)){lockedTarget=null;"), 'perde o alvo fixado');
-  assert.ok(canvas.includes('zabuzaMistActive=mistHides(weatherEvent,elapsed)&&!!enemyList.find(e=>e.heroId===weatherEvent?.elite);'), 'só com o Zabuza vivo');
+  assert.ok(canvas.includes('zabuzaMistActive=mistHides(weatherEvent,elapsed)&&!!liveWeatherOpponent();'), 'só com o Zabuza vivo');
 });
 
 test('eventos de clima sorteados por zona: podem não acontecer, podem repetir em outra zona e não se sobrepõem (rodada 96)', async () => {
@@ -103,5 +103,11 @@ test('eventos de clima sorteados por zona: podem não acontecer, podem repetir e
   assert.deepEqual(planZoneWeather(['mist'], 0, () => 0).map(p => p.id), ['mist'], 'sorteio baixo acontece');
   assert.deepEqual(planZoneWeather(['mist'], 0, () => .99), [], 'sorteio alto não acontece');
   assert.ok(canvas.includes('zoneStart=elapsed;weatherPlan=planZoneWeather(WEATHER_BY_MAP[mapId],zoneStart);'), 'novo sorteio a cada zona (pode haver 2 Zabuzas)');
-  assert.ok(canvas.includes('const next=weatherPlan.shift()!;startWeather(next.id);'), 'só o que foi sorteado acontece');
+  assert.match(canvas,/const next=weatherPlan\.shift\(\)!;\s*if\(!startWeather\(next.id\)\)/,'só o que foi sorteado acontece');
+  for(const ids of Object.values(WEATHER_BY_MAP))assert.deepEqual(ids,['mist','snow','sand']);
+  assert.match(canvas,/!enemy\.youth&&!enemy\.weatherElite\)\{const pending/,'Mega de clima não entra na fila de captura');
+  assert.match(canvas,/elite\.weatherElite=true;elite\.seen=true;/,'retomar preserva a origem do Mega');
+  assert.match(canvas,/weatherPlan\.push\(next\)/,'nova tentativa se o teto impediu o nascimento');
+  assert.match(canvas,/liveWeatherOpponent=\(\)=>weatherOpponent&&enemyList\.includes\(weatherOpponent\)/,'o clima pertence ao próprio ator, mesmo que haja duas versões iguais');
+  assert.match(canvas,/until:elapsed\+WEATHER_EVENT_DURATION,elite:/,'a conjuração entra nos 60 s do encontro');
 });

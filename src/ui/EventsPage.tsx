@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { EVENTS, duelAvailable, eventPhases, eventProgress, type EventDuel } from '../game/events';
 import { eventDuelsDone, eventPrizesClaimed, isHeroPlayable } from '../game/account';
 import { HERO_BY_ID, familyOf } from '../game/heroes';
-import { MAP_BY_ID } from '../game/maps';
 import { HeroPortrait } from './RunSheet';
 import '../events.css';
 
@@ -41,13 +40,13 @@ export function EventsPage({ heroId, onPlay, onBack }: { heroId: string; onPlay:
 }
 
 function DuelCard({ duel, winner, playAs, onPlay }: { duel: EventDuel; winner?: string; playAs: (side: string) => string; onPlay: (duelId: string, playAs: string) => void }) {
-  const open = duelAvailable(duel, isHeroPlayable), map = MAP_BY_ID[duel.map];
+  const open = duelAvailable(duel, isHeroPlayable);
   const name = (id: string) => HERO_BY_ID[id]?.name ?? id;
   return <article className={'ev-duel' + (winner ? ' done' : '') + (open ? '' : ' locked')}>
     <div className="ev-sides">{duel.sides.map((side, i) => <span key={side} className={isHeroPlayable(side) ? '' : 'ev-locked-side'}>{i > 0 && <em>×</em>}<HeroPortrait id={side}/><b>{name(side)}</b></span>)}</div>
     <h4>{duel.title}</h4>
     <p>{duel.story}</p>
-    <small className="ev-rule">{map?.name ?? duel.map} · {duel.difficulty} · o oponente aparece a partir de {duel.minute} min e {duel.kills} abates</small>
+    <small className="ev-rule">Floresta da Morte · {duel.difficulty} · entrada da sala após {duel.minute} min e {duel.kills} abates</small>
     {winner ? <small className="ev-state">✓ Vencido com {name(winner)}</small> : !open ? <small className="ev-state">🔒 Libere {name(duel.sides[0])} ou {name(duel.sides[1])}</small> : null}
     {open && <div className="ev-actions">{duel.sides.filter(isHeroPlayable).map(side => {
       const as = playAs(side), foe = duel.sides.find(s => s !== side)!;

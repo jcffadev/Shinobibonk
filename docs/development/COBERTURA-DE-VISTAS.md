@@ -135,3 +135,53 @@ Linhas das folhas começam em zero. A suíte em `tests/movimento.test.mjs` inspe
 | tobi-akatsuki | tobi-akatsuki-roster-v1.png · 0/1 | walk-side-10.png · 3 | tobi-akatsuki-directional-v2.png · 0/1 |
 | obito-guerra | obito-guerra-roster-v1.png · 0/1 | walk-side-10.png · 4 | obito-guerra-directional-v2.png · 0/1 |
 | hanabi-adulta | hanabi-adulta-roster-v1.png · 0/1 | walk-side-13.png · 3 | hanabi-adulta-directional-v2.png · 0/1 |
+
+
+## Derrota antes do selamento · 27/11/2026
+
+Há **40 de 115 versões** com oito poses próprias em folhas 4×2. A queda passa pelo impacto, mão no peito, apoio dos joelhos e espera do selamento. O plano se orienta pela câmera em torno do ponto de apoio. A última célula aparece a 1,42 s e libera o E. [Padrão de criação](../../skills/criar-arte-shinobibonk/SKILL.md#derrota-e-selamento).
+
+| Versão | Folha dedicada |
+| --- | --- |
+| Naruto Academia | `naruto-derrota-v1.png` |
+| Gaara Genin | `gaara-derrota-v1.png` |
+| Madara Armadura | `madara-derrota-v1.png` |
+| Hashirama Hokage | `hashirama-derrota-v1.png` |
+| Sasuke Genin | `sasuke-derrota-v1.png` |
+| Kakashi Jonin | `kakashi-derrota-v1.png` |
+| Itachi ANBU | `itachi-derrota-v1.png` |
+| Minato Jonin | `minato-derrota-v1.png` |
+| Orochimaru Sannin | `orochimaru-derrota-v1.png` |
+| Rock Lee Genin | `lee-derrota-v1.png` |
+| Neji Genin | `neji-derrota-v1.png` |
+| Hinata Genin | `hinata-derrota-v1.png` |
+| Shikamaru Genin | `shikamaru-derrota-v1.png` |
+| Pain | `pain-derrota-v1.png` |
+| Kushina | `kushina-derrota-v1.png` |
+| Hanzō Salamandra | `hanzo-derrota-v1.png` |
+| Chōji Akimichi Genin | `choji-derrota-v1.png` |
+| Zabuza Momochi Espadachim da Névoa | `zabuza-derrota-v1.png` |
+| Haku Caçador da Névoa | `haku-derrota-v1.png` |
+| Sakumo Hatake Canino Branco | `sakumo-derrota-v1.png` |
+| Kakuzu Akatsuki | `kakuzu-derrota-v1.png` |
+| Konan Akatsuki | `konan-derrota-v1.png` |
+| Zetsu Akatsuki | `zetsu-derrota-v1.png` |
+| Jūgo Taka | `jugo-derrota-v1.png` |
+| Kimimaro Clássico | `kimimaro-derrota-v1.png` |
+| Jirōbō Quarteto do Som | `jirobo-derrota-v1.png` |
+| Kidōmaru Quarteto do Som | `kidomaru-derrota-v1.png` |
+| Tayuya Quarteto do Som | `tayuya-derrota-v1.png` |
+| Sakon e Ukon Quarteto do Som | `sakon-ukon-derrota-v1.png` |
+| Dosu Kinuta Trio do Som | `dosu-derrota-v1.png` |
+| Zaku Abumi Trio do Som | `zaku-derrota-v1.png` |
+| Kin Tsuchi Trio do Som | `kin-derrota-v1.png` |
+| Jūzō Biwa Akatsuki | `juzo-derrota-v1.png` |
+| Naruto Genin | `naruto-genin-derrota-v1.png` |
+| Naruto Shippuden | `naruto-shippuden-derrota-v1.png` |
+| Naruto Kyuubi | `naruto-kyuubi-derrota-v1.png` |
+| Sasuke Shippuden | `sasuke-shippuden-derrota-v1.png` |
+| Sasuke Rinnegan | `sasuke-rinnegan-derrota-v1.png` |
+| Sakura Shippuden | `sakura-shippuden-derrota-v1.png` |
+| Sakura Byakugou | `sakura-byakugou-derrota-v1.png` |
+
+As 75 versões restantes ainda usam a transição compartilhada. Confira cada folha em movimento e em uma volta de câmera no tamanho de partida.

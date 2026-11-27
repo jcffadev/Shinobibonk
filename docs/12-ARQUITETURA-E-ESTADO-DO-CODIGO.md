@@ -426,3 +426,17 @@ Em Konoha, `villageLayout.ts` fornece as faixas de cobertura das ruas e praças.
 `landmarkRelief.ts` projeta a textura `leaf-statue-backs-v1.png` sobre o verso de Hashirama e Madara. `dropSprites.ts` mantém as âncoras das artes e a sombra reutilizada. `fallenShinobi.ts` dobra a malha pelos segmentos da perna e do tronco, e expõe o estado `ready` após o assentamento.
 
 `terrainGeometry.ts` subdivide e costura as células de margem. `water.ts` controla as ondulações e a opacidade de contato, e `terrainArt.ts` pinta o leito contínuo e a cobertura das ruas. `missionNpcs.ts` anima a pixel art dos NPCs e do Totem. Resolve família e forma pelo mesmo ID usado no retrato. O Plano do Shikamaru escolhe a versão Estrategista para todas as vistas. A instância da cena compartilha texturas, normaliza a silhueta de cada recorte e atualiza uma malha ancorada nos pés. O alvo de clique fica fixo no mundo. `public/assets/shinobis/*-perfil-costas-v1.png` fornece os ângulos adicionais para Ebisu, Teuchi e Sapos Sábios. As outras vistas de NPC vêm das folhas do elenco. `missionStructures.ts` cuida das construções de evento. Os bairros e fachadas regionais vêm de `villageDistricts.ts` e `villageArchitecture.ts`.
+
+
+## Clima, drops e captura · 26/11/2026
+
+`maps.ts` compartilha o sorteio de clima. `GameCanvas.tsx` restaura a marca de origem do Mega, exclui esse ator da captura e expõe cor de areia e segundos restantes a `WeatherOverlay.tsx`. As camadas de partículas de `hud-dock.css` usam pequenas texturas repetidas. `guizos.ts` define a regra de coleta e as cores. `dropModels.ts` monta malhas em cache para guizos, shurikens e onigiri. `RyuCost.tsx` usa os custos das transações. `fallenShinobi.ts` deforma a arte da forma com pivôs de canela, coxa, tronco e cabeça. A captura passa a aceitar E após o assentamento.
+
+A direção de arte para volumes reais de personagens fica em `skills/criar-personagem-3d/SKILL.md`. O estudo de imagem gerada e o teste de OpenGL são prévias externas.
+
+
+## Cenas e folhas adicionais · 27/11/2026
+
+`src/game/missionArenas.ts` define limites, piso e posição da porta. `src/scene/missionArenas.ts` monta a Floresta da Morte, a sala e o Espaço do Sábio como grupos que só são construídos quando usados. Conserva o fundo e a névoa originais. `GameCanvas.tsx` define o piso da instância ativa, isola elenco, colisões e drops ao cruzar áreas, restaura a origem do C e salva `examRoom` e `examWon`. O começo da sala usa a condição de tempo e abates existente.
+
+`DEFEAT_SHEETS` em `fallenShinobi.ts` resolve a imagem da versão de forma exata. Mantém um cache de fontes, texturas independentes por corpo e oito quadros de duração fixa. O atlas fica em `public/assets/shinobi-defeat/`. O jogo usa a pose final restaurada enquanto aguarda E.
