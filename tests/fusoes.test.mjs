@@ -188,7 +188,8 @@ test('planejador: abre com o catálogo e a aba Habilidades mostra a receita da f
     "const catalog=tab==='Fusões'?fusionCatalog(fusionOptions,familyOf(hero.id)):[];",
     'Fusões que você pode aprender · {catalog.length}',
     'onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}',
-    'aria-pressed={done} disabled={!done&&fusionPlan.length>=4}',
+    // 27/11/2026: plano com 3 uniões, 1 por zona (MERGE_PLAN).
+    'aria-pressed={done} disabled={!done&&planFull}',
     'fusionPlan.filter(pair=>pair.includes(name)).map(pair=>fusionRecipeText(pair,fusionName(pair)))',
     '{technique&&fusionRecipes(e.name).map(',
     '{fusionRecipes(focused.name).map(',
@@ -270,4 +271,23 @@ test('sem raridade no cartão de fusão', () => {
   const planner = read('src/ui/BuildPlanner.tsx');
   assert.ok(!/Fusão · Épico|Combinação · Raro|Kekkei Genkai · Épico/.test(planner));
   assert.ok(planner.includes("<div><small>{sheet.label}</small><h3>{recipe.name}</h3></div>"));
+});
+
+test('planejador: 1 fusão ou combinação por zona (3 vagas) e combinações do kit no catálogo (27/11/2026)', async () => {
+  // Usuário: "em combinação... ele deveria conseguir combinar/fundir 1 por zona... aparentemente no planejador aparece apenas 1 combinação e 1 fusão, isso está errado."
+  const { MERGE_PLAN, combinationCatalog, fusionCatalog, isMergedName } = await import('../src/game/techniqueMerge.ts');
+  assert.deepEqual({ ...MERGE_PLAN }, { perZone: 1, zones: 3, limit: 3 });
+  const short = [];
+  for (const h of HEROES) {
+    const pool = techniquePool(h.id).filter(t => !t.setup && !t.locked && !isMergedName(t.name));
+    const total = fusionCatalog(pool, familyOf(h.id)).length + combinationCatalog(h.skills, pool, familyOf(h.id)).length;
+    if (total < MERGE_PLAN.limit) short.push(h.id + ':' + total);
+  }
+  assert.deepEqual(short, [], 'toda versão tem ao menos 3 uniões para planejar');
+  const naruto = techniquePool('naruto').filter(t => !t.setup);
+  const combos = combinationCatalog(HEROES.find(h => h.id === 'naruto').skills, naruto, 'naruto');
+  assert.ok(combos.length >= 3 && combos.every(c => c.name === c.pair.join(' + ')), 'combinações A + B do kit');
+  const planner = read('src/ui/BuildPlanner.tsx'), main = read('src/main.tsx');
+  assert.ok(planner.includes('Combinações do kit · {combos.length}') && planner.includes('1 fusão ou combinação por zona'));
+  assert.ok(main.includes('||fusionPlan.length>=MERGE_PLAN.limit)return;'), 'o limite do plano é o das zonas');
 });

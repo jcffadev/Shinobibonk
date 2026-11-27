@@ -39,6 +39,7 @@ import { HEROES as heroes, HERO_BY_ID, techniquePool, skillArchiveLimit, isProje
 import { SAVED_RUN_KEY, type SavedRun } from './scene/GameCanvas';
 import { sealedHeroes, unlockedHeroes, sealForAccount, isHeroPlayable, isDifficultyUnlocked, markMapCompleted } from './game/account';
 import { SEAL_ATTEMPTS, captureChance, inSeason } from './game/season';
+import { MERGE_PLAN } from './game/techniqueMerge';
 import { MAP_BY_ID, type MapId } from './game/maps';
 import './maps.css';
 import { formAt } from './game/evolution';
@@ -322,7 +323,7 @@ function App() {
   // Rodada 39 — Fusões planejadas: pares de técnicas do pool do herói (até 4); a execução continua na
   // Oficina dos Sapos Sábios (1 uso por zona). O badge ⚗ no pool do jogo marca as técnicas de um par.
   const fusionNames=useMemo(()=>new Set(fusionPlan.flat()),[fusionPlan]);
-  const addFusionPair=(a:string,b:string)=>{if(!a||!b||a===b||fusionPlan.some(p=>(p[0]===a&&p[1]===b)||(p[0]===b&&p[1]===a))||fusionPlan.length>=4)return;const next=[...fusionPlan,[a,b] as [string,string]];setFusionPlan(next);writeByHero('sb_fusion_plan_by_hero_v1',heroId,next);};
+  const addFusionPair=(a:string,b:string)=>{if(!a||!b||a===b||fusionPlan.some(p=>(p[0]===a&&p[1]===b)||(p[0]===b&&p[1]===a))||fusionPlan.length>=MERGE_PLAN.limit)return;const next=[...fusionPlan,[a,b] as [string,string]];setFusionPlan(next);writeByHero('sb_fusion_plan_by_hero_v1',heroId,next);};
   const removeFusionPair=(index:number)=>{const next=fusionPlan.filter((_,i)=>i!==index);setFusionPlan(next);writeByHero('sb_fusion_plan_by_hero_v1',heroId,next);};
   // Tática de Missão: preset nomeado por herói com snapshot {planejado · treinadas · em casa · prioridade · fusões}.
   const snapshotTactic=(name:string):MissionTactic=>({

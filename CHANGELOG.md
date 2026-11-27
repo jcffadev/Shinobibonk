@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 27/11/2026 · Todo o elenco começa com 9+ técnicas e planejador com 1 fusão ou combinação por zona (Claude Code)
+
+- **Pedido do usuário:** "Lembre-se referente as habilidades... os personagens tem que ir desbloqueando os outros para ter mais habilidades... Porém, acho interessante que tenhamos mais habilidades... Consegue que TODOS os personagens de todo o elenco... fazendo mais pesquisa consiga ter inicialmente pelo menos 8 habilidades? Outra coisa, em combinação... ele deveria conseguir combinar/fundir 1 por zona... aparentemente no planejador aparece apenas 1 combinação e 1 fusão, isso está errado."
+- **Técnicas iniciais** (`ACADEMY` e `MIN_STARTING_POOL` em `heroes.ts`): 46 versões (afinidade Neutra, Sombra ou Areia) começavam com 7 técnicas no pool sem selar ninguém. Entraram duas técnicas ensinadas na Academia na obra: **Bunshin no Jutsu** (área, 35% de atordoar; um dos três jutsus do exame de graduação) e **Armadilha de Fios** (linha, 30% de paralisar). Agora o elenco começa com 9 a 12. As técnicas dos outros continuam vindo ao selar (e com pesquisa, para o planejador).
+- **Uniões** (`MERGE_PLAN` e `combinationCatalog` em `techniqueMerge.ts`, `BuildPlanner.tsx`): a Oficina dos Sapos já fazia 1 fusão ou combinação por zona, mas o planejador só listava fusões com receita (61 versões tinham uma só) e nenhuma combinação. Agora a aba "Fusões e combinações" lista também as combinações de todos os pares de técnicas de ataque do kit, e o plano tem 3 vagas, uma por zona (antes 4). Toda versão tem pelo menos 3 uniões para planejar.
+- **Testes:** +1 em `naruto-academia.test.mjs` e +1 em `fusoes.test.mjs`; 2 mutações novas, verificadas à mão. **PENDENTE DE VALIDAÇÃO E2E:** aba de fusões e combinações no planejador e as duas técnicas novas em partida.
+
 ## 27/11/2026 · Banidos na ficha, passivas nas 25 ferramentas do Hagoromo e Kage Bunshin como ultimate do Naruto Academia (Claude Code)
 
 - **Pedidos do usuário:** "mostrar na ficha o que banimos na run" · "Todos os itens tem que ter passivas" (ferramentas do Hagoromo) · "kage bunshin de naruto academia deve ser sua ultimate e ele lançar 10 clones ao redor dele"

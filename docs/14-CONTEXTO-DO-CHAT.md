@@ -3459,3 +3459,9 @@ O usuário aprovou o gesto e pediu as folhas de queda para todo o elenco, com co
 > kage bunshin de naruto academia deve ser sua ultimate e ele lançar 10 clones ao redor dele
 
 **Resposta.** Ficha com "BANIDOS DA RUN". As 25 ferramentas de atributo do Hagoromo têm passiva própria (o pedido anterior "Todos os itens do Hagoromo devem dar buffs" foi entendido como bônus de atributo; agora cada uma tem efeito). Naruto Academia: Kage Bunshin virou a ultimate com 10 clones em volta. **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**
+
+## 27/11/2026 · Técnicas iniciais e uniões por zona (Claude Code)
+
+> Lembre-se referente as habilidades... os personagens tem que ir desbloqueando os outros para ter mais habilidades... Porém, acho interessante que tenhamos mais habilidades... Consegue que TODOS os personagens de todo o elenco... fazendo mais pesquisa consiga ter inicialmente pelo menos 8 habilidades? Outra coisa, em combinação... ele deveria conseguir combinar/fundir 1 por zona... aparentemente no planejador aparece apenas 1 combinação e 1 fusão, isso está errado.
+
+**Resposta.** Bunshin no Jutsu e Armadilha de Fios (Academia, na obra) entram no pool de todos: o elenco começa com 9 a 12 técnicas. O planejador lista fusões e combinações do kit, com 3 vagas (1 por zona). **PENDENTE DE VALIDAÇÃO E2E.** **Publicado no GitHub.**

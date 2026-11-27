@@ -153,6 +153,24 @@ export function fusionCatalog(pool:readonly Technique[], family?:string):FusionE
   }
   return [...out.values()].sort((a,b)=>Number(b.kekkei)-Number(a.kekkei)||a.name.localeCompare(b.name,'pt-BR'));
 }
+/**
+ * Plano de uniões (27/11/2026 — usuário: "em combinação... ele deveria conseguir combinar/fundir 1 por zona... aparentemente no planejador aparece apenas 1 combinação e 1 fusão, isso está errado."): a Oficina dos Sapos Sábios faz 1 fusão OU combinação por zona, então o plano tem 3 vagas (zonas 1, 2
+ * e 3). O catálogo do planejador só listava fusões com receita — 61 versões tinham uma só — e nenhuma combinação. Agora lista
+ * também as combinações das técnicas de ataque do kit, que funcionam com qualquer par.
+ */
+export const MERGE_PLAN = { perZone: 1, zones: 3, limit: 3 } as const;
+export type CombinationEntry = { name: string; pair: [string, string]; result: Technique };
+/** Combinações planejáveis: todos os pares das técnicas de ataque do kit (`kit`) presentes no pool (na Oficina, qualquer par pode ser combinado, mesmo o que também se funde). */
+export function combinationCatalog(kit: readonly string[], pool: readonly Technique[], family?: string): CombinationEntry[] {
+  const options = pool.filter(t => kit.includes(t.name) && !t.setup && !(t as { locked?: boolean }).locked && !isMergedName(t.name));
+  const out: CombinationEntry[] = [];
+  for (let i = 0; i < options.length; i++) for (let j = i + 1; j < options.length; j++) {
+    const pair: [string, string] = [options[i].name, options[j].name];
+    const result = mergedTechnique({ kind: 'combine', names: pair }, options, family);
+    if (result) out.push({ name: result.name, pair, result });
+  }
+  return out;
+}
 /** Nome mostrado: o nome da receita (sem o prefixo "Fusão · "). */
 export const fusionDisplayName = (name:string) => fusionByName(name)?.name ?? name;
 /** Texto da receita para a aba Habilidades: "A + B = Nome da fusão". */

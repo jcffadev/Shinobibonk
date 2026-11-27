@@ -29,3 +29,12 @@ test('Kage Bunshin é a ultimate: 10 clones em anel em volta do Naruto Academia 
   assert.ok(canvas.includes('const a=i/SHADOW_CLONES.count*Math.PI*2'), 'em anel, ao redor dele');
   assert.ok(canvas.includes('target=(free.length?free:pool).sort((p,q)=>distance(p)-distance(q))[0]'), 'cada clone vai atrás de um inimigo diferente, o mais perto dele');
 });
+
+test('todo o elenco começa com pelo menos 8 técnicas no pool, sem selar ninguém (27/11/2026)', async () => {
+  // Usuário: "Consegue que TODOS os personagens de todo o elenco... consiga ter inicialmente pelo menos 8 habilidades?"
+  const { HEROES, ACADEMY, MIN_STARTING_POOL, techniquePool } = await import('../src/game/heroes.ts');
+  assert.equal(MIN_STARTING_POOL, 8);
+  assert.ok(ACADEMY.some(t => t.name === 'Bunshin no Jutsu') && ACADEMY.some(t => t.name === 'Armadilha de Fios'));
+  const short = HEROES.filter(h => techniquePool(h.id).length < MIN_STARTING_POOL).map(h => h.id);
+  assert.deepEqual(short, [], 'versões com menos de 8');
+});

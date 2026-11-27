@@ -200,6 +200,8 @@ const MUTATIONS = [
   { regra: "monstro mantém o lado ao contornar", arquivo: 'src/scene/collision.ts', de: "const side: 1 | -1 = memory && now < memory.until ? memory.side :", para: "const side: 1 | -1 =" },
   { regra: "Kage Bunshin do Naruto Academia lança 10 clones", arquivo: 'src/scene/GameCanvas.tsx', de: "const SHADOW_CLONES={count:10,", para: "const SHADOW_CLONES={count:4," },
   { regra: "passivas das ferramentas do Hagoromo", arquivo: 'src/scene/GameCanvas.tsx', de: "if(p.kind==='heal'){cappedHeal(stats.maxHp*(p.share??0));", para: "if(p.kind==='heal'){" },
+  { regra: "todos começam com 8 técnicas no pool", arquivo: 'src/game/heroes.ts', de: " {...t('Armadilha de Fios','Taijutsu','Neutro','Linha',.65),status:'Paralisar',statusChance:.3,unlockLevel:4},", para: "" },
+  { regra: "plano de uniões: 1 por zona", arquivo: 'src/game/techniqueMerge.ts', de: "export const MERGE_PLAN = { perZone: 1, zones: 3, limit: 3 } as const;", para: "export const MERGE_PLAN = { perZone: 1, zones: 3, limit: 4 } as const;" },
   { regra: "afixos de dano pela metade", arquivo: 'src/game/combat.ts', de: "damage:{base:[22.5,40,67.5,112.5,187.5]", para: "damage:{base:[45,80,135,225,375]" },
   { regra: "Final Swarm entra com ×2", arquivo: 'src/game/progression.ts', de: "export const FINAL_SWARM={multiplier:2,", para: "export const FINAL_SWARM={multiplier:3," },
   { regra: "curva de dano por nível intacta", arquivo: 'src/game/progression.ts', de: "perLevel:.04,cubicDivisor:72,power:3};", para: "perLevel:.04,cubicDivisor:73,power:3};" },

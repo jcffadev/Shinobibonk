@@ -9,7 +9,7 @@ import { plannerCardInfo } from '../game/plannerCards';
 import { techniquePool, HERO_BY_ID, heroAffinity, familyOf, type PoolTechnique, type Technique } from '../game/heroes';
 import { sealedHeroes, researchProgress } from '../game/account';
 import { ArsenalControls, type ArsenalControlsProps } from './ArsenalControls';
-import { combineBonus, FUSION_KIND_LABEL, fusionBonus, fusionCatalog, fusionDisplayName, fusionRecipeText, isMergedName, kekkeiFusion, mergedTechnique } from '../game/techniqueMerge';
+import { combinationCatalog, MERGE_PLAN, combineBonus, FUSION_KIND_LABEL, fusionBonus, fusionCatalog, fusionDisplayName, fusionRecipeText, isMergedName, kekkeiFusion, mergedTechnique } from '../game/techniqueMerge';
 /** Origem da técnica no pool (regra do usuário: 1–2 únicas por shinobi; compartilhadas por vila/elemento; únicas de outros só após selar). */
 function sourceText(t:PoolTechnique){const who=HERO_BY_ID[t.origin]?.name??t.origin;if(t.source==='kit')return 'Kit próprio.';if(t.source==='basica')return 'Básica da Academia (sempre disponível).';if(t.source==='vila')return 'Compartilhada · mesma vila ('+who+').';if(t.source==='elemento')return 'Compartilhada · mesmo elemento '+t.element+' ('+who+').';return t.locked?'Única de '+who+' · bloqueada até selar '+who+' pela 1ª vez.':'Única de '+who+' (selado).';}
 import { fusionParts, fusionSheet, fusionUpgrades } from '../game/fusionCard';
@@ -51,6 +51,8 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
  // Rodada 81 (pedido do usuário: "é pra aparecer já as fusões que o ninja pode aprender… quando for liberando ninja na
  // conta… vai aparecer mais fusões também"): a aba abre com o catálogo de fusões do pool atual; o par manual fica opcional.
  const catalog=tab==='Fusões'?fusionCatalog(fusionOptions,familyOf(hero.id)):[];
+ // 27/11/2026 — usuário: "em combinação... ele deveria conseguir combinar/fundir 1 por zona... aparentemente no planejador aparece apenas 1 combinação e 1 fusão, isso está errado."
+ const combos=tab==='Fusões'?combinationCatalog(hero.skills,fusionOptions,familyOf(hero.id)).filter(c=>matchesSearch(c.name,fusionSearch)):[],planFull=fusionPlan.length>=MERGE_PLAN.limit;
  const shownCatalog=catalog.filter(f=>matchesSearch(f.name+' '+f.pair.join(' '),fusionSearch));
  const candidate:[string,string]=[fusionA,fusionB];
  const canPreview=fusionOptions.some(t=>t.name===fusionA)&&fusionOptions.some(t=>t.name===fusionB)&&fusionA!==fusionB;
@@ -128,9 +130,9 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
   {tab==='Fusões'
    ? <section className="planner-fusions" aria-label="Fusões de técnicas">
      <div className="planner-fusion-toolbar">
-       <div><h2>Fusões de técnicas</h2><p>Na missão, leve as duas técnicas ao nível máximo. A Oficina dos Sapos Sábios permite uma união por zona.</p></div>
-       <button type="button" className="planner-fusion-save" disabled={!canPreview||duplicate||fusionPlan.length>=4}
-         onClick={()=>{addFusionPair(...candidate);setFusionA('');setFusionB('');}}>{duplicate?'Par já planejado':'Planejar fusão'} ({fusionPlan.length}/4)</button>
+       <div><h2>Fusões e combinações</h2><p>Na missão, leve as duas técnicas ao nível máximo. A Oficina dos Sapos Sábios faz <b>1 fusão ou combinação por zona</b>: planeje até {MERGE_PLAN.limit}, uma para cada zona.</p></div>
+       <button type="button" className="planner-fusion-save" disabled={!canPreview||duplicate||planFull}
+         onClick={()=>{addFusionPair(...candidate);setFusionA('');setFusionB('');}}>{duplicate?'Par já planejado':'Planejar união'} ({fusionPlan.length}/{MERGE_PLAN.limit})</button>
      </div>
      <label className="fusion-search"><span>Buscar técnica ou fusão</span><input type="search" value={fusionSearch} onChange={e=>setFusionSearch(e.target.value)} placeholder="Ex. Gelo, Raio, Circo Laser"/></label>
      <h3>Fusões que você pode aprender · {catalog.length}</h3>
@@ -138,11 +140,19 @@ export function BuildPlanner({hero,unlocked,planned,togglePlanned,archivedItems,
      <div className="planner-fusion-catalog" aria-label="Fusões disponíveis">
        {shownCatalog.map(f=>{const planIndex=fusionPlan.findIndex(p=>p.includes(f.pair[0])&&p.includes(f.pair[1])),done=planIndex>=0;
          // Rodada 82 (pedido do usuário: "Ao clicar na fusão, ela já fica selecionada"): 1 clique planeja; clicar de novo tira do plano.
-         return <button type="button" key={f.result.name} className={'fusion-catalog-entry kind-'+f.kind+(f.kekkei?' is-kekkei':'')} aria-pressed={done} disabled={!done&&fusionPlan.length>=4} onMouseEnter={event=>showTip(f.name,event.currentTarget,f.pair)} onMouseLeave={()=>setTip(null)} onFocus={event=>showTip(f.name,event.currentTarget,f.pair)} onBlur={()=>setTip(null)} title={done?'Clique para tirar do plano':fusionPlan.length>=4?'Limite de 4 fusões planejadas':'Clique para planejar'} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}>
+         return <button type="button" key={f.result.name} className={'fusion-catalog-entry kind-'+f.kind+(f.kekkei?' is-kekkei':'')} aria-pressed={done} disabled={!done&&planFull} onMouseEnter={event=>showTip(f.name,event.currentTarget,f.pair)} onMouseLeave={()=>setTip(null)} onFocus={event=>showTip(f.name,event.currentTarget,f.pair)} onBlur={()=>setTip(null)} title={done?'Clique para tirar do plano':planFull?`Limite de ${MERGE_PLAN.limit} uniões (1 por zona)`:'Clique para planejar'} onClick={()=>{setFusionA(f.pair[0]);setFusionB(f.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...f.pair);}}>
          <span className="fusion-catalog-icon"><SkillIcon heroId={hero.id} name={f.result.name}/></span><span className="fusion-catalog-text"><small className="fusion-kind">{FUSION_KIND_LABEL[f.kind]}</small><b>{f.name}</b><small>{f.pair[0]} + {f.pair[1]}</small><small className="fusion-catalog-effect">{[f.result.element,f.result.secondaryElement].filter(Boolean).join(' + ')} · {f.result.school} · {fusionParts(f.result).map(p=>p.kind).join(' · ')}</small>{done&&<small className="fusion-catalog-planned">✓ Planejada</small>}</span>
        </button>;})}
      </div>
      {!catalog.length&&<p className="planner-empty">Este pool ainda não tem duas técnicas que se fundem. Sele mais shinobis para liberar fusões.</p>}
+     <h3>Combinações do kit · {combos.length}</h3>
+     <p className="planner-fusion-hint">Qualquer par de técnicas de ataque pode ser combinado: as duas disparam juntas com ×1,5 e um atributo extra.</p>
+     <div className="planner-fusion-catalog" aria-label="Combinações disponíveis">
+       {combos.map(c=>{const planIndex=fusionPlan.findIndex(p=>p.includes(c.pair[0])&&p.includes(c.pair[1])),done=planIndex>=0;
+         return <button type="button" key={c.name} className="fusion-catalog-entry kind-combinacao" aria-pressed={done} disabled={!done&&planFull} title={done?'Clique para tirar do plano':planFull?`Limite de ${MERGE_PLAN.limit} uniões (1 por zona)`:'Clique para planejar'} onClick={()=>{setFusionA(c.pair[0]);setFusionB(c.pair[1]);if(done)removeFusionPair(planIndex);else addFusionPair(...c.pair);}}>
+         <span className="fusion-catalog-icon"><SkillIcon heroId={hero.id} name={c.pair[0]}/></span><span className="fusion-catalog-text"><small className="fusion-kind">Combinação</small><b>{c.name}</b><small>{[c.result.element,c.result.secondaryElement].filter(Boolean).join(' + ')} · {c.result.school}</small>{done&&<small className="fusion-catalog-planned">✓ Planejada · Zona {planIndex+1}</small>}</span>
+       </button>;})}
+     </div>
      {catalog.length>0&&!shownCatalog.length&&<p className="planner-empty">Nenhuma fusão com essa busca.</p>}
      {canPreview&&<div className="fusion-comparison">
        <FusionCard heroId={hero.id} pair={candidate} kind="fuse" pool={techniques}/>

@@ -216,7 +216,14 @@ export const ACADEMY:Technique[]=[
  {...t('Fuuton: Rajada','Ninjutsu','Vento','Cone',.7),unlockLevel:3},
  {...t('Doton: Pedregulho','Ninjutsu','Terra','Projétil',.75),unlockLevel:4},
  {...t('Raiton: Faísca','Ninjutsu','Raio','Linha',.7),unlockLevel:4},
+ // 27/11/2026 — usuário: "Consegue que TODOS os personagens de todo o elenco... consiga ter inicialmente pelo menos 8 habilidades?":
+ // 46 versões (afinidade Neutra, Sombra ou Areia) começavam com 7. Duas técnicas ensinadas na Academia na obra (Narutopedia: Bunshin
+ // no Jutsu é um dos três jutsus do exame de graduação; fios de aço são ferramenta ninja básica) deixam todos com 9 ou mais.
+ {...t('Bunshin no Jutsu','Ninjutsu','Neutro','Área',.5),status:'Atordoar',statusChance:.35,unlockLevel:2},
+ {...t('Armadilha de Fios','Taijutsu','Neutro','Linha',.65),status:'Paralisar',statusChance:.3,unlockLevel:4},
 ];
+/** Mínimo de técnicas no pool inicial de qualquer versão, sem ter selado ninguém (27/11/2026). */
+export const MIN_STARTING_POOL = 8;
 /** Técnica-base da Ultimate (elemento/escola/cor): a última técnica de ataque do kit (setups não contam). */
 export function isProjectileUltimate(id:string){if(id==='naruto-hokage'||id==='kisame'||id==='kidomaru')return true;const family=familyOf(id);/* 27/11/2026: a ultimate do Naruto Academia (Tajū Kage Bunshin) é de projéteis, como a das outras versões. */return family==='naruto'||family==='tenten'||family==='minato';}
 /**
